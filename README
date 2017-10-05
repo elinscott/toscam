@@ -1,0 +1,57 @@
+=============================================================
+
+                        O N E T E P
+
+      - Linear-Scaling Ab Inito Total Energy Program -
+
+=============================================================
+
+ Authors:
+ Peter D. Haynes, N. D. M. Hine, Arash A. Mostofi, 
+ Mike C. Payne and Chris-Kriton Skylaris
+
+ Contributors:
+ P. W. Avraam, S. J. Clark, O. Dieguez, Q. O. Hill, 
+ D. D. O'Regan, C. J. Pickard, M. I. J. Probert, M. Robinson
+ and A. Ruiz Serrano
+
+ Copyright (c) 2004-2009
+
+-------------------------------------------------------------
+
+ Please cite:
+
+  "Introducing ONETEP: Linear-scaling density functional
+  simulations on parallel computers",
+  C.-K. Skylaris, P. D. Haynes, A. A. Mostofi & M. C. Payne,
+  J. Chem. Phys. 122, 084119 (2005)
+
+      in all pulications arising from your use of ONETEP.
+
+-------------------------------------------------------------
+
+ Website: http://www.onetep.org
+
+-------------------------------------------------------------
+
+ Directory Structure
+
+ bin/		Executables
+ config/	Example conf.arch for a number of platforms
+ doc/           Documentation
+ fireballs/	Fireball files for tests and tutorials
+ lib/		Libraries
+ obj/		For object files creeated on compilation
+ pseudo/	Pseudopotential files for tests and tutorials
+ src/		The ONETEP source code
+ tests/         A set of reference calculations
+ utils/         Related utility programs
+
+-------------------------------------------------------------
+
+ For installation instructions, see INSTALL
+
+ Further information can be found on the website 
+   http://www.onetep.org and in the tutorial.
+
+-------------------------------------------------------------

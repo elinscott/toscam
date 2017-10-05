@@ -1,0 +1,21 @@
+F90        =  /home/cweber/local/mpich2/bin/mpif90   -I/home/cweber/local/mpich2/include  
+
+DEBUGF=-fbacktrace -w -O0 -g -m64 -ffree-line-length-2000 -Warray-bounds -fbounds-check -w -g 
+ 
+MAGMA=-I/home/cweber/MYLIBRARY/LIB_GPU_NUMERICS_MAGMA/common -I/home/cweber/MYLIBRARY/LIB_GPU_NUMERICS_MAGMA/include  -L/home/cweber/MYLIBRARY/LIB_GPU_NUMERICS_MAGMA/lib -lmagma -lmagmablas  
+
+FFLAGS     = -cpp -DFFTW3 -DMPI -w -O3 -fopenmp -m64 -ffree-line-length-400 -L/opt/local/mpich2/lib/ -lmpichf90 -lfmpich -lmpich -lmpichcxx -I/opt/local/mpich2/include/ -I./obj/Darwin/ -I. -I../obj/Darwin -L/home/cweber/MYLIBRARY/LIB_GPU_NUMERICS -lgpu   -L/opt/cuda-5.0/lib64 -lcufft -lcuda -lcudart -lcublas    -DINTGETARG  -DINTFLUSH      
+ 
+GSL = -I$(HOME)/MYLIBRARY/LIB_GSL_GCC/include/ -L$(HOME)/MYLIBRARY/LIB_GSL_GCC/lib/ -lgsl -lgslcblas 
+
+MKL = -L/home/cweber/MYLIBRARY/LIB_SCALAPACK -lscalapack -L$(HOME)/MYLIBRARY/LIBLAPACK -L$(HOME)/MYLIBRARY/LIBBLAS/ -llapack -lblas -L/opt/gcc4.6.3/lib64/ -lgomp  -L/home/cweber/MYLIBRARY/LIB_FFTW_3.2_GCC/lib/  -lfftw3 ${GSL} 
+
+LIBS       = ${MKL}  -lpthread  -lm  -L$(HOME)/local/mpich2/lib/ -lmpichf90 -lfmpich -lmpich -lmpichcxx -I$(HOME)/local/mpich2/include/ -L/home/cweber/MYLIBRARY/LIB_GPU_NUMERICS -lgpu    -L/opt/cuda-5.0/lib64 -lcufft -lcuda -lcudart -lcublas  ${MAGMA}  ${MKL}   
+
+OPTFLAGS   = -cpp -DFFTW3 -DMPI -w -O3 -fopenmp -m64 -ffree-line-length-400 -L/home/cweber/MYLIBRARY/LIB_GPU_NUMERICS -lgpu  -L/opt/cuda-5.0/lib64 -lcufft -lcuda -lcudart -lcublas  -I/home/cweber/MYLIBRARY/LIB_GPU_NUMERICS/MODFILES -L/home/cweber/MYLIBRARY/LIB_GPU_NUMERICS -lgpu -DGPU_SPEEDUP_MATMUL_R -DGPU_SPEEDUP_MATMUL -DGPU_SPEEDUP   -DINTGETARG  -DINTFLUSH # -Ddebug  
+
+#-DGPU_SPEEDUP_WRAPPER
+#-DSCALAPACK  
+#-DINVERT_N_CUBE  
+
+DEBUGFLAGS = -cpp -DFFTW3 -DMPI -DDEBUG ${DEBUGF}

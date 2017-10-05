@@ -1,0 +1,11 @@
+#
+# ONETEP configuration file
+#
+# For i386 compatible running linux
+#
+
+F90 = gfortran
+FFLAGS = -DFFTW3 -DINTGETARG -DINTFLUSH -O2
+LIBS = -llapack -lblas -lfftw3
+OPTFLAGS = 
+DEBUGFLAGS = -g

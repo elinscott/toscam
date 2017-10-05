@@ -1,0 +1,11 @@
+F90        =  mpif90  
+
+CUDA       = -I/usr/local/cuda/include/ -L/Users/cweber/MYLIBRARY/LIB_GPU_NUMERICS_MAGMA/lib  -L/usr/local/cuda/lib -L/Users/cweber/MYLIBRARY/LIB_GPU_NUMERICS  -L/Users/cweber/MYLIBRARY/LIB_GPU_NUMERICS_MAGMA/lib  -I/Users/cweber/MYLIBRARY/LIB_GPU_NUMERICS_MAGMA/include -I/Users/cweber/MYLIBRARY/LIB_GPU_NUMERICS/MODFILES  -L/usr/local/cuda/lib -lgpu -lcudart -lcufft -lcublas -lcuda -lmagma -lmagmablas
+
+FFLAGS     = -fpp -DMPI -DFFTW3 -arch i386 -ip $(CUDA)   
+ 
+LIBS       = -L/opt/intel/composerxe/mkl/lib/ -lmkl_blas95 -lmkl_lapack95 -lmkl_intel -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -I/opt/intel/composerxe/mkl/include  -lpthread -L/opt/local/mpich2/lib/ -lmpichf90 -lfmpich -lmpich -lmpichcxx -I/opt/local/mpich2/include/ $(CUDA)  -cxxlib    
+
+OPTFLAGS   =  -fpp -DFFTW3 -DMPI -openmp -parallel -O3 -xHOST -no-prec-div -no-prec-sqrt $(CUDA)  -DGPU_SPEEDUP_MATMUL_R -DGPU_SPEEDUP_MATMUL -DGPU_SPEEDUP -DGPU_SPEEDUP_WRAPPER     
+
+DEBUGFLAGS = -traceback -fpe0 -g -O0 -heap-arrays -inline-debug-info -debug all -check all -zero -ftz -ftrapuv       

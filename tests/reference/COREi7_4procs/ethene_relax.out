@@ -1,0 +1,2292 @@
+ +---------------------------------------------------------------+
+ |                                                               |
+ |        ####### #     # ####### ####### ####### ######         |
+ |        #     # ##    # #          #    #       #     #        |
+ |        #     # # #   # #          #    #       #     #        |
+ |        #     # #  #  # #####      #    #####   ######         |
+ |        #     # #   # # #          #    #       #              |
+ |        #     # #    ## #          #    #       #              |
+ |        ####### #     # #######    #    ####### #              |
+ |                                                               |
+ |        Linear-Scaling Ab Initio Total Energy Program          |
+ |                                                               |
+ |          Release for academic collaborators of ODG            |
+ |                                              Version 3.0      |
+ |                                                               |
+ +---------------------------------------------------------------+
+ |                                                               |
+ |  Authors:                                                     |
+ |  Peter D. Haynes, Nicholas D. M. Hine, Arash. A. Mostofi,     |
+ |  Mike C. Payne and Chris-Kriton Skylaris                      |
+ |                                                               |
+ |  Contributors:                                                |
+ |  P. W. Avraam, S. J. Clark, O. Dieguez, S. M. M. Dubois,      |
+ |  J. Dziedzic, H. H. Helal, Q. O. Hill, D. D. O`Regan,         |
+ |  C. J. Pickard, M. I. J. Probert, L. Ratcliff, M. Robinson    |
+ |  and A. Ruiz Serrano                                          |
+ |                                                               |
+ |                                   Copyright (c) 2004-2011     |
+ |                                                               |
+ |  Please cite:                                                 |
+ |  "Introducing ONETEP: Linear-scaling density functional       |
+ |   simulations on parallel computers".                         |
+ |   C.-K. Skylaris, P. D. Haynes, A. A. Mostofi, M. C. Payne.   |
+ |   J. Chem. Phys. 122 084119 (2005).                           |
+ |                                                               |
+ |          in all publications arising from your use of ONETEP. |
+ |                                                               |
+ +---------------------------------------------------------------+
+ |                                                               |
+ |   ONETEP is based on developments described in the following  |
+ |   publications:                                               |
+ |                                                               |
+ |  "Nonorthogonal generalized Wannier function pseudopotential  |
+ |   plane-wave method".                                         |
+ |   C.-K. Skylaris, A. A. Mostofi, P. D. Haynes, O. Dieguez,    |
+ |   M. C. Payne.                                                |
+ |   Phys. Rev. B 66 035119 (2002).                              |
+ |                                                               |
+ |  "Preconditioned iterative minimization for linear-scaling    |
+ |   electronic structure calculations".                         |
+ |   A. A. Mostofi, P. D. Haynes, C.-K. Skylaris, M. C. Payne.   |
+ |   J. Chem. Phys. 119(17), pp.8842-8848 (2003).                |
+ |                                                               |
+ |  "Total-energy calculations on a real space grid with         |
+ |   localized functions and a plane-wave basis".                |
+ |   A. A. Mostofi, C.-K. Skylaris, P. D. Haynes, M. C. Payne.   |
+ |   Comput. Phys. Commun. 147, pp.788-802 (2002).               |
+ |                                                               |
+ |  "Accurate kinetic energy evaluation in electronic structure  |
+ |   calculations with localized functions on real space grids"  |
+ |   C.-K. Skylaris, A. A. Mostofi, P. D. Haynes, C. J. Pickard, |
+ |   M. C. Payne.                                                |
+ |   Comput. Phys. Commun. 140, pp.315-322 (2001).               |
+ |                                                               |
+ +---------------------------------------------------------------+
+
+Job started: 27-05-2011 23:12 (+0100)
+
+Running on     4 processors.
+
+Reading parameters from file "ethene_relax.dat" ...... done
+Reading geometry and species blocks from file "ethene_relax.dat" ...
+  <species_atomic_set> block not found: NGWF initialisation set to AUTO
+... done
+-------------------------------------------------------------------------------
+---------------------------- RUN-TIME PARAMETERS ------------------------------
+-------------------------------------------------------------------------------
+task                      : GEOMETRYOPTIMIZATION *! Type of calculation (String 
+cutoffenergy              : 20.2119468234927      hartree *! Plane wave kinetic 
+kernelcutoff              : 1000.00000000000 *! Density kernel radius in Bohr ( 
+xcfunctional              : LDA *! Exchange-correlation functional (String)     
+libxcxfuncid              : 0 *! Functional identifier for which exchange funct 
+libxccfuncid              : 0 *! Functional identifier for which correlation fu 
+charge                    : 0.000000000000000E+000 *! The total charge of the s 
+spin                      : 0 *! Total spin of system (Integer)                 
+spinpolarized             : F *! Switch for spin polarization (Boolean)         
+spinpolarised             : F *! Switch for spin polarisation (Boolean)         
+constantefield            : 0.0 0.0 0.0 *! Cartesian coordinates of constant el 
+fftboxpref                : 0 0 0 *! Preferred FFT box dimensions (String)      
+ppdnpoints                : 0 0 0 *! PPD edge length in grid points for each la 
+psincspacing              : 0.0 0.0 0.0 *! PSINC grid spacing in atomic units ( 
+oldinput                  : F *! Read old-format input file (Boolean)           
+develcode                 : *! For development code only (String)               
+nnho                      : F *! Initialise NGWFs to nonorthogonal natural hybr 
+ngwfhalo                  : -1.00000000000000 *! Halo extension to NGWF radii ( 
+nonscforces               : F *! Include non self-consistent forces due to NGWF 
+maxitpalsermano           : 50 *! Maximum number of iterations for Palser-Manol 
+maxitpen                  : 3 *! Max number of penalty functional iterations (I 
+penparam                  : 4.00000000000000 *! Penalty functional parameter (D 
+minitlnv                  : 3 *! Min number of LNV iterations (Integer)         
+maxitlnv                  : 8 *! Max number of LNV iterations (Integer)         
+maxitlnvcoarse            : 0 *! Max number of low-accuracy LNV iterations (Int 
+lnvthresholdorig          : 1.000000000000000E-009 *! LNV convergence threshold 
+lnvcgtype                 : LNV_FLETCHER *! Type of CG coefficient for LNV dens 
+lnvcgmaxstep              : 3.00000000000000 *! Maximum length of trial step fo 
+exactlnv                  : T *! Use original LNV algorithm (Boolean)           
+oldlnv                    : F *! Use LNV algorithm backwards compatible pre Dec 
+lnvchecktrialsteps        : F *! Check stability of kernel at each trial step d 
+kerfix                    : 1 *! Density kernel fixing approach (Integer)       
+maxitkernelfix            : 3 *! Maximum # iterations of Penalty Functional ide 
+initialdensrealspace      : F *! Construct initial density in real space from a 
+kerneldiis                : F *! Use kernel DIIS in the inner loop (Boolean)    
+kerneldiistype            : P *! Density mixing method (String)                 
+kerneldiismax             : 10 *! Max number of kernels saved during kernel DII 
+kerneldiismaxit           : 25 *! Max number of kernel DIIS iterations (Integer 
+kerneldiisthres           : 1.000000000000000E-009 *! Density mixing convergenc 
+kerneldiisliter           : 5 *! Number of linear mixing iterations (Integer)   
+kerneldiiscin             : 0.900000000000000 *! Coefficient for the input kern 
+kerneldiiscriteria        : 1000 *! Density mixing convergence criteria (String 
+maxitngwfcg               : 60 *! Max number of NGWF conjugate gradients (CG) i 
+ngwfcgtype                : NGWF_FLETCHER *! Type of CG coefficient for NGWF op 
+ngwfcgmaxstep             : -8.00000000000000 *! Maximum length of trial step f 
+eleccgmax                 : 5 *! Number of NGWF iterations to reset CG (Integer 
+precondscheme             : TETER *! Recip-space preconditioning scheme (String 
+kzero                     : 3.00000000000000 *! KE preconditioning parameter (D 
+rprecond                  : 2.00000000000000 *! Radial cut-off for real-space p 
+precondrecip              : T *! Recip-space KE preconditioning (Boolean)       
+precondreal               : F *! Real-space KE preconditioning (Boolean)        
+smoothscheme              : NONE *! Smoothing scheme for the NGWF gradients at  
+rsmooth                   : 1.50000000000000      bohr *! Radius of the unshave 
+ksmooth                   : 5.00000000000000 *! Characteristic wavelength of th 
+occmix                    : 0.250000000000000 *! Mix fraction of occupancy prec 
+kernelupdate              : F *! Update density kernel during NGWF line search  
+kernelchristoffelupdate   : F *! Update density kernel during NGWF line search  
+maxithotelling            : 50 *! Number of Hotelling iteration per NGWF change 
+maxresidhotelling         : 1.000000000000000E-012 *! Max allowed value in Hote 
+maxitngwfdiis             : 0 *! Max number of NGWF DIIS steps (Integer)        
+ngwfdiissize              : 4 *! Max size of the DIIS iterative subspace (Integ 
+ngwfdiisreset             : 8 *! Max number of iteration for the resetting of D 
+ngwfdiismaxstep           : 2.00000000000000 *! Max length of trial step for NG 
+ngwfthresholdorig         : 1.000000000000000E-005 *! NGWF convergence threshol 
+elecenergytol             : -1.000000000000000E-003 hartree *! Tolerance on tot 
+elecforcetol              : -1.000000000000000E-003 ha/bohr *! Tolerance on max 
+ngwfmaxgrad               : -2.000000000000000E-005 *! Maximum permissible valu 
+deltaeconv                : T *! Use consecutive energy gains as a criterion fo 
+locpotintbatchsize        : 10 *! Size of NGWF in fftbox batch for locpot integ 
+kineticintbatchsize       : 10 *! Size of NGWF in fftbox batch for kinetic inte 
+densitybatchsize          : 10 *! Size of NGWF in fftbox batch for charge densi 
+ngwfgradbatchsize         : 10 *! Size of NGWF in fftbox batch for NGWF gradien 
+densethreshold            : 0.400000000000000 *! Threshold for matrix segment f 
+commsgroupsize            : 4 *! Number of nodes in a group (determines comms e 
+ovlpfornonlocal           : F *! Overlap sparsity for nonlocal (Boolean)        
+usespacefillingcurve      : T *! Re-arrange atoms according to space-filling cu 
+corehamdenskernguess      : T *! Initial guess for density kernel from core Ham 
+checkatoms                : T *! Check atoms on top of each other (Boolean)     
+locpotscheme              : FULL *! Scheme for evaluating local potential matri 
+smoothprojectors          : -0.400000000000000 *! Halfwidth of Gaussian filter  
+smoothlocpspot            : -0.400000000000000 *! Halfwidth of Gaussian filter  
+oddpsincgrid              : F *! Force odd number of points in simcell psinc gr 
+evenpsincgrid             : F *! Force even number of points in simcell psinc g 
+realspaceprojectors       : F *! Whether to evaluate and store projectors in re 
+outputdetail              : NORMAL *! Level of output detail (String)           
+pawoutputdetail           : DEFAULT *! Level of output detail for PAW: BRIEF, N 
+timingslevel              : 0 *! Level of timings output: 0(none) 1(nodes summa 
+writeparams               : T *! Output runtime parameters at startup (Boolean) 
+writeforces               : T *! Write ionic forces (Boolean)                   
+writepositions            : T *! Write ionic positions each geometry or MD step 
+writexyz                  : F *! Output coordinates in .xyz file (Boolean)      
+printqc                   : T *! Print Quality Control information (Boolean)    
+cubeformat                : F *! Allow .cube format for plot outputs (Boolean)  
+dxformat                  : F *! Allow .dx format for plot outputs (Boolean)    
+dxformatcoarse            : F *! Output only points on the coarse grid (Boolean 
+dxformatdigits            : 7 *! Number of significant digits in .dx output (In 
+grdformat                 : T *! Allow .grd format for plot outputs (Boolean)   
+writedensityplot          : T *! Write the charge density in plotting format (B 
+writengwfplot             : F *! Write NGWFs in plotting format (Boolean)       
+writengwfgradplot         : F *! Write NGWF Gradients in plotting format (Boole 
+writengwfradial           : F *! Write NGWFs radial distributions (Boolean)     
+writengwfgradradial       : F *! Write NGWFs gradients radial distributions (Bo 
+writeradialstep           : 5.000000000000000E-003 bohr *! Define the grid step 
+writeradialsmear          : 1.000000000000000E-002 bohr *! Define the gaussian  
+readdenskern              : F *! Read density kernel restart information (Boole 
+writedenskern             : T *! Write density kernel restart information (Bool 
+readtightboxngwfs         : F *! Read in universal tightbox NGWFs restart infor 
+writetightboxngwfs        : T *! Write in universal tightbox NGWFs restart info 
+writeconvergeddkngwfs     : F *! Only write Density Kernel and NGWFs upon conve 
+readswngwfs               : F *! Read NGWFs restart information in spherical wa 
+writeswngwfs              : F *! Write NGWFs restart information in spherical w 
+writemaxl                 : 3 *! Maximum angular momentum number when writing i 
+readmaxl                  : 3 *! Maximum angular momentum number when reading i 
+extransw                  : 0 *! Maximum number of zeros of the sph Bessel func 
+paw                       : F *! Uses a PAW construction to find correct core d 
+finegridscale             : 2.00000000000000 *! Ratio of size of fine grid to s 
+dblgridscale              : 2.00000000000000 *! Ratio of charge density / poten 
+augfuncsrecip             : T *! Construct Augmentation functions in recip spac 
+dispersion                : 0 *! Select dispersion correction (Integer)         
+vdwdcoeff                 : -1.00000000000000 *! Replacement VDW damping coeffi 
+hubbardmaxiter            : 0 *! Maximum number of DFT+U projector optimisation 
+hubbardenergytol          : 1.000000000000000E-008 hartree *! Energy tolerance  
+hubbardconvwin            : 2 *! Energy convergence window when using DFT+U pro 
+hubbardprojmixing         : 0.000000000000000E+000 *! Proportion of old Hubbard 
+hubbardfunctional         : 1 *! DFT+U energy functional to use (Integer)       
+hubbardtensorcorr         : 1 *! DFT+U projector tensorial correction to use (I 
+hubbardngwfspinthreshold  : 2.000000000000000E-005 *! NGWF RMS  gradient thresh 
+coulombcutoffradius       : 0.000000000000000E+000 *! Radius of sphere or cylin 
+coulombcutofflength       : 0.000000000000000E+000 *! Length of cylinder or wid 
+coulombcutofftype         : NONE *! Type of cutoff coulomb interaction: NONE, S 
+coulombcutoffwriteint     : F *! Write real-space cutoff Coulomb interaction sc 
+pbccorrectioncutoff       : 0.000000000000000E+000 *! alpha*L cutoff parameter  
+doproperties              : F *! Allow calculation of properties (Boolean)      
+numeigenvalues            : 10 *! Number of energy and occupancy eigenvalues to 
+homodensplot              : -1 *! Number of squared MOs to plot from HOMO and l 
+lumodensplot              : -1 *! Number of squared MOs to plot from LUMO and h 
+homoplot                  : 5 *! Number of MOs to plot from HOMO and lower (Int 
+lumoplot                  : 5 *! Number of MOs to plot from LUMO and higher (In 
+dossmear                  : 3.674932438755288E-003 hartree *! Half width of sme 
+ldossmear                 : 3.674932438755288E-003 hartree *! Lorentzian broade 
+popncalculate             : F *! Allow population analysis (Boolean)            
+popnbondcutoff            : 5.66917840375065      bohr *! Bond length cutoff fo 
+ngwfanalysis              : F *! Perform NGWF analysis (Boolean)                
+polarisationcalculate     : F *! Allow calculation of polarisation (Boolean)    
+spreadcalculate           : F *! Calculate spread of NGWFs (Boolean)            
+geommodulusest            : 1.700000000000000E-002 ha/bohr**3 *! The estimated  
+geomfrequencyest          : 7.600000000000000E-003 hartree *! The estimated ave 
+geomenergytol             : 1.000000000000000E-006 hartree *! Geometry optimiza 
+geomforcetol              : 2.000000000000000E-003 ha/bohr *! Geometry optimiza 
+geomdisptol               : 5.000000000000000E-003 bohr *! Geometry optimizatio 
+geommaxiter               : 2 *! Maximum number of geometry optimization iterat 
+geomconvergencewin        : 2 *! Geometry optimization convergence tolerance wi 
+geomcontinuation          : F *! Read information for continuation of a previou 
+geombackupiter            : 1 *! Number of geometry optimisation iterations bet 
+geomresetdkngwfsiter      : 6 *! Number of geom iterations between resets of ke 
+geomreusedkngwfs          : T *! Re-use density kernel and NGWFs during geometr 
+geomprintinvhessian       : F *! Write inverse Hessian to standard output (Bool 
+geommethod                : CARTESIAN *! Method for geometry optimization (Stri 
+tssearchmethod            : LSTQST *! Specifies method to be used for TS search 
+tssearchlstqstprotocol    : LSTMAXIMUM *! Specifies LSTQST protocol (String)    
+tssearchqstmaxiter        : 5 *! Specifies maximum number of QST steps (Integer 
+tssearchcgmaxiter         : 20 *! Specifies maximum number of CG steps (Integer 
+tssearchforcetol          : 5.000000000000000E-003 ha/bohr *! Force tolerance f 
+tssearchdisptol           : 1.000000000000000E-002 bohr *! Displacement toleran 
+mddeltat                  : 40.0000000000000      aut *! Molecular dynamics tim 
+mdnumiter                 : 100 *! Maximum number of molecular dynamics iterati 
+mdtemperature             : 9.500000000000000E-004 hartree *! Temperature for m 
+mdalgorithm               : LEAPFROGVERLET *! Integration algorithm for molecul 
+mdthermostat              : NONE *! Thermostat for molecular dynamics (String)  
+mdcollisionfrequency      : 0.152000000000000      hartree *! Collision frequen 
+mixdenskern               : 0 *! Number of coefficients used to build new guess 
+mixngwfs                  : 0 *! Number of coefficients used to build new guess 
+condreaddenskern          : F *! Read in conduction density kernel (Boolean)    
+condreadtightboxngwfs     : F *! Read in universal tightbox conduction NGWFs (B 
+condfixedshift            : F *! Fixed projected conduction Hamiltonian shift ( 
+condcalcmaxeigen          : T *! Calculate maximum conduction Hamiltonian eigen 
+condnumstates             : 0 *! Number of conduction states to be optimised fo 
+condkernelcutoff          : 1000.00000000000 *! Conduction density kernel radiu 
+condinitshift             : 0.000000000000000E+000 *! Initial shifting factor f 
+condshiftbuffer           : 0.100000000000000 *! Additional buffer for updating 
+condnumextrastates        : 0 *! Number of extra conduction states for initial  
+condnumextraits           : 0 *! Number of NGWF iterations with extra conductio 
+condplotjointorbitals     : T *! Plot orbitals in the joint basis following a c 
+condplotvcorbitals        : T *! Plot orbitals in the val and cond NGWF basis s 
+condcalcopticalspectra    : F *! Calculate matrix elements for optical absorpti 
+condspeccalcmommatels     : T *! Calculate momentum matrix elements (default tr 
+condspeccalcnonloccomm    : T *! Calculate nonlocal commutator for momentum mat 
+condspeccontderiv         : T *! Calculate non-local commuator using continuous 
+condspecnonloccommshift   : 1.000000000000000E-004 *! Finite difference shift f 
+bskpointpathspacing       : 0.188972700000000      1/bohr *! K-point spacing al 
+bsnumeigenvalues          : -1 *! Num of energy and occ. eigenvalues to print b 
+bsunfold                  : 0 0 0 *! Number of times to unfold Brillouin zone i 
+bsmethod                  : TB *! Method to use: 'KP' or 'TB' (String)          
+dotddft                   : F *! Allow Time-Dependent DFT calculation (Boolean) 
+tddftmaximumenergy        : 1.00000000000000      hartree *! Desired maximum of 
+tddftresolution           : 1.000000000000000E-003 hartree *! Desired resolutio 
+tddftpropagationmethod    : CRANKNICHOLSON *! Method used to integrate von Neum 
+tddftsparsitylevel        : 0 *! Matrix sparsity when computing propagators e.g 
+tddfttammdancoff          : F *! Invoke Tamm-Dancoff decoupling approximation ( 
+tddftdipolekickstrength   : 0.0 0.0 0.0 *! Maximum allowed phase shift in TDDFT 
+tddftxcfunctional         : LDA *! Exchange-correlation functional for TDDFT (S 
+tddfthamiltonianmixing    : 0 *! Order of polynomial extrapolation to H(t + hal 
+tddftdamping              : 0.000000000000000E+000 hartree *! Energy smearing w 
+tddftenforcedidempotency  : F *! Project out at each timestep that part of chan 
+tddftmaxithotelling       : 50 *! Number of Hotelling iteration per propagation 
+tddftmaxresidhotelling    : 1.000000000000000E-018 *! Max allowed value in Hote 
+tddftinvoverlapexact      : T *! Renew inverse overlap with O N^3 algorithm bef 
+isimplicitsolvent         : F *! Use implicit solvent? (Boolean)                
+issmearedionrep           : F *! Implicit solvent: use smeared ions for electro 
+isincludecavitation       : F *! Implicit solvent: include cavitation energy (B 
+isdensitythreshold        : 7.800000000000000E-004 *! Implicit solvent: rho_0 p 
+issolvationbeta           : 1.30000000000000 *! Implicit solvent: beta paramete 
+isbulkpermittivity        : 1.00000000000000 *! Implicit solvent: eps_inf param 
+ismultigriddefecterrortol : 1.000000000000000E-002 *! Implicit solvent: stop cr 
+ismultigriderrortol       : 1.000000000000000E-005 *! Implicit solvent: stop cr 
+issmearedionwidth         : 0.800000000000000 *! Implicit solvent: Width of Gau 
+issurfacethickness        : 2.000000000000000E-004 *! Implicit solvent: thickne 
+issolventsurfacetension   : 4.762400000000000E-005 ha/bohr**2 *! Implicit solve 
+ismultigridmaxiters       : 100 *! Implicit solvent: max number of iterations i 
+ismultigridnlevels        : 4 *! Implicit solvent: number of levels in multigri 
+isdiscretizationorder     : 8 *! Implicit solvent: discretization order (2nd, 4 
+isbccoarseness            : 5 *! Implicit solvent: controls boundary condition  
+isbcsurfacecoarseness     : 1 *! Implicit solvent: controls boundary condition  
+ischecksolvenergygrad     : F *! Implicit solvent: sanity check the energy grad 
+issolvationmethod         : DIRECT *! Implicit solvent: direct or corrective me 
+isdielectricmodel         : FIX_INITIAL *! Implicit solvent: how the cavity is  
+isdielectricfunction      : FGF *! Implicit solvent: how the cavity is determin 
+issolvationoutputdetail   : NONE *! Implicit solvent: controls extra output (St 
+openbcionion              : F *! Force open BCs in ion-ion energy (Boolean)     
+openbchartree             : F *! Force open BCs in Hartree potential (Boolean)  
+openbcpspot               : F *! Force open BCs in local pseudopotential (Boole 
+openbcpspotfinetunenptsx  : 100000 *! Open BCs in local pseudo, npts_x paramete 
+openbcpspotfinetunealpha  : 0.300000000000000 *! Open BCs in local pseudo, alph 
+openbcpspotfinetunef      : -1 *! Open BCs in local pseudo, fineness parameter  
+%block positionsabs       : *! Cartesian positions for each atom (Block)        
+C     21.131469   19.862216   20.048416                                         
+H     22.316684   21.381117   21.086741                                         
+H     22.305600   18.474510   19.097577                                         
+C     18.868395   20.137541   19.951432                                         
+H     17.694385   21.525477   20.902418                                         
+H     17.683467   18.617139   18.913416                                         
+%endblock positionsabs    : *! Cartesian positions for each atom (Block)        
+%block latticecart        : *! The simulation cell lattice vectors (Block)      
+40.000    0.000    0.000                                                        
+0.000   40.000    0.000                                                         
+0.000    0.000   40.000                                                         
+%endblock latticecart     : *! The simulation cell lattice vectors (Block)      
+%block species            : *! Species information (symbol, atomic number, numb 
+H     H   1  1  5.50                                                            
+C     C   6  4  6.00                                                            
+%endblock species         : *! Species information (symbol, atomic number, numb 
+%block speciespot         : *! Pseudopotential name for each species (Block)    
+H     "../../pseudo/hydrogen.recpot"                                            
+C     "../../pseudo/carbon.recpot"                                              
+%endblock speciespot      : *! Pseudopotential name for each species (Block)    
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+
+================================================================================
+<<<<<<<<<<<<<<<<<<<< Starting ONETEP Geometry Optimisation >>>>>>>>>>>>>>>>>>>>>
+================================================================================
+
+ Geometry Optimisation: output file is "ethene_relax.geom"
+ 
+ 
+                           -------------------------------
+                                     Cell Contents
+                           -------------------------------
+ 
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            x  Element    Atom      Absolute co-ordinates of atoms     x
+            x            Number        x           y           z       x
+            x----------------------------------------------------------x
+            x    C         1       21.131469   19.862216   20.048416   x
+            x    H         2       22.316684   21.381117   21.086741   x
+            x    H         3       22.305600   18.474510   19.097577   x
+            x    C         4       18.868395   20.137541   19.951432   x
+            x    H         5       17.694385   21.525477   20.902418   x
+            x    H         6       17.683467   18.617139   18.913416   x
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ 
+WARNING in pseudopotentials_read_species: string "GGA" found in pseudopotential
+file "../../pseudo/carbon.recpot", yet xc_functional = "LDA".
+ 
+<<<<<<<<<<<<<<<<<<<<<<<<< Pseudopotential information >>>>>>>>>>>>>>>>>>>>>>>>>
+File: ../../pseudo/carbon.recpot [ 2001 points up to Gmax=  52.9 (1/bohr)]
+  Atomic number:  6;  ionic charge:  4.000000
+    Shell 1: l = 0; rc = 1.48 bohr
+File: ../../pseudo/hydrogen.recpot [ 2001 points up to Gmax=  52.9 (1/bohr)]
+  Atomic number:  1;  ionic charge:  1.000000
+    Local potential
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+------------------------- Atom counting information ---------------------------
+Symbol    Natoms    Nngwfs    Nprojs
+  C          2         8         2
+  H          4         4         0
+.......   ......    ......    ......
+Totals:      6        12         2
+-------------------------------------------------------------------------------
+ 
+Determining parallel strategy ...... done
+
+Calculating Ewald energy ...           14.949500 Hartree
+
+Basis initialisation ...... done
+
+============================== PSINC grid sizes ================================
+                      Simulation cell:   65 x  65 x  65
+                              FFT-box:   63 x  63 x  63
+                                  PPD:    5 x   5 x   5
+================================================================================
+
+********************** Fourier parallelisation information *********************
+       Coarse grid (whole simulation cell) dimensions:     65    65    65
+          Real-space ('12') slabs/node (min max mean):     16    17    16
+         Recip-space ('23') slabs/node (min max mean):      8     9     8
+********************************************************************************
+
+********************** Fourier parallelisation information *********************
+       Double grid (whole simulation cell) dimensions:    130   130   130
+          Real-space ('12') slabs/node (min max mean):     32    33    32
+         Recip-space ('23') slabs/node (min max mean):     16    17    16
+********************************************************************************
+
+=========================== Sparse matrix information ==========================
+                        Overlap matrix filling: 100.00%
+                        Density kernel filling: 100.00%
+              NGWF-Proj overlap matrix filling: 100.00%
+                    Hamiltonian matrix filling: 100.00%
+                  NGWF diagonal matrix filling:  25.00%
+                             KS matrix filling: 100.00% 
+                           KSKS matrix filling: 100.00% 
+================================================================================
+
+Sparse matrix initialisation ... done
+NGWF initialisation ...... done
+
+Up spin density kernel initialisation ...... done
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+................................................................................
+<<<<<<<<<<<<<<<< Penalty functional density kernel optimisation >>>>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |   rms grad  |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -12.40454587837116 0.20945965084 0.05638310292 0.0311  0.000   12.00000000
+ 2    -12.60087397225035 0.15697048088 0.05661724061 2.8962 -0.727   12.00000000
+WARNING: internal_polak_cg_coeff =  5.63878
+WARNING: setting internal_polak_cg_coeff to zero
+ 3    -12.83841829180094 0.14906532570 0.03857793784 0.0359  0.000   12.00000000
+
+======================== Penalty functional minimisation =======================
+   Final total energy     :     -12.958767834163
+   Final penalty energy   :       0.183856003104
+   RMS occupancy error    :       0.061890
+   Occupancy bounds       : [-0.082, 1.071]
+================================================================================
+
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+################################################################################
+########################### NGWF CG iteration  001 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -12.48355494633831 0.00000000000 0.03111135820 0.4231  0.000   12.00000000
+ 2    -12.51500937498011 0.02967826117 0.00160441715 0.5833  0.003   12.00000000
+ 3    -12.51512638319835 0.00221672000 0.00039598286 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00911511751684
+Trial step length           =               0.122474
+Gradient along search dir.  =         -3.57441558858
+Functional at step 0        =     -12.51512638319835
+Functional at step 1        =     -12.90841732025916
+Functional predicted        =     -13.59218585534281
+Selected quadratic step     =               0.602649
+Conjugate gradients coeff.  =               0.000000
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  002 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.53562646591875 0.00000000000 0.01791691791 0.4901  0.000   12.00000000
+ 2    -13.54605578361854 0.02048106799 0.00362414082 0.5919  0.063   12.00000000
+ 3    -13.54685642087356 0.00605223943 0.00076002226 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00330982133058
+Trial step length           =               0.271678
+Gradient along search dir.  =         -0.44434915010
+Functional at step 0        =     -13.54685642087356
+Functional at step 1        =     -13.62973929712145
+Functional predicted        =     -13.64314616624591
+Selected quadratic step     =               0.433397
+Conjugate gradients coeff.  =               0.131851
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  003 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.64365988456044 0.00000000000 0.00717372295 0.4328  0.000   12.00000000
+ 2    -13.64507946138609 0.00584596662 0.00052774166 0.5735  0.008   12.00000000
+ 3    -13.64509361207196 0.00080220948 0.00017155303 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00114625688511
+Trial step length           =               0.343139
+Gradient along search dir.  =         -0.05787624360
+Functional at step 0        =     -13.64509361207196
+Functional at step 1        =     -13.65828453768211
+Functional predicted        =     -13.65987929028232
+Selected quadratic step     =               0.510941
+Conjugate gradients coeff.  =               0.119937
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  004 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.65988026138889 0.00000000000 0.00243903984 0.5428  0.000   12.00000000
+ 2    -13.66015253749369 0.00321994430 0.00070324344 0.6062  0.049   12.00000000
+ 3    -13.66016744816497 0.00061228444 0.00012799606 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00049462853073
+Trial step length           =               0.418717
+Gradient along search dir.  =         -0.01072309785
+Functional at step 0        =     -13.66016744816497
+Functional at step 1        =     -13.66291535166515
+Functional predicted        =     -13.66306054925117
+Selected quadratic step     =               0.539602
+Conjugate gradients coeff.  =               0.186206
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  005 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.66305899005697 0.00000000000 0.00096509358 0.5109  0.000   12.00000000
+ 2    -13.66309772851949 0.00115543179 0.00027342294 0.6703  0.056   12.00000000
+ 3    -13.66310053861612 0.00030940489 0.00004698723 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00025048501686
+Trial step length           =               0.475332
+Gradient along search dir.  =         -0.00273903973
+Functional at step 0        =     -13.66310053861612
+Functional at step 1        =     -13.66388578822436
+Functional predicted        =     -13.66392068107913
+Selected quadratic step     =               0.598854
+Conjugate gradients coeff.  =               0.256451
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  006 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.66391959202561 0.00000000000 0.00042324948 0.5175  0.000   12.00000000
+ 2    -13.66392851518652 0.00058885505 0.00014658806 0.5191  0.073   12.00000000
+ 3    -13.66392934851582 0.00012601802 0.00004589828 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00015141524719
+Trial step length           =               0.533530
+Gradient along search dir.  =         -0.00099837037
+Functional at step 0        =     -13.66392934851582
+Functional at step 1        =     -13.66424777567194
+Functional predicted        =     -13.66426044444723
+Selected quadratic step     =               0.663273
+Conjugate gradients coeff.  =               0.365406
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  007 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.66425804621238 0.00000000000 0.00032058698 0.7033  0.000   12.00000000
+ 2    -13.66426357848206 0.00048744342 0.00010940944 0.4022  0.099   12.00000000
+ 3    -13.66426398696232 0.00008426972 0.00003750421 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00009774348750
+Trial step length           =               0.594875
+Gradient along search dir.  =         -0.00041101357
+Functional at step 0        =     -13.66426398696232
+Functional at step 1        =     -13.66432782199239
+Functional predicted        =     -13.66434670984043
+Selected quadratic step     =               0.402531
+Conjugate gradients coeff.  =               0.000000
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  008 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.66434621958402 0.00000000000 0.00011983434 0.4113  0.000   12.00000000
+ 2    -13.66434648123029 0.00007698646 0.00005434136 0.5706  0.233   12.00000000
+ 3    -13.66434663790846 0.00007879022 0.00001534128 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00003475179204
+Trial step length           =               0.489342
+Gradient along search dir.  =         -0.00005200587
+Functional at step 0        =     -13.66434663790846
+Functional at step 1        =     -13.66435753338462
+Functional predicted        =     -13.66435776321101
+Selected quadratic step     =               0.427848
+Conjugate gradients coeff.  =               0.126409
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  009 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.66435717951991 0.00000000000 0.00014238893 0.4303  0.000   12.00000000
+ 2    -13.66435759561657 0.00009500158 0.00005011590 0.1527  0.143   12.00000000
+ 3    -13.66435765188201 0.00001805829 0.00003667891 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+WARNING: slope along search direction is positive:    0.200057E-04
+         Resetting conjugate gradients!
+WARNING: slope along search direction is still positive.
+         Reversing search direction!!
+RMS gradient                =       0.00002177757831
+Trial step length           =               0.457563
+Gradient along search dir.  =         -0.00002040326
+Functional at step 0        =     -13.66435765188201
+Functional at step 1        =     -13.66436330549466
+Rejected quadratic step     =               0.580053
+Functional at new step 1    =     -13.66436370377100
+Functional predicted        =     -13.66436370689433
+Selected quadratic step     =               0.593534
+Conjugate gradients coeff.  =              -0.392703
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  010 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.66436283314774 0.00000000000 0.00014101983 0.4501  0.000   12.00000000
+ 2    -13.66436367121903 0.00010597767 0.00003133344 0.5879  0.059   12.00000000
+ 3    -13.66436371877476 0.00004300493 0.00000927057 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+WARNING: NGWF Fletcher-Reeves CG coeff too large ( -2.1456) - setting to zero
+RMS gradient                =       0.00003189953431
+Trial step length           =               0.521133
+Gradient along search dir.  =         -0.00004377732
+Functional at step 0        =     -13.66436371877476
+Functional at step 1        =     -13.66437472230606
+Functional predicted        =     -13.66437473608226
+Selected quadratic step     =               0.503334
+Conjugate gradients coeff.  =               0.000000
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  011 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.66437413032066 0.00000000000 0.00015555550 0.4066  0.000   12.00000000
+ 2    -13.66437463222737 0.00009961119 0.00005492020 0.1462  0.138   12.00000000
+ 3    -13.66437469404742 0.00001845815 0.00003989453 0.0487  0.550   12.00000000
+ 4    -13.66437471219110 0.00000684732 0.00003473298 0.0000  0.000   12.00000000
+Finished density kernel iterations (   4)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+WARNING: slope along search direction is positive:    0.438618E-04
+         Resetting conjugate gradients!
+WARNING: slope along search direction is still positive.
+         Reversing search direction!!
+RMS gradient                =       0.00003218549174
+Trial step length           =               0.512156
+Gradient along search dir.  =         -0.00004456571
+Functional at step 0        =     -13.66437471219110
+Functional at step 1        =     -13.66439268780983
+Rejected quadratic step     =               1.205384
+Functional at new step 1    =     -13.66440255990487
+Functional predicted        =     -13.66440259766011
+Selected quadratic step     =               1.251432
+Conjugate gradients coeff.  =              -1.018009
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  012 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.66439872265347 0.00000000000 0.00031473261 0.5766  0.000   12.00000000
+ 2    -13.66440220286589 0.00029327654 0.00006158333 0.6277  0.057   12.00000000
+ 3    -13.66440240373163 0.00009212714 0.00001343249 0.6672  0.033   12.00000000
+ 4    -13.66440241077222 0.00001573814 0.00000279334 0.6471  0.076   12.00000000
+ 5    -13.66440241128842 0.00000491142 0.00000092830 0.0000  0.000   12.00000000
+Finished density kernel iterations (   5)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00003990790043
+Trial step length           =               0.800580
+Gradient along search dir.  =         -0.00006805994
+Functional at step 0        =     -13.66440241128842
+Functional at step 1        =     -13.66425984014756
+Functional predicted        =     -13.66440617778172
+Selected quadratic step     =               0.110682
+Conjugate gradients coeff.  =              -1.537437
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  013 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.66440620350738 0.00000000000 0.00007895255 0.2837  0.000   12.00000000
+ 2    -13.66440635605471 0.00003518363 0.00004312436 0.0957  0.311   12.00000000
+ 3    -13.66440616151040 0.00001040441 0.00003348774 0.3133  0.619   12.00000000
+ 4    -13.66440620774741 0.00003863409 0.00000976940 0.4820  0.115   12.00000000
+ 5    -13.66440621146624 0.00001305865 0.00000523202 0.4267  0.219   12.00000000
+ 6    -13.66440621218624 0.00000472759 0.00000240359 0.0000  0.000   12.00000000
+Finished density kernel iterations (   6)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00001079256497
+Trial step length           =               0.297673
+Gradient along search dir.  =         -0.00000506425
+Functional at step 0        =     -13.66440621218624
+Functional at step 1        =     -13.66440123541398
+Functional predicted        =     -13.66440629980358
+Selected quadratic step     =               0.034602
+Conjugate gradients coeff.  =               0.073136
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  014 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.66440629285843 0.00000000000 0.00001080257 0.5911  0.000   12.00000000
+ 2    -13.66440629651969 0.00000945517 0.00000230427 0.6723  0.073   12.00000000
+ 3    -13.66440629682284 0.00000365576 0.00000054256 0.6485  0.042   12.00000000
+ 4    -13.66440629683588 0.00000067106 0.00000013293 0.5656  0.084   12.00000000
+ 5    -13.66440629683697 0.00000019793 0.00000004941 0.2350  0.101   12.00000000
+ 6    -13.66440629683668 0.00000002793 0.00000003517 0.0000  0.000   12.00000000
+Finished density kernel iterations (   6)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+           ........................................................
+           | *** NGWF optimisation converged ***                  |
+           | RMS NGWF gradient =    0.00000679149349              |
+           | Criteria satisfied:                                  |
+           | -> RMS NGWF gradient lower than set threshold.       |
+           ========================================================
+
+================================================================================
+           ---------------- ENERGY COMPONENTS (Eh) ----------------
+           | Kinetic                    :       10.45567054331478 |
+           | Pseudopotential (local)    :      -60.79375105008037 |
+           | Pseudopotential (non-local):        1.56773751816533 |
+           | Hartree                    :       24.95519023876338 |
+           | Exchange-correlation       :       -4.79875338643071 |
+           | Ewald                      :       14.94949983943089 |
+           | Total                      :      -13.66440629683668 |
+           --------------------------------------------------------
+           Integrated density           :       11.99999999999998
+================================================================================
+
+
+                    <<<<< CALCULATION SUMMARY >>>>>
+|ITER|    RMS GRADIENT   |     TOTAL ENERGY    |   step   |     Epredicted      
+   1     0.00911511751684    -12.51512638319835   0.602649    -13.59218585534281
+   2     0.00330982133058    -13.54685642087356   0.433397    -13.64314616624591
+   3     0.00114625688511    -13.64509361207196   0.510941    -13.65987929028232
+   4     0.00049462853073    -13.66016744816497   0.539602    -13.66306054925117
+   5     0.00025048501686    -13.66310053861612   0.598854    -13.66392068107913
+   6     0.00015141524719    -13.66392934851582   0.663273    -13.66426044444723
+   7     0.00009774348750    -13.66426398696232   0.402531    -13.66434670984043
+   8     0.00003475179204    -13.66434663790846   0.427848    -13.66435776321101
+   9     0.00002177757831    -13.66435765188201   0.593534    -13.66436370689433
+  10     0.00003189953431    -13.66436371877476   0.503334    -13.66437473608226
+  11     0.00003218549174    -13.66437471219110   1.251432    -13.66440259766011
+  12     0.00003990790043    -13.66440241128842   0.110682    -13.66440617778172
+  13     0.00001079256497    -13.66440621218624   0.034602    -13.66440629980358
+  14     0.00000679149349    -13.66440629683668  <-- CG                         
+ 
+<QC>        [NGWF iterations]:       14
+<QC>           [total_energy]:      -13.66440630
+<QC>                     [F0]:      -13.66440621
+<QC>                     [F1]:      -13.66440124
+<QC>                     [F2]:        0.00000000
+<QC>   [predicted_functional]:      -13.66440630
+<QC>           [rms_gradient]:        0.000006791493
+<QC>                 [G_init]:       -0.000005064251
+<QC>        [quadratic_coeff]:        0.034602
+<QC>            [cubic_coeff]:        0.000000
+<QC>               [cg_coeff]:        0.073136
+<QC>           [trial_length]:        0.297673
+
+********************* Unconstrained **********************
+************************* Forces *************************
+*                                                        *
+* Element  Atom         Cartesian components (Eh/a)      *
+* ------------------------------------------------------ *
+*                       x            y            z      *
+*                                                        *
+*    C       1      0.20625644   0.03117607   0.02632949 *
+*    H       2     -0.01152924  -0.02147983  -0.01169505 *
+*    H       3     -0.00222039  -0.00914123  -0.00352866 *
+*    C       4     -0.20631517  -0.03128494  -0.02634867 *
+*    H       5      0.00222901   0.00907592   0.00349102 *
+*    H       6      0.01157935   0.02165401   0.01175187 *
+*                                                        *
+**********************************************************
+* TOTAL:            0.00000000   0.00000000   0.00000000 *
+**********************************************************
+ <QC>    [total_force(1,1)]:        0.206256438597
+ <QC>    [total_force(1,2)]:       -0.011529240018
+ <QC>    [total_force(1,3)]:       -0.002220391363
+ <QC>    [total_force(1,4)]:       -0.206315165604
+ <QC>    [total_force(1,5)]:        0.002229012757
+ <QC>    [total_force(1,6)]:        0.011579345631
+ <QC>    [total_force(2,1)]:        0.031176068044
+ <QC>    [total_force(2,2)]:       -0.021479832496
+ <QC>    [total_force(2,3)]:       -0.009141231411
+ <QC>    [total_force(2,4)]:       -0.031284935730
+ <QC>    [total_force(2,5)]:        0.009075921380
+ <QC>    [total_force(2,6)]:        0.021654010214
+ <QC>    [total_force(3,1)]:        0.026329487949
+ <QC>    [total_force(3,2)]:       -0.011695051123
+ <QC>    [total_force(3,3)]:       -0.003528659384
+ <QC>    [total_force(3,4)]:       -0.026348666860
+ <QC>    [total_force(3,5)]:        0.003491022983
+ <QC>    [total_force(3,6)]:        0.011751866436
+ Geometry Optimisation: read_denskern parameter over-ridden to TRUE
+ Geometry Optimisation: read_tightbox_ngwfs parameter over-ridden to TRUE
+ 
+                           -------------------------------
+                                     Cell Contents
+                           -------------------------------
+ 
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            x  Element    Atom      Absolute co-ordinates of atoms     x
+            x            Number        x           y           z       x
+            x----------------------------------------------------------x
+            x    C         1       21.131469   19.862216   20.048416   x
+            x    H         2       22.316684   21.381117   21.086741   x
+            x    H         3       22.305600   18.474510   19.097577   x
+            x    C         4       18.868395   20.137541   19.951432   x
+            x    H         5       17.694385   21.525477   20.902418   x
+            x    H         6       17.683467   18.617139   18.913416   x
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ 
+
+ BFGS: continuation file name is "ethene_relax.continuation"
+ BFGS: finished iteration   0  with enthalpy= -1.366440629684E+001 Ha
+  
+ +-----------+-----------------+-----------------+------------+-----+ <-- BFGS
+ | Parameter |      value      |    tolerance    |    units   | OK? | <-- BFGS
+ +-----------+-----------------+-----------------+------------+-----+ <-- BFGS
+ |  dE/ion   |   0.000000E+000 |   1.000000E-006 |         Ha | No  | <-- BFGS
+ |  |F|max   |   2.103306E-001 |   2.000000E-003 |    Ha/Bohr | No  | <-- BFGS
+ |  |dR|max  |   0.000000E+000 |   5.000000E-003 |       Bohr | No  | <-- BFGS
+ +-----------+-----------------+-----------------+------------+-----+ <-- BFGS
+  
+
+================================================================================
+ Starting BFGS iteration    1 ...
+================================================================================
+
+ Writing continuation file "ethene_relax.continuation" ...done
+ Backing up NGWFs to file "ethene_relax.tightbox_ngwfs.bfgs_back" ... done
+ Backing up density kernel to file "ethene_relax.dkn.bfgs_back" ... done
+  
+ +------------+-------------+-------------+-----------------+ <-- min BFGS
+ |    Step    |   lambda    |   F.delta   |    enthalpy     | <-- min BFGS
+ +------------+-------------+-------------+-----------------+ <-- min BFGS
+ |  previous  |     0.00000 |    0.183061 |      -13.664406 | <-- min BFGS
+ +------------+-------------+-------------+-----------------+ <-- min BFGS
+  
+
+--------------------------------------------------------------------------------
+ BFGS: starting iteration   1 with trial guess (lambda=    1.000000)
+--------------------------------------------------------------------------------
+ 
+                           -------------------------------
+                                     Cell Contents
+                           -------------------------------
+ 
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            x  Element    Atom      Absolute co-ordinates of atoms     x
+            x            Number        x           y           z       x
+            x----------------------------------------------------------x
+            x    C         1       21.550446   19.925545   20.101900   x
+            x    H         2       22.293264   21.337484   21.062984   x
+            x    H         3       22.301090   18.455941   19.090409   x
+            x    C         4       18.449299   20.073991   19.897909   x
+            x    H         5       17.698913   21.543913   20.909509   x
+            x    H         6       17.706989   18.661126   18.937288   x
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ 
+WARNING in pseudopotentials_read_species: string "GGA" found in pseudopotential
+file "../../pseudo/carbon.recpot", yet xc_functional = "LDA".
+ 
+<<<<<<<<<<<<<<<<<<<<<<<<< Pseudopotential information >>>>>>>>>>>>>>>>>>>>>>>>>
+File: ../../pseudo/carbon.recpot [ 2001 points up to Gmax=  52.9 (1/bohr)]
+  Atomic number:  6;  ionic charge:  4.000000
+    Shell 1: l = 0; rc = 1.48 bohr
+File: ../../pseudo/hydrogen.recpot [ 2001 points up to Gmax=  52.9 (1/bohr)]
+  Atomic number:  1;  ionic charge:  1.000000
+    Local potential
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+------------------------- Atom counting information ---------------------------
+Symbol    Natoms    Nngwfs    Nprojs
+  C          2         8         2
+  H          4         4         0
+.......   ......    ......    ......
+Totals:      6        12         2
+-------------------------------------------------------------------------------
+ 
+Determining parallel strategy ...... done
+
+Calculating Ewald energy ...           13.617643 Hartree
+
+Basis initialisation ...... done
+
+============================== PSINC grid sizes ================================
+                      Simulation cell:   65 x  65 x  65
+                              FFT-box:   63 x  63 x  63
+                                  PPD:    5 x   5 x   5
+================================================================================
+
+********************** Fourier parallelisation information *********************
+       Coarse grid (whole simulation cell) dimensions:     65    65    65
+          Real-space ('12') slabs/node (min max mean):     16    17    16
+         Recip-space ('23') slabs/node (min max mean):      8     9     8
+********************************************************************************
+
+********************** Fourier parallelisation information *********************
+       Double grid (whole simulation cell) dimensions:    130   130   130
+          Real-space ('12') slabs/node (min max mean):     32    33    32
+         Recip-space ('23') slabs/node (min max mean):     16    17    16
+********************************************************************************
+
+=========================== Sparse matrix information ==========================
+                        Overlap matrix filling: 100.00%
+                        Density kernel filling: 100.00%
+              NGWF-Proj overlap matrix filling: 100.00%
+                    Hamiltonian matrix filling: 100.00%
+                  NGWF diagonal matrix filling:  25.00%
+                             KS matrix filling: 100.00% 
+                           KSKS matrix filling: 100.00% 
+================================================================================
+
+Sparse matrix initialisation ... done
+NGWF initialisation ...  
+Reading NGWFs from file "ethene_relax.tightbox_ngwfs" ...  done
+... done
+
+
+Reading density kernel from file "ethene_relax.dkn" ... done
+
+################################################################################
+########################### NGWF CG iteration  001 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.15492547144509 0.00000000000 0.03650603995 0.6783  0.000   12.00000000
+ 2    -13.19835130366389 0.03506978693 0.00821945674 0.7261  0.060   12.00000000
+ 3    -13.20118312120349 0.00986960514 0.00325621140 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00643274934357
+Trial step length           =               0.122474
+Gradient along search dir.  =         -1.78022034259
+Functional at step 0        =     -13.20118312120349
+Functional at step 1        =     -13.38510918427705
+Functional predicted        =     -13.54964416528141
+Selected quadratic step     =               0.391481
+Conjugate gradients coeff.  =               0.000000
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  002 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.55030179532431 0.00000000000 0.01688991215 0.5370  0.000   12.00000000
+ 2    -13.55926049045720 0.01535047671 0.00457353140 0.7099  0.083   12.00000000
+ 3    -13.56025465313025 0.00622431164 0.00124590868 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00147742914746
+Trial step length           =               0.218967
+Gradient along search dir.  =         -0.09635063076
+Functional at step 0        =     -13.56025465313025
+Functional at step 1        =     -13.57664370434970
+Functional predicted        =     -13.58388772305277
+Selected quadratic step     =               0.490564
+Conjugate gradients coeff.  =               0.052750
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  003 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.58388656384313 0.00000000000 0.00368554198 0.6007  0.000   12.00000000
+ 2    -13.58437950144365 0.00370140720 0.00107012146 0.7118  0.091   12.00000000
+ 3    -13.58443277717514 0.00145202553 0.00029104830 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00051755832063
+Trial step length           =               0.327746
+Gradient along search dir.  =         -0.01175946255
+Functional at step 0        =     -13.58443277717514
+Functional at step 1        =     -13.58721904882379
+Functional predicted        =     -13.58791039951327
+Selected quadratic step     =               0.591459
+Conjugate gradients coeff.  =               0.122717
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  004 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.58790371007446 0.00000000000 0.00167101339 0.5597  0.000   12.00000000
+ 2    -13.58798941932852 0.00134616465 0.00031391699 0.6708  0.055   12.00000000
+ 3    -13.58799508982436 0.00051382822 0.00008075987 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00028275806692
+Trial step length           =               0.440282
+Gradient along search dir.  =         -0.00352257898
+Functional at step 0        =     -13.58799508982436
+Functional at step 1        =     -13.58902974726571
+Functional predicted        =     -13.58915987529625
+Selected quadratic step     =               0.661325
+Conjugate gradients coeff.  =               0.298477
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  005 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.58915121814405 0.00000000000 0.00123160848 0.6131  0.000   12.00000000
+ 2    -13.58920600278798 0.00114877731 0.00025508427 0.6290  0.066   12.00000000
+ 3    -13.58920973766394 0.00042467146 0.00004087189 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00015019811677
+Trial step length           =               0.539601
+Gradient along search dir.  =         -0.00101241382
+Functional at step 0        =     -13.58920973766394
+Functional at step 1        =     -13.58944050038321
+Functional predicted        =     -13.58944619440790
+Selected quadratic step     =               0.467115
+Conjugate gradients coeff.  =               0.282162
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  006 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.58944454198349 0.00000000000 0.00054249910 0.7089  0.000   12.00000000
+ 2    -13.58945808806485 0.00066167442 0.00012125076 0.5621  0.058   12.00000000
+ 3    -13.58945871593112 0.00016152842 0.00001710324 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00007772696802
+Trial step length           =               0.502052
+Gradient along search dir.  =         -0.00027414357
+Functional at step 0        =     -13.58945871593112
+Functional at step 1        =     -13.58951383468287
+Functional predicted        =     -13.58951610874050
+Selected quadratic step     =               0.418706
+Conjugate gradients coeff.  =               0.267802
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  007 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.58951558930448 0.00000000000 0.00037376366 0.7267  0.000   12.00000000
+ 2    -13.58952216364839 0.00047251611 0.00008058273 0.5591  0.050   12.00000000
+ 3    -13.58952241725293 0.00010105291 0.00000997946 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00004991279568
+Trial step length           =               0.458489
+Gradient along search dir.  =         -0.00010717767
+Functional at step 0        =     -13.58952241725293
+Functional at step 1        =     -13.58955113262806
+Functional predicted        =     -13.58955197402681
+Selected quadratic step     =               0.551547
+Conjugate gradients coeff.  =               0.000000
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  008 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.58955165485216 0.00000000000 0.00030315648 0.6934  0.000   12.00000000
+ 2    -13.58955545333548 0.00033689713 0.00006464000 0.5911  0.059   12.00000000
+ 3    -13.58955564523256 0.00009261806 0.00000810248 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+WARNING: slope along search direction is positive:    0.392337E-04
+         Resetting conjugate gradients!
+WARNING: slope along search direction is still positive.
+         Reversing search direction!!
+RMS gradient                =       0.00002848959465
+Trial step length           =               0.502870
+Gradient along search dir.  =         -0.00003491830
+Functional at step 0        =     -13.58955564523256
+Functional at step 1        =     -13.58956045136082
+Functional predicted        =     -13.58956168941026
+Selected quadratic step     =               0.346190
+Conjugate gradients coeff.  =              -0.325798
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  009 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.58956153902155 0.00000000000 0.00018090471 0.6636  0.000   12.00000000
+ 2    -13.58956274617295 0.00017988063 0.00003620278 0.6101  0.060   12.00000000
+ 3    -13.58956281248106 0.00005585075 0.00000511647 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00001506966298
+Trial step length           =               0.417239
+Gradient along search dir.  =         -0.00000795171
+Functional at step 0        =     -13.58956281248106
+Functional at step 1        =     -13.58953356364742
+Functional predicted        =     -13.58956289698141
+Selected quadratic step     =               0.021253
+Conjugate gradients coeff.  =              -0.279792
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  010 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.58956289607947 0.00000000000 0.00001612755 0.6704  0.000   12.00000000
+ 2    -13.58956290459840 0.00001490797 0.00000292431 0.6268  0.046   12.00000000
+ 3    -13.58956290496787 0.00000414288 0.00000047698 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+           ........................................................
+           | *** NGWF optimisation converged ***                  |
+           | RMS NGWF gradient =    0.00000608310456              |
+           | Criteria satisfied:                                  |
+           | -> RMS NGWF gradient lower than set threshold.       |
+           ========================================================
+
+================================================================================
+           ---------------- ENERGY COMPONENTS (Eh) ----------------
+           | Kinetic                    :       10.15422743124734 |
+           | Pseudopotential (local)    :      -57.77017907806869 |
+           | Pseudopotential (non-local):        1.56047290940530 |
+           | Hartree                    :       23.57546550538925 |
+           | Exchange-correlation       :       -4.72719316054529 |
+           | Ewald                      :       13.61764348760423 |
+           | Total                      :      -13.58956290496786 |
+           --------------------------------------------------------
+           Integrated density           :       11.99999999999996
+================================================================================
+
+
+                    <<<<< CALCULATION SUMMARY >>>>>
+|ITER|    RMS GRADIENT   |     TOTAL ENERGY    |   step   |     Epredicted      
+   1     0.00643274934357    -13.20118312120349   0.391481    -13.54964416528141
+   2     0.00147742914746    -13.56025465313025   0.490564    -13.58388772305277
+   3     0.00051755832063    -13.58443277717514   0.591459    -13.58791039951327
+   4     0.00028275806692    -13.58799508982436   0.661325    -13.58915987529625
+   5     0.00015019811677    -13.58920973766394   0.467115    -13.58944619440790
+   6     0.00007772696802    -13.58945871593112   0.418706    -13.58951610874050
+   7     0.00004991279568    -13.58952241725293   0.551547    -13.58955197402681
+   8     0.00002848959465    -13.58955564523256   0.346190    -13.58956168941026
+   9     0.00001506966298    -13.58956281248106   0.021253    -13.58956289698141
+  10     0.00000608310456    -13.58956290496787  <-- CG                         
+ 
+<QC>        [NGWF iterations]:       10
+<QC>           [total_energy]:      -13.58956290
+<QC>                     [F0]:      -13.58956281
+<QC>                     [F1]:      -13.58953356
+<QC>                     [F2]:        0.00000000
+<QC>   [predicted_functional]:      -13.58956290
+<QC>           [rms_gradient]:        0.000006083105
+<QC>                 [G_init]:       -0.000007951709
+<QC>        [quadratic_coeff]:        0.021253
+<QC>            [cubic_coeff]:        0.000000
+<QC>               [cg_coeff]:       -0.279792
+<QC>           [trial_length]:        0.417239
+
+********************* Unconstrained **********************
+************************* Forces *************************
+*                                                        *
+* Element  Atom         Cartesian components (Eh/a)      *
+* ------------------------------------------------------ *
+*                       x            y            z      *
+*                                                        *
+*    C       1     -0.20935539  -0.01977234  -0.03564128 *
+*    H       2      0.04735419   0.06718461   0.04726147 *
+*    H       3      0.02981226  -0.03778092  -0.02402483 *
+*    C       4      0.20926094   0.01976384   0.03559969 *
+*    H       5     -0.02978400   0.03769389   0.02397062 *
+*    H       6     -0.04728799  -0.06708908  -0.04716568 *
+*                                                        *
+**********************************************************
+* TOTAL:            0.00000000   0.00000000   0.00000000 *
+**********************************************************
+ <QC>    [total_force(1,1)]:       -0.209355385191
+ <QC>    [total_force(1,2)]:        0.047354185211
+ <QC>    [total_force(1,3)]:        0.029812255451
+ <QC>    [total_force(1,4)]:        0.209260939147
+ <QC>    [total_force(1,5)]:       -0.029783999721
+ <QC>    [total_force(1,6)]:       -0.047287994898
+ <QC>    [total_force(2,1)]:       -0.019772339282
+ <QC>    [total_force(2,2)]:        0.067184614926
+ <QC>    [total_force(2,3)]:       -0.037780921777
+ <QC>    [total_force(2,4)]:        0.019763842042
+ <QC>    [total_force(2,5)]:        0.037693888149
+ <QC>    [total_force(2,6)]:       -0.067089084058
+ <QC>    [total_force(3,1)]:       -0.035641277702
+ <QC>    [total_force(3,2)]:        0.047261470227
+ <QC>    [total_force(3,3)]:       -0.024024826415
+ <QC>    [total_force(3,4)]:        0.035599693477
+ <QC>    [total_force(3,5)]:        0.023970623472
+ <QC>    [total_force(3,6)]:       -0.047165683057
+  
+ +------------+-------------+-------------+-----------------+ <-- min BFGS
+ |    Step    |   lambda    |   F.delta   |    enthalpy     | <-- min BFGS
+ +------------+-------------+-------------+-----------------+ <-- min BFGS
+ |  previous  |     0.00000 |    0.183061 |      -13.664406 | <-- min BFGS
+ | trial step |     1.00000 |   -0.190618 |      -13.589563 | <-- min BFGS
+ +------------+-------------+-------------+-----------------+ <-- min BFGS
+  
+
+--------------------------------------------------------------------------------
+ BFGS: improving iteration   1 with line minimization (lambda=    0.489888)
+--------------------------------------------------------------------------------
+ 
+                           -------------------------------
+                                     Cell Contents
+                           -------------------------------
+ 
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            x  Element    Atom      Absolute co-ordinates of atoms     x
+            x            Number        x           y           z       x
+            x----------------------------------------------------------x
+            x    C         1       21.336721   19.893240   20.074617   x
+            x    H         2       22.305211   21.359742   21.075103   x
+            x    H         3       22.303390   18.465413   19.094066   x
+            x    C         4       18.663085   20.106408   19.925212   x
+            x    H         5       17.696603   21.534509   20.905892   x
+            x    H         6       17.694990   18.638688   18.925111   x
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ 
+WARNING in pseudopotentials_read_species: string "GGA" found in pseudopotential
+file "../../pseudo/carbon.recpot", yet xc_functional = "LDA".
+ 
+<<<<<<<<<<<<<<<<<<<<<<<<< Pseudopotential information >>>>>>>>>>>>>>>>>>>>>>>>>
+File: ../../pseudo/carbon.recpot [ 2001 points up to Gmax=  52.9 (1/bohr)]
+  Atomic number:  6;  ionic charge:  4.000000
+    Shell 1: l = 0; rc = 1.48 bohr
+File: ../../pseudo/hydrogen.recpot [ 2001 points up to Gmax=  52.9 (1/bohr)]
+  Atomic number:  1;  ionic charge:  1.000000
+    Local potential
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+------------------------- Atom counting information ---------------------------
+Symbol    Natoms    Nngwfs    Nprojs
+  C          2         8         2
+  H          4         4         0
+.......   ......    ......    ......
+Totals:      6        12         2
+-------------------------------------------------------------------------------
+ 
+Determining parallel strategy ...... done
+
+Calculating Ewald energy ...           14.156550 Hartree
+
+Basis initialisation ...... done
+
+============================== PSINC grid sizes ================================
+                      Simulation cell:   65 x  65 x  65
+                              FFT-box:   63 x  63 x  63
+                                  PPD:    5 x   5 x   5
+================================================================================
+
+********************** Fourier parallelisation information *********************
+       Coarse grid (whole simulation cell) dimensions:     65    65    65
+          Real-space ('12') slabs/node (min max mean):     16    17    16
+         Recip-space ('23') slabs/node (min max mean):      8     9     8
+********************************************************************************
+
+********************** Fourier parallelisation information *********************
+       Double grid (whole simulation cell) dimensions:    130   130   130
+          Real-space ('12') slabs/node (min max mean):     32    33    32
+         Recip-space ('23') slabs/node (min max mean):     16    17    16
+********************************************************************************
+
+=========================== Sparse matrix information ==========================
+                        Overlap matrix filling: 100.00%
+                        Density kernel filling: 100.00%
+              NGWF-Proj overlap matrix filling: 100.00%
+                    Hamiltonian matrix filling: 100.00%
+                  NGWF diagonal matrix filling:  25.00%
+                             KS matrix filling: 100.00% 
+                           KSKS matrix filling: 100.00% 
+================================================================================
+
+Sparse matrix initialisation ... done
+NGWF initialisation ...  
+Reading NGWFs from file "ethene_relax.tightbox_ngwfs" ...  done
+... done
+
+
+Reading density kernel from file "ethene_relax.dkn" ... done
+
+################################################################################
+########################### NGWF CG iteration  001 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.59014116195887 0.00000000000 0.01778348078 0.5560  0.000   12.00000000
+ 2    -13.60392860876316 0.02141849756 0.00498863173 0.7295  0.054   12.00000000
+ 3    -13.60491836136199 0.00563358445 0.00068608346 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00263857694349
+Trial step length           =               0.122474
+Gradient along search dir.  =         -0.29951600018
+Functional at step 0        =     -13.60491836136199
+Functional at step 1        =     -13.63596329992556
+Functional predicted        =     -13.66458564145664
+Selected quadratic step     =               0.398425
+Conjugate gradients coeff.  =               0.000000
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  002 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.66457338435737 0.00000000000 0.00224357224 0.6774  0.000   12.00000000
+ 2    -13.66480426663887 0.00282627126 0.00069291190 0.6278  0.067   12.00000000
+ 3    -13.66481864412679 0.00059006150 0.00008636230 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00057900576030
+Trial step length           =               0.220900
+Gradient along search dir.  =         -0.01447160742
+Functional at step 0        =     -13.66481864412679
+Functional at step 1        =     -13.66729274406586
+Functional predicted        =     -13.66835388959151
+Selected quadratic step     =               0.488577
+Conjugate gradients coeff.  =               0.048153
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  003 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.66835450744936 0.00000000000 0.00092377638 0.6265  0.000   12.00000000
+ 2    -13.66837993944860 0.00069168411 0.00021855302 0.6647  0.087   12.00000000
+ 3    -13.66838229803118 0.00030349997 0.00001908716 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00021856729692
+Trial step length           =               0.328522
+Gradient along search dir.  =         -0.00207244633
+Functional at step 0        =     -13.66838229803118
+Functional at step 1        =     -13.66886595089078
+Functional predicted        =     -13.66896998733351
+Selected quadratic step     =               0.567145
+Conjugate gradients coeff.  =               0.142497
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  004 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.66896951405881 0.00000000000 0.00044951369 0.8601  0.000   12.00000000
+ 2    -13.66898061981879 0.00066365483 0.00006698518 0.5519  0.016   12.00000000
+ 3    -13.66898073319109 0.00004979173 0.00001147846 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00012216329454
+Trial step length           =               0.431648
+Gradient along search dir.  =         -0.00065387576
+Functional at step 0        =     -13.66898073319109
+Functional at step 1        =     -13.66917325506362
+Functional predicted        =     -13.66920270097724
+Selected quadratic step     =               0.678930
+Conjugate gradients coeff.  =               0.312400
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  005 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.66920035771358 0.00000000000 0.00044893539 0.7796  0.000   12.00000000
+ 2    -13.66921474589909 0.00082513776 0.00015074248 0.5659  0.065   12.00000000
+ 3    -13.66921542532046 0.00011659379 0.00001943529 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00009028970079
+Trial step length           =               0.541349
+Gradient along search dir.  =         -0.00037052569
+Functional at step 0        =     -13.66921542532046
+Functional at step 1        =     -13.66934214639915
+Functional predicted        =     -13.66935160325667
+Selected quadratic step     =               0.735053
+Conjugate gradients coeff.  =               0.546254
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  006 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.66934575192536 0.00000000000 0.00057065047 0.6628  0.000   12.00000000
+ 2    -13.66936751584571 0.00095585316 0.00022898546 0.6627  0.082   12.00000000
+ 3    -13.66936933209121 0.00022303018 0.00002457344 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00004529428712
+Trial step length           =               0.630809
+Gradient along search dir.  =         -0.00010034599
+Functional at step 0        =     -13.66936933209121
+Functional at step 1        =     -13.66937909024780
+Functional predicted        =     -13.66938804103448
+Selected quadratic step     =               0.372889
+Conjugate gradients coeff.  =               0.251658
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  007 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.66938686992985 0.00000000000 0.00022445941 0.6106  0.000   12.00000000
+ 2    -13.66938992129121 0.00034240944 0.00008295027 0.7165  0.072   12.00000000
+ 3    -13.66939017888321 0.00009010595 0.00000805851 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+WARNING: slope along search direction is positive:    0.170896E-04
+         Resetting conjugate gradients!
+WARNING: slope along search direction is still positive.
+         Reversing search direction!!
+RMS gradient                =       0.00001993085239
+Trial step length           =               0.484996
+Gradient along search dir.  =         -0.00001708961
+Functional at step 0        =     -13.66939017888321
+Functional at step 1        =     -13.66939086583410
+Functional predicted        =     -13.66939243824118
+Selected quadratic step     =               0.264413
+Conjugate gradients coeff.  =               0.000000
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  008 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.66939216075612 0.00000000000 0.00010829562 0.5739  0.000   12.00000000
+ 2    -13.66939277769415 0.00014635761 0.00003224477 0.7400  0.053   12.00000000
+ 3    -13.66939281948758 0.00003788443 0.00000431944 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+           ........................................................
+           | *** NGWF optimisation converged ***                  |
+           | RMS NGWF gradient =    0.00000251221609              |
+           | Criteria satisfied:                                  |
+           | -> RMS NGWF gradient lower than set threshold.       |
+           ========================================================
+
+================================================================================
+           ---------------- ENERGY COMPONENTS (Eh) ----------------
+           | Kinetic                    :       10.18393007089803 |
+           | Pseudopotential (local)    :      -58.97353920667490 |
+           | Pseudopotential (non-local):        1.52560309371329 |
+           | Hartree                    :       24.18256898146418 |
+           | Exchange-correlation       :       -4.74450581986441 |
+           | Ewald                      :       14.15655006097624 |
+           | Total                      :      -13.66939281948758 |
+           --------------------------------------------------------
+           Integrated density           :       12.00000000000009
+================================================================================
+
+
+                    <<<<< CALCULATION SUMMARY >>>>>
+|ITER|    RMS GRADIENT   |     TOTAL ENERGY    |   step   |     Epredicted      
+   1     0.00263857694349    -13.60491836136199   0.398425    -13.66458564145664
+   2     0.00057900576030    -13.66481864412679   0.488577    -13.66835388959151
+   3     0.00021856729692    -13.66838229803118   0.567145    -13.66896998733351
+   4     0.00012216329454    -13.66898073319109   0.678930    -13.66920270097724
+   5     0.00009028970079    -13.66921542532046   0.735053    -13.66935160325667
+   6     0.00004529428712    -13.66936933209121   0.372889    -13.66938804103448
+   7     0.00001993085239    -13.66939017888321   0.264413    -13.66939243824118
+   8     0.00000251221609    -13.66939281948758  <-- CG                         
+ 
+<QC>        [NGWF iterations]:        8
+<QC>           [total_energy]:      -13.66939282
+<QC>                     [F0]:      -13.66939018
+<QC>                     [F1]:      -13.66939087
+<QC>                     [F2]:        0.00000000
+<QC>   [predicted_functional]:      -13.66939244
+<QC>           [rms_gradient]:        0.000002512216
+<QC>                 [G_init]:       -0.000017089614
+<QC>        [quadratic_coeff]:        0.264413
+<QC>            [cubic_coeff]:        0.000000
+<QC>               [cg_coeff]:        0.000000
+<QC>           [trial_length]:        0.484996
+
+********************* Unconstrained **********************
+************************* Forces *************************
+*                                                        *
+* Element  Atom         Cartesian components (Eh/a)      *
+* ------------------------------------------------------ *
+*                       x            y            z      *
+*                                                        *
+*    C       1     -0.13036721   0.03131336   0.00098396 *
+*    H       2      0.01381058   0.00929507   0.00814695 *
+*    H       3      0.01675683  -0.02324831  -0.01385843 *
+*    C       4      0.13028650  -0.03140465  -0.00102819 *
+*    H       5     -0.01674207   0.02317624   0.01381602 *
+*    H       6     -0.01374463  -0.00913171  -0.00806031 *
+*                                                        *
+**********************************************************
+* TOTAL:            0.00000000   0.00000000   0.00000000 *
+**********************************************************
+ <QC>    [total_force(1,1)]:       -0.130367207398
+ <QC>    [total_force(1,2)]:        0.013810582905
+ <QC>    [total_force(1,3)]:        0.016756825013
+ <QC>    [total_force(1,4)]:        0.130286498769
+ <QC>    [total_force(1,5)]:       -0.016742065427
+ <QC>    [total_force(1,6)]:       -0.013744633862
+ <QC>    [total_force(2,1)]:        0.031313359968
+ <QC>    [total_force(2,2)]:        0.009295065670
+ <QC>    [total_force(2,3)]:       -0.023248311310
+ <QC>    [total_force(2,4)]:       -0.031404647474
+ <QC>    [total_force(2,5)]:        0.023176241358
+ <QC>    [total_force(2,6)]:       -0.009131708212
+ <QC>    [total_force(3,1)]:        0.000983963694
+ <QC>    [total_force(3,2)]:        0.008146951095
+ <QC>    [total_force(3,3)]:       -0.013858430544
+ <QC>    [total_force(3,4)]:       -0.001028194152
+ <QC>    [total_force(3,5)]:        0.013816017727
+ <QC>    [total_force(3,6)]:       -0.008060307820
+  
+ +------------+-------------+-------------+-----------------+ <-- min BFGS
+ |    Step    |   lambda    |   F.delta   |    enthalpy     | <-- min BFGS
+ +------------+-------------+-------------+-----------------+ <-- min BFGS
+ |  previous  |     0.00000 |    0.183061 |      -13.664406 | <-- min BFGS
+ | trial step |     1.00000 |   -0.190618 |      -13.589563 | <-- min BFGS
+ |  line step |     0.48989 |   -0.106072 |      -13.669393 | <-- min BFGS
+ +------------+-------------+-------------+-----------------+ <-- min BFGS
+  
+ BFGS: finished iteration   1  with enthalpy= -1.366939281949E+001 Ha
+  
+ +-----------+-----------------+-----------------+------------+-----+ <-- BFGS
+ | Parameter |      value      |    tolerance    |    units   | OK? | <-- BFGS
+ +-----------+-----------------+-----------------+------------+-----+ <-- BFGS
+ |  dE/ion   |   8.310871E-004 |   1.000000E-006 |         Ha | No  | <-- BFGS
+ |  |F|max   |   1.340787E-001 |   2.000000E-003 |    Ha/Bohr | No  | <-- BFGS
+ |  |dR|max  |   2.093059E-001 |   5.000000E-003 |       Bohr | No  | <-- BFGS
+ +-----------+-----------------+-----------------+------------+-----+ <-- BFGS
+  
+
+================================================================================
+ Starting BFGS iteration    2 ...
+================================================================================
+
+ Writing continuation file "ethene_relax.continuation" ...done
+ Backing up NGWFs to file "ethene_relax.tightbox_ngwfs.bfgs_back" ... done
+ Backing up density kernel to file "ethene_relax.dkn.bfgs_back" ... done
+  
+ +------------+-------------+-------------+-----------------+ <-- min BFGS
+ |    Step    |   lambda    |   F.delta   |    enthalpy     | <-- min BFGS
+ +------------+-------------+-------------+-----------------+ <-- min BFGS
+ |  previous  |     0.00000 |    0.025891 |      -13.669393 | <-- min BFGS
+ +------------+-------------+-------------+-----------------+ <-- min BFGS
+  
+
+--------------------------------------------------------------------------------
+ BFGS: starting iteration   2 with trial guess (lambda=    1.000000)
+--------------------------------------------------------------------------------
+ 
+                           -------------------------------
+                                     Cell Contents
+                           -------------------------------
+ 
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            x  Element    Atom      Absolute co-ordinates of atoms     x
+            x            Number        x           y           z       x
+            x----------------------------------------------------------x
+            x    C         1       21.263087   19.947726   20.087887   x
+            x    H         2       22.317717   21.361904   21.080249   x
+            x    H         3       22.323929   18.431346   19.074633   x
+            x    C         4       18.736588   20.051755   19.911877   x
+            x    H         5       17.676087   21.568454   20.925253   x
+            x    H         6       17.682592   18.636815   18.920102   x
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ 
+WARNING in pseudopotentials_read_species: string "GGA" found in pseudopotential
+file "../../pseudo/carbon.recpot", yet xc_functional = "LDA".
+ 
+<<<<<<<<<<<<<<<<<<<<<<<<< Pseudopotential information >>>>>>>>>>>>>>>>>>>>>>>>>
+File: ../../pseudo/carbon.recpot [ 2001 points up to Gmax=  52.9 (1/bohr)]
+  Atomic number:  6;  ionic charge:  4.000000
+    Shell 1: l = 0; rc = 1.48 bohr
+File: ../../pseudo/hydrogen.recpot [ 2001 points up to Gmax=  52.9 (1/bohr)]
+  Atomic number:  1;  ionic charge:  1.000000
+    Local potential
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+------------------------- Atom counting information ---------------------------
+Symbol    Natoms    Nngwfs    Nprojs
+  C          2         8         2
+  H          4         4         0
+.......   ......    ......    ......
+Totals:      6        12         2
+-------------------------------------------------------------------------------
+ 
+Determining parallel strategy ...... done
+
+Calculating Ewald energy ...           14.296985 Hartree
+
+Basis initialisation ...... done
+
+============================== PSINC grid sizes ================================
+                      Simulation cell:   65 x  65 x  65
+                              FFT-box:   63 x  63 x  63
+                                  PPD:    5 x   5 x   5
+================================================================================
+
+********************** Fourier parallelisation information *********************
+       Coarse grid (whole simulation cell) dimensions:     65    65    65
+          Real-space ('12') slabs/node (min max mean):     16    17    16
+         Recip-space ('23') slabs/node (min max mean):      8     9     8
+********************************************************************************
+
+********************** Fourier parallelisation information *********************
+       Double grid (whole simulation cell) dimensions:    130   130   130
+          Real-space ('12') slabs/node (min max mean):     32    33    32
+         Recip-space ('23') slabs/node (min max mean):     16    17    16
+********************************************************************************
+
+=========================== Sparse matrix information ==========================
+                        Overlap matrix filling: 100.00%
+                        Density kernel filling: 100.00%
+              NGWF-Proj overlap matrix filling: 100.00%
+                    Hamiltonian matrix filling: 100.00%
+                  NGWF diagonal matrix filling:  25.00%
+                             KS matrix filling: 100.00% 
+                           KSKS matrix filling: 100.00% 
+================================================================================
+
+Sparse matrix initialisation ... done
+NGWF initialisation ...  
+Reading NGWFs from file "ethene_relax.tightbox_ngwfs" ...  done
+... done
+
+
+Reading density kernel from file "ethene_relax.dkn" ... done
+
+################################################################################
+########################### NGWF CG iteration  001 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.65961609292167 0.00000000000 0.00735895797 0.6146  0.000   12.00000000
+ 2    -13.66211754821780 0.00893808701 0.00261558282 0.7531  0.088   12.00000000
+ 3    -13.66238684416733 0.00290710355 0.00046437014 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00153987417665
+Trial step length           =               0.122474
+Gradient along search dir.  =         -0.10201193210
+Functional at step 0        =     -13.66238684416733
+Functional at step 1        =     -13.67294186595315
+Functional predicted        =     -13.68251443764436
+Selected quadratic step     =               0.394613
+Conjugate gradients coeff.  =               0.000000
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  002 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.68251385330974 0.00000000000 0.00199152059 0.5872  0.000   12.00000000
+ 2    -13.68262086346992 0.00138775046 0.00042114872 0.7549  0.055   12.00000000
+ 3    -13.68262840242364 0.00049835060 0.00006712302 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00032819009143
+Trial step length           =               0.219841
+Gradient along search dir.  =         -0.00465789769
+Functional at step 0        =     -13.68262840242364
+Functional at step 1        =     -13.68341479629439
+Functional predicted        =     -13.68373168394819
+Selected quadratic step     =               0.473725
+Conjugate gradients coeff.  =               0.045423
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  003 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.68373128517247 0.00000000000 0.00051935318 0.7262  0.000   12.00000000
+ 2    -13.68374052863341 0.00047312057 0.00014877668 0.6297  0.098   12.00000000
+ 3    -13.68374131429468 0.00015523676 0.00001815003 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00011506357063
+Trial step length           =               0.322714
+Gradient along search dir.  =         -0.00057537738
+Functional at step 0        =     -13.68374131429468
+Functional at step 1        =     -13.68387536690942
+Functional predicted        =     -13.68390826266392
+Selected quadratic step     =               0.580309
+Conjugate gradients coeff.  =               0.122921
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  004 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.68390646593851 0.00000000000 0.00033695452 0.7979  0.000   12.00000000
+ 2    -13.68391405657369 0.00058747722 0.00013073512 0.5834  0.083   12.00000000
+ 3    -13.68391451607417 0.00009252870 0.00001119759 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00007154626308
+Trial step length           =               0.432751
+Gradient along search dir.  =         -0.00022854360
+Functional at step 0        =     -13.68391451607417
+Functional at step 1        =     -13.68398222365798
+Functional predicted        =     -13.68399290785757
+Selected quadratic step     =               0.686012
+Conjugate gradients coeff.  =               0.386632
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  005 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.68398855001488 0.00000000000 0.00047934943 0.7053  0.000   12.00000000
+ 2    -13.68400385219852 0.00080448713 0.00021693122 0.6565  0.099   12.00000000
+ 3    -13.68400526098720 0.00018272773 0.00001794209 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00006043258934
+Trial step length           =               0.544860
+Gradient along search dir.  =         -0.00018233046
+Functional at step 0        =     -13.68400526098720
+Functional at step 1        =     -13.68406022235418
+Functional predicted        =     -13.68406085264590
+Selected quadratic step     =               0.609790
+Conjugate gradients coeff.  =               0.713458
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  006 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.68405371175691 0.00000000000 0.00059157547 0.6570  0.000   12.00000000
+ 2    -13.68407536415666 0.00092207696 0.00025334940 0.7082  0.090   12.00000000
+ 3    -13.68407745472645 0.00023960724 0.00002382847 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00003082019542
+Trial step length           =               0.576412
+Gradient along search dir.  =         -0.00005480868
+Functional at step 0        =     -13.68407745472645
+Functional at step 1        =     -13.68408231083002
+Functional predicted        =     -13.68408678734477
+Selected quadratic step     =               0.340553
+Conjugate gradients coeff.  =               0.260093
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  007 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.68408553219400 0.00000000000 0.00024269299 0.6041  0.000   12.00000000
+ 2    -13.68408869846808 0.00033307630 0.00008767198 0.7656  0.070   12.00000000
+ 3    -13.68408897911323 0.00009459299 0.00000945519 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+WARNING: slope along search direction is positive:    0.323935E-04
+         Resetting conjugate gradients!
+WARNING: slope along search direction is still positive.
+         Reversing search direction!!
+RMS gradient                =       0.00002744028481
+Trial step length           =               0.443056
+Gradient along search dir.  =         -0.00003239349
+Functional at step 0        =     -13.68408897911323
+Functional at step 1        =     -13.68409930133623
+Rejected quadratic step     =               0.788952
+Functional at new step 1    =     -13.68410174682353
+Functional predicted        =     -13.68410174683254
+Selected quadratic step     =               0.788289
+Conjugate gradients coeff.  =               0.000000
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  008 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.68409906263328 0.00000000000 0.00035979029 0.5724  0.000   12.00000000
+ 2    -13.68410513833798 0.00043915532 0.00010329521 0.7836  0.051   12.00000000
+ 3    -13.68410555858350 0.00011987963 0.00001497170 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00001152936257
+Trial step length           =               0.590979
+Gradient along search dir.  =         -0.00000401474
+Functional at step 0        =     -13.68410555858350
+Functional at step 1        =     -13.68407733997960
+Rejected quadratic step     =               0.022918
+Functional at new step 1    =     -13.68410560453918
+Functional predicted        =     -13.68410560453923
+Selected quadratic step     =               0.022894
+Conjugate gradients coeff.  =              -0.176536
+--------------------------- NGWF line search finished --------------------------
+                                               
+Writing NGWFs to file "ethene_relax.tightbox_ngwfs"....  done
+
+################################################################################
+########################### NGWF CG iteration  009 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.0000 a0^-1 *******
+................................................................................
+<<<<<<<<<<<<<< LNV (Original version) density kernel optimisation >>>>>>>>>>>>>>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iter|       energy      |  rms DeltaK |  commutator |LScoef|CGcoef|      Ne    |
+ 1    -13.68410560121592 0.00000000000 0.00002010904 0.6048  0.000   12.00000000
+ 2    -13.68410561422611 0.00001830996 0.00000352044 0.6406  0.030   12.00000000
+ 3    -13.68410561463481 0.00000322721 0.00000058386 0.0000  0.000   12.00000000
+Finished density kernel iterations (   3)
+
+Writing density kernel to file "ethene_relax.dkn" ... done
+
+           ........................................................
+           | *** NGWF optimisation converged ***                  |
+           | RMS NGWF gradient =    0.00000542012257              |
+           | Criteria satisfied:                                  |
+           | -> RMS NGWF gradient lower than set threshold.       |
+           ========================================================
+
+================================================================================
+           ---------------- ENERGY COMPONENTS (Eh) ----------------
+           | Kinetic                    :       10.19912943272678 |
+           | Pseudopotential (local)    :      -59.30249002758964 |
+           | Pseudopotential (non-local):        1.52481171226372 |
+           | Hartree                    :       24.34095226458648 |
+           | Exchange-correlation       :       -4.74349408894229 |
+           | Ewald                      :       14.29698509232013 |
+           | Total                      :      -13.68410561463481 |
+           --------------------------------------------------------
+           Integrated density           :       12.00000000000001
+================================================================================
+
+
+                    <<<<< CALCULATION SUMMARY >>>>>
+|ITER|    RMS GRADIENT   |     TOTAL ENERGY    |   step   |     Epredicted      
+   1     0.00153987417665    -13.66238684416733   0.394613    -13.68251443764436
+   2     0.00032819009143    -13.68262840242364   0.473725    -13.68373168394819
+   3     0.00011506357063    -13.68374131429468   0.580309    -13.68390826266392
+   4     0.00007154626308    -13.68391451607417   0.686012    -13.68399290785757
+   5     0.00006043258934    -13.68400526098720   0.609790    -13.68406085264590
+   6     0.00003082019542    -13.68407745472645   0.340553    -13.68408678734477
+   7     0.00002744028481    -13.68408897911323   0.788289    -13.68410174683254
+   8     0.00001152936257    -13.68410555858350   0.022894    -13.68410560453923
+   9     0.00000542012257    -13.68410561463481  <-- CG                         
+ 
+<QC>        [NGWF iterations]:        9
+<QC>           [total_energy]:      -13.68410561
+<QC>                     [F0]:      -13.68410556
+<QC>                     [F1]:      -13.68407734
+<QC>                     [F2]:        0.00000000
+<QC>   [predicted_functional]:      -13.68410560
+<QC>           [rms_gradient]:        0.000005420123
+<QC>                 [G_init]:       -0.000004014740
+<QC>        [quadratic_coeff]:        0.022894
+<QC>            [cubic_coeff]:        0.000000
+<QC>               [cg_coeff]:       -0.176536
+<QC>           [trial_length]:        0.590979
+
+********************* Unconstrained **********************
+************************* Forces *************************
+*                                                        *
+* Element  Atom         Cartesian components (Eh/a)      *
+* ------------------------------------------------------ *
+*                       x            y            z      *
+*                                                        *
+*    C       1     -0.04242886  -0.01691242  -0.02386939 *
+*    H       2      0.00912426   0.01044001   0.00841570 *
+*    H       3     -0.00458528   0.00839992   0.00770287 *
+*    C       4      0.04248696   0.01696551   0.02392118 *
+*    H       5      0.00457473  -0.00845461  -0.00772867 *
+*    H       6     -0.00917181  -0.01043841  -0.00844169 *
+*                                                        *
+**********************************************************
+* TOTAL:            0.00000000   0.00000000   0.00000000 *
+**********************************************************
+ <QC>    [total_force(1,1)]:       -0.042428861171
+ <QC>    [total_force(1,2)]:        0.009124263420
+ <QC>    [total_force(1,3)]:       -0.004585282607
+ <QC>    [total_force(1,4)]:        0.042486963856
+ <QC>    [total_force(1,5)]:        0.004574730101
+ <QC>    [total_force(1,6)]:       -0.009171813599
+ <QC>    [total_force(2,1)]:       -0.016912422998
+ <QC>    [total_force(2,2)]:        0.010440013063
+ <QC>    [total_force(2,3)]:        0.008399919976
+ <QC>    [total_force(2,4)]:        0.016965506297
+ <QC>    [total_force(2,5)]:       -0.008454605791
+ <QC>    [total_force(2,6)]:       -0.010438410547
+ <QC>    [total_force(3,1)]:       -0.023869385433
+ <QC>    [total_force(3,2)]:        0.008415695137
+ <QC>    [total_force(3,3)]:        0.007702874102
+ <QC>    [total_force(3,4)]:        0.023921176932
+ <QC>    [total_force(3,5)]:       -0.007728671947
+ <QC>    [total_force(3,6)]:       -0.008441688790
+  
+ +------------+-------------+-------------+-----------------+ <-- min BFGS
+ |    Step    |   lambda    |   F.delta   |    enthalpy     | <-- min BFGS
+ +------------+-------------+-------------+-----------------+ <-- min BFGS
+ |  previous  |     0.00000 |    0.025891 |      -13.669393 | <-- min BFGS
+ | trial step |     1.00000 |    0.003058 |      -13.684106 | <-- min BFGS
+ +------------+-------------+-------------+-----------------+ <-- min BFGS
+  
+ BFGS: finished iteration   2  with enthalpy= -1.368410561463E+001 Ha
+  
+ +-----------+-----------------+-----------------+------------+-----+ <-- BFGS
+ | Parameter |      value      |    tolerance    |    units   | OK? | <-- BFGS
+ +-----------+-----------------+-----------------+------------+-----+ <-- BFGS
+ |  dE/ion   |   2.452133E-003 |   1.000000E-006 |         Ha | No  | <-- BFGS
+ |  |F|max   |   5.162551E-002 |   2.000000E-003 |    Ha/Bohr | No  | <-- BFGS
+ |  |dR|max  |   9.256070E-002 |   5.000000E-003 |       Bohr | No  | <-- BFGS
+ +-----------+-----------------+-----------------+------------+-----+ <-- BFGS
+  
+ BFGS: Geometry optimization failed to converge after           2 steps.
+
+================================================================================
+ BFGS: Final Configuration:
+================================================================================
+ 
+                           -------------------------------
+                                     Cell Contents
+                           -------------------------------
+ 
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            x  Element    Atom      Absolute co-ordinates of atoms     x
+            x            Number        x           y           z       x
+            x----------------------------------------------------------x
+            x    C         1       21.263087   19.947726   20.087887   x
+            x    H         2       22.317717   21.361904   21.080249   x
+            x    H         3       22.323929   18.431346   19.074633   x
+            x    C         4       18.736588   20.051755   19.911877   x
+            x    H         5       17.676087   21.568454   20.925253   x
+            x    H         6       17.682592   18.636815   18.920102   x
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ 
+ BFGS: Final Enthalpy     = -1.36841056E+001 Ha
+
+ Writing continuation file "ethene_relax.continuation" ...done
+
+ Removing NGWF backup file "ethene_relax.tightbox_ngwfs.bfgs_back" ... done
+ Removing density kernel backup file "ethene_relax.dkn.bfgs_back" ... done
+
+------------------------------ TIMING INFORMATION ------------------------------
+TOTAL TIME:     362.848s on     4 node(s)
+
+Job completed: 27-05-2011 23:18 (+0100)
+

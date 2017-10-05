@@ -1,0 +1,5 @@
+F90 = pathf90
+FFLAGS = -DFFTW -DMPI -m64 -I/scratch/pdh1001/mpich-1.2.6/include
+LIBS = -lrfftw -lfftw -lacml -L/scratch/pdh1001/mpich-1.2.6/lib -lfmpich -lmpich
+OPTFLAGS = -O2 -march=opteron
+DEBUGFLAGS = -trapuv -g -ffortran-bounds-check -C

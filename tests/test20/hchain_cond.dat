@@ -1,0 +1,100 @@
+!=====================================================!
+! Input for calculation with the ONETEP program       !
+!                                                     !
+! Quality Control file for bandstructure, no nonlocal !
+! projectors and full spin-polarisation               !
+!                                                     !
+! Created by PDH                                      !
+! Adapted for QC test by NDMH: 26/02/2010             !
+!                                                     !
+!                                                     !
+! Peter D Haynes and Nicholas D.M. Hine               !
+! Thomas Young Centre                                 !
+! Department of Materials and Department of Physics   !
+! Imperial College London                             !
+! London SW7 2AZ                                      !
+! UK                                                  !
+!=====================================================!
+
+
+task                   : COND
+spin                   : 20
+maxit_ngwf_cg          : 30
+minit_lnv              : 4
+maxit_lnv              : 4
+ngwf_cg_max_step       : 4.0
+psinc_spacing          : 0.5 0.5 0.5
+fftboxpref             : 45 45 45
+write_tightbox_ngwfs   : T
+write_denskern         : T
+output_detail          : VERBOSE
+print_qc               : T
+maxit_palser_mano      : -1
+ngwf_threshold_orig    : 0.00001
+do_properties          : T
+dos_smear              : -1.0 eV
+num_eigenvalues        : 20
+homo_plot              : -1
+lumo_plot              : -1
+popn_calculate         : F
+write_density_plot     : F
+bs_kpoint_path_spacing : 0.015 "1/bohr"
+bs_num_eigenvalues     : 20
+bs_unfold              : 1 1 20
+bs_method              : tb
+
+cond_init_shift : 1.0
+cond_shift_buffer : 0.1
+cond_fixed_shift : FALSE
+cond_calc_max_eigen : TRUE
+cond_num_states : 20
+
+%block bs_kpoint_path
+0.0 0.0 -0.5
+0.0 0.0  0.5
+%endblock bs_kpoint_path
+
+%block lattice_cart
+ 40.0  0.0  0.0
+  0.0 40.0  0.0
+  0.0  0.0 40.0
+%endblock lattice_cart
+
+%block species
+H H 1 1 5.9
+%endblock species
+
+%block species_cond
+H H 1 4 5.9
+%endblock species_cond
+
+%block species_pot
+H     "../../pseudo/hydrogen_coul.recpot"
+%endblock species_pot
+
+%block species_atomic_set
+H "SOLVE conf=1s1 2sX"
+%endblock species_atomic_set
+
+%block positions_abs
+H 0.0 0.0  0.0
+H 0.0 0.0  2.0
+H 0.0 0.0  4.0
+H 0.0 0.0  6.0
+H 0.0 0.0  8.0
+H 0.0 0.0 10.0
+H 0.0 0.0 12.0
+H 0.0 0.0 14.0
+H 0.0 0.0 16.0
+H 0.0 0.0 18.0
+H 0.0 0.0 20.0
+H 0.0 0.0 22.0
+H 0.0 0.0 24.0
+H 0.0 0.0 26.0
+H 0.0 0.0 28.0
+H 0.0 0.0 30.0
+H 0.0 0.0 32.0
+H 0.0 0.0 34.0
+H 0.0 0.0 36.0
+H 0.0 0.0 38.0
+%endblock positions_abs

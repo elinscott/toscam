@@ -1,0 +1,75 @@
+#!/bin/bash
+
+##########################################################################################
+# This will run all ONETEP quality-check (QC) tests on four cores on the local machine.  #
+# Consider queuing this script in the queueing system if running the tests on a cluster. #
+##########################################################################################
+# Written on 2010.10.04 by Jacek Dziedzic (jd12g09@soton.ac.uk)                          #
+# v1.01                                                                                  #
+##########################################################################################
+
+nproc=4
+exedir="../bin"
+
+# Count the available ONETEP executables
+nexes=`find $exedir -type f -and -perm /110 2>/dev/null | grep -cvE "/arch\$"`
+
+# Abort if there are none
+if [ $nexes -eq 0 ]; then
+  echo "Could not find any ONETEP executables in $exedir. Aborting!" >&2
+  exit 1
+fi
+
+# If there are more than one, try to guess the correct one. Since this might be
+# run in a queue, there may be no user to ask which one (s)he prefers.
+n=1
+if [ $nexes -gt 1 ]; then
+  echo "There appears to be more than one ONETEP executable in $exedir: "
+  find $exedir -type f -and -perm /110 2>/dev/null | grep -vE "/arch\$"
+  nexes_nonserial=`find $exedir -type f -and -perm /110 2>/dev/null | grep -vE "/arch\$" | grep -cv serial`
+  if [ $nexes_nonserial -eq 1 ]; then
+    echo "Picking the only executable that is not obviously serial."
+  fi
+  if [ $nexes_nonserial -gt 1 ]; then
+    echo "Trying the first executable from the list that is not obviously serial, as an educated guess."
+  fi
+  if [ $nexes_nonserial -lt 1 ]; then
+    echo "However, all these executables look like serial versions. I do not know which one to choose."
+    echo "Aborting!"
+    exit 3
+  fi
+fi
+
+# Pick this executable
+exe=`find $exedir -type f -and -perm /110 2>/dev/null | grep -vE "/arch\$" | grep -v serial | awk -v n=$n 'NR==n'`
+
+# This will only happen when there was one executable and it has 'serial' in the name
+if [ -z "$exe" ]; then
+  echo "The only executable in $exedir looks like a serial version, running it in parallel is not a good idea."
+  echo "Aborting!"
+  exit 4
+fi
+
+echo "Running quality-check tests with $exe"
+
+if [ ! -x $exe ]; then
+  echo "Somehow $exe does not exist or is not executable. Aborting!">&2
+  exit 2
+fi
+
+for directory in test[0-9]*; do
+  echo "Running $directory..."
+  cd $directory
+  rm -f *.out
+  rm -f *.err
+  rootname=`echo *.dat | sed "s/\.dat//"`
+  cmdline="../$exe $rootname.dat >$rootname.out 2>$rootname.err"
+  echo "Executing 'mpirun -np $nproc $cmdline'"
+  echo "in `pwd` on $nproc cores."
+  echo "Please wait."
+  mpirun -np $nproc ../$exe $rootname.dat >$rootname.out 2>$rootname.err
+  echo "Done. "
+  cd - >/dev/null
+  echo 
+  echo "======================================================================="
+done

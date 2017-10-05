@@ -1,0 +1,789 @@
+Defaulting to ethernet
+No MPI process pinning
+Starting MPD ring...
+PBS has allocated the following nodes:
+cx1-8-5-1
+cx1-8-5-1
+cx1-8-5-1
+cx1-8-5-1
+---
+mpiexec.intel -genv I_MPI_DEVICE ssm -genv I_MPI_DEBUG 0 -genv I_MPI_PIN no -genv I_MPI_PIN_MODE none -genv I_MPI_FALLBACK_DEVICE disable -genv DAPL_MAX_CM_RETRIES 500 -genv DAPL_MAX_CM_RESPONSE_TIME 300 -genv I_MPI_DAPL_CONNECTION_TIMEOUT 300 -machinefile /tmp/pbs.5705182.cx1/tmp.DLMkb26337 -n 4 -wdir /home/nhine/ONETEP/devel/tests/test26 /home/nhine/ONETEP/devel/bin/onetep.cx1 12-difluoroethane
+
+Job output begins below
+-----------------------
+ +---------------------------------------------------------------+
+ |                                                               |
+ |        ####### #     # ####### ####### ####### ######         |
+ |        #     # ##    # #          #    #       #     #        |
+ |        #     # # #   # #          #    #       #     #        |
+ |        #     # #  #  # #####      #    #####   ######         |
+ |        #     # #   # # #          #    #       #              |
+ |        #     # #    ## #          #    #       #              |
+ |        ####### #     # #######    #    ####### #              |
+ |                                                               |
+ |        Linear-Scaling Ab Initio Total Energy Program          |
+ |                                                               |
+ |          Release for academic collaborators of ODG            |
+ |                                              Version 3.0      |
+ |                                                               |
+ +---------------------------------------------------------------+
+ |                                                               |
+ |  Authors:                                                     |
+ |  Peter D. Haynes, Nicholas D. M. Hine, Arash. A. Mostofi,     |
+ |  Mike C. Payne and Chris-Kriton Skylaris                      |
+ |                                                               |
+ |  Contributors:                                                |
+ |  P. W. Avraam, S. J. Clark, O. Dieguez, S. M. M. Dubois,      |
+ |  J. Dziedzic, H. H. Helal, Q. O. Hill, D. D. O`Regan,         |
+ |  C. J. Pickard, M. I. J. Probert, L. Ratcliff, M. Robinson    |
+ |  and A. Ruiz Serrano                                          |
+ |                                                               |
+ |                                   Copyright (c) 2004-2011     |
+ |                                                               |
+ |  Please cite:                                                 |
+ |  "Introducing ONETEP: Linear-scaling density functional       |
+ |   simulations on parallel computers".                         |
+ |   C.-K. Skylaris, P. D. Haynes, A. A. Mostofi, M. C. Payne.   |
+ |   J. Chem. Phys. 122 084119 (2005).                           |
+ |                                                               |
+ |          in all publications arising from your use of ONETEP. |
+ |                                                               |
+ +---------------------------------------------------------------+
+ |                                                               |
+ |   ONETEP is based on developments described in the following  |
+ |   publications:                                               |
+ |                                                               |
+ |  "Nonorthogonal generalized Wannier function pseudopotential  |
+ |   plane-wave method".                                         |
+ |   C.-K. Skylaris, A. A. Mostofi, P. D. Haynes, O. Dieguez,    |
+ |   M. C. Payne.                                                |
+ |   Phys. Rev. B 66 035119 (2002).                              |
+ |                                                               |
+ |  "Preconditioned iterative minimization for linear-scaling    |
+ |   electronic structure calculations".                         |
+ |   A. A. Mostofi, P. D. Haynes, C.-K. Skylaris, M. C. Payne.   |
+ |   J. Chem. Phys. 119(17), pp.8842-8848 (2003).                |
+ |                                                               |
+ |  "Total-energy calculations on a real space grid with         |
+ |   localized functions and a plane-wave basis".                |
+ |   A. A. Mostofi, C.-K. Skylaris, P. D. Haynes, M. C. Payne.   |
+ |   Comput. Phys. Commun. 147, pp.788-802 (2002).               |
+ |                                                               |
+ |  "Accurate kinetic energy evaluation in electronic structure  |
+ |   calculations with localized functions on real space grids"  |
+ |   C.-K. Skylaris, A. A. Mostofi, P. D. Haynes, C. J. Pickard, |
+ |   M. C. Payne.                                                |
+ |   Comput. Phys. Commun. 140, pp.315-322 (2001).               |
+ |                                                               |
+ +---------------------------------------------------------------+
+
+Job started: 28-05-2011 02:26 (+0100)
+
+Running on     4 processors.
+
+Reading parameters from file "12-difluoroethane.dat" ...... done
+Reading geometry and species blocks from file "12-difluoroethane.dat" ...
+  <species_atomic_set> block not found: NGWF initialisation set to AUTO
+... done
+-------------------------------------------------------------------------------
+---------------------------- RUN-TIME PARAMETERS ------------------------------
+-------------------------------------------------------------------------------
+task                      : SINGLEPOINT *! Type of calculation (String)         
+cutoffenergy              : 29.3991953796258      hartree *! Plane wave kinetic 
+kernelcutoff              : 1000.00000000000 *! Density kernel radius in Bohr ( 
+xcfunctional              : PBE *! Exchange-correlation functional (String)     
+libxcxfuncid              : 0 *! Functional identifier for which exchange funct 
+libxccfuncid              : 0 *! Functional identifier for which correlation fu 
+charge                    : 0.000000000000000E+000 *! The total charge of the s 
+spin                      : 0 *! Total spin of system (Integer)                 
+spinpolarized             : F *! Switch for spin polarization (Boolean)         
+spinpolarised             : F *! Switch for spin polarisation (Boolean)         
+constantefield            : 0.0 0.0 0.0 *! Cartesian coordinates of constant el 
+fftboxpref                : 0 0 0 *! Preferred FFT box dimensions (String)      
+ppdnpoints                : 0 0 0 *! PPD edge length in grid points for each la 
+psincspacing              : 0.0 0.0 0.0 *! PSINC grid spacing in atomic units ( 
+oldinput                  : F *! Read old-format input file (Boolean)           
+develcode                 : *! For development code only (String)               
+nnho                      : F *! Initialise NGWFs to nonorthogonal natural hybr 
+ngwfhalo                  : -1.00000000000000 *! Halo extension to NGWF radii ( 
+nonscforces               : F *! Include non self-consistent forces due to NGWF 
+maxitpalsermano           : 50 *! Maximum number of iterations for Palser-Manol 
+maxitpen                  : 0 *! Max number of penalty functional iterations (I 
+penparam                  : 4.00000000000000 *! Penalty functional parameter (D 
+minitlnv                  : 3 *! Min number of LNV iterations (Integer)         
+maxitlnv                  : 8 *! Max number of LNV iterations (Integer)         
+maxitlnvcoarse            : 0 *! Max number of low-accuracy LNV iterations (Int 
+lnvthresholdorig          : 1.000000000000000E-009 *! LNV convergence threshold 
+lnvcgtype                 : LNV_FLETCHER *! Type of CG coefficient for LNV dens 
+lnvcgmaxstep              : 3.00000000000000 *! Maximum length of trial step fo 
+exactlnv                  : T *! Use original LNV algorithm (Boolean)           
+oldlnv                    : F *! Use LNV algorithm backwards compatible pre Dec 
+lnvchecktrialsteps        : F *! Check stability of kernel at each trial step d 
+kerfix                    : 1 *! Density kernel fixing approach (Integer)       
+maxitkernelfix            : 3 *! Maximum # iterations of Penalty Functional ide 
+initialdensrealspace      : F *! Construct initial density in real space from a 
+kerneldiis                : T *! Use kernel DIIS in the inner loop (Boolean)    
+kerneldiistype            : P *! Density mixing method (String)                 
+kerneldiismax             : 10 *! Max number of kernels saved during kernel DII 
+kerneldiismaxit           : 25 *! Max number of kernel DIIS iterations (Integer 
+kerneldiisthres           : 2.000000000000000E-006 *! Density mixing convergenc 
+kerneldiisliter           : 5 *! Number of linear mixing iterations (Integer)   
+kerneldiiscin             : 0.900000000000000 *! Coefficient for the input kern 
+kerneldiiscriteria        : 1000 *! Density mixing convergence criteria (String 
+maxitngwfcg               : 60 *! Max number of NGWF conjugate gradients (CG) i 
+ngwfcgtype                : NGWF_FLETCHER *! Type of CG coefficient for NGWF op 
+ngwfcgmaxstep             : -8.00000000000000 *! Maximum length of trial step f 
+eleccgmax                 : 5 *! Number of NGWF iterations to reset CG (Integer 
+precondscheme             : TETER *! Recip-space preconditioning scheme (String 
+kzero                     : 3.50000000000000 *! KE preconditioning parameter (D 
+rprecond                  : 2.00000000000000 *! Radial cut-off for real-space p 
+precondrecip              : T *! Recip-space KE preconditioning (Boolean)       
+precondreal               : F *! Real-space KE preconditioning (Boolean)        
+smoothscheme              : NONE *! Smoothing scheme for the NGWF gradients at  
+rsmooth                   : 1.50000000000000      bohr *! Radius of the unshave 
+ksmooth                   : 5.00000000000000 *! Characteristic wavelength of th 
+occmix                    : 0.250000000000000 *! Mix fraction of occupancy prec 
+kernelupdate              : F *! Update density kernel during NGWF line search  
+kernelchristoffelupdate   : F *! Update density kernel during NGWF line search  
+maxithotelling            : 50 *! Number of Hotelling iteration per NGWF change 
+maxresidhotelling         : 1.000000000000000E-012 *! Max allowed value in Hote 
+maxitngwfdiis             : 0 *! Max number of NGWF DIIS steps (Integer)        
+ngwfdiissize              : 4 *! Max size of the DIIS iterative subspace (Integ 
+ngwfdiisreset             : 8 *! Max number of iteration for the resetting of D 
+ngwfdiismaxstep           : 2.00000000000000 *! Max length of trial step for NG 
+ngwfthresholdorig         : 2.000000000000000E-004 *! NGWF convergence threshol 
+elecenergytol             : -1.000000000000000E-003 hartree *! Tolerance on tot 
+elecforcetol              : -1.000000000000000E-003 ha/bohr *! Tolerance on max 
+ngwfmaxgrad               : -2.000000000000000E-005 *! Maximum permissible valu 
+deltaeconv                : T *! Use consecutive energy gains as a criterion fo 
+locpotintbatchsize        : 10 *! Size of NGWF in fftbox batch for locpot integ 
+kineticintbatchsize       : 10 *! Size of NGWF in fftbox batch for kinetic inte 
+densitybatchsize          : 10 *! Size of NGWF in fftbox batch for charge densi 
+ngwfgradbatchsize         : 10 *! Size of NGWF in fftbox batch for NGWF gradien 
+densethreshold            : 0.400000000000000 *! Threshold for matrix segment f 
+commsgroupsize            : 4 *! Number of nodes in a group (determines comms e 
+ovlpfornonlocal           : F *! Overlap sparsity for nonlocal (Boolean)        
+usespacefillingcurve      : T *! Re-arrange atoms according to space-filling cu 
+corehamdenskernguess      : T *! Initial guess for density kernel from core Ham 
+checkatoms                : T *! Check atoms on top of each other (Boolean)     
+locpotscheme              : FULL *! Scheme for evaluating local potential matri 
+smoothprojectors          : -0.400000000000000 *! Halfwidth of Gaussian filter  
+smoothlocpspot            : -0.400000000000000 *! Halfwidth of Gaussian filter  
+oddpsincgrid              : F *! Force odd number of points in simcell psinc gr 
+evenpsincgrid             : F *! Force even number of points in simcell psinc g 
+realspaceprojectors       : F *! Whether to evaluate and store projectors in re 
+outputdetail              : NORMAL *! Level of output detail (String)           
+pawoutputdetail           : DEFAULT *! Level of output detail for PAW: BRIEF, N 
+timingslevel              : 0 *! Level of timings output: 0(none) 1(nodes summa 
+writeparams               : T *! Output runtime parameters at startup (Boolean) 
+writeforces               : F *! Write ionic forces (Boolean)                   
+writepositions            : T *! Write ionic positions each geometry or MD step 
+writexyz                  : F *! Output coordinates in .xyz file (Boolean)      
+printqc                   : T *! Print Quality Control information (Boolean)    
+cubeformat                : F *! Allow .cube format for plot outputs (Boolean)  
+dxformat                  : F *! Allow .dx format for plot outputs (Boolean)    
+dxformatcoarse            : F *! Output only points on the coarse grid (Boolean 
+dxformatdigits            : 7 *! Number of significant digits in .dx output (In 
+grdformat                 : T *! Allow .grd format for plot outputs (Boolean)   
+writedensityplot          : T *! Write the charge density in plotting format (B 
+writengwfplot             : F *! Write NGWFs in plotting format (Boolean)       
+writengwfgradplot         : F *! Write NGWF Gradients in plotting format (Boole 
+writengwfradial           : F *! Write NGWFs radial distributions (Boolean)     
+writengwfgradradial       : F *! Write NGWFs gradients radial distributions (Bo 
+writeradialstep           : 5.000000000000000E-003 bohr *! Define the grid step 
+writeradialsmear          : 1.000000000000000E-002 bohr *! Define the gaussian  
+readdenskern              : F *! Read density kernel restart information (Boole 
+writedenskern             : F *! Write density kernel restart information (Bool 
+readtightboxngwfs         : F *! Read in universal tightbox NGWFs restart infor 
+writetightboxngwfs        : F *! Write in universal tightbox NGWFs restart info 
+writeconvergeddkngwfs     : F *! Only write Density Kernel and NGWFs upon conve 
+readswngwfs               : F *! Read NGWFs restart information in spherical wa 
+writeswngwfs              : F *! Write NGWFs restart information in spherical w 
+writemaxl                 : 3 *! Maximum angular momentum number when writing i 
+readmaxl                  : 3 *! Maximum angular momentum number when reading i 
+extransw                  : 0 *! Maximum number of zeros of the sph Bessel func 
+paw                       : F *! Uses a PAW construction to find correct core d 
+finegridscale             : 2.00000000000000 *! Ratio of size of fine grid to s 
+dblgridscale              : 2.00000000000000 *! Ratio of charge density / poten 
+augfuncsrecip             : T *! Construct Augmentation functions in recip spac 
+dispersion                : 1 *! Select dispersion correction (Integer)         
+vdwdcoeff                 : -1.00000000000000 *! Replacement VDW damping coeffi 
+hubbardmaxiter            : 0 *! Maximum number of DFT+U projector optimisation 
+hubbardenergytol          : 1.000000000000000E-008 hartree *! Energy tolerance  
+hubbardconvwin            : 2 *! Energy convergence window when using DFT+U pro 
+hubbardprojmixing         : 0.000000000000000E+000 *! Proportion of old Hubbard 
+hubbardfunctional         : 1 *! DFT+U energy functional to use (Integer)       
+hubbardtensorcorr         : 1 *! DFT+U projector tensorial correction to use (I 
+hubbardngwfspinthreshold  : 2.000000000000000E-005 *! NGWF RMS  gradient thresh 
+coulombcutoffradius       : 0.000000000000000E+000 *! Radius of sphere or cylin 
+coulombcutofflength       : 0.000000000000000E+000 *! Length of cylinder or wid 
+coulombcutofftype         : NONE *! Type of cutoff coulomb interaction: NONE, S 
+coulombcutoffwriteint     : F *! Write real-space cutoff Coulomb interaction sc 
+pbccorrectioncutoff       : 0.000000000000000E+000 *! alpha*L cutoff parameter  
+doproperties              : F *! Allow calculation of properties (Boolean)      
+numeigenvalues            : 10 *! Number of energy and occupancy eigenvalues to 
+homodensplot              : -1 *! Number of squared MOs to plot from HOMO and l 
+lumodensplot              : -1 *! Number of squared MOs to plot from LUMO and h 
+homoplot                  : 5 *! Number of MOs to plot from HOMO and lower (Int 
+lumoplot                  : 5 *! Number of MOs to plot from LUMO and higher (In 
+dossmear                  : 3.674932438755288E-003 hartree *! Half width of sme 
+ldossmear                 : 3.674932438755288E-003 hartree *! Lorentzian broade 
+popncalculate             : F *! Allow population analysis (Boolean)            
+popnbondcutoff            : 5.66917840375065      bohr *! Bond length cutoff fo 
+ngwfanalysis              : F *! Perform NGWF analysis (Boolean)                
+polarisationcalculate     : F *! Allow calculation of polarisation (Boolean)    
+spreadcalculate           : F *! Calculate spread of NGWFs (Boolean)            
+geommodulusest            : 1.700000000000000E-002 ha/bohr**3 *! The estimated  
+geomfrequencyest          : 7.600000000000000E-003 hartree *! The estimated ave 
+geomenergytol             : 1.000000000000000E-006 hartree *! Geometry optimiza 
+geomforcetol              : 2.000000000000000E-003 ha/bohr *! Geometry optimiza 
+geomdisptol               : 5.000000000000000E-003 bohr *! Geometry optimizatio 
+geommaxiter               : 50 *! Maximum number of geometry optimization itera 
+geomconvergencewin        : 2 *! Geometry optimization convergence tolerance wi 
+geomcontinuation          : F *! Read information for continuation of a previou 
+geombackupiter            : 1 *! Number of geometry optimisation iterations bet 
+geomresetdkngwfsiter      : 6 *! Number of geom iterations between resets of ke 
+geomreusedkngwfs          : T *! Re-use density kernel and NGWFs during geometr 
+geomprintinvhessian       : F *! Write inverse Hessian to standard output (Bool 
+geommethod                : CARTESIAN *! Method for geometry optimization (Stri 
+tssearchmethod            : LSTQST *! Specifies method to be used for TS search 
+tssearchlstqstprotocol    : LSTMAXIMUM *! Specifies LSTQST protocol (String)    
+tssearchqstmaxiter        : 5 *! Specifies maximum number of QST steps (Integer 
+tssearchcgmaxiter         : 20 *! Specifies maximum number of CG steps (Integer 
+tssearchforcetol          : 5.000000000000000E-003 ha/bohr *! Force tolerance f 
+tssearchdisptol           : 1.000000000000000E-002 bohr *! Displacement toleran 
+mddeltat                  : 40.0000000000000      aut *! Molecular dynamics tim 
+mdnumiter                 : 100 *! Maximum number of molecular dynamics iterati 
+mdtemperature             : 9.500000000000000E-004 hartree *! Temperature for m 
+mdalgorithm               : LEAPFROGVERLET *! Integration algorithm for molecul 
+mdthermostat              : NONE *! Thermostat for molecular dynamics (String)  
+mdcollisionfrequency      : 0.152000000000000      hartree *! Collision frequen 
+mixdenskern               : 0 *! Number of coefficients used to build new guess 
+mixngwfs                  : 0 *! Number of coefficients used to build new guess 
+condreaddenskern          : F *! Read in conduction density kernel (Boolean)    
+condreadtightboxngwfs     : F *! Read in universal tightbox conduction NGWFs (B 
+condfixedshift            : F *! Fixed projected conduction Hamiltonian shift ( 
+condcalcmaxeigen          : T *! Calculate maximum conduction Hamiltonian eigen 
+condnumstates             : 0 *! Number of conduction states to be optimised fo 
+condkernelcutoff          : 1000.00000000000 *! Conduction density kernel radiu 
+condinitshift             : 0.000000000000000E+000 *! Initial shifting factor f 
+condshiftbuffer           : 0.100000000000000 *! Additional buffer for updating 
+condnumextrastates        : 0 *! Number of extra conduction states for initial  
+condnumextraits           : 0 *! Number of NGWF iterations with extra conductio 
+condplotjointorbitals     : T *! Plot orbitals in the joint basis following a c 
+condplotvcorbitals        : T *! Plot orbitals in the val and cond NGWF basis s 
+condcalcopticalspectra    : F *! Calculate matrix elements for optical absorpti 
+condspeccalcmommatels     : T *! Calculate momentum matrix elements (default tr 
+condspeccalcnonloccomm    : T *! Calculate nonlocal commutator for momentum mat 
+condspeccontderiv         : T *! Calculate non-local commuator using continuous 
+condspecnonloccommshift   : 1.000000000000000E-004 *! Finite difference shift f 
+bskpointpathspacing       : 0.188972700000000      1/bohr *! K-point spacing al 
+bsnumeigenvalues          : -1 *! Num of energy and occ. eigenvalues to print b 
+bsunfold                  : 0 0 0 *! Number of times to unfold Brillouin zone i 
+bsmethod                  : TB *! Method to use: 'KP' or 'TB' (String)          
+dotddft                   : F *! Allow Time-Dependent DFT calculation (Boolean) 
+tddftmaximumenergy        : 1.00000000000000      hartree *! Desired maximum of 
+tddftresolution           : 1.000000000000000E-003 hartree *! Desired resolutio 
+tddftpropagationmethod    : CRANKNICHOLSON *! Method used to integrate von Neum 
+tddftsparsitylevel        : 0 *! Matrix sparsity when computing propagators e.g 
+tddfttammdancoff          : F *! Invoke Tamm-Dancoff decoupling approximation ( 
+tddftdipolekickstrength   : 0.0 0.0 0.0 *! Maximum allowed phase shift in TDDFT 
+tddftxcfunctional         : LDA *! Exchange-correlation functional for TDDFT (S 
+tddfthamiltonianmixing    : 0 *! Order of polynomial extrapolation to H(t + hal 
+tddftdamping              : 0.000000000000000E+000 hartree *! Energy smearing w 
+tddftenforcedidempotency  : F *! Project out at each timestep that part of chan 
+tddftmaxithotelling       : 50 *! Number of Hotelling iteration per propagation 
+tddftmaxresidhotelling    : 1.000000000000000E-018 *! Max allowed value in Hote 
+tddftinvoverlapexact      : T *! Renew inverse overlap with O N^3 algorithm bef 
+isimplicitsolvent         : F *! Use implicit solvent? (Boolean)                
+issmearedionrep           : F *! Implicit solvent: use smeared ions for electro 
+isincludecavitation       : F *! Implicit solvent: include cavitation energy (B 
+isdensitythreshold        : 7.800000000000000E-004 *! Implicit solvent: rho_0 p 
+issolvationbeta           : 1.30000000000000 *! Implicit solvent: beta paramete 
+isbulkpermittivity        : 1.00000000000000 *! Implicit solvent: eps_inf param 
+ismultigriddefecterrortol : 1.000000000000000E-002 *! Implicit solvent: stop cr 
+ismultigriderrortol       : 1.000000000000000E-005 *! Implicit solvent: stop cr 
+issmearedionwidth         : 0.800000000000000 *! Implicit solvent: Width of Gau 
+issurfacethickness        : 2.000000000000000E-004 *! Implicit solvent: thickne 
+issolventsurfacetension   : 4.762400000000000E-005 ha/bohr**2 *! Implicit solve 
+ismultigridmaxiters       : 100 *! Implicit solvent: max number of iterations i 
+ismultigridnlevels        : 4 *! Implicit solvent: number of levels in multigri 
+isdiscretizationorder     : 8 *! Implicit solvent: discretization order (2nd, 4 
+isbccoarseness            : 5 *! Implicit solvent: controls boundary condition  
+isbcsurfacecoarseness     : 1 *! Implicit solvent: controls boundary condition  
+ischecksolvenergygrad     : F *! Implicit solvent: sanity check the energy grad 
+issolvationmethod         : DIRECT *! Implicit solvent: direct or corrective me 
+isdielectricmodel         : FIX_INITIAL *! Implicit solvent: how the cavity is  
+isdielectricfunction      : FGF *! Implicit solvent: how the cavity is determin 
+issolvationoutputdetail   : NONE *! Implicit solvent: controls extra output (St 
+openbcionion              : F *! Force open BCs in ion-ion energy (Boolean)     
+openbchartree             : F *! Force open BCs in Hartree potential (Boolean)  
+openbcpspot               : F *! Force open BCs in local pseudopotential (Boole 
+openbcpspotfinetunenptsx  : 100000 *! Open BCs in local pseudo, npts_x paramete 
+openbcpspotfinetunealpha  : 0.300000000000000 *! Open BCs in local pseudo, alph 
+openbcpspotfinetunef      : -1 *! Open BCs in local pseudo, fineness parameter  
+%block positionsabs       : *! Cartesian positions for each atom (Block)        
+C      11.03265426     9.90071429     8.78389204                                
+C       8.44374314     8.72153141     8.78389204                                
+F       8.17540344     7.00000000    10.78510145                                
+F      12.50852257     8.97286366    10.78510145                                
+H      10.90604328    11.96995347     8.99365054                                
+H      12.00963751     9.43773383     7.00000000                                
+H       8.09792508     7.68974639     7.00755886                                
+H       7.00000000    10.20873802     9.02199628                                
+%endblock positionsabs    : *! Cartesian positions for each atom (Block)        
+%block latticecart        : *! The simulation cell lattice vectors (Block)      
+24.5       0.0       0.0                                                        
+0.0      24.5       0.0                                                         
+0.0       0.0      24.5                                                         
+%endblock latticecart     : *! The simulation cell lattice vectors (Block)      
+%block species            : *! Species information (symbol, atomic number, numb 
+C   C   6 4 7.0                                                                 
+F   F   9 9 7.0                                                                 
+H   H   1 1 7.0                                                                 
+%endblock species         : *! Species information (symbol, atomic number, numb 
+%block speciespot         : *! Pseudopotential name for each species (Block)    
+H     "../../pseudo/hydrogen.recpot"                                            
+C     "../../pseudo/carbon.recpot"                                              
+F     "../../pseudo/fluorine.recpot"                                            
+%endblock speciespot      : *! Pseudopotential name for each species (Block)    
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+WARNING in pseudopotentials_read_species: string "LDA" found in pseudopotential
+file "../../pseudo/fluorine.recpot", yet xc_functional = "PBE".
+ 
+<<<<<<<<<<<<<<<<<<<<<<<<< Pseudopotential information >>>>>>>>>>>>>>>>>>>>>>>>>
+File: ../../pseudo/carbon.recpot [ 2001 points up to Gmax=  52.9 (1/bohr)]
+  Atomic number:  6;  ionic charge:  4.000000
+    Shell 1: l = 0; rc = 1.48 bohr
+File: ../../pseudo/fluorine.recpot [ 2001 points up to Gmax=  52.9 (1/bohr)]
+  Atomic number:  9;  ionic charge:  7.000000
+    Shell 1: l = 0; rc = 1.60 bohr
+File: ../../pseudo/hydrogen.recpot [ 2001 points up to Gmax=  52.9 (1/bohr)]
+  Atomic number:  1;  ionic charge:  1.000000
+    Local potential
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+------------------------- Atom counting information ---------------------------
+Symbol    Natoms    Nngwfs    Nprojs
+  C          2         8         2
+  F          2        18         2
+  H          4         4         0
+.......   ......    ......    ......
+Totals:      8        30         4
+-------------------------------------------------------------------------------
+ 
+Determining parallel strategy ...... done
+
+Calculating Ewald energy ...           35.913065 Hartree
+Dispersion Correction Energy: -0.61292798E-03 Hartree
+
+Basis initialisation ...... done
+
+============================== PSINC grid sizes ================================
+                      Simulation cell:   49 x  49 x  49
+                              FFT-box:   49 x  49 x  49
+                                  PPD:    7 x   7 x   7
+================================================================================
+
+********************** Fourier parallelisation information *********************
+       Coarse grid (whole simulation cell) dimensions:     49    49    49
+          Real-space ('12') slabs/node (min max mean):     12    13    12
+         Recip-space ('23') slabs/node (min max mean):      6     7     6
+********************************************************************************
+
+********************** Fourier parallelisation information *********************
+       Double grid (whole simulation cell) dimensions:     98    98    98
+          Real-space ('12') slabs/node (min max mean):     24    25    24
+         Recip-space ('23') slabs/node (min max mean):     12    13    12
+********************************************************************************
+
+=========================== Sparse matrix information ==========================
+                        Overlap matrix filling: 100.00%
+                        Density kernel filling: 100.00%
+              NGWF-Proj overlap matrix filling: 100.00%
+                    Hamiltonian matrix filling: 100.00%
+                  NGWF diagonal matrix filling:  22.00%
+                             KS matrix filling: 100.00% 
+                           KSKS matrix filling: 100.00% 
+================================================================================
+
+Sparse matrix initialisation ... done
+NGWF initialisation ...... done
+
+Up spin density kernel initialisation ...... done
+
+################################################################################
+########################### NGWF CG iteration  001 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.5000 a0^-1 *******
+
+------------------ Hamiltonian diagonalisation + kernel DIIS -------------------
+T|Iter|Spin| [HKS,SKH]|   [K,KSK]|  Residual|         Ne|            Energy(Ha)|
+ orfac =   1.000000000000000E-004
+D    1    1  3.654E-02  4.898E-15  2.810E+00      26.000     -50.16573065344906
+ orfac =   1.000000000000000E-004
+L    2    1  2.820E-02  4.024E-02  1.632E+00      26.000     -56.70037173514865
+ orfac =   1.000000000000000E-004
+L    3    1  2.348E-02  4.791E-02  1.352E+00      26.000     -56.90266635733887
+ orfac =   1.000000000000000E-004
+L    4    1  1.966E-02  5.183E-02  1.135E+00      26.000     -57.00899736652898
+ orfac =   1.000000000000000E-004
+L    5    1  1.654E-02  5.311E-02  9.582E-01      26.000     -57.07451992030841
+ orfac =   1.000000000000000E-004
+L    6    1  1.396E-02  5.258E-02  8.129E-01      26.000     -57.11688814712665
+ orfac =   1.000000000000000E-004
+P    7    1  4.490E-04  5.413E-03  4.502E-02      26.000     -57.20023563138564
+ orfac =   1.000000000000000E-004
+P    8    1  1.878E-04  3.028E-03  2.292E-02      26.000     -57.20028193108551
+ orfac =   1.000000000000000E-004
+P    9    1  1.261E-04  2.346E-03  1.681E-02      26.000     -57.20028884182423
+ orfac =   1.000000000000000E-004
+P   10    1  2.031E-05  1.060E-03  6.606E-03      26.000     -57.20030110488526
+ orfac =   1.000000000000000E-004
+P   11    1  1.768E-05  9.852E-04  6.120E-03      26.000     -57.20030412480568
+ orfac =   1.000000000000000E-004
+P   12    1  1.793E-05  2.384E-04  1.935E-03      26.000     -57.20031879552257
+ orfac =   1.000000000000000E-004
+P   13    1  3.985E-06  4.073E-05  3.822E-04      26.000     -57.20031887292615
+ orfac =   1.000000000000000E-004
+P   14    1  8.634E-07  3.373E-06  7.634E-05      26.000     -57.20031890502396
+ orfac =   1.000000000000000E-004
+P   15    1  1.671E-07  1.499E-06  1.874E-05      26.000     -57.20031890642760
+ orfac =   1.000000000000000E-004
+P   16    1  3.226E-08  3.437E-08  2.827E-06      26.000     -57.20031890646645
+ orfac =   1.000000000000000E-004
+P   17    1  1.679E-08  6.815E-10  1.327E-06      26.000     -57.20031890646896
+
+==> Kernel converged after  17 iterations with energy =     -57.20031890646896
+==> Residual (1) =       0.00000132746407   OK
+<QC>           [total_energy]:      -57.200318906469
+<QC>                 [deltaE]:       -0.000000000003
+<QC>             [HKS,SKH(1)]:        0.000000016790
+<QC>               [K,KSK(1)]:        0.000000000681
+<QC>            [residual(1)]:        0.000001327464
+<QC>                  [mu(1)]:       -0.635258051433
+<QC>        [max(denskern(1)]:        5.430682259557
+<QC>    [max(pur_denskern(1)]:       10.861364519114
+<QC>             [max(ham(1)]:        0.907057745215
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00612166330895
+Trial step length           =               0.122474
+Gradient along search dir.  =        -12.92208479315
+Functional at step 0        =     -57.20031890646896
+Functional at step 1        =     -58.66062247849238
+Functional predicted        =     -62.31939264344403
+Selected quadratic step     =               0.792298
+Conjugate gradients coeff.  =               0.000000
+--------------------------- NGWF line search finished --------------------------
+                                               
+
+################################################################################
+########################### NGWF CG iteration  002 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.5000 a0^-1 *******
+
+------------------ Hamiltonian diagonalisation + kernel DIIS -------------------
+T|Iter|Spin| [HKS,SKH]|   [K,KSK]|  Residual|         Ne|            Energy(Ha)|
+ orfac =   1.000000000000000E-004
+D    1    1  5.010E-03  2.595E-03  2.970E-01      26.000     -61.79235204413438
+ orfac =   1.000000000000000E-004
+L    2    1  4.402E-03  1.970E-03  2.576E-01      26.000     -61.79817440825146
+ orfac =   1.000000000000000E-004
+L    3    1  3.880E-03  1.628E-03  2.254E-01      26.000     -61.80169741364050
+ orfac =   1.000000000000000E-004
+L    4    1  3.429E-03  1.456E-03  1.986E-01      26.000     -61.80385991818257
+ orfac =   1.000000000000000E-004
+L    5    1  3.037E-03  1.367E-03  1.759E-01      26.000     -61.80520280575744
+ orfac =   1.000000000000000E-004
+L    6    1  2.695E-03  1.312E-03  1.565E-01      26.000     -61.80604490512570
+ orfac =   1.000000000000000E-004
+P    7    1  9.328E-06  5.120E-05  6.907E-04      26.000     -61.80754842190665
+ orfac =   1.000000000000000E-004
+P    8    1  1.337E-06  2.919E-05  1.905E-04      26.000     -61.80754851731701
+ orfac =   1.000000000000000E-004
+P    9    1  1.169E-06  2.274E-05  1.514E-04      26.000     -61.80754851700829
+ orfac =   1.000000000000000E-004
+P   10    1  7.969E-07  1.364E-05  9.142E-05      26.000     -61.80754851795458
+ orfac =   1.000000000000000E-004
+P   11    1  6.652E-07  1.149E-05  7.809E-05      26.000     -61.80754851814493
+ orfac =   1.000000000000000E-004
+P   12    1  2.557E-07  5.765E-06  5.980E-05      26.000     -61.80754851762667
+ orfac =   1.000000000000000E-004
+P   13    1  2.660E-07  5.811E-06  5.654E-05      26.000     -61.80754851768001
+ orfac =   1.000000000000000E-004
+P   14    1  1.810E-08  1.205E-07  1.723E-06      26.000     -61.80754851828112
+
+==> Kernel converged after  14 iterations with energy =     -61.80754851828112
+==> Residual (1) =       0.00000172324266   OK
+<QC>           [total_energy]:      -61.807548518281
+<QC>                 [deltaE]:       -0.000000000601
+<QC>             [HKS,SKH(1)]:        0.000000018099
+<QC>               [K,KSK(1)]:        0.000000120459
+<QC>            [residual(1)]:        0.000001723243
+<QC>                  [mu(1)]:       -0.515781796581
+<QC>        [max(denskern(1)]:        5.328244480928
+<QC>    [max(pur_denskern(1)]:       10.656488961855
+<QC>             [max(ham(1)]:        0.782444188321
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00230875946324
+Trial step length           =               0.311507
+Gradient along search dir.  =         -1.59977041968
+Functional at step 0        =     -61.80754851828112
+Functional at step 1        =     -62.17796048347051
+Functional predicted        =     -62.29286767221202
+Selected quadratic step     =               0.606736
+Conjugate gradients coeff.  =               0.142239
+--------------------------- NGWF line search finished --------------------------
+                                               
+
+################################################################################
+########################### NGWF CG iteration  003 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.5000 a0^-1 *******
+
+------------------ Hamiltonian diagonalisation + kernel DIIS -------------------
+T|Iter|Spin| [HKS,SKH]|   [K,KSK]|  Residual|         Ne|            Energy(Ha)|
+ orfac =   1.000000000000000E-004
+D    1    1  1.190E-03  2.827E-03  7.214E-02      26.000     -62.29627766669083
+ orfac =   1.000000000000000E-004
+L    2    1  1.032E-03  2.537E-03  6.056E-02      26.000     -62.29707597727798
+ orfac =   1.000000000000000E-004
+L    3    1  9.003E-04  2.278E-03  5.176E-02      26.000     -62.29759050697191
+ orfac =   1.000000000000000E-004
+L    4    1  7.885E-04  2.047E-03  4.500E-02      26.000     -62.29792440637405
+ orfac =   1.000000000000000E-004
+L    5    1  6.932E-04  1.840E-03  3.973E-02      26.000     -62.29814232314747
+ orfac =   1.000000000000000E-004
+L    6    1  6.115E-04  1.655E-03  3.552E-02      26.000     -62.29828523052869
+ orfac =   1.000000000000000E-004
+P    7    1  1.783E-06  1.564E-05  1.207E-04      26.000     -62.29856578329226
+ orfac =   1.000000000000000E-004
+P    8    1  7.248E-07  7.049E-06  6.646E-05      26.000     -62.29856578341969
+ orfac =   1.000000000000000E-004
+P    9    1  4.014E-07  3.419E-06  3.330E-05      26.000     -62.29856578381011
+ orfac =   1.000000000000000E-004
+P   10    1  1.462E-07  1.114E-06  1.196E-05      26.000     -62.29856578388390
+ orfac =   1.000000000000000E-004
+P   11    1  3.866E-08  3.587E-07  5.155E-06      26.000     -62.29856578388694
+ orfac =   1.000000000000000E-004
+P   12    1  3.155E-08  5.112E-07  5.669E-06      26.000     -62.29856578388166
+ orfac =   1.000000000000000E-004
+P   13    1  5.945E-09  5.149E-08  6.352E-07      26.000     -62.29856578388838
+
+==> Kernel converged after  13 iterations with energy =     -62.29856578388838
+==> Residual (1) =       0.00000063515872   OK
+<QC>           [total_energy]:      -62.298565783888
+<QC>                 [deltaE]:       -0.000000000007
+<QC>             [HKS,SKH(1)]:        0.000000005945
+<QC>               [K,KSK(1)]:        0.000000051489
+<QC>            [residual(1)]:        0.000000635159
+<QC>                  [mu(1)]:       -0.518613837141
+<QC>        [max(denskern(1)]:        5.221425654967
+<QC>    [max(pur_denskern(1)]:       10.442851309933
+<QC>             [max(ham(1)]:        0.759610909079
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00077049262388
+Trial step length           =               0.434744
+Gradient along search dir.  =         -0.20843813798
+Functional at step 0        =     -62.29856578388838
+Functional at step 1        =     -62.36032521627612
+Functional predicted        =     -62.36970327013056
+Selected quadratic step     =               0.682576
+Conjugate gradients coeff.  =               0.111373
+--------------------------- NGWF line search finished --------------------------
+                                               
+
+################################################################################
+########################### NGWF CG iteration  004 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.5000 a0^-1 *******
+
+------------------ Hamiltonian diagonalisation + kernel DIIS -------------------
+T|Iter|Spin| [HKS,SKH]|   [K,KSK]|  Residual|         Ne|            Energy(Ha)|
+ orfac =   1.000000000000000E-004
+D    1    1  5.215E-04  1.517E-03  3.673E-02      26.000     -62.37058586321783
+ orfac =   1.000000000000000E-004
+L    2    1  4.559E-04  1.364E-03  3.199E-02      26.000     -62.37063186172629
+ orfac =   1.000000000000000E-004
+L    3    1  4.000E-04  1.226E-03  2.801E-02      26.000     -62.37066284322076
+ orfac =   1.000000000000000E-004
+L    4    1  3.521E-04  1.103E-03  2.466E-02      26.000     -62.37068376874746
+ orfac =   1.000000000000000E-004
+L    5    1  3.109E-04  9.917E-04  2.180E-02      26.000     -62.37069794191584
+ orfac =   1.000000000000000E-004
+L    6    1  2.752E-04  8.919E-04  1.935E-02      26.000     -62.37070756863555
+ orfac =   1.000000000000000E-004
+P    7    1  2.304E-07  9.990E-07  1.433E-05      26.000     -62.37072856250705
+ orfac =   1.000000000000000E-004
+P    8    1  5.875E-08  6.273E-07  5.306E-06      26.000     -62.37072856252763
+ orfac =   1.000000000000000E-004
+P    9    1  2.214E-08  4.310E-07  3.423E-06      26.000     -62.37072856252860
+ orfac =   1.000000000000000E-004
+P   10    1  1.275E-08  2.523E-07  1.974E-06      26.000     -62.37072856252972
+
+==> Kernel converged after  10 iterations with energy =     -62.37072856252972
+==> Residual (1) =       0.00000197355643   OK
+<QC>           [total_energy]:      -62.370728562530
+<QC>                 [deltaE]:       -0.000000000001
+<QC>             [HKS,SKH(1)]:        0.000000012747
+<QC>               [K,KSK(1)]:        0.000000252268
+<QC>            [residual(1)]:        0.000001973556
+<QC>                  [mu(1)]:       -0.526388820328
+<QC>        [max(denskern(1)]:        5.177318505485
+<QC>    [max(pur_denskern(1)]:       10.354637010971
+<QC>             [max(ham(1)]:        0.753694680415
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00034949214401
+Trial step length           =               0.544744
+Gradient along search dir.  =         -0.04286292758
+Functional at step 0        =     -62.37072856252972
+Functional at step 1        =     -62.38625567751539
+Functional predicted        =     -62.38815302094907
+Selected quadratic step     =               0.813032
+Conjugate gradients coeff.  =               0.205749
+--------------------------- NGWF line search finished --------------------------
+                                               
+
+################################################################################
+########################### NGWF CG iteration  005 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.5000 a0^-1 *******
+
+------------------ Hamiltonian diagonalisation + kernel DIIS -------------------
+T|Iter|Spin| [HKS,SKH]|   [K,KSK]|  Residual|         Ne|            Energy(Ha)|
+ orfac =   1.000000000000000E-004
+D    1    1  3.421E-04  4.097E-04  2.858E-02      26.000     -62.38825499031581
+ orfac =   1.000000000000000E-004
+L    2    1  2.850E-04  3.682E-04  2.300E-02      26.000     -62.38834891089270
+ orfac =   1.000000000000000E-004
+L    3    1  2.397E-04  3.311E-04  1.862E-02      26.000     -62.38840597072813
+ orfac =   1.000000000000000E-004
+L    4    1  2.035E-04  2.978E-04  1.517E-02      26.000     -62.38844063669830
+ orfac =   1.000000000000000E-004
+L    5    1  1.744E-04  2.679E-04  1.245E-02      26.000     -62.38846170268133
+ orfac =   1.000000000000000E-004
+L    6    1  1.507E-04  2.410E-04  1.031E-02      26.000     -62.38847451022089
+ orfac =   1.000000000000000E-004
+P    7    1  9.326E-08  6.899E-07  8.874E-06      26.000     -62.38849452858544
+ orfac =   1.000000000000000E-004
+P    8    1  3.494E-08  3.113E-07  4.543E-06      26.000     -62.38849452858936
+ orfac =   1.000000000000000E-004
+P    9    1  1.494E-08  1.038E-07  1.797E-06      26.000     -62.38849452858866
+
+==> Kernel converged after   9 iterations with energy =     -62.38849452858866
+==> Residual (1) =       0.00000179683687   OK
+<QC>           [total_energy]:      -62.388494528589
+<QC>                 [deltaE]:        0.000000000001
+<QC>             [HKS,SKH(1)]:        0.000000014941
+<QC>               [K,KSK(1)]:        0.000000103806
+<QC>            [residual(1)]:        0.000001796837
+<QC>                  [mu(1)]:       -0.523364611313
+<QC>        [max(denskern(1)]:        5.176396219688
+<QC>    [max(pur_denskern(1)]:       10.352792439376
+<QC>             [max(ham(1)]:        0.747600379034
+
+------------------------------- NGWF line search -------------------------------
+RMS gradient                =       0.00020002791040
+Trial step length           =               0.665503
+Gradient along search dir.  =         -0.01407424492
+Functional at step 0        =     -62.38849452858866
+Functional at step 1        =     -62.39434685785660
+Functional predicted        =     -62.39473580415879
+Selected quadratic step     =               0.886907
+Conjugate gradients coeff.  =               0.327572
+--------------------------- NGWF line search finished --------------------------
+                                               
+
+################################################################################
+########################### NGWF CG iteration  006 #############################
+################################################################################
+****** Reciprocal space K.E. preconditioning with k_zero =  3.5000 a0^-1 *******
+
+------------------ Hamiltonian diagonalisation + kernel DIIS -------------------
+T|Iter|Spin| [HKS,SKH]|   [K,KSK]|  Residual|         Ne|            Energy(Ha)|
+ orfac =   1.000000000000000E-004
+D    1    1  2.618E-04  3.328E-04  2.134E-02      26.000     -62.39471552263483
+ orfac =   1.000000000000000E-004
+L    2    1  2.170E-04  2.998E-04  1.686E-02      26.000     -62.39478572489624
+ orfac =   1.000000000000000E-004
+L    3    1  1.819E-04  2.700E-04  1.340E-02      26.000     -62.39482795965828
+ orfac =   1.000000000000000E-004
+L    4    1  1.542E-04  2.432E-04  1.074E-02      26.000     -62.39485335882610
+ orfac =   1.000000000000000E-004
+L    5    1  1.320E-04  2.190E-04  8.683E-03      26.000     -62.39486863030109
+ orfac =   1.000000000000000E-004
+L    6    1  1.141E-04  1.971E-04  7.098E-03      26.000     -62.39487781209731
+ orfac =   1.000000000000000E-004
+P    7    1  7.965E-08  6.412E-07  7.869E-06      26.000     -62.39489169130512
+ orfac =   1.000000000000000E-004
+P    8    1  2.570E-08  2.263E-07  2.844E-06      26.000     -62.39489169131350
+ orfac =   1.000000000000000E-004
+P    9    1  9.001E-09  4.281E-08  8.513E-07      26.000     -62.39489169131373
+
+==> Kernel converged after   9 iterations with energy =     -62.39489169131373
+==> Residual (1) =       0.00000085133586   OK
+<QC>           [total_energy]:      -62.394891691314
+<QC>                 [deltaE]:        0.000000000000
+<QC>             [HKS,SKH(1)]:        0.000000009001
+<QC>               [K,KSK(1)]:        0.000000042815
+<QC>            [residual(1)]:        0.000000851336
+<QC>                  [mu(1)]:       -0.521094301605
+<QC>        [max(denskern(1)]:        5.180184244117
+<QC>    [max(pur_denskern(1)]:       10.360368488235
+<QC>             [max(ham(1)]:        0.744306205418
+
+           ........................................................
+           | *** NGWF optimisation converged ***                  |
+           | RMS NGWF gradient =    0.00011894763065              |
+           | Criteria satisfied:                                  |
+           | -> RMS NGWF gradient lower than set threshold.       |
+           ========================================================
+
+================================================================================
+           ---------------- ENERGY COMPONENTS (Eh) ----------------
+           | Kinetic                    :       43.71805033349727 |
+           | Pseudopotential (local)    :     -225.12295916173184 |
+           | Pseudopotential (non-local):        8.36718395105668 |
+           | Hartree                    :       89.01066597834875 |
+           | Exchange-correlation       :      -14.28028449853607 |
+           | Ewald                      :       35.91306463402832 |
+           | Dispersion Correction      :       -0.00061292797685 |
+           | Total                      :      -62.39489169131373 |
+           --------------------------------------------------------
+           Integrated density           :       25.99999999999999
+================================================================================
+
+
+                    <<<<< CALCULATION SUMMARY >>>>>
+|ITER|    RMS GRADIENT   |     TOTAL ENERGY    |   step   |     Epredicted      
+   1     0.00612166330895    -57.20031890646896   0.792298    -62.31939264344403
+   2     0.00230875946324    -61.80754851828112   0.606736    -62.29286767221202
+   3     0.00077049262388    -62.29856578388838   0.682576    -62.36970327013056
+   4     0.00034949214401    -62.37072856252972   0.813032    -62.38815302094907
+   5     0.00020002791040    -62.38849452858866   0.886907    -62.39473580415879
+   6     0.00011894763065    -62.39489169131373  <-- CG                         
+ 
+<QC>        [NGWF iterations]:        6
+<QC>           [total_energy]:      -62.39489169
+<QC>                     [F0]:      -62.38849453
+<QC>                     [F1]:      -62.39434686
+<QC>                     [F2]:        0.00000000
+<QC>   [predicted_functional]:      -62.39473580
+<QC>           [rms_gradient]:        0.000118947631
+<QC>                 [G_init]:       -0.014074244923
+<QC>        [quadratic_coeff]:        0.886907
+<QC>            [cubic_coeff]:        0.000000
+<QC>               [cg_coeff]:        0.327572
+<QC>           [trial_length]:        0.665503
+
+------------------------------ TIMING INFORMATION ------------------------------
+TOTAL TIME:     323.473s on     4 node(s)
+
+Job completed: 28-05-2011 02:32 (+0100)
+

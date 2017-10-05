@@ -1,0 +1,11 @@
+#
+# ONETEP configuration file
+#
+# For Core2 running linux
+
+F90 = gfortran
+FFLAGS = -DFFTW3 -m64 -DGFORTRAN -DINTGETARG -DINTFLUSH
+LIBS = -lfftw3  -lblas -llapack -lpthread -ldl
+OPTFLAGS =-O2 -march=core2
+WARNINGFLAGS = -Wall -Wextra
+DEBUGFLAGS = -g -fbounds-check

@@ -1,0 +1,5 @@
+F90 = mppathf90
+FFLAGS = -DFFTW3 -DMPI -m64
+LIBS = -lfftw3 -lacml -lfmpi -lmpi -llam -lpthread -ldl
+OPTFLAGS = -O2 -march=opteron
+DEBUGFLAGS = -trapuv -g -ffortran-bounds-check -C

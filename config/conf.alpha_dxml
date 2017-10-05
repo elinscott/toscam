@@ -1,0 +1,11 @@
+#
+# ONES configuration file
+#
+# For Alpha running Compaq Tru64
+#
+
+F90 = f90
+FFLAGS = -DALPHA -DVENDOR -DMPI
+LIBS = -ldxml -lmpi
+OPTFLAGS = -fast
+DEBUGFLAGS = -g -C -ladebug

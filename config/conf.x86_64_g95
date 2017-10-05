@@ -1,0 +1,11 @@
+#
+# ONETEP configuration file
+#
+# For Opteron running linux
+
+F90 = g95
+FFLAGS = -DFFTW3 -m64
+LIBS = -lfftw3  -llapack -lpthread -ldl
+OPTFLAGS = -O2
+WARNINGFLAGS = -Wall -Wextra
+DEBUGFLAGS = -g

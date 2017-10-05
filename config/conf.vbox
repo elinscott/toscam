@@ -1,0 +1,14 @@
+F90        =  mpif90 -m64 -lstdc++ -w -cpp 
+
+CUDA       = 
+
+FFLAGS     = -ffree-line-length-400  -cpp -DFFTW3 -DMPI  -I.   $(CUDA) 
+
+LIBS       = -L/home/cweber/MYLIBRARY/LIB_FFTW_3.2_GCC/lib -lfftw3 -L/home/cweber/MYLIBRARY/LIBBLAS -L/home/cweber/MYLIBRARY/LIBLAPACK   -llapack -lblas $(CUDA) -lstdc++   
+
+OPTFLAGS   = -cpp -DFFTW3 -DMPI -O1 -DINTFLUSH -DINTGETARG  
+#-DGPU_SPEEDUP_MATMUL_R -DGPU_SPEEDUP_MATMUL -DGPU_SPEEDUP -DGPU_SPEEDUP_WRAPPER  $(CUDA) 
+#-DGPU_SPEEDUP_WRAPPER
+#-DINVERT_N_CUBE  
+
+DEBUGFLAGS = -cpp -DFFTW3 -DMPI -O0 -ffree-line-length-400     

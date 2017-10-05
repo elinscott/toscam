@@ -1,0 +1,419 @@
+#!/bin/bash
+
+########################################################################################
+#                                                                                      #
+# test_results: Analyses the results of onetep tests.                                  #
+#                                                                                      #
+# Written on 2009.12.08 by Jacek Dziedzic (jd12g09@soton.ac.uk)                        #
+# v1.23                                                                                #
+#                                                                                      #
+# Iterates through onetep test directories and compares the results of quality checks  #
+# against reference values. It is assumed that the tests have already been run, with   #
+# the standard output stream redirected to an *.out file and the standard error stream #
+# redirected to an *.err file, e.g.                                                    #
+#                                                                                      #
+# mpirun -np 2 ../../bin/onetep.arch h_bond.dat >h_bond.out 2>h_bond.err               #
+#                                                                                      #
+# 'run_all_tests_serial', 'run_all_tests_parallel' provide a convenient way to do this.#
+#                                                                                      #
+# To classify a qc test as failed or passed, both the absolute and relative difference #
+# between the reference and obtained values are taken into account. A qc test is deemed#
+# failed only when *both* the absolute and the relative difference are above a set     #
+# threshold. Thus quantities that differ wildly (like the rms gradient), but represent #
+# numerical noise very close to zero will not fail qc tests. The only exception is     #
+# the [total_energy], where it is only sufficient for the absolute difference to exceed#
+# a separate threshold to trigger a failed condition.                                  #
+#                                                                                      #
+# The absolute (-a), relative tolerance (-t) and energy tolerance (-e) can be changed  #
+# with command line options.                                                           #
+# The reference directory (-r) can be changed with the command line as well.           #
+#                                                                                      #
+# Run with --help for more details on the syntax.                                      #
+#                                                                                      #
+########################################################################################
+# Default values are given below.
+relative_tolerance_threshold="0.005"   # Do not modify these,
+absolute_tolerance_threshold="1E-05"   # ... rather use the command
+energy_tolerance_threshold="2E-05"     # ... line to override
+reference="CORE2_4procs"               # ...
+verbose=0
+
+# Revision history:
+#       1.00 jd, original version
+#       1.01 jd, fancy terminal optional
+#       1.05 jd, verbose mode on/off
+#       1.06 jd, some spelling errors fixed
+#       1.08 jd, files in the 'reference' subdirectory are ignored; extra 'reference/' prefix is ignored
+#       1.10 jd, -e and a separate check for [total_energy] added, default relative tol. threshold increased to 0.005
+#       1.11 jd, gracefully handles broken reference files, whitespace fixes
+#       1.12 jd, increased the default absolute_tolerance_threshold
+#       1.13 jd, numbers error lines and shows a tail of .out as well in case of errors
+#       1.15 jd, does not treat QC-tests aborted due to missing functionality as error
+#       1.16 jd, spots cases of running the serial version in parallel
+#       1.17 jd, increased default absolute_tolerance_threshold
+#       1.18 jd, increased default energy_tolerance_threshold to 0.02mHa, improved formatting, help
+#       1.19 jd, minor formatting fix
+#       1.20 jd, Electric Fence's banner is recognized not to be an error condition
+#       1.21 jd, Warns when the number of processors differed between test and reference runs
+#       1.22 jd, Electric Fence ignored in parallel as well (multiple banners handled correctly)
+#       1.23 jd, Revised 'missing functionality' string.
+
+syntax_help() {
+  echo "The correct syntax is: " >&2
+  echo "test_results [-r reference] [-t relative_tolerance] [-a absolute_tolerance] [-e energy_tolerance] [-x] [-v]" >&2
+  echo "... where 'reference' is a name of a subdirectory in the 'tests/reference' directory " >&2
+  echo "    that the results will be compared against. 'relative_tolerance' is the maximum " >&2
+  echo "    relative difference between the obtained and reference values that passes the test," >&2
+  echo "    'absolute_tolerance' is the maximum absolute difference between the obtained and" >&2
+  echo "    reference values that passes the test and 'energy_tolerance' overrides 'absolute_tolerance'" >&2
+  echo "    when comparing [total_energy], to make this test more stringent." >&2
+  echo "    All options are optional (duh!), the default being a reference directory '$reference'," >&2
+  echo "    a relative_tolerance of $relative_tolerance_threshold and absolute_tolerance of $absolute_tolerance_threshold." >&2
+  echo "" >&2
+  echo "A test is deemed failed if *both* the relative and absolute tolerances are exceeded." >&2
+  echo "This allows for ignoring quantities (such as rms gradients) that differ wildly, but are very close to zero." >&2
+  echo "" >&2
+  echo "Supplying -x turns off the fancy terminal bold/reverse, which might be useful " >&2 
+  echo "when redirecting output to a file." >&2
+  echo "Supplying -v turns on verbose mode, where a lot of details is shown." >&2 
+}
+
+warnon() {
+  if [ $fancy_terminal -eq 1 ]; then
+    setterm -bold on
+    setterm -reverse on
+  fi
+}
+
+warnoff() {
+  if [ $fancy_terminal -eq 1 ]; then 
+    setterm -bold off
+    setterm -reverse off
+  fi
+}
+
+abort() {
+  echo "Aborting!" >&2
+  echo >&2
+  exit $errcode
+}
+
+############################################################################################
+# Initialisation and sanity checks on arguments
+############################################################################################
+fancy_terminal=1
+
+# Introduce myself
+tail -n +3 $0 2>/dev/null | head -n 31 2>/dev/null
+echo
+
+if [ "$1" == "--help" ] || [ "$1" == "-help" ] || [ "$1" == "-?" ]; then
+  syntax_help
+  errcode=1; abort
+fi
+
+
+echo "Available reference directories:"
+ls -l reference | grep "^dr" | awk '{print "\t",$NF}'
+ls reference >/dev/null 2>/dev/null
+problems=$?
+
+if [ $problems -ne 0 ]; then
+  echo "There are none! Make sure you run this script from the 'tests' directory of a onetep installation." >&2
+  errcode=2; abort
+fi
+echo 
+
+# Sanity check on first option
+if [ $# -gt 0 ] && [ "`echo $1 | cut -c 1`" != "-" ]; then
+  syntax_help
+  errcode=1; abort
+fi
+
+# Parse options, if any
+while getopts "t:r:a:e:xv" flag; do
+  if [ "$flag" == "?" ]; then
+    echo "Improper invocation." >&2
+    syntax_help
+    errcode=1; abort
+  fi
+  if [ "$flag" == "a" ]; then absolute_tolerance_threshold=$OPTARG; fi
+  if [ "$flag" == "e" ]; then energy_tolerance_threshold=$OPTARG; fi
+  if [ "$flag" == "t" ]; then relative_tolerance_threshold=$OPTARG; fi
+  if [ "$flag" == "r" ]; then reference=$OPTARG; fi
+  if [ "$flag" == "x" ]; then fancy_terminal=0; fi
+  if [ "$flag" == "v" ]; then verbose=1; fi
+done
+
+
+# Sanity checks on the tolerances provided
+correct_value=`echo $relative_tolerance_threshold | awk '{if($1<0) print 0; else print $1+0}'`
+if [ "$correct_value" == "0" ]; then
+  echo "Please supply a relative tolerance that is numerical and larger than zero." >&2
+  errcode=3; abort
+fi
+relative_tolerance_threshold=$correct_value # take care of numericals with strings attached to them
+
+correct_value=`echo $absolute_tolerance_threshold | awk '{if($1<0) print 0; else print $1+0}'`
+if [ "$correct_value" == "0" ]; then
+  echo "Please supply an absolute tolerance that is numerical and larger than zero." >&2
+  errcode=3; abort
+fi
+absolute_tolerance_threshold=$correct_value # take care of numericals with strings attached to them
+
+correct_value=`echo $energy_tolerance_threshold | awk '{if($1<0) print 0; else print $1+0}'`
+if [ "$correct_value" == "0" ]; then
+  echo "Please supply an energy tolerance that is numerical and larger than zero." >&2
+  errcode=3; abort
+fi
+energy_tolerance_threshold=$correct_value # take care of numericals with strings attached to them
+
+# Inform the user of what is going on
+echo "Using reference: '$reference'"
+echo "Using a relative tolerance threshold of $relative_tolerance_threshold."
+echo "Using an absolute tolerance threshold of $absolute_tolerance_threshold (but not for [total_energy])."
+echo "Using an energy tolerance threshold of $energy_tolerance_threshold."
+referencedir="reference/$reference"
+
+# Make sure the required reference directory exists
+if [ ! -d $referencedir ]; then
+  # It does not. See if the user mistakenly prefixed it with 'reference/' herself
+  alternatereferencedir=`echo $referencedir | sed "s/reference\///"`
+  if [ -d "$alternatereferencedir" ]; then
+    # Yep, that's the case, fix this silently
+    referencedir="$alternatereferencedir"
+  else
+    # Not really, it's just not there
+    echo "The directory '$referencedir' does not exist. Aborting!" >&2
+    exit 3
+  fi
+fi
+
+############################################################################################
+# Analyse tests
+############################################################################################
+
+# Are there any?
+ntests=`ls -d test[0-9]* 2>/dev/null | wc -l`
+if [ $ntests -lt 1 ]; then
+  warnon; echo "??? There are no tests to analyse (no directories matching 'test[0-9]*')."; warnoff
+  errcode=4; abort
+fi
+
+nproc_differed=0
+
+# Loop over test directories
+for directory in test[0-9]*; do
+for dummyloop in 1; do  # Trick to be able to 'continue' the main loop with clean-up.
+  let "counter++"
+  echo ""
+  if [ $verbose -eq 1 ]; then
+    echo "============================================================================="
+  fi
+  echo -n "$directory: "
+  cd $directory
+
+  # Exclude the unlikely scenario of having more than one *.out or *.err files
+  for extension in .out .err; do
+    nfiles=`ls *$extension 2>/dev/null | wc -l`
+    if [ $nfiles -gt 1 ]; then
+      warnon; echo -n "??? MORE THAN ONE $extension FILE in `pwd`. Skipping this test."; warnoff
+      continue 2  # Must get out of the inner loop first
+    fi
+  done
+
+  # If there is no out file, the check did not even start
+  if [ ! -r *.out ]; then
+    warnon; echo -n "*** DID NOT START ***"; warnoff; echo -n " (No '*.out' file in `pwd`)"
+    continue
+  fi
+
+  # Spot multiple ONETEP processes writing to the same file
+  if [ `grep -c "Linear-Scaling Ab Initio Total Energy Program" *.out` -gt 1 ]; then
+    warnon; echo -n "*** You tried to run the serial version of ONETEP in parallel. ***"; warnoff
+    continue
+  fi
+
+  # If the error file exists and is non-zero in size, something must have gone wrong
+  if [ -s *.err ]; then
+    # ... unless this is due to functionality not having been compiled in.
+    if [ ! -z "`grep "not present in this version" *.out`" ]; then
+      echo -n "This optional feature cannot be tested with this ONETEP executable."
+      continue
+    else
+      # ... or the .err file contains only Electric Fence banners and/or empty lines
+      if [ `cat *.err | grep -v "Electric Fence" | grep -Ev "^$" | wc -l ` == 0 ]; then
+        true
+      else
+        warnon; echo -n "*** DID NOT COMPLETE, PRODUCING AN ERROR ***:"; warnoff; 
+        echo " Error message follows."
+        head *.err | cat -n
+        echo " Last three lines of output were:"
+        tail -n 3 *.out | cat -n
+        continue
+      fi
+    fi
+  fi
+
+  # Check if it completed
+  grep "Job completed" *.out >/dev/null 2>/dev/null; not_completed=$?
+  if [ $not_completed -ne 0 ]; then
+    warnon; echo -n "*** DID NOT COMPLETE, NO ERROR MESSAGE ***"; warnoff
+    continue
+  fi
+
+  # Completed, compare results
+  echo -n "completed: "
+
+  # Extract the QC information
+  rootname=`echo *.out | sed "s/\.out//"`
+  qc_this=$rootname.qc.this
+  qc_reference=$rootname.qc.reference
+  tmp="qc_temporary"
+  grep "<QC>" $rootname.out >$qc_this
+  # Extract the QC information from reference
+  referencefile="../"$referencedir/$rootname.out
+  if [ ! -r $referencefile ]; then
+    warnon; echo -n "!!! Error reading reference file: $referencefile. Skipping this test."; warnoff
+    continue
+  fi
+  grep "<QC>" $referencefile >$qc_reference
+  # Collate the two outputs into one file
+  # - get the name of the quantity (anything in between [], even if it contains spaces)
+  cat $qc_reference | sed -r -e "s/.*(\[.*\]).*/\1/" -e "s/ /_/g" | awk '{printf("%24s\n",$0)}' >$tmp.1
+  # - get the reference value for the quantity
+  cat $qc_reference | awk '{printf("%16.8e\n", $NF)}' >$tmp.2
+  # - get the obtained value for the quantity
+  cat $qc_this | awk '{printf("%16.8e\n", $NF)}' >$tmp.3
+  # - paste the three together
+  paste -d " " $tmp.1 $tmp.2 $tmp.3 >$tmp.4
+  rm -f $qc_this $qc_reference 2>/dev/null
+  # Compare the results
+  cat $tmp.4 | awk -v relative_tolerance_threshold=$relative_tolerance_threshold \
+                   -v absolute_tolerance_threshold=$absolute_tolerance_threshold \
+                   -v energy_tolerance_threshold=$energy_tolerance_threshold \
+		   -v fancy_terminal=$fancy_terminal \
+		   -v verbose=$verbose \
+		   '
+
+            BEGIN{
+              if(verbose) printf("\n\n        *** Quantity *** | Reference (x0) |  Obtained (x1) | Abs. diff. (x1-x0)  | Rel. diff. (x1-x0)/x0 | Passed?\n")
+	    }
+
+            function fabs(x) {
+	      return (x > 0.0) ? x : -x;
+	    }
+
+	    function fail() {
+              fail_flag=1
+              verdict="***FAILED***"
+              if(fancy_terminal && verbose) {
+  	        system("setterm -bold on")
+	        system("setterm -reverse on")
+	      }
+	    }
+
+	    function pass() {
+              verdict="PASSED"
+	    }
+
+	    {
+              x0=$2
+	      x1=$3
+	      absdiff=x1-x0;
+
+              if($1 == "[total_energy]") comparing_energy=1; else comparing_energy=0;
+
+     	      if(fabs(absdiff) > (comparing_energy ? energy_tolerance_threshold : absolute_tolerance_threshold) ) 
+	        test_absolute="BAD"; else test_absolute="OK";
+
+              # Case where the reference value is non-zero
+              if(x0 != 0.0) {
+
+                # Very unlikely case of this being a non-numerical value
+                if(0+x0 == 0.0) { # cf. http://www.faqs.org/faqs/computer-lang/awk/faq/ (para 24)
+                  printf("! Broken reference file ! ")
+                  fail()
+                  if(fancy_terminal) {
+  	            system("setterm -bold off")
+	            system("setterm -reverse off")
+	          }
+                  exit
+                } 
+
+                else reldiff=absdiff/x0
+                if(fabs(reldiff) > relative_tolerance_threshold) test_relative="BAD"; else test_relative="OK";
+              }
+              # Case where the reference value is exactly zero, avoid division by zero
+	      else {
+	        if(x1 == 0.0) {
+	          reldiff_string="  (0.000000000)"; test_relative="OK"
+	        }
+	        else {
+	          reldiff_string="  (*infinity*) "; test_relative="BAD"
+	        }
+	      }
+	      if(test_absolute=="BAD" && (test_relative=="BAD" || comparing_energy)) fail(); else pass();
+              if(verbose) {
+	        if(x0 != 0.0) printf("%s  %16.8e %3s %16.9f  %3s  %9s",$0,(x1-x0),test_absolute,reldiff,test_relative,verdict)
+	        else printf("%s* %16.8e %3s  %16s %3s  %9s",$0,(x1-x0),test_absolute,reldiff_string,test_relative,verdict)
+                if(fancy_terminal) {
+  	          system("setterm -bold off")
+	          system("setterm -reverse off")
+	         }
+	        print ""
+	      }
+	    }
+            END{
+              # Return 100 if all tests were fine, 101 if at least failed
+	      exit (100+fail_flag)
+	    }
+  	  '
+
+  testresult=$?
+
+  if [ $verbose -eq 0 ]; then
+    if [ $testresult -eq 100 ]; then
+      echo -n "PASSED"
+    else
+      if [ $testresult -eq 101 ]; then
+        echo -n "***FAILED***"
+      else
+        echo -n "??? TESTING WENT WRONG ???"
+      fi
+    fi
+  fi
+
+  if [ $testresult -eq 101 ]; then
+     nproc_here=`cat $rootname.out | grep "Running on" | awk '{print $3}'`
+     nproc_ref=`cat ../$referencedir/$rootname.out | grep "Running on" | awk '{print $3}'`
+
+     if [ "$nproc_here" != "$nproc_ref" ]; then
+       echo -n " (*)"
+       nproc_differed=1
+     fi
+  fi
+  
+  # Clean up
+  rm -f $tmp.1 $tmp.2 $tmp.3 $tmp.4 2>/dev/null
+done # End of the dummy-loop
+
+  # Continue statements go to here
+
+  cd - >/dev/null
+
+done # End of the loop over test directories
+
+echo ""
+echo "============================================================================="
+echo ""
+if [ $nproc_differed == 1 ]; then
+  echo "(*) Note that the reference and test runs used different numbers of processors."
+  echo "    Results might not be directly comparable."
+fi
+echo "$counter tests analysed. Bye!"
+if [ $verbose -eq 0 ]; then
+  echo "Re-run with -v to see more details."
+fi
+
+echo ""

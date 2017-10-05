@@ -1,0 +1,76 @@
+!====================================================!
+! Input for calculation with the ONETEP program      !
+!                                                    !
+! Quality Control file                               !
+!                                                    !
+! Created by CKS:  05/05/2004                        !
+! Modified by AAM: 29/07/2005                        !
+! Modified by CKS: 21/03/2006                        !
+! Changed pseudopotential names PDH: 06/02/2008      !
+! Made a1, a2 and a3 grids differ CKS: 27/10/2008    !
+!                                                    !
+! Chris-Kriton Skylaris                              !
+! School of Chemistry                                !
+! University of Southampton                          !
+! Highfield                                          !
+! Southampton SO17 1BJ                               !
+! UK                                                 !
+!                                                    !
+! Arash A Mostofi and Peter D Haynes                 !
+! Theory of Condensed Matter group                   !
+! Cavendish Laboratory                               !
+! Madingley Road                                     !
+! Cambridge CB3 0HE                                  !
+! UK                                                 !
+!====================================================!
+
+
+fftboxpref           :  65 65 65
+psinc_spacing        :  0.6  0.65  0.70
+ppd_npoints          :  5  4  6
+old_lnv              :  T
+exact_lnv            :  F
+print_qc             :  T
+output_detail        :  VERBOSE
+timings_level        :  0
+write_denskern       :  F
+write_tightbox_ngwfs : F
+
+
+%block   lattice_cart
+  51.00     0.00     0.00
+   0.00    52.00     0.00
+   0.00     0.00    46.20
+%endblock  lattice_cart
+
+
+%block  positions_abs    
+O     24.887507   23.896975   22.647313 
+C     27.731659   23.667449   22.643306 
+H     28.655157   21.721170   22.637547 
+H     28.955467   25.440371   22.646039 
+O     19.766101   21.820471   22.648599 
+H     17.687651   22.103070   22.651801 
+H     20.725313   23.685785   22.651874 
+%endblock  positions_abs  
+
+
+%block species
+O    O    8    4    6.3
+C    C    6    4    6.3
+H    H    1    1    6.0
+%endblock species
+
+
+%block species_pot
+O    "../../pseudo/oxygen.recpot"
+C    "../../pseudo/carbon.recpot"
+H    "../../pseudo/hydrogen_coul.recpot"
+%endblock species_pot
+
+
+%block species_atomic_set
+O    "../../fireballs/O_SZ_6.0_recpot01_600eV.fbl"
+C    "../../fireballs/C_SZ_6.0_recpot00_600eV.fbl"
+H    "../../fireballs/H_SZ_6.0_recpot00_600eV.fbl"
+%endblock species_atomic_set

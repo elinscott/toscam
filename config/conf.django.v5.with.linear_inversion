@@ -1,0 +1,31 @@
+F90        =  $(HOME)/local/mpich2/bin/mpif90   -I$(HOME)/local/mpich2/include  
+
+DEBUGF=-fbacktrace -w -O0 -g -m64 -ffree-line-length-2000 -Warray-bounds -fbounds-check -w -g 
+ 
+MAGMA=-I$(HOME)/MYLIBRARY/LIB_GPU_NUMERICS_MAGMA/common -I$(HOME)/MYLIBRARY/LIB_GPU_NUMERICS_MAGMA/include  -L$(HOME)/MYLIBRARY/LIB_GPU_NUMERICS_MAGMA/lib -lmagma -lmagmablas  
+
+FFLAGS     = -cpp -DFFTW3 -DMPI -w -O3 -fopenmp -m64 -ffree-line-length-400 -L/opt/local/mpich2/lib/ -lmpichf90 -lfmpich -lmpich -lmpichcxx -I/opt/local/mpich2/include/ -I./obj/Darwin/ -I. -I../obj/Darwin -L$(HOME)/MYLIBRARY/LIB_GPU_NUMERICS -lgpu   -L/opt/cuda-5.0/lib64 -lcufft -lcuda -lcudart -lcublas    -DINTGETARG  -DINTFLUSH      
+ 
+GSL = -I$(HOME)/MYLIBRARY/LIB_GSL_GCC/include/ -L$(HOME)/MYLIBRARY/LIB_GSL_GCC/lib/ -lgsl -lgslcblas 
+
+MKL = -L$(HOME)/MYLIBRARY/LIB_SCALAPACK -lscalapack -L$(HOME)/MYLIBRARY/LIBLAPACK -L$(HOME)/MYLIBRARY/LIBBLAS/ -llapack -lblas -L/opt/gcc4.6.3/lib64/ -lgomp  -L$(HOME)/MYLIBRARY/LIB_FFTW_3.2_GCC/lib/  -lfftw3 ${GSL} 
+
+LINSCAL =  -DLINEAR_SCALING_INV  -L$(HOME)/MYLIBRARY/LIB_LINEAR_INVERSION/  -llininv  -I$(HOME)/MYLIBRARY/LIB_LINEAR_INVERSION/ -L$(HOME)/MYLIBRARY/LIBUTILS -lutils -I$(HOME)/MYLIBRARY/LIBUTILS/MODFILES \
+           -L$(HOME)/MYLIBRARY/LIB_PRIMME/  -lprimme -I$(HOME)/MYLIBRARY/LIB_PRIMME/PRIMMESRC/COMMONSRC/ -L$(HOME)/MYLIBRARY/LIBLAPACK \
+           -L$(HOME)/MYLIBRARY/LIBBLAS/ -llapack -lblas -L/opt/gcc4.6.3/lib64/ -lgomp \
+           -L$(HOME)/MYLIBRARY/LIB_DIERICK/ -ldierick -L$(HOME)/MYLIBRARY/LIB_FIELD_SPLINE -lfield \
+           -L$(HOME)/MYLIBRARY/LIB_ARPACK -lparpack -larpack -L$(HOME)/MYLIBRARY/LIBNMR -lnmr -L$(HOME)/MYLIBRARY/LIBSLATEC/ -lslatec   
+
+LIBS       = ${LINSCAL} ${MKL}  -lpthread  -lm  -L$(HOME)/local/mpich2/lib/ -lmpichf90 -lfmpich -lmpich -lmpichcxx -I$(HOME)/local/mpich2/include/ -L$(HOME)/MYLIBRARY/LIB_GPU_NUMERICS -lgpu    -L/opt/cuda-5.0/lib64 -lcufft -lcuda -lcudart -lcublas  ${MAGMA}  ${MKL} -I$(HOME)/MYLIBRARY/LIB_GPU_NUMERICS/MODFILES  
+
+OPTFLAGS   = -cpp -DFFTW3 -DMPI -w -O3 -fopenmp -m64 -ffree-line-length-400 -L/opt/cuda-5.0/lib64 -lcufft -lcuda -lcudart -lcublas ${LIBS} -DGPU_SPEEDUP_MATMUL_R -DGPU_SPEEDUP_MATMUL -DGPU_SPEEDUP -DINTGETARG -DINTFLUSH ${LINSCAL} #-Ddebug     
+
+#-DGPU_SPEEDUP_DENSE  #-Ddebug  
+#-DGPU_SPEEDUP_SINGPREC  #-DdebugMIXv1 #-DdebugMIXv2 #-DdebugMIXv3    #-Ddebug
+#-DGPU_SPEEDUP_SINGLEPREC
+#-DGPU_SPEEDUP_WRAPPER
+#-DSCALAPACK  
+#-DINVERT_N_CUBE  
+
+
+DEBUGFLAGS = -cpp -DFFTW3 -DMPI -DDEBUG ${DEBUGF}

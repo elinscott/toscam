@@ -1,0 +1,293 @@
+\documentclass[a4paper,oneside,11pt]{article}
+
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{latexsym,amsmath,amssymb,amsthm}
+
+\newenvironment{alist}
+{\renewcommand{\theenumi}{\alph{enumi}}
+\renewcommand{\labelenumi}{\textup{(\theenumi)}}
+\renewcommand{\theenumii}{\roman{enumii}}
+\renewcommand{\labelenumii}{\textup{(\theenumii)}}
+
+\begin{enumerate}}
+{\end{enumerate}}
+
+\newenvironment{rlist}
+{\renewcommand{\theenumi}{\roman{enumi}}
+\renewcommand{\labelenumi}{\textup{(\theenumi)}}
+\begin{enumerate}}
+{\end{enumerate}}
+
+\newcommand{\dummy}[1]{\newcounter{#1}\setcounter{#1}{\value{enumii}}}
+\newcommand{\rref}[1]{\tu{(\roman{#1})}}
+
+\setcounter{secnumdepth}{2}
+\setcounter{section}{1}
+
+\numberwithin{equation}{section}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\rhead{}
+
+\pagenumbering{roman} \setcounter{page}{1}
+
+\begin{document}
+\title{Notes for users of the DFT+U (a.k.a. LDA+U) implementation in ONETEP}
+\author{David D. O'Regan \\  University of Cambridge}
+\date{August 2009}
+
+\maketitle
+
+\section*{WHAT IS DFT+U?}
+
+The DFT+U method \cite{Anisimov91,Anisimov97, Dudarev} is used to improve upon the description
+of so-called strongly correlated materials offered by DFT within  
+approximations for exchange-correlation such as LSDA, $\sigma$-GGA etc.
+These functionals based on the locally-evaluated density can 
+often fail to reproduce the physics associated with localised
+orbitals of $3d$ and $4f$ hydrogenic character found in strongly 
+correlated materials, a category traditionally consisting of first-row 
+transition metals and their oxides but increasingly being considered to include
+Lanthanoid oxide materials, magnetic semiconductors and
+organometallic molecules. 
+
+Typically, the LDA and extensions thereof
+can underestimate both local moments on metal ions and the insulating gap. Correlation gap underestimation 
+(due to neglect in the LDA of the derivative discontinuity 
+with respect to orbital occupancy in the exact XC-funtional)
+may be confounded by an underestimation of the exchange splitting
+(the exchange gap can best be recoved by using a functional including
+long-range exchange e.g. based partly or entirely on the Hartree-Fock approximation).
+
+The DFT+U correction term is usually thought of
+as a treatment of the exchange-correlation energy contributed 
+by the correlated sites (subspaces projected out with functions 
+of $3d$ and or $4f$ character on ``Hubbard atoms") within the Hubbard 
+model, including a double-counting correction for that contribution
+already included in the LDA term. The flavour implemented in 
+ONETEP is the basis-set independent, rotationally invariant version
+of reference \cite{Cococcioni1}, where nonsphericity in the electronic interaction
+and explicit exchange coupling are neglected, leading
+to the DFT+U correction term
+
+\begin{equation}
+E_U \left[ n^{(I) (\sigma)} \right] =  \sum_{I \sigma} \frac{U^{(I)}-J^{(I)}}{2} Tr \left[  n^{(I) (\sigma)} \left( 1 -  n^{(I) (\sigma)} \right)\right],
+\end{equation}
+
+where $U$ and $J$ are the screened Hubbard on-site repulsion and exchange interaction parameters and the occupancy matrix of the correlated site $I$ for spin channel $\sigma$ is defined by
+
+\begin{equation}
+n^{(I)(\sigma)}_{m m'} = \sum_i f_i \langle \psi_i^{(\sigma)} \rvert \hat{P}^{(I)}_{m m'} \lvert \psi_i^{(\sigma)} \rangle,
+\end{equation} 
+defining $\hat{P}^{(I)} = \lvert \varphi^{(I)}_m \rangle \langle \varphi^{(I)}_{m'} \rvert$ in the case of a set of
+orthogonal Hubbard projectors localised on site $(I)$.
+
+Put simply, if the system under study contains first-row transition-metal 
+or Lanthanoid ions there is a good chance that the LDA will partly 
+occupy degenerate $3d$ or $4f$ states rather than splitting them into occupied and
+virtual Hubbard bands, hence underestimating the correlation gap and 
+associated magnetic order. In this case the DFT+U method can be used to 
+penalise the noninteger occupancy of these states, tending to fill states
+ with occupancy greater than $0.5$ and emptying states with occupancy less than $0.5$, 
+as can be seen from the expression for the DFT+U potential
+\begin{equation}
+\hat{V}^{(\sigma)}_{DFT+U} = \sum_{(I)} \left( U^{(I)}-J^{(I)} \right) Tr \left[ \frac{1}{2} - n^{(I) (\sigma)} \right].
+\end{equation} 
+
+The DFT+U term may 
+be considered to be a correction which removes the contribution to the energy
+arising due to the spurious self-interaction of a partially occupied
+orbital \cite{Cococcioni1}. In this case, the $U-J$ parameter (henceforth simply denoted $U$)
+is the curvature of the total energy with respect to the occupancy
+of the correlated manifold - which should be a piece-wise linear curve
+were it to satisfy Janak's theorem \cite{Janak} - and can be computed using linear-response
+theory (among other methods such as constrained DFT) according to the prescription given in references \cite{Cococcioni1,Cococcioni2}.
+
+\section*{HOW TO USE DFT+U IN ONETEP}
+
+In order to activate the DFT+U functionality, the \textbf{hubbard} block
+is used in the input file. For example, in the case of a system 
+containing Iron and Cerium atoms, which we think needs the 
+help of the DFT+U correction to improve the description of localisation, 
+we might use the hubbard block 
+
+\begin{table}[!h]
+{\centering \begin{tabular}{|c|c|c|c|c|c|}
+\hline\hline
+!! species$^1$      &  $l$ $^2$ & $U$(eV)$^3$ & Z$^4$ & $\alpha$(eV)$^5$  & $\sigma$-splitting(eV)$^6$   \\
+\hline
+\% block hubbard & & & & & \\
+Fe1 & 2 & 4.0 & 11.18 & 0.00 & 0.05    \\
+Fe2 & 2 & 4.0 & 11.18 &  0.00 & -0.05    \\
+Ce1 & 3 & 6.0  & 1.68 & 0.05 & 0.0     \\
+\% endblock hubbard & & & & & \\
+\hline\hline
+\end{tabular}\par}
+\end{table}
+
+The columns of the \textbf{hubbard} block are described as follows:
+
+\begin{enumerate}
+\item The species label, e.g. $Fe1$ for Iron atoms of the 1st type in the cell, $Fe2$ for Iron atoms of a 2nd kind etc.
+
+\item The angular momentum channel of the projectors
+used to delineate the strongly correlated sites on Hubbard atoms of type, e.g. $l=2$ for $Fe1$. 
+The radial quantum number $r=l+1$ is used to generate atom-centred hydrogenic projectors, so $l=2$ gives $3d$ orbitals, $l=3$ gives $4f$ orbitals etc.
+
+\item The value of the Hubbard $U$ to use, in electron-volts. 
+Most users will simply work with the value for $U$ which corrects the
+band-gap or bond-lengths in the system they wish to study. Methods 
+do, however, exist to estimate its value, for example the linear-response technique \cite{Cococcioni1, Cococcioni2} which is 
+implemented in ONETEP. 
+
+\item The effective charge divided by the ratio of effective masses 
+is needed in order to generate the hydrogenic Hubbard projectors. It has been 
+shown that this does make a difference to the effect of the DFT+U method \cite{Pickett}, but 
+some feel that what is most important is to choose a value for $U$ which is
+consistent with the choice of projectors \cite{Cococcioni1}. Valence pseudo-orbitals from the
+pseudopotential generator may be a preferable choice, or Wannier functions
+such as those used in the self-consistent scheme described below. 
+In this example we have used the Clementi-Raimondi \cite{Clementi1,Clementi2} effective charges for 
+neutral Iron and Cerium, $3d$ and $4f$ orbitals respectively, this data is quite
+old, and based on the restricted Hartree-Fock method, but serves as a useful
+guess. The hydrogenic projectors are renormalised within an atom-centred sphere
+with the same radius as the NGWFs on that atom.
+
+\item An on-site potential acting on the Hubbard projectors, 
+the prefactor $\alpha$ is here entered in electron-volts. This is needed in 
+order to vary the occupancy of the correlated subspace in order to determine
+the value of $U$ which is consistent with the screened response in the system
+with linear-response theory \cite{Cococcioni1, Cococcioni2}. In this case we seem to be trying to calculate a
+value of $U$ for the Cerium atoms.
+
+\item The spin-splitting factor, in electron-volts, which is
+deducted from the $\alpha$ factor for the spin-up channel and added
+to $\alpha$ for the spin-down channel. In this case it looks like we're 
+encouraging occupation of the spin-up channel for some Iron atoms, and 
+spin-down for others. Perhaps this is an antiferromagnetically ordered
+oxide of Iron which is doped with Cerium, and we're worried about maintaining
+this ordering while we deduce the $U$ parameter for Cerium.
+
+\textbf{N.B.} Some users may find the above described functionality useful in 
+cases of spin or charge ordered systems even when the DFT+U correction
+is not needed. Moreover, with zero $U$, $\alpha$ and spin-splitting 
+factors, the DFT+U functionality may be used to monitor the projection
+of the density matrix onto a set of hydrogenic projectors of your choosing.
+
+In the case of antiferromagnetically ordered solids,
+it is very unlikely that any currently available DFT code will find 
+the correct ground state from an un-spin-ordered starting guess. 
+The user may find it useful to use a non-zero 
+spin-splitting factor on atoms which are known to have a given magnetic moment for a few NGWF iterations before restarting in order 
+to relax to the ground state.
+Similary, it may be found difficult to locate a charge-ordered ground state
+in cases where there are no geometric grounds for charge to locate preferentially
+in one part of a system, leading to partial occupancies even when DFT+U is
+used. The alpha parameter may be set nonzero temporarily in this case with a zero value
+of $U$ in order to find the charge-ordered state even in cases where DFT+U is
+not needed.
+\end{enumerate}
+
+\textbf{N.B.} At present the DFT+U contribution to the forces is not implemented
+and thus molecular dynamics and geometry optimisation tasks are incompatable
+with the DFT+U functionality.
+
+\section*{MORE ADVANCED OPTIONS}
+
+Any set of localised functions may, in principle, be used for Hubbard projectors since the
+choice is always somewhat arbitrary. However, it is becoming increasingly accepted
+that Wannier functions, in particular the Maximally Localised variety \cite{Marzari, Souza}
+can provide an excellent minimal basis with which to construct tight-binding models from ab 
+initio simulations. These have been used with good effect in the past to construct sophisticated
+self-interaction corrections based on the occupancies of localised projectors \cite{Mazurenko, Lechermann}.
+Indeed, there is numerical evidence to suggest that Maximally Localised Wannier Functions provide
+the basis which maximises the corresponding on-site repulsion, and hence the $U$ parameter \cite{Miyake}.
+
+In ONETEP, the NGWFs are a readily accessible set of localised Wannier functions, related to the 
+MLWFs via the Modern Theory of Polarisation. Thus, in ONETEP it is possible to re-use the NGWFs from
+the end of a ground-state calculation as a set of Hubbard projectors with which to construct the DFT+U correction. 
+
+In order to ensure that NGWFs with the correct symmetry are chosen as Hubbard projectors on a given
+atom, those $l$ NGWFs $\phi$ centered on that atom which maximise $\sum_l \lvert \langle \phi \rvert \varphi_l\rangle \rvert^2$,
+for the set of hydrogenic projectors $\varphi_l$ defined in the \textbf{hubbard} block, are selected for the task.
+
+The keyword \textbf{hubbard\_max\_iter}, (default of $0$), sets the task to \textbf{HUBBARDSCF}
+and carries out a self-consistency loop over the Hubbard projectors. The density from one minimisation is re-used at the beginning of the next,
+and setting \textbf{hubbard\_max\_iter} to $2$ one can carry out one DFT+U calculation on the back of 
+a conventional ONETEP minimisation. 
+
+The keywords \textbf{hubbard\_energy\_tol} , \textbf{hubbard\_conv\_win} and  \textbf{hubbard\_proj\_mixing} are used
+to obtain full self-consistency over the Hubbard projectors for a given $U$ parameter. The ground state energy must
+deviate less than \textbf{hubbard\_energy\_tol} (default of $10^{-6}Ha$) from one  \textbf{HUBBARDSCF} iteration 
+to the next over  \textbf{hubbard\_conv\_win} (default of $2$) iterations. A fraction  \textbf{hubbard\_proj\_mixing} (default of $0.0$) 
+of the previous Hubbard projectors may be mixed with the new ones in order to prevent projector oscillation, though
+it must be stressed that the energy is not guaranteed to decrease monotonically with successive \textbf{HUBBARDSCF} iterations.
+
+\begin{thebibliography}{13}
+
+\bibitem{Anisimov91}
+J. Z. V. I. Anisimov and O. K. Andersen, 
+	Phys. Rev. B \textbf{44}, 943 (1991).
+
+\bibitem{Anisimov97}
+V. I. Anisimov, F. Aryasetiawan, and A. I. Liechtenstein, 
+	J. Phys.: Condens. Matter \textbf{9}, 767 (1997).
+
+\bibitem{Janak}
+J. F. Janak,
+Phys. Rev. B \textbf{18}, 12 (1978).
+
+\bibitem{Lechermann}
+F. Lechermann, A. Georges, A. Poteryaev, S. Biermann, M. Posternak, A. Yamasaki and O. K. Andersen,
+Phys. Rev. B \textbf{74}, 125120 (2006).
+
+\bibitem{Marzari}
+N. Marzari and D. Vanderbilt,
+Phys. Rev. B \textbf{56}, 12847 (1997).
+
+\bibitem{Souza}
+I. Souza, N. Marzari and D. Vanderbilt,
+Phys. Rev. B \textbf{65}, 035109 (2001).
+
+\bibitem{Miyake}
+T. Miyake and F. Aryasetiawan,
+Phys. Rev. B \textbf{77}, 085122 (2008).
+
+\bibitem{Cococcioni1}
+M. Cococcioni and S. de Gironcoli,
+Phys. Rev. B \textbf{71}, 035105 (2005).
+
+\bibitem{Cococcioni2}
+H. J. Kulik, M. Cococcioni, D. A. Scherlis and N. Marzari,
+Phys. Rev. Lett. \textbf{97}, 103001 (2006).
+
+\bibitem{Mazurenko}
+V. V. Mazurenko, S. L. Skornyakov, A. V. Kozhevnikov, F. Mila and V. I. Anisimov,
+Phys. Rev. B \textbf{75}, 224408 (2007).
+
+\bibitem{Dudarev}
+S. L. Dudarev,
+Phys. Rev. B \textbf{57}, 3 (1998).
+
+\bibitem{Pickett}
+W. E. Pickett, S. C. Erwin and E. C. Ethridge,
+Phys. Rev. B \textbf{58}, 1201 (1998).
+
+\bibitem{Clementi1}
+E. Clementi and D.L.Raimondi,
+ J. Chem. Phys. \textbf{38}, 2686 (1963). 
+
+\bibitem{Clementi2}
+E. Clementi, D.L.Raimondi, and W.P. Reinhardt,
+ J. Chem. Phys. \textbf{47}, 1300 (1967).
+
+\end{thebibliography}
+
+%\newpage
+
+\addcontentsline{toc}{section}{References}
+\bibliographystyle{unsrt}
+
+\end{document}

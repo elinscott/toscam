@@ -1,0 +1,55 @@
+! Input for calculation with the ONETEP program
+!
+! Quality Control file for: PROPERTIES
+! Created by Mark Robinson 30/01/2008
+
+
+cutoff_energy        : 400 eV
+xc_functional        : LDA
+
+nnho                 : TRUE
+do_properties        : TRUE
+write_density_plot   : FALSE
+popn_calculate       : FALSE
+ngwf_analysis        : TRUE
+ldos_smear           : 0.1 eV
+homo_plot            : 0
+lumo_plot            : 0
+homo_dens_plot       : 0
+lumo_dens_plot       : 0
+
+ngwf_threshold_orig  : 1e-3
+print_qc             : TRUE
+timings_level        : 0
+write_denskern       : TRUE
+write_tightbox_ngwfs : TRUE
+
+%block  lattice_cart
+  40.000    0.000    0.000
+   0.000   40.000    0.000
+   0.000    0.000   40.000
+%endblock  lattice_cart
+
+%block  positions_abs
+C     21.231469   19.962216   20.048416
+H     22.316684   21.381117   21.086741
+H     22.305600   18.474510   19.097577
+C     18.768395   20.037541   19.951432
+H     17.694385   21.525477   20.902418
+H     17.683467   18.617139   18.913416
+%endblock  positions_abs
+
+%block  species
+H     H   1  1  5.50
+C     C   6  4  6.00
+%endblock  species
+
+%block species_ldos_groups
+C
+H
+%endblock species_ldos_groups
+
+%block  species_pot
+H     "../../pseudo/hydrogen.recpot"
+C     "../../pseudo/carbon.recpot"
+%endblock  species_pot

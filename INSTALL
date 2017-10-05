@@ -1,0 +1,61 @@
+Instructions for installing ONETEP
+
+The following assumes that your working directory is the top level of
+the ONETEP tree.
+
+You will need to supply:
+- BLAS and LAPACK
+- an FFT library
+- MPI (if compiling for parallel execution)
+
+1) Run bin/arch to see which architecture is detected. You may edit
+this script to return a different string for your system if you
+wish. The ONETEP build system will by default use the flags defined in
+config/conf.ARCH where ARCH is the output from bin/arch. However you
+may use any file by defining the variable ${ARCH} on the make command
+line: gmake onetep ARCH=xxx
+
+2) The ONETEP build system is designed to work with GNU make and may
+not work with other versions. Compiled objects are stored in the
+obj/ARCH directory and the final binary is bin/onetep.ARCH so that
+more than one platform may be supported simultaneously.
+
+3) Edit (or create) the relevant file in the config directory. This
+might look something like:
+
+      # ONETEP configuration file
+
+      F90 = mpif90
+      FFLAGS = -DMPI -DFFTW 
+      LIBS = -lmkl_lapack -lmkl -lrfftw -lfftw -Vaxlib -lfmpi -lmpi
+      OPTFLAGS = -axW -O2 
+      DEBUGFLAGS = -g -CB
+      PROFILEFLAGS = -p -g
+
+  a) F90 is simply the Fortran compiler to be used
+  b) FFLAGS are the default compiler flags, including preprocessor directives
+        -DMPI if compiling for parallel execution with MPI
+        -DFFTW to use FFTw version 2 as the FFT library
+        -DFFTW3 to use FFTw version 3 as the FFT library
+        -DVENDOR to use a vendor specific FFT library, in addition you must
+                 specify one of the following:
+        -DALPHA for compiling under Tru64 (to use CXML)
+        -DSUN for compiling under Solaris (to use Sun's performance library)
+        -DFD to test the lnv and NGWF gradients with finite differences
+        -DINTGETARG for compilers that treat getarg as internal (e.g. gfortran)
+        -DINTFLUSH that treat flush as internal (e.g. gfortran)
+  c) LIBS lists the libraries to link with (and additions to the
+        standard search path where necessary). lib/ARCH is searched by default.
+  d) OPTFLAGS lists optimization flags for the compiler
+  e) DEBUGFLAGS lists debugging flags for the 'debug' target
+  f) PROFILEFLAGS lists profiling flags for the 'profile' target
+
+4) Running gmake with no target in the ONETEP directory lists the
+available options. The normal target is 'onetep' but there are also
+options for debugging and profiling. This should create the
+appropriate binary for your platform.
+
+5) Check your binary using the inputs in the quality_control directory.
+
+ONETEP Developers' Group
+Last updated: 3 February 2009

@@ -1,0 +1,11 @@
+#
+# ONES configuration file
+#
+# For Sun running Solaris and using FFTw
+#
+
+F90 = mpf90
+FFLAGS = -DMPI -DSUN -DFFTW -w0 -fast -xO3 -xarch=native64 -xalias=actual
+LIBS = -lrfftw -lfftw -xlic_lib=sunperf -lmpi
+OPTFLAGS = 
+DEBUGFLAGS = -g -C

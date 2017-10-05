@@ -1,0 +1,15 @@
+F90        =  mpif90  
+
+CUDA       = -I/opt/cuda/include/ -L/home/cweber/MYLIBRARY/LIB_GPU_NUMERICS_MAGMA/lib  -L/opt/cuda/lib64 -L/home/cweber/MYLIBRARY/LIB_GPU_NUMERICS  -L/home/cweber/MYLIBRARY/LIB_GPU_NUMERICS_MAGMA/lib  -I/home/cweber/MYLIBRARY/LIB_GPU_NUMERICS_MAGMA/include -I/home/cweber/MYLIBRARY/LIB_GPU_NUMERICS/MODFILES  -L/opt/cuda/lib64 -lgpu -lcudart -lcufft -lcublas -lcuda -lmagma -lmagmablas   
+
+FFLAGS     = -fpp -DFFTW3 -DMPI -parallel -openmp -L/opt/local/mpich2/lib/ -lmpichf90 -lfmpich -lmpich -lmpichcxx -I/opt/local/mpich2/include/ -I./obj/Darwin/ -I. -I../obj/Darwin  $(CUDA) 
+
+LIBS       =  -L/opt/mkl/lib/intel64/ -lmkl_blas95_lp64 -lmkl_lapack95_lp64 -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -lmatmul -L$(HOME)/local/mpich2/lib/ -lmpichf90 -lfmpich -lmpich -lmpichcxx -I$(HOME)/local/mpich2/include/ -I$(HOME)/local/mkl/include $(CUDA)   
+
+OPTFLAGS   = -fpp -DFFTW3 -DMPI -O3 -parallel -openmp -xHost -ip -DGPU_SPEEDUP_MATMUL_R -DGPU_SPEEDUP_MATMUL -DGPU_SPEEDUP -DGPU_SPEEDUP_WRAPPER  $(CUDA) 
+
+#-DDFFTW3GPU   
+#-DGPU_SPEEDUP_WRAPPER
+#-DINVERT_N_CUBE  
+
+DEBUGFLAGS = -fpp -DFFTW3 -DMPI -O0 -parallel -openmp -ip   

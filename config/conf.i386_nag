@@ -1,0 +1,11 @@
+#
+# ONES configuration file
+#
+# For i386 compatible running linux
+#
+
+F90 = f95
+FFLAGS = -DFFTW
+LIBS = -llapack -lblas -lrfftw -lfftw
+OPTFLAGS = -O4 
+DEBUGFLAGS = -g -C

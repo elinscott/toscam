@@ -1,0 +1,16 @@
+# Config file for BlueGene/P with mpixlf95 compiler
+#
+# This config will work for Kaust Supercomputing Laboratory's BlueGene/P
+# machine, Shaheen, as long as the following modules
+# have been loaded:
+
+# module load IBM
+# module load lapack
+
+# and an fftw3 library is present (edit LIBS line)
+
+F90 = mpixlf95
+FFLAGS = -WF,-DFFTW3,-DMPI,-DNO_ISNAN -qextname=flush -qextname=etime
+LIBS = $(KSL_LAPACK_LIBS) -L/home/nhine/fftw3/lib -lfftw3
+DEBUGFLAGS = -g -C
+OPTFLAGS = -O3 -qnoipa -qarch=450d -qtune=450 -qstrict
