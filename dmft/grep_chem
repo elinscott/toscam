@@ -1,0 +1,20 @@
+#!/bin/bash
+
+tt=`cat *.dat | grep dmft_nmu_loop | awk '{print $3}'`
+echo "number of mu iterations : " $tt
+
+echo "#chemical potential vs DMFT iteration" > plot_chem
+
+for i in `ls onetep_output*`
+ do
+  j=`grep -A $tt "CHARGE OBTAINED" $i |tail -1 | awk '{print $1}'`
+  k=`echo $i | sed 's/onetep_output_iter//g'`
+  echo $k $j
+  echo $k $j >> plot_chem
+ done
+
+
+cat plot_chem | sort -n  > plot_chem_sorted
+cat plot_chem_sorted > plot_chem
+
+

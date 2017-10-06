@@ -1,0 +1,41 @@
+ Nitermax=320
+ Nitergreenmax=43
+ dEmax0=5.3d0
+
+ nsec=-1
+ nsec0=0
+
+ PAIRING_IMP_TO_BATH=.false.
+ track_sectors=.true.
+ fast_fit=.true.
+
+ first_iter_use_edinput=.false.
+
+ FLAG_ALL_GREEN_FUNC_COMPUTED=.false.
+ start_para=.false.
+ force_para_state=.false.
+ FLAG_GUP_IS_GDN=.false.
+
+ force_nupdn_basis=.true.
+ force_sz_basis=.false.
+ force_no_pairing=.true.
+
+ lambda_sym_fit=0.
+ fit_shift=0.0d0 
+ weight_expo=2
+
+ FLAG_MPI_GREENS=0
+ window_hybrid=0
+ window_hybrid2=0
+ window_weight=0.
+ search_step=0.000001
+
+ cutoff_hamilt_param=0.000000010
+ dist_max=1.d-8
+ tolerance=1.d-13
+ FIT_METH=MINIMIZE
+
+ flag_introduce_only_noise_in_minimization=.false.
+ flag_introduce_noise_in_minimization=.false.
+
+

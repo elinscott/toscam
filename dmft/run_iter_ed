@@ -1,0 +1,58 @@
+#!/bin/bash
+
+EXPECTED_ARGS=3
+
+if [ $# -ne $EXPECTED_ARGS ]
+then
+  echo "Usage: `basename $0` ERROR run_iter_ed : expecting 3 arguments"
+  exit
+fi
+
+cd $1
+export OMP_NUM_THREADS=$2
+echo "#######################################"
+echo "with number of mpi cpus         : " $3
+echo "and [x] openmp cores            : " $2
+echo "for argument/atom               : " $1
+echo "mpi command line                : " ${DMFT_ONETEP_MPI_EXEC}
+echo "run_iter_ed in dir              : " `pwd`
+echo "#######################################"
+echo `pwd`
+
+if [ $3 == 1 ]
+then
+ed_solver_serial.out EDfile=ed.in BATHfile=ed.hybrid CORRELfile=ed.correl OLDGSFILE=GS.raw
+else
+ls machines_ed || fill_machine_file machines_ed $3
+
+j=`cat machines_ed | sort | uniq | wc -l`
+if [ $j == 1 ]
+then
+  jj=`cat machines_ed | sort | uniq`
+  echo "only local node : " $jj
+  mpicommand=`get_mpi_command_line ed_solver_serial.out "EDfile=ed.in BATHfile=ed.hybrid CORRELfile=ed.correl OLDGSFILE=GS.raw" $3 1 $2 $jj " -host " " " F`
+  echo "your command is : " ${mpicommand}
+  ${mpicommand}
+ else
+  echo "multiple nodes : " $j
+  mpicommand=`get_mpi_command_line ed_solver_serial.out "EDfile=ed.in BATHfile=ed.hybrid CORRELfile=ed.correl OLDGSFILE=GS.raw" $3 1 $2 machines_ed " -machinefile " " " F`
+  echo "your command is : " ${mpicommand}
+  ${mpicommand}
+fi
+fi
+
+echo "   " >>  sigma_output
+cp  status* ../                     2> /dev/null
+cp  sigma_output ../                2> /dev/null 
+cp _sigma_output_full_1 ../         2> /dev/null 
+cp _sigma_output_full_2 ../         2> /dev/null
+cp _sigma_output_full_real_1 ../    2> /dev/null
+cp _sigma_output_full_real_2 ../    2> /dev/null
+cp  ed.fit.param ../                2> /dev/null
+cp  ed.sector_bound_file ../        2> /dev/null
+cp  ed.fmos ../                     2> /dev/null
+cd ..
+echo "ED SOLVER DONE, now in directory : " `pwd`
+echo "SIGMA FILES : " `ls sigma_output* 2> /dev/null`
+
+

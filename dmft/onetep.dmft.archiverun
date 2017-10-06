@@ -1,0 +1,36 @@
+#!/bin/bash
+
+EXPECTED_ARGS=1
+
+if [ $# -ne $EXPECTED_ARGS ]
+then
+  echo "Usage: `basename $0` index_of_run (=number)"
+  exit 
+fi
+
+for i in `ls | grep atom` 
+ do 
+  check_if_symlink $i
+ done
+
+mkdir DMFT_RUN_$1  > /dev/null 2>&1 || exit
+
+mv compound* DMFT_RUN_$1                    > /dev/null 2>&1
+mv dir_onetep_iter* DMFT_RUN_$1             > /dev/null 2>&1
+mv atom* DMFT_RUN_$1                        > /dev/null 2>&1
+mv LOCAL_DOS* DMFT_RUN_$1                   > /dev/null 2>&1
+mv FULL_DOS* DMFT_RUN_$1                    > /dev/null 2>&1
+mv onetep_* DMFT_RUN_$1                     > /dev/null 2>&1
+cp *.dat DMFT_RUN_$1                        > /dev/null 2>&1
+cp *.PBS DMFT_RUN $1                        > /dev/null 2>&1
+cp input_onetep_dmft.txt DMFT_RUN_$1        > /dev/null 2>&1
+mv sigma_output* DMFT_RUN_$1                > /dev/null 2>&1
+mv green_output* DMFT_RUN_$1                > /dev/null 2>&1
+cp machines* DMFT_RUN_$1                    > /dev/null 2>&1
+mv mask_loc_rot_atom_* DMFT_RUN_$1          > /dev/null 2>&1
+cp mask_* DMFT_RUN_$1                       > /dev/null 2>&1
+mv optical_conductivity_pm* DMFT_RUN_$1     > /dev/null 2>&1
+mv optical_conductivity_spin* DMFT_RUN_$1   > /dev/null 2>&1
+mv projected_rotated_green* DMFT_RUN_$1     > /dev/null 2>&1
+mv *.cube DMFT_RUN_$1                       > /dev/null 2>&1
+mv AGR DMFT_RUN_$1                          > /dev/null 2>&1

@@ -1,0 +1,2 @@
+#!/bin/bash
+echo ${DMFT_ONETEP_MPI_EXEC} > dir_onetep_mpi

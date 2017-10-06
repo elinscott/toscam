@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo "=========================================="
+echo " Executing TOSCAM ........................"
+echo "=========================================="
+echo " "
+echo " date is : " `date`
+echo " "
+echo " The output is redirected to the file output_sc "
+echo " "
+onetep.dmft.sc  > output_sc  2>&1

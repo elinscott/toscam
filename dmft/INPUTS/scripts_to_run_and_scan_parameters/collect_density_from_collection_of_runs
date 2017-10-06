@@ -1,0 +1,2 @@
+#!/bin/bash
+for i in DMFT_RUN_2._0.145_*/ ; do cd $i ; echo $i ; jj=`cat run.dat | grep dmft_chem | awk '{print $3}'` ; kk=`density |tail -1|awk '{print $5}'` ; echo $jj $kk >> ../dens_2_0.145 ; cd .. ; done ;

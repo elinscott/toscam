@@ -1,0 +1,31 @@
+#!/bin/bash
+
+for T in 0.0009 0.0008 0.0006
+do
+ for U in 0.14 0.30 0.45 0.60 1.00 
+ do
+
+   echo $T
+   echo $U 
+
+   cp actqmc.cix100_$U actqmc.cix100
+   echo UU=$U >> input_onetep_dmft.txt 
+   cp run.dat0 run.dat 
+   echo "dmft_temp : " $T " Hartree " >> run.dat
+ 
+   onetep.dmft
+   
+   onetep.dmft.archiverun 24
+   mv DMFT_RUN_24 DMFT_RUN_${T}_${U}
+        
+
+
+
+ done
+
+done
+
+ 
+
+
+

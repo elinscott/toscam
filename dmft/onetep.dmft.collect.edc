@@ -1,0 +1,16 @@
+#!/bin/bash
+
+rm ./edc_total > /dev/null 2>&1
+
+ls edc_output*  > /dev/null 2>&1 || exit
+
+for i in `ls edc_output* 2> /dev/null`
+  do
+    cat $i | head -1 | awk '{print $1}'>> ./edc_total
+  done 
+for i in `ls edc_output* 2> /dev/null`
+  do
+    cat $i | head -1 | awk '{print $2}'>> ./edc_total
+  done 
+
+  awk '{a+=$0}END{print a}' edc_total 

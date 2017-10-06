@@ -1,0 +1,39 @@
+#!/bin/bash                                     
+                                    
+mkdir $1                           2>/dev/null 
+mv output_sc $1                    2>/dev/null
+mv real_sigma_output* $1           2>/dev/null                         
+mv sigma_output* $1                2>/dev/null                    
+mv dens_kern_tmp* $1               2>/dev/null                     
+mv fort.* $1                       2>/dev/null             
+mv logfile* $1                     2>/dev/null               
+mv edc_output* $1                  2>/dev/null                  
+mv edc_total $1                    2>/dev/null                
+mv chem.potential.nmu.iter*  $1    2>/dev/null                                
+mv sc_* $1                         2>/dev/null           
+mv onetep_output_iter* $1          2>/dev/null                          
+mv onetep_confirmation* $1         2>/dev/null                           
+mv store_* $1                      2>/dev/null              
+mv onetep_dmft_part* $1            2>/dev/null                        
+mv onetep_dimer_splitting* $1      2>/dev/null                              
+mv onetep_projecting_back*  $1     2>/dev/null                               
+mv sc_dmft_full_iter* $1           2>/dev/null                         
+mv sc_store_iter* $1               2>/dev/null                     
+mv _TMP_KERNEL_BACKUP $1           2>/dev/null                         
+mv sc_dmft_kernel_full_iter* $1    2>/dev/null                                
+cp *.dat $1                        2>/dev/null            
+cp *.dat.* $1                      2>/dev/null
+cp case.for.dos $1                 2>/dev/null  
+mv _store_last_iter $1             2>/dev/null                       
+cp input_onetep_dmft.txt $1        2>/dev/null                            
+mv gpu_temp_dmft_run* $1           2>/dev/null                         
+mv AGR $1                          2>/dev/null          
+mv diis_* $1                       2>/dev/null             
+cp gpu_max $1                      2>/dev/null              
+mv FULL_DOS* $1                    2>/dev/null                 
+mv LOCAL_DOS* $1                   2>/dev/null
+mv __last_iter* $1                 2>/dev/null
+cp mask_* $1                       2>/dev/null             
+                                    
+onetep_erase                                     
+rm tmp_kernel*                     2>/dev/null 

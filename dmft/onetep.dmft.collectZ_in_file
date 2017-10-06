@@ -1,0 +1,37 @@
+#!/bin/bash
+
+   ij=`pwd`
+   echo "FOR DMFT ITERATION : " $1
+   echo "FOR NUMBER OF BATH : " $2
+ 
+   rm histogram_*
+
+   for iatom in `ls -F | grep \/ | grep atom` 
+    do echo $iatom 
+     cd ${iatom}/dir_green_output*iter${1}/
+     ls green_output_matsu && ir=`onetep.dmft.density.matsu.out green_output_matsu sigma_output $2 | grep "TOTAL RHO"| awk '{print $4}'  `
+     ls green_output_matsu && ik=`onetep.dmft.density.matsu.out green_output_matsu sigma_output $2 | grep "TOTAL Z_b"| awk '{print $4}'  `
+     ls green_output_matsu && tt=`onetep.dmft.density.matsu.out green_output_matsu sigma_output $2 | grep "TOTAL density"| awk '{print $4}'  `
+     ls green_output       && ir=`onetep.dmft.density.matsu.out green_output       sigma_output $2 | grep "TOTAL RHO"| awk '{print $4}'  `
+     ls green_output       && ik=`onetep.dmft.density.matsu.out green_output       sigma_output $2 | grep "TOTAL Z_b"| awk '{print $4}'  `
+     ls green_output       && tt=`onetep.dmft.density.matsu.out green_output       sigma_output $2 | grep "TOTAL density"| awk '{print $4}'  `
+
+     cd $ij
+
+     echo  $ir >> histogram_Rho
+     echo  $ik >> histogram_Z
+     echo  $tt >> histogram_Nr
+
+     iat=${iatom#*m}
+
+     echo ${iat} ${ir} >> histogram_Rho_at
+     echo ${iat} ${ik} >> histogram_Z_at
+     echo ${iat} ${tt} >> histogram_Nr_at
+
+     ls positions_cor_atoms_in_onetep && iat_line=`cat positions_cor_atoms_in_onetep | head -n $iat`
+     ls positions_cor_atoms_in_onetep && echo ${iat_line} ${ir} >> histogram_Rho_pos
+     ls positions_cor_atoms_in_onetep && echo ${iat_line} ${ik} >> histogram_Z_pos
+     ls positions_cor_atoms_in_onetep && echo ${iat_line} ${tt} >> histogram_Nr_pos
+
+    done
+

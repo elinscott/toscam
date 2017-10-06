@@ -1,0 +1,2 @@
+#!/bin/bash
+plotps -x$2:$3  -wlp -u1:3 dir_green_output*iter$1/gloc.out  -u1:5 dir_green_output*iter$1/gloc.out -u1:7 dir_green_output*iter$1/gloc.out -u1:7 dir_green_output*iter$1/gloc.out -u1:9 dir_green_output*iter$1/gloc.out -u1:11 dir_green_output*iter$1/gloc.out

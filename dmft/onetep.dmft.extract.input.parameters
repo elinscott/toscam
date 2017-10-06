@@ -1,0 +1,15 @@
+#!/bin/bash
+
+   i=`cat *.dat | grep dmft_chem | awk '{print $3}'`
+   j=`cat input*.txt | grep UU | tail -1 `
+   j=${j#*=}
+   k=`cat input*.txt | grep double_counting_nf | tail -1 `
+   k=${k#*=}
+   jh=`cat input*.txt | grep Jhund | tail -1 `
+   jh=${jh#*=}
+
+   echo  $i
+   echo  $j
+   echo  $k
+   echo  $jh
+

@@ -1,0 +1,2 @@
+#!/bin/bash
+for i in `ls -F |grep \/` ; do  echo $i ; onetep.dmft.density.matsu.out $i/atom100/dir_green_output100_1_1_iter10/green_output $i/atom100/dir_green_output100_1_1_iter10/sigma_output |grep TOT ; done ;

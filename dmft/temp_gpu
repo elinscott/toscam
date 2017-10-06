@@ -1,0 +1,2 @@
+#!/bin/bash
+nvidia-smi -q |grep -A 1 Temperature  |tail -1 | awk '{print $3}'

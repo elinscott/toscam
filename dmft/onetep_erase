@@ -1,0 +1,25 @@
+#!/bin/bash
+onetep.dmft.archiverun 123
+rm -r DMFT_RUN_123  > /dev/null 2>&1
+
+
+ls ${DMFT_ONETEP_SCRATCH_DIR} > /dev/null 2>&1 && rm ${DMFT_ONETEP_SCRATCH_DIR}/sigma_output* > /dev/null 2>&1  
+rm namelist_number_1 > /dev/null 2>&1
+rm seed > /dev/null 2>&1
+rm pgplot.ps > /dev/null 2>&1
+rm list_of_greens > /dev/null 2>&1
+rm fort.* > /dev/null 2>&1
+rm logfile* > /dev/null 2>&1
+rm onetep_output_iter* > /dev/null 2>&1
+rm onetep_confirmation* > /dev/null 2>&1
+rm sum_matrixDensKernelc* > /dev/null 2>&1
+rm sum_tempvar_bef_exit* > /dev/null 2>&1
+rm summing_up_totN* > /dev/null 2>&1
+rm sumup_tail* > /dev/null 2>&1
+rm onetep_nfs* > /dev/null 2>&1
+rm matrixH*  > /dev/null 2>&1
+rm matrixS*  > /dev/null 2>&1
+rm summing_dmft_energy* > /dev/null 2>&1
+rm summing_up_contribN* > /dev/null 2>&1
+rm invert_matc* > /dev/null 2>&1 
+rm sumup_vectorAA* > /dev/null 2>&1

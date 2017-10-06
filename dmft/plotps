@@ -1,0 +1,208 @@
+#!/usr/bin/perl
+
+$tmpdir = "/tmp/";
+$path = $DMFT_ONETEP;
+$using = "all";
+$with = "lp";
+$xr = "";
+$login = getlogin || getpwuid($<) || `users` ;
+$stdinf = $tmpdir . "gnuplota.stdin" . $login;
+$gdatf = $tmpdir . "gnuplota.dat" . $login;
+
+$stdin = -t STDIN;
+if ($stdin ne "1")
+{
+    open(G, ">" . $stdinf);
+    while (<STDIN>)
+    {
+	print G $_;
+    }
+    close(G);
+    $ARGV[$#ARGV + 1] = $stdinf;
+}
+foreach (@ARGV){
+    if (/\.gz/){	
+	print "Gzipped!\n";
+	$j++;
+	push(@gfilename, $tmpdir . "gnuplot.$j");
+	qx{gunzip -c $_ > $gfilename[$#gfilename]};
+	$_ = $gfilename[$#gfilename];
+    }
+}
+
+$i = 0;
+$all = "1";
+#$deftail = "pause -1";
+#$deftail = "pause 1000";
+$prog = "p ";
+foreach $f (@ARGV)
+{
+  $i++;
+  if (substr($f, 0, 2) eq "-c")
+  {
+      $conf = substr($f, 2);
+      next;
+  }
+  if (substr($f, 0, 2) eq "-g")
+  {
+      $prep .= "set grid \n";
+      next;
+  }
+  if (substr($f, 0, 2) eq "-t")
+  {
+      $notitle = 1;
+      next;
+  }
+  if (substr($f, 0, 3) eq "-xt")
+  {
+      $vw = substr($f, 3);
+      $prep .= "set xtics $vw\n";
+      next;
+  }
+  if (substr($f, 0, 3) eq "-yt")
+  {
+      $vw = substr($f, 3);
+      $prep .= "set ytics $vw\n";
+      next;
+  }
+  if (substr($f, 0, 2) eq "-h")
+  {
+      print "*************** PLOT ***************\n";
+      print "**   gnuplot from command-line    **\n";
+      print "** Copyright Tomi Rejec, 5.3.1999 **\n";
+      print "************************************\n";
+      print "\n";
+      print "[... |] plot [-xy] [-uw file] [-uw file] [-uw]\n" ;
+      print "Options:   -x     x-interval    -x0:10\n";
+      print "           -y     y-interval    -y-2.5:0.75\n";
+      print "           -u     x, y column   -u1:3; -uall\n";
+      print "           -w     style         -wp; -wd; -wl; -wlinesp; -ws\n";
+      print "           -cfile use configuration file\n";
+      print "\n";
+      print "Examples:  plot data\n";
+      print "           plot -u1:3 -wp -x-1:1 data.1* -u1:2 -wl data.0\n";
+      print "           prog | plot -uall\n";
+      print "           prog | plot -wl test.dat -wp\n"; 
+      exit;
+  }  
+  if (substr($f, 0, 2) eq "-u")
+  {
+       $using = substr($f, 2);
+      if ($using eq "all")
+      {
+          $all = "1";
+      }
+      else
+      {
+          $all = "0";
+	  $_ = $using;
+	  $#uss=-1;
+	  while (/([0-9]+(:[0-9]+)+)/g){
+	      $uss[++$#uss] = "u $1";
+	  }
+      }
+      next;
+  } 
+  if (substr($f, 0, 2) eq "-w")
+  {
+      $with = substr($f, 2);
+      next;
+  }
+  if (substr($f, 0, 2) eq "-x")
+  {
+      $xr = substr($f, 2);
+      $prog .= "[$xr] ";
+      next;
+  }
+  if (substr($f, 0, 2) eq "-y")
+  {
+      $yr = substr($f, 2);
+      if ($xr eq "")
+      {
+	  $prog .= "[] ";
+      }
+      $prog .= "[$yr] ";      
+      next;
+  }
+  if ($all eq "1")
+  {
+      open (G, "<$f");
+      while (<G>)
+      {
+	  if(/^[ |\t]*\#/) {next;}
+          @temp = split(' ', $_);
+          $nall = $#temp + 1;
+          last;
+      }
+      close (G);
+      
+      $#uss=-1;
+      for ($j=2; $j<=$nall; $j++){
+	  $uss[++$#uss] = "u 1:$j"; 
+      }
+      
+  }
+
+  if ($#uss<0) {$uss[0]="u 1:2";}
+  
+  for ($j = 0; $j <= $#uss; $j++)
+  {
+      if ($notitle)
+      {
+          $prog .= "\"$f\" $uss[$j] t \"\" w $with";
+      } else
+      {
+	  $prog .= "\"$f\" $uss[$j] t \"$f $uss[$j]\" w $with";
+      }
+      ($j != $#uss) && ($prog .= ", ");
+#      $prog .= "\"$f\" $uss[$j] t \"$f $uss[$j]\" w $with";
+#      ($j != $#uss) && ($prog .= ", ");
+  }
+  
+  if ($i <= $#ARGV)
+  {
+    $prog .= ", ";
+  }
+}
+
+if ($conf eq "")
+{
+    $head = $defhead . $prep;
+    $tail = $deftail;
+}
+else
+{
+    open(G, "$path/$conf");
+    $head = $prep;
+    $tail = "";
+    $ht = "h";
+    while (<G>)
+    {
+	if ($_ eq "-\n")
+	{
+	    $ht = "t";
+	    next;
+	}
+	if ($ht eq "h")
+	{
+	    $head .= $_;
+	}
+	if ($ht eq "t")
+	{
+	    $tail .= $_;
+	}	
+    }
+    close($G);
+}
+$prog = $head . $prog . "\n" . $tail;
+
+open(F,">" . $gdatf);
+print F "set term postscript;";
+print F "set output 'test.ps'; ";
+print F "$prog";
+close(F);
+
+qx{gnuplot $gdatf};
+# qx{rm -f gnuplot.dat gnuplot.stdin};
+# qx{rm -f @gfilename};
+

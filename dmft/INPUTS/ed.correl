@@ -1,0 +1,52 @@
+###############################################
+### ELECTRONIC CORRELATIONS ON THE IMPURITY ###
+###############################################
+########################################
+###     MASK FOR GREEN'S FUNCTION    ###
+### [ <c[up]*C[up]>  <c[up]*c[do]> ] ###       
+### [ <C[do]*C[up]>  <c[do]*C[do]> ] ###
+########################################
+ 1  0  0  0  0  0  0  0  0  0  
+ 0  2  0  0  0  0  0  0  0  0
+ 0  0  3  0  0  0  0  0  0  0
+ 0  0  0  4  0  0  0  0  0  0 
+ 0  0  0  0  5  0  0  0  0  0 
+ 0  0  0  0  0  6  0  0  0  0 
+ 0  0  0  0  0  0  7  0  0  0 
+ 0  0  0  0  0  0  0  8  0  0 
+ 0  0  0  0  0  0  0  0  9  0 
+ 0  0  0  0  0  0  0  0  0  10
+###########################################
+### MASKS FOR SPIN/DENSITY CORRELATIONS ###
+###########################################
+F # FLAG TO COMPUTE Sz  CORRELATIONS
+F # FLAG TO COMPUTE S+- CORRELATIONS
+F # FLAG TO COMPUTE N   CORRELATIONS
+  1  0  0  0 0  
+  0  0  0  0 0
+  0  0  0  0 0
+  0  0  0  0 0
+  0  0  0  0 0
+2.  # wmax = real freq. range [-wmax,wmax] for Sz
+2.  # wmax = real freq. range [-wmax,wmax] for S+-
+30. # wmax = real freq. range [-wmax,wmax] for N
+##################################
+### MASK FOR Pijk CORRELATIONS ###
+##################################
+F # FLAG TO COMPUTE Pijk CORRELATIONS
+0 # NUMBER OF TRIPLETS TO CONSIDER
+# LIST OF TRIPLETS
+# MASK OF CORRELATIONS
+4. # wzoommax = real freq. range [-wzoommax,wzoommax] for Pijk-Pijk
+###################################
+### MASK FOR Pijkl CORRELATIONS ###
+###################################
+F # FLAG TO COMPUTE Pijkl CORRELATIONS
+0 # NUMBER OF QUADRUPLETS TO CONSIDER
+# LIST OF QUADRUPLETS
+# MASK OF CORRELATIONS
+4. # wzoommax = real freq. range [-wzoommax,wzoommax] for Pijkl-Pijkl
+##################################################
+### LIST OF PROJECTION VECTORS IN BASIS |.ud2> ###
+##################################################
+0 # NUMBER OF PROJECTION VECTORS 

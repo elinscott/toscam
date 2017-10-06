@@ -1,0 +1,41 @@
+#!/bin/bash
+
+EXPECTED_ARGS=2
+
+if [ $# -ne $EXPECTED_ARGS ]
+then
+  echo "Usage: `basename $0` ERROR split_sigma file [x] =number of up orbitals"
+  exit
+fi
+
+if [ $2 == 6 ]
+then
+ cat sigma_output | awk  '{print $1 " " $2 " " $3 " " $4 " " $5  " " $6 " " $7 " " $8 " " $9 " " $10 " " $11 " " $12 " " $13 " " }' > $1
+fi
+
+if [ $2 == 5 ]
+then
+ cat sigma_output | awk  '{print $1 " " $2 " " $3 " " $4 " " $5  " " $6 " " $7 " " $8 " " $9 " " $10 " " $11 " " }' > $1
+fi
+
+if [ $2 == 4 ]
+then
+ cat sigma_output | awk  '{print $1 " " $2 " " $3 " " $4 " " $5  " " $6 " " $7 " " $8 " " $9 " "  }' > $1
+fi
+
+if [ $2 == 3 ]
+then
+ cat sigma_output | awk  '{print $1 " " $2 " " $3 " " $4 " " $5  " " $6 " " $7 " "  }' > $1
+fi
+
+if [ $2 == 2 ]
+then
+ cat sigma_output | awk  '{print $1 " " $2 " " $3 " " $4 " " $5  " "  }' > $1
+fi
+
+if [ $2 == 1 ]
+then
+ cat sigma_output | awk  '{print $1 " " $2 " " $3 " " }' > $1
+fi
+
+

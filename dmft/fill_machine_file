@@ -1,0 +1,10 @@
+#!/bin/bash
+
+LIMIT=$2
+rm $1 2> /dev/null
+for ((a=1; a <= LIMIT ; a++))  # Double parentheses, and "LIMIT" with no "$".
+do
+ echo `hostname` >> $1
+done 
+
+

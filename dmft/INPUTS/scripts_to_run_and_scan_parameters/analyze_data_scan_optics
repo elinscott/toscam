@@ -1,0 +1,26 @@
+#!/bin/bash
+
+#please update in run.dat 
+
+#dmft_optics           :  T
+#dmft_optics_i1        :  1
+#dmft_optics_i2        :  1
+#dmft_optics_window    :  0.22 Hartree
+#dmft_dos_min          : -0.23 Hartree
+#dmft_dos_max          :  0.23 Hartree
+
+ for i in `ls  ../RUNS/my_runs_3_disorder1 | grep DMFT_RUN`
+  do echo $i 
+  ls ../RUNS/my_runs_3_disorder1/$i | grep sigma_output1_1_1  || exit
+  cp ../RUNS/my_runs_3_disorder1/$i/sigma_output* ./
+  kk=../RUNS/my_runs_3_disorder1/$i/
+  echo $kk
+  diff $kk/input*.txt ./input*.txt |grep ed_
+  onetep.dmft compute_dos=.true.
+  export OMP_NUM_THREADS=12
+  /opt/mpich2/intel/11.1/bin/mpiexec -env OMP_NUM_THREADS 12 -np 1 onetep.dmft.compute.optics.out
+  export OMP_NUM_THREADS=1
+  onetep.dmft.archiverun _DOS_FULL_${i}
+  rm sigma_output*
+ done
+

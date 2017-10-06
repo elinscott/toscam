@@ -1,0 +1,71 @@
+#!/bin/bash
+
+EXPECTED_ARGS=6
+
+if [ $# -ne $EXPECTED_ARGS ]
+then
+  echo "Usage: `basename $0` ERROR : expecting 3 arguments"
+  echo " first argument - numb of frequencies for each cpu "
+  echo " second argument - numb of cpus "
+  echo " third argument - factor for the numb of frequencies of cpu 1 (can be gpu) " 
+  echo " fourth argument - number of gpu"
+  echo " fifth argument - flip (0 or 1) - if 1 then the gpu take the last frequencies of the spectrum "
+  echo " sixth argument - (tot number of freq+1) for flip - enter zero if you dont want to flip the spectra "
+  exit
+fi
+
+ngpu=$4
+weightgpu=$3
+rm mask_frequ*
+ncpu=$2
+
+echo "NUMBER OF CPUS : " $2
+echo "NUMBER OF GPUS : " $4
+
+b=`expr  0 + 1`
+c=`expr $b + $1 - 1`
+c=`expr $3 \* $c`
+flip=$5
+tot=$6
+flipp=0
+flipm=1
+
+if [ $flip -eq $flipp ]
+then
+ flip=" "
+ tot=0
+else
+ flip="-"
+fi
+
+echo "FLIPPING SPECTRA    " $flip
+echo "TOT NUMBER OF FREQU " $tot
+
+for k in `seq 1 $ngpu`
+do
+echo "0.0000" > mask_frequ${k}
+for i in `seq $b $c`
+ do
+  echo `expr ${flip}$i + $tot` >> mask_frequ${k}
+ done 
+ b=`expr $c + 1 ` 
+ t1=`expr $3 \* $1`
+ c=`expr $b + $t1 - 1`
+done
+
+ c=`expr $b + $1 - 1`
+t2=`expr $ngpu + 1`
+for k in `seq $t2 $ncpu`
+do
+echo "0.0000" > mask_frequ${k}
+for i in `seq $b $c`
+ do
+  echo `expr ${flip}$i + $tot ` >> mask_frequ${k}
+ done 
+ b=`expr $c + 1 `  
+ c=`expr $b + $1 - 1`
+done
+
+
+
+

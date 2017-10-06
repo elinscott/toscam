@@ -1,0 +1,3 @@
+#!/bin/bash
+ls *b | awk '{print("mv "$1" "$1)}' | sed 's/green_/sigma_/2' | /bin/sh
+ls *b | awk '{print("mv "$1" "$1)}' | sed 's/1b/2/2' | /bin/sh

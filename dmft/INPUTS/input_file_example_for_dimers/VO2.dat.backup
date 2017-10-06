@@ -1,0 +1,966 @@
+!========================================================!
+! Input for calculation with the ONETEP program          !
+!                                                        !
+! Quality Control file for:                              ! 
+! DFT+U with hydrogenic projectors                       !
+! VO2 in M1 Phase                                        !
+! based on :                                             !
+! Acta Chemica Scandinavica (1-27,1973-42,1988)'         !
+! 1956 10 p623-628                                       !
+!                                                        !
+! Created by C.Weber and D.D.O'Regan on 03/05/2011       !
+!                                                        !
+! Cavendish Laboratory,                                  !
+! University of Cambridge,                               !                
+! 19, J J Thomson Avenue,                                !
+! Cambridge CB3 0HE, UK                                  !
+!                                                        !
+!========================================================!
+
+task                  : PROPERTIES
+!task                 : PROPERTIES
+cutoff_energy         : 630.000000  eV
+maxit_ngwf_cg         : 20 
+minit_lnv             : 7
+maxit_lnv             : 10
+xc_functional         : LDA
+ngwf_cg_max_step      : 2.0
+
+spin_polarized        : F 
+spin                  : 1
+lnv_check_trial_steps : T
+check_atoms           : T
+
+do_properties         : F
+CUBE_FORMAT           : T
+print_qc              : T
+
+!PROPERTIES
+read_denskern         : T
+read_tightbox_ngwfs   : T 
+write_denskern        : F 
+write_tightbox_ngwfs  : F  
+write_forces          : F 
+
+write_density_plot    :  F
+lumo_dens_plot        : -1
+homo_dens_plot        : -1
+ngwf_analysis         :  F
+
+optics_energy_max     : 0.0 eV
+
+dmft_temp             :  0.002 Hartree
+dmft_emin             : -3.0 Hartree
+dmft_emax             :  3.0 Hartree
+dmft_points           :  100 
+dmft_smear            :  0.001 Hartree
+dmft_paramagnetic     :  T
+dmft_chem_shift       :  0.00 Hartree
+!dmft_temp            :  0.01 Hartree
+!dmft_points          :  100
+dmft_cutoff_tail      :  10.00 Hartree
+
+
+dos_smear             :  0.00 Hartree
+pub_ldos_ngroups      :  0
+pub_num_eigenvalues   :  0
+pub_ngwf_analysis     :  F
+pub_popn_calculate    :  F
+pub_cond_calculate    :  F
+pub_polarisation_calculate : F
+pub_homo_dens_plot : -1
+pub_lumo_dens_plot : -1
+ldos_smear            :  0.00 Hartree
+
+output_detail         : VERBOSE
+timings_level         : 0
+print_qc              : TRUE
+
+kerfix                : 2
+pen_param             : 10
+maxit_pen             : 0
+maxit_palser_mano     : -1
+maxit_kernel_fix      : 250
+maxit_hotelling       : 0
+delta_e_conv          : T
+
+%block hubbard
+V 2 0.0 11.68 0.0 0.0
+O 1 0.0 11.68 0.0 0.0
+%endblock hubbard
+
+%block species_ldos_groups
+O
+V
+%endblock species_ldos_groups
+
+%block  lattice_cart
+Ang
+       4.83          0.00000      -3.08001
+       0.00000       4.51400       0.00000
+       0.00000       0.00000       5.37500
+%endblock  lattice_cart
+
+%block  positions_abs
+Ang
+   V         1.17071        -2.14557        -3.30211
+   V        -1.17071         0.11292         0.61462
+   V        -1.17071         2.14557         3.30211
+   V         1.17071        -0.11292        -0.61462
+   O         0.48377         1.30993        -1.92200
+   O        -0.48377        -0.94857        -0.76550
+   O        -0.48377        -1.30993         1.92200
+   O         0.48377         0.94857         0.76550
+   O         1.88669        -0.85823        -2.33580
+   O        -1.88669         1.40027        -0.35170
+   O        -1.88669         0.85823         2.33580
+   O         1.88669        -1.40027         0.35170
+%endblock  positions_abs
+
+%block species_atomic_set
+V  "SOLVE" 
+O  "SOLVE" 
+%endblock species_atomic_set
+
+%block  species
+ANG
+V     V  23  9  2.2
+O     O   8  4  2.2
+%endblock  species
+
+%block  species_pot 
+V   "./pseudo/vanadium_opium_lda.recpot"
+O   "./pseudo/oxygen_opium_lda.recpot"
+%endblock  species_pot
+
+
+
+
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree
+writeparams                 :  F
+writeforces                 :  F
+writepositions              :  F
+writexyz                    :  F
+writedensityplot            :  F
+writengwfplot               :  F
+writengwfgradplot           :  F
+writedenskern               :  F
+writetightboxngwfs          :  F
+writeconvergeddkngwfs       :  F
+writeswngwfs                :  F
+homoplot                    : -1
+lumoplot                    : -1
+do_properties               :  F
+dos_smear                   :  0.00 Hartree
+ldos_smear                  :  0.00 Hartree
+ngwf_analysis               :  F
+popn_calculate              :  F
+cond_calculate              :  F
+polarisation_calculate      :  F
+homo_dens_plot              : -1
+lumo_dens_plot              : -1
+optics_energy_max           :  0.00 Hartree

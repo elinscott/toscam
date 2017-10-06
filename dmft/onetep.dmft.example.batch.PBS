@@ -1,0 +1,83 @@
+#!/bin/bash
+#$ -N sulfides
+#$ -pe mvapich 24
+#$ -q infini.q
+#$ -m be 
+#$ -M cedric.weber@kcl.ac.uk 
+#$ -v MPI_HOME 
+#$ -V 
+#$ -cwd   
+
+  echo "eps1="$1 >> definesim.txt
+  export MPI_HOME=/home/cweber/local/mpich2/
+  export ID=`basename $TMPDIR | sed 's/\.1\.infini\.q//g'`
+  export JOB=job`date +%d_%m_%y_%H_%M_%S`_${ID}
+
+  export DIR_PARENT="/home/cweber/run_job/sulfides/"
+  export DIR_TARGET=${DIR_PARENT}/${JOB}
+  mkdir  ${DIR_TARGET}
+  cd     ${DIR_TARGET}   
+  cp     ${DIR_PARENT}/*      ${DIR_TARGET}
+  cp -r  ${DIR_PARENT}/pseudo ${DIR_TARGET}  
+
+  env                                   > temp_my_env
+
+  ulimit -a                             > temp_echo
+  echo "DIR_PARENT" ${DIR_PARENT}      >> temp_echo
+  echo "DIR_TARGET" ${DIR_TARGET}      >> temp_echo 
+  echo "PATH"       $PATH              >> temp_echo
+  echo "PWD"        `pwd`              >> temp_echo
+  echo "LD_LIB " $LD_LIBRARY_PATH      >> temp_echo
+  cat "machine file " $TMPDIR/machines >> temp_echo
+  echo "nslot "     $NSLOTS            >> temp_echo
+  echo "MPI_HOME "  $MPI_HOME          >> temp_echo
+  echo "TMPDIR "    $TMPDIR            >> temp_echo
+  export nnodes=`cat $TMPDIR/machines | sort | uniq | wc -l `
+  echo "N NODES "   $nnodes            >> temp_echo 
+  cp $TMPDIR/machines ./machine_file
+  cat ./machine_file | sort | uniq > ./node_file
+
+  mpdboot -n $nnodes --file=./node_file
+
+#########################################################
+#########################################################
+
+  echo "openmp_solver=4"      >> input_onetep_dmft.txt
+  echo "nproc="$nnodes        >> input_onetep_dmft.txt
+  echo "nproc_store="$NSLOTS  >> input_onetep_dmft.txt
+  echo "nproc_gpu="$NSLOTS    >> input_onetep_dmft.txt
+  echo "nomachinefile=.true." >> input_onetep_dmft.txt 
+
+  export export DMFT_ONETEP_MPICH2=no_machine_arg  
+  export ONETEP=/home/cweber/onetep/bin/onetep.capablanca
+  export DMFT_ONETEP=/home/cweber/MYLIBRARY_ONETEP/DMFT_ONETEP
+  export DMFT_ONETEP_MPI_EXEC=$MPI_HOME/bin/mpiexec
+  export DMFT_ONETEP_BG=0
+
+#machinefiles
+
+#  nproc       : machines_dmft
+#  nproc_store : machines_onetep_dft
+#  nproc_gpu   : machines_onetep_gf_ker
+
+   cp node_file     machines_dmft
+   cp machine_file  machines_onetep_dft
+   cp machine_file  machines_onetep_gf_ker
+
+   $DMFT_ONETEP/onetep.dmft.sc.exec
+
+#########################################################
+#########################################################
+
+  mpdallexit 
+
+  echo "TIDY THINGS UP..."
+  for i in `cat node_file`
+   do 
+    echo "KILLIG MPD ON NODE " $i
+    ssh  $i -T "kill -9 -1" 
+   done
+   echo "DONE"
+
+
+

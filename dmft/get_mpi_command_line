@@ -1,0 +1,84 @@
+#!/bin/bash
+
+EXPECTED_ARGS=9
+
+if [ $# -ne $EXPECTED_ARGS ]
+then
+  echo "Usage: `basename $0` ERROR get_mpi_command_line : expecting 9 arguments"
+  echo "        arg 1 : EXEC NAME       "
+  echo "        arg 2 : EXEC ARGS       "
+  echo "        arg 3 : number of cpu   "
+  echo "        arg 4 : number of nodes "
+  echo "        arg 5 : number of OMP threads "
+  echo "        arg 6 : machine file name (enter "NA" is none is needed) "
+  echo "        arg 7 : machine file argument notation (e.g. -machinefile )"
+  echo "        arg 8 : output redirection file "
+  echo "        arg 9 : T of F, if T does not append MPI EXEC command (for local host serial) "
+  exit
+fi
+
+VERBOSE="0"
+
+if [ ${VERBOSE} -eq 1 ]
+then
+echo "#######################################"
+echo "with number of mpi cpus         : " $3
+echo "with number of cores per node   : " $4
+echo "with number of openmp cores     : " $5
+echo "with machine file               : " $6
+echo "with machine file arg notation  : " $7
+echo "your command                    : " $1
+echo "your arguments                  : " $2
+echo "your command output             : " $8
+echo "Are you using localhost calc.?  : " $9
+echo "Are you using BlueGene/IBM ?    : " $DMFT_ONETEP_BG
+fi
+
+ nomachine="NA"
+ mpich2="no_machine_arg"
+ compar="$6"
+ localhost="T"
+ emptyoutput=""
+ outputfile=`echo $8 | tr -d ' '`
+
+if [ ${VERBOSE} -eq 1 ]
+then
+echo "Your output file trimmed        : " ${outputfile}
+fi
+
+ if [ ${DMFT_ONETEP_BG} -eq 1 ]
+ then
+  mpicmd="runjob --envs OMP_NUM_THREADS=$5 --exe $1 -n $3 -p $4 --args \"$2\""
+ else
+   if [ $9 = ${localhost}  ]
+   then
+     mpicmd=" $1 $2 "
+   else
+     mpicmd=${DMFT_ONETEP_MPI_EXEC}
+      if [ $DMFT_ONETEP_MPICH2 != ${mpich2} ];
+      then
+       if [ $6 != ${nomachine} ];
+       then
+        mpicmd="$mpicmd $7 $6"
+       fi 
+      fi
+ #    mpicmd="$mpicmd -env OMP_NUM_THREADS $5 -np $3 $1 $2   "
+      if [ ${DMFT_ONETEP_ENV_END} -eq 1 ] 
+      then
+       mpicmd="$mpicmd -np $3 $1 $2 "
+      else
+       mpicmd="$mpicmd -env OMP_NUM_THREADS $5 -np $3 $1 $2   "
+      fi
+   fi
+ fi
+
+ if [ "${outputfile}" != "$emptyoutput" ]
+ then
+  mpicmd="$mpicmd > $8 "
+ fi
+echo  ${mpicmd}
+
+if [ ${VERBOSE} -eq 1 ]
+then
+echo "#######################################"
+fi

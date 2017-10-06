@@ -1,0 +1,4 @@
+#!/bin/bash
+grep "total density" onetep_dmft*
+grep -A 3 "Number of successfully sampled" onetep_dmft*  
+

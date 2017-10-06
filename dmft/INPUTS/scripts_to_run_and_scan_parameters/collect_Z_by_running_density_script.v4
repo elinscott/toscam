@@ -1,0 +1,35 @@
+#!/bin/bash
+for i in ` ls | grep DMFT_RUN `
+  do
+
+   cd $i
+
+   echo $i 
+   jj=`cat run.dat | grep dmft_chem | awk '{print $3}'`
+   ju=`cat input*.txt | grep UU | tail -1 `
+   ju=${ju#*=}
+
+   echo "jj=" $jj
+   echo "ju=" $ju
+
+   kk=`density |tail -1|awk '{print $5}'`
+
+   ij=`pwd`
+   cd ./atom100/dir_green_output100_1_1_iter7/
+   ik=`onetep.dmft.density.matsu.out green_output_matsu sigma_output 5 | grep "TOTAL Z"| awk '{print $4}'  `
+   tt=`onetep.dmft.density.matsu.out green_output_matsu sigma_output 5 | grep "TOTAL density"| awk '{print $4}'  `
+   cd $ij
+
+   echo $jj $kk >> ../dens_mu_N
+   echo $jj $ik >> ../dens_mu_Z
+
+   echo $ju $kk >> ../dens_u_N
+   echo $ju $ik >> ../dens_u_Z
+
+   echo $jj $tt >> ../dens_mu_N_ReG
+   echo $ju $tt >> ../dens_u_N_ReG
+
+   cd ..
+
+  done
+

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+ls mask_frequ1 > /dev/null 2>&1 || exit
+
+n=0 ; for i in `ls mask_frequ* 2> /dev/null` ; do l=`cat $i | wc -l` ; n=`expr $n + $l - 1`;  done ;
+
+echo "THERE ARE [X] FREQUENCIES IN THE MASK_FREQU PROFILES : " $n
+
+nn=`cat *.dat | grep dmft_points |awk '{ print $3 }'`
+echo "NUMBER OF FREQUENCIES GIVEN IN YOUR CASE FILE        : " $nn
+
+if [ $nn -eq $n ] 
+ then
+  echo "THEY MATCH - ALL IS FINE - BETTER SAFE THAN SORRY"
+ else
+  echo "ERROR : MASK FREQU DO NOT MATCH THE NUMBER OF FREQUENCIES"
+  echo "DISABLING THE PROFILE"
+  echo "YOUR FILES ARE MOVED TO THE DIR : backup_mask_frequ_dir "
+  mkdir backup_mask_frequ_dir
+  mv mask_frequ* backup_mask_frequ_dir  
+ fi
+

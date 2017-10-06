@@ -1,0 +1,49 @@
+#!/bin/bash
+
+EXPECTED_ARGS=3
+
+if [ $# -ne $EXPECTED_ARGS ]
+then
+  echo "Usage: `basename $0` ERROR run_iter_oca : expecting 3 arguments"
+  exit
+fi
+
+cd $1
+export OMP_NUM_THREADS=$2
+echo "#######################################"
+echo "with number of mpi cpus         : " $3
+echo "and [x] openmp cores            : " $2
+echo "for argument/atom               : " $1
+echo "mpi command line                : " ${DMFT_ONETEP_MPI_EXEC}
+echo "run_iter_oca in dir             : " `pwd`
+echo "#######################################"
+echo `pwd`
+
+if [ $3 == 1 ]
+then
+oca PARAMS
+else
+ls machines_oca || fill_machine_file machines_oca $3
+
+j=`cat machines_oca | sort | uniq | wc -l`
+if [ $j == 1 ]
+then
+  jj=`cat machines_oca | sort | uniq`
+  echo "only local node : " $jj
+
+  mpicommand=`get_mpi_command_line oca "PARAMS" $3 1 $2 $jj " -host " " " F`
+  echo "your command is : " ${mpicommand}
+  ${mpicommand}
+ else
+  echo "multiple nodes : " $j
+  mpicommand=`get_mpi_command_line oca "PARAMS" $3 1 $2 machines_oca " -machinefile " " " F`
+  echo "your command is : " ${mpicommand}
+  ${mpicommand}
+fi
+fi
+
+echo "   " >>  sigma_output
+#cp status* ../             2> /dev/null
+#cp sigma_output ../        2> /dev/null
+#cp Sigma.000 ../           2> /dev/null
+cd ..

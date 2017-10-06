@@ -1,0 +1,104 @@
+#!/bin/bash
+
+EXPECTED_ARGS=2
+
+if [ $# -ne $EXPECTED_ARGS ]
+then
+  echo "Usage: `basename $0` ERROR generating real embedding potentials : expecting 1 argument"
+  echo "Usage : argument 1, number of cpu"
+  echo "        comment: it can require a lot of memory, use only 1cpu if any problem "
+  echo "Usage : argument 2, window around the Fermi Level where double prec is used"
+  exit
+fi
+
+ echo " RUNNING IN DIRECTORY : " `pwd`
+
+ rm scratchdir 2> /dev/null  
+
+namedat=`ls *.dat`
+kk=`pwd`
+cp ${namedat} run.dat.backup
+
+update_case_file 'dmft_split '  F
+update_case_file 'dmft_splitk ' F
+update_case_file 'dmft_local_scratch ' F 
+update_case_file dmft_cutoff_tail   10000.0
+update_case_file dmft_cutoff_small  $2
+
+update_case_file hubbard_proj_mixing 1.0
+update_case_file_flip_hub +10
+cp _store_last_iter/* .
+
+mkdir _mask_frequ_backup
+mv mask_freq* _mask_frequ_backup/
+
+cp embedding_dir/connections_D_L* .
+
+#onetep.dmft compute_dos=.true. just_onetep=.false. nproc_onetep=$1 > output_real_embedding_left
+ onetep.dmft.compute.dos.out > output_real_embedding_left
+
+mkdir potentials_LEFT
+mv _H* embedding_potentials* potentials_LEFT      
+rm connections_D_L*
+
+cp embedding_dir/connections_D_R* .
+#onetep.dmft compute_dos=.true. just_onetep=.false. nproc_onetep=$1 > output_real_embedding_right
+ onetep.dmft.compute.dos.out > output_real_embedding_right
+
+mkdir potentials_RIGHT
+mv _H* embedding_potentials* potentials_RIGHT       
+rm connections_D_R*
+
+cd ${kk}
+cd ../_potentials/L1/
+rm _H0_ _H1_ embedding_potentials
+cp ${kk}/potentials_LEFT/* .
+mv _H0_1 _H0_
+mv _H1_1 _H1_
+mv embedding_potentials_1 embedding_potentials   
+onetep.dmft.embedding.gen.sigma.out remove_unconnected_sites=1 cutoff_remove_sites=0.0001 > output_gen_pot
+cp sigma_embedding ../../_structmixt/sigma_embedding_realL1
+
+cd ${kk}
+cd ../_potentials/L2/
+rm _H0_ _H1_ embedding_potentials
+cp ${kk}/potentials_LEFT/* .
+ls _H0_2 || cp _H0_1 _H0_2
+ls _H1_2 || cp _H1_1 _H1_2
+ls embedding_potentials_2 || cp embedding_potentials_1 embedding_potentials_2 
+mv _H0_2 _H0_
+mv _H1_2 _H1_
+mv embedding_potentials_2 embedding_potentials
+onetep.dmft.embedding.gen.sigma.out remove_unconnected_sites=1 cutoff_remove_sites=0.0001 > output_gen_pot
+cp sigma_embedding ../../_structmixt/sigma_embedding_realL2
+
+cd ${kk}
+cd ../_potentials/R1/
+rm _H0_ _H1_ embedding_potentials
+cp ${kk}/potentials_RIGHT/* .
+mv _H0_1 _H0_
+mv _H1_1 _H1_
+mv embedding_potentials_1 embedding_potentials
+onetep.dmft.embedding.gen.sigma.out remove_unconnected_sites=1 cutoff_remove_sites=0.0001 > output_gen_pot
+cp sigma_embedding ../../_structmixt/sigma_embedding_realR1
+
+cd ${kk}
+cd ../_potentials/R2/
+rm _H0_ _H1_ embedding_potentials
+cp ${kk}/potentials_RIGHT/* .
+ls _H0_2 || cp _H0_1 _H0_2
+ls _H1_2 || cp _H1_1 _H1_2
+ls embedding_potentials_2 || cp embedding_potentials_1 embedding_potentials_2
+mv _H0_2 _H0_
+mv _H1_2 _H1_
+mv embedding_potentials_2 embedding_potentials
+onetep.dmft.embedding.gen.sigma.out remove_unconnected_sites=1 cutoff_remove_sites=0.0001 > output_gen_pot
+cp sigma_embedding ../../_structmixt/sigma_embedding_realR2
+
+cd ${kk}
+cp run.dat.backup ${namedat}
+
+
+
+
+

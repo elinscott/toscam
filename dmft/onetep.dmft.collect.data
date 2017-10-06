@@ -1,0 +1,41 @@
+#!/bin/bash
+
+rm dens_*
+
+for i in ` ls | grep DMFT_RUN `
+  do
+
+   cd $i
+
+   echo $i 
+
+     chem=`onetep.dmft.extract.input.parameters | head -n 1 | tail -1 `
+       UU=`onetep.dmft.extract.input.parameters | head -n 2 | tail -1 `
+       DC=`onetep.dmft.extract.input.parameters | head -n 3 | tail -1 `
+       JH=`onetep.dmft.extract.input.parameters | head -n 4 | tail -1 `
+     onetep.dmft.summarize.sim.out 14 10 3
+
+      Z=`cat summary_run | head -n 1 | tail -1 | awk  '{print $6}'`
+      N=`cat summary_run | head -n 2 | tail -1 | awk  '{print $6}'`
+     Nf=`cat summary_run | head -n 3 | tail -1 | awk  '{print $6}'`
+
+     echo ${chem} $N  >> ../dens_mu_N
+     echo ${chem} $Z  >> ../dens_mu_Z
+     echo ${chem} $Nf >> ../dens_mu_Nf
+
+     echo ${UU} $N    >> ../dens_u_N
+     echo ${UU} $Z    >> ../dens_u_Z
+     echo ${UU} $Nf   >> ../dens_u_Nf
+
+     echo ${DC} $N    >> ../dens_dc_N
+     echo ${DC} $Z    >> ../dens_dc_Z
+     echo ${DC} $Nf   >> ../dens_dc_Nf
+
+     echo ${JH} $N    >> ../dens_JH_N
+     echo ${JH} $Z    >> ../dens_JH_Z
+     echo ${JH} $Nf   >> ../dens_JH_Nf
+
+   cd ..
+
+  done
+

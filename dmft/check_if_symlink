@@ -1,0 +1,25 @@
+#!/bin/bash
+
+LINK_OR_DIR=$1
+
+if [ -d "$LINK_OR_DIR" ]; then 
+    if [ -L "$LINK_OR_DIR" ]; then
+        # It is a symlink!
+        # Symbolic link specific commands go here
+        echo "it is a symlink" > /dev/null
+
+        mkdir ${1}_
+        tar -czf ${1}/${1}.tar ${1}/*
+        mv ${1}/${1}.tar ${1}_/
+
+        kk=`perl -e 'print readlink($ARGV[0]) . "\n"' ${1}`
+        rm -r ${kk}
+        rm ${1}
+        mv ${1}_ ${1}
+    else
+        # It's a directory!
+        # Directory command goes here
+        echo "it is a directory" > /dev/null
+        #rmdir "$LINK_OR_DIR"
+    fi
+fi

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo " YOUR SCRATCH DIRECTORY TO STORE LOCAL SIGMA FILES : " ${DMFT_ONETEP_SCRATCH_DIR} 
+echo ${DMFT_ONETEP_SCRATCH_DIR} >  scratchdir
+echo ${DMFT_ONETEP_SCRATCH_DIR} >> scratchdir
+mkdir ${DMFT_ONETEP_SCRATCH_DIR} > /dev/null 2>&1 || echo " could not create directory "

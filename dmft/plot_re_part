@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "FILE TO PLOT : " $1
+plot $2 -u1:2 $1 -u1:4 $1 -u1:6 $1 -u1:8 $1 -u1:10 $1  
+

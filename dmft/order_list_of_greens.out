@@ -1,0 +1,26 @@
+#!/bin/bash
+
+ nnn=`cat list_of_greens |wc -l`
+ cat list_of_greens | tail -`expr ${nnn} - 1` > list_of_greens
+
+ rm list_of_green_filter > /dev/null 2>&1  
+ for i in `cat list_of_greens` 
+ do 
+   j=`echo $i | sed 's/green_output//g'` 
+   echo $j >> list_of_green_filter 
+ done 
+
+ nn=`cat list_of_green_filter | sort -u | sort -n | wc -l`
+     cat list_of_green_filter | sort -u | sort -n  > list_of_greens_tmp
+ echo $nn > list_of_greens_sorted
+ for i in `cat list_of_greens_tmp`
+ do
+  j=green_output$i
+  echo $j >> list_of_greens_sorted
+ done 
+ 
+ mv list_of_greens_sorted list_of_greens
+
+ rm list_of_green_filter
+ rm list_of_greens_tmp
+

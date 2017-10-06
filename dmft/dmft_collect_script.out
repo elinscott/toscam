@@ -1,0 +1,5 @@
+#!/bin/bash
+
+ for i in `ls green*_rank1 2> /dev/null`       ; do echo $i ; j=`echo $i | sed 's/rank1/rank/g'` ; echo $j; dmft_collect.out             `ls $j*` ; done ;
+ for i in `ls *DOS*_rank1 2> /dev/null`        ; do echo $i ; j=`echo $i | sed 's/rank1/rank/g'` ; echo $j; dmft_collect_dos.out         `ls $j*` ; done ;
+ for i in `ls embedding_potentials*_rank1 2> /dev/null` ; do echo $i ; j=`echo $i | sed 's/rank1/rank/g'` ; echo $j; dmft_collect_sigma_embed.out `ls $j*` ; done ;

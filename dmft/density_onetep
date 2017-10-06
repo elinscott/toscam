@@ -1,0 +1,3 @@
+#!/bin/bash
+dens_onetep |grep total
+dens_onetep |grep nf

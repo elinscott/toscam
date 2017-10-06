@@ -1,0 +1,26 @@
+#!/bin/bash
+
+TMPFILE=./tmp56131291
+IFS='%'
+ZZ=`cat *.dat |grep -A 1 "%block hubbard" |tail -1 |awk '{print  $4 }'`
+
+echo "------------------------------------------------"           >> updating_variables
+echo "CASE FILE                         :  " `ls |grep *.dat `    >> updating_variables
+echo " FLIPPING HUBBARD PROJECTOR SIGNS "                         >> updating_variables
+echo " BLOCK HUBBARD                    :  " $ZZ                  >> updating_variables
+echo " NAME OF TMP FILE                 :  " ${TMPFILE}           >> updating_variables
+
+old_line=`cat *.dat |grep -A 1 "%block hubbard" |tail -1`
+new_line=`cat *.dat |grep -A 1 "%block hubbard" |tail -1 |awk '{print $1 " " $2 " " $3 " " " "  '$1' " "  $5 " " $6}'`
+seds="s/"${old_line}"/"${new_line}"/g"
+filename=`ls *.dat`
+echo " old line                         :  " ${old_line}          >> updating_variables
+echo " new line                         :  " ${new_line}          >> updating_variables
+echo "------------------------------------------------"           >> updating_variables
+
+echo "SED ARGUMENT = " ${seds}       >> updating_variables
+echo "FILENAME     = " ${filename}   >> updating_variables
+
+sed "${seds}" ${filename} > ${TMPFILE}
+mv ${TMPFILE} ${filename}
+

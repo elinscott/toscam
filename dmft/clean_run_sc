@@ -1,0 +1,58 @@
+#!/bin/bash 
+
+rm -r __last_iter_* > /dev/null 2>&1 
+rm -r AGR > /dev/null 2>&1
+mkdir AGR > /dev/null 2>&1
+rm namelist_number_1 > /dev/null 2>&1
+rm seed > /dev/null 2>&1
+rm pgplot.ps > /dev/null 2>&1
+rm list_of_greens > /dev/null 2>&1
+rm sigma_output* > /dev/null 2>&1
+rm real_sigma_output* > /dev/null 2>&1
+rm dens_kern_tmp* > /dev/null 2>&1
+rm fort.* > /dev/null 2>&1
+rm logfile* > /dev/null 2>&1
+rm edc_output* > /dev/null 2>&1
+rm edc_total > /dev/null 2>&1
+rm chem.potential.nmu.iter*  > /dev/null 2>&1
+rm sc_* > /dev/null 2>&1
+rm onetep_output_iter* > /dev/null 2>&1
+rm onetep_confirmation* > /dev/null 2>&1
+rm store_* > /dev/null 2>&1
+rm onetep_dmft_part* > /dev/null 2>&1
+rm onetep_dimer_splitting* > /dev/null 2>&1
+rm onetep_projecting_back*  > /dev/null 2>&1
+rm -r sc_dmft_full_iter* > /dev/null 2>&1
+rm -r sc_store_iter* > /dev/null 2>&1
+rm -r _TMP_KERNEL_BACKUP > /dev/null 2>&1
+rm -r sc_dmft_kernel_full_iter* > /dev/null 2>&1
+onetep_erase 
+rm tmp_kernel* > /dev/null 2>&1
+rm diis_* > /dev/null 2>&1
+rm chem.potential.nmu.iter* > /dev/null 2>&1
+rm gpu_temp_dmft_run gpu_temp_dmft_run2 > /dev/null 2>&1
+rm sum_tempvar_bef_exit* > /dev/null 2>&1
+rm -r sc_dmft_full_LEFT_* > /dev/null 2>&1
+rm -r sc_dmft_full_RIGHT_* > /dev/null 2>&1
+rm -r _store_last_iter > /dev/null 2>&1
+rm splitk* > /dev/null 2>&1
+rm updating_variables > /dev/null 2>&1
+rm scratchdir > /dev/null 2>&1  
+rm case_onetep > /dev/null 2>&1 
+ls ${DMFT_ONETEP_SCRATCH_DIR} > /dev/null 2>&1 && rm ${DMFT_ONETEP_SCRATCH_DIR}/sigma_output* > /dev/null 2>&1    
+rm summing_up_totN* > /dev/null 2>&1   
+rm sumup_tail* > /dev/null 2>&1  
+rm onetep_nfs* > /dev/null 2>&1 
+rm matrixH*  > /dev/null 2>&1   
+rm matrixS*  > /dev/null 2>&1
+rm input_onetep_dmft.txt.dos > /dev/null 2>&1
+rm case.for.dos   > /dev/null 2>&1
+rm updating_variables > /dev/null 2>&1
+rm collect_rank_files   > /dev/null 2>&1
+rm summing_dmft_energy* > /dev/null 2>&1
+rm run.dkn_onetep > /dev/null 2>&1
+rm run.dkn_dmft > /dev/null 2>&1
+rm summing_up_contribN* > /dev/null 2>&1  
+rm sum_matrixDensKernelc* > /dev/null 2>&1
+rm invert_matc* > /dev/null 2>&1
+

@@ -1,0 +1,64 @@
+#!/bin/bash
+
+IFS='%'
+variable=" "$1
+ll=$2
+zz=`ls *.dat`
+TMPFILE=./tmp56131291
+
+sed 's/^/ /' $zz > $TMPFILE
+mv $TMPFILE $zz
+
+echo "------------------------------------------------"        >> updating_variables
+echo "CASE FILE               :  " ${zz}                       >> updating_variables
+echo "VAR                     :  " $variable                   >> updating_variables
+echo "ADDING VAR IF NECESSARY :  "                             >> updating_variables
+grep $variable $zz  > /dev/null 2>&1 || echo "$variable : XX " >> ${zz}   
+echo "VAR PRESENT?            :  " cat *.dat | grep $variable  >> updating_variables
+echo " NAME OF TMP FILE       :  " ${TMPFILE}                  >> updating_variables
+echo "------------------------------------------------"        >> updating_variables
+echo " PROCESS DETAILED BELOW :  "                             >> updating_variables
+echo "CHECKING FOR DUPLICATES :  "                             >> updating_variables
+dup=`grep $variable $zz |wc -l`
+if [ $dup -eq 1 ]
+then
+ echo " ONLY ONE INSTANCE OF THIS FLAG           " >> updating_variables
+else
+ echo " TWO OR MORE ENTRIES OF THIS FLAG         " >> updating_variables
+ echo " KEEPING THE FIRST ONE "                    >> updating_variables
+ backup=`grep $variable $zz | head -n 1`
+ stringtoremove=`grep $variable $zz | tail -1 |awk '{print $1}'`
+ echo "string to remove : " $stringtoremove        >> updating_variables
+ sed  's/ '${stringtoremove}'.*//g' $zz  > ${TMPFILE}
+ mv  ${TMPFILE} $zz
+ echo $backup >> $zz 
+fi
+
+echo "NOW VAR PRESENT? "                     >> updating_variables
+grep $variable $zz                           >> updating_variables
+
+k=`cat *.dat | grep $variable`
+it=`echo $k |awk '{print $3}'`
+echo " REPLACING " $it "WITH " ${ll}  >> updating_variables
+
+new_line=`echo $k | sed 's/'${it}'/'${ll}'/g'` 
+filename=`ls *.dat`
+
+echo "old iter = " $it          >> updating_variables
+echo "new iter = " $ll          >> updating_variables
+echo "k        = " $k           >> updating_variables
+echo "new line = " ${new_line}  >> updating_variables
+
+ttt='s/'${k}'/'${new_line}'/g'
+echo "SED ARGUMENT IS : " $ttt  >> updating_variables
+sed $ttt $filename >  ${TMPFILE}
+mv  ${TMPFILE} $filename
+
+sed 's/^ //' $filename > $TMPFILE
+mv $TMPFILE $filename
+
+echo "ALL DONE ......                                 " >> updating_variables
+echo " "                                                >> updating_variables
+echo "------------------------------------------------" >> updating_variables
+
+

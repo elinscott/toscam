@@ -1,0 +1,41 @@
+#!/bin/bash
+
+EXPECTED_ARGS=3
+
+if [ $# -ne $EXPECTED_ARGS ]
+then
+  echo "Usage: `basename $0` ERROR split_sigma_ncp file [x]=number of up orbitals , dir where sigma_output is located"
+  exit
+fi
+
+if [ $2 == 6 ]
+then
+cat $3/sigma_output | awk  '{print $1 " " $14 " " $15 " " $16 " " $17  " " $18 " " $19 " " $20 " " $21 " " $22 " " $23 " " $24 " " $25 }' > $1
+fi
+
+if [ $2 == 5 ]
+then
+cat $3/sigma_output | awk  '{print $1 " " $12 " " $13 " " $14 " " $15  " " $16 " " $17 " " $18 " " $19 " " $20 " " $21 " "  }' > $1
+fi
+
+if [ $2 == 4 ]
+then
+cat $3/sigma_output | awk  '{print $1 " " $10 " " $11 " " $12 " " $13  " " $14 " " $15 " " $16 " " $17 " "  }' > $1
+fi
+
+if [ $2 == 3 ]
+then
+cat $3/sigma_output | awk  '{print $1 " " $8 " " $9 " " $10 " " $11  " " $12 " " $13 " "  }' > $1
+fi
+
+if [ $2 == 2 ]
+then
+cat $3/sigma_output | awk  '{print $1 " " $6 " " $7 " " $8 " " $9  " "  }' > $1
+fi
+
+if [ $2 == 1 ]
+then
+cat $3/sigma_output | awk  '{print $1 " " $4 " " $5 " " }' > $1
+fi
+
+

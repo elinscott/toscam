@@ -1,0 +1,2 @@
+#!/bin/bash
+for i in `ls |grep sc_dmft_full` ; do  k=`cat $i/onetep_dmft_part_1 |grep "total dens"| awk '{print $4}'`; l=`cat $i/onetep_dmft_part_1 |grep "total occ"| tail -1 | awk '{print $4}'` ; j=`echo $i |sed 's/sc_dmft_full_iter//g'`; echo $j $k $l; done ;

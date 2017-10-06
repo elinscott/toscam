@@ -1,0 +1,87 @@
+#!/bin/bash
+set -x
+#$ -N  run1
+#$ -pe mpi2 108
+#$ -q wp12
+#$ -j y
+#$ -v LD_LIBRARY_PATH
+
+export WIEN_DMFT_ROOT=/home/cedricw/dmft_w2k/bin
+export PYTHONPATH=/home/cedricw/dmft_w2k/bin
+export SCRATCH="."
+export WIENROOT=/home/cedricw/wien
+export SMPD_OPTION_NO_DYNAMIC_HOSTS=1
+source /etc/profile.d/ifortvars_intel64.sh
+source /opt/intel/Compiler/11.1/072/mkl/tools/environment/mklvarsem64t.sh
+source $TMPDIR/sge_init.sh
+export MPICH_HOME=/opt/mpich2/intel/11.1
+export PATH=$MPICH_HOME/bin:/home/cedricw//dmft:/home/cedricw//bin:$PATH
+
+  echo $PATH > temp_echo
+  echo $LD_LIBRARY_PATH >> temp_echo
+  echo $port >> temp_echo
+  cat $TMPDIR/machines >> temp_echo
+  tar -xf tar.tar
+  gunzip *.gz
+  cat $TMPDIR/machines > temp1
+  echo  $NSLOTS > temp2
+
+  cat temp1 | sort | uniq > machine_uniq
+  jj=`cat machine_uniq | wc -l`
+  echo $jj >> number_nodes
+  sleep 1
+
+  cp temp1        machines_onetep
+#change if you do not want openmp
+ #cp temp1        machines_dmft
+  cp machine_uniq machines_dmft
+# change if you do not want openmp
+ #echo "nproc="${NSLOTS} >> input_onetep_dmft.txt0
+  echo "nproc="${jj} >> input_onetep_dmft.txt0
+  echo "nproc_onetep=18" >> input_onetep_dmft.txt0
+  echo "all_local_host=.false." >> input_onetep_dmft.txt0
+  echo "mpi_onetep_type=2" >>  input_onetep_dmft.txt0
+  echo "input_temp_dir=/scratch/cedric_run"$port >>  input_onetep_dmft.txt0
+  echo "flag_donot_keep_all_files=.true." >> input_onetep_dmft.txt0
+#change if you do not want openmp
+ #echo "openmp_solver=1" >> input_onetep_dmft.txt0
+  echo "openmp_solver=18" >> input_onetep_dmft.txt0
+
+  export DMFT_ONETEP_MPI_EXEC="/opt/mpich2/intel/11.1/bin/mpiexec -port $port -env OMP_NUM_THREADS 1 "
+  echo ${DMFT_ONETEP_MPI_EXEC} >> my_mpi_command
+  export DMFT_ONETEP=/home/cedricw/dmft
+  export ONETEP=/home/cedricw/ed_on_other_nodes/bin/ed.biggie.cpu
+  echo ${DMFT_ONETEP} >> my_mpi_command
+  echo ${ONETEP} >> my_mpi_command
+
+  for U in 0.30
+
+  do
+
+      Edc=-1.0
+      mu=0.00
+
+      echo ${Edc}
+      echo $U 
+      echo ${mu}
+
+      cp input_onetep_dmft.txt0 input_onetep_dmft.txt
+      cp run.dat0               run.dat
+      sleep 1
+      echo "dmft_chem_shift : " ${mu} " Hartree " >> run.dat
+      echo UU=$U                                  >> input_onetep_dmft.txt
+      echo double_counting_nf=${Edc}              >> input_onetep_dmft.txt
+      sleep 1
+      onetep.dmft >> onetep_dmft_main_output
+      sleep 1
+      onetep.dmft.archiverun 24
+      sleep 1
+      rm -r DMFT_RUN_24/atom*/*/AGR
+      rm DMFT_RUN_24/atom*/*/pgplot.ps
+      mv DMFT_RUN_24 DMFT_RUN_${Edc}_${U}_${mu}
+      sleep 1
+
+  done
+
+  rm -r /scratch/cedric_run$port  
+

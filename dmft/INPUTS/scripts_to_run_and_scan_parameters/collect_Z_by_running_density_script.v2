@@ -1,0 +1,20 @@
+#!/bin/bash
+for i in DMFT_RUN_${1}_0.145_*/ 
+  do 
+
+   cd $i 
+
+   echo $i 
+   jj=`cat run.dat | grep dmft_chem | awk '{print $3}'` 
+   kk=`density |tail -1|awk '{print $5}'` 
+
+   ij=`pwd` 
+   cd ./atom100/dir_green_output100_1_1_iter10/
+   ik=`onetep.dmft.density.matsu.out green_output_matsu sigma_output 5 | grep "TOTAL Z"| awk '{print $4}'  ` 
+   cd $ij
+
+   echo $jj $kk $ik >> ../dens_${1}_0.145
+
+   cd .. 
+
+  done 

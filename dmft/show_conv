@@ -1,0 +1,5 @@
+#!/bin/bash
+
+tt=`grep niter_dft_dmft_sc input_onetep_dmft.txt`; ttt=`echo ${tt%%\=*}` ;  iter=`echo $tt | sed 's/'$ttt'=//g'`; echo $iter; for i in `seq 1 $iter` ; do k=`grep Lambda sc_dmft_kernel_full_iter${i}/onetep_output_iter1_rank__1 |awk '{ print $3 }'` ; echo $i $k ; done ;
+
+

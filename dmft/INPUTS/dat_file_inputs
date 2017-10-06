@@ -1,0 +1,20 @@
+dmft_temp              :  0.05 Hartree
+dmft_emin              : -10.0 Hartree
+dmft_emax              :  10.0 Hartree
+dmft_points            :  2000
+ldos_smear             :  0.03 Hartree
+dmft_chem_shift        :  0.00 Hartree
+dos_smear              :  0.00 Hartree
+
+ldos_ngroups           :  0
+num_eigenvalues        :  0
+ngwf_analysis          :  F
+popn_calculate         :  F
+cond_calculate         :  F
+polarisation_calculate : F
+homo_dens_plot         : -1
+lumo_dens_plot         : -1
+ldos_smear             :  0.00 Hartree
+do_properties          :  F
+dmft_smear             :  0.04 Hartree
+optics_energy_max      :  0.00 Hartree

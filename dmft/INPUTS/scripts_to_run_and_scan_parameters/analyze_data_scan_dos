@@ -1,0 +1,13 @@
+#!/bin/bash
+ for i in `ls  ../RUNS/my_runs_3_disorder1 | grep DMFT_RUN`
+  do echo $i 
+  ls ../RUNS/my_runs_3_disorder1/$i | grep sigma_output1_1_1  || exit
+  cp ../RUNS/my_runs_3_disorder1/$i/sigma_output* ./
+  kk=../RUNS/my_runs_3_disorder1/$i/
+  echo $kk
+  diff $kk/input*.txt ./input*.txt |grep ed_
+  onetep.dmft compute_dos=.true.
+  onetep.dmft.archiverun _DOS_FULL_${i}
+  rm sigma_output*
+ done
+~       

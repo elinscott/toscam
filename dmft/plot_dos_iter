@@ -1,0 +1,40 @@
+#!/bin/bash
+
+EXPECTED_ARGS=4
+
+if [ $# -ne $EXPECTED_ARGS ]
+then
+  echo "Usage: `basename $0` plot_dos_iter (x=number of iteration) xmin xmax (min max energy scale in eV) Z=number of orbitals (=number)"
+  exit
+fi
+
+echo "If you dont have jot installed, please change script plot_dos_iter, change jot by seq"
+echo " take care: usage of jot is : jot x1 nx, usage of seq is : seq x1 x2"
+
+j=""
+for i in `jot $4 1`
+ do
+  echo "i is " $i
+  c=`expr $i + $i + 1 `
+  echo "column is : " c
+  j=$j" -u1:$c dir_green_output*_iter$1/gloc.out"
+  echo "j is " $j
+ done
+ls dir_green_output*_iter$1/gloc.out && plot -x$2:$3  -wlp $j
+
+
+j=""
+for i in `jot $4 1`
+ do  
+  echo "i is " $i
+  c=`expr $i + $i + 1 `  
+  echo "column is : " c
+  j=$j" -u1:$c dir_green_output*_iter$1/green_output_real"
+  echo "j is " $j
+ done
+
+ls dir_green_output*_iter$1/green_output_real && plot -x$2:$3  -wlp $j
+
+
+
+

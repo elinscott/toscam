@@ -1,0 +1,130 @@
+!========================================================!
+! Input for calculation with the ONETEP program          !
+!                                                        !
+! Quality Control file for:                              ! 
+! DFT+U with hydrogenic projectors                       !
+! Iron Carbonate molecule FeCO_3                         !
+!                                                        !
+! Created by Nicholas D.D. O'Regan on 10/09/2009         !
+!                                                        !
+! Cavendish Laboratory,                                  !
+! University of Cambridge,                               !                
+! 19, J J Thomson Avenue,                                !
+! Cambridge CB3 0HE, UK                                  !
+!                                                        !
+!========================================================!
+
+task                  : PROPERTIES
+cutoff_energy         : 600.000000  eV
+maxit_ngwf_cg         : 20 
+minit_lnv             : 12
+maxit_lnv             : 18
+xc_functional         : LDA
+
+kerfix                : 2
+pen_param             : 0.0
+
+spin_polarized        : F 
+spin                  : 1
+lnv_check_trial_steps : TRUE
+
+read_denskern         : TRUE 
+read_tightbox_ngwfs   : TRUE 
+
+write_denskern        : FALSE 
+write_tightbox_ngwfs  : FALSE  
+write_forces          : FALSE 
+do_properties         : FALSE
+CUBE_FORMAT           : TRUE
+
+output_detail         : NORMAL
+timings_level         : 0
+print_qc              : TRUE
+
+%block hubbard
+Fe1 2 0.0 11.18 0.0 0.0
+%endblock hubbard
+
+%block species_ldos_groups
+C1
+O1
+Fe1
+%endblock species_ldos_groups
+
+%block  lattice_cart
+Ang
+  21.167    0.000    0.000
+   0.000   21.167    0.000
+   0.000    0.000   21.167
+%endblock  lattice_cart
+
+%block  positions_abs
+Ang
+Fe1  6.546149	5.698683   5.613481
+C1   4.317344	5.190539   5.214890
+O1   5.371306	4.329598   5.149560
+O1   4.840265	6.389633   5.603814
+O1   3.161252	4.956243   4.982952
+%endblock  positions_abs
+
+%block  species
+ANG
+Fe1    Fe  26  9  10.0
+C1      C   6  4  10.0
+O1      O   8  4  10.0
+%endblock  species
+
+%block  species_pot 
+Fe1   "./pseudo/iron.recpot"
+C1    "./pseudo/carbon.recpot"
+O1    "./pseudo/oxygen.recpot"
+%endblock  species_pot
+
+dos_smear              :  0.00 Hartree
+ngwf_analysis          :  F
+popn_calculate         :  F
+cond_calculate         :  F
+polarisation_calculate :  F
+homo_dens_plot         : -1
+lumo_dens_plot         : -1
+ldos_smear             :  0.00 Hartree
+do_properties          :  F
+optics_energy_max      :  0.00 Hartree
+
+
+dmft_emin             : -1.0 Hartree
+dmft_emax             :  1.0 Hartree
+dmft_points           :  112
+dmft_smear            :  0.00018 Hartree
+dmft_smear_T          :  0.01   Hartree !0.01  full dos,  0.01
+dmft_smear_eta        :  0.005  Hartree !0.02  full dos,  0.005
+dmft_smear_w          :  0.04   Hartree !0.035 full dos,  0.04
+dmft_paramagnetic     :  T
+dmft_cutoff_tail      :  9.00 Hartree
+dmft_cutoff_small     :  0.01 Hartree
+dmft_rotate_green     :  T
+dmft_temp             :  0.0002 Hartree
+dmft_optics           :  T
+dmft_optics_window    :  0.22 Hartree
+dmft_dos_min          : -0.23 Hartree
+dmft_dos_max          :  0.23 Hartree
+
+dmft_emin             : -1.0 Hartree
+dmft_emax             :  1.0 Hartree
+dmft_points           :  112
+dmft_smear            :  0.00001   Hartree
+dmft_smear_shift      : -0.007246 Hartree
+dmft_smear_T          :  0.04      Hartree
+dmft_smear_eta        :  0.03      Hartree
+dmft_smear_w          :  0.17      Hartree
+dmft_paramagnetic     :  T
+dmft_cutoff_tail      :  9.00 Hartree
+dmft_cutoff_small     :  0.01 Hartree
+dmft_rotate_green     :  T
+dmft_temp             :  0.0002 Hartree
+dmft_optics           :  F
+dmft_optics_window    :  0.22 Hartree
+dmft_dos_min          : -0.23 Hartree
+dmft_dos_max          :  0.23 Hartree
+
+

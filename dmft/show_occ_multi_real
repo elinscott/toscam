@@ -1,0 +1,21 @@
+#!/bin/bash
+rm dens1 dens2 dens5 dens7
+
+for j in 1 2 5 7 
+  do  
+   for i in `seq 1 $1` 
+    do 
+      tt=`pwd`
+      cd sc_dmft_full_iter${i}
+      ttt=`pwd`
+      #cd atom${j}
+      #cd dir*
+      #check_convergence_renorm.out > out
+      #dens=` grep "TOTAL DENSITY (" out |awk '{print $5}' `
+       dens=`grep "total dens" onetep_dmft_part_solver_1_atom_${j} |awk '{print $4}'`  
+      #echo "density = " $dens
+      #echo " path   = " `pwd`
+      cd $tt
+      echo $i $dens >> dens${j} 
+    done 
+done 

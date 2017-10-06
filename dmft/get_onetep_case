@@ -1,0 +1,5 @@
+#!/bin/bash
+echo `pwd`
+export j=`ls *.dat | sed 's/\.dat//'` 
+echo "CASE : " $j
+echo $j  > case_onetep

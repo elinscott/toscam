@@ -1,0 +1,32 @@
+#!/bin/bash
+
+
+for U in 0.145 0.30 0.45 0.55 0.70
+do
+
+ for Edc in 2. 2.5 3. 3.15 3.5 4. 4.5  5. 
+ do
+
+  for mu in -1.0 -0.8 -0.6 -0.4 -0.2 0.0 0.2 0.4 0.6 0.8 1.0
+  do
+
+    echo ${Edc}
+    echo $U 
+    echo ${mu}
+
+    cp input_onetep_dmft.txt0 input_onetep_dmft.txt
+    cp run.dat0               run.dat
+    echo "dmft_chem_shift : " ${mu} " Hartree " >> run.dat  
+    echo UU=$U                                  >> input_onetep_dmft.txt 
+    echo double_counting_nf=${Edc}              >> input_onetep_dmft.txt 
+    onetep.dmft
+    onetep.dmft.archiverun 24
+    mv DMFT_RUN_24 DMFT_RUN_${Edc}_${U}_${mu}
+
+  done
+
+ done
+
+done
+
+ 
