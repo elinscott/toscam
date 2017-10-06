@@ -1,0 +1,7 @@
+#!/bin/bash
+mpif90  -D__DUMP_DISLIN -fpp -ip -arch i386 -c -O1 -I./MODFILES/ $1.f90 -I./MODFILES/ -I/Users/cweber/MYLIBRARY/LIBUTILS/MODFILES -I/Users/cweber/MYLIBRARY/LIBVMC/MODFILES -I./ -I/Users/cweber/MYLIBRARY/LIB_GPU_NUMERICS/MODFILES -I/Users/cweber/MYLIBRARY/LIB_GPU_NUMERICS_MAGMA/include      
+echo $1
+echo `ls $1.o`
+ar ru libutils.a $1.o 
+rm $1.o
+mv *.mod MODFILES

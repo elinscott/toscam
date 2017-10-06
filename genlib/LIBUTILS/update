@@ -1,0 +1,7 @@
+#!/bin/bash
+mpifort -fpp  -DNOSVD -c -O0  -I./MODFILES/ $1.f90 -I./MODFILES/ -lutils -I/./MODFILES -I/rscratch/ebl27/MYLIBRARY_ONETEP/MYLIBRARY/LIB_GPU_NUMERICS/MODFILES   
+echo $1
+echo `ls $1.o`
+ar ru libutils.a $1.o 
+rm $1.o
+mv *.mod MODFILES
