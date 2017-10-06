@@ -1,0 +1,11 @@
+dmft_ed_solver.f90:825:6:
+
+dmft_ed_solver.f90:821:55:
+
+   read(1212,*,end=78) (bathparams(j),j=1,bath_param_ed)
+                                                       2
+dmft_ed_solver.f90:825:6:
+
+     78 continue
+      1
+Warning: Legacy Extension: Label at (1) is not in the same block as the GOTO statement at (2)

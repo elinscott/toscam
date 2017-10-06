@@ -1,0 +1,7 @@
+#!/bin/bash
+mpif90 -fpp -D__complex -debug all -arch i386 -g -fpe0  -check all -O0 -static -assume nobuffered_io -traceback -check all -check noarg_temp_created  -c -I./MODFILES/ $1.f90 -I/Users/cweber/MYLIBRARY/LIB_PROLONG_ANA/MODFILES -I/Users/cweber/MYLIBRARY/LIBUTILS/MODFILES -I/Users/cweber/MYLIBRARY/LIB_GPU_NUMERICS/MODFILES -I/Users/cweber/MYLIBRARY/LIB_GPU_NUMERICS_MAGMA/include  
+echo $1
+echo `ls $1.o`
+ar ru libdmftsolverED.a $1.o 
+rm $1.o
+mv *.mod MODFILES

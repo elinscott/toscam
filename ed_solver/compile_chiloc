@@ -1,0 +1,31 @@
+#!/bin/bash
+
+export  HOME="/home/cweber"
+export  FCOMPL="  mpif90    "
+export  FFLAG=" -O1 -cpp -D_GPU_SPEEDUP -ffree-line-length-4000 -w -fopenmp       "
+export  X11=" -L/usr/X11/lib/ -lX11 -lxcb -lXau -lXdmcp -lstdc++   "
+export  GSL=" -L$HOME/MYLIBRARY/LIB_GSL_GCC/include/ -L$HOME/MYLIBRARY/LIB_GSL_GCC/lib/ -lgsl -lgslcblas "
+export  PGPLOT=" -L$HOME/MYLIBRARY/PGLIB -lpgplot "
+export  MKL=" -L$HOME/MYLIBRARY/LIBLAPACK -L$HOME/MYLIBRARY/LIBBLAS -llapack -lblas  "
+export  ARPACK=" -L$HOME/MYLIBRARY/LIB_ARPACK -lparpack -larpack  "
+export  NMR=" -L$HOME/MYLIBRARY/LIBNMR/ -lnmr "
+export  DIERICK=" -L$HOME/MYLIBRARY/LIB_DIERICK/ -ldierick -L$HOME/MYLIBRARY/LIB_FIELD_SPLINE -lfield  "
+export  MPI=" "
+export  DISLIN=" "
+export  SLATEC=" -L$HOME/MYLIBRARY/LIBSLATEC/ -lslatec "
+export  BLZPACK=" -L$HOME/MYLIBRARY/LIB_BLOCK_LAPACK/lib -lblzpack "
+export  GPU=" -L$HOME/MYLIBRARY/LIB_GPU_NUMERICS -lgpu "
+export  ALL_LIB=" $ARPACK ${BLZPACK} ${PGPLOT} ${GSL} ${MKL} ${DISLIN} $NSWC $NMR $DIERICK $SLATEC $MPI ${X11}"
+export  LIBSOLVER=" -L/$HOME/MYLIBRARY/LIBDMFT_SOLVER_CTQMC_V3 -L/$HOME/MYLIBRARY/LIBDMFT_SOLVER_CTQMC_CIX_FILE_GEN -ldmft_solver_ctqmc_cix -ldmft_solver_ctqmc -L/$HOME/MYLIBRARY/LIBDMFT_SOLVER_NCA -ldmft_solver_nca -L/$HOME/MYLIBRARY/LIBDMFT_SOLVER_OCA -ldmft_solver_oca -L/$HOME/MYLIBRARY/LIBDMFT_SOLVER_ED -ldmftsolverED_real -L/$HOME/MYLIBRARY/LIBDMFT_SOLVER_ED_CIVELLI -ldmftcivelli -L/$HOME/MYLIBRARY/LIBDMFT_SOLVER_DMRG -ldmftsolverDMRG -L/$HOME/MYLIBRARY/LIBDMFT_SOLVER_HF -ldmftsolverHF  "
+export  LIBUTILS=" -L/$HOME/MYLIBRARY/LIBUTILS -lutils "
+export  LIBDMFT=" -L/$HOME/MYLIBRARY/LIBDMFT -ldmft  -L/$HOME/MYLIBRARY/LIBDMFT_TOOLS -ldmft_tools "
+export  LIBPRO=" -L/$HOME/MYLIBRARY/LIB_PROLONG_ANA -lproal "
+export  MODFILES=" -I$HOME/MYLIBRARY/LIBDMFT/MODFILES -I$HOME/MYLIBRARY/LIBDMFT_TOOLS/MODFILES -I$HOME/MYLIBRARY/LIBDMFT_SOLVER_ED/MODFILES_REAL -I$HOME/MYLIBRARY/LIBDMFT_SOLVER_HF/MODFILES -I$HOME/MYLIBRARY/LIBDMFT_SOLVER_DMRG/MODFILES -I$HOME/MYLIBRARY/LIB_PROLONG_ANA/MODFILES -I$HOME/MYLIBRARY/LIBUTILS/MODFILES  -I$HOME/MYLIBRARY/LIB_GPU_NUMERICS/MODFILES -I$HOME/MYLIBRARY/LIBDMFT_SOLVER_ED_CIVELLI/MODFILES -I$HOME/MYLIBRARY/LIB_GPU_NUMERICS/MODFILES    "
+export  STATIC="  ${LIBDMFT} $LIBSOLVER $LIBPRO ${LIBUTILS}${GPU}${ALL_LIB} "
+
+
+echo " ........... compile : static / dynamic linking ........... "
+g++ -c Chiloc_Wenhu_version3.cpp  
+${FCOMPL} ${FFLAG} -o chiloc.out Chiloc_Wenhu_version3.o  Chiloc_four_leg_read_v3.f90 ${MODFILES} ${STATIC} ${CUDA} -lstdc++
+echo " ...................... done .............................. "
+
