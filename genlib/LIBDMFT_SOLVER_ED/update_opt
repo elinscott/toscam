@@ -1,7 +1,0 @@
-#!/bin/bash
-mpif90 -arch i386 -no-prec-sqrt -no-prec-div -ip -fp-model fast=2 -openmp -xsse4.1 -openmp -c -O3 -static -fpp -D__complex -c -I./MODFILES/ $1.f90 -I/Users/cweber/MYLIBRARY/LIB_PROLONG_ANA/MODFILES -I/Users/cweber/MYLIBRARY/LIBUTILS/MODFILES -I/Users/cweber/MYLIBRARY/LIB_GPU_NUMERICS/MODFILES  
-echo $1
-echo `ls $1.o`
-ar ru libdmftsolverED.a $1.o 
-rm $1.o
-mv *.mod MODFILES
