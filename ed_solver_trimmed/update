@@ -1,7 +1,0 @@
-#!/bin/bash
-mpifort -cpp -D__complex -O1 -g -traceback -c -I./MODFILES/ $1.f90 -I/scratch/ebl27//MYLIBRARY/LIB_PROLONG_ANA/MODFILES -I/scratch/ebl27//MYLIBRARY/LIBUTILS/MODFILES -I/scratch/ebl27//MYLIBRARY/LIB_GPU_NUMERICS/MODFILES -I/scratch/ebl27//MYLIBRARY/LIB_GPU_NUMERICS_MAGMA/include  
-echo $1
-echo `ls $1.o`
-ar ru libdmftsolverED.a $1.o 
-rm $1.o
-mv *.mod MODFILES
