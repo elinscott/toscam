@@ -6,11 +6,168 @@ MODULE impurity_class
 
   use eigen_sector_class 
 
-  use latticerout    , only : web,T1_T2_connect_unitcells
-  use quantum_hamilt , only : Hamiltonian
+  !use latticerout    , only : web,T1_T2_connect_unitcells
+  !use quantum_hamilt , only : Hamiltonian
   use matrix         , only : diag
 
   IMPLICIT NONE
+
+TYPE symmetry
+
+ ! ======= groupe ponctuel ======== !
+
+ integer,dimension(:,:),allocatable      ::  rot,trans,alltrans,flip,invtrans
+ real(8),dimension(:,:),allocatable      ::  ttrans
+ integer                                 ::  nmax,nnmax !max numb of sym.
+ real(8)                                 ::  BZVEC(3),BZVEC2(3)
+ complex(8),dimension(:),allocatable     ::  rotchar,flipchar,transchar
+ complex(8)                              ::  chirot,chiflip
+ integer                                 ::  ntrans,nrot,nflip
+ real(8),dimension(:,:,:),allocatable    ::  rotmat
+ real(8)                                 ::  centerrot(3),diagonale(3)
+ integer                                 ::  flag(20),flageff(20)
+ integer,dimension(:,:,:),allocatable    ::  symtab
+ integer,dimension(:,:),allocatable      ::  sympoint,whichk
+ type(arrayi),dimension(:),allocatable   ::  tabid
+ integer                                 ::  tabidli
+ integer,dimension(:),allocatable        ::  tabidcol
+
+ ! ======= groupe ponctuel ======== !
+
+END TYPE
+
+TYPE unitcell
+   integer                                   :: q1,q1small,q1mag,ncor,npk
+   real(8)                                   :: band_plot_shift
+   real(8),dimension(:,:),allocatable        :: insidepos,pk
+   real(8),dimension(:,:,:),allocatable      :: clock
+   integer,dimension(:,:),allocatable        :: half
+   integer,dimension(:),allocatable          :: nneigh
+   integer,dimension(:,:,:),allocatable      :: invlink
+   real(8)                                   :: a(3),b(3),c(3),as(3),bs(3),cs(3),VBZ
+   integer,dimension(:),allocatable          :: smallsite,smallsite2,orbitals
+   integer,dimension(:,:),allocatable        :: phase2,phase3
+   integer                                   :: struct_nm,struct_nlink
+   integer,dimension(:,:),allocatable        :: struct
+   logical                                   :: FLAG_MATRIX_ELEMENTS
+   complex(8),dimension(:,:,:),allocatable   :: matkxky,matkxkyshift
+   real(8), dimension(:,:),allocatable       :: dispersion
+   complex(8),dimension(:,:,:),allocatable   :: eigenstates
+   integer                                   :: k_zero
+   real(8)                                   :: reciproc_base(3,3),P(3,3),T1(3),T2(3),T3(3)
+   real(8)                                   :: reciproc_boundary(3,3)
+   real(8), dimension(:),allocatable         :: xr,yr,zr,xrpp,yrpp,zrpp
+   integer                                   :: nL,nLz
+   integer                                   :: nfermiNnumb=2000
+   real(8),dimension(:,:),allocatable        :: nfermiN,Akwfree
+
+   real(8),dimension(:),allocatable          :: polygonx,polygony
+   integer                                   :: Npoly
+   integer,dimension(:,:),allocatable        :: site_connected_to_bath
+   integer,dimension(:,:,:),allocatable      :: site_connected_to_cor
+   logical,dimension(:),allocatable          :: sitecor
+   integer,dimension(:),allocatable          :: reduced_space
+   integer                                   :: mbath=0,mdata=0,nmanybody=0
+   logical                                   :: FLAG_ONLY_NN
+   integer                                   :: FLAG_MAG_FIELD
+   integer                                   :: FLAG_HORSDIAG_SIGMA
+END TYPE
+
+
+TYPE web
+
+ type(unitcell)                            :: cell
+ type(symmetry)                            :: sym
+
+ !web:
+ logical                                   :: symmetries
+ real(8), dimension(:,:),allocatable       :: nlink_
+ integer                                   :: mini,maxi,Ncu,maxconn
+ integer,dimension(:,:,:,:),allocatable    :: struct_link
+ real(8),dimension(:,:,:),allocatable      :: struct_pos
+ integer                                   :: plaquettecentre(100),plaquetteN
+ integer,dimension(:),allocatable          :: latticemapi
+ real(8)                                   :: P(3,3),teta(2)
+ real(8)                                   :: T1(3),T2(3),T3(3)
+ logical                                   :: FLAG_NO_SYM_AT_ALL
+ logical                                   :: FLAG_OPEN_BC,FLAG_OPEN_BUT_PERIODIC_LINKED,FLAG_UNIT_CELL_INSIDE,FLAG_PLOT_3D
+ real(8),dimension(:,:),allocatable        :: x,xma
+ real(8)                                   :: randvec(3)
+ integer,dimension(:),allocatable          :: site,site2,site3
+ integer                                   :: open1,open2,open3,nL,nLz
+ complex(8),dimension(:,:),allocatable     :: phase,phase4
+ integer                                   :: centresite
+ integer,dimension(:,:),allocatable        :: vecin
+ real(8),dimension(:),allocatable          :: latticemap
+ real(8),dimension(:,:),allocatable        :: distbord,periodist,periodist_open_bc
+ real(8),dimension(:),allocatable          :: distances,angles
+ real(8),dimension(:,:),allocatable        :: distancesp
+ integer,dimension(:),allocatable          :: bordure,whichbord
+ integer,dimension(:,:),allocatable        :: nombrevoisin
+ integer                                   :: maxd,maxd_real,maxvoisins,bordcount
+ integer,dimension(:,:),allocatable        :: maxdistsite
+ integer,dimension(:,:,:),allocatable      :: longvoisin
+ real(8)                                   :: centre(3)
+ integer,dimension(:,:),allocatable        :: ineigh,cadran,direc,centerCu,centreangle
+ integer,dimension(:,:),allocatable        :: links
+ integer                                   :: nlinks,N
+ integer,dimension(:),allocatable          :: conv_unitcell_site_,centredist,k_inv
+ logical,dimension(:),allocatable          :: major_site
+ integer                                   :: normalisation,nlink_cell
+ complex(8),dimension(:,:),allocatable     :: unitary_transform
+
+ !--------------------------------!
+ ! copy of the unitcell variables !
+ !--------------------------------!
+
+ real(8), dimension(:,:),allocatable       :: dispersion
+ real(8)                                   :: reciproc_base(3,3)
+ real(8)                                   :: reciproc_boundary(3,3)
+ real(8), dimension(:),allocatable         :: xr,yr,zr,xrpp,yrpp,zrpp
+ complex(8),dimension(:,:,:),allocatable   :: matkxky,matkxkyshift
+ integer                                   :: q1,q1small,q1mag
+ real(8),dimension(:,:),allocatable        :: insidepos
+ real(8),dimension(:,:,:),allocatable      :: clock
+ integer,dimension(:,:),allocatable        :: half
+ integer,dimension(:),allocatable          :: nneigh
+ real(8)                                   :: a(3),b(3),c(3)
+ integer,dimension(:),allocatable          :: smallsite,smallsite2
+ integer,dimension(:,:),allocatable        :: phase2,phase3
+ integer                                   :: struct_nm,struct_nlink
+ integer,dimension(:,:),allocatable        :: struct
+
+END TYPE
+
+
+TYPE Hamiltonian
+  character(22)                               :: hamiltonian_title
+  integer                                     :: RANGE_TETA=1
+  logical                                     :: spin_sector_not_coupled,NO_DC=.false.,DC_NO_SAME_ORBITALS=.false.
+  integer                                     :: ordertype,ncor,mbath,mdata  ! 1=para, 2=spinupdn, 3=bcs, 4=currents
+  character(22)                               :: orderlabel(100)
+  complex(8),dimension(:,:),allocatable       :: teta,delta,tetadn,deltap,sigma_hf
+  complex(8),dimension(:,:,:,:,:),allocatable :: teta_,tetadn_
+  complex(8),dimension(:,:),allocatable       :: delta_mat,teta_mat,teta_mat_dn,teta_mat0
+  complex(8),dimension(:,:),allocatable       :: delta_mat_p
+  real(8),dimension(:,:),allocatable          :: rrrrsign,rrrrrsign
+  real(8),dimension(:),allocatable            :: rrsign,rsign
+  real(8),dimension(:),allocatable            :: eps_mat
+  logical,dimension(:),allocatable            :: full_proj
+  real(8),dimension(:),allocatable            :: eps,dU
+  complex(8),dimension(:,:),allocatable       :: epsk
+  integer,dimension(:,:),allocatable          :: type
+  real(8),dimension(:,:),allocatable          :: Vrep,Jterm,field,field_cell
+  integer                                     :: subE,ntype,subDiag,q1
+  logical,dimension(:),allocatable            :: diagornot,forbidden
+  character(20),dimension(:),allocatable      :: label
+  integer                                     :: nH
+  character(22)                               :: labH(100)
+  real(8)                                     :: min(100),max(100),hund,disorder,a_Angstrom,b_Angstrom,c_Angstrom,dist_plane
+  real(8)                                     :: cor1,cor2,cor3,cor4,quanta,temperature
+  real(8)                                     :: rrrsign
+end type
+
+
 
   TYPE(masked_matrix_type), PUBLIC, SAVE :: Eccc
 
@@ -38,6 +195,32 @@ MODULE impurity_class
 
 
 CONTAINS
+
+ subroutine T1_T2_connect_unitcells(xx,i,j,n1,n2,n3,cadran)
+ implicit none
+ type(web)        :: xx
+ integer          :: i,j,k,l,m,n1,n2,n3
+ real(8)          :: base(3,3),Tdecomp(3),vv(3),aa,bb,cc
+ logical,optional :: cadran
+
+  if(.not.present(cadran))then
+    base(1,:) = xx%T1
+    base(2,:) = xx%T2
+    base(3,:) = xx%T3
+    vv        = xx%xma(j,:) - xx%xma(i,:)
+    call decomposevec(Tdecomp,vv,base)
+    n1=NINT(Tdecomp(1))
+    n2=NINT(Tdecomp(2))
+    n3=NINT(Tdecomp(3))
+  else
+    call cells(xx%cadran(i,j),aa,bb,cc)
+    n1=NINT(aa)
+    n2=NINT(bb)
+    n3=NINT(cc)
+  endif
+
+ return
+ end subroutine
 
 !**************************************************************************
 !**************************************************************************
@@ -280,6 +463,7 @@ CONTAINS
 
   SUBROUTINE update_impurity(Nc,impurity,mmu,impurity_,Himp,Eimp)
   
+    integer                            :: Nc
     TYPE(impurity_type), INTENT(INOUT) :: impurity
     type(web)                          :: impurity_
     type(hamiltonian)                  :: Himp
@@ -294,7 +478,7 @@ CONTAINS
 #endif
 
     REAL(DBL)                          :: rval,mmu
-    INTEGER                            :: mu,Nc,spin,iind_,iind
+    INTEGER                            :: mu, spin, iind_, iind
     INTEGER                            :: IMASKE(Nc,Nc,2)
 
    IMASKE=0; k=0; val=0.d0 

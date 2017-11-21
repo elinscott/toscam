@@ -30,7 +30,6 @@ module globalvar_ed_solver
   LOGICAL, parameter                               :: verboseall=.false.
 #endif
   LOGICAL                                          :: fmos,fmos_fluc,fmos_hub1
-  LOGICAL                                          :: fit_bath_mu_incorporated_in_param
   integer                                          :: fmos_iter,nvecout
   REAL(8)                                          :: fmos_mix
   INTEGER                                          :: flag_idelta_two_scales_ed

@@ -107,7 +107,6 @@ end module
 program read_chi_loc
 use cdagger
 use mpirout  ! CW_MPI : link to the mpi module
-use init_and_close_my_sim
 implicit none
 
 interface
@@ -254,8 +253,8 @@ integer,allocatable                 :: op_(:)
 !END CW_MPI
 
 
-     call initialize_my_simulation !CW_MPI : init mpi
-           
+     call initialize_MPI !CW_MPI : init mpi
+
      PHI_EPS=1.d-9
 
      open(unit=1414,file='chiloc_vertex',form='unformatted')
@@ -901,7 +900,7 @@ integer,allocatable                 :: op_(:)
       close(8080)
      endif
 
-     call finalize_my_simulation !CW_MPI : shut down mpi
+     call finalize_MPI !CW_MPI : shut down mpi
 !END CW_MPI
 
 end program

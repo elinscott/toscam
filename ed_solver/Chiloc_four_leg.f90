@@ -2,7 +2,6 @@ module vertex
 
   use correlations
   use namelistmod
-  use Lanczos_Cullum_wrapper
 
 PRIVATE
 

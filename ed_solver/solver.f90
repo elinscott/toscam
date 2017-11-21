@@ -2,7 +2,6 @@ MODULE solver
 
   use correlations 
   use namelistmod 
-  use Lanczos_Cullum_wrapper
   use vertex
 
   IMPLICIT NONE

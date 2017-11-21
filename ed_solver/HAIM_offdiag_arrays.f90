@@ -180,6 +180,9 @@ CONTAINS
 
   SUBROUTINE tab_HAIM2(AIM2,sector,NO_STORAGE)
 
+    use openmpmod, only: omp_get_num_threads, omp_get_thread_num
+    use lockmod,   only: maxt
+
   !----------------------------------------------------------------------!
   ! TABULATE THE QUADRATIC PART OF THE AIM HAMILTONIAN IN A GIVEN SECTOR ! 
   !----------------------------------------------------------------------!
@@ -303,7 +306,7 @@ CONTAINS
 
 #ifndef OPENMP_MPI
    if(OPEN_MP) call openmp_split_array(sector%dimen,imin_,imax_)
-   if(iproc/=1.and.OPEN_MP)then !BUG Cedric April 2017
+   if(iproc/=1)then
      write(*,*) 'ERROR : using openmp and MPI at the same time'
      write(*,*) 'either set FLAG_MPI to >0, or recompile with -DOPENMP_MPI'
      stop

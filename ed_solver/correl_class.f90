@@ -8,7 +8,6 @@ MODULE correl_class
   USE frequency_class
   USE impurity_class  
   USE mesh
-  USE plotlib 
 
   IMPLICIT NONE
 
@@ -535,8 +534,8 @@ CONTAINS
          chi0(iw)=chi0(iw)+gg(iw_)*gg(iw_+iw)*2.d0/beta
        enddo
       ENDDO
-      call plotarray( AIMAG(G%freq%vec(1:Nw/2)),  real(chi0(1:Nw/2)),  'real_part_matsubara_Chi0'//toString(j) )
-      call plotarray( AIMAG(G%freq%vec(1:Nw/2)),  aimag(chi0(1:Nw/2)),   'im_part_matsubara_Chi0'//toString(j) )
+      !!call plotarray( AIMAG(G%freq%vec(1:Nw/2)),  real(chi0(1:Nw/2)),  'real_part_matsubara_Chi0'//toString(j) )
+      !!call plotarray( AIMAG(G%freq%vec(1:Nw/2)),  aimag(chi0(1:Nw/2)),   'im_part_matsubara_Chi0'//toString(j) )
     enddo
 
   return
@@ -607,14 +606,14 @@ CONTAINS
        DO iw=1,CORREL%Nw
          WRITE(UNIT,fmtcorrel) AIMAG(CORREL%freq%vec(iw)),CORREL%vec(:,iw)
        ENDDO
-       call plotarray( AIMAG(CORREL%freq%vec), real(CORREL%vec),  'real_part_matsubara_'//TRIM(ADJUSTL(CORREL%title)))
-       call plotarray( AIMAG(CORREL%freq%vec), aimag(CORREL%vec), 'im_part_matsubara_'//TRIM(ADJUSTL(CORREL%title)))
+       !!call plotarray( AIMAG(CORREL%freq%vec), real(CORREL%vec),  'real_part_matsubara_'//TRIM(ADJUSTL(CORREL%title)))
+       !!call plotarray( AIMAG(CORREL%freq%vec), aimag(CORREL%vec), 'im_part_matsubara_'//TRIM(ADJUSTL(CORREL%title)))
       CASE(RETARDED,ADVANCED)
        DO iw=1,CORREL%Nw
          WRITE(UNIT,fmtcorrel)  DBLE(CORREL%freq%vec(iw)),CORREL%vec(:,iw)
        ENDDO
-       call plotarray( DBLE(CORREL%freq%vec), real(CORREL%vec), 'real_part_retarded_'//TRIM(ADJUSTL(CORREL%title)))
-       call plotarray( DBLE(CORREL%freq%vec), aimag(CORREL%vec), 'im_part_retarded_'//TRIM(ADJUSTL(CORREL%title)))
+       !!call plotarray( DBLE(CORREL%freq%vec), real(CORREL%vec), 'real_part_retarded_'//TRIM(ADJUSTL(CORREL%title)))
+       !!call plotarray( DBLE(CORREL%freq%vec), aimag(CORREL%vec), 'im_part_retarded_'//TRIM(ADJUSTL(CORREL%title)))
     END SELECT 
 
     CALL close_safe(UNIT)
@@ -1171,10 +1170,10 @@ CONTAINS
        if(rank/=0) return
        call PGSUBP(1,1)
        do j=1,size(CORRELIN%vec,1)
-         call plotarray( real(CORRELIN%freq%vec),  real(vecin(j,:)),  & 
-                         real(CORRELIN%freq%vec),  real(CORRELOUT%vec(j,:)) ,'re transfo correl'//toString(j))
-         call plotarray( real(CORRELIN%freq%vec), aimag(vecin(j,:)),  &
-                       & real(CORRELIN%freq%vec), aimag(CORRELOUT%vec(j,:)) ,'im transfo correl'//toString(j))
+         !!call plotarray( real(CORRELIN%freq%vec),  real(vecin(j,:)),  & 
+         !                real(CORRELIN%freq%vec),  real(CORRELOUT%vec(j,:)) ,'re transfo correl'//toString(j))
+         !!call plotarray( real(CORRELIN%freq%vec), aimag(vecin(j,:)),  &
+          !             & real(CORRELIN%freq%vec), aimag(CORRELOUT%vec(j,:)) ,'im transfo correl'//toString(j))
        enddo
     end subroutine
 

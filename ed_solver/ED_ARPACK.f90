@@ -59,10 +59,15 @@ CONTAINS
     !----------------------------------------------------------------------------------------------!
      if(Neigen_>0)then
      write(*,*) '======= RUNNING ARPACK WITH NEIGEN = ', Neigen_ , '========'
+#ifdef _arpack
 #ifdef _complex
      call arpack_eigenvector_sym_matrix_(.true.,'SR',tolerance,dimenvec,.true.,VALP(1:Neigen_),VECP(1:dimenvec,1:Neigen_),Neigen_,nconv,av=Hmultc)
 #else
      call arpack_eigenvector_sym_matrix (.true.,'BE',tolerance,dimenvec,.true.,VALP(1:Neigen_),VECP(1:dimenvec,1:Neigen_),Neigen_,nconv,av=Hmultr)
+#endif
+#else
+     write(*,*) 'error ARPACK library not present, recompile with -D_arpack'
+     stop
 #endif
 
 #ifndef _complex

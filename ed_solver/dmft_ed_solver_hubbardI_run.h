@@ -205,16 +205,16 @@ real(8)                :: mmu_
     !==========================================================================!
 
      do i=1,2*Nc
-       call plotarray(aimag(matsubara),real(g_out(i,i,:)),'g_out_re_'//"_band_"//trim(adjustl(toString(i)))//"_")  
-       call plotarray(aimag(matsubara),real(self_out(i,i,:)),'self_out_re_'//"_band_"//trim(adjustl(toString(i)))//"_")
-       call plotarray(real(frequ__),real(gw(i,i,:)),'gw_re_'//"_band_"//trim(adjustl(toString(i)))//"_")
-       call plotarray(real(frequ__),real(sigw(i,i,:)),'sigw_re_'//"_band_"//trim(adjustl(toString(i)))//"_")
+      !call plotarray(aimag(matsubara),real(g_out(i,i,:)),'g_out_re_'//"_band_"//trim(adjustl(toString(i)))//"_")  
+      !call plotarray(aimag(matsubara),real(self_out(i,i,:)),'self_out_re_'//"_band_"//trim(adjustl(toString(i)))//"_")
+      !call plotarray(real(frequ__),real(gw(i,i,:)),'gw_re_'//"_band_"//trim(adjustl(toString(i)))//"_")
+      !call plotarray(real(frequ__),real(sigw(i,i,:)),'sigw_re_'//"_band_"//trim(adjustl(toString(i)))//"_")
      enddo
      do i=1,2*Nc     
-       call plotarray(aimag(matsubara),aimag(g_out(i,i,:)),'g_out_im_'//"_band_"//trim(adjustl(toString(i)))//"_")  
-       call plotarray(aimag(matsubara),aimag(self_out(i,i,:)),'self_out_im_'//"_band_"//trim(adjustl(toString(i)))//"_")
-       call plotarray(real(frequ__),aimag(gw(i,i,:)),'gw_im_'//"_band_"//trim(adjustl(toString(i)))//"_")
-       call plotarray(real(frequ__),aimag(sigw(i,i,:)),'sigw_im_'//"_band_"//trim(adjustl(toString(i)))//"_")
+      !call plotarray(aimag(matsubara),aimag(g_out(i,i,:)),'g_out_im_'//"_band_"//trim(adjustl(toString(i)))//"_")  
+      !call plotarray(aimag(matsubara),aimag(self_out(i,i,:)),'self_out_im_'//"_band_"//trim(adjustl(toString(i)))//"_")
+      !call plotarray(real(frequ__),aimag(gw(i,i,:)),'gw_im_'//"_band_"//trim(adjustl(toString(i)))//"_")
+      !call plotarray(real(frequ__),aimag(sigw(i,i,:)),'sigw_im_'//"_band_"//trim(adjustl(toString(i)))//"_")
      enddo
 
 end subroutine

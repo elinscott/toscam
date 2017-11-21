@@ -304,24 +304,24 @@
 
   do jj=1,Nc
   do ispin=1,2 
-  call plotarray(time_mesh,real(green_lesser(1,:,jj,jj,ispin)),'Real_glesser_0T_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
-  call plotarray(time_mesh,aimag(green_lesser(1,:,jj,jj,ispin)),'Im_glesser_0T_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
-  call plotarray(time_mesh,real(green_bigger(:,1,jj,jj,ispin)),'Real_gbigger_T0_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
-  call plotarray(time_mesh,aimag(green_bigger(:,1,jj,jj,ispin)),'Im_gbigger_T0_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
-  call plotarray(time_mesh,real(green_lesser(:,1,jj,jj,ispin)),'Real_glesser_T0_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
-  call plotarray(time_mesh,aimag(green_lesser(:,1,jj,jj,ispin)),'Im_glesser_T0_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
-  call plotarray(time_mesh,real(green_bigger(1,:,jj,jj,ispin)),'Real_gbigger_0T_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
-  call plotarray(time_mesh,aimag(green_bigger(1,:,jj,jj,ispin)),'Im_gbigger_0T_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
-  call plotarray(time_mesh, real(green_ret(:,1,jj,jj,ispin)),'Real_gret_T0_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
-  call plotarray(time_mesh,aimag(green_ret(:,1,jj,jj,ispin)),  'Im_gret_T0_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
-  call plotarray(time_mesh, real(green_ret(1,:,jj,jj,ispin)),'Real_gret_0T_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
-  call plotarray(time_mesh,aimag(green_ret(1,:,jj,jj,ispin)),  'Im_gret_0T_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
+  !!call plotarray(time_mesh,real(green_lesser(1,:,jj,jj,ispin)),'Real_glesser_0T_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
+  !!call plotarray(time_mesh,aimag(green_lesser(1,:,jj,jj,ispin)),'Im_glesser_0T_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
+  !!call plotarray(time_mesh,real(green_bigger(:,1,jj,jj,ispin)),'Real_gbigger_T0_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
+  !!call plotarray(time_mesh,aimag(green_bigger(:,1,jj,jj,ispin)),'Im_gbigger_T0_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
+  !!call plotarray(time_mesh,real(green_lesser(:,1,jj,jj,ispin)),'Real_glesser_T0_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
+  !!call plotarray(time_mesh,aimag(green_lesser(:,1,jj,jj,ispin)),'Im_glesser_T0_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
+  !!call plotarray(time_mesh,real(green_bigger(1,:,jj,jj,ispin)),'Real_gbigger_0T_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
+  !!call plotarray(time_mesh,aimag(green_bigger(1,:,jj,jj,ispin)),'Im_gbigger_0T_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
+  !!call plotarray(time_mesh, real(green_ret(:,1,jj,jj,ispin)),'Real_gret_T0_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
+  !!call plotarray(time_mesh,aimag(green_ret(:,1,jj,jj,ispin)),  'Im_gret_T0_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
+  !!call plotarray(time_mesh, real(green_ret(1,:,jj,jj,ispin)),'Real_gret_0T_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
+  !!call plotarray(time_mesh,aimag(green_ret(1,:,jj,jj,ispin)),  'Im_gret_0T_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
   do i=1,keldysh_n
    n_versus_t(i,ispin)=-imi*green_lesser(i,i,jj,jj,ispin)
   enddo
-  call plotarray(time_mesh,n_versus_t(:,ispin),'n_versus_t_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
+  !!call plotarray(time_mesh,n_versus_t(:,ispin),'n_versus_t_orb_'//trim(adjustl(toString(jj)))//'_'//trim(adjustl(toString(ispin))))
   enddo
-  call plotarray(time_mesh,(n_versus_t(:,1)-n_versus_t(:,2))/2.d0,'mag_versus_t_orb_'//trim(adjustl(toString(jj))))
+  !!call plotarray(time_mesh,(n_versus_t(:,1)-n_versus_t(:,2))/2.d0,'mag_versus_t_orb_'//trim(adjustl(toString(jj))))
   enddo
 
   open(unit=918181,file='Glesser',form='unformatted')

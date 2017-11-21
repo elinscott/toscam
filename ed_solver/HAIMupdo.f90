@@ -1213,7 +1213,8 @@ CONTAINS
 !*********************************************
 
   SUBROUTINE HAIMupdo_multr_split(vec_out,vec_in)
-  implicit none
+   use mpirout, only: distributed_memory_transpose_mat 
+   implicit none
 
   !-------------------------------------------------------!
   ! WE COMPUTE THE RELEVANT CHUNK OF vec_out = H * vec_in !

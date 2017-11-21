@@ -57,10 +57,10 @@
          if(USE_TRANSPOSE_TRICK_MPI) stop 'error block lanczos and lanczos vector split among nodes'
 
 #ifdef _complex
-           write(log_unit,*) 'Eigenvectors already computed by Cullum during the first Lanczos pass'
 #else
           IF(Block_size<0)THEN
-           write(log_unit,*) 'Eigenvectors already computed by Cullum during the first Lanczos pass'
+           write(log_unit,*) 'Cullum library not installed - to be added in the future'
+           stop
           ELSE
            write(log_unit,*) 'Eigenvectors already computed by Block Lanczos during the first Lanczos pass' 
           ENDIF
@@ -162,12 +162,12 @@
          if(USE_TRANSPOSE_TRICK_MPI) stop 'error block lanczos and lanczos vector split among nodes, stop - critical '
 
 #ifdef _complex
-            CALL Lanczos_Cullum_diagonalize(GS%es(isector)%lowest,eigenvalue_eigenvector=1)
-            CALL Lanczos_Cullum_diagonalize(GS%es(isector)%lowest,eigenvalue_eigenvector=2)
+            write(log_unit,*) 'Cullum library not installed - to be added in the future'
+            stop 
 #else
           IF(Block_size<0)THEN
-            CALL Lanczos_Cullum_diagonalize(GS%es(isector)%lowest,eigenvalue_eigenvector=1)
-            CALL Lanczos_Cullum_diagonalize(GS%es(isector)%lowest,eigenvalue_eigenvector=2)
+           write(log_unit,*) 'Cullum library not installed - to be added in the future'
+           stop
           ELSE
             CALL Block_Lanczos_diagonalize(GS%es(isector)%lowest)
           ENDIF

@@ -6,6 +6,7 @@ MODULE bath_class_hybrid
 
   USE bath_class_vec
   USE minimization_wrapping
+  use stringmanip
 
   IMPLICIT NONE
 
@@ -214,19 +215,10 @@ CONTAINS
          endif
 
       endif
- 
+
       Eb=-Eb
 
     endif
-
-!BUG
-      do i=1,size(Eb,1)/2
-        Eb(i,i)=Eb(i,i) - bath%mmu
-      enddo
-      do i=size(Eb,1)/2+1,size(Eb,1)
-        Eb(i,i)=Eb(i,i) + bath%mmu
-      enddo
-!END BUG
 
     !-------------------------------------! 
     SELECT CASE (FREQTYPE)
@@ -549,10 +541,10 @@ endif
   !---------------------------------------------------------------------------------------------!
 
     if(verbose_graph)then
-      call plotarray(real(bath%hybridret%freq%vec),  real(bath%hybridret%fctn(1,1,:)), 'ED hybrid Bath re bath')
-      call plotarray(real(bath%hybridret%freq%vec),  real(bath%hybridret%fctn(2,2,:)), 'ED hybrid Bath re bath2')
-      call plotarray(real(bath%hybridret%freq%vec), aimag(bath%hybridret%fctn(1,1,:)), 'ED hybrid Bath im bath')
-      call plotarray(real(bath%hybridret%freq%vec), aimag(bath%hybridret%fctn(2,2,:)), 'ED hybrid Bath im bath2')
+      !!call plotarray(real(bath%hybridret%freq%vec),  real(bath%hybridret%fctn(1,1,:)), 'ED hybrid Bath re bath')
+      !!call plotarray(real(bath%hybridret%freq%vec),  real(bath%hybridret%fctn(2,2,:)), 'ED hybrid Bath re bath2')
+      !!call plotarray(real(bath%hybridret%freq%vec), aimag(bath%hybridret%fctn(1,1,:)), 'ED hybrid Bath im bath')
+      !!call plotarray(real(bath%hybridret%freq%vec), aimag(bath%hybridret%fctn(2,2,:)), 'ED hybrid Bath im bath2')
     endif
 
     write(*,*) 'min bath parameters are : ', param_output
@@ -567,28 +559,28 @@ endif
   character(12) :: lab
   integer       :: kkk
    if(rank/=0) return
-   call PGSUBP(4,4)
+   !call PGSUBP(4,4)
    do j=1,size(bath%hybrid%fctn(:,1,1))
    do kkk=1,size(bath%hybrid%fctn(1,:,1))
 
     if(j==kkk.or.fit_all_elements_show_graphs)then   
     lab=TRIM(ADJUSTL(toString(j)))//"_"//TRIM(ADJUSTL(toString(kkk)))//"_iter"//TRIM(ADJUSTL(toString(iterdmft)))//"_"
      if(.not.fit_green_func_and_not_hybrid)then
-      call plotarray( aimag(hybrid2fit%freq%vec),real(bath%hybrid%fctn(j,kkk,:)), &
-                    & aimag(hybrid2fit%freq%vec),real(hybrid2fit%fctn(j,kkk,:)), 'FIT_ED_re_bath'//lab,inset=.true.,nn=100)
-      call plotarray( aimag(hybrid2fit%freq%vec),aimag(bath%hybrid%fctn(j,kkk,:)), &
-                    & aimag(hybrid2fit%freq%vec),aimag(hybrid2fit%fctn(j,kkk,:)), 'FIT_ED_im_bath'//lab,inset=.true.,nn=100)
+      !!call plotarray( aimag(hybrid2fit%freq%vec),real(bath%hybrid%fctn(j,kkk,:)), &
+         !           & aimag(hybrid2fit%freq%vec),real(hybrid2fit%fctn(j,kkk,:)), 'FIT_ED_re_bath'//lab,inset=.true.,nn=100)
+      !!call plotarray( aimag(hybrid2fit%freq%vec),aimag(bath%hybrid%fctn(j,kkk,:)), &
+         !           & aimag(hybrid2fit%freq%vec),aimag(hybrid2fit%fctn(j,kkk,:)), 'FIT_ED_im_bath'//lab,inset=.true.,nn=100)
      else
-      call plotarray( aimag(hybrid2fit%freq%vec),real(batht%hybrid%fctn(j,kkk,:)), &
-                    & aimag(hybrid2fit%freq%vec),real(hybrid2fit%fctn(j,kkk,:)), 'FIT_ED_re_bath_t'//lab,inset=.true.,nn=100)
-      call plotarray( aimag(hybrid2fit%freq%vec),aimag(batht%hybrid%fctn(j,kkk,:)), &
-                    & aimag(hybrid2fit%freq%vec),aimag(hybrid2fit%fctn(j,kkk,:)), 'FIT_ED_im_bath_t'//lab,inset=.true.,nn=100)
+      !!call plotarray( aimag(hybrid2fit%freq%vec),real(batht%hybrid%fctn(j,kkk,:)), &
+          !          & aimag(hybrid2fit%freq%vec),real(hybrid2fit%fctn(j,kkk,:)), 'FIT_ED_re_bath_t'//lab,inset=.true.,nn=100)
+      !!call plotarray( aimag(hybrid2fit%freq%vec),aimag(batht%hybrid%fctn(j,kkk,:)), &
+          !          & aimag(hybrid2fit%freq%vec),aimag(hybrid2fit%fctn(j,kkk,:)), 'FIT_ED_im_bath_t'//lab,inset=.true.,nn=100)
      endif
     endif
 
    enddo
    enddo
-   call PGSUBP(1,1)
+   !call PGSUBP(1,1)
 
   end subroutine
 
@@ -681,15 +673,15 @@ endif
 !*********************************************
 
  subroutine plot_it_
-     call simplehist(dble(batht%vec),'vec',display=5)
-     call plotarray( aimag(hybrid2fit%freq%vec),real(batht%hybrid%fctn(1,1,:)), &
-                   & aimag(hybrid2fit%freq%vec),real(hybrid2fit%fctn(1,1,:)), 're bath'  ,inset=.true.,nn=100,display=1)
-     call plotarray( aimag(hybrid2fit%freq%vec),real(batht%hybrid%fctn(2,2,:)), &
-                   & aimag(hybrid2fit%freq%vec),real(hybrid2fit%fctn(2,2,:)), 're bath2' ,inset=.true.,nn=100,display=2)
-     call plotarray( aimag(hybrid2fit%freq%vec),aimag(batht%hybrid%fctn(1,1,:)), &
-                   & aimag(hybrid2fit%freq%vec),aimag(hybrid2fit%fctn(1,1,:)), 'im bath',inset=.true.,nn=100,display=3)
-     call plotarray( aimag(hybrid2fit%freq%vec),aimag(batht%hybrid%fctn(2,2,:)), &
-                   & aimag(hybrid2fit%freq%vec),aimag(hybrid2fit%fctn(2,2,:)), 'im bath2',inset=.true.,nn=100,display=4)
+     !call simplehist(dble(batht%vec),'vec',display=5)
+     !!call plotarray( aimag(hybrid2fit%freq%vec),real(batht%hybrid%fctn(1,1,:)), &
+            !       & aimag(hybrid2fit%freq%vec),real(hybrid2fit%fctn(1,1,:)), 're bath'  ,inset=.true.,nn=100,display=1)
+     !!call plotarray( aimag(hybrid2fit%freq%vec),real(batht%hybrid%fctn(2,2,:)), &
+            !       & aimag(hybrid2fit%freq%vec),real(hybrid2fit%fctn(2,2,:)), 're bath2' ,inset=.true.,nn=100,display=2)
+     !!call plotarray( aimag(hybrid2fit%freq%vec),aimag(batht%hybrid%fctn(1,1,:)), &
+            !       & aimag(hybrid2fit%freq%vec),aimag(hybrid2fit%fctn(1,1,:)), 'im bath',inset=.true.,nn=100,display=3)
+     !!call plotarray( aimag(hybrid2fit%freq%vec),aimag(batht%hybrid%fctn(2,2,:)), &
+            !       & aimag(hybrid2fit%freq%vec),aimag(hybrid2fit%fctn(2,2,:)), 'im bath2',inset=.true.,nn=100,display=4)
  end subroutine
 
 !*********************************************

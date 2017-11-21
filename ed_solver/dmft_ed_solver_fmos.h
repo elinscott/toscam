@@ -176,8 +176,8 @@
       if(iter==1)then
         do s1=-1,1,2
           do m=1,Nc
-            call plotarray(matsubara,real(Gdyn_m(s1,m,m,:)), 'FMOS_GREEN0_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
-            call plotarray(matsubara,aimag(Gdyn_m(s1,m,m,:)),'FMOS_GREEN0_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+           !call plotarray(matsubara,real(Gdyn_m(s1,m,m,:)), 'FMOS_GREEN0_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+           !call plotarray(matsubara,aimag(Gdyn_m(s1,m,m,:)),'FMOS_GREEN0_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
           enddo
         enddo
       endif
@@ -365,10 +365,10 @@
       if(iter==1)then
          do s1=-1,1,2
            do m=1,Nc
-             call plotarray(matsubara, real(1.d0/(matsubara(:)*imi+mmu-Ei_(s1,m,m)-Dmsig(s1,m,:))),'FMOS_WEISS_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
-             call plotarray(matsubara,aimag(1.d0/(matsubara(:)*imi+mmu-Ei_(s1,m,m)-Dmsig(s1,m,:))),'FMOS_WEISS_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
-             call plotarray(matsubara, real(Dmsig(s1,m,:)),'FMOS_HYBRID_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
-             call plotarray(matsubara,aimag(Dmsig(s1,m,:)),'FMOS_HYBRID_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+            !call plotarray(matsubara, real(1.d0/(matsubara(:)*imi+mmu-Ei_(s1,m,m)-Dmsig(s1,m,:))),'FMOS_WEISS_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+            !call plotarray(matsubara,aimag(1.d0/(matsubara(:)*imi+mmu-Ei_(s1,m,m)-Dmsig(s1,m,:))),'FMOS_WEISS_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+            !call plotarray(matsubara, real(Dmsig(s1,m,:)),'FMOS_HYBRID_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+            !call plotarray(matsubara,aimag(Dmsig(s1,m,:)),'FMOS_HYBRID_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
            enddo
          enddo
       endif
@@ -643,10 +643,10 @@
         enddo 
 
        if(s1==-1)then
-        call plotarray( matsubara,real(BB(s1,m,1,:)),'FMOS_BB_RE_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
-        call plotarray( matsubara,aimag(BB(s1,m,1,:)),'FMOS_BB_IM_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
-        call plotarray( matsubara,real(tempvec),'FMOS_TEMPVEC_RE_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
-        call plotarray( matsubara,aimag(tempvec),'FMOS_TEMPVEC_IM_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+       !call plotarray( matsubara,real(BB(s1,m,1,:)),'FMOS_BB_RE_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+       !call plotarray( matsubara,aimag(BB(s1,m,1,:)),'FMOS_BB_IM_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+       !call plotarray( matsubara,real(tempvec),'FMOS_TEMPVEC_RE_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+       !call plotarray( matsubara,aimag(tempvec),'FMOS_TEMPVEC_IM_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
        endif
         Gdyn_m(s1,m,m,:) = (1.d0/Gdyn_m(s1,m,m,:))  * &
                  & ( 1.d0 + AA(s1,m,:)*(densav(-s1,m,m)+I1a(s1,m,:)) + tempvec(:)  ) 
@@ -657,11 +657,11 @@
      do s1=-1,1,2
        S_ff_m(s1,:,:,:)=0.0
        do m=1,Nc
-         call plotarray(matsubara,real(Gdyn_m(s1,m,m,:)), 'FMOS_GREEN_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
-         call plotarray(matsubara,aimag(Gdyn_m(s1,m,m,:)),'FMOS_GREEN_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+        !call plotarray(matsubara,real(Gdyn_m(s1,m,m,:)), 'FMOS_GREEN_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+        !call plotarray(matsubara,aimag(Gdyn_m(s1,m,m,:)),'FMOS_GREEN_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
          S_ff_m(s1,m,m,:)=(matsubara(:)*imi + mmu) - Ei_(s1,m,m) - Dmsig(s1,m,:) - 1.d0/Gdyn_m(s1,m,m,:)   
-         call plotarray(matsubara, real(S_ff_m(s1,m,m,:)),'FMOS_SELF_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
-         call plotarray(matsubara,aimag(S_ff_m(s1,m,m,:)),'FMOS_SELF_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+        !call plotarray(matsubara, real(S_ff_m(s1,m,m,:)),'FMOS_SELF_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+        !call plotarray(matsubara,aimag(S_ff_m(s1,m,m,:)),'FMOS_SELF_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
          do i=1,nw_m
            if(aimag(S_ff_m(s1,m,m,i))>0.) S_ff_m(s1,m,m,i)=CMPLX(real(S_ff_m(s1,m,m,i)),0.d0)
          enddo
@@ -752,8 +752,8 @@
       if(iter==1)then
         do s1=-1,1,2
           do m=1,Nc
-            call plotarray(real(frequ__),real(Gdyn_r(s1,m,m,:)), 'FMOSR_GREEN0_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
-            call plotarray(real(frequ__),aimag(Gdyn_r(s1,m,m,:)),'FMOSR_GREEN0_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+           !call plotarray(real(frequ__),real(Gdyn_r(s1,m,m,:)), 'FMOSR_GREEN0_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+           !call plotarray(real(frequ__),aimag(Gdyn_r(s1,m,m,:)),'FMOSR_GREEN0_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
           enddo
         enddo
       endif
@@ -774,10 +774,10 @@
 
          do s1=-1,1,2
            do m=1,Nc
-             call plotarray(real(frequ__), real(1.d0/(frequ__(:)+mmu-Ei_(s1,m,m)-Dmsig(s1,m,:))),'FMOSR_WEISS_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
-             call plotarray(real(frequ__),aimag(1.d0/(frequ__(:)+mmu-Ei_(s1,m,m)-Dmsig(s1,m,:))),'FMOSR_WEISS_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
-             call plotarray(real(frequ__), real(Dmsig(s1,m,:)),'FMOSR_HYBRID_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
-             call plotarray(real(frequ__),aimag(Dmsig(s1,m,:)),'FMOSR_HYBRID_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+            !call plotarray(real(frequ__), real(1.d0/(frequ__(:)+mmu-Ei_(s1,m,m)-Dmsig(s1,m,:))),'FMOSR_WEISS_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+            !call plotarray(real(frequ__),aimag(1.d0/(frequ__(:)+mmu-Ei_(s1,m,m)-Dmsig(s1,m,:))),'FMOSR_WEISS_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+            !call plotarray(real(frequ__), real(Dmsig(s1,m,:)),'FMOSR_HYBRID_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+            !call plotarray(real(frequ__),aimag(Dmsig(s1,m,:)),'FMOSR_HYBRID_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
            enddo
          enddo
 
@@ -1051,11 +1051,11 @@
      do s1=-1,1,2
        S_ff_r(s1,:,:,:)=0.0
        do m=1,Nc
-         call plotarray(real(frequ__),real(Gdyn_r(s1,m,m,:)), 'FMOSR_GREEN_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
-         call plotarray(real(frequ__),aimag(Gdyn_r(s1,m,m,:)),'FMOSR_GREEN_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+        !call plotarray(real(frequ__),real(Gdyn_r(s1,m,m,:)), 'FMOSR_GREEN_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+        !call plotarray(real(frequ__),aimag(Gdyn_r(s1,m,m,:)),'FMOSR_GREEN_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
          S_ff_r(s1,m,m,:)=frequ__(:) + mmu - Ei_(s1,m,m) - Dmsig(s1,m,:) - 1.d0/Gdyn_r(s1,m,m,:)   
-         call plotarray(real(frequ__), real(S_ff_r(s1,m,m,:)),'FMOSR_SELF_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
-         call plotarray(real(frequ__),aimag(S_ff_r(s1,m,m,:)),'FMOSR_SELF_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+        !call plotarray(real(frequ__), real(S_ff_r(s1,m,m,:)),'FMOSR_SELF_RE_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
+        !call plotarray(real(frequ__),aimag(S_ff_r(s1,m,m,:)),'FMOSR_SELF_IM_ITER_'//trim(adjustl(toString(iter)))//"_"//trim(adjustl(toString(m)))//"_")
          do i=1,nw_r
            if(aimag(S_ff_r(s1,m,m,i))>0.) S_ff_r(s1,m,m,i)=CMPLX(real(S_ff_r(s1,m,m,i)),0.d0)
          enddo
@@ -1124,6 +1124,17 @@ end subroutine
 
 !************************************************/
 
+      elemental real(8) function step_func_loc(rr)
+      implicit none
+      real(8),intent(in) :: rr
+       if(rr>0.d0)then
+        step_func_loc=1.d0
+       else
+        step_func_loc=0.d0
+       endif
+      end function
+
+
 subroutine Fourier(nw,Giom,iom,Gtau_,beta,tailmax,green)
 implicit none
  integer,parameter:: Ntau=1
@@ -1165,7 +1176,7 @@ implicit none
        pp2 = DEXPc( ahh*(tau(t)+beta) )
        pp2 = pp2 / ( DEXPc( beta*ahh ) + 1.d0 )
     endif
-    Gtau_ = Gtau_ - ddd*(step_func_(tau(t))*pp1 - step_func_(-tau(t))*pp2 )
+    Gtau_ = Gtau_ - ddd*(step_func_loc(tau(t))*pp1 - step_func_loc(-tau(t))*pp2 )
    enddo
 
   Giom=Giomback

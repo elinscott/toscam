@@ -5,7 +5,6 @@
   call putel_in_namelist(nm,  OLDGSFILE             ,'OLDGSFILE           ', './ED_out/GS.raw'                          ,'OLD GS FILE')
   call putel_in_namelist(nm,  fit_weight_power      ,'fit_weight_power    ',  0.5d0 ,                'Bath fit : give the exponent of the 1/w**a to weight the frequencies to fit')
   call putel_in_namelist(nm,  fit_shift             ,'fit_shift'           , 0.01d0 ,                'Bath fit : give the shift of the 1/(w**a+shift) fit')
-  call putel_in_namelist(nm,  fit_bath_mu_incorporated_in_param             ,'fit_bath_mu_incorporated_in_param'           , .true. ,                'Bath fit : if true the chem pot is incorporated in the epsilon bath param, so the fit will depend on the chemical potential')
   call putel_in_namelist(nm,  start_from_old_gs     ,'start_from_old_gs   ',  F                      ,'START FROM OLD GS')
   call putel_in_namelist(nm,  Nitergreenmax         ,'Nitergreenmax'       ,  36                     ,'max.numb.of Lanczos iterations in Green s fct. computation')
   call putel_in_namelist(nm,  Niter_search_max      ,'Niter_search_max'    ,  100                    ,'Niter_search_max = max. numb. of function calls in conjugate gradient')

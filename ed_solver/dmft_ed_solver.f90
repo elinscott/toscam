@@ -70,6 +70,8 @@ CONTAINS
                   & spm_,corhop_,only_density,skip_fit,use_specific_set_parameters_,                        &
                   & param_input_,param_output_,nbathparam_,freeze_poles_delta_,freeze_poles_delta_iter_,    &
                   & freeze_poles_delta_niter_,imp_causality,Jhund_,use_input_delta_instead_of_fit,Jhund_matrix)
+ use mesh, only: mirror_array
+ use splines, only: resampleit
  implicit none
  complex(8)        :: g_out(:,:,:),gw(:,:,:),self_out(:,:,:),hybrid_in(:,:,:),sigw(:,:,:),sigww(size(sigw,1),size(sigw,2),size(sigw,3))
  complex(8)        :: gw_(size(gw,1),size(gw,2),size(gw,3)),sigw_(size(sigw,1),size(sigw,2),size(sigw,3))
@@ -82,7 +84,8 @@ CONTAINS
  type(hamiltonian) :: Himp
  type(web)         :: impurity_
  logical           :: flip_input_output,para_state_,restarted_,retarded,compute_all
- logical,optional  :: use_input_delta_instead_of_fit,only_density,skip_fit,use_specific_set_parameters_,freeze_poles_delta_,imp_causality
+ logical,optional  :: only_density,skip_fit,use_specific_set_parameters_,freeze_poles_delta_,imp_causality
+ logical,optional  :: use_input_delta_instead_of_fit
  integer,optional  :: freeze_poles_delta_iter_,freeze_poles_delta_niter_
  real(8)           :: bandes(size(gw,1),size(frequ))
 
@@ -90,29 +93,42 @@ CONTAINS
   ! ---> SET GLOBAL VARIABLES
   !----------------------------------------------------------------------------------------------!
 
-
    if(2*impurity_%N/=size(g_out,1))then
      write(*,*) 'size of impurity does not match size of impurity green functions'
      write(*,*) 'error,critical'
      stop
    endif
 
+
                                              Jhund    = 0.d0
    if(present(Jhund_))                       Jhund    = Jhund_
+
+
+   if(.not.allocated(JJmatrix)) then
+     write(*,*) 'JJ matrix not allocated, it should be if ED solver initialized'
+     stop
+   endif
+
                                              JJmatrix = Jhund
+
    if(present(Jhund_matrix))then
+
                                              JJmatrix = Jhund_matrix
+
                                              Jhund    = maxval(abs(Jhund_matrix))
    endif
+
    if(flag_slater_int) then
                                              JJmatrix = 0.d0
                                              Jhund    = 0.d0
    endif
 
+
    if(fmos_hub1)then
      call hub1_run 
      return
    endif
+
 
                                              freeze_poles_delta_niter=1
    if(present(freeze_poles_delta_niter_))    freeze_poles_delta_niter=freeze_poles_delta_niter_
@@ -132,12 +148,6 @@ CONTAINS
                                              skip_fit_ =   .false.
    if(present(skip_fit))                     skip_fit_ =   skip_fit
 
-   if(fit_bath_mu_incorporated_in_param)then
-    bath%mmu = 0.d0
-   else
-    bath%mmu = mmu
-   endif
-
    if(bath%nparam==0) stop 'error ed solver 0 parameters in the bath'
    if(present(nbathparam_))         nbathparam_=bath%nparam+ncpt_para*ncpt_tot
    if(.not.allocated(param_output)) allocate(param_output(bath%nparam+ncpt_para*ncpt_tot))
@@ -151,6 +161,7 @@ CONTAINS
       write(*,*) '---------------------------------------------------------'
      endif
    endif
+
 
    iterdmft=iter_
    restarted=restarted_
@@ -208,12 +219,12 @@ CONTAINS
      else
        CALL bath2hybrid(bath,FERMIONIC)
        if(rank==0)then
-       call PGSUBP(4,4)
+       !call PGSUBP(4,4)
        do j=1,size(bath%hybrid%fctn(:,1,1))
-         call plotarray(aimag(bath%hybrid%freq%vec),real (bath%hybrid%fctn(j,j,:)),'ED re bath start iter1')
-         call plotarray(aimag(bath%hybrid%freq%vec),aimag(bath%hybrid%fctn(j,j,:)),'ED im bath start iter1')
+        !call plotarray(aimag(bath%hybrid%freq%vec),real (bath%hybrid%fctn(j,j,:)),'ED re bath start iter1')
+        !call plotarray(aimag(bath%hybrid%freq%vec),aimag(bath%hybrid%fctn(j,j,:)),'ED im bath start iter1')
        enddo
-       call PGSUBP(1,1)
+       !call PGSUBP(1,1)
        endif
      endif
 
@@ -229,7 +240,6 @@ CONTAINS
      endif
 
      CALL solve_AIM(GS,AIM,OLDGSFILE=OLDGSFILE,COMPUTE_ALL_CORREL=compute_all)
-
      write(log_unit,*) '##########################################################'
      do isector=1,GS%nsector
        write(log_unit,*) '------> PARSE EIGEN SECTORS : ', isector,GS%nsector
@@ -282,7 +292,6 @@ CONTAINS
      self_out  =  SNAMBU%fctn
      sigww     =  SNAMBUret%fctn
      gw        =  GNAMBUret%correl(2,1)%fctn
-
      if(ncpt_approx/=0)then
        call cpt_extract_G(   GNAMBUN%correl(2,1)%freq%vec, self_out, g_out, imaginary=.true.  )
        call cpt_extract_G( GNAMBUret%correl(2,1)%freq%vec, sigww   , gw   , imaginary=.false. )
@@ -293,13 +302,13 @@ CONTAINS
      spm_(1,1,:) = Spm%correl(1,2)%fctn(1,1,:)
      corhop_     = GNAMBUN%correl(2,1)%fctn
 
-     call plotarray(aimag(GNAMBUN%correl(2,1)%freq%vec),  real(GNAMBUN%correl(2,1)%fctn(1,1,:)),'inside_ed_solver_GnambuN_real')
-     call plotarray(aimag(GNAMBUN%correl(2,1)%freq%vec), aimag(GNAMBUN%correl(2,1)%fctn(1,1,:)),'inside_ed_solver_GnambuN_aimag')
+    !call plotarray(aimag(GNAMBUN%correl(2,1)%freq%vec),  real(GNAMBUN%correl(2,1)%fctn(1,1,:)),'inside_ed_solver_GnambuN_real')
+    !call plotarray(aimag(GNAMBUN%correl(2,1)%freq%vec), aimag(GNAMBUN%correl(2,1)%fctn(1,1,:)),'inside_ed_solver_GnambuN_aimag')
 
      do j=1,size(sigww,1)
       bandes(j,:)=aimag(sigww(j,j,:))
      enddo
-     call plotarray(real(GNAMBUret%correl(2,1)%freq%vec),bandes,'inside_ed_solver_self_energy_bef_average')
+    !call plotarray(real(GNAMBUret%correl(2,1)%freq%vec),bandes,'inside_ed_solver_self_energy_bef_average')
 
      if(abs(average_G)==1) call average_correlations(SNAMBU,self_out,average_G>=0,MASK_AVERAGE_SIGMA)
      if(abs(average_G)==1) call average_correlations(SNAMBUret,sigww,average_G>=0,MASK_AVERAGE_SIGMA)
@@ -308,7 +317,7 @@ CONTAINS
       bandes(j,:)=aimag(sigww(j,j,:))
      enddo
 
-     call plotarray(real(GNAMBUret%correl(2,1)%freq%vec),bandes,'inside_ed_solver_self_energy_aft_average'//ADJUSTL(TRIM(SNAMBU%stat)))
+    !call plotarray(real(GNAMBUret%correl(2,1)%freq%vec),bandes,'inside_ed_solver_self_energy_aft_average'//ADJUSTL(TRIM(SNAMBU%stat)))
      if(abs(average_G)==1) call average_correlations(GNAMBU%correl(2,1),g_out,average_G>=0,MASK_AVERAGE_SIGMA)
      if(abs(average_G)==1) call average_correlations(GNAMBUN%correl(2,1),corhop_,average_G>=0,MASK_AVERAGE_SIGMA)
 
@@ -321,6 +330,13 @@ CONTAINS
          g_out(:,:,i) = flip_matrix(   g_out(:,:,i),flip_input_output)
        corhop_(:,:,i) = flip_matrix( corhop_(:,:,i),flip_input_output)
      enddo
+     write(*,*) a1,a2
+     write(*,*) allocated(GNAMBUret%correl(2,1)%freq%vec)
+     write(*,*) shape(gw)
+    write(*,*) shape(gw_)
+     write(*,*) shape(sigww)
+     write(*,*) shape(sigw_)
+     write(*,*) flip_input_output
 
      do i=1,a1
       do j=1,a2
@@ -337,11 +353,8 @@ CONTAINS
        endif
       enddo
      enddo
-
   !----------------------------------------------------------------------------------------------!
-
 144  continue
-
      DO i=1,size(rdens)
       if(i<=size(rdens)/2)then
         rdens(i) = DBLE(G(1)%correlstat(1,2)%rc%mat(i,i)) 
@@ -374,7 +387,7 @@ CONTAINS
        call mirror_array(frequ,bandes(j,:))
       enddo
      endif
-     call plotarray(frequ,bandes,'ED_IMP_DOS')
+    !call plotarray(frequ,bandes,'ED_IMP_DOS')
 
      open(unit=87120,file='chiloc_vertex_sigma_ret_spin_up')
      open(unit=87121,file='chiloc_vertex_sigma_matsu_spin_up')
@@ -402,6 +415,7 @@ CONTAINS
 #include "correlations_keldysh.h"
 #include "dmft_ed_solver_hubbardI_run.h"
 
+
 end subroutine
 
 !**************************************************************************
@@ -428,11 +442,11 @@ end subroutine
 
    do i=1,size(sig,1)
     if(imaginary)then
-      call plotarray( aimag(vec), aimag(gg(:,i,i)), 'CPT_GREEN_MATSU_APPROX_diag'//trim(adjustl(tostring(i)))//"_" )  
-      call plotarray( aimag(vec), aimag(g_out(i,i,:)), 'CPT_GREEN_MATSU_ORIG_diag'//trim(adjustl(tostring(i)))//"_" )  
+     !call plotarray( aimag(vec), aimag(gg(:,i,i)), 'CPT_GREEN_MATSU_APPROX_diag'//trim(adjustl(tostring(i)))//"_" )  
+     !call plotarray( aimag(vec), aimag(g_out(i,i,:)), 'CPT_GREEN_MATSU_ORIG_diag'//trim(adjustl(tostring(i)))//"_" )  
     else
-      call plotarray(  real(vec), aimag(gg(:,i,i)), 'CPT_GREEN_REAL_APPROX_diag'//trim(adjustl(tostring(i)))//"_" )   
-      call plotarray(  real(vec), aimag(g_out(i,i,:)), 'CPT_GREEN_REAL_ORIG_diag'//trim(adjustl(tostring(i)))//"_" )   
+     !call plotarray(  real(vec), aimag(gg(:,i,i)), 'CPT_GREEN_REAL_APPROX_diag'//trim(adjustl(tostring(i)))//"_" )   
+     !call plotarray(  real(vec), aimag(g_out(i,i,:)), 'CPT_GREEN_REAL_ORIG_diag'//trim(adjustl(tostring(i)))//"_" )   
     endif
    enddo
 
@@ -505,6 +519,7 @@ end subroutine
 !**************************************************************************
 
  subroutine stand_alone_ed
+ use random, only: init_rantab, rand_init
  implicit none
  real(8)                 :: mmu,bbeta,rdelta_width,wwmin,wmax,rdelta_frequ_eta1_,rdelta_frequ_T_,rdelta_frequ_w0_
  type(hamiltonian)       :: Himp
@@ -763,17 +778,17 @@ end subroutine
      ww=dble(2*k-1)*pi/bbeta
      hybrid_in_long(i,i,k) = ddd / (imi*ww) + aa/(ww**2) 
    enddo
-   call plotarray( (/( dble(2*iw-1)*pi/bbeta,iw=1,nmatsu_long )/) ,real(hybrid_in_long(i,i,:)),'hybridlong_re_'//trim(adjustl(tostring(i))))
-   call plotarray( (/( dble(2*iw-1)*pi/bbeta,iw=1,nmatsu_long )/) ,aimag(hybrid_in_long(i,i,:)),'hybridlong_im_'//trim(adjustl(tostring(i))))
+  !call plotarray( (/( dble(2*iw-1)*pi/bbeta,iw=1,nmatsu_long )/) ,real(hybrid_in_long(i,i,:)),'hybridlong_re_'//trim(adjustl(tostring(i))))
+  !call plotarray( (/( dble(2*iw-1)*pi/bbeta,iw=1,nmatsu_long )/) ,aimag(hybrid_in_long(i,i,:)),'hybridlong_im_'//trim(adjustl(tostring(i))))
  enddo
 
  do k=1,2*cluster_problem_size
-  call plotarray(frequi,aimag(hybrid_in(k,k,:)),'diag'//trim(adjustl(tostring(k))))
+ !call plotarray(frequi,aimag(hybrid_in(k,k,:)),'diag'//trim(adjustl(tostring(k))))
  enddo
 
  if(size(hybrid_in,2)>=4)then
- call plotarray(frequi,aimag(hybrid_in(1,3,:)),'offdiag13')
- call plotarray(frequi,aimag(hybrid_in(1,4,:)),'offdiag14')
+!call plotarray(frequi,aimag(hybrid_in(1,3,:)),'offdiag13')
+!call plotarray(frequi,aimag(hybrid_in(1,4,:)),'offdiag14')
  endif
 
  if(rank==0) write(*,*) 'CALLING ED SOLVER WITH [x] real frequencies and [y] nmatsu frequencies : ', nreal_frequ, nmatsu_long
@@ -857,13 +872,15 @@ end subroutine
   call mpibarrier
  endif
 
+ write(*,*) 'allocated JJmatrix? :', allocated(JJmatrix),allocated(UUmatrix)
+
  call solver_ED_interface( &
                   & bath_param_ed,iter_,mmu,g_out,self_out,hybrid_in_long,Eimp,sigw,rdens,impurity_,                        &
                   & Himp,gw,frequr,flip_input_output=FLAG_ORDER_TYPE/=3,para_state_=FLAG_ORDER_TYPE==1,                     &
                   & retarded=retarded,restarted_=.false.,                                                                   &
-                  & compute_all=compute_all,tot_rep=tot_rep, spm_=spm_,corhop_=corhop_,imp_causality=.true.,Jhund_=JJhund,  &
+                  & compute_all=compute_all,tot_rep=tot_rep, spm_=spm_,corhop_=corhop_,imp_causality=.true.,                &
                   & param_output_=bathparams_output,param_input_=bathparams,use_specific_set_parameters_=.true.,            &
-                  & use_input_delta_instead_of_fit=use_input_delta,Jhund_matrix=JJmatrix_loc)
+                  & Jhund_=JJhund,use_input_delta_instead_of_fit=use_input_delta,Jhund_matrix=JJmatrix_loc)
 
  if(size2>1.and..not.no_mpi)then
   write(*,*) 'ED SOLVER TERMINATED, RANK = ', rank
@@ -897,8 +914,8 @@ end subroutine
  endif
 
  do k=1,cluster_problem_size
-  call plotarray((/( dble(j),j=1,nmatsu_long)/),real(self_out(k,k,:)),'self_out_diag_real_'//trim(adjustl(toString(k))))
-  call plotarray((/( dble(j),j=1,nmatsu_long)/),aimag(self_out(k,k,:)),'self_out_diag_imag_'//trim(adjustl(toString(k))))
+ !call plotarray((/( dble(j),j=1,nmatsu_long)/),real(self_out(k,k,:)),'self_out_diag_real_'//trim(adjustl(toString(k))))
+ !call plotarray((/( dble(j),j=1,nmatsu_long)/),aimag(self_out(k,k,:)),'self_out_diag_imag_'//trim(adjustl(toString(k))))
  enddo
 
  if(rank==0)then
@@ -1233,12 +1250,6 @@ end subroutine
      CALL bath2hybrid(bath,FERMIONIC)
      write(log_unit,*) '.... new AIM ....'
      call update_AIM_pointer(AIM,impurity,bath)
-
-     if(fit_bath_mu_incorporated_in_param)then
-      bath%mmu = 0.d0
-     else
-      bath%mmu = mmu
-     endif
 
     !===============================================!
      if(present(init))then

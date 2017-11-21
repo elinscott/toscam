@@ -38,7 +38,6 @@ MODULE bath_class
     INTEGER   :: Niter_search_max = 0    ! max # of iterations in search routine (conj. grad.)
     REAL(DBL) :: search_step      = zero ! small step in initial search direction
     REAL(DBL) :: dist_max         = zero ! max. error on hybridization functions
-    REAL(DBL) :: mmu 
     ! HYBRIDIZATION FUNCTION
     TYPE(correl_type) :: hybrid,hybridret
   END TYPE 
@@ -228,7 +227,6 @@ CONTAINS
     BATHOUT%Nc      = BATHIN%Nc
     BATHOUT%fileout = BATHIN%fileout
     BATHOUT%nparam  = BATHIN%nparam
-    BATHOUT%mmu     = BATHIN%mmu
 
     IF(ASSOCIATED(BATHIN%vec))THEN
       IF(.NOT.ASSOCIATED(BATHOUT%vec)) ALLOCATE(BATHOUT%vec(BATHOUT%nparam))

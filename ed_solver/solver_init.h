@@ -14,6 +14,7 @@
 
 
   SUBROUTINE init_solver(FILEIN,AIM,OLDGSFILE) 
+    use namelistmod, only: putel_in_namelist
    
     !------------------------! 
     ! READ SOLVER PARAMETERS !
@@ -182,8 +183,6 @@
         ! NOW WE ARE SURE THE RELEVANT SECTOR IS INDEED IN sector2diagH
       ENDDO
     ENDIF
-
-    CALL init_Lanczos_Cullum
 
     if(allocated(list_sectors)) DEALLOCATE(list_sectors,STAT=istati)
     if(allocated(list0))        DEALLOCATE(list0,STAT=istati)

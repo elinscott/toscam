@@ -494,6 +494,7 @@ CONTAINS
 !**************************************************************************
 
   SUBROUTINE apply_Cupdo(Ces,pm,spin,MASK,es,esrank) 
+    use mpirout, only: scatter_it
 
     !$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     !$$ COMPUTE c[site,spin]|0>, c^+[site,spin]|0> $$
@@ -604,6 +605,7 @@ CONTAINS
     !----------------------!
 
     subroutine collect_on_rank0(eigen)
+    use mpirout, only: mpigather_on_masternode
     implicit none
      TYPE(eigen_type)  :: eigen
      if(USE_TRANSPOSE_TRICK_MPI)then

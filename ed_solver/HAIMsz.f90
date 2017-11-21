@@ -2,6 +2,7 @@ MODULE HAIMsz_class
 
   USE HAIM2_class
   use sector_class 
+  use lockmod, only: MAXT
 
   !-------------------------------------------------------!
   ! FULL HAMILTONIAN IN FERMION SECTOR WITH TOTAL SPIN Sz !

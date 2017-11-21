@@ -47,10 +47,7 @@ MODULE Block_Lanczos
     INTEGER,   ALLOCATABLE              :: ISTOR(:)
     REAL(DBL), ALLOCATABLE              :: RSTOR(:),U(:,:),V(:,:),VALP(:,:),VECP(:,:)
     REAL(DBL)                           :: SIGMA,minv_
-    INTEGER                             :: NNEIG,LFLAG,NVOPU,Neigen_,ierr
-    INTEGER :: Block_size_ !BUG
-    Block_size_=Block_Size !BUG
-    if(Block_size_==1) Block_size_=0 !BUG
+    INTEGER                             :: NNEIG,LFLAG,NVOPU,Neigen_
 
     CALL reset_timer(start_diagH)
     CALL split(dimen_H(),local_istatemin,local_istatemax,local_chunk)
@@ -58,7 +55,7 @@ MODULE Block_Lanczos
     Neigen_=MIN(Neigen,dimen_H())
 
     write(*,*) '-------------Block Lanczos-------------'
-    write(*,*) ' Block_size        : ', Block_size_
+    write(*,*) ' Block_size        : ', Block_size
     write(*,*) ' Nitermax          : ', Nitermax
     write(*,*) ' Neigen_           : ', Neigen_
     write(*,*) ' locistatemin max  : ', local_istatemin,local_istatemax
@@ -70,10 +67,10 @@ MODULE Block_Lanczos
     ISTOR_QUERY(1)   =  local_chunk(iproc)
     ISTOR_QUERY(2)   =  local_chunk(iproc)
     ISTOR_QUERY(3)   =  Neigen_
-    ISTOR_QUERY(4)   =  MIN(Neigen_+10,Neigen_*3)! >=MIN(Neigen_+10,Neigen_*2) RECOMMENDED !BUG CEDRIC
-    ISTOR_QUERY(5)   =  max(1,abs(Block_size_))
+    ISTOR_QUERY(4)   =  MIN(Neigen_+10,Neigen_*3) ! >=MIN(Neigen_+10,Neigen_*2) RECOMMENDED
+    ISTOR_QUERY(5)   =  Block_size
     ISTOR_QUERY(6)   =  min(Nitermax,dimen_H())
-    ISTOR_QUERY(7)   =  max(1,abs(Block_size_))        ! We will provide 'Block size' input vectors
+    ISTOR_QUERY(7)   =  Block_size          ! We will provide 'Block size' input vectors
     ISTOR_QUERY(8)   =  0                   ! no input eigenpairs
     ISTOR_QUERY(9)   =  0                   ! standard eigenvalue problem
     ISTOR_QUERY(10)  =  0                   ! ignored in standard ev case
@@ -91,13 +88,13 @@ MODULE Block_Lanczos
     RSTOR_QUERY(2)   = zero       ! ignored in standard ev case
     RSTOR_QUERY(3)   = tolerance
 
-    !if(Block_size_>0)then
+    if(Block_size>0)then
      LISTOR=0
      LRSTOR=0                     ! let BLZDRD determine the workspace
-    !else
-    ! LISTOR=200000
-    ! LRSTOR=200000     
-    !endif
+    else
+     LISTOR=200000
+     LRSTOR=200000     
+    endif
    
     ISTOR_QUERY(15) = LISTOR
     RSTOR_QUERY( 4) = LRSTOR
@@ -108,22 +105,22 @@ MODULE Block_Lanczos
     NVOPU = 0      ! FIRST CALL
     
     write(*,*) '.... Block Lanczos allocate main arrays ..... '
-    if(allocated(valp)) deallocate(VALP,VECP) !BUG CEDRIC
     ALLOCATE(VALP(ISTOR_QUERY(4),2),VECP(ISTOR_QUERY(2),ISTOR_QUERY(4)))
  
     !*************************************************************************! 
 
-        if(allocated(U))     deallocate(U)
-        if(allocated(V))     deallocate(V)
         if(allocated(ISTOR)) deallocate(ISTOR)
         if(allocated(RSTOR)) deallocate(RSTOR)
+        if(allocated(U))     deallocate(U)
+        if(allocated(V))     deallocate(V)
+
         ALLOCATE(ISTOR(17+ISTOR_QUERY(15))); ALLOCATE(RSTOR(5+NINT(RSTOR_QUERY(4))))
 
-       !if(Block_size_>0)then
-           ALLOCATE(U(ISTOR_QUERY(2),Block_size_),V(ISTOR_QUERY(2),Block_size_))
-       !else
-       !   ALLOCATE(U(ISTOR_QUERY(2),Neigen_),V(ISTOR_QUERY(2),Neigen_))
-       !endif  
+       if(Block_size>0)then
+         ALLOCATE(U(ISTOR_QUERY(2),Block_size),V(ISTOR_QUERY(2),Block_size))
+       else
+         ALLOCATE(U(ISTOR_QUERY(2),Neigen_),V(ISTOR_QUERY(2),Neigen_))
+       endif  
 
        ISTOR(1:17) = ISTOR_QUERY
        RSTOR(1:5)  = RSTOR_QUERY
@@ -142,20 +139,20 @@ MODULE Block_Lanczos
 
     !*************************************************************************!
 
-    IF(Block_size_==0)THEN
+    IF(Block_size==0)THEN
         write(*,*) ' WE LET BLZDRD DECIDE THE BLOCK SIZE '
-        Block_size_ = NVOPU
-        CALL dump_message(TEXT="# OPTIMAL BLOCK SIZE ADOPTED BY BLZDRD = "//c2s(i2c(Block_size_)))
-        write(*,*) ' block size adopted : ', Block_size_
+        Block_size = NVOPU
+        CALL dump_message(TEXT="# OPTIMAL BLOCK SIZE ADOPTED BY BLZDRD = "//c2s(i2c(Block_size)))
+        write(*,*) ' block size adopted : ', Block_size
     ENDIF
 
-    ISTOR_QUERY(5) = max(1,abs(Block_size_))
-    ISTOR_QUERY(7) = max(1,abs(Block_size_))  ! NUMBER OF INPUT VECTORS THAT WE SPECIFY
+    ISTOR_QUERY(5) = Block_size
+    ISTOR_QUERY(7) = Block_size  ! NUMBER OF INPUT VECTORS THAT WE SPECIFY
 
     IF(LFLAG<0) then
        write(*,*) ' QUERY GAVE ERROR FLAG : ', LFLAG
-       write(*,*) ' Block_size_           : ', Block_size_
-       write(*,*) ' Neigen_               : ', Neigen_
+       write(*,*) ' Block_size            : ', Block_size
+       write(*,*) ' Neigen_                : ', Neigen_
        write(*,*) ' local chunk           : ', local_chunk(iproc)
        write(*,*) ' ISTOR QUERY           : ', ISTOR_QUERY
        write(*,*) ' RSTOR_QUERY           : ', RSTOR_QUERY(1:4)
@@ -173,14 +170,13 @@ MODULE Block_Lanczos
     if(allocated(RSTOR)) deallocate(RSTOR)
     if(allocated(U))     deallocate(U)
     if(allocated(V))     deallocate(V)
-    if(allocated(vec_in))deallocate(vec_in,vec_out) !BUG CEDRIC
 
     ALLOCATE(ISTOR(17+ISTOR_QUERY(15)))
     ISTOR(1:17) = ISTOR_QUERY
     ALLOCATE(RSTOR(5+NINT(RSTOR_QUERY(4))))
     RSTOR(1:5)  = RSTOR_QUERY
 
-    ALLOCATE(U(ISTOR(2),Block_size_),V(ISTOR(2),Block_size_))
+    ALLOCATE(U(ISTOR(2),Block_size),V(ISTOR(2),Block_size))
     ALLOCATE(vec_in(dimen_H()),vec_out(dimen_H()))
 
     LFLAG = 0      ! FIRST CALL
@@ -198,12 +194,7 @@ MODULE Block_Lanczos
        stop
 #endif
      !**************************************************************!
-     
-     if(size(ISTOR)<67)then
-      write(*,*) 'something wrong in dimensions of ISTOR'
-      stop
-     endif
- 
+      
      Nconverged  =  ISTOR(67)
      Niter       =  ISTOR(19)
 
@@ -223,11 +214,6 @@ MODULE Block_Lanczos
 
        !------------------------------------------------------------------------!
        DO ivp=1,NVOPU
-         if(NVOPU>Block_size_)then
-          write(*,*) 'NVOPU larger than Block_size: ', NVOPU, Block_size_
-          stop
-         endif
-
          vec_in = zero
 
          ! Hmult REQUIRES FULL VECTOR => GATHER ALL PARTS FROM LOCAL U(:,ivp)
@@ -260,11 +246,6 @@ MODULE Block_Lanczos
 
     ! NOW WE HAVE THE DESIRED EIGENPAIRS THANKS TO BLZPACK IT JUST REMAINS TO STORE THEM IN EIGENLIST
 
-    if(size(ISTOR)<67)then
-     write(*,*) 'something wrong in dimensions of ISTOR'
-     stop
-    endif
-
     Nconverged = ISTOR(67)  ! NUMBER OF CONVERGED EIGENPAIRS (MAY BE MORE THAN Neigen_ REQUIRED!)
     Niter      = ISTOR(19)  ! NUMBER OF BLOCK LANCZOS ITERATIONS PERFORMED
 
@@ -280,17 +261,10 @@ MODULE Block_Lanczos
       stop
     endif
 
-    if(size(VALP,1)<Nconverged)then
-     write(*,*) 'shape VALP : ', shape(VALP)
-     write(*,*) 'Nconverged: ', Nconverged
-     write(*,*) 'shape dont match'
-     stop
-    endif
 
     minv_=minval(VALP(1:Nconverged,1))
     DO ivp=1,Nconverged
      if(abs(VALP(ivp,1)-minv_)<=dEmax)then
-      write(*,*) 'adding eigenvalue : ', ivp, VALP(ivp,1)
       CALL new_eigen(eigen,dimen_H())
       eigen%val       = VALP(ivp,1)
       eigen%converged = T
@@ -299,18 +273,15 @@ MODULE Block_Lanczos
         CALL MPI_ALLGATHERV(VECP(:,ivp),local_chunk(iproc),MPI_DOUBLE_PRECISION,&
         eigen%vec%rc,local_chunk,local_istatemin-1,MPI_DOUBLE_PRECISION,MPI_COMM_WORLD,ierr)
       else
-        write(*,*) 'eigenvector'
         eigen%vec%rc=VECP(:,ivp)
       endif
-      write(*,*) 'append eigenvalue to list'
       CALL add_eigen(eigen,lowest) ! APPEND NEW EIGENPAIR TO LIST
-      write(*,*) 'delete eigenvalue',ivp
       CALL delete_eigen(eigen)
      endif
     ENDDO
 
 
-    write(*,*)'count eigenvalues' 
+
     IF(Nconverged>Neigen_) &
     CALL dump_message(TEXT="# WARNING IN Block_Lanczos_diagonalize_real: "//c2s(i2c(Nconverged))//&
     " EIGENPAIRS CONVERGED > "//c2s(i2c(Neigen_))//" REQUESTED")
@@ -324,34 +295,13 @@ MODULE Block_Lanczos
       ENDDO
     ENDIF
 
-    !write(*,*) 'delete eigenvalue'
-    !CALL delete_eigen(eigen) ! BUG ?
+    CALL delete_eigen(eigen)
+    IF(ALLOCATED(vec_in))  DEALLOCATE(vec_in); IF(ALLOCATED(vec_out)) DEALLOCATE(vec_out)
 
-    write(*,*) 'timer'
+    DEALLOCATE(ISTOR,RSTOR,U,V,VALP,VECP)
+
     CALL timer_fortran(start_diagH,"# DIAGONALIZATION OF "//TRIM(ADJUSTL(title_H_()))//" TOOK "//c2s(i2c(Niter))//" ITERATIONS AND ")
 
-    write(*,*) 'deallocate VECIN'
-    IF(ALLOCATED(vec_in)) DEALLOCATE(vec_in ,stat=ierr)
-    write(*,*) 'deallocate VECOUT'
-    IF(ALLOCATED(vec_out))DEALLOCATE(vec_out,stat=ierr) !BUG CEDRIC
-
-    write(*,*) 'deallocate U'
-    if(allocated(U))      deallocate(U      ,stat=ierr)
-    write(*,*) 'deallocate V'
-    if(allocated(V))      deallocate(V      ,stat=ierr)
-
-    write(*,*) 'deallocate VALP'
-    if(allocated(VALP))   deallocate(VALP   ,stat=ierr)
-    write(*,*) 'deallocate VECP'
-    if(allocated(VECP))   deallocate(VECP   ,stat=ierr)
-
-    write(*,*) 'deallocate ISTOR'
-    if(allocated(ISTOR))  deallocate(ISTOR  ,stat=ierr)
-    write(*,*) 'deallocate RSTOR'
-    if(allocated(RSTOR))  deallocate(RSTOR  ,stat=ierr)
-
-    write(*,*) 'finalize Block Lanczos'
-    return
   END SUBROUTINE
 
 
