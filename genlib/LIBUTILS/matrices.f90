@@ -1,21 +1,52 @@
 module matrix
 
    use genvar
-   use linalg
+   use linalg, only : matrixinverse, same_array, erase_divergence, q_zsum, csign1, &
+       zdot, zaxpy__, q_zamax, q_zscal, swap, outerprod, cabs1, zsum, qsign, zaxpyb
    use random
    use tools_algebra
    use sorting
-   use common_def,   only : reset_timer,timer_fortran
+   use common_def,   only : reset_timer, timer_fortran, dump_message, c2s, i2c, &
+       create_seg_fault
    use fortran_cuda
 
+private
+public :: average_matrix
+public :: average_vec
+public :: bande_mat
+public :: bande_matc
+public :: decomposevec
+public :: diag
+public :: diagc
+public :: diagi
+public :: diagonalize
+public :: diagonalize_real
+public :: diagr
+public :: eigenvector_matrix
+public :: Id
+public :: invmat
+public :: invmat_comp
+public :: invmat_comp2
+public :: invmat_comps
+public :: matmul_x
+public :: matmul_x_c 
+public :: new_diag
+public :: new_Id
+public :: offdiagc
+public :: qr_decomp
+public :: rearrange_columns_to_identity_c
+public :: write_array
+public :: write_real_array_rank_2
+public :: write_cplx_array_rank_2
+
 !--------------------------------------------------------------------------------!
-INTERFACE rearrange_columns_to_identity
- MODULE PROCEDURE rearrange_columns_to_identity_r,rearrange_columns_to_identity_c
-END INTERFACE
-!--------------------------------------------------------------------------------!
-INTERFACE invmat_sym
- MODULE PROCEDURE invmat_sym_c,invmat_sym_r
-END INTERFACE
+! INTERFACE rearrange_columns_to_identity
+!  MODULE PROCEDURE rearrange_columns_to_identity_r,rearrange_columns_to_identity_c
+! END INTERFACE
+! !--------------------------------------------------------------------------------!
+! INTERFACE invmat_sym
+!  MODULE PROCEDURE invmat_sym_c,invmat_sym_r
+! END INTERFACE
 !--------------------------------------------------------------------------------!
 INTERFACE bande_mat
  MODULE PROCEDURE bande_matr,bande_matc 
@@ -37,17 +68,17 @@ INTERFACE geco__
  MODULE PROCEDURE gecoc__,gecocs__,gecocq__
 END INTERFACE
 !--------------------------------------------------------------------------------!
-INTERFACE svd_wrapper
-    MODULE PROCEDURE svd_wrapper_cs,svd_wrapper_c,svd_wrapper_r,svd_wrapper_rs,svd_wrapper_rq
-END INTERFACE
-!--------------------------------------------------------------------------------!
+! INTERFACE svd_wrapper
+!     MODULE PROCEDURE svd_wrapper_cs,svd_wrapper_c,svd_wrapper_r,svd_wrapper_rs,svd_wrapper_rq
+! END INTERFACE
+! !--------------------------------------------------------------------------------!
 INTERFACE MATMUL_
     MODULE PROCEDURE MATMULr,MATMULc
 END INTERFACE
-!--------------------------------------------------------------------------------!
-INTERFACE tqli
-    MODULE PROCEDURE tqli_,tqli__,tqliq
-END INTERFACE
+! !--------------------------------------------------------------------------------!
+! INTERFACE tqli
+!     MODULE PROCEDURE tqli_,tqli__,tqliq
+! END INTERFACE
 !--------------------------------------------------------------------------------!
 INTERFACE invmat
     MODULE PROCEDURE invmat_comp,invmat_comps,invmat_real,invmat_reals,invmat_real_quad,invmat_comp_quad
@@ -65,17 +96,17 @@ INTERFACE lubksb
     MODULE PROCEDURE lubksbd,lubksbq
 END INTERFACE
 !--------------------------------------------------------------------------------!
-INTERFACE MATMUL_keep_diag
-    MODULE PROCEDURE MATMUL_keep_diag_,MATMUL_keep_diag__
-END INTERFACE
-!--------------------------------------------------------------------------------!
-INTERFACE MATMUL_sum_diag
-    MODULE PROCEDURE MATMUL_sum_diag_,MATMUL_sum_diag__
-END INTERFACE
-!--------------------------------------------------------------------------------!
-INTERFACE symmetrize_mat
-  MODULE PROCEDURE symmetrize_mat_c,symmetrize_mat_r
-END INTERFACE
+! INTERFACE MATMUL_keep_diag
+!     MODULE PROCEDURE MATMUL_keep_diag_,MATMUL_keep_diag__
+! END INTERFACE
+! !--------------------------------------------------------------------------------!
+! INTERFACE MATMUL_sum_diag
+!     MODULE PROCEDURE MATMUL_sum_diag_,MATMUL_sum_diag__
+! END INTERFACE
+! !--------------------------------------------------------------------------------!
+! INTERFACE symmetrize_mat
+!   MODULE PROCEDURE symmetrize_mat_c,symmetrize_mat_r
+! END INTERFACE
 !--------------------------------------------------------------------------------!
 INTERFACE rescale
  MODULE PROCEDURE rescale_r,rescale_c,rescale_r2,rescale_c2,rescale_r3,rescale_c3
@@ -87,17 +118,17 @@ INTERFACE eigenvector_matrix
                      & eigenvector_matrix_rc,eigenvector_matrix_rrc
 END INTERFACE
 !--------------------------------------------------------------------------------!
-INTERFACE eigenvector_matrix_b_
- MODULE PROCEDURE eigenvector_matrixa_,eigenvector_matrixc_
-END INTERFACE
-!--------------------------------------------------------------------------------!
-INTERFACE eigenvalue_matrix
- MODULE PROCEDURE eigenvalue_matrix__,eigenvalue_matrix_,eigenvalue_matrixr_
-END INTERFACE
-!--------------------------------------------------------------------------------!
-INTERFACE print_eigenvalue
- MODULE PROCEDURE print_eigenvalue__
-END INTERFACE
+! INTERFACE eigenvector_matrix_b_
+!  MODULE PROCEDURE eigenvector_matrixa_,eigenvector_matrixc_
+! END INTERFACE
+! !--------------------------------------------------------------------------------!
+! INTERFACE eigenvalue_matrix
+!  MODULE PROCEDURE eigenvalue_matrix__,eigenvalue_matrix_,eigenvalue_matrixr_
+! END INTERFACE
+! !--------------------------------------------------------------------------------!
+! INTERFACE print_eigenvalue
+!  MODULE PROCEDURE print_eigenvalue__
+! END INTERFACE
 !--------------------------------------------------------------------------------!
 INTERFACE MATMUL_x
   MODULE PROCEDURE MATMUL_x_c,MATMUL_x_r
@@ -107,17 +138,17 @@ INTERFACE get_det_from_zgeco
  MODULE PROCEDURE get_det_from_zgeco_,get_det_from_zgeco__,get_det_from_zgeco___
 END INTERFACE
 !--------------------------------------------------------------------------------!
-INTERFACE INVMG
- MODULE PROCEDURE D_INVMG,Q_INVMG
-END INTERFACE
+! INTERFACE INVMG
+!  MODULE PROCEDURE D_INVMG,Q_INVMG
+! END INTERFACE
 !--------------------------------------------------------------------------------!
 INTERFACE diag
  MODULE PROCEDURE diagr,diagc,diagi,diagrr,diagr_,diagc_,diagc__,diagr__
 END INTERFACE
 !--------------------------------------------------------------------------------!
-INTERFACE offdiag
- MODULE PROCEDURE offdiagr,offdiagc
-END INTERFACE
+! INTERFACE offdiag
+!  MODULE PROCEDURE offdiagr,offdiagc
+! END INTERFACE
 !--------------------------------------------------------------------------------!
 INTERFACE write_array
     MODULE PROCEDURE write_bool_array_rank_3  !  write A(n1,n2,n3) boolean
@@ -138,9 +169,9 @@ INTERFACE diagonalize
     MODULE PROCEDURE diagonalize_comp,diagonalize_real
 END INTERFACE
 !--------------------------------------------------------------------------------!
-INTERFACE invert_lapack
-    MODULE PROCEDURE invert_lapack_r,invert_lapack_C
-END INTERFACE
+! INTERFACE invert_lapack
+!     MODULE PROCEDURE invert_lapack_r,invert_lapack_C
+! END INTERFACE
 !--------------------------------------------------------------------------------!
 INTERFACE invert_openmp
     MODULE PROCEDURE invert_pivot_double_,invert_pivot_complex_,invert_pivot_single_,invert_pivot_complexs_
@@ -152,173 +183,172 @@ END INTERFACE
  integer,parameter,private :: n_cuda_rout=100,n_openmp_rout=30
 !--------------------------------------------------------------------------------!
 
-
 contains
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-         !---------------------!
-
-  subroutine invmat_sym_c(cmatrix,num)
-    implicit none
-    integer, intent(in) :: num
-    complex(kind=DP), intent(inout) :: cmatrix(num,num) ! inverse on exit
-    integer :: work_length, info, row, col
-    integer, allocatable, dimension(:) :: ipiv
-    complex(kind=DP), allocatable, dimension(:) :: work_array
-    integer :: ierr ! error flag
-
-    work_length=3*num
-    allocate(ipiv(num),stat=ierr)
-    allocate(work_array(work_length),stat=ierr)
-
-    call zsytrf('L', num, cmatrix, num, ipiv, work_array, work_length, info)
-    if (info.ne.0) then
-             write(6,'(a,i5)') 'ERROR in &
-            &wrappers_invert_sym_cmatrix: Problem with zsytrf, info=',info
-       stop
-    endif
-
-    call zsytri('L', num, cmatrix, num, ipiv, work_array, info )
-    if (info.ne.0) then
-           write(6,'(a,i5)') 'ERROR in &
-            &wrappers_invert_sym_cmatrix: Problem with zsytri, info=',info
-       stop
-    endif
-
-    do row=1,num
-       do col=1,row-1
-          cmatrix(col,row)=cmatrix(row,col)
-       enddo
-    enddo
-
-    deallocate(work_array,stat=ierr)
-    deallocate(ipiv,stat=ierr)
-
-  end subroutine
-
-         !---------------------!
-
-  subroutine invmat_sym_r(matrix,num)
-    implicit none
-    integer, intent(in) :: num
-    real(8), intent(inout) :: matrix(num,num) ! inverse on exit
-    integer :: work_length, info, row, col
-    integer, allocatable, dimension(:) :: ipiv
-    real(8), allocatable, dimension(:) :: work_array
-    integer :: ierr ! error flag
-
-
-    work_length=3*num
-    allocate(ipiv(num),stat=ierr)
-    allocate(work_array(work_length),stat=ierr)
-    call dsytrf('L', num, matrix, num, ipiv, work_array, work_length, info)
-    if (info.ne.0) then
-         write(6,'(a,i5)') 'ERROR in &
-            &wrappers_invert_sym_matrix: Problem with dsytrf, info=',info
-       stop
-    endif
-    call dsytri('L', num, matrix, num, ipiv, work_array, info )
-    if (info.ne.0) then
-            write(6,'(a,i5)') 'ERROR in &
-            &wrappers_invert_sym_matrix: Problem with dsytri, info=',info
-       stop
-    endif
-    do row=1,num
-       do col=1,row-1
-          matrix(col,row)=matrix(row,col)
-       enddo
-    enddo
-    deallocate(work_array,stat=ierr)
-    deallocate(ipiv,stat=ierr)
-  end subroutine 
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-       !-----------------------------!
-
- subroutine map_vector_permutation(vec,mapping)
- implicit none
- real(8) :: vec(:),temp(size(vec))
- integer :: mapping(:),i,ii
-    temp=vec;vec=0
-    do i=1,size(vec,1)
-       ii=mapping(i); vec(i)=temp(ii)
-    enddo
- end subroutine
-
-       !-----------------------------!
-
- subroutine map_matrix_permutation(mat,mapping)
- implicit none
- complex(8) :: mat(:,:),temp(size(mat,1),size(mat,2))
- integer    :: mapping(:),i,j,k,l,ii,jj
-     temp=mat;mat=0
-     do i=1,size(mat,1); do j=1,size(mat,2)
-         ii=mapping(i); jj=mapping(j); mat(i,j)=temp(ii,jj)
-     enddo; enddo
- end subroutine
-
-       !-----------------------------!
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!          !---------------------!
+! 
+!   subroutine invmat_sym_c(cmatrix,num)
+!     implicit none
+!     integer, intent(in) :: num
+!     complex(kind=DP), intent(inout) :: cmatrix(num,num) ! inverse on exit
+!     integer :: work_length, info, row, col
+!     integer, allocatable, dimension(:) :: ipiv
+!     complex(kind=DP), allocatable, dimension(:) :: work_array
+!     integer :: ierr ! error flag
+! 
+!     work_length=3*num
+!     allocate(ipiv(num),stat=ierr)
+!     allocate(work_array(work_length),stat=ierr)
+! 
+!     call zsytrf('L', num, cmatrix, num, ipiv, work_array, work_length, info)
+!     if (info.ne.0) then
+!              write(6,'(a,i5)') 'ERROR in &
+!             &wrappers_invert_sym_cmatrix: Problem with zsytrf, info=',info
+!        stop
+!     endif
+! 
+!     call zsytri('L', num, cmatrix, num, ipiv, work_array, info )
+!     if (info.ne.0) then
+!            write(6,'(a,i5)') 'ERROR in &
+!             &wrappers_invert_sym_cmatrix: Problem with zsytri, info=',info
+!        stop
+!     endif
+! 
+!     do row=1,num
+!        do col=1,row-1
+!           cmatrix(col,row)=cmatrix(row,col)
+!        enddo
+!     enddo
+! 
+!     deallocate(work_array,stat=ierr)
+!     deallocate(ipiv,stat=ierr)
+! 
+!   end subroutine
+! 
+!          !---------------------!
+! 
+!   subroutine invmat_sym_r(matrix,num)
+!     implicit none
+!     integer, intent(in) :: num
+!     real(8), intent(inout) :: matrix(num,num) ! inverse on exit
+!     integer :: work_length, info, row, col
+!     integer, allocatable, dimension(:) :: ipiv
+!     real(8), allocatable, dimension(:) :: work_array
+!     integer :: ierr ! error flag
+! 
+! 
+!     work_length=3*num
+!     allocate(ipiv(num),stat=ierr)
+!     allocate(work_array(work_length),stat=ierr)
+!     call dsytrf('L', num, matrix, num, ipiv, work_array, work_length, info)
+!     if (info.ne.0) then
+!          write(6,'(a,i5)') 'ERROR in &
+!             &wrappers_invert_sym_matrix: Problem with dsytrf, info=',info
+!        stop
+!     endif
+!     call dsytri('L', num, matrix, num, ipiv, work_array, info )
+!     if (info.ne.0) then
+!             write(6,'(a,i5)') 'ERROR in &
+!             &wrappers_invert_sym_matrix: Problem with dsytri, info=',info
+!        stop
+!     endif
+!     do row=1,num
+!        do col=1,row-1
+!           matrix(col,row)=matrix(row,col)
+!        enddo
+!     enddo
+!     deallocate(work_array,stat=ierr)
+!     deallocate(ipiv,stat=ierr)
+!   end subroutine 
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!        !-----------------------------!
+! 
+!  subroutine map_vector_permutation(vec,mapping)
+!  implicit none
+!  real(8) :: vec(:),temp(size(vec))
+!  integer :: mapping(:),i,ii
+!     temp=vec;vec=0
+!     do i=1,size(vec,1)
+!        ii=mapping(i); vec(i)=temp(ii)
+!     enddo
+!  end subroutine
+! 
+!        !-----------------------------!
+! 
+!  subroutine map_matrix_permutation(mat,mapping)
+!  implicit none
+!  complex(8) :: mat(:,:),temp(size(mat,1),size(mat,2))
+!  integer    :: mapping(:),i,j,k,l,ii,jj
+!      temp=mat;mat=0
+!      do i=1,size(mat,1); do j=1,size(mat,2)
+!          ii=mapping(i); jj=mapping(j); mat(i,j)=temp(ii,jj)
+!      enddo; enddo
+!  end subroutine
+! 
+!        !-----------------------------!
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+! 
  subroutine average_vec(mat,MASK_AVERAGE_)
  implicit none
  real(8)    :: mat(:)
@@ -351,40 +381,40 @@ contains
 
  return
  end subroutine
-
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-
- subroutine average_matrix_by_block(mat,M)
- implicit none
-  complex(8) :: mat(:,:)
-  integer    :: M(:,:)
-  integer    :: i,j,siz1,siz2,siz1s,siz2s
-
-   siz1 =size(mat,1) ; siz2=size(mat,2) ; siz1s=size(mat,1)/2 ; siz2s=size(mat,2)/2 ;
-   call average_matrix(mat(1:siz1s,1:siz2s),M(1:siz1s,1:siz2s))
-   call average_matrix(mat(siz1s+1:siz1,siz2s+1:siz2),M(siz1s+1:siz1,siz2s+1:siz2))
-   call average_matrix(mat(1:siz1s,siz2s+1:siz2),M(1:siz1s,siz2s+1:siz2))
-   call average_matrix(mat(siz1s+1:siz1,1:siz2s),M(siz1s+1:siz1,1:siz2s))
-
- return
- end subroutine
-
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-
+! 
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+! 
+!  subroutine average_matrix_by_block(mat,M)
+!  implicit none
+!   complex(8) :: mat(:,:)
+!   integer    :: M(:,:)
+!   integer    :: i,j,siz1,siz2,siz1s,siz2s
+! 
+!    siz1 =size(mat,1) ; siz2=size(mat,2) ; siz1s=size(mat,1)/2 ; siz2s=size(mat,2)/2 ;
+!    call average_matrix(mat(1:siz1s,1:siz2s),M(1:siz1s,1:siz2s))
+!    call average_matrix(mat(siz1s+1:siz1,siz2s+1:siz2),M(siz1s+1:siz1,siz2s+1:siz2))
+!    call average_matrix(mat(1:siz1s,siz2s+1:siz2),M(1:siz1s,siz2s+1:siz2))
+!    call average_matrix(mat(siz1s+1:siz1,1:siz2s),M(siz1s+1:siz1,1:siz2s))
+! 
+!  return
+!  end subroutine
+! 
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+! 
  subroutine average_matrix(mat,MASK_AVERAGE_,offdiag_also)
  implicit none
  complex(8)        :: mat(:,:)
@@ -438,42 +468,42 @@ contains
 
  return
  end subroutine
-
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-
- subroutine average_diag_by_block(MASK,vec,vec2)
- implicit none
- real(8) :: vec(:),vec2(:),vectemp(size(vec))
- integer :: MASK(:)
- integer :: siz
-
-  siz=size(vec)
-  if(mod(siz,2)/=0)then
-   write(*,*) 'average by block, size does not match'
-   stop 'critical'
-  endif
-  vectemp(1:siz/2)=vec(1:siz/2)
-  vectemp(siz/2+1:siz)=vec2(siz/2+1:siz)
-  call average_vec(vectemp,MASK)
-  vec=vectemp
-
- return
- end subroutine
-
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-         !---------------------!
-
+! 
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+! 
+!  subroutine average_diag_by_block(MASK,vec,vec2)
+!  implicit none
+!  real(8) :: vec(:),vec2(:),vectemp(size(vec))
+!  integer :: MASK(:)
+!  integer :: siz
+! 
+!   siz=size(vec)
+!   if(mod(siz,2)/=0)then
+!    write(*,*) 'average by block, size does not match'
+!    stop 'critical'
+!   endif
+!   vectemp(1:siz/2)=vec(1:siz/2)
+!   vectemp(siz/2+1:siz)=vec2(siz/2+1:siz)
+!   call average_vec(vectemp,MASK)
+!   vec=vectemp
+! 
+!  return
+!  end subroutine
+! 
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+!          !---------------------!
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
@@ -657,7 +687,7 @@ contains
    endif
  end subroutine
 
-    !-----------------------!
+  !-----------------------!
 
  subroutine gedic__(nnn,mat,piv,deti)
  implicit none
@@ -743,849 +773,849 @@ contains
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-!---------!
-
-subroutine svd_wrapper_cs(A,values,V,M,N,method)
-implicit none
-integer :: M,N
-complex(4) :: A(M,N),A_BACK(M,N),U(M,M),V(N,N)
-real(4)    :: values(N),E(N),work(M)
-integer    :: method,ierr
-  A_BACK=A 
-  if(M<N) then
-   stop 'svd_wrapper, leading dim of matrix should be rows'
-  endif
-  SELECT CASE(method) 
-  CASE(5)
-    call cula_svd(M,N,A,values,U,V)
-  CASE DEFAULT
-    stop 'svd_not_defined'
-  END SELECT
-  A=A_BACK
-end subroutine
-
-!---------!
-
-subroutine svd_wrapper_c(A,values,V,M,N,method)
-implicit none
-integer :: M,N
-complex(8) :: A(M,N),A_BACK(M,N),U(M,M),V(N,N)
-real(8)    :: values(N),E(N),work(M)
-integer    :: method,ierr
-  A_BACK=A
-  if(M<N) then
-   stop 'svd_wrapper, leading dim of matrix should be rows'
-  endif
-  SELECT CASE(method)
-  CASE(5)
-    call cula_svd(M,N,A,values,U,V)
-  CASE DEFAULT
-    stop 'svd_not_defined'
-  END SELECT
-  A=A_BACK
-end subroutine
-
-!---------!
-
-subroutine svd_wrapper_r(A,values,V,M,N,method)
-implicit none
-integer :: M,N
-real(8) :: A(M,N),A_BACK(M,N),U(M,M),V(N,N)
-real(8) :: values(N),E(N),work(M)
-integer :: method,ierr
-  A_BACK=A
-  if(M<N) then
-   stop 'svd_wrapper, leading dim of matrix should be rows'
-  endif
-  SELECT CASE(method)
-  CASE(1)
-    call SVDCMP(A,M,N,M,N,values,V)
-  CASE(2)
-    call SVD(A,values,.true.,U,.true.,V,ierr)
-  CASE(3)
-#ifndef NOSVD
-    call svdcmp_dp(A,values,V)  
-#else
-    write(*,*) 'no svd stop'
-    stop
-#endif
-  CASE(4)
-    call dsvdc(A,M,M,N,values,E,U,M,V,N,work,11,ierr)
-  CASE(5)
-    call cula_svd(M,N,A,values,U,V)
-  CASE DEFAULT
-    stop 'svd_not_defined'
-  END SELECT
-  A=A_BACK
-end subroutine
-
-!---------!
-
-subroutine svd_wrapper_rs(A,values,V,M,N,method)
-implicit none
-integer :: M,N
-real(4) :: A(M,N),A_BACK(M,N),U(M,M),V(N,N)
-real(4) :: values(N),E(N),work(M)
-integer :: method,ierr
-  A_BACK=A
-  if(M<N) then
-   stop 'svd_wrapper, leading dim of matrix should be rows'
-  endif
-  SELECT CASE(method)
-  CASE(2)
-    call SVD(A,values,.true.,U,.true.,V,ierr)
-  CASE(3)
-#ifndef NOSVD
-    call svdcmp_sp(A,values,V)
-#else
-    write(*,*) 'no svd stop'
-    stop
-#endif
-  CASE(5)
-    call cula_svd(M,N,A,values,U,V)
-  CASE DEFAULT
-    stop 'svd_not_defined'
-  END SELECT
-  A=A_BACK
-end subroutine
-
-!---------!
-
-subroutine svd_wrapper_rq(A,values,V,M,N,method)
-implicit none
-integer  :: M,N
-real(16) :: A(M,N),A_BACK(M,N),U(M,M),V(N,N)
-real(16) :: values(N),E(N),work(M)
-integer  :: method,ierr
-  A_BACK=A
-  if(M<N) then
-   stop 'svd_wrapper, leading dim of matrix should be rows'
-  endif
-  SELECT CASE(method)
-  CASE(1)
-    call Q_SVDCMP(A,M,N,M,N,values,V)
-  CASE(2)
-    call SVD(A,values,.true.,U,.true.,V,ierr) 
-  CASE DEFAULT
-    stop 'svd_not_defined'
-  END SELECT
-  A=A_BACK
-end subroutine
-
-!---------!
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-subroutine test_cuda_eigenvectors
-implicit none
-integer :: i
-
- write(*,*) 'double precision....'
- do i=100,800,100
-   call testit(i)
- enddo
- write(*,*) 'single precision....'
- do i=100,800,100
-   call testit_(i)
- enddo
- stop 'testing done'
-
-contains 
-
-!---------!
-!---------!
-!---------!
-
-subroutine testit(nnn)
-implicit none
-integer              :: nnn 
-real(8)              :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),vec(nnn),vec2(nnn)
-integer              :: i,j,n,jjj,jj
-use_cuda_routines=.false.
-A=0.d0
-do i=1,nnn
- A(i,i)=drand1()
- do j=i+1,nnn
-   A(i,j)=drand1()
-   A(j,i)=A(i,j)
- enddo
-enddo
-call reset_timer(jjj)
-write(*,*) 'start cpu calculations'
-call eigenvector_matrix(lsize=nnn,mat=A,vaps=vec,eigenvec=B)
-write(*,*) 'done'
-call timer_fortran(jjj,'CPU TOOK : ', unit_=6)
-use_cuda_routines=.true.
-call reset_timer(jjj)
-write(*,*) 'start gpu calculations'
-call eigenvector_matrix(lsize=nnn,mat=A,vaps=vec2,eigenvec=C)
-write(*,*) 'done'
-call timer_fortran(jjj,'GPU TOOK : ', unit_=6)
-use_cuda_routines=.false.
-write(*,*) 'maxval gpu eigen  : ', maxval(abs(C))
-write(*,*) 'maxval gpu values : ', maxval(abs(vec2))
-write(*,*) 'checking gpu : '
-do i=1,1
- write(*,*) 'checking vector : ', i
- write(*,*) 'A vec - lambda*vec : ', maxval(abs(matmul(A,C(:,i))-vec2(i)*C(:,i)))
- write(*,*) 'norme vec, eigenvalue : ', norme(C(:,i)),vec2(i)
-enddo
-end subroutine
-
-!---------!
-!---------!
-!---------!
-
-subroutine testit_(nnn)
-implicit none
-integer              :: nnn
-real(4)              :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),vec(nnn),vec2(nnn)
-integer              :: i,j,n,jjj,jj
-A=0.d0
-do i=1,nnn
- A(i,i)=drand1()
- do j=i+1,nnn
-   A(i,j)=drand1()
-   A(j,i)=A(i,j)
- enddo
-enddo
-call reset_timer(jjj)
-write(*,*) 'start cpu calculations'
-use_cuda_routines=.false.
-call eigenvector_matrix_rr(lsize=nnn,mat=A,vaps=vec,eigenvec=B)
-write(*,*) 'done'
-call timer_fortran(jjj,'CPU TOOK : ', unit_=6)
-use_cuda_routines=.true.
-call reset_timer(jjj)
-write(*,*) 'start gpu calculations'
-call eigenvector_matrix_rr(lsize=nnn,mat=A,vaps=vec2,eigenvec=C)
-write(*,*) 'done'
-call timer_fortran(jjj,'GPU TOOK : ', unit_=6)
-use_cuda_routines=.false.
-write(*,*) 'eig gpu : ', minval(vec2),maxval(vec2)
-write(*,*) 'eig cpu : ', minval(vec),maxval(vec)
-write(*,*) 'checking gpu : '
-do i=1,1
- write(*,*) 'checking vector : ', i
- write(*,*) 'A vec - lambda*vec : ', maxval(abs(matmul(A,C(:,i))-vec2(i)*C(:,i)))
- write(*,*) 'norme eig gpu : ', vec2(i)
- write(*,*) 'norme eig cpu : ', vec(i)
-enddo
-end subroutine
-
-!---------!
-!---------!
-!---------!
-
-end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-subroutine test_invmat_array_matrix_collect
-implicit none
-integer,parameter    :: nnn=20,nf=2000
-complex(8)           :: A(nnn,nnn),B(nnn,nnn,nf),C(nnn,nnn),vec(nf)
-real(8)              :: c1(nnn,nnn,nf),c2(nnn,nnn,nf)
-integer              :: i,j,n,jjj,jj
-
-do i=1,nnn
-do j=1,nnn
- A(i,j)=drand1()
-enddo
-enddo
-do i=1,nf
- vec(i)=drand1()+imi*drand1()
-enddo
-
-call reset_timer(jjj)
-write(*,*) 'start cpu calculations'
-B=0.
-do i=1,nf
- C=-A
- do j=1,nnn
-  C(j,j)=C(j,j)+vec(i)
- enddo
- call invmat(n=nnn,mat=C)
- B(:,:,i)=C
-enddo
-
-write(*,*) 'CPU, real : ', maxval(abs(real(B(:,:,:))))
-write(*,*) 'CPU, imag : ', maxval(abs(aimag(B(:,:,:))))
-
-write(*,*) 'done'
-call timer_fortran(jjj,'IT TOOK : ', unit_=6)
-
-call cuda_array_of_inverse_collect(nnn,nf,A,c1,c2,vec,1)
-
-write(*,*) 'GPU, real : ', maxval(abs(c1(:,:,:)))
-write(*,*) 'GPU, imag : ', maxval(abs(c2(:,:,:)))
-
-write(*,*) 'real part comparison : ', maxval(abs(real(B)-c1))
-write(*,*) 'imag part comparison : ', maxval(abs(aimag(B)-c2))
-
-stop
-
-end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-subroutine test_invmat_array_matrix
-implicit none
-integer,parameter    :: nnn=20,nf=2000
-complex(8)           :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),vec(nf)
-integer              :: i,j,n,jjj,jj
-
-
-do i=1,nnn
-do j=1,nnn
- A(i,j)=drand1()
-enddo
-enddo
-do i=1,nf
- vec(i)=drand1()
-enddo
-
-call reset_timer(jjj)
-write(*,*) 'start cpu calculations'
-do jj=1,10
-B=0.
-do i=1,nf
- C=-A
- do j=1,nnn
-  C(j,j)=C(j,j)+vec(i)
- enddo
- call invmat(n=nnn,mat=C)
- B=B+C
-enddo
-enddo
-write(*,*) 'done'
-call timer_fortran(jjj,'IT TOOK : ', unit_=6)
-
- write(*,*) 'start gpu calculations'
- call reset_timer(jjj)
- do i=1,10
-   if(mod(i,10)==0) write(*,*) i
-   if(i==1)then
-   call cuda_array_of_inverse(nnn,nf,A,C,vec,1)
-   elseif(i>1.and.i<100)then
-   call cuda_array_of_inverse(nnn,nf,A,C,vec,0)
-   elseif(i==100)then
-   call cuda_array_of_inverse(nnn,nf,A,C,vec,2)
-  endif
- enddo
-
- call timer_fortran(jjj,'IT TOOK : ', unit_=6)
- write(*,*) 'done'
-
- if(nnn<10)then
- call write_array( B/dble(nf), " obtained by CPU ", unit = 6, short=.true. )
- call write_array( C/dble(nf), " obtained by GPU C", unit = 6, short=.true. )
- endif
-
- write(*,*) 'diff = ', maxval(abs(B-C))
-
- stop 'done'
-
-end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-subroutine test_invmat_gpu
-implicit none
-
-complex(8),allocatable  :: A(:,:),B(:,:)
-complex(8),allocatable  :: AAA(:,:),BBB(:,:),CCC(:,:)
-real(8),allocatable     :: Ar(:,:),Br(:,:)
-integer                 :: nnn,nnnn
-integer                 :: ii,i,j,k,l,m1,n1,q1
-
-complex(8) :: Ac(8,8),Acinv(8,8),Bc_(8,8),Cc_(8,8),Dc_(8,8)
-real(8)    :: AA(16,24),BB(24,32),CC(16,32),DD(16,32)
-interface 
- subroutine invert_ge(nn,a,inva)
-   integer :: nnn
-   real(8) :: a(nn,nn),inva(nn,nn)
- end subroutine
- subroutine invert_spd(nn,a,inva)
-   integer :: nnn
-   real(8) :: a(nn,nn),inva(nn,nn)
- end subroutine
-end interface
-
- nnn=20
- allocate(A(nnn,nnn),B(nnn,nnn),Ar(nnn,nnn),Br(nnn,nnn))
-
- do i=1,nnn
-  do j=1,nnn
-   Ar(i,j)=drand1() 
-  enddo
-  Ar(i,i)=100.+Ar(i,i)
- enddo
- Ar=Ar+TRANSPOSE(Ar)
-
- do i=1,nnn
-   write(*,'(300f9.3)') (Ar(i,j),j=1,nnn)
- enddo
-
- Br=0.
- call invert_ge(nnn,Ar,Br)
- Ar=MATMUL(Ar,Br)
- write(*,*) 'GE------'
- do i=1,nnn
-   write(*,'(300f9.3)') (Ar(i,j),j=1,nnn)
- enddo
-
-
- do i=1,nnn
-  do j=1,nnn
-   Ar(i,j)=drand1() 
-  enddo
-  Ar(i,i)=100.+Ar(i,i)
- enddo
- Ar=Ar+TRANSPOSE(Ar)
- Br=0.
- call invert_spd(nnn,Ar,Br)
- Ar=MATMUL(Ar,Br)
- write(*,*) 'SPD------'
- do i=1,nnn
-   write(*,'(300f9.3)') (Ar(i,j),j=1,nnn)
- enddo
-
-
- write(*,*) 'testing matinv_sym_complex'
- nnn=8
- do i=1,nnn
-  do j=1,nnn
-   Ac(i,j)=drand1() +imi*drand1()*j
-  enddo
-  Ac(i,i)=1000.*imi+1000.+Ac(i,i)
- enddo
- Ac=Ac+TRANSPOSE(Ac)
- Acinv=Ac
- call matinv_sym_complex(nnn,Acinv)
-
- Ac=MATMUL(Ac,Acinv)
- do i=1,nnn
- write(*,'(200f6.2)') (Ac(i,j),j=1,nnn)
- enddo
-
-
- write(*,*) 'testing matinv complex diago it -----------------'
- do ii=1,9
- write(*,*) '##############################################'
- write(*,*) 'START NEW ITERATION : ',ii
- if(ii==1) nnnn=5
- if(ii==2) nnnn=10
- if(ii==3) nnnn=300
- if(ii==4) nnnn=600
- if(ii==5) nnnn=670
- if(ii==6) nnnn=1000
- if(ii==7) nnnn=1200
- if(ii==8) nnnn=1400
- if(ii==9) nnnn=1670
- if(allocated(AAA)) deallocate(AAA,BBB,CCC)
- allocate(AAA(nnnn,nnnn),BBB(nnnn,nnnn),CCC(nnnn,nnnn))
- do i=1,nnnn
-  do j=1,nnnn
-   AAA(i,j)=drand1() +imi*drand1()
-  enddo
- enddo
- BBB=AAA
- write(*,*) 'start diag'
- call diago_cuda_it_c(nnnn,BBB)
- write(*,*) 'done diag'
- call matmulcuda_c_cublas(AAA,BBB,CCC,nnnn,nnnn,nnnn)
- write(*,*) 'max deviation from Id diago_it: ',ii, nnnn,maxval(abs(CCC-Id(nnnn)))
- do i=1,nnnn
-  do j=1,nnnn
-   AAA(i,j)=drand1() +imi*drand1()
-  enddo
- enddo
- BBB=AAA
-
-!write(*,*) 'start diag MAGMAg'
- !call matinv_magma_complex(nnnn,BBB)
-  call matinv_magma_complex_cxx(nnnn,BBB)
-
- write(*,*) 'done diag'
- call matmulcuda_c_cublas(AAA,BBB,CCC,nnnn,nnnn,nnnn)
- write(*,*) 'max deviation from Id magma : ',ii, nnnn,maxval(abs(CCC-Id(nnnn)))
- enddo
-
- write(*,*) 'testing matinv_magma_complex(n,mat)'
- nnn=8
- do i=1,nnn
-  do j=1,nnn
-   Ac(i,j)=drand1() +imi*drand1()*j
-  enddo
- enddo
- Acinv=Ac
- call matinv_magma_complex(nnn,Acinv) 
- Ac=MATMUL(Ac,Acinv)
- do i=1,nnn
-  write(*,'(200f9.2)') (Ac(i,j),j=1,nnn)
- enddo
-
-
- write(*,*) '---->testing matinv_magma_double'
- nnn=20
- do i=1,nnn
-  do j=1,nnn
-   Ar(i,j)=drand1()
-  enddo
- enddo
- Br=Ar
- call matinv_magma_double(nnn,Br)
- Ar=MATMUL(Ar,Br)
- write(*,*) 'GE------'
- do i=1,nnn
-   write(*,'(300f9.3)') (Ar(i,j),j=1,nnn)
- enddo
-
- write(*,*) 'testing matmulcuda_r_cublas(M,N,Q,dima,dimb,dimc)'
- nnn=16
- do i=1,16
-  do j=1,24
-   AA(i,j)=drand1() 
-  enddo
- enddo
- do i=1,24
-  do j=1,32
-   BB(i,j)=drand1()
-  enddo
- enddo
- m1=16
- n1=24
- q1=32
- call matmulcuda_r_cublas(AA,BB,CC,m1,n1,q1)
- DD=MATMUL(AA,BB)
- write(*,*) 'max diff: '
- write(*,*) maxval(abs(CC-DD)) 
- write(*,*) 'out of cuda'
-  do i=1,16
- write(*,'(200f9.2)') (CC(i,j),j=1,32)
- enddo
- write(*,*) 'out of cpu'
- do i=1,16
- write(*,'(200f9.2)') (DD(i,j),j=1,32)
- enddo
-
- write(*,*) 'testing complex MATMUL on cublas'
-
- nnn=8
- do i=1,nnn
-  do j=1,nnn
-   Ac(i,j)=drand1() +imi*drand1()*j
-  enddo
- enddo
- do i=1,nnn
-  do j=1,nnn
-   Bc_(i,j)=drand1() +imi*drand1()*j
-  enddo
- enddo
- call matmulcuda_c_cublas(Ac,Bc_,Cc_,nnn,nnn,nnn)
- Dc_=MATMUL(Ac,Bc_)
- write(*,*) 'max diff: '
- write(*,*) maxval(abs(Cc_-Dc_))
- write(*,*) 'out of cuda'
-  do i=1,8
- write(*,'(200f9.2)') (Cc_(i,j),j=1,8)
- enddo
- write(*,*) 'out of cpu'
- do i=1,8
- write(*,'(200f9.2)') (Dc_(i,j),j=1,8)
- enddo
-
-
-deallocate(A,B,Ar,Br)
-stop
-end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-subroutine test_invmat
-implicit none
-complex(16),allocatable :: Aqc(:,:),Bqc(:,:)
-real(16),allocatable    :: Aq(:,:),Bq(:,:)
-complex(8),allocatable  :: A(:,:),B(:,:)
-real(8),allocatable     :: Ar(:,:),Br(:,:)
-real(4),allocatable     :: As(:,:),Bs(:,:)
-complex(4),allocatable  :: Acs(:,:),Bcs(:,:)
-integer                 :: i,j,nnn,jjj,ii
-
- do ii=0,6
- call define_flag(ii)
- write(*,*) '################################'
- write(*,*) 'STARTING PROCESS WITH FLAG TEST : ', ii
- write(*,*) '################################'
- do nnn=6,6
-  write(*,*) 'MATRIX SIZE : ', nnn
-  if(allocated(A)) deallocate(A,B,Br,Ar,As,Bs,Acs,Bcs,Aqc,Bqc,Aq,Bq)
-  allocate(A(nnn,nnn),B(nnn,nnn),Ar(nnn,nnn),Br(nnn,nnn),As(nnn,nnn),Bs(nnn,nnn),Acs(nnn,nnn),Bcs(nnn,nnn),&
-           & Aqc(nnn,nnn),Bqc(nnn,nnn),Aq(nnn,nnn),Bq(nnn,nnn))
-  call run_test(nnn)
- enddo
- enddo
- stop 
-
- contains
-
- subroutine define_flag(flag)
- implicit none
- integer :: flag
- fast_invmat=.false.
- use_cuda_routines=.false.
- use_openmp_invmat=.false.
- diag_use_LU_instead_of_pivot=.false.
- flag_use_invmat_jordan=.false.
- flag_use_invmat_jordan_real=.false.
- force_invmat_single_prec=.false.
-
- SELECT CASE(flag)
-  CASE(0)
-
-  CASE(1)
-  fast_invmat=.true.
-  CASE(2)
-  use_cuda_routines=.true.
-  CASE(3)
-  use_openmp_invmat=.true.
-  CASE(4)
-  diag_use_LU_instead_of_pivot=.true.
-  CASE(5)
-  flag_use_invmat_jordan=.true.
-  flag_use_invmat_jordan_real=.true.
-  CASE(6)
-  force_invmat_single_prec=.true.
- end SELECT
- end subroutine
-
- subroutine run_test(n)
- implicit none
- integer :: n
-  write(*,*) '============================'
-  write(*,*) 'FULL MATRIX'
-  call define_mat(n,.false.)
-  call run_1(n,.false.)
-  if(mod(n,2)==0)then
-  write(*,*) 'BLOCK MATRIX'
-  call define_mat(n,.true.)
-  call run_1(n,.true.)
-  endif
-  write(*,*) '============================'
- end subroutine
-
-
- subroutine run_1(n,block)
- implicit none
- logical :: block
- integer :: n
- real(4) :: detr
- complex(4)::det2r
- real(8) :: det
- real(16):: detq
- complex(8) :: det2
- complex(16) :: det2q
- integer     :: pdet
-
-     write(*,*) '--- QUAD ---'
-     call reset_timer(jjj)
-     call invmat(n,Aq,block_matrix=block,det2b=det2q,detb=detq,pdetb=pdet)
-     call timer_fortran(jjj,'IT TOOK : ', unit_=6)
-     write(*,*) maxval(abs(MATMUL(Bq,Aq)))
-     write(*,*) det2q,detq,pdet
-     write(*,*) '----------------'
-
-     write(*,*) '--- QUAD COMPLEX ---'
-     call reset_timer(jjj)
-     call invmat(n,Aqc,block_matrix=block,det2b=det2q,detb=detq,pdetb=pdet)
-     call timer_fortran(jjj,'IT TOOK : ', unit_=6)
-     write(*,*) maxval(abs(MATMUL(Bqc,Aqc)))
-     write(*,*) det2q,detq,pdet
-     write(*,*) '----------------'
-
-     write(*,*) '--- DOUBLE COMPLEX ---'
-     call reset_timer(jjj)
-     call invmat(n,A,block_matrix=block,det2b=det2,detb=det,pdetb=pdet)
-     call timer_fortran(jjj,'IT TOOK : ', unit_=6)
-     write(*,*) maxval(abs(MATMUL(B,A)))
-     write(*,*) det2,det,pdet
-     write(*,*) '----------------'
-     
-     write(*,*) '--- COMPLEX ---'
-     call reset_timer(jjj)
-     call invmat(n,Acs,block_matrix=block,det2b=det2r,detb=detr,pdetb=pdet)
-     call timer_fortran(jjj,'IT TOOK : ', unit_=6)
-     write(*,*) maxval(abs(MATMUL(Bcs,Acs)))
-     write(*,*) det2r,detr,pdet
-     write(*,*) '----------------'
-     
-     write(*,*) '--- DOUBLE ---'
-     call reset_timer(jjj)
-     call invmat(n,Ar,block_matrix=block,det2b=det2,detb=det,pdetb=pdet)
-     call timer_fortran(jjj,'IT TOOK : ', unit_=6)
-     write(*,*) maxval(abs(MATMUL(Br,Ar)))
-     write(*,*) det2,det,pdet
-     write(*,*) '----------------'
-     
-     write(*,*) '--- SINGLE ---'
-     call reset_timer(jjj)
-     call invmat(n,As,block_matrix=block,det2b=det2r,detb=detr,pdetb=pdet)
-     call timer_fortran(jjj,'IT TOOK : ', unit_=6)
-     write(*,*) maxval(abs(MATMUL(Bs,As)))
-     write(*,*) det2r,detr,pdet
-     write(*,*) '----------------'
- end subroutine
-
- subroutine define_mat(n,block)
- implicit none
- logical :: block
- integer :: n
- do i=1,n
-  do j=1,n
-   A(i,j)=drand1()+imi*drand1()*j
-  enddo
- enddo
- if(block) then
-  A(1:n/2,n/2+1:n)=0.
-  A(n/2+1:n,1:n/2)=0.
- endif
- Ar =A
- Br =A
- B  =A
- As =A
- Acs=A
- Bs =A
- Bcs=A
- do i=1,n
-  do j=1,n
-   Aq(i,j)=real(A(i,j))
-  enddo
- enddo
- do i=1,n
-  do j=1,n
-   Aqc(i,j)=real(A(i,j))
-  enddo
- enddo
- if(block) then
-  Aq(1:n/2,n/2+1:n)=0.
-  Aq(n/2+1:n,1:n/2)=0.
-  Aqc(1:n/2,n/2+1:n)=0.
-  Aqc(n/2+1:n,1:n/2)=0.
- endif
- Bq =Aq
- Bqc=Aqc
- end subroutine
-
-
-end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-  SUBROUTINE invert_zmblocktridiag(RES,z,A,B,N)
-    COMPLEX(8), INTENT(INOUT) :: RES(:,:)
-    COMPLEX(8), INTENT(IN)    :: z
-    REAL(8),    INTENT(IN)    :: A(:,:,:),B(:,:,:)
-    COMPLEX(8)                :: det_ratio_i(SIZE(A,2),SIZE(A,3)),det_ratio_ip1(SIZE(A,2),SIZE(A,3))
-    REAL(8)                   :: Id(SIZE(A,2),SIZE(A,3))
-    INTEGER                   :: iter,N
-
-    IF(SIZE(A,1)/=SIZE(B,1).OR.ANY(SHAPE(A(1,:,:))/=SHAPE(B(1,:,:)))) &
-    STOP "ERROR IN invert_zmblocktridiag: INCONSISTENT INPUT DIMENSIONS!"
-    IF(SIZE(A,2)/=SIZE(A,3))  &
-    STOP "ERROR IN invert_zmblocktridiag: SQUARE BLOCKS EXPECTED!"
-    IF(SIZE(RES,1)/=SIZE(A,2).OR.SIZE(RES,2)/=SIZE(A,3)) &
-    STOP "ERROR IN invert_zmblocktridiag: INCONSISTENT RESOLVANT DIMENSIONS!"
-
-    CALL new_Id(Id)
-
-  ! COMPUTE <1/(z-T)> WHERE T IS A BLOCK-TRIDIAGONAL MATRIX AND <> IS THE FIRST BLOCK
-
-    det_ratio_ip1 = z * Id - A(N,:,:)
-    CALL invert_lapack(det_ratio_ip1)
-
-    DO iter = N-1,1,-1
-      det_ratio_i   =   z * Id - A(iter,:,:) - MATMUL(B(iter+1,:,:), &
-             & MATMUL(det_ratio_ip1,TRANSPOSE(CONJG( CMPLX(B(iter+1,:,:),0.d0,8) ))))
-      CALL invert_lapack(det_ratio_i)
-      det_ratio_ip1 = det_ratio_i
-    ENDDO
-
-    RES = det_ratio_i
-
-  END SUBROUTINE
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
+! 
+! !---------!
+! 
+! subroutine svd_wrapper_cs(A,values,V,M,N,method)
+! implicit none
+! integer :: M,N
+! complex(4) :: A(M,N),A_BACK(M,N),U(M,M),V(N,N)
+! real(4)    :: values(N),E(N),work(M)
+! integer    :: method,ierr
+!   A_BACK=A 
+!   if(M<N) then
+!    stop 'svd_wrapper, leading dim of matrix should be rows'
+!   endif
+!   SELECT CASE(method) 
+!   CASE(5)
+!     call cula_svd(M,N,A,values,U,V)
+!   CASE DEFAULT
+!     stop 'svd_not_defined'
+!   END SELECT
+!   A=A_BACK
+! end subroutine
+! 
+! !---------!
+! 
+! subroutine svd_wrapper_c(A,values,V,M,N,method)
+! implicit none
+! integer :: M,N
+! complex(8) :: A(M,N),A_BACK(M,N),U(M,M),V(N,N)
+! real(8)    :: values(N),E(N),work(M)
+! integer    :: method,ierr
+!   A_BACK=A
+!   if(M<N) then
+!    stop 'svd_wrapper, leading dim of matrix should be rows'
+!   endif
+!   SELECT CASE(method)
+!   CASE(5)
+!     call cula_svd(M,N,A,values,U,V)
+!   CASE DEFAULT
+!     stop 'svd_not_defined'
+!   END SELECT
+!   A=A_BACK
+! end subroutine
+! 
+! !---------!
+! 
+! subroutine svd_wrapper_r(A,values,V,M,N,method)
+! implicit none
+! integer :: M,N
+! real(8) :: A(M,N),A_BACK(M,N),U(M,M),V(N,N)
+! real(8) :: values(N),E(N),work(M)
+! integer :: method,ierr
+!   A_BACK=A
+!   if(M<N) then
+!    stop 'svd_wrapper, leading dim of matrix should be rows'
+!   endif
+!   SELECT CASE(method)
+!   CASE(1)
+!     call SVDCMP(A,M,N,M,N,values,V)
+!   CASE(2)
+!     call SVD(A,values,.true.,U,.true.,V,ierr)
+!   CASE(3)
+! #ifndef NOSVD
+!     call svdcmp_dp(A,values,V)  
+! #else
+!     write(*,*) 'no svd stop'
+!     stop
+! #endif
+!   CASE(4)
+!     call dsvdc(A,M,M,N,values,E,U,M,V,N,work,11,ierr)
+!   CASE(5)
+!     call cula_svd(M,N,A,values,U,V)
+!   CASE DEFAULT
+!     stop 'svd_not_defined'
+!   END SELECT
+!   A=A_BACK
+! end subroutine
+! 
+! !---------!
+! 
+! subroutine svd_wrapper_rs(A,values,V,M,N,method)
+! implicit none
+! integer :: M,N
+! real(4) :: A(M,N),A_BACK(M,N),U(M,M),V(N,N)
+! real(4) :: values(N),E(N),work(M)
+! integer :: method,ierr
+!   A_BACK=A
+!   if(M<N) then
+!    stop 'svd_wrapper, leading dim of matrix should be rows'
+!   endif
+!   SELECT CASE(method)
+!   CASE(2)
+!     call SVD(A,values,.true.,U,.true.,V,ierr)
+!   CASE(3)
+! #ifndef NOSVD
+!     call svdcmp_sp(A,values,V)
+! #else
+!     write(*,*) 'no svd stop'
+!     stop
+! #endif
+!   CASE(5)
+!     call cula_svd(M,N,A,values,U,V)
+!   CASE DEFAULT
+!     stop 'svd_not_defined'
+!   END SELECT
+!   A=A_BACK
+! end subroutine
+! 
+! !---------!
+! 
+! subroutine svd_wrapper_rq(A,values,V,M,N,method)
+! implicit none
+! integer  :: M,N
+! real(16) :: A(M,N),A_BACK(M,N),U(M,M),V(N,N)
+! real(16) :: values(N),E(N),work(M)
+! integer  :: method,ierr
+!   A_BACK=A
+!   if(M<N) then
+!    stop 'svd_wrapper, leading dim of matrix should be rows'
+!   endif
+!   SELECT CASE(method)
+!   CASE(1)
+!     call Q_SVDCMP(A,M,N,M,N,values,V)
+!   CASE(2)
+!     call SVD(A,values,.true.,U,.true.,V,ierr) 
+!   CASE DEFAULT
+!     stop 'svd_not_defined'
+!   END SELECT
+!   A=A_BACK
+! end subroutine
+! 
+! !---------!
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! subroutine test_cuda_eigenvectors
+! implicit none
+! integer :: i
+! 
+!  write(*,*) 'double precision....'
+!  do i=100,800,100
+!    call testit(i)
+!  enddo
+!  write(*,*) 'single precision....'
+!  do i=100,800,100
+!    call testit_(i)
+!  enddo
+!  stop 'testing done'
+! 
+! contains 
+! 
+! !---------!
+! !---------!
+! !---------!
+! 
+! subroutine testit(nnn)
+! implicit none
+! integer              :: nnn 
+! real(8)              :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),vec(nnn),vec2(nnn)
+! integer              :: i,j,n,jjj,jj
+! use_cuda_routines=.false.
+! A=0.d0
+! do i=1,nnn
+!  A(i,i)=drand1()
+!  do j=i+1,nnn
+!    A(i,j)=drand1()
+!    A(j,i)=A(i,j)
+!  enddo
+! enddo
+! call reset_timer(jjj)
+! write(*,*) 'start cpu calculations'
+! call eigenvector_matrix(lsize=nnn,mat=A,vaps=vec,eigenvec=B)
+! write(*,*) 'done'
+! call timer_fortran(jjj,'CPU TOOK : ', unit_=6)
+! use_cuda_routines=.true.
+! call reset_timer(jjj)
+! write(*,*) 'start gpu calculations'
+! call eigenvector_matrix(lsize=nnn,mat=A,vaps=vec2,eigenvec=C)
+! write(*,*) 'done'
+! call timer_fortran(jjj,'GPU TOOK : ', unit_=6)
+! use_cuda_routines=.false.
+! write(*,*) 'maxval gpu eigen  : ', maxval(abs(C))
+! write(*,*) 'maxval gpu values : ', maxval(abs(vec2))
+! write(*,*) 'checking gpu : '
+! do i=1,1
+!  write(*,*) 'checking vector : ', i
+!  write(*,*) 'A vec - lambda*vec : ', maxval(abs(matmul(A,C(:,i))-vec2(i)*C(:,i)))
+!  write(*,*) 'norme vec, eigenvalue : ', norme(C(:,i)),vec2(i)
+! enddo
+! end subroutine
+! 
+! !---------!
+! !---------!
+! !---------!
+! 
+! subroutine testit_(nnn)
+! implicit none
+! integer              :: nnn
+! real(4)              :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),vec(nnn),vec2(nnn)
+! integer              :: i,j,n,jjj,jj
+! A=0.d0
+! do i=1,nnn
+!  A(i,i)=drand1()
+!  do j=i+1,nnn
+!    A(i,j)=drand1()
+!    A(j,i)=A(i,j)
+!  enddo
+! enddo
+! call reset_timer(jjj)
+! write(*,*) 'start cpu calculations'
+! use_cuda_routines=.false.
+! call eigenvector_matrix_rr(lsize=nnn,mat=A,vaps=vec,eigenvec=B)
+! write(*,*) 'done'
+! call timer_fortran(jjj,'CPU TOOK : ', unit_=6)
+! use_cuda_routines=.true.
+! call reset_timer(jjj)
+! write(*,*) 'start gpu calculations'
+! call eigenvector_matrix_rr(lsize=nnn,mat=A,vaps=vec2,eigenvec=C)
+! write(*,*) 'done'
+! call timer_fortran(jjj,'GPU TOOK : ', unit_=6)
+! use_cuda_routines=.false.
+! write(*,*) 'eig gpu : ', minval(vec2),maxval(vec2)
+! write(*,*) 'eig cpu : ', minval(vec),maxval(vec)
+! write(*,*) 'checking gpu : '
+! do i=1,1
+!  write(*,*) 'checking vector : ', i
+!  write(*,*) 'A vec - lambda*vec : ', maxval(abs(matmul(A,C(:,i))-vec2(i)*C(:,i)))
+!  write(*,*) 'norme eig gpu : ', vec2(i)
+!  write(*,*) 'norme eig cpu : ', vec(i)
+! enddo
+! end subroutine
+! 
+! !---------!
+! !---------!
+! !---------!
+! 
+! end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! subroutine test_invmat_array_matrix_collect
+! implicit none
+! integer,parameter    :: nnn=20,nf=2000
+! complex(8)           :: A(nnn,nnn),B(nnn,nnn,nf),C(nnn,nnn),vec(nf)
+! real(8)              :: c1(nnn,nnn,nf),c2(nnn,nnn,nf)
+! integer              :: i,j,n,jjj,jj
+! 
+! do i=1,nnn
+! do j=1,nnn
+!  A(i,j)=drand1()
+! enddo
+! enddo
+! do i=1,nf
+!  vec(i)=drand1()+imi*drand1()
+! enddo
+! 
+! call reset_timer(jjj)
+! write(*,*) 'start cpu calculations'
+! B=0.
+! do i=1,nf
+!  C=-A
+!  do j=1,nnn
+!   C(j,j)=C(j,j)+vec(i)
+!  enddo
+!  call invmat(n=nnn,mat=C)
+!  B(:,:,i)=C
+! enddo
+! 
+! write(*,*) 'CPU, real : ', maxval(abs(real(B(:,:,:))))
+! write(*,*) 'CPU, imag : ', maxval(abs(aimag(B(:,:,:))))
+! 
+! write(*,*) 'done'
+! call timer_fortran(jjj,'IT TOOK : ', unit_=6)
+! 
+! call cuda_array_of_inverse_collect(nnn,nf,A,c1,c2,vec,1)
+! 
+! write(*,*) 'GPU, real : ', maxval(abs(c1(:,:,:)))
+! write(*,*) 'GPU, imag : ', maxval(abs(c2(:,:,:)))
+! 
+! write(*,*) 'real part comparison : ', maxval(abs(real(B)-c1))
+! write(*,*) 'imag part comparison : ', maxval(abs(aimag(B)-c2))
+! 
+! stop
+! 
+! end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! subroutine test_invmat_array_matrix
+! implicit none
+! integer,parameter    :: nnn=20,nf=2000
+! complex(8)           :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),vec(nf)
+! integer              :: i,j,n,jjj,jj
+! 
+! 
+! do i=1,nnn
+! do j=1,nnn
+!  A(i,j)=drand1()
+! enddo
+! enddo
+! do i=1,nf
+!  vec(i)=drand1()
+! enddo
+! 
+! call reset_timer(jjj)
+! write(*,*) 'start cpu calculations'
+! do jj=1,10
+! B=0.
+! do i=1,nf
+!  C=-A
+!  do j=1,nnn
+!   C(j,j)=C(j,j)+vec(i)
+!  enddo
+!  call invmat(n=nnn,mat=C)
+!  B=B+C
+! enddo
+! enddo
+! write(*,*) 'done'
+! call timer_fortran(jjj,'IT TOOK : ', unit_=6)
+! 
+!  write(*,*) 'start gpu calculations'
+!  call reset_timer(jjj)
+!  do i=1,10
+!    if(mod(i,10)==0) write(*,*) i
+!    if(i==1)then
+!    call cuda_array_of_inverse(nnn,nf,A,C,vec,1)
+!    elseif(i>1.and.i<100)then
+!    call cuda_array_of_inverse(nnn,nf,A,C,vec,0)
+!    elseif(i==100)then
+!    call cuda_array_of_inverse(nnn,nf,A,C,vec,2)
+!   endif
+!  enddo
+! 
+!  call timer_fortran(jjj,'IT TOOK : ', unit_=6)
+!  write(*,*) 'done'
+! 
+!  if(nnn<10)then
+!  call write_array( B/dble(nf), " obtained by CPU ", unit = 6, short=.true. )
+!  call write_array( C/dble(nf), " obtained by GPU C", unit = 6, short=.true. )
+!  endif
+! 
+!  write(*,*) 'diff = ', maxval(abs(B-C))
+! 
+!  stop 'done'
+! 
+! end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! subroutine test_invmat_gpu
+! implicit none
+! 
+! complex(8),allocatable  :: A(:,:),B(:,:)
+! complex(8),allocatable  :: AAA(:,:),BBB(:,:),CCC(:,:)
+! real(8),allocatable     :: Ar(:,:),Br(:,:)
+! integer                 :: nnn,nnnn
+! integer                 :: ii,i,j,k,l,m1,n1,q1
+! 
+! complex(8) :: Ac(8,8),Acinv(8,8),Bc_(8,8),Cc_(8,8),Dc_(8,8)
+! real(8)    :: AA(16,24),BB(24,32),CC(16,32),DD(16,32)
+! interface 
+!  subroutine invert_ge(nn,a,inva)
+!    integer :: nnn
+!    real(8) :: a(nn,nn),inva(nn,nn)
+!  end subroutine
+!  subroutine invert_spd(nn,a,inva)
+!    integer :: nnn
+!    real(8) :: a(nn,nn),inva(nn,nn)
+!  end subroutine
+! end interface
+! 
+!  nnn=20
+!  allocate(A(nnn,nnn),B(nnn,nnn),Ar(nnn,nnn),Br(nnn,nnn))
+! 
+!  do i=1,nnn
+!   do j=1,nnn
+!    Ar(i,j)=drand1() 
+!   enddo
+!   Ar(i,i)=100.+Ar(i,i)
+!  enddo
+!  Ar=Ar+TRANSPOSE(Ar)
+! 
+!  do i=1,nnn
+!    write(*,'(300f9.3)') (Ar(i,j),j=1,nnn)
+!  enddo
+! 
+!  Br=0.
+!  call invert_ge(nnn,Ar,Br)
+!  Ar=MATMUL(Ar,Br)
+!  write(*,*) 'GE------'
+!  do i=1,nnn
+!    write(*,'(300f9.3)') (Ar(i,j),j=1,nnn)
+!  enddo
+! 
+! 
+!  do i=1,nnn
+!   do j=1,nnn
+!    Ar(i,j)=drand1() 
+!   enddo
+!   Ar(i,i)=100.+Ar(i,i)
+!  enddo
+!  Ar=Ar+TRANSPOSE(Ar)
+!  Br=0.
+!  call invert_spd(nnn,Ar,Br)
+!  Ar=MATMUL(Ar,Br)
+!  write(*,*) 'SPD------'
+!  do i=1,nnn
+!    write(*,'(300f9.3)') (Ar(i,j),j=1,nnn)
+!  enddo
+! 
+! 
+!  write(*,*) 'testing matinv_sym_complex'
+!  nnn=8
+!  do i=1,nnn
+!   do j=1,nnn
+!    Ac(i,j)=drand1() +imi*drand1()*j
+!   enddo
+!   Ac(i,i)=1000.*imi+1000.+Ac(i,i)
+!  enddo
+!  Ac=Ac+TRANSPOSE(Ac)
+!  Acinv=Ac
+!  call matinv_sym_complex(nnn,Acinv)
+! 
+!  Ac=MATMUL(Ac,Acinv)
+!  do i=1,nnn
+!  write(*,'(200f6.2)') (Ac(i,j),j=1,nnn)
+!  enddo
+! 
+! 
+!  write(*,*) 'testing matinv complex diago it -----------------'
+!  do ii=1,9
+!  write(*,*) '##############################################'
+!  write(*,*) 'START NEW ITERATION : ',ii
+!  if(ii==1) nnnn=5
+!  if(ii==2) nnnn=10
+!  if(ii==3) nnnn=300
+!  if(ii==4) nnnn=600
+!  if(ii==5) nnnn=670
+!  if(ii==6) nnnn=1000
+!  if(ii==7) nnnn=1200
+!  if(ii==8) nnnn=1400
+!  if(ii==9) nnnn=1670
+!  if(allocated(AAA)) deallocate(AAA,BBB,CCC)
+!  allocate(AAA(nnnn,nnnn),BBB(nnnn,nnnn),CCC(nnnn,nnnn))
+!  do i=1,nnnn
+!   do j=1,nnnn
+!    AAA(i,j)=drand1() +imi*drand1()
+!   enddo
+!  enddo
+!  BBB=AAA
+!  write(*,*) 'start diag'
+!  call diago_cuda_it_c(nnnn,BBB)
+!  write(*,*) 'done diag'
+!  call matmulcuda_c_cublas(AAA,BBB,CCC,nnnn,nnnn,nnnn)
+!  write(*,*) 'max deviation from Id diago_it: ',ii, nnnn,maxval(abs(CCC-Id(nnnn)))
+!  do i=1,nnnn
+!   do j=1,nnnn
+!    AAA(i,j)=drand1() +imi*drand1()
+!   enddo
+!  enddo
+!  BBB=AAA
+! 
+! !write(*,*) 'start diag MAGMAg'
+!  !call matinv_magma_complex(nnnn,BBB)
+!   call matinv_magma_complex_cxx(nnnn,BBB)
+! 
+!  write(*,*) 'done diag'
+!  call matmulcuda_c_cublas(AAA,BBB,CCC,nnnn,nnnn,nnnn)
+!  write(*,*) 'max deviation from Id magma : ',ii, nnnn,maxval(abs(CCC-Id(nnnn)))
+!  enddo
+! 
+!  write(*,*) 'testing matinv_magma_complex(n,mat)'
+!  nnn=8
+!  do i=1,nnn
+!   do j=1,nnn
+!    Ac(i,j)=drand1() +imi*drand1()*j
+!   enddo
+!  enddo
+!  Acinv=Ac
+!  call matinv_magma_complex(nnn,Acinv) 
+!  Ac=MATMUL(Ac,Acinv)
+!  do i=1,nnn
+!   write(*,'(200f9.2)') (Ac(i,j),j=1,nnn)
+!  enddo
+! 
+! 
+!  write(*,*) '---->testing matinv_magma_double'
+!  nnn=20
+!  do i=1,nnn
+!   do j=1,nnn
+!    Ar(i,j)=drand1()
+!   enddo
+!  enddo
+!  Br=Ar
+!  call matinv_magma_double(nnn,Br)
+!  Ar=MATMUL(Ar,Br)
+!  write(*,*) 'GE------'
+!  do i=1,nnn
+!    write(*,'(300f9.3)') (Ar(i,j),j=1,nnn)
+!  enddo
+! 
+!  write(*,*) 'testing matmulcuda_r_cublas(M,N,Q,dima,dimb,dimc)'
+!  nnn=16
+!  do i=1,16
+!   do j=1,24
+!    AA(i,j)=drand1() 
+!   enddo
+!  enddo
+!  do i=1,24
+!   do j=1,32
+!    BB(i,j)=drand1()
+!   enddo
+!  enddo
+!  m1=16
+!  n1=24
+!  q1=32
+!  call matmulcuda_r_cublas(AA,BB,CC,m1,n1,q1)
+!  DD=MATMUL(AA,BB)
+!  write(*,*) 'max diff: '
+!  write(*,*) maxval(abs(CC-DD)) 
+!  write(*,*) 'out of cuda'
+!   do i=1,16
+!  write(*,'(200f9.2)') (CC(i,j),j=1,32)
+!  enddo
+!  write(*,*) 'out of cpu'
+!  do i=1,16
+!  write(*,'(200f9.2)') (DD(i,j),j=1,32)
+!  enddo
+! 
+!  write(*,*) 'testing complex MATMUL on cublas'
+! 
+!  nnn=8
+!  do i=1,nnn
+!   do j=1,nnn
+!    Ac(i,j)=drand1() +imi*drand1()*j
+!   enddo
+!  enddo
+!  do i=1,nnn
+!   do j=1,nnn
+!    Bc_(i,j)=drand1() +imi*drand1()*j
+!   enddo
+!  enddo
+!  call matmulcuda_c_cublas(Ac,Bc_,Cc_,nnn,nnn,nnn)
+!  Dc_=MATMUL(Ac,Bc_)
+!  write(*,*) 'max diff: '
+!  write(*,*) maxval(abs(Cc_-Dc_))
+!  write(*,*) 'out of cuda'
+!   do i=1,8
+!  write(*,'(200f9.2)') (Cc_(i,j),j=1,8)
+!  enddo
+!  write(*,*) 'out of cpu'
+!  do i=1,8
+!  write(*,'(200f9.2)') (Dc_(i,j),j=1,8)
+!  enddo
+! 
+! 
+! deallocate(A,B,Ar,Br)
+! stop
+! end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! subroutine test_invmat
+! implicit none
+! complex(16),allocatable :: Aqc(:,:),Bqc(:,:)
+! real(16),allocatable    :: Aq(:,:),Bq(:,:)
+! complex(8),allocatable  :: A(:,:),B(:,:)
+! real(8),allocatable     :: Ar(:,:),Br(:,:)
+! real(4),allocatable     :: As(:,:),Bs(:,:)
+! complex(4),allocatable  :: Acs(:,:),Bcs(:,:)
+! integer                 :: i,j,nnn,jjj,ii
+! 
+!  do ii=0,6
+!  call define_flag(ii)
+!  write(*,*) '################################'
+!  write(*,*) 'STARTING PROCESS WITH FLAG TEST : ', ii
+!  write(*,*) '################################'
+!  do nnn=6,6
+!   write(*,*) 'MATRIX SIZE : ', nnn
+!   if(allocated(A)) deallocate(A,B,Br,Ar,As,Bs,Acs,Bcs,Aqc,Bqc,Aq,Bq)
+!   allocate(A(nnn,nnn),B(nnn,nnn),Ar(nnn,nnn),Br(nnn,nnn),As(nnn,nnn),Bs(nnn,nnn),Acs(nnn,nnn),Bcs(nnn,nnn),&
+!            & Aqc(nnn,nnn),Bqc(nnn,nnn),Aq(nnn,nnn),Bq(nnn,nnn))
+!   call run_test(nnn)
+!  enddo
+!  enddo
+!  stop 
+! 
+!  contains
+! 
+!  subroutine define_flag(flag)
+!  implicit none
+!  integer :: flag
+!  fast_invmat=.false.
+!  use_cuda_routines=.false.
+!  use_openmp_invmat=.false.
+!  diag_use_LU_instead_of_pivot=.false.
+!  flag_use_invmat_jordan=.false.
+!  flag_use_invmat_jordan_real=.false.
+!  force_invmat_single_prec=.false.
+! 
+!  SELECT CASE(flag)
+!   CASE(0)
+! 
+!   CASE(1)
+!   fast_invmat=.true.
+!   CASE(2)
+!   use_cuda_routines=.true.
+!   CASE(3)
+!   use_openmp_invmat=.true.
+!   CASE(4)
+!   diag_use_LU_instead_of_pivot=.true.
+!   CASE(5)
+!   flag_use_invmat_jordan=.true.
+!   flag_use_invmat_jordan_real=.true.
+!   CASE(6)
+!   force_invmat_single_prec=.true.
+!  end SELECT
+!  end subroutine
+! 
+!  subroutine run_test(n)
+!  implicit none
+!  integer :: n
+!   write(*,*) '============================'
+!   write(*,*) 'FULL MATRIX'
+!   call define_mat(n,.false.)
+!   call run_1(n,.false.)
+!   if(mod(n,2)==0)then
+!   write(*,*) 'BLOCK MATRIX'
+!   call define_mat(n,.true.)
+!   call run_1(n,.true.)
+!   endif
+!   write(*,*) '============================'
+!  end subroutine
+! 
+! 
+!  subroutine run_1(n,block)
+!  implicit none
+!  logical :: block
+!  integer :: n
+!  real(4) :: detr
+!  complex(4)::det2r
+!  real(8) :: det
+!  real(16):: detq
+!  complex(8) :: det2
+!  complex(16) :: det2q
+!  integer     :: pdet
+! 
+!      write(*,*) '--- QUAD ---'
+!      call reset_timer(jjj)
+!      call invmat(n,Aq,block_matrix=block,det2b=det2q,detb=detq,pdetb=pdet)
+!      call timer_fortran(jjj,'IT TOOK : ', unit_=6)
+!      write(*,*) maxval(abs(MATMUL(Bq,Aq)))
+!      write(*,*) det2q,detq,pdet
+!      write(*,*) '----------------'
+! 
+!      write(*,*) '--- QUAD COMPLEX ---'
+!      call reset_timer(jjj)
+!      call invmat(n,Aqc,block_matrix=block,det2b=det2q,detb=detq,pdetb=pdet)
+!      call timer_fortran(jjj,'IT TOOK : ', unit_=6)
+!      write(*,*) maxval(abs(MATMUL(Bqc,Aqc)))
+!      write(*,*) det2q,detq,pdet
+!      write(*,*) '----------------'
+! 
+!      write(*,*) '--- DOUBLE COMPLEX ---'
+!      call reset_timer(jjj)
+!      call invmat(n,A,block_matrix=block,det2b=det2,detb=det,pdetb=pdet)
+!      call timer_fortran(jjj,'IT TOOK : ', unit_=6)
+!      write(*,*) maxval(abs(MATMUL(B,A)))
+!      write(*,*) det2,det,pdet
+!      write(*,*) '----------------'
+!      
+!      write(*,*) '--- COMPLEX ---'
+!      call reset_timer(jjj)
+!      call invmat(n,Acs,block_matrix=block,det2b=det2r,detb=detr,pdetb=pdet)
+!      call timer_fortran(jjj,'IT TOOK : ', unit_=6)
+!      write(*,*) maxval(abs(MATMUL(Bcs,Acs)))
+!      write(*,*) det2r,detr,pdet
+!      write(*,*) '----------------'
+!      
+!      write(*,*) '--- DOUBLE ---'
+!      call reset_timer(jjj)
+!      call invmat(n,Ar,block_matrix=block,det2b=det2,detb=det,pdetb=pdet)
+!      call timer_fortran(jjj,'IT TOOK : ', unit_=6)
+!      write(*,*) maxval(abs(MATMUL(Br,Ar)))
+!      write(*,*) det2,det,pdet
+!      write(*,*) '----------------'
+!      
+!      write(*,*) '--- SINGLE ---'
+!      call reset_timer(jjj)
+!      call invmat(n,As,block_matrix=block,det2b=det2r,detb=detr,pdetb=pdet)
+!      call timer_fortran(jjj,'IT TOOK : ', unit_=6)
+!      write(*,*) maxval(abs(MATMUL(Bs,As)))
+!      write(*,*) det2r,detr,pdet
+!      write(*,*) '----------------'
+!  end subroutine
+! 
+!  subroutine define_mat(n,block)
+!  implicit none
+!  logical :: block
+!  integer :: n
+!  do i=1,n
+!   do j=1,n
+!    A(i,j)=drand1()+imi*drand1()*j
+!   enddo
+!  enddo
+!  if(block) then
+!   A(1:n/2,n/2+1:n)=0.
+!   A(n/2+1:n,1:n/2)=0.
+!  endif
+!  Ar =A
+!  Br =A
+!  B  =A
+!  As =A
+!  Acs=A
+!  Bs =A
+!  Bcs=A
+!  do i=1,n
+!   do j=1,n
+!    Aq(i,j)=real(A(i,j))
+!   enddo
+!  enddo
+!  do i=1,n
+!   do j=1,n
+!    Aqc(i,j)=real(A(i,j))
+!   enddo
+!  enddo
+!  if(block) then
+!   Aq(1:n/2,n/2+1:n)=0.
+!   Aq(n/2+1:n,1:n/2)=0.
+!   Aqc(1:n/2,n/2+1:n)=0.
+!   Aqc(n/2+1:n,1:n/2)=0.
+!  endif
+!  Bq =Aq
+!  Bqc=Aqc
+!  end subroutine
+! 
+! 
+! end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!   SUBROUTINE invert_zmblocktridiag(RES,z,A,B,N)
+!     COMPLEX(8), INTENT(INOUT) :: RES(:,:)
+!     COMPLEX(8), INTENT(IN)    :: z
+!     REAL(8),    INTENT(IN)    :: A(:,:,:),B(:,:,:)
+!     COMPLEX(8)                :: det_ratio_i(SIZE(A,2),SIZE(A,3)),det_ratio_ip1(SIZE(A,2),SIZE(A,3))
+!     REAL(8)                   :: Id(SIZE(A,2),SIZE(A,3))
+!     INTEGER                   :: iter,N
+! 
+!     IF(SIZE(A,1)/=SIZE(B,1).OR.ANY(SHAPE(A(1,:,:))/=SHAPE(B(1,:,:)))) &
+!     STOP "ERROR IN invert_zmblocktridiag: INCONSISTENT INPUT DIMENSIONS!"
+!     IF(SIZE(A,2)/=SIZE(A,3))  &
+!     STOP "ERROR IN invert_zmblocktridiag: SQUARE BLOCKS EXPECTED!"
+!     IF(SIZE(RES,1)/=SIZE(A,2).OR.SIZE(RES,2)/=SIZE(A,3)) &
+!     STOP "ERROR IN invert_zmblocktridiag: INCONSISTENT RESOLVANT DIMENSIONS!"
+! 
+!     CALL new_Id(Id)
+! 
+!   ! COMPUTE <1/(z-T)> WHERE T IS A BLOCK-TRIDIAGONAL MATRIX AND <> IS THE FIRST BLOCK
+! 
+!     det_ratio_ip1 = z * Id - A(N,:,:)
+!     CALL invert_lapack(det_ratio_ip1)
+! 
+!     DO iter = N-1,1,-1
+!       det_ratio_i   =   z * Id - A(iter,:,:) - MATMUL(B(iter+1,:,:), &
+!              & MATMUL(det_ratio_ip1,TRANSPOSE(CONJG( CMPLX(B(iter+1,:,:),0.d0,8) ))))
+!       CALL invert_lapack(det_ratio_i)
+!       det_ratio_ip1 = det_ratio_i
+!     ENDDO
+! 
+!     RES = det_ratio_i
+! 
+!   END SUBROUTINE
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
 subroutine invert_pivot_complexs_(matrix)
  implicit none
    complex(4) :: matrix(:,:)
@@ -2132,169 +2162,169 @@ end function
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-SUBROUTINE tred2(a,d,e,novectors)
-  IMPLICIT NONE
-
-  REAL(8), DIMENSION(:,:), INTENT(inout) :: a
-  REAL(8), DIMENSION(:), INTENT(out)     :: d,e
-  LOGICAL, OPTIONAL, INTENT(in)          :: novectors
-  INTEGER                                :: i,j,l,n
-  REAL(8)                                :: f,g,h,hh,tscale
-  REAL(8), DIMENSION(SIZE(a,1))          :: gg
-  LOGICAL, SAVE                          :: yesvec=.TRUE.
-  
-  n=SIZE(a,1)
-  
-  IF (PRESENT(novectors)) yesvec = .NOT. novectors
-  DO i=n,2,-1
-     l=i-1
-     h=0.0
-     IF(l>1) THEN
-        tscale=SUM(ABS(a(i,1:l)))
-        IF(tscale==0.0) THEN
-           e(i) = a(i,l)
-        ELSE
-           a(i,1:l) = a(i,1:l)/tscale
-           h=SUM(a(i,1:l)**2)
-           f=a(i,l)
-           g=-SIGN(SQRT(h),f)
-           e(i) = tscale*g
-           h=h-f*g
-           a(i,l)=f-g
-           IF(yesvec) a(1:l,i) = a(i,1:l)/h
-           DO j=1,l
-              e(j)=(DOT_PRODUCT(a(j,1:j),a(i,1:j)) &
-                   + DOT_PRODUCT(a(j+1:l,j),a(i,j+1:l)))/h
-           END DO
-           f=DOT_PRODUCT(e(1:l),a(i,1:l))
-           hh=f/(h+h)
-           e(1:l)=e(1:l)-hh*a(i,1:l)
-           DO j=1,l
-              a(j,1:j)=a(j,1:j) - a(i,j)*e(1:j)-e(j)*a(i,1:j)
-           END DO
-        END IF
-     ELSE
-        e(i)=a(i,l)
-     END IF
-     d(i)=h
-  END DO
-  IF(yesvec) d(1)=0.0
-  e(1)=0.0
-  DO i=1,n
-     IF(yesvec) THEN
-        l=i-1
-        IF(d(i) /=0.0) THEN
-           gg(1:l)=MATMUL(a(i,1:l),a(1:l,1:l))
-           a(1:l,1:l) = a(1:l,1:l) - outerprod(a(1:l,i),gg(1:l))
-        END IF
-        d(i)=a(i,i)
-        a(i,i)=1.0
-        a(i,1:l)=0.0
-        a(1:l,i)=0.0
-     ELSE
-        d(i)=a(i,i)
-     END IF
-  END DO
-END SUBROUTINE 
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-SUBROUTINE tqli__(d,e,z)
-  IMPLICIT NONE
-
-  REAL(8), DIMENSION(:), INTENT(inout)            :: d,e
-  REAL(8),DIMENSION(:,:), OPTIONAL, INTENT(inout) :: z
-  INTEGER                                         :: i,iter,l,mm,n,ndum
-  REAL(8)                                         :: b,c,dd,f,g,p,r,s
-  REAL(8), DIMENSION(SIZE(e))                     :: ff
-
-  n=SIZE(d)
-  IF(PRESENT(z)) ndum=n
-  e(:)=EOSHIFT(e(:),1) !convenient to renumber the elements of e
-  DO l=1,n
-     iter=0
-     iterate: DO
-        DO mm=l,n-1
-           dd=ABS(d(mm))+ABS(d(mm+1))
-           IF(ABS(e(mm)) + dd == dd) EXIT
-        END DO
-        IF(mm==l) EXIT iterate
-        IF(iter==100) WRITE(*,*) 'too many iterations in tqli'
-        iter=iter+1
-        g=(d(l+1)-d(l))/(2.d0*e(l))!Form shift
-        r=pythag(g,one)
-        g=d(mm)-d(l)+e(l)/(g+SIGN(r,g)) !this is d_m - k_s.
-        s=one
-        c=one
-        p=zero
-        DO i =mm-1,l,-1
-           f=s*e(i)
-           b=c*e(i)
-           r=pythag(f,g)
-           e(i+1)=r
-           IF(r==zero) THEN
-              d(i+1)=d(i+1)-p
-              e(mm)=zero
-              CYCLE iterate
-           END IF
-           s=f/r
-           c=g/r
-           g=d(i+1)-p
-           r=(d(i)-g)*s+2.d0*c*b
-           p=s*r
-           d(i+1)=g+p
-           g=c*r-b
-           IF(PRESENT(z)) THEN
-              ff(1:n)=z(1:n,i+1)
-              z(1:n,i+1)=s*z(1:n,i)+c*ff(1:n)
-              z(1:n,i)=c*z(1:n,i)-s*ff(1:n)
-           END IF
-        END DO
-        d(l)=d(l)-p
-        e(l)=g
-        e(mm)=zero
-     END DO iterate
-  END DO
-  
-
-  
-CONTAINS
-
- 
-  FUNCTION pythag(a,b)
-    IMPLICIT NONE
-    REAL(8), INTENT(in) :: a,b
-    REAL(8)             :: pythag
-    REAL(8)             :: absa,absb
-    absa = ABS(a)
-    absb = ABS(b)
-    IF(absa > absb) THEN
-       pythag=absa*SQRT(1.d0 + (absb/absa)**2)
-    ELSE
-       IF(absb==0.0) THEN
-          pythag=0.0
-       ELSE
-          pythag=absb*SQRT(1.d0 + (absa/absb)**2)
-       END IF
-    END IF
-  END FUNCTION 
-
-
-END SUBROUTINE 
-
-
+! 
+! SUBROUTINE tred2(a,d,e,novectors)
+!   IMPLICIT NONE
+! 
+!   REAL(8), DIMENSION(:,:), INTENT(inout) :: a
+!   REAL(8), DIMENSION(:), INTENT(out)     :: d,e
+!   LOGICAL, OPTIONAL, INTENT(in)          :: novectors
+!   INTEGER                                :: i,j,l,n
+!   REAL(8)                                :: f,g,h,hh,tscale
+!   REAL(8), DIMENSION(SIZE(a,1))          :: gg
+!   LOGICAL, SAVE                          :: yesvec=.TRUE.
+!   
+!   n=SIZE(a,1)
+!   
+!   IF (PRESENT(novectors)) yesvec = .NOT. novectors
+!   DO i=n,2,-1
+!      l=i-1
+!      h=0.0
+!      IF(l>1) THEN
+!         tscale=SUM(ABS(a(i,1:l)))
+!         IF(tscale==0.0) THEN
+!            e(i) = a(i,l)
+!         ELSE
+!            a(i,1:l) = a(i,1:l)/tscale
+!            h=SUM(a(i,1:l)**2)
+!            f=a(i,l)
+!            g=-SIGN(SQRT(h),f)
+!            e(i) = tscale*g
+!            h=h-f*g
+!            a(i,l)=f-g
+!            IF(yesvec) a(1:l,i) = a(i,1:l)/h
+!            DO j=1,l
+!               e(j)=(DOT_PRODUCT(a(j,1:j),a(i,1:j)) &
+!                    + DOT_PRODUCT(a(j+1:l,j),a(i,j+1:l)))/h
+!            END DO
+!            f=DOT_PRODUCT(e(1:l),a(i,1:l))
+!            hh=f/(h+h)
+!            e(1:l)=e(1:l)-hh*a(i,1:l)
+!            DO j=1,l
+!               a(j,1:j)=a(j,1:j) - a(i,j)*e(1:j)-e(j)*a(i,1:j)
+!            END DO
+!         END IF
+!      ELSE
+!         e(i)=a(i,l)
+!      END IF
+!      d(i)=h
+!   END DO
+!   IF(yesvec) d(1)=0.0
+!   e(1)=0.0
+!   DO i=1,n
+!      IF(yesvec) THEN
+!         l=i-1
+!         IF(d(i) /=0.0) THEN
+!            gg(1:l)=MATMUL(a(i,1:l),a(1:l,1:l))
+!            a(1:l,1:l) = a(1:l,1:l) - outerprod(a(1:l,i),gg(1:l))
+!         END IF
+!         d(i)=a(i,i)
+!         a(i,i)=1.0
+!         a(i,1:l)=0.0
+!         a(1:l,i)=0.0
+!      ELSE
+!         d(i)=a(i,i)
+!      END IF
+!   END DO
+! END SUBROUTINE 
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! SUBROUTINE tqli__(d,e,z)
+!   IMPLICIT NONE
+! 
+!   REAL(8), DIMENSION(:), INTENT(inout)            :: d,e
+!   REAL(8),DIMENSION(:,:), OPTIONAL, INTENT(inout) :: z
+!   INTEGER                                         :: i,iter,l,mm,n,ndum
+!   REAL(8)                                         :: b,c,dd,f,g,p,r,s
+!   REAL(8), DIMENSION(SIZE(e))                     :: ff
+! 
+!   n=SIZE(d)
+!   IF(PRESENT(z)) ndum=n
+!   e(:)=EOSHIFT(e(:),1) !convenient to renumber the elements of e
+!   DO l=1,n
+!      iter=0
+!      iterate: DO
+!         DO mm=l,n-1
+!            dd=ABS(d(mm))+ABS(d(mm+1))
+!            IF(ABS(e(mm)) + dd == dd) EXIT
+!         END DO
+!         IF(mm==l) EXIT iterate
+!         IF(iter==100) WRITE(*,*) 'too many iterations in tqli'
+!         iter=iter+1
+!         g=(d(l+1)-d(l))/(2.d0*e(l))!Form shift
+!         r=pythag(g,one)
+!         g=d(mm)-d(l)+e(l)/(g+SIGN(r,g)) !this is d_m - k_s.
+!         s=one
+!         c=one
+!         p=zero
+!         DO i =mm-1,l,-1
+!            f=s*e(i)
+!            b=c*e(i)
+!            r=pythag(f,g)
+!            e(i+1)=r
+!            IF(r==zero) THEN
+!               d(i+1)=d(i+1)-p
+!               e(mm)=zero
+!               CYCLE iterate
+!            END IF
+!            s=f/r
+!            c=g/r
+!            g=d(i+1)-p
+!            r=(d(i)-g)*s+2.d0*c*b
+!            p=s*r
+!            d(i+1)=g+p
+!            g=c*r-b
+!            IF(PRESENT(z)) THEN
+!               ff(1:n)=z(1:n,i+1)
+!               z(1:n,i+1)=s*z(1:n,i)+c*ff(1:n)
+!               z(1:n,i)=c*z(1:n,i)-s*ff(1:n)
+!            END IF
+!         END DO
+!         d(l)=d(l)-p
+!         e(l)=g
+!         e(mm)=zero
+!      END DO iterate
+!   END DO
+!   
+! 
+!   
+! CONTAINS
+! 
+!  
+!   FUNCTION pythag(a,b)
+!     IMPLICIT NONE
+!     REAL(8), INTENT(in) :: a,b
+!     REAL(8)             :: pythag
+!     REAL(8)             :: absa,absb
+!     absa = ABS(a)
+!     absb = ABS(b)
+!     IF(absa > absb) THEN
+!        pythag=absa*SQRT(1.d0 + (absb/absa)**2)
+!     ELSE
+!        IF(absb==0.0) THEN
+!           pythag=0.0
+!        ELSE
+!           pythag=absb*SQRT(1.d0 + (absa/absb)**2)
+!        END IF
+!     END IF
+!   END FUNCTION 
+! 
+! 
+! END SUBROUTINE 
+! 
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
@@ -2379,29 +2409,29 @@ END SUBROUTINE
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-      !------------------------------------!
-
- real(8) function trace_rp(mat)
- implicit none
- complex(8)::mat(:,:)
- integer::k
- trace_rp=0.d0
- do k=1,size(mat,1)
- trace_rp=trace_rp+real(mat(k,k),8)
- enddo
- end function
-
- real(8) function trace_ip(mat)
- implicit none
- complex(8)::mat(:,:)
- integer::k
- trace_ip=0.d0
- do k=1,size(mat,1)
- trace_ip=trace_ip+aimag(mat(k,k))
- enddo
- end function
-
+! 
+!       !------------------------------------!
+! 
+!  real(8) function trace_rp(mat)
+!  implicit none
+!  complex(8)::mat(:,:)
+!  integer::k
+!  trace_rp=0.d0
+!  do k=1,size(mat,1)
+!  trace_rp=trace_rp+real(mat(k,k),8)
+!  enddo
+!  end function
+! 
+!  real(8) function trace_ip(mat)
+!  implicit none
+!  complex(8)::mat(:,:)
+!  integer::k
+!  trace_ip=0.d0
+!  do k=1,size(mat,1)
+!  trace_ip=trace_ip+aimag(mat(k,k))
+!  enddo
+!  end function
+! 
       !------------------------------------!
 
  function diagr(mat)
@@ -2437,18 +2467,18 @@ END SUBROUTINE
  end function
 
      !------------------------------------!
-
- function offdiagr(mat)
- implicit none
- real(8) :: mat(:,:)
- real(8) :: offdiagr(size(mat(:,1)),size(mat(1,:)))
- integer :: k,i
-  offdiagr=mat
-  do i=1,size(mat(1,:))
-   offdiagr(i,i)=0.
-  enddo
- end function
-
+! 
+!  function offdiagr(mat)
+!  implicit none
+!  real(8) :: mat(:,:)
+!  real(8) :: offdiagr(size(mat(:,1)),size(mat(1,:)))
+!  integer :: k,i
+!   offdiagr=mat
+!   do i=1,size(mat(1,:))
+!    offdiagr(i,i)=0.
+!   enddo
+!  end function
+! 
       !------------------------------------!
 
  function offdiagc(mat)
@@ -2519,498 +2549,498 @@ END SUBROUTINE
  integer::k
    diagi=(/(mat(k,k),k=1,size(mat(1,:)))/)
  end function
-
-      !------------------------------------!
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
- pure integer function linear_size_hermitian_matrix_for_vec(siz)
- implicit none
- integer,intent(in) :: siz
- real(8)            :: tt
-
-   !le vecteur d entree contient la diagonale + les elements superieures
-   tt=(-1.d0+sqrt(1.d0+8.d0*dble(siz)))/2.d0
-   linear_size_hermitian_matrix_for_vec = NINT(tt)
-   tt=tt-NINT(tt)
-
-   if(abs(tt)>1.d-3.or.tt<0.d0)then
-      !le vecteur d entree ne contient que la diagonale
-      linear_size_hermitian_matrix_for_vec = siz
-   endif
-
- return
- end function
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-      !------------------------------------!
-      !------------------------------------!
-      !------------------------------------!
-
-    subroutine test_invmat_tri
-    implicit none
-    real(8)    :: mat(10,10),mat_backup(10,10)
-    complex(8) :: mat_(10,10),mat_backup_(10,10)
-    integer    :: i,j
- 
-     mat=0.d0
-     do i=1,10
-                mat(i,i  )=drand1()+0.1
-       if(i<10) mat(i,i+1)=drand1()
-     enddo
-     do i=1,9
-     do j=i+1,10
-      mat(j,i)=mat(i,j)
-     enddo
-     enddo
-     call write_array( mat, 'MATRIX TO INVERT', SHORT=.true., UNIT=6 )
-     mat_backup=mat
-       
-     call invmat_tridiag(10,mat)
-     write(*,*) 'inverse?? : '
-     call write_array( MATMUL(mat,mat_backup), 'MAt * INV', SHORT=.true., UNIT=6) 
-
-     mat_        = mat_backup
-     mat_backup_ = mat_
-     do i=1,10
-      mat_backup_(i,i)=mat_backup_(i,i)+imi*2.d0
-     enddo
-
-     call invmat_tridiag_complex(10,mat_,imi*2.d0)
-
-     call write_array( REAL(MATMUL(mat_backup_,mat_)), 'MAt * INV', SHORT=.true., UNIT=6)
-     call write_array( AIMAG(MATMUL(mat_backup_,mat_)), 'MAt * INV', SHORT=.true., UNIT=6)
-
-     stop 'done'
-    end subroutine
-
-      !------------------------------------!
-      !------------------------------------!
-      !------------------------------------!
-
-    subroutine invmat_tridiag_complex(siz,mat_,iw_)
-    implicit none
-    integer    :: siz
-    real(8)    :: mat(siz,siz),eigenvalues(siz)
-    complex(8) :: iw_,mat_(siz,siz)
-      mat=real(mat_)
-      call eigenvector_tridiag(siz,eigenvalues,mat)
-      where(abs(eigenvalues)<1.d-13) eigenvalues=1.d-13
-      mat_= MATMUL ( mat, MATMUL(bande_mat(siz,1.d0/(eigenvalues+iw_)),transpose(mat)))
-    end subroutine
-
-      !------------------------------------!
- 
-    subroutine invmat_tridiag(siz,mat)
-    implicit none
-    integer :: siz
-    real(8) :: mat(siz,siz),eigenvalues(siz)
-      call eigenvector_tridiag(siz,eigenvalues,mat)   
-      where(abs(eigenvalues)<1.d-13) eigenvalues=1.d-13
-      mat= MATMUL ( mat, MATMUL(bande_mat(siz,1.d0/eigenvalues),transpose(mat)) )
-    end subroutine
-
-      !------------------------------------!
-
-    subroutine eigenvector_tridiag(siz,eigenvalues,mat)
-    implicit none
-    integer :: siz
-    real(8) :: mat(siz,siz),eigenvalues(siz)
-    INTEGER :: INFO,i
-    REAL(8) :: sdiag(siz-1),work(2*siz-2)
-     eigenvalues =      diag(mat)
-     sdiag       =  (/( mat(i,i+1),i=1,siz-1 )/)
-     call DSTEV('V',siz,eigenvalues,sdiag,mat,siz,WORK,INFO)
-    end subroutine
-  
-      !------------------------------------!
-
-    subroutine eigenvector_matrixa_(sizin,mat,covd)
-    implicit none
-    integer :: sizin
-    real(8) :: cove(sizin),covd(sizin)
-    real(8) :: mat(sizin,sizin)
-      call tred(mat,sizin,sizin,covd,cove)
-      call tqli(covd,cove,sizin,sizin,mat)
-    return
-    end subroutine
-
-      !------------------------------------!
-
-    subroutine eigenvector_matrixb_(sizin,mat,covd)
-    implicit none
-    integer  :: sizin
-    real(8)  :: cove(sizin),covd(sizin)
-    real(8)  :: mat(sizin,sizin)
-    real(16) :: matq(sizin,sizin),coveq(sizin),covdq(sizin)
-      matq=mat
-      call tredq(matq,sizin,sizin,covdq,coveq)
-      call tqliq(covdq,coveq,sizin,sizin,matq)
-      covd=covdq
-    return
-    end subroutine
-
-      !------------------------------------!
-
-    subroutine eigenvector_matrixc_(sizin,matq,qcovdq)
-    implicit none
-    integer   :: sizin
-    real(16)  :: cove(sizin),qcovdq(sizin)
-    real(16)  :: matq(sizin,sizin),coveq(sizin),covdq(sizin)
-      call tredq(matq,sizin,sizin,qcovdq,coveq)
-      call tqliq(qcovdq,coveq,sizin,sizin,matq)
-    return
-    end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-      SUBROUTINE TQLI_(D,E,N,NP,Z)
-      implicit real(8)(a-h,o-z)
-      DIMENSION D(NP),E(NP),Z(NP,NP)
-      DIMENSION WKSP(Np),IWKSP(Np)
-      IF (N.GT.1) THEN
-      DO 11 I=2,N
-      E(I-1)=E(I)
-11    CONTINUE
-      E(N)=0.d0
-      DO 15 L=1,N
-      ITER=0
-1     DO 12 M=L,N-1
-      DD=ABS(D(M))+ABS(D(M+1))
-      IF (ABS(E(M))+DD.EQ.DD) GO TO 2
-12    CONTINUE
-      M=N
-2     IF(M.NE.L)THEN
-      ITER=ITER+1
-      G=(D(L+1)-D(L))/(2.d0*E(L))
-      R=SQRT(G**2+1.d0)
-      G=D(M)-D(L)+E(L)/(G+SIGN(R,G))
-      S=1.d0
-      C=1.d0
-      P=0.d0
-      DO 14 I=M-1,L,-1
-      F=S*E(I)
-      B=C*E(I)
-      IF(ABS(F).GE.ABS(G))THEN
-      C=G/F
-      R=SQRT(C**2+1.d0)
-      E(I+1)=F*R
-      S=1.d0/R
-      C=C*S
-      ELSE
-      S=F/G
-      R=SQRT(S**2+1.d0)
-      E(I+1)=G*R
-      C=1.d0/R
-      S=S*C
-      ENDIF
-      G=D(I+1)-P
-      R=(D(I)-G)*S+2.d0*C*B
-      P=S*R
-      D(I+1)=G+P
-      G=C*R-B
-      DO 13 K=1,N
-      F=Z(K,I+1)
-      Z(K,I+1)=S*Z(K,I)+C*F
-      Z(K,I)=C*Z(K,I)-S*F
-13    CONTINUE
-14    CONTINUE
-      D(L)=D(L)-P
-      E(L)=G
-      E(M)=0.d0
-      GO TO 1
-      ENDIF
-15    CONTINUE
-      ENDIF
-      call SORT3(N,np,D,Z,WKSP,IWKSP)
-      RETURN
-      END subroutine
-
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-      SUBROUTINE TQLIq(D,E,N,NP,Z)
-      implicit real(16)(a-h,o-z)
-      DIMENSION D(NP),E(NP),Z(NP,NP)
-      DIMENSION WKSP(Np),IWKSP(Np)
-      IF (N.GT.1) THEN
-      DO 11 I=2,N
-      E(I-1)=E(I)
-11    CONTINUE
-      E(N)=0.d0
-      DO 15 L=1,N
-      ITER=0
-1     DO 12 M=L,N-1
-      DD=ABS(D(M))+ABS(D(M+1))
-      IF (ABS(E(M))+DD.EQ.DD) GO TO 2
-12    CONTINUE
-      M=N
-2     IF(M.NE.L)THEN
-      ITER=ITER+1
-      G=(D(L+1)-D(L))/(2.d0*E(L))
-      R=SQRT(G**2+1.d0)
-      G=D(M)-D(L)+E(L)/(G+SIGN(R,G))
-      S=1.d0
-      C=1.d0
-      P=0.d0
-      DO 14 I=M-1,L,-1
-      F=S*E(I)
-      B=C*E(I)
-      IF(ABS(F).GE.ABS(G))THEN
-      C=G/F
-      R=SQRT(C**2+1.d0)
-      E(I+1)=F*R
-      S=1.d0/R
-      C=C*S
-      ELSE
-      S=F/G
-      R=SQRT(S**2+1.d0)
-      E(I+1)=G*R
-      C=1.d0/R
-      S=S*C
-      ENDIF
-      G=D(I+1)-P
-      R=(D(I)-G)*S+2.d0*C*B
-      P=S*R
-      D(I+1)=G+P
-      G=C*R-B
-      DO 13 K=1,N
-      F=Z(K,I+1)
-      Z(K,I+1)=S*Z(K,I)+C*F
-      Z(K,I)=C*Z(K,I)-S*F
-13    CONTINUE
-14    CONTINUE
-      D(L)=D(L)-P
-      E(L)=G
-      E(M)=0.d0
-      GO TO 1
-      ENDIF
-15    CONTINUE
-      ENDIF
-      call SORT3q(N,np,D,Z,WKSP,IWKSP)
-      RETURN
-      END subroutine
-
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-      ! Nom : TRED
-      SUBROUTINE TRED(A,N,NP,D,E)
-      implicit real(8)(a-h,o-z)
-      DIMENSION A(NP,NP),D(NP),E(NP)
-      IF(N.GT.1)THEN
-      DO 18 I=N,2,-1
-      L=I-1
-      H=0.d0
-      SCALE=0.d0
-      IF(L.GT.1)THEN
-      DO 11 K=1,L
-      SCALE=SCALE+ABS(A(I,K))
-11    CONTINUE
-      IF(SCALE<epsilonr)THEN
-      E(I)=A(I,L)
-      ELSE
-      DO 12 K=1,L
-      A(I,K)=A(I,K)/SCALE
-      H=H+A(I,K)**2
-12    CONTINUE
-      F=A(I,L)
-      G=-SIGN(SQRT(H),F)
-      E(I)=SCALE*G
-      H=H-F*G
-      A(I,L)=F-G
-      F=0.d0
-      DO 15 J=1,L
-      A(J,I)=A(I,J)/H
-      G=0.d0
-      DO 13 K=1,J
-      G=G+A(J,K)*A(I,K)
-13    CONTINUE
-      IF(L.GT.J)THEN
-      DO 14 K=J+1,L
-      G=G+A(K,J)*A(I,K)
-14    CONTINUE
-      ENDIF
-      E(J)=G/H
-      F=F+E(J)*A(I,J)
-15    CONTINUE
-      HH=F/(H+H)
-      DO 17 J=1,L
-      F=A(I,J)
-      G=E(J)-HH*F
-      E(J)=G
-      DO 16 K=1,J
-      A(J,K)=A(J,K)-F*E(K)-G*A(I,K)
-16    CONTINUE
-17    CONTINUE
-      ENDIF
-      ELSE
-      E(I)=A(I,L)
-      ENDIF
-      D(I)=H
-18    CONTINUE
-      ENDIF
-      D(1)=0.d0
-      E(1)=0.d0
-      DO 23 I=1,N
-      L=I-1
-      IF(D(I).NE.0.d0)THEN
-      DO 21 J=1,L
-      G=0.d0
-      DO 19 K=1,L
-      G=G+A(I,K)*A(K,J)
-19    CONTINUE
-      DO 20 K=1,L
-      A(K,J)=A(K,J)-G*A(K,I)
-20    CONTINUE
-21    CONTINUE
-      ENDIF
-      D(I)=A(I,I)
-      A(I,I)=1.d0
-      IF(L.GE.1)THEN
-      DO 22 J=1,L
-      A(I,J)=0.d0
-      A(J,I)=0.d0
-22    CONTINUE
-      ENDIF
-23    CONTINUE
-      RETURN
-      END subroutine
-
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-      ! Nom : TRED
-      SUBROUTINE TREDq(A,N,NP,D,E)
-      implicit real(16)(a-h,o-z)
-      DIMENSION A(NP,NP),D(NP),E(NP)
-      IF(N.GT.1)THEN
-      DO 18 I=N,2,-1
-      L=I-1
-      H=0.d0
-      SCALE=0.d0
-      IF(L.GT.1)THEN
-      DO 11 K=1,L
-      SCALE=SCALE+ABS(A(I,K))
-11    CONTINUE
-      IF(SCALE<epsilonq)THEN
-      E(I)=A(I,L)
-      ELSE
-      DO 12 K=1,L
-      A(I,K)=A(I,K)/SCALE
-      H=H+A(I,K)**2
-12    CONTINUE
-      F=A(I,L)
-      G=-SIGN(SQRT(H),F)
-      E(I)=SCALE*G
-      H=H-F*G
-      A(I,L)=F-G
-      F=0.d0
-      DO 15 J=1,L
-      A(J,I)=A(I,J)/H
-      G=0.d0
-      DO 13 K=1,J
-      G=G+A(J,K)*A(I,K)
-13    CONTINUE
-      IF(L.GT.J)THEN
-      DO 14 K=J+1,L
-      G=G+A(K,J)*A(I,K)
-14    CONTINUE
-      ENDIF
-      E(J)=G/H
-      F=F+E(J)*A(I,J)
-15    CONTINUE
-      HH=F/(H+H)
-      DO 17 J=1,L
-      F=A(I,J)
-      G=E(J)-HH*F
-      E(J)=G
-      DO 16 K=1,J
-      A(J,K)=A(J,K)-F*E(K)-G*A(I,K)
-16    CONTINUE
-17    CONTINUE
-      ENDIF
-      ELSE
-      E(I)=A(I,L)
-      ENDIF
-      D(I)=H
-18    CONTINUE
-      ENDIF
-      D(1)=0.d0
-      E(1)=0.d0
-      DO 23 I=1,N
-      L=I-1
-      IF(D(I).NE.0.d0)THEN
-      DO 21 J=1,L
-      G=0.d0
-      DO 19 K=1,L
-      G=G+A(I,K)*A(K,J)
-19    CONTINUE
-      DO 20 K=1,L
-      A(K,J)=A(K,J)-G*A(K,I)
-20    CONTINUE
-21    CONTINUE
-      ENDIF
-      D(I)=A(I,I)
-      A(I,I)=1.d0
-      IF(L.GE.1)THEN
-      DO 22 J=1,L
-      A(I,J)=0.d0
-      A(J,I)=0.d0
-22    CONTINUE
-      ENDIF
-23    CONTINUE
-      RETURN
-      END subroutine
-
+! 
+!       !------------------------------------!
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!  pure integer function linear_size_hermitian_matrix_for_vec(siz)
+!  implicit none
+!  integer,intent(in) :: siz
+!  real(8)            :: tt
+! 
+!    !le vecteur d entree contient la diagonale + les elements superieures
+!    tt=(-1.d0+sqrt(1.d0+8.d0*dble(siz)))/2.d0
+!    linear_size_hermitian_matrix_for_vec = NINT(tt)
+!    tt=tt-NINT(tt)
+! 
+!    if(abs(tt)>1.d-3.or.tt<0.d0)then
+!       !le vecteur d entree ne contient que la diagonale
+!       linear_size_hermitian_matrix_for_vec = siz
+!    endif
+! 
+!  return
+!  end function
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!       !------------------------------------!
+!       !------------------------------------!
+!       !------------------------------------!
+! 
+!     subroutine test_invmat_tri
+!     implicit none
+!     real(8)    :: mat(10,10),mat_backup(10,10)
+!     complex(8) :: mat_(10,10),mat_backup_(10,10)
+!     integer    :: i,j
+!  
+!      mat=0.d0
+!      do i=1,10
+!                 mat(i,i  )=drand1()+0.1
+!        if(i<10) mat(i,i+1)=drand1()
+!      enddo
+!      do i=1,9
+!      do j=i+1,10
+!       mat(j,i)=mat(i,j)
+!      enddo
+!      enddo
+!      call write_array( mat, 'MATRIX TO INVERT', SHORT=.true., UNIT=6 )
+!      mat_backup=mat
+!        
+!      call invmat_tridiag(10,mat)
+!      write(*,*) 'inverse?? : '
+!      call write_array( MATMUL(mat,mat_backup), 'MAt * INV', SHORT=.true., UNIT=6) 
+! 
+!      mat_        = mat_backup
+!      mat_backup_ = mat_
+!      do i=1,10
+!       mat_backup_(i,i)=mat_backup_(i,i)+imi*2.d0
+!      enddo
+! 
+!      call invmat_tridiag_complex(10,mat_,imi*2.d0)
+! 
+!      call write_array( REAL(MATMUL(mat_backup_,mat_)), 'MAt * INV', SHORT=.true., UNIT=6)
+!      call write_array( AIMAG(MATMUL(mat_backup_,mat_)), 'MAt * INV', SHORT=.true., UNIT=6)
+! 
+!      stop 'done'
+!     end subroutine
+! 
+!       !------------------------------------!
+!       !------------------------------------!
+!       !------------------------------------!
+! 
+!     subroutine invmat_tridiag_complex(siz,mat_,iw_)
+!     implicit none
+!     integer    :: siz
+!     real(8)    :: mat(siz,siz),eigenvalues(siz)
+!     complex(8) :: iw_,mat_(siz,siz)
+!       mat=real(mat_)
+!       call eigenvector_tridiag(siz,eigenvalues,mat)
+!       where(abs(eigenvalues)<1.d-13) eigenvalues=1.d-13
+!       mat_= MATMUL ( mat, MATMUL(bande_mat(siz,1.d0/(eigenvalues+iw_)),transpose(mat)))
+!     end subroutine
+! 
+!       !------------------------------------!
+!  
+!     subroutine invmat_tridiag(siz,mat)
+!     implicit none
+!     integer :: siz
+!     real(8) :: mat(siz,siz),eigenvalues(siz)
+!       call eigenvector_tridiag(siz,eigenvalues,mat)   
+!       where(abs(eigenvalues)<1.d-13) eigenvalues=1.d-13
+!       mat= MATMUL ( mat, MATMUL(bande_mat(siz,1.d0/eigenvalues),transpose(mat)) )
+!     end subroutine
+! 
+!       !------------------------------------!
+! 
+!     subroutine eigenvector_tridiag(siz,eigenvalues,mat)
+!     implicit none
+!     integer :: siz
+!     real(8) :: mat(siz,siz),eigenvalues(siz)
+!     INTEGER :: INFO,i
+!     REAL(8) :: sdiag(siz-1),work(2*siz-2)
+!      eigenvalues =      diag(mat)
+!      sdiag       =  (/( mat(i,i+1),i=1,siz-1 )/)
+!      call DSTEV('V',siz,eigenvalues,sdiag,mat,siz,WORK,INFO)
+!     end subroutine
+!   
+!       !------------------------------------!
+! 
+!     subroutine eigenvector_matrixa_(sizin,mat,covd)
+!     implicit none
+!     integer :: sizin
+!     real(8) :: cove(sizin),covd(sizin)
+!     real(8) :: mat(sizin,sizin)
+!       call tred(mat,sizin,sizin,covd,cove)
+!       call tqli(covd,cove,sizin,sizin,mat)
+!     return
+!     end subroutine
+! 
+!       !------------------------------------!
+! 
+!     subroutine eigenvector_matrixb_(sizin,mat,covd)
+!     implicit none
+!     integer  :: sizin
+!     real(8)  :: cove(sizin),covd(sizin)
+!     real(8)  :: mat(sizin,sizin)
+!     real(16) :: matq(sizin,sizin),coveq(sizin),covdq(sizin)
+!       matq=mat
+!       call tredq(matq,sizin,sizin,covdq,coveq)
+!       call tqliq(covdq,coveq,sizin,sizin,matq)
+!       covd=covdq
+!     return
+!     end subroutine
+! 
+!       !------------------------------------!
+! 
+!     subroutine eigenvector_matrixc_(sizin,matq,qcovdq)
+!     implicit none
+!     integer   :: sizin
+!     real(16)  :: cove(sizin),qcovdq(sizin)
+!     real(16)  :: matq(sizin,sizin),coveq(sizin),covdq(sizin)
+!       call tredq(matq,sizin,sizin,qcovdq,coveq)
+!       call tqliq(qcovdq,coveq,sizin,sizin,matq)
+!     return
+!     end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!       SUBROUTINE TQLI_(D,E,N,NP,Z)
+!       implicit real(8)(a-h,o-z)
+!       DIMENSION D(NP),E(NP),Z(NP,NP)
+!       DIMENSION WKSP(Np),IWKSP(Np)
+!       IF (N.GT.1) THEN
+!       DO 11 I=2,N
+!       E(I-1)=E(I)
+! 11    CONTINUE
+!       E(N)=0.d0
+!       DO 15 L=1,N
+!       ITER=0
+! 1     DO 12 M=L,N-1
+!       DD=ABS(D(M))+ABS(D(M+1))
+!       IF (ABS(E(M))+DD.EQ.DD) GO TO 2
+! 12    CONTINUE
+!       M=N
+! 2     IF(M.NE.L)THEN
+!       ITER=ITER+1
+!       G=(D(L+1)-D(L))/(2.d0*E(L))
+!       R=SQRT(G**2+1.d0)
+!       G=D(M)-D(L)+E(L)/(G+SIGN(R,G))
+!       S=1.d0
+!       C=1.d0
+!       P=0.d0
+!       DO 14 I=M-1,L,-1
+!       F=S*E(I)
+!       B=C*E(I)
+!       IF(ABS(F).GE.ABS(G))THEN
+!       C=G/F
+!       R=SQRT(C**2+1.d0)
+!       E(I+1)=F*R
+!       S=1.d0/R
+!       C=C*S
+!       ELSE
+!       S=F/G
+!       R=SQRT(S**2+1.d0)
+!       E(I+1)=G*R
+!       C=1.d0/R
+!       S=S*C
+!       ENDIF
+!       G=D(I+1)-P
+!       R=(D(I)-G)*S+2.d0*C*B
+!       P=S*R
+!       D(I+1)=G+P
+!       G=C*R-B
+!       DO 13 K=1,N
+!       F=Z(K,I+1)
+!       Z(K,I+1)=S*Z(K,I)+C*F
+!       Z(K,I)=C*Z(K,I)-S*F
+! 13    CONTINUE
+! 14    CONTINUE
+!       D(L)=D(L)-P
+!       E(L)=G
+!       E(M)=0.d0
+!       GO TO 1
+!       ENDIF
+! 15    CONTINUE
+!       ENDIF
+!       call SORT3(N,np,D,Z,WKSP,IWKSP)
+!       RETURN
+!       END subroutine
+! 
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!       SUBROUTINE TQLIq(D,E,N,NP,Z)
+!       implicit real(16)(a-h,o-z)
+!       DIMENSION D(NP),E(NP),Z(NP,NP)
+!       DIMENSION WKSP(Np),IWKSP(Np)
+!       IF (N.GT.1) THEN
+!       DO 11 I=2,N
+!       E(I-1)=E(I)
+! 11    CONTINUE
+!       E(N)=0.d0
+!       DO 15 L=1,N
+!       ITER=0
+! 1     DO 12 M=L,N-1
+!       DD=ABS(D(M))+ABS(D(M+1))
+!       IF (ABS(E(M))+DD.EQ.DD) GO TO 2
+! 12    CONTINUE
+!       M=N
+! 2     IF(M.NE.L)THEN
+!       ITER=ITER+1
+!       G=(D(L+1)-D(L))/(2.d0*E(L))
+!       R=SQRT(G**2+1.d0)
+!       G=D(M)-D(L)+E(L)/(G+SIGN(R,G))
+!       S=1.d0
+!       C=1.d0
+!       P=0.d0
+!       DO 14 I=M-1,L,-1
+!       F=S*E(I)
+!       B=C*E(I)
+!       IF(ABS(F).GE.ABS(G))THEN
+!       C=G/F
+!       R=SQRT(C**2+1.d0)
+!       E(I+1)=F*R
+!       S=1.d0/R
+!       C=C*S
+!       ELSE
+!       S=F/G
+!       R=SQRT(S**2+1.d0)
+!       E(I+1)=G*R
+!       C=1.d0/R
+!       S=S*C
+!       ENDIF
+!       G=D(I+1)-P
+!       R=(D(I)-G)*S+2.d0*C*B
+!       P=S*R
+!       D(I+1)=G+P
+!       G=C*R-B
+!       DO 13 K=1,N
+!       F=Z(K,I+1)
+!       Z(K,I+1)=S*Z(K,I)+C*F
+!       Z(K,I)=C*Z(K,I)-S*F
+! 13    CONTINUE
+! 14    CONTINUE
+!       D(L)=D(L)-P
+!       E(L)=G
+!       E(M)=0.d0
+!       GO TO 1
+!       ENDIF
+! 15    CONTINUE
+!       ENDIF
+!       call SORT3q(N,np,D,Z,WKSP,IWKSP)
+!       RETURN
+!       END subroutine
+! 
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!       ! Nom : TRED
+!       SUBROUTINE TRED(A,N,NP,D,E)
+!       implicit real(8)(a-h,o-z)
+!       DIMENSION A(NP,NP),D(NP),E(NP)
+!       IF(N.GT.1)THEN
+!       DO 18 I=N,2,-1
+!       L=I-1
+!       H=0.d0
+!       SCALE=0.d0
+!       IF(L.GT.1)THEN
+!       DO 11 K=1,L
+!       SCALE=SCALE+ABS(A(I,K))
+! 11    CONTINUE
+!       IF(SCALE<epsilonr)THEN
+!       E(I)=A(I,L)
+!       ELSE
+!       DO 12 K=1,L
+!       A(I,K)=A(I,K)/SCALE
+!       H=H+A(I,K)**2
+! 12    CONTINUE
+!       F=A(I,L)
+!       G=-SIGN(SQRT(H),F)
+!       E(I)=SCALE*G
+!       H=H-F*G
+!       A(I,L)=F-G
+!       F=0.d0
+!       DO 15 J=1,L
+!       A(J,I)=A(I,J)/H
+!       G=0.d0
+!       DO 13 K=1,J
+!       G=G+A(J,K)*A(I,K)
+! 13    CONTINUE
+!       IF(L.GT.J)THEN
+!       DO 14 K=J+1,L
+!       G=G+A(K,J)*A(I,K)
+! 14    CONTINUE
+!       ENDIF
+!       E(J)=G/H
+!       F=F+E(J)*A(I,J)
+! 15    CONTINUE
+!       HH=F/(H+H)
+!       DO 17 J=1,L
+!       F=A(I,J)
+!       G=E(J)-HH*F
+!       E(J)=G
+!       DO 16 K=1,J
+!       A(J,K)=A(J,K)-F*E(K)-G*A(I,K)
+! 16    CONTINUE
+! 17    CONTINUE
+!       ENDIF
+!       ELSE
+!       E(I)=A(I,L)
+!       ENDIF
+!       D(I)=H
+! 18    CONTINUE
+!       ENDIF
+!       D(1)=0.d0
+!       E(1)=0.d0
+!       DO 23 I=1,N
+!       L=I-1
+!       IF(D(I).NE.0.d0)THEN
+!       DO 21 J=1,L
+!       G=0.d0
+!       DO 19 K=1,L
+!       G=G+A(I,K)*A(K,J)
+! 19    CONTINUE
+!       DO 20 K=1,L
+!       A(K,J)=A(K,J)-G*A(K,I)
+! 20    CONTINUE
+! 21    CONTINUE
+!       ENDIF
+!       D(I)=A(I,I)
+!       A(I,I)=1.d0
+!       IF(L.GE.1)THEN
+!       DO 22 J=1,L
+!       A(I,J)=0.d0
+!       A(J,I)=0.d0
+! 22    CONTINUE
+!       ENDIF
+! 23    CONTINUE
+!       RETURN
+!       END subroutine
+! 
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!       ! Nom : TRED
+!       SUBROUTINE TREDq(A,N,NP,D,E)
+!       implicit real(16)(a-h,o-z)
+!       DIMENSION A(NP,NP),D(NP),E(NP)
+!       IF(N.GT.1)THEN
+!       DO 18 I=N,2,-1
+!       L=I-1
+!       H=0.d0
+!       SCALE=0.d0
+!       IF(L.GT.1)THEN
+!       DO 11 K=1,L
+!       SCALE=SCALE+ABS(A(I,K))
+! 11    CONTINUE
+!       IF(SCALE<epsilonq)THEN
+!       E(I)=A(I,L)
+!       ELSE
+!       DO 12 K=1,L
+!       A(I,K)=A(I,K)/SCALE
+!       H=H+A(I,K)**2
+! 12    CONTINUE
+!       F=A(I,L)
+!       G=-SIGN(SQRT(H),F)
+!       E(I)=SCALE*G
+!       H=H-F*G
+!       A(I,L)=F-G
+!       F=0.d0
+!       DO 15 J=1,L
+!       A(J,I)=A(I,J)/H
+!       G=0.d0
+!       DO 13 K=1,J
+!       G=G+A(J,K)*A(I,K)
+! 13    CONTINUE
+!       IF(L.GT.J)THEN
+!       DO 14 K=J+1,L
+!       G=G+A(K,J)*A(I,K)
+! 14    CONTINUE
+!       ENDIF
+!       E(J)=G/H
+!       F=F+E(J)*A(I,J)
+! 15    CONTINUE
+!       HH=F/(H+H)
+!       DO 17 J=1,L
+!       F=A(I,J)
+!       G=E(J)-HH*F
+!       E(J)=G
+!       DO 16 K=1,J
+!       A(J,K)=A(J,K)-F*E(K)-G*A(I,K)
+! 16    CONTINUE
+! 17    CONTINUE
+!       ENDIF
+!       ELSE
+!       E(I)=A(I,L)
+!       ENDIF
+!       D(I)=H
+! 18    CONTINUE
+!       ENDIF
+!       D(1)=0.d0
+!       E(1)=0.d0
+!       DO 23 I=1,N
+!       L=I-1
+!       IF(D(I).NE.0.d0)THEN
+!       DO 21 J=1,L
+!       G=0.d0
+!       DO 19 K=1,L
+!       G=G+A(I,K)*A(K,J)
+! 19    CONTINUE
+!       DO 20 K=1,L
+!       A(K,J)=A(K,J)-G*A(K,I)
+! 20    CONTINUE
+! 21    CONTINUE
+!       ENDIF
+!       D(I)=A(I,I)
+!       A(I,I)=1.d0
+!       IF(L.GE.1)THEN
+!       DO 22 J=1,L
+!       A(I,J)=0.d0
+!       A(J,I)=0.d0
+! 22    CONTINUE
+!       ENDIF
+! 23    CONTINUE
+!       RETURN
+!       END subroutine
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
@@ -3324,858 +3354,858 @@ END SUBROUTINE
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-!     Fonction:  Single value decomposition
-
-      SUBROUTINE SVDCMP(A,M,N,MP,NP,W,V)
-      integer,intent(in)    :: M,N
-      real(8),intent(inout) :: A(MP,NP),W(NP),V(NP,NP)
-      real(8)               :: RV1(N)
-      real(8)               :: S,G,H,F,SCALE,ANORM
-      INTEGER               :: I,J,L,K
-
-      G=0.0
-      SCALE=0.0; ANORM=0.0
-
-      DO 25 I=1,N
-        L=I+1
-        RV1(I)=SCALE*G
-        G=0.0
-        S=0.0
-        SCALE=0.0
-        IF (I.LE.M) THEN
-          DO 11 K=I,M
-            SCALE=SCALE+ABS(A(K,I))
-11        CONTINUE
-          IF (SCALE.NE.0.0) THEN
-            DO 12 K=I,M
-              A(K,I)=A(K,I)/SCALE
-              S=S+A(K,I)*A(K,I)
-12          CONTINUE
-            F=A(I,I)
-            G=-SIGN(SQRT(S),F)
-            H=F*G-S
-            A(I,I)=F-G
-            IF (I.NE.N) THEN
-              DO 15 J=L,N
-                S=0.0
-                DO 13 K=I,M
-                  S=S+A(K,I)*A(K,J)
-13              CONTINUE
-                F=S/H
-                DO 14 K=I,M
-                  A(K,J)=A(K,J)+F*A(K,I)
-14              CONTINUE
-15            CONTINUE
-            ENDIF
-            DO 16 K= I,M
-              A(K,I)=SCALE*A(K,I)
-16          CONTINUE
-          ENDIF
-        ENDIF
-        W(I)=SCALE *G
-        G=0.0
-        S=0.0
-        SCALE=0.0
-
-        IF ((I<=M).AND.(I/=N)) THEN
-          DO 17 K=L,N
-            SCALE=SCALE+ABS(A(I,K))
-17        CONTINUE
-          IF (SCALE.NE.0.0) THEN
-            DO 18 K=L,N
-              A(I,K)=A(I,K)/SCALE
-              S=S+A(I,K)*A(I,K)
-18          CONTINUE
-            F=A(I,L)
-            G=-SIGN(SQRT(S),F)
-            H=F*G-S
-            A(I,L)=F-G
-            DO 19 K=L,N
-              RV1(K)=A(I,K)/H
-19          CONTINUE
-            IF (I.NE.M) THEN
-              DO 23 J=L,M
-                S=0.0
-                DO 21 K=L,N
-                  S=S+A(J,K)*A(I,K)
-21              CONTINUE
-                DO 22 K=L,N
-                  A(J,K)=A(J,K)+S*RV1(K)
-22              CONTINUE
-23            CONTINUE
-            ENDIF
-            DO 24 K=L,N
-              A(I,K)=SCALE*A(I,K)
-24          CONTINUE
-          ENDIF
-        ENDIF
-        ANORM=MAX(ANORM,(ABS(W(I))+ABS(RV1(I))))
-25    CONTINUE
-      DO 32 I=N,1,-1
-        IF (I<N) THEN
-          IF (G/=0.0) THEN
-            DO 26 J=L,N
-              if(I>M) stop 'error pivot, bad shape 1'
-              V(J,I)=(A(I,J)/A(I,L))/G
-26          CONTINUE
-            DO 29 J=L,N
-              S=0.0
-              DO 27 K=L,N
-                if(I>M) stop 'error pivot, bad shape 2'
-                S=S+A(I,K)*V(K,J)
-27            CONTINUE
-              DO 28 K=L,N
-                V(K,J)=V(K,J)+S*V(K,I)
-28            CONTINUE
-29          CONTINUE
-          ENDIF
-          DO 31 J=L,N
-            V(I,J)=0.0
-            V(J,I)=0.0
-31        CONTINUE
-        ENDIF
-        V(I,I)=1.0
-        G=RV1(I)
-        L=I
-32    CONTINUE
-      DO 39 I=N,1,-1
-        L=I+1
-        G=W(I)
-        IF (I.LT.N) THEN
-          DO 33 J=L,N
-            A(I,J)=0.0
-33        CONTINUE
-        ENDIF
-        IF (G.NE.0.0) THEN
-          G=1.0/G
-          IF (I/=N) THEN
-            DO 36 J=L,N
-              S=0.0
-              DO 34 K=L,M
-                S=S+A(K,I)*A(K,J)
-34            CONTINUE
-              F=(S/A(I,I))*G
-              DO 35 K=I,M
-                A(K,J)=A(K,J)+F*A(K,I)
-35            CONTINUE
-36          CONTINUE
-          ENDIF
-          DO 37 J=I,M
-            A(J,I)=A(J,I)*G
-37        CONTINUE
-        ELSE
-          DO 38 J= I,M
-            A(J,I)=0.0
-38        CONTINUE
-        ENDIF
-        A(I,I)=A(I,I)+1.0
-39    CONTINUE
-      DO 49 K=N,1,-1
-        DO 48 ITS=1,30
-          DO 41 L=K,1,-1
-            NM=L-1
-            IF ((ABS(RV1(L))+ANORM).EQ.ANORM)  GO TO 2
-            IF ((ABS(W(NM))+ANORM).EQ.ANORM)  GO TO 1
-41        CONTINUE
-1         C=0.0
-          S=1.0
-          DO 43 I=L,K
-            F=S*RV1(I)
-            IF ((ABS(F)+ANORM).NE.ANORM) THEN
-              G=W(I)
-              H=SQRT(F*F+G*G)
-              W(I)=H
-              H=1.0/H
-              C= (G*H)
-              S=-(F*H)
-              DO 42 J=1,M
-                Y=A(J,NM)
-                Z=A(J,I)
-                A(J,NM)=(Y*C)+(Z*S)
-                A(J,I)=-(Y*S)+(Z*C)
-42            CONTINUE
-            ENDIF
-43        CONTINUE
-2         Z=W(K)
-          IF (L.EQ.K) THEN
-            IF (Z.LT.0.0) THEN
-              W(K)=-Z
-              DO 44 J=1,N
-                V(J,K)=-V(J,K)
-44            CONTINUE
-            ENDIF
-            GO TO 3
-          ENDIF
-          X=W(L)
-          NM=K-1
-          Y=W(NM)
-          G=RV1(NM)
-          H=RV1(K)
-          F=((Y-Z)*(Y+Z)+(G-H)*(G+H))/(2.0*H*Y)
-          G=SQRT(F*F+1.0)
-          F=((X-Z)*(X+Z)+H*((Y/(F+SIGN(G,F)))-H))/X
-          C=1.0
-          S=1.0
-          DO 47 J=L,NM
-            I=J+1
-            G=RV1(I)
-            Y=W(I)
-            H=S*G
-            G=C*G
-            Z=SQRT(F*F+H*H)
-            RV1(J)=Z
-            C=F/Z
-            S=H/Z
-            F= (X*C)+(G*S)
-            G=-(X*S)+(G*C)
-            H=Y*S
-            Y=Y*C
-            DO 45 NM=1,N
-              X=V(NM,J)
-              Z=V(NM,I)
-              V(NM,J)= (X*C)+(Z*S)
-              V(NM,I)=-(X*S)+(Z*C)
-45          CONTINUE
-            Z=SQRT(F*F+H*H)
-            W(J)=Z
-            IF (Z.NE.0.0) THEN
-              Z=1.0/Z
-              C=F*Z
-              S=H*Z
-            ENDIF
-            F= (C*G)+(S*Y)
-            X=-(S*G)+(C*Y)
-            DO 46 NM=1,M
-              Y=A(NM,J)
-              Z=A(NM,I)
-              A(NM,J)= (Y*C)+(Z*S)
-              A(NM,I)=-(Y*S)+(Z*C)
-46          CONTINUE
-47        CONTINUE
-          RV1(L)=0.0
-          RV1(K)=F
-          W(K)=X
-48      CONTINUE
-3       CONTINUE
-49    CONTINUE
-
-      RETURN
-      END subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-  !*************************************************!
-  !*     resolution avec la decomposition en SVD    !
-  !*************************************************!
-
-      subroutine svbksb(u,w,v,m,n,mp,np,b,x)
-      implicit REAL(8) (a-h,o-z)
-      dimension u(mp,np),w(np),v(np,np),b(mp),x(np),tmp(n)
-
-      do 12 j=1,n
-            s=0.d0
-            if(w(j).ne.0.d0)then
-                    do 11 i=1,m
-                          s=s+u(i,j)*b(i)
-11                  continue
-                    s=s/w(j)
-            endif
-            tmp(j)=s
-12    continue
-
-      do 14 j=1,n
-            s=0.d0
-            do 13 jj=1,n
-                  s=s+v(j,jj)*tmp(jj)
-13          continue
-            x(j)=s
-14    continue
-      return
-      end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-subroutine fix_degeneracies(n,val,ordertab,err)
-implicit none
-integer :: n,i,j,k,l
-real(8)  :: err,val(n)
-integer :: ordertab(n)
-
-!---> ordertab(i)=k : state number i degenerate with the k-1 following state
-
- ordertab=0; i=0
-
- do 
-  i=i+1
-  if(i>n) exit
-  ordertab(i)=1
-  k=1
-  do j=i+1,n
-   if(abs(val(j)-val(i))<err)then
-    k=k+1
-    ordertab(i)=k
-   else
-    exit
-   endif
-  enddo
-  i=i+k-1
- enddo
- 
- k=sum(ordertab(1:n))
- if(k/=n)then
-  write(*,*) 'should be ... states : ', n
-  write(*,*) 'there are ... states : ', k
-  write(*,*) 'ordertab tab : ', ordertab
-  write(*,*) 'values    : ', val
-  stop 'error fix_degeneracies bad check....'
- endif
-
-return
-end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-subroutine perturbation_eigenvectors(n,vecin,valin,Hin,Vin,eigenvec,deg, &
-       & use_nelson,V_not_deg,use_lishu,first_order,permut,permut_typ,half_only)
-implicit none
-integer                     :: n,i,j,k,l,m,nnn,iloop
-complex(8)                  :: temp1,temp2,temp3
-real(8)                     :: valin(n)
-real(8)                     :: eigenval(n)
-complex(8)                  :: vecin(n,n),vec_back(n,n),perturb(n,n),unitary(n,n)
-complex(8)                  :: Vin(n,n),Hin(n,n)
-complex(8)                  :: eigenvec(n,n),ak
-integer                     :: ordertab(n)
-integer                     :: nstate,n_in
-logical                     :: cancel_second_term,degenerate
-logical                     :: use_permut
-
- !=================================================================!
-    complex(8),optional         :: permut_typ(n,2)
-    logical,optional            :: use_nelson,V_not_deg,deg,use_lishu
-    integer,optional            :: permut(n,2)
-    logical,optional            :: first_order
-    logical,optional            :: half_only
- !=================================================================!
-
-
- !=======================================================================!
- ! Routine donne la correction aux valeurs propres et vecteurs propres   !
- ! vecin : composantes vecteurs propres en ligne                         !
- !=======================================================================!
-
- use_permut=.false.
- if(present(permut))then
-   use_permut=.true.
-   if(maxval(abs(permut))==0) use_permut=.false.
- endif
- if(present(half_only)) then
-  n_in=n/2+1
- else
-  n_in=n
- endif
-
-!---------------------------------------------------!
-call fix_degeneracies(n,valin,ordertab,0.02d0)
-                       degenerate=maxval(ordertab)>1
-if(present(deg))       deg=degenerate
-                       cancel_second_term=.false.
-if(present(V_not_deg)) cancel_second_term=.true.
-
-eigenvec=0.d0;eigenval=0.;perturb=0.
-!---------------------------------------------------!
-
-if(degenerate.and.cancel_second_term) call remove_degeneracies
-
-!---------------------------------------------------!
-if(.not.degenerate.and.present(use_nelson))then
-  call first_order_NELSON
-  return
-endif
-
-if(.not.use_permut)then
- call build_V_matrix_full
-else
- call build_V_matrix_sparse
-endif
-!---------------------------------------------------!
-
-
-!************* FIRST ORDER ************!
-
-do iloop=1,n_in
- if(ordertab(iloop)==1)then
-     call first_order_not_deg
-  elseif(ordertab(iloop)>1)then
-    if(present(use_lishu))then
-     call first_order_LiShu(iloop,iloop+ordertab(iloop)-1)
-    else
-     call first_order_deg(iloop,iloop+ordertab(iloop)-1)
-    endif
- endif
-enddo
-
-if(cancel_second_term) vecin=vec_back
-
- 
-if(degenerate.or.present(first_order)) then
- return
-endif
-
-
-!*********** SECOND ORDER *************!
-if(messages) write(*,*) 'go for second order perturbation theory...'
-do iloop=1,n
- if(ordertab(iloop)==0) stop 'error second order pert. theory'
- if(ordertab(iloop)==1) call second_order_not_deg
-enddo
-!**************************************!
-
-return
-
-contains
-
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-
-  subroutine remove_degeneracies
-   call unitary_matrix(n,perturb,unitary)
-   vec_back=vecin
-   do i=1,n
-    if(ordertab(i)>1)then
-     do j=i,i+ordertab(i)-1
-      vecin(j,:)=MATMUL(unitary,vecin(j,:))
-     enddo
-   endif
-   enddo
-  end subroutine
-
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-
-   subroutine build_V_matrix_sparse
-   implicit none
-   integer :: i,j,k,l
-   complex(8) :: tempv
-    do i=1,n
-     do j=1,n
-       perturb(i,j)=0.d0
-        do k=1,n
-         tempv=Vin(k,k)*vecin(j,k)
-         if(abs(permut(k,1))>0) tempv=tempv+permut_typ(k,1)*vecin(j,abs(permut(k,1)))
-         if(abs(permut(k,2))>0) tempv=tempv+permut_typ(k,2)*vecin(j,abs(permut(k,2)))
-         perturb(i,j)=perturb(i,j)+conjg(vecin(i,k))*tempv   
-       enddo
-     enddo
-    enddo
-   return
-   end subroutine
-
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-
-   subroutine build_V_matrix_full
-   implicit none
-   integer :: i,j
-    do i=1,n
-      do j=1,n
-       perturb(i,j)=SCALPROD(vecin(i,:),MATMUL(Vin,vecin(j,:)))
-      enddo
-    enddo
-   end subroutine
-
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-
- subroutine first_order_LiShu(j1,j2)
- implicit none
- integer    :: j1,j2
- complex(8) :: dtemp,phi1(n,j2-j1+1),phi2(n,n-(j2-j1+1))
- complex(8) :: diag(n-(j2-j1+1),n-(j2-j1+1))
- real(8)     :: norm
- integer    :: i,j,k,r,kk
-
- r=j2-j1+1; k=0; diag=0.d0
- do i=1,n
-  if(i<j1.or.i>j2)then
-   k=k+1
-   norm=valin(j1)-valin(i)
-   if(abs(norm)<1.d-4) then
-     write(*,*) 'error LiShu'
-     norm=1.d-3
-     if(strongstop) stop 'error : strongstop activated therefore stop'
-   endif
-   diag(k,k)=1.d0/norm
-  endif
- enddo
-
-  do i=1,j1-1
-     phi2(:,i)=vecin(i,:)
-  enddo
-
-  if(.not.use_permut)then
-    do i=j1,j2
-       phi1(:,i-j1+1)=vecin(i,:)
-    enddo
-  else
-    do i=j1,j2
-     do k=1,n
-       phi1(k,i-j1+1)=Vin(k,k)*vecin(i,k)
-       if(abs(permut(k,1))>0) &
-           & phi1(k,i-j1+1)=phi1(k,i-j1+1) + vecin(i,abs(permut(k,1)))*permut_typ(k,1)
-       if(abs(permut(k,2))>0) &
-           & phi1(k,i-j1+1)=phi1(k,i-j1+1) + vecin(i,abs(permut(k,2)))*permut_typ(k,2)
-     enddo
-    enddo
-  endif
-
-  do i=j2+1,n
-     phi2(:,i-j2+j1-1)=vecin(i,:)
-  enddo
-
- if(.not.use_permut) then
-     phi1=MATMUL(phi2,MATMUL_x(diag,MATMUL &
-               & (MATMUL(TRANSPOSE(CONJG(phi2)),Vin),phi1),IdL=.true.))
- else
-     phi1=MATMUL(phi2,MATMUL_x(diag, & 
-               & MATMUL(TRANSPOSE(CONJG(phi2)),phi1),IdL=.true.))
- endif
-
- k=0
- do i=j1,j2
-  k=k+1
-  eigenvec(i,:)=phi1(:,k)
- enddo
-
- end subroutine
-
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-
-subroutine first_order_NELSON
-complex(8) :: h(n,n),f(n),d(n,n),v(n)
-complex(8) :: ci,dtemp
-integer    :: i,j,ii,k,jjj
-
- do jjj=1,n
-   f       =  MATMUL(Vin,vecin(jjj,:))
-   dtemp   =  scalprod(vecin(jjj,:),f)
-   f       =  dtemp*vecin(jjj,:)
-   f       =  f - MATMUL(Vin,vecin(jjj,:))
-   f(jjj)  =  0.d0
-   h       =  Hin
-   do i=1,n
-     h(i,i)=h(i,i)-valin(jjj)
-   enddo
-   h(jjj,:)=0.; h(:,jjj)=0.; h(jjj,jjj)=1.d0
-   call invmat(n,h)
-   eigenvec(jjj,:)=MATMUL(h,f)
-   ci=-(scalprod(vecin(jjj,:),eigenvec(jjj,:)))
-   eigenvec(jjj,:)=eigenvec(jjj,:)+ci*vecin(jjj,:)
- enddo
-
-end subroutine
-
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-
-subroutine first_order_not_deg
-   do j=1,n
-    if(j/=iloop)then
-      ak = perturb(j,iloop)/(valin(iloop)-valin(j))
-    else
-      ak = 0.d0  !=1.d0; si pas correction mais vecteur
-    endif
-    if(abs(ak)>1.d-3) eigenvec(iloop,:) = eigenvec(iloop,:) + ak*vecin(j,:)
-  enddo
-end subroutine
-
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-
-subroutine second_order_not_deg
-integer :: nn
-
- do j=1,n
-  ak=0.
-  if(j/=iloop)then
-     do nn=1,n
-      if(nn/=iloop)then
-        if(abs(valin(iloop)-valin(j))<1.d-3.and.strongstop) stop 'error 1 second_order_not_deg'
-        if(abs(valin(iloop)-valin(nn))<1.d-3.and.strongstop) stop 'error 2 second_order_not_deg'
-        ak=ak + perturb(j,nn)*perturb(iloop,nn)/(valin(iloop)-valin(nn))/(valin(iloop)-valin(j))
-        ak=ak - perturb(iloop,iloop)*perturb(j,iloop)/((valin(iloop)-valin(j))**2)
-      endif
-     enddo
-  else
-     do nn=1,n
-      if(nn/=iloop)then
-        if(abs(valin(iloop)-valin(nn))<1.d-3) stop 'error 3 second_order_not_deg'
-        ak = ak - 0.5d0 * (abs(perturb(iloop,nn))**2)  /  ((valin(iloop)-valin(nn))**2)
-      endif
-     enddo
-  endif
-  eigenvec(iloop,:)=eigenvec(iloop,:)+ak*vecin(j,:)
- enddo
-
-end subroutine
-
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-
-subroutine first_order_deg(j1,j2)
-integer    :: jj,j1,j2,ii,j,k,l,m
-integer    :: q,qm,qj,nn,nnp,Beta
-complex(8) :: Cq,norm,normb
-
- do q=j1,j2
-
-        !---------------------------------------!
-   if(.not.cancel_second_term)then
-    do qm=j1,j2
-
-     norm=perturb(q,q)-perturb(qm,qm)
-
-     if(abs(norm)>1.d-3)then
- 
-     if(abs(norm)<1.d-3) then
-       write(*,*) 'trouble, perturbation to hamiltonian has identical diagonal value'
-       write(*,*) 'q,qm : ', q,qm
-       write(*,*) 'Vq,Vqm : ', perturb(q,q),perturb(qm,qm)
-       write(*,*) '=======> perturbation does not break entirely the degenerescence......'
-       if(strongstop) stop
-     endif
-
-     if(qm/=q)then
-     if(abs(norm)>1.d-3)then
-
-     Cq=0.
-     do nnp=1,n
-      normb=valin(q)-valin(nnp)
-      if(abs(normb)>1.d-3)then
-        Cq = Cq + perturb(qm,nnp)*perturb(nnp,q)/normb
-      endif
-     enddo
-
-     eigenvec(q,:) = eigenvec(q,:) + Cq /norm * vecin(qm,:)
-
-     endif
-     endif
-     endif
-    enddo
-  endif
-        !---------------------------------------!
-
-    do nnp=1,n
-     normb=valin(q)-valin(nnp)
-     if(abs(normb)>1.d-3)then
-        eigenvec(q,:) = eigenvec(q,:) + vecin(nnp,:)*perturb(nnp,q)/normb
-     endif
-    enddo
-
-        !---------------------------------------!
-
- enddo
-
-end subroutine
-
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-  !-----------------!
-
-end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-function MATMUL_line(a,b,s2)
-implicit none
-complex(8) :: a(:),b(:,:),MATMUL_line(size(a(:)))
-integer    :: i,j,k,s2,siz
-siz=size(a(:))
-MATMUL_line=0.
- do j=1,siz
-  do k=1,size(b(:,1))
-   MATMUL_line(j)=MATMUL_line(j)+a(k)*b(k,j)
-  enddo
- enddo
-return
-end function
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-function MATMUL_keep_diag_(aa,bb)
-implicit none
-complex(8) :: aa(:,:),bb(:,:),MATMUL_keep_diag_(size(aa(:,1)))
-integer    :: i,j,k,l,siz1,siz2
-siz1=size(aa(:,1))
-siz2=size(bb(1,:))
-do i=1,siz1
- MATMUL_keep_diag_(i)=0.
- do k=1,siz2
-   MATMUL_keep_diag_(i)=MATMUL_keep_diag_(i) + aa(i,k)*bb(k,i) 
- enddo
-enddo
-end function
-
-       !-----------------------------------!
-
-function MATMUL_keep_diag__(aa,bb)
-implicit none
-real(8)    :: aa(:,:),bb(:,:),MATMUL_keep_diag__(size(aa(:,1)))
-integer    :: i,j,k,l,siz1,siz2
-siz1=size(aa(:,1))
-siz2=size(bb(1,:))
-do i=1,siz1
- MATMUL_keep_diag__(i)=0.
- do k=1,siz2
-   MATMUL_keep_diag__(i)=MATMUL_keep_diag__(i) + aa(i,k)*bb(k,i)
- enddo
-enddo
-end function
-
-       !-----------------------------------!
-
-function MATMUL_sum_diag_(aa,bb)
-implicit none
-complex(8) :: aa(:,:),bb(:,:),MATMUL_sum_diag_
-integer    :: i,j,k,l,siz1,siz2
-siz1=size(aa(:,1))
-siz2=size(bb(1,:))
-MATMUL_sum_diag_=0.
-do i=1,siz1
- do k=1,siz2
-   MATMUL_sum_diag_=MATMUL_sum_diag_+aa(i,k)*bb(k,i)
- enddo
-enddo
-end function
-
-       !-----------------------------------!
-
-function MATMUL_sum_diag__(aa,bb)
-implicit none
-real(8)    :: aa(:,:),bb(:,:),MATMUL_sum_diag__
-integer    :: i,j,k,l,siz1,siz2
-siz1=size(aa(:,1))
-siz2=size(bb(1,:))
-MATMUL_sum_diag__=0.
-do i=1,siz1
- do k=1,siz2
-   MATMUL_sum_diag__=MATMUL_sum_diag__ + aa(i,k)*bb(k,i)
- enddo
-enddo
-end function
-
+! 
+! !     Fonction:  Single value decomposition
+! 
+!       SUBROUTINE SVDCMP(A,M,N,MP,NP,W,V)
+!       integer,intent(in)    :: M,N
+!       real(8),intent(inout) :: A(MP,NP),W(NP),V(NP,NP)
+!       real(8)               :: RV1(N)
+!       real(8)               :: S,G,H,F,SCALE,ANORM
+!       INTEGER               :: I,J,L,K
+! 
+!       G=0.0
+!       SCALE=0.0; ANORM=0.0
+! 
+!       DO 25 I=1,N
+!         L=I+1
+!         RV1(I)=SCALE*G
+!         G=0.0
+!         S=0.0
+!         SCALE=0.0
+!         IF (I.LE.M) THEN
+!           DO 11 K=I,M
+!             SCALE=SCALE+ABS(A(K,I))
+! 11        CONTINUE
+!           IF (SCALE.NE.0.0) THEN
+!             DO 12 K=I,M
+!               A(K,I)=A(K,I)/SCALE
+!               S=S+A(K,I)*A(K,I)
+! 12          CONTINUE
+!             F=A(I,I)
+!             G=-SIGN(SQRT(S),F)
+!             H=F*G-S
+!             A(I,I)=F-G
+!             IF (I.NE.N) THEN
+!               DO 15 J=L,N
+!                 S=0.0
+!                 DO 13 K=I,M
+!                   S=S+A(K,I)*A(K,J)
+! 13              CONTINUE
+!                 F=S/H
+!                 DO 14 K=I,M
+!                   A(K,J)=A(K,J)+F*A(K,I)
+! 14              CONTINUE
+! 15            CONTINUE
+!             ENDIF
+!             DO 16 K= I,M
+!               A(K,I)=SCALE*A(K,I)
+! 16          CONTINUE
+!           ENDIF
+!         ENDIF
+!         W(I)=SCALE *G
+!         G=0.0
+!         S=0.0
+!         SCALE=0.0
+! 
+!         IF ((I<=M).AND.(I/=N)) THEN
+!           DO 17 K=L,N
+!             SCALE=SCALE+ABS(A(I,K))
+! 17        CONTINUE
+!           IF (SCALE.NE.0.0) THEN
+!             DO 18 K=L,N
+!               A(I,K)=A(I,K)/SCALE
+!               S=S+A(I,K)*A(I,K)
+! 18          CONTINUE
+!             F=A(I,L)
+!             G=-SIGN(SQRT(S),F)
+!             H=F*G-S
+!             A(I,L)=F-G
+!             DO 19 K=L,N
+!               RV1(K)=A(I,K)/H
+! 19          CONTINUE
+!             IF (I.NE.M) THEN
+!               DO 23 J=L,M
+!                 S=0.0
+!                 DO 21 K=L,N
+!                   S=S+A(J,K)*A(I,K)
+! 21              CONTINUE
+!                 DO 22 K=L,N
+!                   A(J,K)=A(J,K)+S*RV1(K)
+! 22              CONTINUE
+! 23            CONTINUE
+!             ENDIF
+!             DO 24 K=L,N
+!               A(I,K)=SCALE*A(I,K)
+! 24          CONTINUE
+!           ENDIF
+!         ENDIF
+!         ANORM=MAX(ANORM,(ABS(W(I))+ABS(RV1(I))))
+! 25    CONTINUE
+!       DO 32 I=N,1,-1
+!         IF (I<N) THEN
+!           IF (G/=0.0) THEN
+!             DO 26 J=L,N
+!               if(I>M) stop 'error pivot, bad shape 1'
+!               V(J,I)=(A(I,J)/A(I,L))/G
+! 26          CONTINUE
+!             DO 29 J=L,N
+!               S=0.0
+!               DO 27 K=L,N
+!                 if(I>M) stop 'error pivot, bad shape 2'
+!                 S=S+A(I,K)*V(K,J)
+! 27            CONTINUE
+!               DO 28 K=L,N
+!                 V(K,J)=V(K,J)+S*V(K,I)
+! 28            CONTINUE
+! 29          CONTINUE
+!           ENDIF
+!           DO 31 J=L,N
+!             V(I,J)=0.0
+!             V(J,I)=0.0
+! 31        CONTINUE
+!         ENDIF
+!         V(I,I)=1.0
+!         G=RV1(I)
+!         L=I
+! 32    CONTINUE
+!       DO 39 I=N,1,-1
+!         L=I+1
+!         G=W(I)
+!         IF (I.LT.N) THEN
+!           DO 33 J=L,N
+!             A(I,J)=0.0
+! 33        CONTINUE
+!         ENDIF
+!         IF (G.NE.0.0) THEN
+!           G=1.0/G
+!           IF (I/=N) THEN
+!             DO 36 J=L,N
+!               S=0.0
+!               DO 34 K=L,M
+!                 S=S+A(K,I)*A(K,J)
+! 34            CONTINUE
+!               F=(S/A(I,I))*G
+!               DO 35 K=I,M
+!                 A(K,J)=A(K,J)+F*A(K,I)
+! 35            CONTINUE
+! 36          CONTINUE
+!           ENDIF
+!           DO 37 J=I,M
+!             A(J,I)=A(J,I)*G
+! 37        CONTINUE
+!         ELSE
+!           DO 38 J= I,M
+!             A(J,I)=0.0
+! 38        CONTINUE
+!         ENDIF
+!         A(I,I)=A(I,I)+1.0
+! 39    CONTINUE
+!       DO 49 K=N,1,-1
+!         DO 48 ITS=1,30
+!           DO 41 L=K,1,-1
+!             NM=L-1
+!             IF ((ABS(RV1(L))+ANORM).EQ.ANORM)  GO TO 2
+!             IF ((ABS(W(NM))+ANORM).EQ.ANORM)  GO TO 1
+! 41        CONTINUE
+! 1         C=0.0
+!           S=1.0
+!           DO 43 I=L,K
+!             F=S*RV1(I)
+!             IF ((ABS(F)+ANORM).NE.ANORM) THEN
+!               G=W(I)
+!               H=SQRT(F*F+G*G)
+!               W(I)=H
+!               H=1.0/H
+!               C= (G*H)
+!               S=-(F*H)
+!               DO 42 J=1,M
+!                 Y=A(J,NM)
+!                 Z=A(J,I)
+!                 A(J,NM)=(Y*C)+(Z*S)
+!                 A(J,I)=-(Y*S)+(Z*C)
+! 42            CONTINUE
+!             ENDIF
+! 43        CONTINUE
+! 2         Z=W(K)
+!           IF (L.EQ.K) THEN
+!             IF (Z.LT.0.0) THEN
+!               W(K)=-Z
+!               DO 44 J=1,N
+!                 V(J,K)=-V(J,K)
+! 44            CONTINUE
+!             ENDIF
+!             GO TO 3
+!           ENDIF
+!           X=W(L)
+!           NM=K-1
+!           Y=W(NM)
+!           G=RV1(NM)
+!           H=RV1(K)
+!           F=((Y-Z)*(Y+Z)+(G-H)*(G+H))/(2.0*H*Y)
+!           G=SQRT(F*F+1.0)
+!           F=((X-Z)*(X+Z)+H*((Y/(F+SIGN(G,F)))-H))/X
+!           C=1.0
+!           S=1.0
+!           DO 47 J=L,NM
+!             I=J+1
+!             G=RV1(I)
+!             Y=W(I)
+!             H=S*G
+!             G=C*G
+!             Z=SQRT(F*F+H*H)
+!             RV1(J)=Z
+!             C=F/Z
+!             S=H/Z
+!             F= (X*C)+(G*S)
+!             G=-(X*S)+(G*C)
+!             H=Y*S
+!             Y=Y*C
+!             DO 45 NM=1,N
+!               X=V(NM,J)
+!               Z=V(NM,I)
+!               V(NM,J)= (X*C)+(Z*S)
+!               V(NM,I)=-(X*S)+(Z*C)
+! 45          CONTINUE
+!             Z=SQRT(F*F+H*H)
+!             W(J)=Z
+!             IF (Z.NE.0.0) THEN
+!               Z=1.0/Z
+!               C=F*Z
+!               S=H*Z
+!             ENDIF
+!             F= (C*G)+(S*Y)
+!             X=-(S*G)+(C*Y)
+!             DO 46 NM=1,M
+!               Y=A(NM,J)
+!               Z=A(NM,I)
+!               A(NM,J)= (Y*C)+(Z*S)
+!               A(NM,I)=-(Y*S)+(Z*C)
+! 46          CONTINUE
+! 47        CONTINUE
+!           RV1(L)=0.0
+!           RV1(K)=F
+!           W(K)=X
+! 48      CONTINUE
+! 3       CONTINUE
+! 49    CONTINUE
+! 
+!       RETURN
+!       END subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!   !*************************************************!
+!   !*     resolution avec la decomposition en SVD    !
+!   !*************************************************!
+! 
+!       subroutine svbksb(u,w,v,m,n,mp,np,b,x)
+!       implicit REAL(8) (a-h,o-z)
+!       dimension u(mp,np),w(np),v(np,np),b(mp),x(np),tmp(n)
+! 
+!       do 12 j=1,n
+!             s=0.d0
+!             if(w(j).ne.0.d0)then
+!                     do 11 i=1,m
+!                           s=s+u(i,j)*b(i)
+! 11                  continue
+!                     s=s/w(j)
+!             endif
+!             tmp(j)=s
+! 12    continue
+! 
+!       do 14 j=1,n
+!             s=0.d0
+!             do 13 jj=1,n
+!                   s=s+v(j,jj)*tmp(jj)
+! 13          continue
+!             x(j)=s
+! 14    continue
+!       return
+!       end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! subroutine fix_degeneracies(n,val,ordertab,err)
+! implicit none
+! integer :: n,i,j,k,l
+! real(8)  :: err,val(n)
+! integer :: ordertab(n)
+! 
+! !---> ordertab(i)=k : state number i degenerate with the k-1 following state
+! 
+!  ordertab=0; i=0
+! 
+!  do 
+!   i=i+1
+!   if(i>n) exit
+!   ordertab(i)=1
+!   k=1
+!   do j=i+1,n
+!    if(abs(val(j)-val(i))<err)then
+!     k=k+1
+!     ordertab(i)=k
+!    else
+!     exit
+!    endif
+!   enddo
+!   i=i+k-1
+!  enddo
+!  
+!  k=sum(ordertab(1:n))
+!  if(k/=n)then
+!   write(*,*) 'should be ... states : ', n
+!   write(*,*) 'there are ... states : ', k
+!   write(*,*) 'ordertab tab : ', ordertab
+!   write(*,*) 'values    : ', val
+!   stop 'error fix_degeneracies bad check....'
+!  endif
+! 
+! return
+! end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! subroutine perturbation_eigenvectors(n,vecin,valin,Hin,Vin,eigenvec,deg, &
+!        & use_nelson,V_not_deg,use_lishu,first_order,permut,permut_typ,half_only)
+! implicit none
+! integer                     :: n,i,j,k,l,m,nnn,iloop
+! complex(8)                  :: temp1,temp2,temp3
+! real(8)                     :: valin(n)
+! real(8)                     :: eigenval(n)
+! complex(8)                  :: vecin(n,n),vec_back(n,n),perturb(n,n),unitary(n,n)
+! complex(8)                  :: Vin(n,n),Hin(n,n)
+! complex(8)                  :: eigenvec(n,n),ak
+! integer                     :: ordertab(n)
+! integer                     :: nstate,n_in
+! logical                     :: cancel_second_term,degenerate
+! logical                     :: use_permut
+! 
+!  !=================================================================!
+!     complex(8),optional         :: permut_typ(n,2)
+!     logical,optional            :: use_nelson,V_not_deg,deg,use_lishu
+!     integer,optional            :: permut(n,2)
+!     logical,optional            :: first_order
+!     logical,optional            :: half_only
+!  !=================================================================!
+! 
+! 
+!  !=======================================================================!
+!  ! Routine donne la correction aux valeurs propres et vecteurs propres   !
+!  ! vecin : composantes vecteurs propres en ligne                         !
+!  !=======================================================================!
+! 
+!  use_permut=.false.
+!  if(present(permut))then
+!    use_permut=.true.
+!    if(maxval(abs(permut))==0) use_permut=.false.
+!  endif
+!  if(present(half_only)) then
+!   n_in=n/2+1
+!  else
+!   n_in=n
+!  endif
+! 
+! !---------------------------------------------------!
+! call fix_degeneracies(n,valin,ordertab,0.02d0)
+!                        degenerate=maxval(ordertab)>1
+! if(present(deg))       deg=degenerate
+!                        cancel_second_term=.false.
+! if(present(V_not_deg)) cancel_second_term=.true.
+! 
+! eigenvec=0.d0;eigenval=0.;perturb=0.
+! !---------------------------------------------------!
+! 
+! if(degenerate.and.cancel_second_term) call remove_degeneracies
+! 
+! !---------------------------------------------------!
+! if(.not.degenerate.and.present(use_nelson))then
+!   call first_order_NELSON
+!   return
+! endif
+! 
+! if(.not.use_permut)then
+!  call build_V_matrix_full
+! else
+!  call build_V_matrix_sparse
+! endif
+! !---------------------------------------------------!
+! 
+! 
+! !************* FIRST ORDER ************!
+! 
+! do iloop=1,n_in
+!  if(ordertab(iloop)==1)then
+!      call first_order_not_deg
+!   elseif(ordertab(iloop)>1)then
+!     if(present(use_lishu))then
+!      call first_order_LiShu(iloop,iloop+ordertab(iloop)-1)
+!     else
+!      call first_order_deg(iloop,iloop+ordertab(iloop)-1)
+!     endif
+!  endif
+! enddo
+! 
+! if(cancel_second_term) vecin=vec_back
+! 
+!  
+! if(degenerate.or.present(first_order)) then
+!  return
+! endif
+! 
+! 
+! !*********** SECOND ORDER *************!
+! if(messages) write(*,*) 'go for second order perturbation theory...'
+! do iloop=1,n
+!  if(ordertab(iloop)==0) stop 'error second order pert. theory'
+!  if(ordertab(iloop)==1) call second_order_not_deg
+! enddo
+! !**************************************!
+! 
+! return
+! 
+! contains
+! 
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+! 
+!   subroutine remove_degeneracies
+!    call unitary_matrix(n,perturb,unitary)
+!    vec_back=vecin
+!    do i=1,n
+!     if(ordertab(i)>1)then
+!      do j=i,i+ordertab(i)-1
+!       vecin(j,:)=MATMUL(unitary,vecin(j,:))
+!      enddo
+!    endif
+!    enddo
+!   end subroutine
+! 
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+! 
+!    subroutine build_V_matrix_sparse
+!    implicit none
+!    integer :: i,j,k,l
+!    complex(8) :: tempv
+!     do i=1,n
+!      do j=1,n
+!        perturb(i,j)=0.d0
+!         do k=1,n
+!          tempv=Vin(k,k)*vecin(j,k)
+!          if(abs(permut(k,1))>0) tempv=tempv+permut_typ(k,1)*vecin(j,abs(permut(k,1)))
+!          if(abs(permut(k,2))>0) tempv=tempv+permut_typ(k,2)*vecin(j,abs(permut(k,2)))
+!          perturb(i,j)=perturb(i,j)+conjg(vecin(i,k))*tempv   
+!        enddo
+!      enddo
+!     enddo
+!    return
+!    end subroutine
+! 
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+! 
+!    subroutine build_V_matrix_full
+!    implicit none
+!    integer :: i,j
+!     do i=1,n
+!       do j=1,n
+!        perturb(i,j)=SCALPROD(vecin(i,:),MATMUL(Vin,vecin(j,:)))
+!       enddo
+!     enddo
+!    end subroutine
+! 
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+! 
+!  subroutine first_order_LiShu(j1,j2)
+!  implicit none
+!  integer    :: j1,j2
+!  complex(8) :: dtemp,phi1(n,j2-j1+1),phi2(n,n-(j2-j1+1))
+!  complex(8) :: diag(n-(j2-j1+1),n-(j2-j1+1))
+!  real(8)     :: norm
+!  integer    :: i,j,k,r,kk
+! 
+!  r=j2-j1+1; k=0; diag=0.d0
+!  do i=1,n
+!   if(i<j1.or.i>j2)then
+!    k=k+1
+!    norm=valin(j1)-valin(i)
+!    if(abs(norm)<1.d-4) then
+!      write(*,*) 'error LiShu'
+!      norm=1.d-3
+!      if(strongstop) stop 'error : strongstop activated therefore stop'
+!    endif
+!    diag(k,k)=1.d0/norm
+!   endif
+!  enddo
+! 
+!   do i=1,j1-1
+!      phi2(:,i)=vecin(i,:)
+!   enddo
+! 
+!   if(.not.use_permut)then
+!     do i=j1,j2
+!        phi1(:,i-j1+1)=vecin(i,:)
+!     enddo
+!   else
+!     do i=j1,j2
+!      do k=1,n
+!        phi1(k,i-j1+1)=Vin(k,k)*vecin(i,k)
+!        if(abs(permut(k,1))>0) &
+!            & phi1(k,i-j1+1)=phi1(k,i-j1+1) + vecin(i,abs(permut(k,1)))*permut_typ(k,1)
+!        if(abs(permut(k,2))>0) &
+!            & phi1(k,i-j1+1)=phi1(k,i-j1+1) + vecin(i,abs(permut(k,2)))*permut_typ(k,2)
+!      enddo
+!     enddo
+!   endif
+! 
+!   do i=j2+1,n
+!      phi2(:,i-j2+j1-1)=vecin(i,:)
+!   enddo
+! 
+!  if(.not.use_permut) then
+!      phi1=MATMUL(phi2,MATMUL_x(diag,MATMUL &
+!                & (MATMUL(TRANSPOSE(CONJG(phi2)),Vin),phi1),IdL=.true.))
+!  else
+!      phi1=MATMUL(phi2,MATMUL_x(diag, & 
+!                & MATMUL(TRANSPOSE(CONJG(phi2)),phi1),IdL=.true.))
+!  endif
+! 
+!  k=0
+!  do i=j1,j2
+!   k=k+1
+!   eigenvec(i,:)=phi1(:,k)
+!  enddo
+! 
+!  end subroutine
+! 
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+! 
+! subroutine first_order_NELSON
+! complex(8) :: h(n,n),f(n),d(n,n),v(n)
+! complex(8) :: ci,dtemp
+! integer    :: i,j,ii,k,jjj
+! 
+!  do jjj=1,n
+!    f       =  MATMUL(Vin,vecin(jjj,:))
+!    dtemp   =  scalprod(vecin(jjj,:),f)
+!    f       =  dtemp*vecin(jjj,:)
+!    f       =  f - MATMUL(Vin,vecin(jjj,:))
+!    f(jjj)  =  0.d0
+!    h       =  Hin
+!    do i=1,n
+!      h(i,i)=h(i,i)-valin(jjj)
+!    enddo
+!    h(jjj,:)=0.; h(:,jjj)=0.; h(jjj,jjj)=1.d0
+!    call invmat(n,h)
+!    eigenvec(jjj,:)=MATMUL(h,f)
+!    ci=-(scalprod(vecin(jjj,:),eigenvec(jjj,:)))
+!    eigenvec(jjj,:)=eigenvec(jjj,:)+ci*vecin(jjj,:)
+!  enddo
+! 
+! end subroutine
+! 
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+! 
+! subroutine first_order_not_deg
+!    do j=1,n
+!     if(j/=iloop)then
+!       ak = perturb(j,iloop)/(valin(iloop)-valin(j))
+!     else
+!       ak = 0.d0  !=1.d0; si pas correction mais vecteur
+!     endif
+!     if(abs(ak)>1.d-3) eigenvec(iloop,:) = eigenvec(iloop,:) + ak*vecin(j,:)
+!   enddo
+! end subroutine
+! 
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+! 
+! subroutine second_order_not_deg
+! integer :: nn
+! 
+!  do j=1,n
+!   ak=0.
+!   if(j/=iloop)then
+!      do nn=1,n
+!       if(nn/=iloop)then
+!         if(abs(valin(iloop)-valin(j))<1.d-3.and.strongstop) stop 'error 1 second_order_not_deg'
+!         if(abs(valin(iloop)-valin(nn))<1.d-3.and.strongstop) stop 'error 2 second_order_not_deg'
+!         ak=ak + perturb(j,nn)*perturb(iloop,nn)/(valin(iloop)-valin(nn))/(valin(iloop)-valin(j))
+!         ak=ak - perturb(iloop,iloop)*perturb(j,iloop)/((valin(iloop)-valin(j))**2)
+!       endif
+!      enddo
+!   else
+!      do nn=1,n
+!       if(nn/=iloop)then
+!         if(abs(valin(iloop)-valin(nn))<1.d-3) stop 'error 3 second_order_not_deg'
+!         ak = ak - 0.5d0 * (abs(perturb(iloop,nn))**2)  /  ((valin(iloop)-valin(nn))**2)
+!       endif
+!      enddo
+!   endif
+!   eigenvec(iloop,:)=eigenvec(iloop,:)+ak*vecin(j,:)
+!  enddo
+! 
+! end subroutine
+! 
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+! 
+! subroutine first_order_deg(j1,j2)
+! integer    :: jj,j1,j2,ii,j,k,l,m
+! integer    :: q,qm,qj,nn,nnp,Beta
+! complex(8) :: Cq,norm,normb
+! 
+!  do q=j1,j2
+! 
+!         !---------------------------------------!
+!    if(.not.cancel_second_term)then
+!     do qm=j1,j2
+! 
+!      norm=perturb(q,q)-perturb(qm,qm)
+! 
+!      if(abs(norm)>1.d-3)then
+!  
+!      if(abs(norm)<1.d-3) then
+!        write(*,*) 'trouble, perturbation to hamiltonian has identical diagonal value'
+!        write(*,*) 'q,qm : ', q,qm
+!        write(*,*) 'Vq,Vqm : ', perturb(q,q),perturb(qm,qm)
+!        write(*,*) '=======> perturbation does not break entirely the degenerescence......'
+!        if(strongstop) stop
+!      endif
+! 
+!      if(qm/=q)then
+!      if(abs(norm)>1.d-3)then
+! 
+!      Cq=0.
+!      do nnp=1,n
+!       normb=valin(q)-valin(nnp)
+!       if(abs(normb)>1.d-3)then
+!         Cq = Cq + perturb(qm,nnp)*perturb(nnp,q)/normb
+!       endif
+!      enddo
+! 
+!      eigenvec(q,:) = eigenvec(q,:) + Cq /norm * vecin(qm,:)
+! 
+!      endif
+!      endif
+!      endif
+!     enddo
+!   endif
+!         !---------------------------------------!
+! 
+!     do nnp=1,n
+!      normb=valin(q)-valin(nnp)
+!      if(abs(normb)>1.d-3)then
+!         eigenvec(q,:) = eigenvec(q,:) + vecin(nnp,:)*perturb(nnp,q)/normb
+!      endif
+!     enddo
+! 
+!         !---------------------------------------!
+! 
+!  enddo
+! 
+! end subroutine
+! 
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+!   !-----------------!
+! 
+! end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! function MATMUL_line(a,b,s2)
+! implicit none
+! complex(8) :: a(:),b(:,:),MATMUL_line(size(a(:)))
+! integer    :: i,j,k,s2,siz
+! siz=size(a(:))
+! MATMUL_line=0.
+!  do j=1,siz
+!   do k=1,size(b(:,1))
+!    MATMUL_line(j)=MATMUL_line(j)+a(k)*b(k,j)
+!   enddo
+!  enddo
+! return
+! end function
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! function MATMUL_keep_diag_(aa,bb)
+! implicit none
+! complex(8) :: aa(:,:),bb(:,:),MATMUL_keep_diag_(size(aa(:,1)))
+! integer    :: i,j,k,l,siz1,siz2
+! siz1=size(aa(:,1))
+! siz2=size(bb(1,:))
+! do i=1,siz1
+!  MATMUL_keep_diag_(i)=0.
+!  do k=1,siz2
+!    MATMUL_keep_diag_(i)=MATMUL_keep_diag_(i) + aa(i,k)*bb(k,i) 
+!  enddo
+! enddo
+! end function
+! 
+!        !-----------------------------------!
+! 
+! function MATMUL_keep_diag__(aa,bb)
+! implicit none
+! real(8)    :: aa(:,:),bb(:,:),MATMUL_keep_diag__(size(aa(:,1)))
+! integer    :: i,j,k,l,siz1,siz2
+! siz1=size(aa(:,1))
+! siz2=size(bb(1,:))
+! do i=1,siz1
+!  MATMUL_keep_diag__(i)=0.
+!  do k=1,siz2
+!    MATMUL_keep_diag__(i)=MATMUL_keep_diag__(i) + aa(i,k)*bb(k,i)
+!  enddo
+! enddo
+! end function
+! 
+!        !-----------------------------------!
+! 
+! function MATMUL_sum_diag_(aa,bb)
+! implicit none
+! complex(8) :: aa(:,:),bb(:,:),MATMUL_sum_diag_
+! integer    :: i,j,k,l,siz1,siz2
+! siz1=size(aa(:,1))
+! siz2=size(bb(1,:))
+! MATMUL_sum_diag_=0.
+! do i=1,siz1
+!  do k=1,siz2
+!    MATMUL_sum_diag_=MATMUL_sum_diag_+aa(i,k)*bb(k,i)
+!  enddo
+! enddo
+! end function
+! 
+!        !-----------------------------------!
+! 
+! function MATMUL_sum_diag__(aa,bb)
+! implicit none
+! real(8)    :: aa(:,:),bb(:,:),MATMUL_sum_diag__
+! integer    :: i,j,k,l,siz1,siz2
+! siz1=size(aa(:,1))
+! siz2=size(bb(1,:))
+! MATMUL_sum_diag__=0.
+! do i=1,siz1
+!  do k=1,siz2
+!    MATMUL_sum_diag__=MATMUL_sum_diag__ + aa(i,k)*bb(k,i)
+!  enddo
+! enddo
+! end function
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
@@ -4408,315 +4438,315 @@ end function
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-   subroutine inv_mat_small_numb_of_lines(mat,n,nind,ind,vind,test,messages)
-   implicit none
-    integer           :: nind,n,kk,kkk(nind+1),ii,jj
-    complex(8)        :: Diag(n,n),mat(n,n),vind(nind,n)
-    complex(8)        :: small(nind,nind),vectors(nind,nind),smallinv(nind,nind),vn(nind)
-    integer           :: ind(nind),i,j,k,l,m
-    real(8)           :: RWORK(3*nind),dnorm
-    complex(8)        :: WORK(3*nind),W(nind),mattest(n,n),DUMMY(1,1),matinv(n,n)
-    integer(4)        :: INFO
-    logical,optional  :: test,messages
-
-       !matrix : Id + row vind(1,:) + row vind(2,:) + etc...
-
-        !--------------------------------------------------------!
-        small=0.
-        if(present(messages))write(*,*) 'define matrix small'
-        l=0
-        do i=1,n
-         if(askinset(i,ind))then
-          l=l+1
-          k=0
-          do j=1,n
-           if(askinset(j,ind))then
-             k=k+1
-             if(i==j) then 
-              small(l,k)=1.d0+vind(l,j) 
-             else
-              small(l,k)=vind(l,j)
-             endif
-           endif
-          enddo
-         endif
-        enddo 
-
-        if(present(messages))write(*,*) 'call ZGEEV'
-        call ZGEEV('N','V',nind,small,nind,W, DUMMY,1,vectors,nind,WORK,3*nind,RWORK,INFO)
-        if(present(messages))write(*,*) 'done, build large eigenvectors'
-
-        !--------------------------------------------------------!
-        mat=0.;l=0
-        do i=1,n !eigenvectors
-         if(askinset(i,ind))then
-          l=l+1
-          k=0
-          do j=1,n
-           if(askinset(j,ind))then
-            k=k+1
-             mat(j,i)=vectors(k,l)
-           endif
-          enddo
-         else
-          kkk=ind_cycle(i,nind+1,n)
-          do ii=1,nind
-           do jj=1,nind
-            smallinv(ii,jj)=vind(ii,kkk(jj+1))
-           enddo
-           vn(ii)=-vind(ii,kkk(1))
-          enddo
-          call invmat_comp(nind,smallinv)
-          vn=MATMUL(smallinv,vn) 
-          mat(kkk(1),i)=1.d0
-          do ii=1,nind
-           mat(kkk(ii+1),i)=vn(ii) 
-          enddo
-         endif
-        enddo
-        do i=1,n
-         dnorm=sum(abs(mat(:,i))**2)
-         mat(:,i)=mat(:,i)/dnorm
-         if(present(messages)) write(*,*) 'norme vec i :', dnorm
-        enddo
-
-        !--------------------------------------------------------!
-        if(present(test)) then    
-        do i=1,n !eigenvectors
-         do j=1,n
-          dnorm=abs(scalprod(mat(:,i),mat(:,j)))
-          if(dnorm>1.d-4.and.i/=j) then
-            write(*,*) 'non-orthogonal basis : ',i,j,dnorm
-          endif
-         enddo
-        enddo
-        endif
-        !--------------------------------------------------------!
-
-        matinv=mat; call invmat(n,matinv)
-        if(present(messages))write(*,*) 'done, build diagonal matrix'
-        Diag=0.;l=0
-        do i=1,n
-          if(askinset(i,ind))then
-           l=l+1 
-           Diag(i,i)=W(l)
-          else
-           Diag(i,i)=1.d0
-          endif
-        enddo
-
-       if(present(messages))write(*,*) 'done build unitary matrix'
-       if(present(test))then
-         mattest=Id(n)
-         l=0
-         do i=1,n 
-          if(askinset(i,ind))then
-           l=l+1
-           mattest(i,:)=mattest(i,:)+vind(l,:)
-          endif
-         enddo
-         write(*,*) 'test mult line invmat matrix, max DIFF : '
-         write(*,*) maxval(abs(mattest-MATMUL(mat,MATMUL(Diag,matinv))))
-       endif
-
-       if(present(messages))write(*,*) 'build inverse diagonal matrix'
-       do i=1,n
-        Diag(i,i)=1.d0/Diag(i,i)
-       enddo
-       if(present(messages))write(*,*) 'final inverse matrix'
-       mat=MATMUL(mat,MATMUL(Diag,matinv))
-       if(present(messages))write(*,*) 'max DIFF : '
-       if(present(messages))write(*,*) maxval(abs(MATMUL(mattest,mat)-Id(n)))
-       if(present(messages))write(*,*) 'done....'
-
-   return
-   end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-subroutine unitary_matrix(lsize,mat,unitary,vaps)
-implicit none
-integer                   :: lsize,i
-real(8)                   :: RWORK(3*lsize),W(lsize)
-complex(8)                :: WORK(3*lsize)
-complex(8),intent(inout)  :: mat(lsize,lsize)
-complex(8),optional       :: unitary(lsize,lsize)
-complex(8)                :: rrr
-integer(4)                :: INFO
-real(8),optional          :: vaps(lsize)
-
-  if(testing) call check_hermitian('unitary_matrix, mat not hermitian',mat)
-
-  if(present(unitary))then
-    if(lsize/=size(mat(:,1))) stop 'bad shape in unitary_matrix'
-    unitary=mat
-    call ZHEEV('V','U',lsize,unitary,lsize,W,WORK,3*lsize,RWORK,INFO)
-    do i=1,lsize
-     rrr=PHASE(unitary(1,i))
-     unitary(:,i)=unitary(:,i)/rrr
-    enddo
-  else
-    if(lsize/=size(mat(:,1)))stop 'bad shape in unitary_matrix'
-    call ZHEEV('V','U',lsize,mat,lsize,W,WORK,3*lsize,RWORK,INFO)
-    do i=1,lsize
-     rrr=PHASE(mat(1,i))
-     mat(:,i)=mat(:,i)/rrr
-    enddo
-  endif
-
-  if(INFO/=0)then
-    write(*,*) 'BAD unitary_matrix , info = :', INFO
-    write(*,*) 'stop calculations...'
-    stop
-  endif
-
-  if(present(vaps)) vaps=W
-
-end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-subroutine print_eigenvalue__(mat)
-implicit none
-complex(8) :: mat(:,:)
-real(8)    :: vap(size(mat,1))
- call eigenvalue_matrix(size(mat,1),mat,vap)
- write(*,*) 'eigenvalues are : ' 
- write(*,'(1000f10.4)') vap
-end subroutine
-
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-subroutine eigenvalue_matrix__(lsize,mat,vaps)
-implicit none
-integer                   :: lsize,i
-real(8)                   :: RWORK(3*lsize)
-complex(8)                :: WORK(3*lsize)
-complex(8)                :: mat(lsize,lsize),temp(lsize,1),temp2(lsize,1)
-complex(8)                :: rrr
-integer                   :: INFO
-complex(8)                :: vaps(lsize)
-   call ZGEEV('N','N', lsize, mat, lsize, vaps, temp, 1, temp2, 1, WORK, 3*lsize, RWORK, INFO )
-end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-subroutine eigenvalue_matrix_(lsize,mat,vap)
-implicit none
-integer                   :: lsize,i
-real(8)                   :: RWORK(3*lsize)
-complex(8)                :: WORK(3*lsize)
-complex(8)                :: mat(lsize,lsize)
-complex(8)                :: rrr
-integer(4)                :: INFO
-real(8)                   :: vap(lsize),rr
-
-   if(testing) then
-     rr=maxval(abs( mat - transpose(conjg(mat)) ))
-     if(rr>1.d-4) then
-       write(*,*) 'A-A^\dagger : ', rr
-       stop 'error eigenvalue matrix not sym'
-     endif
-   endif
-
-   call ZHEEV('N','U',lsize,mat,lsize,vap,WORK,3*lsize,RWORK,INFO)
-
-   if(INFO/=0)then
-     write(*,*) 'BAD eigenvalue calculation , info = :', INFO
-     write(*,*) 'stop calculations...'
-     stop
-   endif
-
-end subroutine
-
-subroutine eigenvalue_matrixr_(lsize,mat,vap)
-implicit none
-integer                   :: lsize,i
-real(8)                   :: RWORK(3*lsize)
-real(8)                   :: WORK(3*lsize)
-real(8)                   :: mat(lsize,lsize)
-real(8)                   :: rrr
-integer(4)                :: INFO
-real(8)                   :: vap(lsize),rr
-
-   if(testing) then
-     rr=maxval(abs( mat - transpose(mat) ))
-     if(rr>1.d-4) then
-       write(*,*) 'A-A^\T : ', rr
-       stop 'error eigenvalue matrix not sym'
-     endif
-   endif
-
-   call DSYEV('N','U',lsize,mat,lsize,vap,WORK,3*lsize,RWORK,INFO)
-
-   if(INFO/=0)then
-     write(*,*) 'BAD eigenvalue calculation , info = :', INFO
-     write(*,*) 'stop calculations...'
-     stop
-   endif
-
-end subroutine
-
-
-
+! 
+!    subroutine inv_mat_small_numb_of_lines(mat,n,nind,ind,vind,test,messages)
+!    implicit none
+!     integer           :: nind,n,kk,kkk(nind+1),ii,jj
+!     complex(8)        :: Diag(n,n),mat(n,n),vind(nind,n)
+!     complex(8)        :: small(nind,nind),vectors(nind,nind),smallinv(nind,nind),vn(nind)
+!     integer           :: ind(nind),i,j,k,l,m
+!     real(8)           :: RWORK(3*nind),dnorm
+!     complex(8)        :: WORK(3*nind),W(nind),mattest(n,n),DUMMY(1,1),matinv(n,n)
+!     integer(4)        :: INFO
+!     logical,optional  :: test,messages
+! 
+!        !matrix : Id + row vind(1,:) + row vind(2,:) + etc...
+! 
+!         !--------------------------------------------------------!
+!         small=0.
+!         if(present(messages))write(*,*) 'define matrix small'
+!         l=0
+!         do i=1,n
+!          if(askinset(i,ind))then
+!           l=l+1
+!           k=0
+!           do j=1,n
+!            if(askinset(j,ind))then
+!              k=k+1
+!              if(i==j) then 
+!               small(l,k)=1.d0+vind(l,j) 
+!              else
+!               small(l,k)=vind(l,j)
+!              endif
+!            endif
+!           enddo
+!          endif
+!         enddo 
+! 
+!         if(present(messages))write(*,*) 'call ZGEEV'
+!         call ZGEEV('N','V',nind,small,nind,W, DUMMY,1,vectors,nind,WORK,3*nind,RWORK,INFO)
+!         if(present(messages))write(*,*) 'done, build large eigenvectors'
+! 
+!         !--------------------------------------------------------!
+!         mat=0.;l=0
+!         do i=1,n !eigenvectors
+!          if(askinset(i,ind))then
+!           l=l+1
+!           k=0
+!           do j=1,n
+!            if(askinset(j,ind))then
+!             k=k+1
+!              mat(j,i)=vectors(k,l)
+!            endif
+!           enddo
+!          else
+!           kkk=ind_cycle(i,nind+1,n)
+!           do ii=1,nind
+!            do jj=1,nind
+!             smallinv(ii,jj)=vind(ii,kkk(jj+1))
+!            enddo
+!            vn(ii)=-vind(ii,kkk(1))
+!           enddo
+!           call invmat_comp(nind,smallinv)
+!           vn=MATMUL(smallinv,vn) 
+!           mat(kkk(1),i)=1.d0
+!           do ii=1,nind
+!            mat(kkk(ii+1),i)=vn(ii) 
+!           enddo
+!          endif
+!         enddo
+!         do i=1,n
+!          dnorm=sum(abs(mat(:,i))**2)
+!          mat(:,i)=mat(:,i)/dnorm
+!          if(present(messages)) write(*,*) 'norme vec i :', dnorm
+!         enddo
+! 
+!         !--------------------------------------------------------!
+!         if(present(test)) then    
+!         do i=1,n !eigenvectors
+!          do j=1,n
+!           dnorm=abs(scalprod(mat(:,i),mat(:,j)))
+!           if(dnorm>1.d-4.and.i/=j) then
+!             write(*,*) 'non-orthogonal basis : ',i,j,dnorm
+!           endif
+!          enddo
+!         enddo
+!         endif
+!         !--------------------------------------------------------!
+! 
+!         matinv=mat; call invmat(n,matinv)
+!         if(present(messages))write(*,*) 'done, build diagonal matrix'
+!         Diag=0.;l=0
+!         do i=1,n
+!           if(askinset(i,ind))then
+!            l=l+1 
+!            Diag(i,i)=W(l)
+!           else
+!            Diag(i,i)=1.d0
+!           endif
+!         enddo
+! 
+!        if(present(messages))write(*,*) 'done build unitary matrix'
+!        if(present(test))then
+!          mattest=Id(n)
+!          l=0
+!          do i=1,n 
+!           if(askinset(i,ind))then
+!            l=l+1
+!            mattest(i,:)=mattest(i,:)+vind(l,:)
+!           endif
+!          enddo
+!          write(*,*) 'test mult line invmat matrix, max DIFF : '
+!          write(*,*) maxval(abs(mattest-MATMUL(mat,MATMUL(Diag,matinv))))
+!        endif
+! 
+!        if(present(messages))write(*,*) 'build inverse diagonal matrix'
+!        do i=1,n
+!         Diag(i,i)=1.d0/Diag(i,i)
+!        enddo
+!        if(present(messages))write(*,*) 'final inverse matrix'
+!        mat=MATMUL(mat,MATMUL(Diag,matinv))
+!        if(present(messages))write(*,*) 'max DIFF : '
+!        if(present(messages))write(*,*) maxval(abs(MATMUL(mattest,mat)-Id(n)))
+!        if(present(messages))write(*,*) 'done....'
+! 
+!    return
+!    end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! subroutine unitary_matrix(lsize,mat,unitary,vaps)
+! implicit none
+! integer                   :: lsize,i
+! real(8)                   :: RWORK(3*lsize),W(lsize)
+! complex(8)                :: WORK(3*lsize)
+! complex(8),intent(inout)  :: mat(lsize,lsize)
+! complex(8),optional       :: unitary(lsize,lsize)
+! complex(8)                :: rrr
+! integer(4)                :: INFO
+! real(8),optional          :: vaps(lsize)
+! 
+!   if(testing) call check_hermitian('unitary_matrix, mat not hermitian',mat)
+! 
+!   if(present(unitary))then
+!     if(lsize/=size(mat(:,1))) stop 'bad shape in unitary_matrix'
+!     unitary=mat
+!     call ZHEEV('V','U',lsize,unitary,lsize,W,WORK,3*lsize,RWORK,INFO)
+!     do i=1,lsize
+!      rrr=PHASE(unitary(1,i))
+!      unitary(:,i)=unitary(:,i)/rrr
+!     enddo
+!   else
+!     if(lsize/=size(mat(:,1)))stop 'bad shape in unitary_matrix'
+!     call ZHEEV('V','U',lsize,mat,lsize,W,WORK,3*lsize,RWORK,INFO)
+!     do i=1,lsize
+!      rrr=PHASE(mat(1,i))
+!      mat(:,i)=mat(:,i)/rrr
+!     enddo
+!   endif
+! 
+!   if(INFO/=0)then
+!     write(*,*) 'BAD unitary_matrix , info = :', INFO
+!     write(*,*) 'stop calculations...'
+!     stop
+!   endif
+! 
+!   if(present(vaps)) vaps=W
+! 
+! end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! subroutine print_eigenvalue__(mat)
+! implicit none
+! complex(8) :: mat(:,:)
+! real(8)    :: vap(size(mat,1))
+!  call eigenvalue_matrix(size(mat,1),mat,vap)
+!  write(*,*) 'eigenvalues are : ' 
+!  write(*,'(1000f10.4)') vap
+! end subroutine
+! 
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! subroutine eigenvalue_matrix__(lsize,mat,vaps)
+! implicit none
+! integer                   :: lsize,i
+! real(8)                   :: RWORK(3*lsize)
+! complex(8)                :: WORK(3*lsize)
+! complex(8)                :: mat(lsize,lsize),temp(lsize,1),temp2(lsize,1)
+! complex(8)                :: rrr
+! integer                   :: INFO
+! complex(8)                :: vaps(lsize)
+!    call ZGEEV('N','N', lsize, mat, lsize, vaps, temp, 1, temp2, 1, WORK, 3*lsize, RWORK, INFO )
+! end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! subroutine eigenvalue_matrix_(lsize,mat,vap)
+! implicit none
+! integer                   :: lsize,i
+! real(8)                   :: RWORK(3*lsize)
+! complex(8)                :: WORK(3*lsize)
+! complex(8)                :: mat(lsize,lsize)
+! complex(8)                :: rrr
+! integer(4)                :: INFO
+! real(8)                   :: vap(lsize),rr
+! 
+!    if(testing) then
+!      rr=maxval(abs( mat - transpose(conjg(mat)) ))
+!      if(rr>1.d-4) then
+!        write(*,*) 'A-A^\dagger : ', rr
+!        stop 'error eigenvalue matrix not sym'
+!      endif
+!    endif
+! 
+!    call ZHEEV('N','U',lsize,mat,lsize,vap,WORK,3*lsize,RWORK,INFO)
+! 
+!    if(INFO/=0)then
+!      write(*,*) 'BAD eigenvalue calculation , info = :', INFO
+!      write(*,*) 'stop calculations...'
+!      stop
+!    endif
+! 
+! end subroutine
+! 
+! subroutine eigenvalue_matrixr_(lsize,mat,vap)
+! implicit none
+! integer                   :: lsize,i
+! real(8)                   :: RWORK(3*lsize)
+! real(8)                   :: WORK(3*lsize)
+! real(8)                   :: mat(lsize,lsize)
+! real(8)                   :: rrr
+! integer(4)                :: INFO
+! real(8)                   :: vap(lsize),rr
+! 
+!    if(testing) then
+!      rr=maxval(abs( mat - transpose(mat) ))
+!      if(rr>1.d-4) then
+!        write(*,*) 'A-A^\T : ', rr
+!        stop 'error eigenvalue matrix not sym'
+!      endif
+!    endif
+! 
+!    call DSYEV('N','U',lsize,mat,lsize,vap,WORK,3*lsize,RWORK,INFO)
+! 
+!    if(INFO/=0)then
+!      write(*,*) 'BAD eigenvalue calculation , info = :', INFO
+!      write(*,*) 'stop calculations...'
+!      stop
+!    endif
+! 
+! end subroutine
+! 
+! 
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
@@ -4792,50 +4822,50 @@ real(8)     :: vaps(lsize)
  !-----------------------!
 
 end subroutine
-
-  !--------------------------------------------------!
-
-subroutine rearrange_columns_to_identity_c(lsize,mat,diagdens)
-implicit none
-integer                   :: lsize
-complex(8)                :: diagdenstemp(lsize),diagdens(lsize),mat(lsize,lsize),mat_temp(lsize,lsize)
-integer                   :: i
-integer                   :: uu(1),uuu(lsize),uuu_not_placed(lsize),j,k
-real(8)                   :: dist(lsize)
-
- uuu=0
- uuu_not_placed=0
- k=0
-
- do i=1,lsize
-  uu=maxloc(abs(mat(:,i)))  
-  j=uu(1)
-  if(uuu(j)==0)then
-    uuu(j)=i     
-  else
-    k=k+1
-    uuu_not_placed(k)=i
-  endif
- enddo
- 
- k=0
- do i=1,lsize
-  if(uuu(i)==0)then
-    k=k+1
-    uuu(i)=uuu_not_placed(k)
-  endif
- enddo
-
- mat_temp=mat
- diagdenstemp=diagdens
- do i=1,lsize
-   mat(:,i)=mat_temp(:,uuu(i))
-   diagdens(i)=diagdenstemp(uuu(i))
- enddo
-
-return
-end subroutine
-
+! 
+!   !--------------------------------------------------!
+! 
+! subroutine rearrange_columns_to_identity_c(lsize,mat,diagdens)
+! implicit none
+! integer                   :: lsize
+! complex(8)                :: diagdenstemp(lsize),diagdens(lsize),mat(lsize,lsize),mat_temp(lsize,lsize)
+! integer                   :: i
+! integer                   :: uu(1),uuu(lsize),uuu_not_placed(lsize),j,k
+! real(8)                   :: dist(lsize)
+! 
+!  uuu=0
+!  uuu_not_placed=0
+!  k=0
+! 
+!  do i=1,lsize
+!   uu=maxloc(abs(mat(:,i)))  
+!   j=uu(1)
+!   if(uuu(j)==0)then
+!     uuu(j)=i     
+!   else
+!     k=k+1
+!     uuu_not_placed(k)=i
+!   endif
+!  enddo
+!  
+!  k=0
+!  do i=1,lsize
+!   if(uuu(i)==0)then
+!     k=k+1
+!     uuu(i)=uuu_not_placed(k)
+!   endif
+!  enddo
+! 
+!  mat_temp=mat
+!  diagdenstemp=diagdens
+!  do i=1,lsize
+!    mat(:,i)=mat_temp(:,uuu(i))
+!    diagdens(i)=diagdenstemp(uuu(i))
+!  enddo
+! 
+! return
+! end subroutine
+! 
   !--------------------------------------------------!
 
 subroutine rearrange_columns_to_identity_r(lsize,mat,diagdens)
@@ -4879,7 +4909,7 @@ real(8)                   :: dist(lsize)
 return
 end subroutine
 
-  !--------------------------------------------------!
+!--------------------------------------------------!
 
 subroutine eigenvector_matrix_c_(lsize,mat,vaps,eigenvec,symmetric)
 implicit none
@@ -5125,352 +5155,352 @@ end subroutine
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-function expMat(lsize,mat,test)
-implicit none
-integer(4)                :: i,j,k,l,m,lsize
-real(8)                   :: RWORK(3*lsize),W(lsize),ddnorm
-complex(8)                :: WORK(3*lsize),BB(lsize,lsize)
-complex(8),intent(in)     :: mat(:,:)
-complex(8)                :: expMat(lsize,lsize),dnorm
-integer(4)                :: INFO
-logical,optional          :: test
-
-  expMat=mat
-
-  if(size(mat(1,:))/=lsize) stop 'error size matrix expMat'
-
-  call ZHEEV('V','U',lsize,expMat,lsize,W,WORK,3*lsize,RWORK,INFO)
-
-  if(INFO/=0)then
-   write(*,*) 'BAD expMAT , info = :', INFO
-   write(*,*) 'stop calculations...'
-   stop
-  endif   
-
-  if(present(test))then
-   call check_hermitian('expMat error, mat not hermitian',mat)
-   BB=0.d0 
-   do i=1,lsize
-    BB(i,i)=W(i)
-   enddo
-   if(size(mat(:,1))/=size(mat(1,:))) write(*,*) 'mat not square'
-   if(size(mat(:,1))/=lsize) write(*,*) 'wrong size exp mat'
-   ddnorm=maxval(abs(mat-MATMUL(expMat,MATMUL(BB,TRANSPOSE(CONJG(expMat))))))
-   if(ddnorm>1.d-2) then
-    write(*,*) 'max DIFF : '
-    write(*,*) ddnorm
-    write(*,*) 'max value exp mat : ',maxval(abs(expMat))
-    write(*,*) 'max vlaue mat     : ',maxval(abs(mat))
-    write(*,*) 'INFO : ', INFO
-    stop 'error expMat'
-   endif
-  endif
-
-  BB=0.
-  do i=1,lsize
-   BB(i,i)=exp(W(i))
-  enddo
-  expMat=MATMUL(expmat,(MATMUL_x(BB,TRANSPOSE(CONJG(expMat)),IdL=.true.)))
-
-return
-end function
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-subroutine inverse_sym_mat(mat,lsize,test,c)
-implicit none
-integer                   :: i,j,k,l,m,lsize
-real(8)                   :: RWORK(3*lsize),W(lsize),ddnorm
-complex(8)                :: WORK(3*lsize),BB(lsize,lsize)
-complex(8),intent(inout)  :: mat(lsize,lsize)
-complex(8)                :: mat_back(lsize,lsize),dnorm
-integer(4)                :: INFO
-logical,optional          :: test
-integer,optional          :: c
-
- if(present(c))then
-  call randomize_matrix(mat,amp=invmat_error,flag=.true.,kk2=c)
- else
-  call randomize_matrix(mat,amp=invmat_error)
- endif
-
-  mat_back=mat
-  call ZHEEV('V','U',lsize,mat_back,lsize,W,WORK,3*lsize,RWORK,INFO)
-  if(INFO/=0)then
-   write(*,*) 'BAD eigenvect. in inverse_mat_sym , info = :', INFO
-   write(*,*) 'stop calculations...'
-   stop
-  endif
-
-  if(present(test))then
-   write(*,*) 'mat - mat^dagger : ', maxval(abs(mat-conjg(transpose(mat))))
-   write(*,*) 'max el           : ', maxval(abs(mat))
-   BB=0.d0
-   do i=1,lsize
-    BB(i,i)=W(i)
-   enddo
-   if(size(mat(:,1))/=size(mat(1,:))) stop 'inverse_sym_mat : mat not square'
-   ddnorm=maxval(abs(mat-MATMUL(mat_back,MATMUL(BB,TRANSPOSE(CONJG(mat_back))))))
-   if(ddnorm>1.d-2) then
-    write(*,*) 'max DIFF           : ', ddnorm
-    write(*,*) 'max element in mat : ', maxval(abs(mat))
-    stop 'error mat_back: bad decomposition'
-   endif
-  endif
-
-  BB=0.d0
-  do i=1,lsize
-   if(abs(W(i))>1.d-25) then
-    BB(i,i)=1.d0/W(i)
-   else 
-    if(messages3) write(*,*) 'DANGER In inverse_sym_mat, very large inverse element'
-    BB(i,i)=1.d25
-   endif
-  enddo
-
-  mat_back=MATMUL(mat_back,MATMUL(BB,TRANSPOSE(CONJG(mat_back))))
-  
-  if(present(test))then
-    ddnorm=maxval(abs(Id(lsize)-MATMUL(mat,mat_back)))
-     if(ddnorm>1.d-2) then
-        mat=MATMUL(mat,mat_back)
-        write(*,*) 'error,inverse_sym_mat, divergence, here we have (mat*mat^-1)-Id :'
-        write(*,*)  ddnorm
-        write(*,*) 'max element :', maxval(abs(mat)),maxval(abs(mat_back)),maxval(abs(BB))
-        do i=1,min(lsize,3)
-         write(*,*) mat(i,:)
-         write(*,*) 
-        enddo
-        stop 'bad inverse...'
-     endif
-  endif
-
-  mat=mat_back
-
-return
-end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-      subroutine update_inv(n,invmat,v1,v2,imouv,jmouv,flagerror,temdet,temdet2,onlydet,only_i_term)
-      implicit none
-      integer,intent(in)    :: imouv,jmouv,n
-      integer,intent(out)   :: flagerror
-      integer               :: k
-      real(8)               :: error
-      complex(8)            :: invmat(n,n),tem(n,n),mqj(n),v1(n),vect(n)
-      complex(8)            :: v2(n)
-      complex(8)            :: piq(n)
-      real(8)               :: temdet2,rrr
-      complex(8)            :: temdet,garb,garba,garbb,garbf
-      complex(8)            :: tempscal
-      logical,optional      :: onlydet
-      integer,optional      :: only_i_term
-
-      error=1.d-9
-
-      flagerror=0
-      if(n==0) stop '0 dimension in update_inv' 
-      !-------------------------------------!
-
-      if(imouv==0) temdet=sum(invmat(jmouv,:)*v2(:))
-      if(jmouv==0) temdet=sum(invmat(:,imouv)*v1(:))
-
-      if(jmouv>0.and.imouv>0) then
-        do k=1,n
-         piq(k)=sum(v1(:)*invmat(:,k))
-        enddo
-        tempscal = v1(jmouv)
-        garb     = sum(piq(:)*v2(:))
-        garb     = invmat(jmouv,imouv) * (tempscal-garb)
-        garba    = sum( v1(:) * invmat(:,imouv) )
-        garbb    = sum( invmat(jmouv,:) * v2(:) )
-        temdet   = (garb + garba*garbb)
-      endif
-
-      rrr=abs(temdet) 
-      if(rrr>1.d-9) then
-       temdet2=rrr
-       temdet=temdet/rrr
-      else
-       temdet2=rrr
-       temdet=1. 
-      endif
-
-      if(present(onlydet)) return
-
-
-      if(present(only_i_term))then
-      !-------------------------------------!
-      if(imouv==0) then
-        mqj(:)=invmat(:,only_i_term)*v2(only_i_term)
-        if(abs(mqj(jmouv))<error) then
-          if(messages) then
-           write(*,*) 'error in update_inv'
-           write(*,*) 'mqj, jmouv : ', mqj(jmouv),jmouv
-          endif
-         flagerror=1
-         return
-        endif
-        vect(:)=invmat(jmouv,:)/mqj(jmouv)
-        do k=1,n
-         invmat(k,:)=invmat(k,:)-mqj(k)*vect(:)
-        enddo
-        invmat(jmouv,:)=vect(:)
-      endif
-      !-------------------------------------!
-      if(jmouv==0)then
-         mqj(:)=v1(only_i_term)*invmat(only_i_term,:)
-         if(abs(mqj(imouv))<error) then
-          if(messages) then
-           write(*,*) 'error in update_inv'
-           write(*,*) 'mqj, imouv : ', mqj(imouv),imouv
-          endif
-          flagerror=1
-          return
-         endif
-        vect(:)=invmat(:,imouv)/mqj(imouv)
-        do k=1,n
-          invmat(k,:)=invmat(k,:)-vect(k)*mqj(:)
-        enddo
-        invmat(:,imouv)=vect(:)
-       endif
-      !-------------------------------------!
-
-
-      return
-
-      endif
-
-      !-------------------------------------!
-      if(imouv==0) then
-        mqj(:)=0.d0
-        do k=1,n
-         mqj(:)=invmat(:,k)*v2(k)+mqj(:)
-        enddo
-        if(abs(mqj(jmouv))<error) then
-          if(messages) then
-           write(*,*) 'error in update_inv'
-           write(*,*) 'mqj, jmouv : ', mqj(jmouv),jmouv
-          endif
-         flagerror=1
-         return
-        endif
-        vect(:)=invmat(jmouv,:)/mqj(jmouv)
-        do k=1,n
-         invmat(k,:)=invmat(k,:)-mqj(k)*vect(:)
-        enddo
-        invmat(jmouv,:)=vect(:)
-      endif
-      !-------------------------------------!
-      if(jmouv==0)then
-        mqj(:)=0.d0
-        do k=1,n
-         mqj(:)=v1(k)*invmat(k,:)+mqj(:)
-        enddo
-         if(abs(mqj(imouv))<error) then
-          if(messages) then
-           write(*,*) 'error in update_inv'
-           write(*,*) 'mqj, imouv : ', mqj(imouv),imouv
-          endif
-          flagerror=1 
-          return
-         endif
-        vect(:)=invmat(:,imouv)/mqj(imouv)
-        do k=1,n
-          invmat(k,:)=invmat(k,:)-vect(k)*mqj(:)
-        enddo
-        invmat(:,imouv)=vect(:)
-       endif
-      !-------------------------------------!
-       if(imouv>0.and.jmouv>0) then
-         if(abs(piq(imouv))<error)then
-          flagerror=1
-          return
-         endif
-         vect(:)=invmat(:,imouv)/piq(imouv)
-         do k=1,n
-          tem(k,:)=invmat(k,:)-vect(k)* piq(:)
-         enddo
-         tem(:,imouv)=vect(:)
-         mqj(:)=0.d0
-         do k=1,n
-          mqj(:)=tem(:,k)*v2(k)+mqj(:)
-         enddo
-         if(abs(mqj(jmouv))<error) then
-          if(messages) write(*,*) 'error in update_inv'
-          flagerror=1
-          return
-         endif
-         vect(:)=tem(jmouv,:)/mqj(jmouv)
-         do k=1,n
-          invmat(k,:)=tem(k,:)-vect(:)*mqj(k)
-         enddo
-         invmat(jmouv,:)=vect(:)
-       endif
-      !-------------------------------------!
-
-      return
-      end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
- subroutine addId(mat,n)
- implicit none
- integer    :: n
- complex(8) :: mat(n,n)
- integer    :: i
-   do i=1,n
-    mat(i,i)=mat(i,i)+1.
-   enddo
- end subroutine
-
-   !-------!
-
+! 
+! function expMat(lsize,mat,test)
+! implicit none
+! integer(4)                :: i,j,k,l,m,lsize
+! real(8)                   :: RWORK(3*lsize),W(lsize),ddnorm
+! complex(8)                :: WORK(3*lsize),BB(lsize,lsize)
+! complex(8),intent(in)     :: mat(:,:)
+! complex(8)                :: expMat(lsize,lsize),dnorm
+! integer(4)                :: INFO
+! logical,optional          :: test
+! 
+!   expMat=mat
+! 
+!   if(size(mat(1,:))/=lsize) stop 'error size matrix expMat'
+! 
+!   call ZHEEV('V','U',lsize,expMat,lsize,W,WORK,3*lsize,RWORK,INFO)
+! 
+!   if(INFO/=0)then
+!    write(*,*) 'BAD expMAT , info = :', INFO
+!    write(*,*) 'stop calculations...'
+!    stop
+!   endif   
+! 
+!   if(present(test))then
+!    call check_hermitian('expMat error, mat not hermitian',mat)
+!    BB=0.d0 
+!    do i=1,lsize
+!     BB(i,i)=W(i)
+!    enddo
+!    if(size(mat(:,1))/=size(mat(1,:))) write(*,*) 'mat not square'
+!    if(size(mat(:,1))/=lsize) write(*,*) 'wrong size exp mat'
+!    ddnorm=maxval(abs(mat-MATMUL(expMat,MATMUL(BB,TRANSPOSE(CONJG(expMat))))))
+!    if(ddnorm>1.d-2) then
+!     write(*,*) 'max DIFF : '
+!     write(*,*) ddnorm
+!     write(*,*) 'max value exp mat : ',maxval(abs(expMat))
+!     write(*,*) 'max vlaue mat     : ',maxval(abs(mat))
+!     write(*,*) 'INFO : ', INFO
+!     stop 'error expMat'
+!    endif
+!   endif
+! 
+!   BB=0.
+!   do i=1,lsize
+!    BB(i,i)=exp(W(i))
+!   enddo
+!   expMat=MATMUL(expmat,(MATMUL_x(BB,TRANSPOSE(CONJG(expMat)),IdL=.true.)))
+! 
+! return
+! end function
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! subroutine inverse_sym_mat(mat,lsize,test,c)
+! implicit none
+! integer                   :: i,j,k,l,m,lsize
+! real(8)                   :: RWORK(3*lsize),W(lsize),ddnorm
+! complex(8)                :: WORK(3*lsize),BB(lsize,lsize)
+! complex(8),intent(inout)  :: mat(lsize,lsize)
+! complex(8)                :: mat_back(lsize,lsize),dnorm
+! integer(4)                :: INFO
+! logical,optional          :: test
+! integer,optional          :: c
+! 
+!  if(present(c))then
+!   call randomize_matrix(mat,amp=invmat_error,flag=.true.,kk2=c)
+!  else
+!   call randomize_matrix(mat,amp=invmat_error)
+!  endif
+! 
+!   mat_back=mat
+!   call ZHEEV('V','U',lsize,mat_back,lsize,W,WORK,3*lsize,RWORK,INFO)
+!   if(INFO/=0)then
+!    write(*,*) 'BAD eigenvect. in inverse_mat_sym , info = :', INFO
+!    write(*,*) 'stop calculations...'
+!    stop
+!   endif
+! 
+!   if(present(test))then
+!    write(*,*) 'mat - mat^dagger : ', maxval(abs(mat-conjg(transpose(mat))))
+!    write(*,*) 'max el           : ', maxval(abs(mat))
+!    BB=0.d0
+!    do i=1,lsize
+!     BB(i,i)=W(i)
+!    enddo
+!    if(size(mat(:,1))/=size(mat(1,:))) stop 'inverse_sym_mat : mat not square'
+!    ddnorm=maxval(abs(mat-MATMUL(mat_back,MATMUL(BB,TRANSPOSE(CONJG(mat_back))))))
+!    if(ddnorm>1.d-2) then
+!     write(*,*) 'max DIFF           : ', ddnorm
+!     write(*,*) 'max element in mat : ', maxval(abs(mat))
+!     stop 'error mat_back: bad decomposition'
+!    endif
+!   endif
+! 
+!   BB=0.d0
+!   do i=1,lsize
+!    if(abs(W(i))>1.d-25) then
+!     BB(i,i)=1.d0/W(i)
+!    else 
+!     if(messages3) write(*,*) 'DANGER In inverse_sym_mat, very large inverse element'
+!     BB(i,i)=1.d25
+!    endif
+!   enddo
+! 
+!   mat_back=MATMUL(mat_back,MATMUL(BB,TRANSPOSE(CONJG(mat_back))))
+!   
+!   if(present(test))then
+!     ddnorm=maxval(abs(Id(lsize)-MATMUL(mat,mat_back)))
+!      if(ddnorm>1.d-2) then
+!         mat=MATMUL(mat,mat_back)
+!         write(*,*) 'error,inverse_sym_mat, divergence, here we have (mat*mat^-1)-Id :'
+!         write(*,*)  ddnorm
+!         write(*,*) 'max element :', maxval(abs(mat)),maxval(abs(mat_back)),maxval(abs(BB))
+!         do i=1,min(lsize,3)
+!          write(*,*) mat(i,:)
+!          write(*,*) 
+!         enddo
+!         stop 'bad inverse...'
+!      endif
+!   endif
+! 
+!   mat=mat_back
+! 
+! return
+! end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!       subroutine update_inv(n,invmat,v1,v2,imouv,jmouv,flagerror,temdet,temdet2,onlydet,only_i_term)
+!       implicit none
+!       integer,intent(in)    :: imouv,jmouv,n
+!       integer,intent(out)   :: flagerror
+!       integer               :: k
+!       real(8)               :: error
+!       complex(8)            :: invmat(n,n),tem(n,n),mqj(n),v1(n),vect(n)
+!       complex(8)            :: v2(n)
+!       complex(8)            :: piq(n)
+!       real(8)               :: temdet2,rrr
+!       complex(8)            :: temdet,garb,garba,garbb,garbf
+!       complex(8)            :: tempscal
+!       logical,optional      :: onlydet
+!       integer,optional      :: only_i_term
+! 
+!       error=1.d-9
+! 
+!       flagerror=0
+!       if(n==0) stop '0 dimension in update_inv' 
+!       !-------------------------------------!
+! 
+!       if(imouv==0) temdet=sum(invmat(jmouv,:)*v2(:))
+!       if(jmouv==0) temdet=sum(invmat(:,imouv)*v1(:))
+! 
+!       if(jmouv>0.and.imouv>0) then
+!         do k=1,n
+!          piq(k)=sum(v1(:)*invmat(:,k))
+!         enddo
+!         tempscal = v1(jmouv)
+!         garb     = sum(piq(:)*v2(:))
+!         garb     = invmat(jmouv,imouv) * (tempscal-garb)
+!         garba    = sum( v1(:) * invmat(:,imouv) )
+!         garbb    = sum( invmat(jmouv,:) * v2(:) )
+!         temdet   = (garb + garba*garbb)
+!       endif
+! 
+!       rrr=abs(temdet) 
+!       if(rrr>1.d-9) then
+!        temdet2=rrr
+!        temdet=temdet/rrr
+!       else
+!        temdet2=rrr
+!        temdet=1. 
+!       endif
+! 
+!       if(present(onlydet)) return
+! 
+! 
+!       if(present(only_i_term))then
+!       !-------------------------------------!
+!       if(imouv==0) then
+!         mqj(:)=invmat(:,only_i_term)*v2(only_i_term)
+!         if(abs(mqj(jmouv))<error) then
+!           if(messages) then
+!            write(*,*) 'error in update_inv'
+!            write(*,*) 'mqj, jmouv : ', mqj(jmouv),jmouv
+!           endif
+!          flagerror=1
+!          return
+!         endif
+!         vect(:)=invmat(jmouv,:)/mqj(jmouv)
+!         do k=1,n
+!          invmat(k,:)=invmat(k,:)-mqj(k)*vect(:)
+!         enddo
+!         invmat(jmouv,:)=vect(:)
+!       endif
+!       !-------------------------------------!
+!       if(jmouv==0)then
+!          mqj(:)=v1(only_i_term)*invmat(only_i_term,:)
+!          if(abs(mqj(imouv))<error) then
+!           if(messages) then
+!            write(*,*) 'error in update_inv'
+!            write(*,*) 'mqj, imouv : ', mqj(imouv),imouv
+!           endif
+!           flagerror=1
+!           return
+!          endif
+!         vect(:)=invmat(:,imouv)/mqj(imouv)
+!         do k=1,n
+!           invmat(k,:)=invmat(k,:)-vect(k)*mqj(:)
+!         enddo
+!         invmat(:,imouv)=vect(:)
+!        endif
+!       !-------------------------------------!
+! 
+! 
+!       return
+! 
+!       endif
+! 
+!       !-------------------------------------!
+!       if(imouv==0) then
+!         mqj(:)=0.d0
+!         do k=1,n
+!          mqj(:)=invmat(:,k)*v2(k)+mqj(:)
+!         enddo
+!         if(abs(mqj(jmouv))<error) then
+!           if(messages) then
+!            write(*,*) 'error in update_inv'
+!            write(*,*) 'mqj, jmouv : ', mqj(jmouv),jmouv
+!           endif
+!          flagerror=1
+!          return
+!         endif
+!         vect(:)=invmat(jmouv,:)/mqj(jmouv)
+!         do k=1,n
+!          invmat(k,:)=invmat(k,:)-mqj(k)*vect(:)
+!         enddo
+!         invmat(jmouv,:)=vect(:)
+!       endif
+!       !-------------------------------------!
+!       if(jmouv==0)then
+!         mqj(:)=0.d0
+!         do k=1,n
+!          mqj(:)=v1(k)*invmat(k,:)+mqj(:)
+!         enddo
+!          if(abs(mqj(imouv))<error) then
+!           if(messages) then
+!            write(*,*) 'error in update_inv'
+!            write(*,*) 'mqj, imouv : ', mqj(imouv),imouv
+!           endif
+!           flagerror=1 
+!           return
+!          endif
+!         vect(:)=invmat(:,imouv)/mqj(imouv)
+!         do k=1,n
+!           invmat(k,:)=invmat(k,:)-vect(k)*mqj(:)
+!         enddo
+!         invmat(:,imouv)=vect(:)
+!        endif
+!       !-------------------------------------!
+!        if(imouv>0.and.jmouv>0) then
+!          if(abs(piq(imouv))<error)then
+!           flagerror=1
+!           return
+!          endif
+!          vect(:)=invmat(:,imouv)/piq(imouv)
+!          do k=1,n
+!           tem(k,:)=invmat(k,:)-vect(k)* piq(:)
+!          enddo
+!          tem(:,imouv)=vect(:)
+!          mqj(:)=0.d0
+!          do k=1,n
+!           mqj(:)=tem(:,k)*v2(k)+mqj(:)
+!          enddo
+!          if(abs(mqj(jmouv))<error) then
+!           if(messages) write(*,*) 'error in update_inv'
+!           flagerror=1
+!           return
+!          endif
+!          vect(:)=tem(jmouv,:)/mqj(jmouv)
+!          do k=1,n
+!           invmat(k,:)=tem(k,:)-vect(:)*mqj(k)
+!          enddo
+!          invmat(jmouv,:)=vect(:)
+!        endif
+!       !-------------------------------------!
+! 
+!       return
+!       end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!  subroutine addId(mat,n)
+!  implicit none
+!  integer    :: n
+!  complex(8) :: mat(n,n)
+!  integer    :: i
+!    do i=1,n
+!     mat(i,i)=mat(i,i)+1.
+!    enddo
+!  end subroutine
+! 
+!    !-------!
+! 
  function Id(n)
  implicit none
  integer :: n,i
@@ -5480,19 +5510,19 @@ end subroutine
     Id(i,i)=1.
    enddo
  end function
-
-   !-------!
-
- function Idc(n)
- implicit none
- integer    :: n,i
- complex(8) :: Idc(n,n)
-   Idc=0.d0
-   do i=1,n
-    Idc(i,i)=1.
-   enddo
- end function
-
+! 
+!    !-------!
+! 
+!  function Idc(n)
+!  implicit none
+!  integer    :: n,i
+!  complex(8) :: Idc(n,n)
+!    Idc=0.d0
+!    do i=1,n
+!     Idc(i,i)=1.
+!    enddo
+!  end function
+! 
    !-------!
 
  function bande_matr(n,bande)
@@ -5531,64 +5561,64 @@ end subroutine
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-    subroutine decomposemat(matrice,base)
-    implicit none
-    real(8),intent(inout) :: matrice(:,:),base(:,:)
-    integer :: sizemat
-     sizemat=size(matrice(:,1))
-     if(sizemat/=size(matrice(1,:))) &
-         & stop 'error decomposemat : matrice pas carree'
-     matrice=transpose(base)
-     call invmat_real(n=sizemat,mat=matrice)
-    end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-    subroutine symmetrize_mat_r(matrice)
-    implicit none
-    real(8),intent(inout) :: matrice(:,:)
-    integer :: sizemat,i,j
-     sizemat=size(matrice(:,1))
-     if(sizemat/=size(matrice(1,:))) &
-         & stop 'error sym_mat : matrice pas carree'
-     do i=1,sizemat
-      do j=i+1,sizemat
-       matrice(j,i)=matrice(i,j)
-      enddo
-     enddo
-    return
-    end subroutine
-
-      !--------------------------!
-
-    subroutine symmetrize_mat_c(matrice)
-    implicit none
-    complex(8),intent(inout) :: matrice(:,:)
-    integer :: sizemat,i,j
-     sizemat=size(matrice(:,1))
-     if(sizemat/=size(matrice(1,:))) &
-         & stop 'error sym_mat : matrice pas carree'
-     do i=1,sizemat
-      do j=i+1,sizemat
-       matrice(j,i)=conjg(matrice(i,j))
-      enddo
-     enddo
-    return
-    end subroutine
-
-
+! 
+!     subroutine decomposemat(matrice,base)
+!     implicit none
+!     real(8),intent(inout) :: matrice(:,:),base(:,:)
+!     integer :: sizemat
+!      sizemat=size(matrice(:,1))
+!      if(sizemat/=size(matrice(1,:))) &
+!          & stop 'error decomposemat : matrice pas carree'
+!      matrice=transpose(base)
+!      call invmat_real(n=sizemat,mat=matrice)
+!     end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!     subroutine symmetrize_mat_r(matrice)
+!     implicit none
+!     real(8),intent(inout) :: matrice(:,:)
+!     integer :: sizemat,i,j
+!      sizemat=size(matrice(:,1))
+!      if(sizemat/=size(matrice(1,:))) &
+!          & stop 'error sym_mat : matrice pas carree'
+!      do i=1,sizemat
+!       do j=i+1,sizemat
+!        matrice(j,i)=matrice(i,j)
+!       enddo
+!      enddo
+!     return
+!     end subroutine
+! 
+!       !--------------------------!
+! 
+!     subroutine symmetrize_mat_c(matrice)
+!     implicit none
+!     complex(8),intent(inout) :: matrice(:,:)
+!     integer :: sizemat,i,j
+!      sizemat=size(matrice(:,1))
+!      if(sizemat/=size(matrice(1,:))) &
+!          & stop 'error sym_mat : matrice pas carree'
+!      do i=1,sizemat
+!       do j=i+1,sizemat
+!        matrice(j,i)=conjg(matrice(i,j))
+!       enddo
+!      enddo
+!     return
+!     end subroutine
+! 
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
@@ -5807,18 +5837,18 @@ end subroutine
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-       !---------------------!
-
-      function invmat_(n,mat)
-      implicit none
-       complex(8) :: mat(n,n)
-       complex(8) :: invmat_(n,n)
-       integer :: n
-        invmat_=mat
-        call invmat(n,invmat_)
-      end function
-
+! 
+!        !---------------------!
+! 
+!       function invmat_(n,mat)
+!       implicit none
+!        complex(8) :: mat(n,n)
+!        complex(8) :: invmat_(n,n)
+!        integer :: n
+!         invmat_=mat
+!         call invmat(n,invmat_)
+!       end function
+! 
        !---------------------!
 
       subroutine invmat_comp(n,mat,det2b,detb,pdetb,check_nan,c,block_matrix,diagmat)
@@ -7710,244 +7740,244 @@ end subroutine
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-!     Fonction:  Single value decomposition, QUAD precision
-
-      SUBROUTINE Q_SVDCMP(A,M,N,MP,NP,W,V)
-      integer,intent(in)      :: M,N
-      real(16),intent(inout)  :: A(MP,NP),W(NP),V(NP,NP)
-      real(16)                :: RV1(N)
-      real(16)                :: S,G,H,F,SCALE,ANORM
-      INTEGER                 :: I,J,L,K
-
-      G=0.0; SCALE=0.0; ANORM=0.0
-
-      DO 25 I=1,N
-        L=I+1
-        RV1(I)=SCALE*G
-        G=0.0
-        S=0.0
-        SCALE=0.0
-        IF (I.LE.M) THEN
-          DO 11 K=I,M
-            SCALE=SCALE+ABS(A(K,I))
-11        CONTINUE
-          IF (SCALE.NE.0.0) THEN
-            DO 12 K=I,M
-              A(K,I)=A(K,I)/SCALE
-              S=S+A(K,I)*A(K,I)
-12          CONTINUE
-            F=A(I,I)
-            G=-SIGN(SQRT(S),F)
-            H=F*G-S
-            A(I,I)=F-G
-            IF (I.NE.N) THEN
-              DO 15 J=L,N
-                S=0.0
-                DO 13 K=I,M
-                  S=S+A(K,I)*A(K,J)
-13              CONTINUE
-                F=S/H
-                DO 14 K=I,M
-                  A(K,J)=A(K,J)+F*A(K,I)
-14              CONTINUE
-15            CONTINUE
-            ENDIF
-            DO 16 K= I,M
-              A(K,I)=SCALE*A(K,I)
-16          CONTINUE
-          ENDIF
-        ENDIF
-        W(I)=SCALE *G
-        G=0.0
-        S=0.0
-        SCALE=0.0
-
-        IF ((I<=M).AND.(I/=N)) THEN
-          DO 17 K=L,N
-            SCALE=SCALE+ABS(A(I,K))
-17        CONTINUE
-          IF (SCALE.NE.0.0) THEN
-            DO 18 K=L,N
-              A(I,K)=A(I,K)/SCALE
-              S=S+A(I,K)*A(I,K)
-18          CONTINUE
-            F=A(I,L)
-            G=-SIGN(SQRT(S),F)
-            H=F*G-S
-            A(I,L)=F-G
-            DO 19 K=L,N
-              RV1(K)=A(I,K)/H
-19          CONTINUE
-            IF (I.NE.M) THEN
-              DO 23 J=L,M
-                S=0.0
-                DO 21 K=L,N
-                  S=S+A(J,K)*A(I,K)
-21              CONTINUE
-                DO 22 K=L,N
-                  A(J,K)=A(J,K)+S*RV1(K)
-22              CONTINUE
-23            CONTINUE
-            ENDIF
-            DO 24 K=L,N
-              A(I,K)=SCALE*A(I,K)
-24          CONTINUE
-          ENDIF
-        ENDIF
-        ANORM=MAX(ANORM,(ABS(W(I))+ABS(RV1(I))))
-25    CONTINUE
-      DO 32 I=N,1,-1
-        IF (I<N) THEN
-          IF (G/=0.0) THEN
-            DO 26 J=L,N
-              if(I>M) stop 'error pivot, bad shape 1'
-              V(J,I)=(A(I,J)/A(I,L))/G
-26          CONTINUE
-            DO 29 J=L,N
-              S=0.0
-              DO 27 K=L,N
-                if(I>M) stop 'error pivot, bad shape 2'
-                S=S+A(I,K)*V(K,J)
-27            CONTINUE
-              DO 28 K=L,N
-                V(K,J)=V(K,J)+S*V(K,I)
-28            CONTINUE
-29          CONTINUE
-          ENDIF
-          DO 31 J=L,N
-            V(I,J)=0.0
-            V(J,I)=0.0
-31        CONTINUE
-        ENDIF
-        V(I,I)=1.0
-        G=RV1(I)
-        L=I
-32    CONTINUE
-      DO 39 I=N,1,-1
-        L=I+1
-        G=W(I)
-        IF (I.LT.N) THEN
-          DO 33 J=L,N
-            A(I,J)=0.0
-33        CONTINUE
-        ENDIF
-        IF (G.NE.0.0) THEN
-          G=1.0/G
-          IF (I/=N) THEN
-            DO 36 J=L,N
-              S=0.0
-              DO 34 K=L,M
-                S=S+A(K,I)*A(K,J)
-34            CONTINUE
-              F=(S/A(I,I))*G
-              DO 35 K=I,M
-                A(K,J)=A(K,J)+F*A(K,I)
-35            CONTINUE
-36          CONTINUE
-          ENDIF
-          DO 37 J=I,M
-            A(J,I)=A(J,I)*G
-37        CONTINUE
-        ELSE
-          DO 38 J= I,M
-            A(J,I)=0.0
-38        CONTINUE
-        ENDIF
-        A(I,I)=A(I,I)+1.0
-39    CONTINUE
-      DO 49 K=N,1,-1
-        DO 48 ITS=1,30
-          DO 41 L=K,1,-1
-            NM=L-1
-            IF ((ABS(RV1(L))+ANORM).EQ.ANORM)  GO TO 2
-            IF ((ABS(W(NM))+ANORM).EQ.ANORM)  GO TO 1
-41        CONTINUE
-1         C=0.0
-          S=1.0
-          DO 43 I=L,K
-            F=S*RV1(I)
-            IF ((ABS(F)+ANORM).NE.ANORM) THEN
-              G=W(I)
-              H=SQRT(F*F+G*G)
-              W(I)=H
-              H=1.0/H
-              C= (G*H)
-              S=-(F*H)
-              DO 42 J=1,M
-                Y=A(J,NM)
-                Z=A(J,I)
-                A(J,NM)=(Y*C)+(Z*S)
-                A(J,I)=-(Y*S)+(Z*C)
-42            CONTINUE
-            ENDIF
-43        CONTINUE
-2         Z=W(K)
-          IF (L.EQ.K) THEN
-            IF (Z.LT.0.0) THEN
-              W(K)=-Z
-              DO 44 J=1,N
-                V(J,K)=-V(J,K)
-44            CONTINUE
-            ENDIF
-            GO TO 3
-          ENDIF
-          X=W(L)
-          NM=K-1
-          Y=W(NM)
-          G=RV1(NM)
-          H=RV1(K)
-          F=((Y-Z)*(Y+Z)+(G-H)*(G+H))/(2.0*H*Y)
-          G=SQRT(F*F+1.0)
-          F=((X-Z)*(X+Z)+H*((Y/(F+SIGN(G,F)))-H))/X
-          C=1.0
-          S=1.0
-          DO 47 J=L,NM
-            I=J+1
-            G=RV1(I)
-            Y=W(I)
-            H=S*G
-            G=C*G
-            Z=SQRT(F*F+H*H)
-            RV1(J)=Z
-            C=F/Z
-            S=H/Z
-            F= (X*C)+(G*S)
-            G=-(X*S)+(G*C)
-            H=Y*S
-            Y=Y*C
-            DO 45 NM=1,N
-              X=V(NM,J)
-              Z=V(NM,I)
-              V(NM,J)= (X*C)+(Z*S)
-              V(NM,I)=-(X*S)+(Z*C)
-45          CONTINUE
-            Z=SQRT(F*F+H*H)
-            W(J)=Z
-            IF (Z.NE.0.0) THEN
-              Z=1.0/Z
-              C=F*Z
-              S=H*Z
-            ENDIF
-            F= (C*G)+(S*Y)
-            X=-(S*G)+(C*Y)
-            DO 46 NM=1,M
-              Y=A(NM,J)
-              Z=A(NM,I)
-              A(NM,J)= (Y*C)+(Z*S)
-              A(NM,I)=-(Y*S)+(Z*C)
-46          CONTINUE
-47        CONTINUE
-          RV1(L)=0.0
-          RV1(K)=F
-          W(K)=X
-48      CONTINUE
-3       CONTINUE
-49    CONTINUE
-
-      RETURN
-      END subroutine
-
+! 
+! !     Fonction:  Single value decomposition, QUAD precision
+! 
+!       SUBROUTINE Q_SVDCMP(A,M,N,MP,NP,W,V)
+!       integer,intent(in)      :: M,N
+!       real(16),intent(inout)  :: A(MP,NP),W(NP),V(NP,NP)
+!       real(16)                :: RV1(N)
+!       real(16)                :: S,G,H,F,SCALE,ANORM
+!       INTEGER                 :: I,J,L,K
+! 
+!       G=0.0; SCALE=0.0; ANORM=0.0
+! 
+!       DO 25 I=1,N
+!         L=I+1
+!         RV1(I)=SCALE*G
+!         G=0.0
+!         S=0.0
+!         SCALE=0.0
+!         IF (I.LE.M) THEN
+!           DO 11 K=I,M
+!             SCALE=SCALE+ABS(A(K,I))
+! 11        CONTINUE
+!           IF (SCALE.NE.0.0) THEN
+!             DO 12 K=I,M
+!               A(K,I)=A(K,I)/SCALE
+!               S=S+A(K,I)*A(K,I)
+! 12          CONTINUE
+!             F=A(I,I)
+!             G=-SIGN(SQRT(S),F)
+!             H=F*G-S
+!             A(I,I)=F-G
+!             IF (I.NE.N) THEN
+!               DO 15 J=L,N
+!                 S=0.0
+!                 DO 13 K=I,M
+!                   S=S+A(K,I)*A(K,J)
+! 13              CONTINUE
+!                 F=S/H
+!                 DO 14 K=I,M
+!                   A(K,J)=A(K,J)+F*A(K,I)
+! 14              CONTINUE
+! 15            CONTINUE
+!             ENDIF
+!             DO 16 K= I,M
+!               A(K,I)=SCALE*A(K,I)
+! 16          CONTINUE
+!           ENDIF
+!         ENDIF
+!         W(I)=SCALE *G
+!         G=0.0
+!         S=0.0
+!         SCALE=0.0
+! 
+!         IF ((I<=M).AND.(I/=N)) THEN
+!           DO 17 K=L,N
+!             SCALE=SCALE+ABS(A(I,K))
+! 17        CONTINUE
+!           IF (SCALE.NE.0.0) THEN
+!             DO 18 K=L,N
+!               A(I,K)=A(I,K)/SCALE
+!               S=S+A(I,K)*A(I,K)
+! 18          CONTINUE
+!             F=A(I,L)
+!             G=-SIGN(SQRT(S),F)
+!             H=F*G-S
+!             A(I,L)=F-G
+!             DO 19 K=L,N
+!               RV1(K)=A(I,K)/H
+! 19          CONTINUE
+!             IF (I.NE.M) THEN
+!               DO 23 J=L,M
+!                 S=0.0
+!                 DO 21 K=L,N
+!                   S=S+A(J,K)*A(I,K)
+! 21              CONTINUE
+!                 DO 22 K=L,N
+!                   A(J,K)=A(J,K)+S*RV1(K)
+! 22              CONTINUE
+! 23            CONTINUE
+!             ENDIF
+!             DO 24 K=L,N
+!               A(I,K)=SCALE*A(I,K)
+! 24          CONTINUE
+!           ENDIF
+!         ENDIF
+!         ANORM=MAX(ANORM,(ABS(W(I))+ABS(RV1(I))))
+! 25    CONTINUE
+!       DO 32 I=N,1,-1
+!         IF (I<N) THEN
+!           IF (G/=0.0) THEN
+!             DO 26 J=L,N
+!               if(I>M) stop 'error pivot, bad shape 1'
+!               V(J,I)=(A(I,J)/A(I,L))/G
+! 26          CONTINUE
+!             DO 29 J=L,N
+!               S=0.0
+!               DO 27 K=L,N
+!                 if(I>M) stop 'error pivot, bad shape 2'
+!                 S=S+A(I,K)*V(K,J)
+! 27            CONTINUE
+!               DO 28 K=L,N
+!                 V(K,J)=V(K,J)+S*V(K,I)
+! 28            CONTINUE
+! 29          CONTINUE
+!           ENDIF
+!           DO 31 J=L,N
+!             V(I,J)=0.0
+!             V(J,I)=0.0
+! 31        CONTINUE
+!         ENDIF
+!         V(I,I)=1.0
+!         G=RV1(I)
+!         L=I
+! 32    CONTINUE
+!       DO 39 I=N,1,-1
+!         L=I+1
+!         G=W(I)
+!         IF (I.LT.N) THEN
+!           DO 33 J=L,N
+!             A(I,J)=0.0
+! 33        CONTINUE
+!         ENDIF
+!         IF (G.NE.0.0) THEN
+!           G=1.0/G
+!           IF (I/=N) THEN
+!             DO 36 J=L,N
+!               S=0.0
+!               DO 34 K=L,M
+!                 S=S+A(K,I)*A(K,J)
+! 34            CONTINUE
+!               F=(S/A(I,I))*G
+!               DO 35 K=I,M
+!                 A(K,J)=A(K,J)+F*A(K,I)
+! 35            CONTINUE
+! 36          CONTINUE
+!           ENDIF
+!           DO 37 J=I,M
+!             A(J,I)=A(J,I)*G
+! 37        CONTINUE
+!         ELSE
+!           DO 38 J= I,M
+!             A(J,I)=0.0
+! 38        CONTINUE
+!         ENDIF
+!         A(I,I)=A(I,I)+1.0
+! 39    CONTINUE
+!       DO 49 K=N,1,-1
+!         DO 48 ITS=1,30
+!           DO 41 L=K,1,-1
+!             NM=L-1
+!             IF ((ABS(RV1(L))+ANORM).EQ.ANORM)  GO TO 2
+!             IF ((ABS(W(NM))+ANORM).EQ.ANORM)  GO TO 1
+! 41        CONTINUE
+! 1         C=0.0
+!           S=1.0
+!           DO 43 I=L,K
+!             F=S*RV1(I)
+!             IF ((ABS(F)+ANORM).NE.ANORM) THEN
+!               G=W(I)
+!               H=SQRT(F*F+G*G)
+!               W(I)=H
+!               H=1.0/H
+!               C= (G*H)
+!               S=-(F*H)
+!               DO 42 J=1,M
+!                 Y=A(J,NM)
+!                 Z=A(J,I)
+!                 A(J,NM)=(Y*C)+(Z*S)
+!                 A(J,I)=-(Y*S)+(Z*C)
+! 42            CONTINUE
+!             ENDIF
+! 43        CONTINUE
+! 2         Z=W(K)
+!           IF (L.EQ.K) THEN
+!             IF (Z.LT.0.0) THEN
+!               W(K)=-Z
+!               DO 44 J=1,N
+!                 V(J,K)=-V(J,K)
+! 44            CONTINUE
+!             ENDIF
+!             GO TO 3
+!           ENDIF
+!           X=W(L)
+!           NM=K-1
+!           Y=W(NM)
+!           G=RV1(NM)
+!           H=RV1(K)
+!           F=((Y-Z)*(Y+Z)+(G-H)*(G+H))/(2.0*H*Y)
+!           G=SQRT(F*F+1.0)
+!           F=((X-Z)*(X+Z)+H*((Y/(F+SIGN(G,F)))-H))/X
+!           C=1.0
+!           S=1.0
+!           DO 47 J=L,NM
+!             I=J+1
+!             G=RV1(I)
+!             Y=W(I)
+!             H=S*G
+!             G=C*G
+!             Z=SQRT(F*F+H*H)
+!             RV1(J)=Z
+!             C=F/Z
+!             S=H/Z
+!             F= (X*C)+(G*S)
+!             G=-(X*S)+(G*C)
+!             H=Y*S
+!             Y=Y*C
+!             DO 45 NM=1,N
+!               X=V(NM,J)
+!               Z=V(NM,I)
+!               V(NM,J)= (X*C)+(Z*S)
+!               V(NM,I)=-(X*S)+(Z*C)
+! 45          CONTINUE
+!             Z=SQRT(F*F+H*H)
+!             W(J)=Z
+!             IF (Z.NE.0.0) THEN
+!               Z=1.0/Z
+!               C=F*Z
+!               S=H*Z
+!             ENDIF
+!             F= (C*G)+(S*Y)
+!             X=-(S*G)+(C*Y)
+!             DO 46 NM=1,M
+!               Y=A(NM,J)
+!               Z=A(NM,I)
+!               A(NM,J)= (Y*C)+(Z*S)
+!               A(NM,I)=-(Y*S)+(Z*C)
+! 46          CONTINUE
+! 47        CONTINUE
+!           RV1(L)=0.0
+!           RV1(K)=F
+!           W(K)=X
+! 48      CONTINUE
+! 3       CONTINUE
+! 49    CONTINUE
+! 
+!       RETURN
+!       END subroutine
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
@@ -8547,18 +8577,18 @@ END SUBROUTINE
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-  subroutine test_hermicity(Amat)
-  logical    :: not_hermitian
-  COMPLEX(8) :: Amat(:,:)
-     not_hermitian = ANY( abs(Amat-TRANSPOSE(CONJG(Amat)))>1.d-8 )
-     IF(not_hermitian)THEN
-         CALL dump_message(TEXT="ERROR MATRICE ISN T HERMITIC!")
-         CALL write_cplx_array_rank_2(Amat,"Amat = ")
-         STOP 'matrix not hermitian'
-     ENDIF
-  end subroutine
-
+! 
+!   subroutine test_hermicity(Amat)
+!   logical    :: not_hermitian
+!   COMPLEX(8) :: Amat(:,:)
+!      not_hermitian = ANY( abs(Amat-TRANSPOSE(CONJG(Amat)))>1.d-8 )
+!      IF(not_hermitian)THEN
+!          CALL dump_message(TEXT="ERROR MATRICE ISN T HERMITIC!")
+!          CALL write_cplx_array_rank_2(Amat,"Amat = ")
+!          STOP 'matrix not hermitian'
+!      ENDIF
+!   end subroutine
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
@@ -8727,29 +8757,29 @@ END SUBROUTINE
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-  SUBROUTINE invert_lapack_c(A)
-    COMPLEX(8), INTENT(INOUT) :: A(:,:)
-    INTEGER                   :: bIPVT(size(A,1))
-    IF(SIZE(A,1)/=SIZE(A,2)) STOP "ERROR IN invert: SQUARE MATRIX REQUIRED!"
-    CALL GETRF__(A,bIPVT)
-    CALL GETRI__(A,bIPVT)
-  RETURN
-  END SUBROUTINE
-
-
-      !---------------------------------------------------------!
-
-  SUBROUTINE invert_lapack_r(A)
-    REAL(8), INTENT(INOUT)    :: A(:,:)
-    INTEGER                   :: bIPVT(size(A,1))
-    IF(SIZE(A,1)/=SIZE(A,2)) STOP "ERROR IN invert: SQUARE MATRIX REQUIRED!"
-    CALL GETRF__(A,bIPVT)
-    CALL GETRI__(A,bIPVT)
-  RETURN
-  END SUBROUTINE
-
-
+! 
+!   SUBROUTINE invert_lapack_c(A)
+!     COMPLEX(8), INTENT(INOUT) :: A(:,:)
+!     INTEGER                   :: bIPVT(size(A,1))
+!     IF(SIZE(A,1)/=SIZE(A,2)) STOP "ERROR IN invert: SQUARE MATRIX REQUIRED!"
+!     CALL GETRF__(A,bIPVT)
+!     CALL GETRI__(A,bIPVT)
+!   RETURN
+!   END SUBROUTINE
+! 
+! 
+!       !---------------------------------------------------------!
+! 
+!   SUBROUTINE invert_lapack_r(A)
+!     REAL(8), INTENT(INOUT)    :: A(:,:)
+!     INTEGER                   :: bIPVT(size(A,1))
+!     IF(SIZE(A,1)/=SIZE(A,2)) STOP "ERROR IN invert: SQUARE MATRIX REQUIRED!"
+!     CALL GETRF__(A,bIPVT)
+!     CALL GETRI__(A,bIPVT)
+!   RETURN
+!   END SUBROUTINE
+! 
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
@@ -8781,19 +8811,19 @@ END SUBROUTINE
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-  SUBROUTINE new_cId(cId,N) 
-    INTEGER,      INTENT(IN)    :: N
-    COMPLEX(8), INTENT(INOUT)   :: cId(:,:)
-    INTEGER                     :: i
-    cId = zero
-    DO i=1,N
-      cId(i,i) =  one
-    ENDDO
-  END SUBROUTINE 
-
-       !--------------!
-
+! 
+!   SUBROUTINE new_cId(cId,N) 
+!     INTEGER,      INTENT(IN)    :: N
+!     COMPLEX(8), INTENT(INOUT)   :: cId(:,:)
+!     INTEGER                     :: i
+!     cId = zero
+!     DO i=1,N
+!       cId(i,i) =  one
+!     ENDDO
+!   END SUBROUTINE 
+! 
+!        !--------------!
+! 
   SUBROUTINE new_diag(Id,N) 
     LOGICAL, INTENT(INOUT) :: Id(:,:)
     INTEGER, INTENT(IN)    :: N
@@ -8986,6 +9016,7 @@ END SUBROUTINE
 
 
   SUBROUTINE write_cplx_array_rank_2(A,title,UNIT,SHORT,ULTRASHORT)
+    use common_def, only : dump_message
 
     !$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     !$$ WRITE COMPLEX ARRAY A(n1,n2) $$
@@ -9035,6 +9066,7 @@ END SUBROUTINE
 !**************************************************************************
 
   SUBROUTINE write_real_array_rank_2(A,title,UNIT,SHORT,ULTRASHORT)
+    use common_def, only : dump_message
 
     !$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     !$$ WRITE REAL ARRAY A(n1,n2) $$
@@ -9722,1272 +9754,1272 @@ END SUBROUTINE
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-         !------------------------!
-         !------------------------!
-         !------------------------!
-         !------------------------!
-
-      subroutine test_arpack_vector
-      implicit none
-      integer,parameter    :: nnn=150
-      real(8)              :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),vec(nnn),vec2(nnn),v(nnn,nnn)
-      integer              :: i,j,n,jjj,jj,nval,nconv
-
-      A=0.d0
-      do i=1,nnn
-       A(i,i)=drand1()
-       do j=i+1,nnn
-         A(i,j)=drand1()
-         A(j,i)=A(i,j)
-       enddo
-      enddo
-      
-      call reset_timer(jjj)
-      write(*,*) 'start lapack calculations'
-      call eigenvector_matrix(lsize=nnn,mat=A,vaps=vec,eigenvec=B)
-      write(*,*) 'done'
-      call timer_fortran(jjj,'LAPACK TOOK : ', unit_=6)
-
-      if(maxval(abs(A-transpose(A)))>1.d-5) stop 'not symm'
-      call reset_timer(jjj)
-      write(*,*) 'start ARPACK calculations'
-
-      write(*,*) 'please enter nval'
-      read(*,*) nval
-
-      write(*,*) '---------------------------------------'
-      call arpack_eigenvector_sym_matrix(.false.,'BE',1d-8,nnn,.true.,vec2(1:nval),v(1:nnn,1:nval),nval,nconv,mat_)
-      call timer_fortran(jjj,'ARPACK TOOK : ', unit_=6)
-      write(*,*) '---------------------------------------'
-      write(*,*) 'ARPACK EIGEN BE: ', vec2(1:nconv/2)
-      write(*,*) '---------------------------------------'
-      call arpack_eigenvector_sym_matrix(.false.,'SA',1d-8,nnn,.true.,vec2(1:nval),v(1:nnn,1:nval),nval,nconv,mat_)
-      write(*,*) '---------------------------------------'
-      write(*,*) 'ARPACK EIGEN SA: ', vec2(1:nconv)
-      write(*,*) '---------------------------------------'
-      call timer_fortran(jjj,'ARPACK TOOK : ', unit_=6)
-      write(*,*) '---------------------------------------'
-      write(*,*) 'LAPACK EIGEN : ', vec(1:nval)
-      write(*,*) '---------------------------------------'
-      stop 'done'
-
-      contains
-
-       subroutine mat_(n,w,v)
-        integer n
-        Double precision,intent(in)    ::  v(n) 
-        Double precision,intent(inout) ::  w(n)
-         w=MATMUL(A,v)
-       return
-       end subroutine
-
-      end subroutine
-
-         !------------------------!
-         !------------------------!
-         !------------------------!
-         !------------------------!
-
-      subroutine test_arpack_vector_
-      implicit none
-      integer,parameter    :: nnn=150
-      complex(8)           :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),v(nnn,nnn)
-      real(8)              :: vec2(nnn),vec(nnn)
-      integer              :: i,j,n,jjj,jj,nval,nconv
-
-      A=0.d0
-      do i=1,nnn
-       A(i,i)=drand1()
-       do j=i+1,nnn
-         A(i,j)=drand1()+imi*drand1()
-         A(j,i)=conjg(A(i,j))
-       enddo
-      enddo
-
-      call reset_timer(jjj)
-      write(*,*) 'start lapack calculations'
-      call eigenvector_matrix(lsize=nnn,mat=A,vaps=vec,eigenvec=B)
-      write(*,*) 'done'
-      call timer_fortran(jjj,'LAPACK TOOK : ', unit_=6)
-
-      call reset_timer(jjj)
-      write(*,*) 'start ARPACK calculations'
-      write(*,*) 'please enter nval'
-      read(*,*) nval
-
-      write(*,*) '---------------------------------------'
-      call arpack_eigenvector_sym_matrix_(.false.,'SR',1d-8,nnn,.true.,vec2(1:nval),v(1:nnn,1:nval),nval,nconv,mat_)
-      call timer_fortran(jjj,'ARPACK TOOK : ', unit_=6)
-      write(*,*) '---------------------------------------'
-      write(*,*) 'ARPACK EIGEN SR: ', vec2(1:nconv)
-      write(*,*) '---------------------------------------'
-      call arpack_eigenvector_sym_matrix_(.false.,'SM',1d-8,nnn,.true.,vec2(1:nval),v(1:nnn,1:nval),nval,nconv,mat_)
-      write(*,*) '---------------------------------------'
-      write(*,*) 'ARPACK EIGEN SM: ', vec2(1:nconv)
-      write(*,*) '---------------------------------------'
-      call timer_fortran(jjj,'ARPACK TOOK : ', unit_=6)
-      write(*,*) '---------------------------------------'
-      write(*,*) 'LAPACK EIGEN : ', vec(1:nval)
-      write(*,*) '---------------------------------------'
-      stop 'done'
-
-      contains
-
-       subroutine mat_(n,w,v)
-        integer n
-        complex(8),intent(in)   ::  v(n)  
-        complex(8),intent(inout)::  w(n)
-         w=MATMUL(A,v)
-       return
-       end subroutine
-
-      end subroutine
-
-         !------------------------!
-         !------------------------!
-         !------------------------!
-         !------------------------!
- 
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-      subroutine arpack_eigenvector_sym_matrix(verbose,amode,tol,maxn,rvec,values,v,maxncv,nconv_,av,sigma_,mode_)
-      implicit none
-
-      !---------------------------------------------!
-      !     Solve A*x = lambda*x in regular mode    !
-      !---------------------------------------------!
-
-      integer              :: maxn, maxnev, maxncv,nconv_
-      Double precision     :: values(maxncv),v(maxn,maxncv), workl(maxncv*(maxncv+8))
-      Double precision     :: workd(3*maxn), d(maxncv,2), resid(maxn), ax(maxn)
-      logical              :: select(maxncv)
-      integer              :: iparam(11), ipntr(11)
-      character            :: bmat*1, which*2
-      integer              :: ido, n, nev, ncv, lworkl, info, ierr, j, nconv, maxitr, mode, ishfts
-      logical              :: rvec
-      Double precision     :: tol, sigma,dnrm2
-      external             :: dnrm2
-      Double precision     :: zero
-      parameter        (zero = 0.0D+0)
-      character(2)         :: amode
-      logical              :: verbose
-      real(8),optional     :: sigma_
-      integer,optional     :: mode_
-     !----------------------------------!
-     ! amode : SM around 0              !
-     ! amode : BE extremas eigenvalues  !
-     !----------------------------------!
-      interface
-       subroutine av(n,w,v)
-        integer          :: n
-        Double precision,intent(in)    :: v(n)
-        Double precision,intent(inout) :: w(n)
-       end subroutine
-      end interface
-
-#ifdef _ARPACK
-
-      if(present(sigma_))then
-        sigma=sigma_
-      else
-        sigma=0.d0
-      endif
-
-      maxnev=maxncv-1
-      n=maxn
-      nev=maxnev
-      ncv=maxncv
-
-!     %----------------------------------------------------%
-!     | A standard eigenvalue                              |
-!     | problem is solved (BMAT = 'I'). NEV is the number  |
-!     | of eigenvalues to be approximated.  The user can   |
-!     | modify NEV, NCV, WHICH to solve problems of        |
-!     | different sizes, and to get different parts of the |
-!     | spectrum.  However, The following conditions must  |
-!     | be satisfied:                                      |
-!     |                   N <= MAXN,                       | 
-!     |                 NEV <= MAXNEV,                     |
-!     |             NEV + 1 <= NCV <= MAXNCV               | 
-!     %----------------------------------------------------% 
-      if ( n .gt. maxn ) then
-         write(*,*) 'n,maxn : ',n,maxn       
-         print *, ' ERROR with _SDRV1: N is greater than MAXN '
-         stop 'arpack error'
-      else if ( nev .gt. maxnev ) then
-         print *, ' ERROR with _SDRV1: NEV is greater than MAXNEV '
-         stop 'arpack error'
-      else if ( ncv .gt. maxncv ) then
-         print *, ' ERROR with _SDRV1: NCV is greater than MAXNCV '
-         stop 'arpack error'
-      end if
-      bmat = 'I'
-      which = amode
-!     %--------------------------------------------------%
-!     | The work array WORKL is used in DSAUPD as        |
-!     | workspace.  Its dimension LWORKL is set as       |
-!     | illustrated below.  The parameter TOL determines |
-!     | the stopping criterion.  If TOL<=0, machine      |
-!     | precision is used.  The variable IDO is used for |
-!     | reverse communication and is initially set to 0. |
-!     | Setting INFO=0 indicates that a random vector is |
-!     | generated in DSAUPD to start the Arnoldi         |
-!     | iteration.                                       |
-!     %--------------------------------------------------%
-      lworkl = ncv*(ncv+8)
-      info = 0
-      ido = 0
-!     %---------------------------------------------------%
-!     | This program uses exact shifts with respect to    |
-!     | the current Hessenberg matrix (IPARAM(1) = 1).    |
-!     | IPARAM(3) specifies the maximum number of Arnoldi |
-!     | iterations allowed.  Mode 1 of DSAUPD is used     |
-!     | (IPARAM(7) = 1).  All these options may be        |
-!     | changed by the user. For details, see the         |
-!     | documentation in DSAUPD.                          |
-!     %---------------------------------------------------%
-      ishfts = 1
-      maxitr = 300
-      mode   = 1
-
-      if(present(mode_))then
-       mode=mode_
-       if(mode/=1)then
-          write(*,*) 'ARPACK routine needs to be modified for mode/=1';stop
-       endif
-      else
-       mode=1
-      endif
-
-      iparam(1) = ishfts 
-      iparam(3) = maxitr 
-      iparam(7) = mode 
-
- 10   continue
-!        %---------------------------------------------%
-!        | Repeatedly call the routine DSAUPD and take | 
-!        | actions indicated by parameter IDO until    |
-!        | either convergence is indicated or maxitr   |
-!        | has been exceeded.                          |
-!        %---------------------------------------------%
-         call dsaupd ( ido, bmat, n, which, nev, tol, resid, ncv, v, maxn, iparam, ipntr, workd, workl, lworkl, info )
-         if (ido .eq. -1 .or. ido .eq. 1) then
-!           %--------------------------------------%
-!           | Perform matrix vector multiplication |
-!           |              y <--- OP*x             |
-!           %--------------------------------------%
-            call av (n, workd(ipntr(2)), workd(ipntr(1)))
-            go to 10
-         end if 
-      if ( info .lt. 0 ) then
-         print *, ' '
-         print *, ' Error with _saupd, info = ', info
-         print *, ' Check documentation in _saupd '
-         print *, ' '
-      else 
-!        %-------------------------------------------%
-!        | No fatal errors occurred.                 |
-!        | Post-Process using DSEUPD.                |
-!        | Computed eigenvalues may be extracted.    |  
-!        | Eigenvectors may also be computed now if  |
-!        | desired.  (indicated by rvec = .true.)    | 
-!        %-------------------------------------------%
-         call dseupd ( rvec, 'All', select, d, v, maxn, sigma, bmat, n, which, &
-             & nev, tol, resid, ncv, v, maxn, iparam, ipntr, workd, workl, lworkl, ierr )
-!        %----------------------------------------------%
-!        | Eigenvalues are returned in the first column |
-!        | of the two dimensional array D and the       |
-!        | corresponding eigenvectors are returned in   |
-!        | the first NEV columns of the two dimensional |
-!        | array V if requested.  Otherwise, an         |
-!        | orthogonal basis for the invariant subspace  |
-!        | corresponding to the eigenvalues in D is     |
-!        | returned in V.                               |
-!        %----------------------------------------------%
-         if ( ierr .ne. 0) then
-             print *, ' '
-             print *, ' Error with _seupd, info = ', ierr
-             print *, ' Check the documentation of _seupd. '
-             print *, ' '
-         else
-             nconv =  iparam(5)
-             do 20 j=1, nconv
-!               %---------------------------%
-!               | Compute the residual norm |
-!               |   ||  A*x - lambda*x ||   |
-!               | for the NCONV accurately  |
-!               | computed eigenvalues and  |
-!               | eigenvectors.  (iparam(5) |
-!               | indicates how many are    |
-!               | accurate to the requested |
-!               | tolerance)                |
-!               %---------------------------%
-                call av(n, ax, v(1,j))
-                call daxpy(n, -d(j,1), v(1,j), 1, ax, 1)
-                d(j,2) = dnrm2(n, ax, 1)
-                d(j,2) = d(j,2) / abs(d(j,1))
- 20          continue
-            if(verbose)  call dmout(6, nconv, 2, d, maxncv, -6, 'Ritz values and relative residuals')
-         end if
-!        %------------------------------------------%
-!        | Print additional convergence information |
-!        %------------------------------------------%
-         if ( info .eq. 1) then
-           if(verbose)then
-            print *, ' '
-            print *, ' Maximum number of iterations reached.'
-            print *, ' '
-           endif
-         else if ( info .eq. 3) then
-           if(verbose)then
-            print *, ' ' 
-            print *, ' No shifts could be applied during implicit', ' Arnoldi update, try increasing NCV.'
-            print *, ' '
-           endif
-         end if      
-        if(verbose)then
-         print *, ' '
-         print *, ' _SDRV1 '
-         print *, ' ====== '
-         print *, ' '
-         print *, ' Size of the matrix is ', n
-         print *, ' The number of Ritz values requested is ', nev
-         print *, ' The number of Arnoldi vectors generated', ' (NCV) is ', ncv
-         print *, ' What portion of the spectrum: ', which
-         print *, ' The number of converged Ritz values is ',   nconv 
-         print *, ' The number of Implicit Arnoldi update',  ' iterations taken is ', iparam(3)
-         print *, ' The number of OP*x is ', iparam(9)
-         print *, ' The convergence criterion is ', tol
-         print *, ' '
-        endif
-      end if
-      nconv_=nconv
-      values=d(:,1)
-
- 9000 continue
-
-#endif
-
- end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-      subroutine arpack_eigenvector_sym_matrix_(verbose,amode,tol,maxn,rvec,values,v,maxncv,nconv_,av,sigma_,mode_)
-      implicit none
-      !---------------------------------------------!
-      !     Solve A*x = lambda*x in regular mode    !
-      !---------------------------------------------!
-      integer           maxn, maxnev, maxncv, nconv_
-      integer           iparam(11), ipntr(14)
-      logical           select(maxncv)
-      Complex(8)        ax(maxn),d(maxncv),v(maxn,maxncv),workd(3*maxn), workev(3*maxncv), resid(maxn), workl(3*maxncv*maxncv+5*maxncv)
-      Double precision  rwork(maxncv), rd(maxncv,3),values(:)
-      character         bmat*1, which*2
-      integer           ido, n, nev, ncv, lworkl, info, j, ierr, nconv, maxitr, ishfts, mode
-      Complex(8)        sigma
-      Double precision  tol
-      logical           rvec
-      Double precision  dznrm2 , dlapy2 
-      external          dznrm2 , dlapy2  
-      character(2)      amode
-      logical           verbose
-     !----------------------------------!
-     ! amode : SM around 0              !
-     ! amode : BE extremas eigenvalues  !
-     !----------------------------------!
-
-      interface
-       subroutine av(n,w,v)
-        integer                  :: n
-        complex(8),intent(in)    :: v(n)
-        complex(8),intent(inout) :: w(n)
-       end subroutine
-      end interface
-
-      complex(8),optional :: sigma_
-      integer,optional    :: mode_
-
-
-#ifdef _ARPACK
-
-      if(present(sigma_))then
-        sigma=sigma_
-      else
-        sigma=0.d0
-      endif
-
-      maxnev=maxncv-1
-      n=maxn
-      nev=maxnev
-      ncv=maxncv
-
-      if ( n .gt. maxn ) then
-         print *, ' ERROR with _NDRV1: N is greater than MAXN '
-         go to 9000
-      else if ( nev .gt. maxnev ) then
-         print *, ' ERROR with _NDRV1: NEV is greater than MAXNEV '
-         go to 9000
-      else if ( ncv .gt. maxncv ) then
-         print *, ' ERROR with _NDRV1: NCV is greater than MAXNCV '
-         go to 9000
-      end if
-
-      bmat  = 'I'
-      which = amode
-      lworkl  = 3*ncv**2+5*ncv 
-      ido    = 0
-      info   = 0
-      ishfts = 1
-      maxitr = 300
-      mode   = 1
-
-      if(present(mode_))then
-       mode=mode_
-       if(mode/=1)then
-          write(*,*) 'ARPACK routine needs to be modified for mode/=1';stop
-       endif
-      else
-       mode=1
-      endif
-
-      iparam(1) = ishfts
-      iparam(3) = maxitr 
-      iparam(7) = mode 
-
- 10   continue
-
-      call znaupd  ( ido, bmat, n, which, nev, tol, resid, ncv, v, maxn, iparam, ipntr, workd, workl, lworkl, rwork,info )
-      if (ido .eq. -1 .or. ido .eq. 1) then
-         call av (n, workd(ipntr(2)), workd(ipntr(1)))
-         go to 10
-      end if
-      if ( info .lt. 0 ) then
-         print *, ' '
-         print *, ' Error with _naupd, info = ', info
-         print *, ' Check the documentation of _naupd'
-         print *, ' '
-      else 
-         call zneupd  (rvec, 'A', select, d, v, maxn, sigma, workev, bmat, n, which, &
-            & nev, tol, resid, ncv, v, maxn, iparam, ipntr, workd, workl, lworkl, rwork, ierr)
-         if ( ierr .ne. 0) then
-             print *, ' '
-             print *, ' Error with _neupd, info = ', ierr
-             print *, ' Check the documentation of _neupd. '
-             print *, ' '
-         else
-             nconv = iparam(5)
-             do 20 j=1, nconv
-                call av(n, ax,v(1,j))
-                call zaxpy (n, -d(j), v(1,j), 1, ax, 1)
-                rd(j,1) = dble (d(j))
-                rd(j,2) = dimag (d(j))
-                rd(j,3) = dznrm2 (n, ax, 1)
-                rd(j,3) = rd(j,3) / dlapy2 (rd(j,1),rd(j,2))
- 20          continue
-             if(verbose) call dmout (6, nconv, 3, rd, maxncv, -6, 'Ritz values (Real, Imag) and relative residuals')
-          end if
-        if(verbose)then
-         if ( info .eq. 1) then
-             print *, ' '
-             print *, ' Maximum number of iterations reached.'
-             print *, ' '
-         else if ( info .eq. 3) then
-             print *, ' ' 
-             print *, ' No shifts could be applied during implicit', ' Arnoldi update, try increasing NCV.'
-             print *, ' '
-         end if      
-         print *, ' '
-         print *, '_NDRV1'
-         print *, '====== '
-         print *, ' '
-         print *, ' Size of the matrix is ', n
-         print *, ' The number of Ritz values requested is ', nev
-         print *, ' The number of Arnoldi vectors generated', ' (NCV) is ', ncv
-         print *, ' What portion of the spectrum: ', which
-         print *, ' The number of converged Ritz values is ', nconv 
-         print *, ' The number of Implicit Arnoldi update', ' iterations taken is ', iparam(3)
-         print *, ' The number of OP*x is ', iparam(9)
-         print *, ' The convergence criterion is ', tol
-         print *, ' '
-        endif
-      end if
-      nconv_=nconv
-      values=real(d(:))
-
- 9000 continue
-
-#endif
-      end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-      Subroutine GramSchmidt (vect, dimreal, dim, numvects) 
-      IMPLICIT none 
-      INTEGER  :: dim, dimreal, numvects, iii, j 
-      REAL(8)  :: vect (dimreal, * ) 
-      REAL(8)  :: anor, aux (numvects) , temp
-
-      DO iii = 1, numvects 
-       temp = norme(vect (1:dim,iii))
-       if(temp==0.d0)then
-         write(*,*) 'GramSchmidt error, 0 division'
-         write(*,*) 'temp        : ', temp
-         write(*,*) 'dim,dimreal : ', dim,dimreal
-         write(*,*) 'vect        : ', vect(1:dim,iii)
-         stop 'critical'
-       endif
-       anor = 1.d0 / temp
-       vect(1:dim,iii)=vect(1:dim,iii)*anor
-      enddo 
-                                                                        
-      DO iii = 2, numvects 
-       DO j = 1, iii - 1 
-        aux(j) = - DOT_PRODUCT(vect(1:dim,iii),vect(1:dim,j)) 
-       enddo 
-       DO j = 1, iii - 1 
-        vect(1:dim,iii)=vect(1:dim,iii)+aux(j)*vect(1:dim,j)
-       enddo 
-       temp = norme(vect(1:dim,iii))
-       if(temp==0.d0)then
-         write(*,*) 'number of vectors : ', numvects
-         write(*,*) 'GramSchmidt error, 0 division bis'
-         stop 'critical'
-       endif
-       anor = 1.d0 / temp
-       vect(1:dim,iii)=vect(1:dim,iii)*anor
-      enddo 
-
-      RETURN 
-      END subroutine
-
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-                                                                        
-      SUBROUTINE EHOBKS (A, N, M1, M2, Z, IZ) 
-      DIMENSION A ( * ), Z (IZ, * ) 
-      real(8) A, Z, H, S 
-      IF (N.EQ.1) GOTO 30 
-      DO 25 I = 2, N 
-         L = I - 1 
-         IA = (I * L) / 2 
-         H = A (IA + I) 
-         IF (H.EQ.0.D0) GOTO 25 
-!                                  DERIVES EIGENVECTORS M1 TO M2 OF     
-!                                  THE ORIGINAL MATRIX FROM EIGENVECTORS
-!                                  M1 TO M2 OF THE SYMMETRIC            
-!                                  TRIDIAGONAL MATRIX                   
-         DO 20 J = M1, M2 
-            S = 0.0D0 
-            DO 10 K = 1, L 
-               S = S + A (IA + K) * Z (K, J) 
-   10       END DO 
-            S = S / H 
-            DO 15 K = 1, L 
-               Z (K, J) = Z (K, J) - S * A (IA + K) 
-   15       END DO 
-   20    END DO 
-   25 END DO 
-   30 RETURN 
-      END SUBROUTINE
-                                                                      
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-                                                                       
-      SUBROUTINE EHOUSS (A, N, D, E, E2) 
-      DIMENSION A ( * ), D (N), E (N), E2 (N) 
-      real(8) A, D, E, E2, ZERO, H, SCALE, F, G, HH 
-      DATA ZERO / 0.0D0 / 
-!                                  FIRST EXECUTABLE STATEMENT           
-      NP1 = N + 1 
-      NN = (N * NP1) / 2 - 1 
-      NBEG = NN + 1 - N 
-      DO 70 II = 1, N 
-         I = NP1 - II 
-         L = I - 1 
-         H = ZERO 
-         SCALE = ZERO 
-         IF (L.LT.1) GOTO 10 
-!                                  SCALE ROW (ALGOL TOL THEN NOT NEEDED)
-         NK = NN 
-         DO 5 K = 1, L 
-            SCALE = SCALE+DABS (A (NK) ) 
-            NK = NK - 1 
-    5    END DO 
-         IF (SCALE.NE.ZERO) GOTO 15 
-   10    E (I) = ZERO 
-         E2 (I) = ZERO 
-         GOTO 65 
-   15    NK = NN 
-         DO 20 K = 1, L 
-            A (NK) = A (NK) / SCALE 
-            H = H + A (NK) * A (NK) 
-            NK = NK - 1 
-   20    END DO 
-         E2 (I) = SCALE * SCALE * H 
-         F = A (NN) 
-         G = - DSIGN (DSQRT (H), F) 
-         E (I) = SCALE * G 
-         H = H - F * G 
-         A (NN) = F - G 
-         IF (L.EQ.1) GOTO 55 
-         F = ZERO 
-         JK1 = 1 
-         DO 40 J = 1, L 
-            G = ZERO 
-            IK = NBEG + 1 
-            JK = JK1 
-!                                  FORM ELEMENT OF A*U                  
-            DO 25 K = 1, J 
-               G = G + A (JK) * A (IK) 
-               JK = JK + 1 
-               IK = IK + 1 
-   25       END DO 
-            JP1 = J + 1 
-            IF (L.LT.JP1) GOTO 35 
-            JK = JK + J - 1 
-            DO 30 K = JP1, L 
-               G = G + A (JK) * A (IK) 
-               JK = JK + K 
-               IK = IK + 1 
-   30       END DO 
-!                                  FORM ELEMENT OF P                    
-   35       E (J) = G / H 
-            F = F + E (J) * A (NBEG + J) 
-            JK1 = JK1 + J 
-   40    END DO 
-         HH = F / (H + H) 
-!                                  FORM REDUCED A                       
-         JK = 1 
-         DO 50 J = 1, L 
-            F = A (NBEG + J) 
-            G = E (J) - HH * F 
-            E (J) = G 
-            DO 45 K = 1, J 
-               A (JK) = A (JK) - F * E (K) - G * A (NBEG + K) 
-               JK = JK + 1 
-   45       END DO 
-   50    END DO 
-   55    DO 60 K = 1, L 
-            A (NBEG + K) = SCALE * A (NBEG + K) 
-   60    END DO 
-   65    D (I) = A (NBEG + I) 
-         A (NBEG + I) = H * SCALE * SCALE 
-         NBEG = NBEG - I + 1 
-         NN = NN - I 
-   70 END DO 
-      RETURN 
-      END SUBROUTINE
-     
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-                                                                  
-      SUBROUTINE EIGRS (A, N, JOBN, D, Z, IZ, WK, IER) 
-      IMPLICIT none 
-      INTEGER N, JOBN, IZ, IER 
-      real(8) A ( * ), D ( * ), WK ( * ), Z (IZ, * ) 
-      INTEGER IJOB, IR, JR, IJ, JI, NP1 
-      INTEGER JER, NA, ND, IIZ, IBEG, IL, KK, LK, I, J, K, L 
-      real(8) ANORM, ASUM, PI, SUMZ, SUMR, AN, S, TEN, RDELP,   &
-      ZERO, ONE, THOUS                                                  
-      DATA RDELP / 0.222045D-15 / 
-      DATA ZERO, ONE / 0.0D0, 1.0D0 /, TEN / 10.0D0 /, THOUS / 1000.0D0 &
-      /                                                                 
-!                                  INITIALIZE ERROR PARAMETERS          
-!                                  FIRST EXECUTABLE STATEMENT           
-      IER = 0 
-      JER = 0 
-      IF (JOBN.LT.10) GOTO 15 
-!                                  CONVERT TO SYMMETRIC STORAGE MODE    
-      K = 1 
-      JI = N - 1 
-      IJ = 1 
-      DO 10 J = 1, N 
-         DO 5 I = 1, J 
-            A (K) = A (IJ) 
-            IJ = IJ + 1 
-            K = K + 1 
-    5    END DO 
-         IJ = IJ + JI 
-         JI = JI - 1 
-   10 END DO 
-   15 IJOB = MOD (JOBN, 10) 
-      IF (IJOB.GE.0.AND.IJOB.LE.3) GOTO 20 
-!                                  WARNING ERROR - IJOB IS NOT IN THE   
-!                                    RANGE                              
-      IER = 66 
-      IJOB = 1 
-      GOTO 25 
-   20 IF (IJOB.EQ.0) GOTO 35 
-   25 IF (IZ.GE.N) GOTO 30 
-!                                  WARNING ERROR - IZ IS LESS THAN N    
-!                                    EIGENVECTORS CAN NOT BE COMPUTED,  
-!                                    IJOB SET TO ZERO                   
-      IER = 67 
-      IJOB = 0 
-   30 IF (IJOB.EQ.3) GOTO 75 
-   35 NA = (N * (N + 1) ) / 2 
-      IF (IJOB.NE.2) GOTO 45 
-      DO 40 I = 1, NA 
-         WK (I) = A (I) 
-   40 END DO 
-!                                  SAVE INPUT A IF IJOB = 2             
-   45 ND = 1 
-      IF (IJOB.EQ.2) ND = NA + 1 
-!                                  REDUCE A TO SYMMETRIC TRIDIAGONAL    
-!                                    FORM                               
-      CALL EHOUSS (A, N, D, WK (ND), WK (ND) ) 
-      IIZ = 1 
-      IF (IJOB.EQ.0) GOTO 60 
-      IIZ = IZ 
-!                                  SET Z TO THE IDENTITY MATRIX         
-      DO 55 I = 1, N 
-         DO 50 J = 1, N 
-            Z (I, J) = ZERO 
-   50    END DO 
-         Z (I, I) = ONE 
-   55 END DO 
-!                                  COMPUTE EIGENVALUES AND EIGENVECTORS 
-   60 CALL EQRT2S (D, WK (ND), N, Z, IIZ, JER) 
-      IF (IJOB.EQ.0) GOTO 9000 
-      IF (JER.GT.128) GOTO 65 
-!                                  BACK TRANSFORM EIGENVECTORS          
-      CALL EHOBKS (A, N, 1, N, Z, IZ) 
-   65 IF (IJOB.LE.1) GOTO 9000 
-!                                  MOVE INPUT MATRIX BACK TO A          
-      DO 70 I = 1, NA 
-         A (I) = WK (I) 
-   70 END DO 
-      WK (1) = THOUS 
-      IF (JER.NE.0) GOTO 9000 
-!                                  COMPUTE 1 - NORM OF A                
-   75 ANORM = ZERO 
-      IBEG = 1 
-      DO 85 I = 1, N 
-         ASUM = ZERO 
-         IL = IBEG 
-         KK = 1 
-         DO 80 L = 1, N 
-            ASUM = ASUM + DABS (A (IL) ) 
-            IF (L.GE.I) KK = L 
-            IL = IL + KK 
-   80    END DO 
-         ANORM = DMAX1 (ANORM, ASUM) 
-         IBEG = IBEG + I 
-   85 END DO 
-      IF (ANORM.EQ.ZERO) ANORM = ONE 
-!                                  COMPUTE PERFORMANCE INDEX            
-      PI = ZERO 
-      DO 100 I = 1, N 
-         IBEG = 1 
-         S = ZERO 
-         SUMZ = ZERO 
-         DO 95 L = 1, N 
-            LK = IBEG 
-            KK = 1 
-            SUMZ = SUMZ + DABS (Z (L, I) ) 
-            SUMR = - D (I) * Z (L, I) 
-            DO 90 K = 1, N 
-               SUMR = SUMR + A (LK) * Z (K, I) 
-               IF (K.GE.L) KK = K 
-               LK = LK + KK 
-   90       END DO 
-            S = S + DABS (SUMR) 
-            IBEG = IBEG + L 
-   95    END DO 
-         IF (SUMZ.EQ.ZERO) GOTO 100 
-         PI = DMAX1 (PI, S / SUMZ) 
-  100 END DO 
-      AN = N 
-      PI = PI / (ANORM * TEN * AN * RDELP) 
-      WK (1) = PI 
-      IF (JOBN.LT.10) GOTO 9000 
-!                                  CONVERT BACK TO FULL STORAGE MODE    
-      NP1 = N + 1 
-      IJ = (N - 1) * NP1 + 2 
-      K = (N * (NP1) ) / 2 
-      DO 110 JR = 1, N 
-         J = NP1 - JR 
-         DO 105 IR = 1, J 
-            IJ = IJ - 1 
-            A (IJ) = A (K) 
-            K = K - 1 
-  105    END DO 
-         IJ = IJ - JR 
-  110 END DO 
-      JI = 0 
-      K = N - 1 
-      DO 120 I = 1, N 
-         IJ = I - N 
-         DO 115 J = 1, I 
-            IJ = IJ + N 
-            JI = JI + 1 
-            A (IJ) = A (JI) 
-  115    END DO 
-         JI = JI + K 
-         K = K - 1 
-  120 END DO 
- 9000 CONTINUE 
-      IF (IER.NE.0) CALL UERTST (IER, 'EIGRS ') 
-      IF (JER.EQ.0) GOTO 9005 
-      IER = JER 
-      CALL UERTST (IER, 'EIGRS ') 
- 9005 RETURN 
-      END SUBROUTINE
-     
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-                                                                  
-      SUBROUTINE EQRT2S (D, E, N, Z, IZ, IER) 
-      DIMENSION D ( * ), E ( * ), Z (IZ, * ) 
-      real(8) D, E, Z, B, C, F, G, H, P, R, S, RDELP, ONE, ZERO 
-      DATA RDELP / 0.222045D-15 / 
-      DATA ZERO, ONE / 0.0D0, 1.0D0 / 
-!                                  MOVE THE LAST N-1 ELEMENTS           
-!                                  OF E INTO THE FIRST N-1 LOCATIONS    
-!                                  FIRST EXECUTABLE STATEMENT           
-      IER = 0 
-      K = 0 
-      IF (N.EQ.1) GOTO 9005 
-      DO 5 I = 2, N 
-         E (I - 1) = E (I) 
-    5 END DO 
-      E (N) = ZERO 
-      B = ZERO 
-      F = ZERO 
-      DO 60 L = 1, N 
-         J = 0 
-         H = RDELP * (DABS (D (L) ) + DABS (E (L) ) ) 
-         IF (B.LT.H) B = H 
-!                                  LOOK FOR SMALL SUB-DIAGONAL ELEMENT  
-         DO 10 M = L, N 
-            K = M 
-            IF (DABS (E (K) ) .LE.B) GOTO 15 
-   10    END DO 
-   15    M = K 
-         IF (M.EQ.L) GOTO 55 
-   20    IF (J.EQ.30) GOTO 85 
-         J = J + 1 
-         L1 = L + 1 
-         G = D (L) 
-         P = (D (L1) - G) / (E (L) + E (L) ) 
-         R = DABS (P) 
-         IF (RDELP * DABS (P) .LT.1.0D0) R = DSQRT (P * P + ONE) 
-         D (L) = E (L) / (P + DSIGN (R, P) ) 
-         H = G - D (L) 
-         DO 25 I = L1, N 
-            D (I) = D (I) - H 
-   25    END DO 
-         F = F + H 
-!                                  QL TRANSFORMATION                    
-         P = D (M) 
-         C = ONE 
-         S = ZERO 
-         MM1 = M - 1 
-         MM1PL = MM1 + L 
-         IF (L.GT.MM1) GOTO 50 
-         DO 45 II = L, MM1 
-            I = MM1PL - II 
-            G = C * E (I) 
-            H = C * P 
-            IF (DABS (P) .LT.DABS (E (I) ) ) GOTO 30 
-            C = E (I) / P 
-            R = DSQRT (C * C + ONE) 
-            E (I + 1) = S * P * R 
-            S = C / R 
-            C = ONE / R 
-            GOTO 35 
-   30       C = P / E (I) 
-            R = DSQRT (C * C + ONE) 
-            E (I + 1) = S * E (I) * R 
-            S = ONE / R 
-            C = C * S 
-   35       P = C * D (I) - S * G 
-            D (I + 1) = H + S * (C * G + S * D (I) ) 
-            IF (IZ.LT.N) GOTO 45 
-!                                  FORM VECTOR                          
-            DO 40 K = 1, N 
-               H = Z (K, I + 1) 
-               Z (K, I + 1) = S * Z (K, I) + C * H 
-               Z (K, I) = C * Z (K, I) - S * H 
-   40       END DO 
-   45    END DO 
-   50    E (L) = S * P 
-         D (L) = C * P 
-         IF (DABS (E (L) ) .GT.B) GOTO 20 
-   55    D (L) = D (L) + F 
-   60 END DO 
-!                                  ORDER EIGENVALUES AND EIGENVECTORS   
-      DO 80 I = 1, N 
-         K = I 
-         P = D (I) 
-         IP1 = I + 1 
-         IF (IP1.GT.N) GOTO 70 
-         DO 65 J = IP1, N 
-            IF (D (J) .GE.P) GOTO 65 
-            K = J 
-            P = D (J) 
-   65    END DO 
-   70    IF (K.EQ.I) GOTO 80 
-         D (K) = D (I) 
-         D (I) = P 
-         IF (IZ.LT.N) GOTO 80 
-         DO 75 J = 1, N 
-            P = Z (J, I) 
-            Z (J, I) = Z (J, K) 
-            Z (J, K) = P 
-   75    END DO 
-   80 END DO 
-      GOTO 9005 
-   85 IER = 128 + L 
- 9000 CONTINUE 
-      CALL UERTST (IER, 'EQRT2S') 
- 9005 RETURN 
-      END SUBROUTINE
-
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
- 
-      SUBROUTINE UERTST (IER, NAME) 
-      INTEGER IER 
-      CHARACTER NAME * ( * ) 
-      INTEGER I, IEQDF, IOUNIT, LEVEL, LEVOLD, NIN, NMTB 
-      CHARACTER IEQ, NAMEQ (6), NAMSET (6), NAMUPK (6) 
-      DATA NAMSET / 'U', 'E', 'R', 'S', 'E', 'T' / 
-      DATA NAMEQ / 6 * ' ' / 
-      DATA LEVEL / 4 / , IEQDF / 0 / , IEQ / '=' / 
-!                                  UNPACK NAME INTO NAMUPK              
-!                                  FIRST EXECUTABLE STATEMENT           
-      CALL USPKD (NAME, 6, NAMUPK, NMTB) 
-!                                  GET OUTPUT UNIT NUMBER               
-      CALL UGETIO (1, NIN, IOUNIT) 
-!                                  CHECK IER                            
-      IF (IER.GT.999) GOTO 25 
-      IF (IER.LT. - 32) GOTO 55 
-      IF (IER.LE.128) GOTO 5 
-      IF (LEVEL.LT.1) GOTO 30 
-!                                  PRINT TERMINAL MESSAGE               
-      IF (IEQDF.EQ.1) WRITE (IOUNIT, 35) IER, NAMEQ, IEQ, NAMUPK 
-      IF (IEQDF.EQ.0) WRITE (IOUNIT, 35) IER, NAMUPK 
-      GOTO 30 
-    5 IF (IER.LE.64) GOTO 10 
-      IF (LEVEL.LT.2) GOTO 30 
-!                                  PRINT WARNING WITH FIX MESSAGE       
-      IF (IEQDF.EQ.1) WRITE (IOUNIT, 40) IER, NAMEQ, IEQ, NAMUPK 
-      IF (IEQDF.EQ.0) WRITE (IOUNIT, 40) IER, NAMUPK 
-      GOTO 30 
-   10 IF (IER.LE.32) GOTO 15 
-!                                  PRINT WARNING MESSAGE                
-      IF (LEVEL.LT.3) GOTO 30 
-      IF (IEQDF.EQ.1) WRITE (IOUNIT, 45) IER, NAMEQ, IEQ, NAMUPK 
-      IF (IEQDF.EQ.0) WRITE (IOUNIT, 45) IER, NAMUPK 
-      GOTO 30 
-   15 CONTINUE 
-!                                  CHECK FOR UERSET CALL                
-      DO 20 I = 1, 6 
-         IF (NAMUPK (I) .NE.NAMSET (I) ) GOTO 25 
-   20 END DO 
-      LEVOLD = LEVEL 
-      LEVEL = IER 
-      IER = LEVOLD 
-      IF (LEVEL.LT.0) LEVEL = 4 
-      IF (LEVEL.GT.4) LEVEL = 4 
-      GOTO 30 
-   25 CONTINUE 
-      IF (LEVEL.LT.4) GOTO 30 
-!                                  PRINT NON-DEFINED MESSAGE            
-      IF (IEQDF.EQ.1) WRITE (IOUNIT, 50) IER, NAMEQ, IEQ, NAMUPK 
-      IF (IEQDF.EQ.0) WRITE (IOUNIT, 50) IER, NAMUPK 
-   30 IEQDF = 0 
-      RETURN 
-   35 FORMAT(19H *** TERMINAL ERROR,10X,7H(IER = ,I3,                   &
-     &       20H) FROM IMSL ROUTINE ,6A1,A1,6A1)                        
-   40 FORMAT(27H *** WARNING WITH FIX ERROR,2X,7H(IER = ,I3,            &
-     &       20H) FROM IMSL ROUTINE ,6A1,A1,6A1)                        
-   45 FORMAT(18H *** WARNING ERROR,11X,7H(IER = ,I3,                    &
-     &       20H) FROM IMSL ROUTINE ,6A1,A1,6A1)                        
-   50 FORMAT(20H *** UNDEFINED ERROR,9X,7H(IER = ,I5,                   &
-     &       20H) FROM IMSL ROUTINE ,6A1,A1,6A1)                        
+! 
+!          !------------------------!
+!          !------------------------!
+!          !------------------------!
+!          !------------------------!
+! 
+!       subroutine test_arpack_vector
+!       implicit none
+!       integer,parameter    :: nnn=150
+!       real(8)              :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),vec(nnn),vec2(nnn),v(nnn,nnn)
+!       integer              :: i,j,n,jjj,jj,nval,nconv
+! 
+!       A=0.d0
+!       do i=1,nnn
+!        A(i,i)=drand1()
+!        do j=i+1,nnn
+!          A(i,j)=drand1()
+!          A(j,i)=A(i,j)
+!        enddo
+!       enddo
+!       
+!       call reset_timer(jjj)
+!       write(*,*) 'start lapack calculations'
+!       call eigenvector_matrix(lsize=nnn,mat=A,vaps=vec,eigenvec=B)
+!       write(*,*) 'done'
+!       call timer_fortran(jjj,'LAPACK TOOK : ', unit_=6)
+! 
+!       if(maxval(abs(A-transpose(A)))>1.d-5) stop 'not symm'
+!       call reset_timer(jjj)
+!       write(*,*) 'start ARPACK calculations'
+! 
+!       write(*,*) 'please enter nval'
+!       read(*,*) nval
+! 
+!       write(*,*) '---------------------------------------'
+!       call arpack_eigenvector_sym_matrix(.false.,'BE',1d-8,nnn,.true.,vec2(1:nval),v(1:nnn,1:nval),nval,nconv,mat_)
+!       call timer_fortran(jjj,'ARPACK TOOK : ', unit_=6)
+!       write(*,*) '---------------------------------------'
+!       write(*,*) 'ARPACK EIGEN BE: ', vec2(1:nconv/2)
+!       write(*,*) '---------------------------------------'
+!       call arpack_eigenvector_sym_matrix(.false.,'SA',1d-8,nnn,.true.,vec2(1:nval),v(1:nnn,1:nval),nval,nconv,mat_)
+!       write(*,*) '---------------------------------------'
+!       write(*,*) 'ARPACK EIGEN SA: ', vec2(1:nconv)
+!       write(*,*) '---------------------------------------'
+!       call timer_fortran(jjj,'ARPACK TOOK : ', unit_=6)
+!       write(*,*) '---------------------------------------'
+!       write(*,*) 'LAPACK EIGEN : ', vec(1:nval)
+!       write(*,*) '---------------------------------------'
+!       stop 'done'
+! 
+!       contains
+! 
+!        subroutine mat_(n,w,v)
+!         integer n
+!         Double precision,intent(in)    ::  v(n) 
+!         Double precision,intent(inout) ::  w(n)
+!          w=MATMUL(A,v)
+!        return
+!        end subroutine
+! 
+!       end subroutine
+! 
+!          !------------------------!
+!          !------------------------!
+!          !------------------------!
+!          !------------------------!
+! 
+!       subroutine test_arpack_vector_
+!       implicit none
+!       integer,parameter    :: nnn=150
+!       complex(8)           :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),v(nnn,nnn)
+!       real(8)              :: vec2(nnn),vec(nnn)
+!       integer              :: i,j,n,jjj,jj,nval,nconv
+! 
+!       A=0.d0
+!       do i=1,nnn
+!        A(i,i)=drand1()
+!        do j=i+1,nnn
+!          A(i,j)=drand1()+imi*drand1()
+!          A(j,i)=conjg(A(i,j))
+!        enddo
+!       enddo
+! 
+!       call reset_timer(jjj)
+!       write(*,*) 'start lapack calculations'
+!       call eigenvector_matrix(lsize=nnn,mat=A,vaps=vec,eigenvec=B)
+!       write(*,*) 'done'
+!       call timer_fortran(jjj,'LAPACK TOOK : ', unit_=6)
+! 
+!       call reset_timer(jjj)
+!       write(*,*) 'start ARPACK calculations'
+!       write(*,*) 'please enter nval'
+!       read(*,*) nval
+! 
+!       write(*,*) '---------------------------------------'
+!       call arpack_eigenvector_sym_matrix_(.false.,'SR',1d-8,nnn,.true.,vec2(1:nval),v(1:nnn,1:nval),nval,nconv,mat_)
+!       call timer_fortran(jjj,'ARPACK TOOK : ', unit_=6)
+!       write(*,*) '---------------------------------------'
+!       write(*,*) 'ARPACK EIGEN SR: ', vec2(1:nconv)
+!       write(*,*) '---------------------------------------'
+!       call arpack_eigenvector_sym_matrix_(.false.,'SM',1d-8,nnn,.true.,vec2(1:nval),v(1:nnn,1:nval),nval,nconv,mat_)
+!       write(*,*) '---------------------------------------'
+!       write(*,*) 'ARPACK EIGEN SM: ', vec2(1:nconv)
+!       write(*,*) '---------------------------------------'
+!       call timer_fortran(jjj,'ARPACK TOOK : ', unit_=6)
+!       write(*,*) '---------------------------------------'
+!       write(*,*) 'LAPACK EIGEN : ', vec(1:nval)
+!       write(*,*) '---------------------------------------'
+!       stop 'done'
+! 
+!       contains
+! 
+!        subroutine mat_(n,w,v)
+!         integer n
+!         complex(8),intent(in)   ::  v(n)  
+!         complex(8),intent(inout)::  w(n)
+!          w=MATMUL(A,v)
+!        return
+!        end subroutine
+! 
+!       end subroutine
+! 
+!          !------------------------!
+!          !------------------------!
+!          !------------------------!
+!          !------------------------!
+!  
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!       subroutine arpack_eigenvector_sym_matrix(verbose,amode,tol,maxn,rvec,values,v,maxncv,nconv_,av,sigma_,mode_)
+!       implicit none
+! 
+!       !---------------------------------------------!
+!       !     Solve A*x = lambda*x in regular mode    !
+!       !---------------------------------------------!
+! 
+!       integer              :: maxn, maxnev, maxncv,nconv_
+!       Double precision     :: values(maxncv),v(maxn,maxncv), workl(maxncv*(maxncv+8))
+!       Double precision     :: workd(3*maxn), d(maxncv,2), resid(maxn), ax(maxn)
+!       logical              :: select(maxncv)
+!       integer              :: iparam(11), ipntr(11)
+!       character            :: bmat*1, which*2
+!       integer              :: ido, n, nev, ncv, lworkl, info, ierr, j, nconv, maxitr, mode, ishfts
+!       logical              :: rvec
+!       Double precision     :: tol, sigma,dnrm2
+!       external             :: dnrm2
+!       Double precision     :: zero
+!       parameter        (zero = 0.0D+0)
+!       character(2)         :: amode
+!       logical              :: verbose
+!       real(8),optional     :: sigma_
+!       integer,optional     :: mode_
+!      !----------------------------------!
+!      ! amode : SM around 0              !
+!      ! amode : BE extremas eigenvalues  !
+!      !----------------------------------!
+!       interface
+!        subroutine av(n,w,v)
+!         integer          :: n
+!         Double precision,intent(in)    :: v(n)
+!         Double precision,intent(inout) :: w(n)
+!        end subroutine
+!       end interface
+! 
+! #ifdef _ARPACK
+! 
+!       if(present(sigma_))then
+!         sigma=sigma_
+!       else
+!         sigma=0.d0
+!       endif
+! 
+!       maxnev=maxncv-1
+!       n=maxn
+!       nev=maxnev
+!       ncv=maxncv
+! 
+! !     %----------------------------------------------------%
+! !     | A standard eigenvalue                              |
+! !     | problem is solved (BMAT = 'I'). NEV is the number  |
+! !     | of eigenvalues to be approximated.  The user can   |
+! !     | modify NEV, NCV, WHICH to solve problems of        |
+! !     | different sizes, and to get different parts of the |
+! !     | spectrum.  However, The following conditions must  |
+! !     | be satisfied:                                      |
+! !     |                   N <= MAXN,                       | 
+! !     |                 NEV <= MAXNEV,                     |
+! !     |             NEV + 1 <= NCV <= MAXNCV               | 
+! !     %----------------------------------------------------% 
+!       if ( n .gt. maxn ) then
+!          write(*,*) 'n,maxn : ',n,maxn       
+!          print *, ' ERROR with _SDRV1: N is greater than MAXN '
+!          stop 'arpack error'
+!       else if ( nev .gt. maxnev ) then
+!          print *, ' ERROR with _SDRV1: NEV is greater than MAXNEV '
+!          stop 'arpack error'
+!       else if ( ncv .gt. maxncv ) then
+!          print *, ' ERROR with _SDRV1: NCV is greater than MAXNCV '
+!          stop 'arpack error'
+!       end if
+!       bmat = 'I'
+!       which = amode
+! !     %--------------------------------------------------%
+! !     | The work array WORKL is used in DSAUPD as        |
+! !     | workspace.  Its dimension LWORKL is set as       |
+! !     | illustrated below.  The parameter TOL determines |
+! !     | the stopping criterion.  If TOL<=0, machine      |
+! !     | precision is used.  The variable IDO is used for |
+! !     | reverse communication and is initially set to 0. |
+! !     | Setting INFO=0 indicates that a random vector is |
+! !     | generated in DSAUPD to start the Arnoldi         |
+! !     | iteration.                                       |
+! !     %--------------------------------------------------%
+!       lworkl = ncv*(ncv+8)
+!       info = 0
+!       ido = 0
+! !     %---------------------------------------------------%
+! !     | This program uses exact shifts with respect to    |
+! !     | the current Hessenberg matrix (IPARAM(1) = 1).    |
+! !     | IPARAM(3) specifies the maximum number of Arnoldi |
+! !     | iterations allowed.  Mode 1 of DSAUPD is used     |
+! !     | (IPARAM(7) = 1).  All these options may be        |
+! !     | changed by the user. For details, see the         |
+! !     | documentation in DSAUPD.                          |
+! !     %---------------------------------------------------%
+!       ishfts = 1
+!       maxitr = 300
+!       mode   = 1
+! 
+!       if(present(mode_))then
+!        mode=mode_
+!        if(mode/=1)then
+!           write(*,*) 'ARPACK routine needs to be modified for mode/=1';stop
+!        endif
+!       else
+!        mode=1
+!       endif
+! 
+!       iparam(1) = ishfts 
+!       iparam(3) = maxitr 
+!       iparam(7) = mode 
+! 
+!  10   continue
+! !        %---------------------------------------------%
+! !        | Repeatedly call the routine DSAUPD and take | 
+! !        | actions indicated by parameter IDO until    |
+! !        | either convergence is indicated or maxitr   |
+! !        | has been exceeded.                          |
+! !        %---------------------------------------------%
+!          call dsaupd ( ido, bmat, n, which, nev, tol, resid, ncv, v, maxn, iparam, ipntr, workd, workl, lworkl, info )
+!          if (ido .eq. -1 .or. ido .eq. 1) then
+! !           %--------------------------------------%
+! !           | Perform matrix vector multiplication |
+! !           |              y <--- OP*x             |
+! !           %--------------------------------------%
+!             call av (n, workd(ipntr(2)), workd(ipntr(1)))
+!             go to 10
+!          end if 
+!       if ( info .lt. 0 ) then
+!          print *, ' '
+!          print *, ' Error with _saupd, info = ', info
+!          print *, ' Check documentation in _saupd '
+!          print *, ' '
+!       else 
+! !        %-------------------------------------------%
+! !        | No fatal errors occurred.                 |
+! !        | Post-Process using DSEUPD.                |
+! !        | Computed eigenvalues may be extracted.    |  
+! !        | Eigenvectors may also be computed now if  |
+! !        | desired.  (indicated by rvec = .true.)    | 
+! !        %-------------------------------------------%
+!          call dseupd ( rvec, 'All', select, d, v, maxn, sigma, bmat, n, which, &
+!              & nev, tol, resid, ncv, v, maxn, iparam, ipntr, workd, workl, lworkl, ierr )
+! !        %----------------------------------------------%
+! !        | Eigenvalues are returned in the first column |
+! !        | of the two dimensional array D and the       |
+! !        | corresponding eigenvectors are returned in   |
+! !        | the first NEV columns of the two dimensional |
+! !        | array V if requested.  Otherwise, an         |
+! !        | orthogonal basis for the invariant subspace  |
+! !        | corresponding to the eigenvalues in D is     |
+! !        | returned in V.                               |
+! !        %----------------------------------------------%
+!          if ( ierr .ne. 0) then
+!              print *, ' '
+!              print *, ' Error with _seupd, info = ', ierr
+!              print *, ' Check the documentation of _seupd. '
+!              print *, ' '
+!          else
+!              nconv =  iparam(5)
+!              do 20 j=1, nconv
+! !               %---------------------------%
+! !               | Compute the residual norm |
+! !               |   ||  A*x - lambda*x ||   |
+! !               | for the NCONV accurately  |
+! !               | computed eigenvalues and  |
+! !               | eigenvectors.  (iparam(5) |
+! !               | indicates how many are    |
+! !               | accurate to the requested |
+! !               | tolerance)                |
+! !               %---------------------------%
+!                 call av(n, ax, v(1,j))
+!                 call daxpy(n, -d(j,1), v(1,j), 1, ax, 1)
+!                 d(j,2) = dnrm2(n, ax, 1)
+!                 d(j,2) = d(j,2) / abs(d(j,1))
+!  20          continue
+!             if(verbose)  call dmout(6, nconv, 2, d, maxncv, -6, 'Ritz values and relative residuals')
+!          end if
+! !        %------------------------------------------%
+! !        | Print additional convergence information |
+! !        %------------------------------------------%
+!          if ( info .eq. 1) then
+!            if(verbose)then
+!             print *, ' '
+!             print *, ' Maximum number of iterations reached.'
+!             print *, ' '
+!            endif
+!          else if ( info .eq. 3) then
+!            if(verbose)then
+!             print *, ' ' 
+!             print *, ' No shifts could be applied during implicit', ' Arnoldi update, try increasing NCV.'
+!             print *, ' '
+!            endif
+!          end if      
+!         if(verbose)then
+!          print *, ' '
+!          print *, ' _SDRV1 '
+!          print *, ' ====== '
+!          print *, ' '
+!          print *, ' Size of the matrix is ', n
+!          print *, ' The number of Ritz values requested is ', nev
+!          print *, ' The number of Arnoldi vectors generated', ' (NCV) is ', ncv
+!          print *, ' What portion of the spectrum: ', which
+!          print *, ' The number of converged Ritz values is ',   nconv 
+!          print *, ' The number of Implicit Arnoldi update',  ' iterations taken is ', iparam(3)
+!          print *, ' The number of OP*x is ', iparam(9)
+!          print *, ' The convergence criterion is ', tol
+!          print *, ' '
+!         endif
+!       end if
+!       nconv_=nconv
+!       values=d(:,1)
+! 
+!  9000 continue
+! 
+! #endif
+! 
+!  end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!       subroutine arpack_eigenvector_sym_matrix_(verbose,amode,tol,maxn,rvec,values,v,maxncv,nconv_,av,sigma_,mode_)
+!       implicit none
+!       !---------------------------------------------!
+!       !     Solve A*x = lambda*x in regular mode    !
+!       !---------------------------------------------!
+!       integer           maxn, maxnev, maxncv, nconv_
+!       integer           iparam(11), ipntr(14)
+!       logical           select(maxncv)
+!       Complex(8)        ax(maxn),d(maxncv),v(maxn,maxncv),workd(3*maxn), workev(3*maxncv), resid(maxn), workl(3*maxncv*maxncv+5*maxncv)
+!       Double precision  rwork(maxncv), rd(maxncv,3),values(:)
+!       character         bmat*1, which*2
+!       integer           ido, n, nev, ncv, lworkl, info, j, ierr, nconv, maxitr, ishfts, mode
+!       Complex(8)        sigma
+!       Double precision  tol
+!       logical           rvec
+!       Double precision  dznrm2 , dlapy2 
+!       external          dznrm2 , dlapy2  
+!       character(2)      amode
+!       logical           verbose
+!      !----------------------------------!
+!      ! amode : SM around 0              !
+!      ! amode : BE extremas eigenvalues  !
+!      !----------------------------------!
+! 
+!       interface
+!        subroutine av(n,w,v)
+!         integer                  :: n
+!         complex(8),intent(in)    :: v(n)
+!         complex(8),intent(inout) :: w(n)
+!        end subroutine
+!       end interface
+! 
+!       complex(8),optional :: sigma_
+!       integer,optional    :: mode_
+! 
+! 
+! #ifdef _ARPACK
+! 
+!       if(present(sigma_))then
+!         sigma=sigma_
+!       else
+!         sigma=0.d0
+!       endif
+! 
+!       maxnev=maxncv-1
+!       n=maxn
+!       nev=maxnev
+!       ncv=maxncv
+! 
+!       if ( n .gt. maxn ) then
+!          print *, ' ERROR with _NDRV1: N is greater than MAXN '
+!          go to 9000
+!       else if ( nev .gt. maxnev ) then
+!          print *, ' ERROR with _NDRV1: NEV is greater than MAXNEV '
+!          go to 9000
+!       else if ( ncv .gt. maxncv ) then
+!          print *, ' ERROR with _NDRV1: NCV is greater than MAXNCV '
+!          go to 9000
+!       end if
+! 
+!       bmat  = 'I'
+!       which = amode
+!       lworkl  = 3*ncv**2+5*ncv 
+!       ido    = 0
+!       info   = 0
+!       ishfts = 1
+!       maxitr = 300
+!       mode   = 1
+! 
+!       if(present(mode_))then
+!        mode=mode_
+!        if(mode/=1)then
+!           write(*,*) 'ARPACK routine needs to be modified for mode/=1';stop
+!        endif
+!       else
+!        mode=1
+!       endif
+! 
+!       iparam(1) = ishfts
+!       iparam(3) = maxitr 
+!       iparam(7) = mode 
+! 
+!  10   continue
+! 
+!       call znaupd  ( ido, bmat, n, which, nev, tol, resid, ncv, v, maxn, iparam, ipntr, workd, workl, lworkl, rwork,info )
+!       if (ido .eq. -1 .or. ido .eq. 1) then
+!          call av (n, workd(ipntr(2)), workd(ipntr(1)))
+!          go to 10
+!       end if
+!       if ( info .lt. 0 ) then
+!          print *, ' '
+!          print *, ' Error with _naupd, info = ', info
+!          print *, ' Check the documentation of _naupd'
+!          print *, ' '
+!       else 
+!          call zneupd  (rvec, 'A', select, d, v, maxn, sigma, workev, bmat, n, which, &
+!             & nev, tol, resid, ncv, v, maxn, iparam, ipntr, workd, workl, lworkl, rwork, ierr)
+!          if ( ierr .ne. 0) then
+!              print *, ' '
+!              print *, ' Error with _neupd, info = ', ierr
+!              print *, ' Check the documentation of _neupd. '
+!              print *, ' '
+!          else
+!              nconv = iparam(5)
+!              do 20 j=1, nconv
+!                 call av(n, ax,v(1,j))
+!                 call zaxpy (n, -d(j), v(1,j), 1, ax, 1)
+!                 rd(j,1) = dble (d(j))
+!                 rd(j,2) = dimag (d(j))
+!                 rd(j,3) = dznrm2 (n, ax, 1)
+!                 rd(j,3) = rd(j,3) / dlapy2 (rd(j,1),rd(j,2))
+!  20          continue
+!              if(verbose) call dmout (6, nconv, 3, rd, maxncv, -6, 'Ritz values (Real, Imag) and relative residuals')
+!           end if
+!         if(verbose)then
+!          if ( info .eq. 1) then
+!              print *, ' '
+!              print *, ' Maximum number of iterations reached.'
+!              print *, ' '
+!          else if ( info .eq. 3) then
+!              print *, ' ' 
+!              print *, ' No shifts could be applied during implicit', ' Arnoldi update, try increasing NCV.'
+!              print *, ' '
+!          end if      
+!          print *, ' '
+!          print *, '_NDRV1'
+!          print *, '====== '
+!          print *, ' '
+!          print *, ' Size of the matrix is ', n
+!          print *, ' The number of Ritz values requested is ', nev
+!          print *, ' The number of Arnoldi vectors generated', ' (NCV) is ', ncv
+!          print *, ' What portion of the spectrum: ', which
+!          print *, ' The number of converged Ritz values is ', nconv 
+!          print *, ' The number of Implicit Arnoldi update', ' iterations taken is ', iparam(3)
+!          print *, ' The number of OP*x is ', iparam(9)
+!          print *, ' The convergence criterion is ', tol
+!          print *, ' '
+!         endif
+!       end if
+!       nconv_=nconv
+!       values=real(d(:))
+! 
+!  9000 continue
+! 
+! #endif
+!       end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!       Subroutine GramSchmidt (vect, dimreal, dim, numvects) 
+!       IMPLICIT none 
+!       INTEGER  :: dim, dimreal, numvects, iii, j 
+!       REAL(8)  :: vect (dimreal, * ) 
+!       REAL(8)  :: anor, aux (numvects) , temp
+! 
+!       DO iii = 1, numvects 
+!        temp = norme(vect (1:dim,iii))
+!        if(temp==0.d0)then
+!          write(*,*) 'GramSchmidt error, 0 division'
+!          write(*,*) 'temp        : ', temp
+!          write(*,*) 'dim,dimreal : ', dim,dimreal
+!          write(*,*) 'vect        : ', vect(1:dim,iii)
+!          stop 'critical'
+!        endif
+!        anor = 1.d0 / temp
+!        vect(1:dim,iii)=vect(1:dim,iii)*anor
+!       enddo 
+!                                                                         
+!       DO iii = 2, numvects 
+!        DO j = 1, iii - 1 
+!         aux(j) = - DOT_PRODUCT(vect(1:dim,iii),vect(1:dim,j)) 
+!        enddo 
+!        DO j = 1, iii - 1 
+!         vect(1:dim,iii)=vect(1:dim,iii)+aux(j)*vect(1:dim,j)
+!        enddo 
+!        temp = norme(vect(1:dim,iii))
+!        if(temp==0.d0)then
+!          write(*,*) 'number of vectors : ', numvects
+!          write(*,*) 'GramSchmidt error, 0 division bis'
+!          stop 'critical'
+!        endif
+!        anor = 1.d0 / temp
+!        vect(1:dim,iii)=vect(1:dim,iii)*anor
+!       enddo 
+! 
+!       RETURN 
+!       END subroutine
+! 
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+!                                                                         
+!       SUBROUTINE EHOBKS (A, N, M1, M2, Z, IZ) 
+!       DIMENSION A ( * ), Z (IZ, * ) 
+!       real(8) A, Z, H, S 
+!       IF (N.EQ.1) GOTO 30 
+!       DO 25 I = 2, N 
+!          L = I - 1 
+!          IA = (I * L) / 2 
+!          H = A (IA + I) 
+!          IF (H.EQ.0.D0) GOTO 25 
+! !                                  DERIVES EIGENVECTORS M1 TO M2 OF     
+! !                                  THE ORIGINAL MATRIX FROM EIGENVECTORS
+! !                                  M1 TO M2 OF THE SYMMETRIC            
+! !                                  TRIDIAGONAL MATRIX                   
+!          DO 20 J = M1, M2 
+!             S = 0.0D0 
+!             DO 10 K = 1, L 
+!                S = S + A (IA + K) * Z (K, J) 
+!    10       END DO 
+!             S = S / H 
+!             DO 15 K = 1, L 
+!                Z (K, J) = Z (K, J) - S * A (IA + K) 
+!    15       END DO 
+!    20    END DO 
+!    25 END DO 
+!    30 RETURN 
+!       END SUBROUTINE
 !                                                                       
-!                                  SAVE P FOR P = R CASE                
-!                                    P IS THE PAGE NAMUPK               
-!                                    R IS THE ROUTINE NAMUPK            
-   55 IEQDF = 1 
-      DO 60 I = 1, 6 
-   60 NAMEQ (I) = NAMUPK (I) 
-   65 RETURN 
-      END SUBROUTINE
-      
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
- 
-      SUBROUTINE UGETIO (IOPT, NIN, NOUT) 
-      INTEGER IOPT, NIN, NOUT 
-      INTEGER NIND, NOUTD 
-      DATA NIND / 5 /, NOUTD / 6 / 
-      IF (IOPT.EQ.3) GOTO 10 
-      IF (IOPT.EQ.2) GOTO 5 
-      IF (IOPT.NE.1) GOTO 9005 
-      NIN = NIND 
-      NOUT = NOUTD 
-      GOTO 9005 
-    5 NIND = NIN 
-      GOTO 9005 
-   10 NOUTD = NOUT 
- 9005 RETURN 
-      END SUBROUTINE
-                                                                 
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
- 
-      SUBROUTINE USPKD (PACKED, NCHARS, UNPAKD, NCHMTB) 
-      INTEGER NC, NCHARS, NCHMTB 
-      CHARACTER UNPAKD ( * ), IBLANK 
-      CHARACTER ( * ) PACKED 
-      DATA IBLANK / ' ' / 
-!                                  INITIALIZE NCHMTB                    
-      NCHMTB = 0 
-!                                  RETURN IF NCHARS IS LE ZERO          
-      IF (NCHARS.LE.0) RETURN 
-!                                  SET NC=NUMBER OF CHARS TO BE DECODED 
-      NC = MIN0 (129, NCHARS) 
-      READ (PACKED, 150) (UNPAKD (I), I = 1, NC) 
-  150 FORMAT (129A1) 
-!                                  CHECK UNPAKD ARRAY AND SET NCHMTB    
-!                                  BASED ON TRAILING BLANKS FOUND       
-      DO 200 N = 1, NC 
-         NN = NC - N + 1 
-         IF (UNPAKD (NN) .NE.IBLANK) GOTO 210 
-  200 END DO 
-      NN = 0 
-  210 NCHMTB = NN 
-      RETURN 
-      END SUBROUTINE
-
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-!*************************************************************************!
-
-! subroutine for determination of e-vectors and e-values                
-! from numerical recipes     
-                                           
-      SUBROUTINE JACOBI (A, N, NP, D, V, NROT) 
-      IMPLICIT none 
-      INTEGER NMAX, NP, N 
-      PARAMETER (NMAX = 2500) 
-      REAL(8) A (NP, NP), D (NP), V (NP, NP), B (NMAX), Z (NMAX) 
-      INTEGER IP, IQ, NROT, I, J 
-      REAL(8) sm, tresh, G, H, T, theta, C, s, tau 
-      REAL(8) tmp1, tmp2 
-                                                                        
-      DO 12 IP = 1, N 
-         DO 11 IQ = 1, N 
-            V (IP, IQ) = 0.d0 
-   11    END DO 
-         V (IP, IP) = 1.d0 
-   12 END DO 
-      DO 13 IP = 1, N 
-         B (IP) = A (IP, IP) 
-         D (IP) = B (IP) 
-         Z (IP) = 0.d0 
-   13 END DO 
-      NROT = 0 
-      DO 24 I = 1, 50 
-         SM = 0.d0 
-         DO 15 IP = 1, N - 1 
-            DO 14 IQ = IP + 1, N 
-               SM = SM + ABS (A (IP, IQ) ) 
-   14       END DO 
-   15    END DO 
-         IF (SM.EQ.0.) RETURN 
-         IF (I.LT.4) THEN 
-            TRESH = 0.2d0 * SM / N**2 
-         ELSE 
-            TRESH = 0.d0 
-         ENDIF 
-         DO 22 IP = 1, N - 1 
-            DO 21 IQ = IP + 1, N 
-               G = 100.d0 * ABS (A (IP, IQ) ) 
-               tmp1 = ABS (D (IP) ) + G 
-               tmp2 = ABS (D (IQ) ) + G 
-               IF ( (I.GT.4) .AND. (tmp1.EQ.ABS (D (IP) ) ) .AND. (     &
-               tmp2.EQ.ABS (D (IQ) ) ) ) THEN                           
-                  A (IP, IQ) = 0.d0 
-               ELSEIF (ABS (A (IP, IQ) ) .GT.TRESH) THEN 
-                  H = D (IQ) - D (IP) 
-                  tmp1 = ABS (H) + G 
-                  IF (tmp1.EQ.ABS (H) ) THEN 
-                     T = A (IP, IQ) / H 
-                  ELSE 
-                     THETA = 0.5d0 * H / A (IP, IQ) 
-                     T = 1. / (ABS (THETA) + SQRT (1. + THETA**2) ) 
-                     IF (THETA.LT.0.d0) T = - T 
-                  ENDIF 
-                  C = 1.d0 / SQRT (1.d0 + T**2) 
-                  S = T * C 
-                  TAU = S / (1.d0 + C) 
-                  H = T * A (IP, IQ) 
-                  Z (IP) = Z (IP) - H 
-                  Z (IQ) = Z (IQ) + H 
-                  D (IP) = D (IP) - H 
-                  D (IQ) = D (IQ) + H 
-                  A (IP, IQ) = 0.d0 
-                  DO 16 J = 1, IP - 1 
-                     G = A (J, IP) 
-                     H = A (J, IQ) 
-                     A (J, IP) = G - S * (H + G * TAU) 
-                     A (J, IQ) = H + S * (G - H * TAU) 
-   16             END DO 
-                  DO 17 J = IP + 1, IQ - 1 
-                     G = A (IP, J) 
-                     H = A (J, IQ) 
-                     A (IP, J) = G - S * (H + G * TAU) 
-                     A (J, IQ) = H + S * (G - H * TAU) 
-   17             END DO 
-                  DO 18 J = IQ + 1, N 
-                     G = A (IP, J) 
-                     H = A (IQ, J) 
-                     A (IP, J) = G - S * (H + G * TAU) 
-                     A (IQ, J) = H + S * (G - H * TAU) 
-   18             END DO 
-                  DO 19 J = 1, N 
-                     G = V (J, IP) 
-                     H = V (J, IQ) 
-                     V (J, IP) = G - S * (H + G * TAU) 
-                     V (J, IQ) = H + S * (G - H * TAU) 
-   19             END DO 
-                  NROT = NROT + 1 
-               ENDIF 
-   21       END DO 
-   22    END DO 
-         DO 23 IP = 1, N 
-            B (IP) = B (IP) + Z (IP) 
-            D (IP) = B (IP) 
-            Z (IP) = 0.d0 
-   23    END DO 
-   24 END DO 
-      PAUSE '50 iterations should never happen' 
-      RETURN 
-      END SUBROUTINE
-                                
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+!                                                                        
+!       SUBROUTINE EHOUSS (A, N, D, E, E2) 
+!       DIMENSION A ( * ), D (N), E (N), E2 (N) 
+!       real(8) A, D, E, E2, ZERO, H, SCALE, F, G, HH 
+!       DATA ZERO / 0.0D0 / 
+! !                                  FIRST EXECUTABLE STATEMENT           
+!       NP1 = N + 1 
+!       NN = (N * NP1) / 2 - 1 
+!       NBEG = NN + 1 - N 
+!       DO 70 II = 1, N 
+!          I = NP1 - II 
+!          L = I - 1 
+!          H = ZERO 
+!          SCALE = ZERO 
+!          IF (L.LT.1) GOTO 10 
+! !                                  SCALE ROW (ALGOL TOL THEN NOT NEEDED)
+!          NK = NN 
+!          DO 5 K = 1, L 
+!             SCALE = SCALE+DABS (A (NK) ) 
+!             NK = NK - 1 
+!     5    END DO 
+!          IF (SCALE.NE.ZERO) GOTO 15 
+!    10    E (I) = ZERO 
+!          E2 (I) = ZERO 
+!          GOTO 65 
+!    15    NK = NN 
+!          DO 20 K = 1, L 
+!             A (NK) = A (NK) / SCALE 
+!             H = H + A (NK) * A (NK) 
+!             NK = NK - 1 
+!    20    END DO 
+!          E2 (I) = SCALE * SCALE * H 
+!          F = A (NN) 
+!          G = - DSIGN (DSQRT (H), F) 
+!          E (I) = SCALE * G 
+!          H = H - F * G 
+!          A (NN) = F - G 
+!          IF (L.EQ.1) GOTO 55 
+!          F = ZERO 
+!          JK1 = 1 
+!          DO 40 J = 1, L 
+!             G = ZERO 
+!             IK = NBEG + 1 
+!             JK = JK1 
+! !                                  FORM ELEMENT OF A*U                  
+!             DO 25 K = 1, J 
+!                G = G + A (JK) * A (IK) 
+!                JK = JK + 1 
+!                IK = IK + 1 
+!    25       END DO 
+!             JP1 = J + 1 
+!             IF (L.LT.JP1) GOTO 35 
+!             JK = JK + J - 1 
+!             DO 30 K = JP1, L 
+!                G = G + A (JK) * A (IK) 
+!                JK = JK + K 
+!                IK = IK + 1 
+!    30       END DO 
+! !                                  FORM ELEMENT OF P                    
+!    35       E (J) = G / H 
+!             F = F + E (J) * A (NBEG + J) 
+!             JK1 = JK1 + J 
+!    40    END DO 
+!          HH = F / (H + H) 
+! !                                  FORM REDUCED A                       
+!          JK = 1 
+!          DO 50 J = 1, L 
+!             F = A (NBEG + J) 
+!             G = E (J) - HH * F 
+!             E (J) = G 
+!             DO 45 K = 1, J 
+!                A (JK) = A (JK) - F * E (K) - G * A (NBEG + K) 
+!                JK = JK + 1 
+!    45       END DO 
+!    50    END DO 
+!    55    DO 60 K = 1, L 
+!             A (NBEG + K) = SCALE * A (NBEG + K) 
+!    60    END DO 
+!    65    D (I) = A (NBEG + I) 
+!          A (NBEG + I) = H * SCALE * SCALE 
+!          NBEG = NBEG - I + 1 
+!          NN = NN - I 
+!    70 END DO 
+!       RETURN 
+!       END SUBROUTINE
+!      
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+!                                                                   
+!       SUBROUTINE EIGRS (A, N, JOBN, D, Z, IZ, WK, IER) 
+!       IMPLICIT none 
+!       INTEGER N, JOBN, IZ, IER 
+!       real(8) A ( * ), D ( * ), WK ( * ), Z (IZ, * ) 
+!       INTEGER IJOB, IR, JR, IJ, JI, NP1 
+!       INTEGER JER, NA, ND, IIZ, IBEG, IL, KK, LK, I, J, K, L 
+!       real(8) ANORM, ASUM, PI, SUMZ, SUMR, AN, S, TEN, RDELP,   &
+!       ZERO, ONE, THOUS                                                  
+!       DATA RDELP / 0.222045D-15 / 
+!       DATA ZERO, ONE / 0.0D0, 1.0D0 /, TEN / 10.0D0 /, THOUS / 1000.0D0 &
+!       /                                                                 
+! !                                  INITIALIZE ERROR PARAMETERS          
+! !                                  FIRST EXECUTABLE STATEMENT           
+!       IER = 0 
+!       JER = 0 
+!       IF (JOBN.LT.10) GOTO 15 
+! !                                  CONVERT TO SYMMETRIC STORAGE MODE    
+!       K = 1 
+!       JI = N - 1 
+!       IJ = 1 
+!       DO 10 J = 1, N 
+!          DO 5 I = 1, J 
+!             A (K) = A (IJ) 
+!             IJ = IJ + 1 
+!             K = K + 1 
+!     5    END DO 
+!          IJ = IJ + JI 
+!          JI = JI - 1 
+!    10 END DO 
+!    15 IJOB = MOD (JOBN, 10) 
+!       IF (IJOB.GE.0.AND.IJOB.LE.3) GOTO 20 
+! !                                  WARNING ERROR - IJOB IS NOT IN THE   
+! !                                    RANGE                              
+!       IER = 66 
+!       IJOB = 1 
+!       GOTO 25 
+!    20 IF (IJOB.EQ.0) GOTO 35 
+!    25 IF (IZ.GE.N) GOTO 30 
+! !                                  WARNING ERROR - IZ IS LESS THAN N    
+! !                                    EIGENVECTORS CAN NOT BE COMPUTED,  
+! !                                    IJOB SET TO ZERO                   
+!       IER = 67 
+!       IJOB = 0 
+!    30 IF (IJOB.EQ.3) GOTO 75 
+!    35 NA = (N * (N + 1) ) / 2 
+!       IF (IJOB.NE.2) GOTO 45 
+!       DO 40 I = 1, NA 
+!          WK (I) = A (I) 
+!    40 END DO 
+! !                                  SAVE INPUT A IF IJOB = 2             
+!    45 ND = 1 
+!       IF (IJOB.EQ.2) ND = NA + 1 
+! !                                  REDUCE A TO SYMMETRIC TRIDIAGONAL    
+! !                                    FORM                               
+!       CALL EHOUSS (A, N, D, WK (ND), WK (ND) ) 
+!       IIZ = 1 
+!       IF (IJOB.EQ.0) GOTO 60 
+!       IIZ = IZ 
+! !                                  SET Z TO THE IDENTITY MATRIX         
+!       DO 55 I = 1, N 
+!          DO 50 J = 1, N 
+!             Z (I, J) = ZERO 
+!    50    END DO 
+!          Z (I, I) = ONE 
+!    55 END DO 
+! !                                  COMPUTE EIGENVALUES AND EIGENVECTORS 
+!    60 CALL EQRT2S (D, WK (ND), N, Z, IIZ, JER) 
+!       IF (IJOB.EQ.0) GOTO 9000 
+!       IF (JER.GT.128) GOTO 65 
+! !                                  BACK TRANSFORM EIGENVECTORS          
+!       CALL EHOBKS (A, N, 1, N, Z, IZ) 
+!    65 IF (IJOB.LE.1) GOTO 9000 
+! !                                  MOVE INPUT MATRIX BACK TO A          
+!       DO 70 I = 1, NA 
+!          A (I) = WK (I) 
+!    70 END DO 
+!       WK (1) = THOUS 
+!       IF (JER.NE.0) GOTO 9000 
+! !                                  COMPUTE 1 - NORM OF A                
+!    75 ANORM = ZERO 
+!       IBEG = 1 
+!       DO 85 I = 1, N 
+!          ASUM = ZERO 
+!          IL = IBEG 
+!          KK = 1 
+!          DO 80 L = 1, N 
+!             ASUM = ASUM + DABS (A (IL) ) 
+!             IF (L.GE.I) KK = L 
+!             IL = IL + KK 
+!    80    END DO 
+!          ANORM = DMAX1 (ANORM, ASUM) 
+!          IBEG = IBEG + I 
+!    85 END DO 
+!       IF (ANORM.EQ.ZERO) ANORM = ONE 
+! !                                  COMPUTE PERFORMANCE INDEX            
+!       PI = ZERO 
+!       DO 100 I = 1, N 
+!          IBEG = 1 
+!          S = ZERO 
+!          SUMZ = ZERO 
+!          DO 95 L = 1, N 
+!             LK = IBEG 
+!             KK = 1 
+!             SUMZ = SUMZ + DABS (Z (L, I) ) 
+!             SUMR = - D (I) * Z (L, I) 
+!             DO 90 K = 1, N 
+!                SUMR = SUMR + A (LK) * Z (K, I) 
+!                IF (K.GE.L) KK = K 
+!                LK = LK + KK 
+!    90       END DO 
+!             S = S + DABS (SUMR) 
+!             IBEG = IBEG + L 
+!    95    END DO 
+!          IF (SUMZ.EQ.ZERO) GOTO 100 
+!          PI = DMAX1 (PI, S / SUMZ) 
+!   100 END DO 
+!       AN = N 
+!       PI = PI / (ANORM * TEN * AN * RDELP) 
+!       WK (1) = PI 
+!       IF (JOBN.LT.10) GOTO 9000 
+! !                                  CONVERT BACK TO FULL STORAGE MODE    
+!       NP1 = N + 1 
+!       IJ = (N - 1) * NP1 + 2 
+!       K = (N * (NP1) ) / 2 
+!       DO 110 JR = 1, N 
+!          J = NP1 - JR 
+!          DO 105 IR = 1, J 
+!             IJ = IJ - 1 
+!             A (IJ) = A (K) 
+!             K = K - 1 
+!   105    END DO 
+!          IJ = IJ - JR 
+!   110 END DO 
+!       JI = 0 
+!       K = N - 1 
+!       DO 120 I = 1, N 
+!          IJ = I - N 
+!          DO 115 J = 1, I 
+!             IJ = IJ + N 
+!             JI = JI + 1 
+!             A (IJ) = A (JI) 
+!   115    END DO 
+!          JI = JI + K 
+!          K = K - 1 
+!   120 END DO 
+!  9000 CONTINUE 
+!       IF (IER.NE.0) CALL UERTST (IER, 'EIGRS ') 
+!       IF (JER.EQ.0) GOTO 9005 
+!       IER = JER 
+!       CALL UERTST (IER, 'EIGRS ') 
+!  9005 RETURN 
+!       END SUBROUTINE
+!      
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+!                                                                   
+!       SUBROUTINE EQRT2S (D, E, N, Z, IZ, IER) 
+!       DIMENSION D ( * ), E ( * ), Z (IZ, * ) 
+!       real(8) D, E, Z, B, C, F, G, H, P, R, S, RDELP, ONE, ZERO 
+!       DATA RDELP / 0.222045D-15 / 
+!       DATA ZERO, ONE / 0.0D0, 1.0D0 / 
+! !                                  MOVE THE LAST N-1 ELEMENTS           
+! !                                  OF E INTO THE FIRST N-1 LOCATIONS    
+! !                                  FIRST EXECUTABLE STATEMENT           
+!       IER = 0 
+!       K = 0 
+!       IF (N.EQ.1) GOTO 9005 
+!       DO 5 I = 2, N 
+!          E (I - 1) = E (I) 
+!     5 END DO 
+!       E (N) = ZERO 
+!       B = ZERO 
+!       F = ZERO 
+!       DO 60 L = 1, N 
+!          J = 0 
+!          H = RDELP * (DABS (D (L) ) + DABS (E (L) ) ) 
+!          IF (B.LT.H) B = H 
+! !                                  LOOK FOR SMALL SUB-DIAGONAL ELEMENT  
+!          DO 10 M = L, N 
+!             K = M 
+!             IF (DABS (E (K) ) .LE.B) GOTO 15 
+!    10    END DO 
+!    15    M = K 
+!          IF (M.EQ.L) GOTO 55 
+!    20    IF (J.EQ.30) GOTO 85 
+!          J = J + 1 
+!          L1 = L + 1 
+!          G = D (L) 
+!          P = (D (L1) - G) / (E (L) + E (L) ) 
+!          R = DABS (P) 
+!          IF (RDELP * DABS (P) .LT.1.0D0) R = DSQRT (P * P + ONE) 
+!          D (L) = E (L) / (P + DSIGN (R, P) ) 
+!          H = G - D (L) 
+!          DO 25 I = L1, N 
+!             D (I) = D (I) - H 
+!    25    END DO 
+!          F = F + H 
+! !                                  QL TRANSFORMATION                    
+!          P = D (M) 
+!          C = ONE 
+!          S = ZERO 
+!          MM1 = M - 1 
+!          MM1PL = MM1 + L 
+!          IF (L.GT.MM1) GOTO 50 
+!          DO 45 II = L, MM1 
+!             I = MM1PL - II 
+!             G = C * E (I) 
+!             H = C * P 
+!             IF (DABS (P) .LT.DABS (E (I) ) ) GOTO 30 
+!             C = E (I) / P 
+!             R = DSQRT (C * C + ONE) 
+!             E (I + 1) = S * P * R 
+!             S = C / R 
+!             C = ONE / R 
+!             GOTO 35 
+!    30       C = P / E (I) 
+!             R = DSQRT (C * C + ONE) 
+!             E (I + 1) = S * E (I) * R 
+!             S = ONE / R 
+!             C = C * S 
+!    35       P = C * D (I) - S * G 
+!             D (I + 1) = H + S * (C * G + S * D (I) ) 
+!             IF (IZ.LT.N) GOTO 45 
+! !                                  FORM VECTOR                          
+!             DO 40 K = 1, N 
+!                H = Z (K, I + 1) 
+!                Z (K, I + 1) = S * Z (K, I) + C * H 
+!                Z (K, I) = C * Z (K, I) - S * H 
+!    40       END DO 
+!    45    END DO 
+!    50    E (L) = S * P 
+!          D (L) = C * P 
+!          IF (DABS (E (L) ) .GT.B) GOTO 20 
+!    55    D (L) = D (L) + F 
+!    60 END DO 
+! !                                  ORDER EIGENVALUES AND EIGENVECTORS   
+!       DO 80 I = 1, N 
+!          K = I 
+!          P = D (I) 
+!          IP1 = I + 1 
+!          IF (IP1.GT.N) GOTO 70 
+!          DO 65 J = IP1, N 
+!             IF (D (J) .GE.P) GOTO 65 
+!             K = J 
+!             P = D (J) 
+!    65    END DO 
+!    70    IF (K.EQ.I) GOTO 80 
+!          D (K) = D (I) 
+!          D (I) = P 
+!          IF (IZ.LT.N) GOTO 80 
+!          DO 75 J = 1, N 
+!             P = Z (J, I) 
+!             Z (J, I) = Z (J, K) 
+!             Z (J, K) = P 
+!    75    END DO 
+!    80 END DO 
+!       GOTO 9005 
+!    85 IER = 128 + L 
+!  9000 CONTINUE 
+!       CALL UERTST (IER, 'EQRT2S') 
+!  9005 RETURN 
+!       END SUBROUTINE
+! 
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+!  
+!       SUBROUTINE UERTST (IER, NAME) 
+!       INTEGER IER 
+!       CHARACTER NAME * ( * ) 
+!       INTEGER I, IEQDF, IOUNIT, LEVEL, LEVOLD, NIN, NMTB 
+!       CHARACTER IEQ, NAMEQ (6), NAMSET (6), NAMUPK (6) 
+!       DATA NAMSET / 'U', 'E', 'R', 'S', 'E', 'T' / 
+!       DATA NAMEQ / 6 * ' ' / 
+!       DATA LEVEL / 4 / , IEQDF / 0 / , IEQ / '=' / 
+! !                                  UNPACK NAME INTO NAMUPK              
+! !                                  FIRST EXECUTABLE STATEMENT           
+!       CALL USPKD (NAME, 6, NAMUPK, NMTB) 
+! !                                  GET OUTPUT UNIT NUMBER               
+!       CALL UGETIO (1, NIN, IOUNIT) 
+! !                                  CHECK IER                            
+!       IF (IER.GT.999) GOTO 25 
+!       IF (IER.LT. - 32) GOTO 55 
+!       IF (IER.LE.128) GOTO 5 
+!       IF (LEVEL.LT.1) GOTO 30 
+! !                                  PRINT TERMINAL MESSAGE               
+!       IF (IEQDF.EQ.1) WRITE (IOUNIT, 35) IER, NAMEQ, IEQ, NAMUPK 
+!       IF (IEQDF.EQ.0) WRITE (IOUNIT, 35) IER, NAMUPK 
+!       GOTO 30 
+!     5 IF (IER.LE.64) GOTO 10 
+!       IF (LEVEL.LT.2) GOTO 30 
+! !                                  PRINT WARNING WITH FIX MESSAGE       
+!       IF (IEQDF.EQ.1) WRITE (IOUNIT, 40) IER, NAMEQ, IEQ, NAMUPK 
+!       IF (IEQDF.EQ.0) WRITE (IOUNIT, 40) IER, NAMUPK 
+!       GOTO 30 
+!    10 IF (IER.LE.32) GOTO 15 
+! !                                  PRINT WARNING MESSAGE                
+!       IF (LEVEL.LT.3) GOTO 30 
+!       IF (IEQDF.EQ.1) WRITE (IOUNIT, 45) IER, NAMEQ, IEQ, NAMUPK 
+!       IF (IEQDF.EQ.0) WRITE (IOUNIT, 45) IER, NAMUPK 
+!       GOTO 30 
+!    15 CONTINUE 
+! !                                  CHECK FOR UERSET CALL                
+!       DO 20 I = 1, 6 
+!          IF (NAMUPK (I) .NE.NAMSET (I) ) GOTO 25 
+!    20 END DO 
+!       LEVOLD = LEVEL 
+!       LEVEL = IER 
+!       IER = LEVOLD 
+!       IF (LEVEL.LT.0) LEVEL = 4 
+!       IF (LEVEL.GT.4) LEVEL = 4 
+!       GOTO 30 
+!    25 CONTINUE 
+!       IF (LEVEL.LT.4) GOTO 30 
+! !                                  PRINT NON-DEFINED MESSAGE            
+!       IF (IEQDF.EQ.1) WRITE (IOUNIT, 50) IER, NAMEQ, IEQ, NAMUPK 
+!       IF (IEQDF.EQ.0) WRITE (IOUNIT, 50) IER, NAMUPK 
+!    30 IEQDF = 0 
+!       RETURN 
+!    35 FORMAT(19H *** TERMINAL ERROR,10X,7H(IER = ,I3,                   &
+!      &       20H) FROM IMSL ROUTINE ,6A1,A1,6A1)                        
+!    40 FORMAT(27H *** WARNING WITH FIX ERROR,2X,7H(IER = ,I3,            &
+!      &       20H) FROM IMSL ROUTINE ,6A1,A1,6A1)                        
+!    45 FORMAT(18H *** WARNING ERROR,11X,7H(IER = ,I3,                    &
+!      &       20H) FROM IMSL ROUTINE ,6A1,A1,6A1)                        
+!    50 FORMAT(20H *** UNDEFINED ERROR,9X,7H(IER = ,I5,                   &
+!      &       20H) FROM IMSL ROUTINE ,6A1,A1,6A1)                        
+! !                                                                       
+! !                                  SAVE P FOR P = R CASE                
+! !                                    P IS THE PAGE NAMUPK               
+! !                                    R IS THE ROUTINE NAMUPK            
+!    55 IEQDF = 1 
+!       DO 60 I = 1, 6 
+!    60 NAMEQ (I) = NAMUPK (I) 
+!    65 RETURN 
+!       END SUBROUTINE
+!       
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+!  
+!       SUBROUTINE UGETIO (IOPT, NIN, NOUT) 
+!       INTEGER IOPT, NIN, NOUT 
+!       INTEGER NIND, NOUTD 
+!       DATA NIND / 5 /, NOUTD / 6 / 
+!       IF (IOPT.EQ.3) GOTO 10 
+!       IF (IOPT.EQ.2) GOTO 5 
+!       IF (IOPT.NE.1) GOTO 9005 
+!       NIN = NIND 
+!       NOUT = NOUTD 
+!       GOTO 9005 
+!     5 NIND = NIN 
+!       GOTO 9005 
+!    10 NOUTD = NOUT 
+!  9005 RETURN 
+!       END SUBROUTINE
+!                                                                  
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+!  
+!       SUBROUTINE USPKD (PACKED, NCHARS, UNPAKD, NCHMTB) 
+!       INTEGER NC, NCHARS, NCHMTB 
+!       CHARACTER UNPAKD ( * ), IBLANK 
+!       CHARACTER ( * ) PACKED 
+!       DATA IBLANK / ' ' / 
+! !                                  INITIALIZE NCHMTB                    
+!       NCHMTB = 0 
+! !                                  RETURN IF NCHARS IS LE ZERO          
+!       IF (NCHARS.LE.0) RETURN 
+! !                                  SET NC=NUMBER OF CHARS TO BE DECODED 
+!       NC = MIN0 (129, NCHARS) 
+!       READ (PACKED, 150) (UNPAKD (I), I = 1, NC) 
+!   150 FORMAT (129A1) 
+! !                                  CHECK UNPAKD ARRAY AND SET NCHMTB    
+! !                                  BASED ON TRAILING BLANKS FOUND       
+!       DO 200 N = 1, NC 
+!          NN = NC - N + 1 
+!          IF (UNPAKD (NN) .NE.IBLANK) GOTO 210 
+!   200 END DO 
+!       NN = 0 
+!   210 NCHMTB = NN 
+!       RETURN 
+!       END SUBROUTINE
+! 
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! !*************************************************************************!
+! 
+! ! subroutine for determination of e-vectors and e-values                
+! ! from numerical recipes     
+!                                            
+!       SUBROUTINE JACOBI (A, N, NP, D, V, NROT) 
+!       IMPLICIT none 
+!       INTEGER NMAX, NP, N 
+!       PARAMETER (NMAX = 2500) 
+!       REAL(8) A (NP, NP), D (NP), V (NP, NP), B (NMAX), Z (NMAX) 
+!       INTEGER IP, IQ, NROT, I, J 
+!       REAL(8) sm, tresh, G, H, T, theta, C, s, tau 
+!       REAL(8) tmp1, tmp2 
+!                                                                         
+!       DO 12 IP = 1, N 
+!          DO 11 IQ = 1, N 
+!             V (IP, IQ) = 0.d0 
+!    11    END DO 
+!          V (IP, IP) = 1.d0 
+!    12 END DO 
+!       DO 13 IP = 1, N 
+!          B (IP) = A (IP, IP) 
+!          D (IP) = B (IP) 
+!          Z (IP) = 0.d0 
+!    13 END DO 
+!       NROT = 0 
+!       DO 24 I = 1, 50 
+!          SM = 0.d0 
+!          DO 15 IP = 1, N - 1 
+!             DO 14 IQ = IP + 1, N 
+!                SM = SM + ABS (A (IP, IQ) ) 
+!    14       END DO 
+!    15    END DO 
+!          IF (SM.EQ.0.) RETURN 
+!          IF (I.LT.4) THEN 
+!             TRESH = 0.2d0 * SM / N**2 
+!          ELSE 
+!             TRESH = 0.d0 
+!          ENDIF 
+!          DO 22 IP = 1, N - 1 
+!             DO 21 IQ = IP + 1, N 
+!                G = 100.d0 * ABS (A (IP, IQ) ) 
+!                tmp1 = ABS (D (IP) ) + G 
+!                tmp2 = ABS (D (IQ) ) + G 
+!                IF ( (I.GT.4) .AND. (tmp1.EQ.ABS (D (IP) ) ) .AND. (     &
+!                tmp2.EQ.ABS (D (IQ) ) ) ) THEN                           
+!                   A (IP, IQ) = 0.d0 
+!                ELSEIF (ABS (A (IP, IQ) ) .GT.TRESH) THEN 
+!                   H = D (IQ) - D (IP) 
+!                   tmp1 = ABS (H) + G 
+!                   IF (tmp1.EQ.ABS (H) ) THEN 
+!                      T = A (IP, IQ) / H 
+!                   ELSE 
+!                      THETA = 0.5d0 * H / A (IP, IQ) 
+!                      T = 1. / (ABS (THETA) + SQRT (1. + THETA**2) ) 
+!                      IF (THETA.LT.0.d0) T = - T 
+!                   ENDIF 
+!                   C = 1.d0 / SQRT (1.d0 + T**2) 
+!                   S = T * C 
+!                   TAU = S / (1.d0 + C) 
+!                   H = T * A (IP, IQ) 
+!                   Z (IP) = Z (IP) - H 
+!                   Z (IQ) = Z (IQ) + H 
+!                   D (IP) = D (IP) - H 
+!                   D (IQ) = D (IQ) + H 
+!                   A (IP, IQ) = 0.d0 
+!                   DO 16 J = 1, IP - 1 
+!                      G = A (J, IP) 
+!                      H = A (J, IQ) 
+!                      A (J, IP) = G - S * (H + G * TAU) 
+!                      A (J, IQ) = H + S * (G - H * TAU) 
+!    16             END DO 
+!                   DO 17 J = IP + 1, IQ - 1 
+!                      G = A (IP, J) 
+!                      H = A (J, IQ) 
+!                      A (IP, J) = G - S * (H + G * TAU) 
+!                      A (J, IQ) = H + S * (G - H * TAU) 
+!    17             END DO 
+!                   DO 18 J = IQ + 1, N 
+!                      G = A (IP, J) 
+!                      H = A (IQ, J) 
+!                      A (IP, J) = G - S * (H + G * TAU) 
+!                      A (IQ, J) = H + S * (G - H * TAU) 
+!    18             END DO 
+!                   DO 19 J = 1, N 
+!                      G = V (J, IP) 
+!                      H = V (J, IQ) 
+!                      V (J, IP) = G - S * (H + G * TAU) 
+!                      V (J, IQ) = H + S * (G - H * TAU) 
+!    19             END DO 
+!                   NROT = NROT + 1 
+!                ENDIF 
+!    21       END DO 
+!    22    END DO 
+!          DO 23 IP = 1, N 
+!             B (IP) = B (IP) + Z (IP) 
+!             D (IP) = B (IP) 
+!             Z (IP) = 0.d0 
+!    23    END DO 
+!    24 END DO 
+!       PAUSE '50 iterations should never happen' 
+!       RETURN 
+!       END SUBROUTINE
+!                                 
 !*************************************************************************!
 !*************************************************************************!
 !*************************************************************************!

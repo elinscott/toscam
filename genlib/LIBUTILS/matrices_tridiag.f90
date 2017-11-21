@@ -1,16 +1,26 @@
 MODULE tridiag_class
 
   USE common_def
-  USE matrix
+  use genvar, only : DBL, strongstop
+  use matrix, only : eigenvector_matrix
 
   IMPLICIT NONE
 
+  private
+  public :: delete_tridiag
+  public :: diagonalize_tridiag
+  public :: invert_zmtridiag
+  public :: new_tridiag
+  public :: new_tridiag_from_old
+  public :: new_tridiag_from_scratch
+  public :: submatrix_tridiag
+  public :: tridiag_type
 
   REAL(DBL),    PARAMETER, PRIVATE                 :: zero=0.0_DBL,one=1.0_DBL,two=2.0_DBL,three=3.0_DBL,four=4.0_DBL
   LOGICAL,      PARAMETER, PRIVATE                 :: F=.FALSE.,T=.TRUE.
 
 
-  ! GENERATE TRIDIAGONAL LANCZOS MATRIX RECURSIVELY 
+  ! ! GENERATE TRIDIAGONAL LANCZOS MATRIX RECURSIVELY 
 
   TYPE tridiag_type ! TRI-DIAGONAL LANCZOS MATRIX
     INTEGER            ::          N = 0       ! matrix size
@@ -18,12 +28,10 @@ MODULE tridiag_class
     REAL(DBL), POINTER :: subdiag(:) => NULL() ! subdiagonal (1..N)
   END TYPE
 
-
   INTERFACE new_tridiag
     MODULE PROCEDURE new_tridiag_from_scratch
     MODULE PROCEDURE new_tridiag_from_old
   END INTERFACE
-
 
 CONTAINS
 
@@ -279,7 +287,6 @@ CONTAINS
 
   END SUBROUTINE 
 
-
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
@@ -288,7 +295,5 @@ CONTAINS
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-
 
 END MODULE 

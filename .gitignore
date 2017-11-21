@@ -1,0 +1,8 @@
+# From compiling
+dmft/**/*.mod
+dmft/**/*.out
+genlib/**/*.mod
+genlib/**/*.out
+ed_solver/**/*.mod
+ed_solver/**/*.out
+ONETEP_3.1/obj/*

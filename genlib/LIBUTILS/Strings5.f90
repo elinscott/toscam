@@ -1,46 +1,43 @@
 module string5
 
-
+private
+public :: get_unit
+public :: s_eqi
+public :: s_to_r8
 
 contains
-
-
-
-
-
-
-
-subroutine ch_cap ( c )
-
-!*****************************************************************************80
-!
-!! CH_CAP capitalizes a single character.
-!
-!  Modified:
-!
-!    19 July 1998
-!
-!  Author:
-!
-!    John Burkardt
-!
-!  Parameters:
-!
-!    Input/output, character C, the character to capitalize.
-!
-  implicit none
-
-  character c
-  integer itemp
-
-  itemp = ichar ( c )
-
-  if ( 97 <= itemp .and. itemp <= 122 ) then
-    c = char ( itemp - 32 )
-  end if
-
-  return
-end subroutine
+! 
+! subroutine ch_cap ( c )
+! 
+! !*****************************************************************************80
+! !
+! !! CH_CAP capitalizes a single character.
+! !
+! !  Modified:
+! !
+! !    19 July 1998
+! !
+! !  Author:
+! !
+! !    John Burkardt
+! !
+! !  Parameters:
+! !
+! !    Input/output, character C, the character to capitalize.
+! !
+!   implicit none
+! 
+!   character c
+!   integer itemp
+! 
+!   itemp = ichar ( c )
+! 
+!   if ( 97 <= itemp .and. itemp <= 122 ) then
+!     c = char ( itemp - 32 )
+!   end if
+! 
+!   return
+! end subroutine
 
 
 
@@ -102,60 +99,60 @@ end function
 
 
 
-subroutine ch_to_digit ( c, digit )
-
-!*****************************************************************************80
-!
-!! CH_TO_DIGIT returns the integer value of a base 10 digit.
-!
-!  Example:
-!
-!     C   DIGIT
-!    ---  -----
-!    '0'    0
-!    '1'    1
-!    ...  ...
-!    '9'    9
-!    ' '    0
-!    'X'   -1
-!
-!  Modified:
-!
-!    04 August 1999
-!
-!  Author:
-!
-!    John Burkardt
-!
-!  Parameters:
-!
-!    Input, character C, the decimal digit, '0' through '9' or blank
-!    are legal.
-!
-!    Output, integer DIGIT, the corresponding integer value.  If C was
-!    'illegal', then DIGIT is -1.
-!
-  implicit none
-
-  character c
-  integer digit
-
-  if ( lle ( '0', c ) .and. lle ( c, '9' ) ) then
-
-    digit = ichar ( c ) - 48
-
-  else if ( c == ' ' ) then
-
-    digit = 0
-
-  else
-
-    digit = -1
-
-  end if
-
-  return
-end subroutine
+! subroutine ch_to_digit ( c, digit )
+! 
+! !*****************************************************************************80
+! !
+! !! CH_TO_DIGIT returns the integer value of a base 10 digit.
+! !
+! !  Example:
+! !
+! !     C   DIGIT
+! !    ---  -----
+! !    '0'    0
+! !    '1'    1
+! !    ...  ...
+! !    '9'    9
+! !    ' '    0
+! !    'X'   -1
+! !
+! !  Modified:
+! !
+! !    04 August 1999
+! !
+! !  Author:
+! !
+! !    John Burkardt
+! !
+! !  Parameters:
+! !
+! !    Input, character C, the decimal digit, '0' through '9' or blank
+! !    are legal.
+! !
+! !    Output, integer DIGIT, the corresponding integer value.  If C was
+! !    'illegal', then DIGIT is -1.
+! !
+!   implicit none
+! 
+!   character c
+!   integer digit
+! 
+!   if ( lle ( '0', c ) .and. lle ( c, '9' ) ) then
+! 
+!     digit = ichar ( c ) - 48
+! 
+!   else if ( c == ' ' ) then
+! 
+!     digit = 0
+! 
+!   else
+! 
+!     digit = -1
+! 
+!   end if
+! 
+!   return
+! end subroutine
 
 
 
@@ -230,56 +227,56 @@ end subroutine
 
 
 
-subroutine s_cat ( s1, s2, s3 )
-
-!*****************************************************************************80
-!
-!! S_CAT concatenates two strings to make a third string.
-!
-!  Modified:
-!
-!    18 September 2000
-!
-!  Author:
-!
-!    John Burkardt
-!
-!  Parameters:
-!
-!    Input, character ( len = * ) S1, the "prefix" string.
-!
-!    Input, character ( len = * ) S2, the "postfix" string.
-!
-!    Output, character ( len = * ) S3, the string made by
-!    concatenating S1 and S2, ignoring any trailing blanks.
-!
-  implicit none
-
-  character ( len = * ) s1
-  character ( len = * ) s2
-  character ( len = * ) s3
-
-  if ( s1 == ' ' .and. s2 == ' ' ) then
-    s3 = ' '
-  else if ( s1 == ' ' ) then
-    s3 = s2
-  else if ( s2 == ' ' ) then
-    s3 = s1
-  else
-    s3 = trim ( s1 ) // trim ( s2 )
-  end if
-
-  return
-end subroutine
-
-
-
-
-
-
-
-
-
+! subroutine s_cat ( s1, s2, s3 )
+! 
+! !*****************************************************************************80
+! !
+! !! S_CAT concatenates two strings to make a third string.
+! !
+! !  Modified:
+! !
+! !    18 September 2000
+! !
+! !  Author:
+! !
+! !    John Burkardt
+! !
+! !  Parameters:
+! !
+! !    Input, character ( len = * ) S1, the "prefix" string.
+! !
+! !    Input, character ( len = * ) S2, the "postfix" string.
+! !
+! !    Output, character ( len = * ) S3, the string made by
+! !    concatenating S1 and S2, ignoring any trailing blanks.
+! !
+!   implicit none
+! 
+!   character ( len = * ) s1
+!   character ( len = * ) s2
+!   character ( len = * ) s3
+! 
+!   if ( s1 == ' ' .and. s2 == ' ' ) then
+!     s3 = ' '
+!   else if ( s1 == ' ' ) then
+!     s3 = s2
+!   else if ( s2 == ' ' ) then
+!     s3 = s1
+!   else
+!     s3 = trim ( s1 ) // trim ( s2 )
+!   end if
+! 
+!   return
+! end subroutine
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! 
 function s_eqi ( s1, s2 )
 
 !*****************************************************************************80
@@ -634,255 +631,245 @@ subroutine s_to_r8 ( s, dval, ierror, length )
 
   return
 end subroutine
-
-
-
-
-
-
-
-subroutine timestamp ( )
-
-!*****************************************************************************80
-!
-!! TIMESTAMP prints the current YMDHMS date as a time stamp.
-!
-!  Example:
-!
-!    31 May 2001   9:45:54.872 AM
-!
-!  Modified:
-!
-!    06 August 2005
-!
-!  Author:
-!
-!    John Burkardt
-!
-!  Parameters:
-!
-!    None
-!
-  implicit none
-
-  character ( len = 8 ) ampm
-  integer d
-  integer h
-  integer m
-  integer mm
-  character ( len = 9 ), parameter, dimension(12) :: month = (/ &
-    'January  ', 'February ', 'March    ', 'April    ', &
-    'May      ', 'June     ', 'July     ', 'August   ', &
-    'September', 'October  ', 'November ', 'December ' /)
-  integer n
-  integer s
-  integer values(8)
-  integer y
-
-  call date_and_time ( values = values )
-
-  y = values(1)
-  m = values(2)
-  d = values(3)
-  h = values(5)
-  n = values(6)
-  s = values(7)
-  mm = values(8)
-
-  if ( h < 12 ) then
-    ampm = 'AM'
-  else if ( h == 12 ) then
-    if ( n == 0 .and. s == 0 ) then
-      ampm = 'Noon'
-    else
-      ampm = 'PM'
-    end if
-  else
-    h = h - 12
-    if ( h < 12 ) then
-      ampm = 'PM'
-    else if ( h == 12 ) then
-      if ( n == 0 .and. s == 0 ) then
-        ampm = 'Midnight'
-      else
-        ampm = 'AM'
-      end if
-    end if
-  end if
-
-  write ( *, '(i2,1x,a,1x,i4,2x,i2,a1,i2.2,a1,i2.2,a1,i3.3,1x,a)' ) &
-    d, trim ( month(m) ), y, h, ':', n, ':', s, '.', mm, trim ( ampm )
-
-  return
-end subroutine
-
-
-
-
-
-subroutine word_next_read ( s, word, done )
-
-!*****************************************************************************80
-!
-!! WORD_NEXT_READ "reads" words from a string, one at a time.
-!
-!  Special cases:
-!
-!    The following characters are considered to be a single word,
-!    whether surrounded by spaces or not:
-!
-!      " ( ) { } [ ]
-!
-!    Also, if there is a trailing comma on the word, it is stripped off.
-!    This is to facilitate the reading of lists.
-!
-!  Modified:
-!
-!    23 May 2001
-!
-!  Author:
-!
-!    John Burkardt
-!
-!  Parameters:
-!
-!    Input, character ( len = * ) S, a string, presumably containing
-!    words
-!    separated by spaces.
-!
-!    Output, character ( len = * ) WORD.
-!    If DONE is FALSE, then WORD contains the "next" word read.
-!    If DONE is TRUE, then WORD is blank, because there was no more to
-!    read.
-!
-!    Input/output, logical DONE.
-!    On input with a fresh string, set DONE to TRUE.
-!    On output, the routine sets DONE:
-!      FALSE if another word was read,
-!      TRUE if no more words could be read.
-!
-  implicit none
-
-  logical done
-  integer ilo
-  integer, save :: lenc = 0
-  integer, save :: next = 1
-  character ( len = * ) s
-  character, parameter :: TAB = char ( 9 )
-  character ( len = * ) word
-!
-!  We "remember" LENC and NEXT from the previous call.
-!
-!  An input value of DONE = TRUE signals a new line of text to examine.
-!
-  if ( done ) then
-
-    next = 1
-    done = .false.
-    lenc = len_trim ( s )
-
-    if ( lenc <= 0 ) then
-      done = .true.
-      word = ' '
-      return
-    end if
-
-  end if
-!
-!  Beginning at index NEXT, search the string for the next nonblank,
-!  which signals the beginning of a word.
-!
-  ilo = next
-!
-!  ...S(NEXT:) is blank.  Return with WORD = ' ' and DONE = TRUE.
-!
-  do
-
-    if ( lenc < ilo ) then
-      word = ' '
-      done = .true.
-      next = lenc + 1
-      return
-    end if
-!
-!  If the current character is blank, skip to the next one.
-!
-    if ( s(ilo:ilo) /= ' ' .and. s(ilo:ilo) /= TAB ) then
-      exit
-    end if
-
-    ilo = ilo + 1
-
-  end do
-!
-!  ILO is the index of the next nonblank character in the string.
-!
-!  If this initial nonblank is a special character,
-!  then that's the whole word as far as we're concerned,
-!  so return immediately.
-!
-  if ( s(ilo:ilo) == '"' .or. &
-       s(ilo:ilo) == '(' .or. &
-       s(ilo:ilo) == ')' .or. &
-       s(ilo:ilo) == '{' .or. &
-       s(ilo:ilo) == '}' .or. &
-       s(ilo:ilo) == '[' .or. &
-       s(ilo:ilo) == ']' ) then
-
-    word = s(ilo:ilo)
-    next = ilo + 1
-    return
-
-  end if
-!
-!  Now search for the last contiguous character that is not a
-!  blank, TAB, or special character.
-!
-  next = ilo + 1
-
-  do while ( next <= lenc )
-
-    if ( s(next:next) == ' ' ) then
-      exit
-    else if ( s(next:next) == TAB ) then
-      exit
-    else if ( s(next:next) == '"' ) then
-      exit
-    else if ( s(next:next) == '(' ) then
-      exit
-    else if ( s(next:next) == ')' ) then
-      exit
-    else if ( s(next:next) == '{' ) then
-      exit
-    else if ( s(next:next) == '}' ) then
-      exit
-    else if ( s(next:next) == '[' ) then
-      exit
-    else if ( s(next:next) == ']' ) then
-      exit
-    end if
-
-    next = next + 1
-
-  end do
-
-  if ( s(next-1:next-1) == ',' ) then
-    word = s(ilo:next-2)
-  else
-    word = s(ilo:next-1)
-  end if
-
-  return
-end subroutine
-
-
-
-
-
-
-
-
-
-
+! 
+! 
+! 
+! 
+! 
+! 
+! 
+! subroutine timestamp ( )
+! 
+! !*****************************************************************************80
+! !
+! !! TIMESTAMP prints the current YMDHMS date as a time stamp.
+! !
+! !  Example:
+! !
+! !    31 May 2001   9:45:54.872 AM
+! !
+! !  Modified:
+! !
+! !    06 August 2005
+! !
+! !  Author:
+! !
+! !    John Burkardt
+! !
+! !  Parameters:
+! !
+! !    None
+! !
+!   implicit none
+! 
+!   character ( len = 8 ) ampm
+!   integer d
+!   integer h
+!   integer m
+!   integer mm
+!   character ( len = 9 ), parameter, dimension(12) :: month = (/ &
+!     'January  ', 'February ', 'March    ', 'April    ', &
+!     'May      ', 'June     ', 'July     ', 'August   ', &
+!     'September', 'October  ', 'November ', 'December ' /)
+!   integer n
+!   integer s
+!   integer values(8)
+!   integer y
+! 
+!   call date_and_time ( values = values )
+! 
+!   y = values(1)
+!   m = values(2)
+!   d = values(3)
+!   h = values(5)
+!   n = values(6)
+!   s = values(7)
+!   mm = values(8)
+! 
+!   if ( h < 12 ) then
+!     ampm = 'AM'
+!   else if ( h == 12 ) then
+!     if ( n == 0 .and. s == 0 ) then
+!       ampm = 'Noon'
+!     else
+!       ampm = 'PM'
+!     end if
+!   else
+!     h = h - 12
+!     if ( h < 12 ) then
+!       ampm = 'PM'
+!     else if ( h == 12 ) then
+!       if ( n == 0 .and. s == 0 ) then
+!         ampm = 'Midnight'
+!       else
+!         ampm = 'AM'
+!       end if
+!     end if
+!   end if
+! 
+!   write ( *, '(i2,1x,a,1x,i4,2x,i2,a1,i2.2,a1,i2.2,a1,i3.3,1x,a)' ) &
+!     d, trim ( month(m) ), y, h, ':', n, ':', s, '.', mm, trim ( ampm )
+! 
+!   return
+! end subroutine
+! 
+! 
+! 
+! 
+! 
+! subroutine word_next_read ( s, word, done )
+! 
+! !*****************************************************************************80
+! !
+! !! WORD_NEXT_READ "reads" words from a string, one at a time.
+! !
+! !  Special cases:
+! !
+! !    The following characters are considered to be a single word,
+! !    whether surrounded by spaces or not:
+! !
+! !      " ( ) { } [ ]
+! !
+! !    Also, if there is a trailing comma on the word, it is stripped off.
+! !    This is to facilitate the reading of lists.
+! !
+! !  Modified:
+! !
+! !    23 May 2001
+! !
+! !  Author:
+! !
+! !    John Burkardt
+! !
+! !  Parameters:
+! !
+! !    Input, character ( len = * ) S, a string, presumably containing
+! !    words
+! !    separated by spaces.
+! !
+! !    Output, character ( len = * ) WORD.
+! !    If DONE is FALSE, then WORD contains the "next" word read.
+! !    If DONE is TRUE, then WORD is blank, because there was no more to
+! !    read.
+! !
+! !    Input/output, logical DONE.
+! !    On input with a fresh string, set DONE to TRUE.
+! !    On output, the routine sets DONE:
+! !      FALSE if another word was read,
+! !      TRUE if no more words could be read.
+! !
+!   implicit none
+! 
+!   logical done
+!   integer ilo
+!   integer, save :: lenc = 0
+!   integer, save :: next = 1
+!   character ( len = * ) s
+!   character, parameter :: TAB = char ( 9 )
+!   character ( len = * ) word
+! !
+! !  We "remember" LENC and NEXT from the previous call.
+! !
+! !  An input value of DONE = TRUE signals a new line of text to examine.
+! !
+!   if ( done ) then
+! 
+!     next = 1
+!     done = .false.
+!     lenc = len_trim ( s )
+! 
+!     if ( lenc <= 0 ) then
+!       done = .true.
+!       word = ' '
+!       return
+!     end if
+! 
+!   end if
+! !
+! !  Beginning at index NEXT, search the string for the next nonblank,
+! !  which signals the beginning of a word.
+! !
+!   ilo = next
+! !
+! !  ...S(NEXT:) is blank.  Return with WORD = ' ' and DONE = TRUE.
+! !
+!   do
+! 
+!     if ( lenc < ilo ) then
+!       word = ' '
+!       done = .true.
+!       next = lenc + 1
+!       return
+!     end if
+! !
+! !  If the current character is blank, skip to the next one.
+! !
+!     if ( s(ilo:ilo) /= ' ' .and. s(ilo:ilo) /= TAB ) then
+!       exit
+!     end if
+! 
+!     ilo = ilo + 1
+! 
+!   end do
+! !
+! !  ILO is the index of the next nonblank character in the string.
+! !
+! !  If this initial nonblank is a special character,
+! !  then that's the whole word as far as we're concerned,
+! !  so return immediately.
+! !
+!   if ( s(ilo:ilo) == '"' .or. &
+!        s(ilo:ilo) == '(' .or. &
+!        s(ilo:ilo) == ')' .or. &
+!        s(ilo:ilo) == '{' .or. &
+!        s(ilo:ilo) == '}' .or. &
+!        s(ilo:ilo) == '[' .or. &
+!        s(ilo:ilo) == ']' ) then
+! 
+!     word = s(ilo:ilo)
+!     next = ilo + 1
+!     return
+! 
+!   end if
+! !
+! !  Now search for the last contiguous character that is not a
+! !  blank, TAB, or special character.
+! !
+!   next = ilo + 1
+! 
+!   do while ( next <= lenc )
+! 
+!     if ( s(next:next) == ' ' ) then
+!       exit
+!     else if ( s(next:next) == TAB ) then
+!       exit
+!     else if ( s(next:next) == '"' ) then
+!       exit
+!     else if ( s(next:next) == '(' ) then
+!       exit
+!     else if ( s(next:next) == ')' ) then
+!       exit
+!     else if ( s(next:next) == '{' ) then
+!       exit
+!     else if ( s(next:next) == '}' ) then
+!       exit
+!     else if ( s(next:next) == '[' ) then
+!       exit
+!     else if ( s(next:next) == ']' ) then
+!       exit
+!     end if
+! 
+!     next = next + 1
+! 
+!   end do
+! 
+!   if ( s(next-1:next-1) == ',' ) then
+!     word = s(ilo:next-2)
+!   else
+!     word = s(ilo:next-1)
+!   end if
+! 
+!   return
+! end subroutine
 
 end module

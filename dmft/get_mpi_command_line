@@ -62,12 +62,11 @@ fi
         mpicmd="$mpicmd $7 $6"
        fi 
       fi
- #    mpicmd="$mpicmd -env OMP_NUM_THREADS $5 -np $3 $1 $2   "
-      if [ ${DMFT_ONETEP_ENV_END} -eq 1 ] 
+      if [ ${DMFT_ONETEP_ENV_END} -eq 1 ]
       then
-       mpicmd="$mpicmd -np $3 $1 $2 "
+        mpicmd="$mpicmd -np $3 $1 $2   "
       else
-       mpicmd="$mpicmd -env OMP_NUM_THREADS $5 -np $3 $1 $2   "
+        mpicmd="$mpicmd -env OMP_NUM_THREADS $5 -np $3 $1 $2   "
       fi
    fi
  fi

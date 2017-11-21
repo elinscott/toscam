@@ -4,6 +4,8 @@
  
   implicit none
 
+  private
+
   type node
     type(node), pointer :: next, prev
     real(8)             :: a

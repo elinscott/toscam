@@ -2,15 +2,24 @@
 module namelistmod
 
  use StringManip
- use string5
- use common_def
+ use string5, only: s_eqi, get_unit, s_to_r8
+ use common_def, only: get_address, put_address, open_safe
  use genvar 
 
 
 IMPLICIT NONE
 
-
- PRIVATE
+ private
+ public :: look_for_command_line_argument
+ public :: look_for_namelist_in_file
+ public :: namelist_init
+ public :: namelist_set
+ public :: putel_in_namelist
+ public :: putel_in_namelist_char
+ public :: putel_in_namelist_i
+ public :: putel_in_namelist_ivec
+ public :: putel_in_namelist_l
+ public :: putel_in_namelist_r
 
  TYPE namelist_member
    integer(8)             ::  address
@@ -39,9 +48,9 @@ IMPLICIT NONE
  END TYPE
 
 
- INTERFACE get_info
-   MODULE PROCEDURE get_infoi,get_infor,get_infoc,get_infol
- END INTERFACE
+ ! INTERFACE get_info
+ !   MODULE PROCEDURE get_infoi,get_infor,get_infoc,get_infol
+ ! END INTERFACE
 
 
  INTERFACE putel_in_namelist
@@ -49,8 +58,6 @@ IMPLICIT NONE
                     & putel_in_namelist_l,putel_in_namelist_rr,putel_in_namelist_rvec,putel_in_namelist_char , &
                       putel_in_namelist_cvec,putel_in_namelist_ivec
  END INTERFACE
-
- PUBLIC :: namelist_init,look_for_namelist_in_file,look_for_command_line_argument,namelist_set,putel_in_namelist
 
  logical, private :: wait
  logical, private :: menu_parsed=.false.
@@ -513,106 +520,106 @@ end subroutine
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-
-subroutine get_infoi(nm,i)
- TYPE(namelist_set) :: nm
- integer            :: i
- integer            :: ii
- integer(8)         :: j
- j=get_address(i)
- do ii=1,nm%cc
-  if(nm%members(ii)%address==j) exit
- enddo
- if(rank/=0) return
- write(*,*) 'VARIABLE      = ' , nm%members(ii)%label
- write(*,*) 'DEFAULT VALUE = ' , nm%members(ii)%i0
- write(*,*) 'COMMENT       = ' , nm%members(ii)%comment
-end subroutine
-
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-
-subroutine get_infor(nm,i)
- TYPE(namelist_set) :: nm
- real(8)            :: i
- integer            :: ii
- integer(8)         :: j
- if(rank/=0) return
- j=get_address(i)
- do ii=1,nm%cc
-  if(nm%members(ii)%address==j) exit
- enddo
- write(*,*) 'VARIABLE      = ' , nm%members(ii)%label
- write(*,*) 'DEFAULT VALUE = ' , nm%members(ii)%i0
- write(*,*) 'COMMENT       = ' , nm%members(ii)%comment
-end subroutine
-
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-
-subroutine get_infoc(nm,i)
- TYPE(namelist_set) :: nm
- complex(8)         :: i
- integer            :: ii
- integer(8)         :: j
- if(rank/=0) return
- j=get_address(i)
- do ii=1,nm%cc
-  if(nm%members(ii)%address==j) exit
- enddo
- write(*,*) 'VARIABLE      = ' , nm%members(ii)%label
- write(*,*) 'DEFAULT VALUE = ' , nm%members(ii)%i0
- write(*,*) 'COMMENT       = ' , nm%members(ii)%comment
-end subroutine
-
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-
-subroutine get_infol(nm,i)
- TYPE(namelist_set) :: nm
- logical            :: i
- integer            :: ii
- integer(8)         :: j
- if(rank/=0) return
- j=get_address(i)
- do ii=1,nm%cc
-  if(nm%members(ii)%address==j) exit
- enddo
- write(*,*) 'VARIABLE      = ' , nm%members(ii)%label
- write(*,*) 'DEFAULT VALUE = ' , nm%members(ii)%i0
- write(*,*) 'COMMENT       = ' , nm%members(ii)%comment
-end subroutine
-
-
-
+! 
+! 
+! subroutine get_infoi(nm,i)
+!  TYPE(namelist_set) :: nm
+!  integer            :: i
+!  integer            :: ii
+!  integer(8)         :: j
+!  j=get_address(i)
+!  do ii=1,nm%cc
+!   if(nm%members(ii)%address==j) exit
+!  enddo
+!  if(rank/=0) return
+!  write(*,*) 'VARIABLE      = ' , nm%members(ii)%label
+!  write(*,*) 'DEFAULT VALUE = ' , nm%members(ii)%i0
+!  write(*,*) 'COMMENT       = ' , nm%members(ii)%comment
+! end subroutine
+! 
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! 
+! subroutine get_infor(nm,i)
+!  TYPE(namelist_set) :: nm
+!  real(8)            :: i
+!  integer            :: ii
+!  integer(8)         :: j
+!  if(rank/=0) return
+!  j=get_address(i)
+!  do ii=1,nm%cc
+!   if(nm%members(ii)%address==j) exit
+!  enddo
+!  write(*,*) 'VARIABLE      = ' , nm%members(ii)%label
+!  write(*,*) 'DEFAULT VALUE = ' , nm%members(ii)%i0
+!  write(*,*) 'COMMENT       = ' , nm%members(ii)%comment
+! end subroutine
+! 
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! 
+! subroutine get_infoc(nm,i)
+!  TYPE(namelist_set) :: nm
+!  complex(8)         :: i
+!  integer            :: ii
+!  integer(8)         :: j
+!  if(rank/=0) return
+!  j=get_address(i)
+!  do ii=1,nm%cc
+!   if(nm%members(ii)%address==j) exit
+!  enddo
+!  write(*,*) 'VARIABLE      = ' , nm%members(ii)%label
+!  write(*,*) 'DEFAULT VALUE = ' , nm%members(ii)%i0
+!  write(*,*) 'COMMENT       = ' , nm%members(ii)%comment
+! end subroutine
+! 
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! 
+! subroutine get_infol(nm,i)
+!  TYPE(namelist_set) :: nm
+!  logical            :: i
+!  integer            :: ii
+!  integer(8)         :: j
+!  if(rank/=0) return
+!  j=get_address(i)
+!  do ii=1,nm%cc
+!   if(nm%members(ii)%address==j) exit
+!  enddo
+!  write(*,*) 'VARIABLE      = ' , nm%members(ii)%label
+!  write(*,*) 'DEFAULT VALUE = ' , nm%members(ii)%i0
+!  write(*,*) 'COMMENT       = ' , nm%members(ii)%comment
+! end subroutine
+! 
+! 
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************

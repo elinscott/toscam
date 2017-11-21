@@ -1,5 +1,0 @@
-gfortran-mp-4.6: error: 30000: No such file or directory
-gfortran-mp-4.6: error: i386: No such file or directory
-gfortran-mp-4.6: error: unrecognized option '-h'
-gfortran-mp-4.6: error: unrecognized option '-arch'
-gfortran-mp-4.6: error: unrecognized option '-parallel'

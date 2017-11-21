@@ -1,49 +1,28 @@
 
 #########################################################################
+  HOME    =  /u/fs1/ebl27/scratch/toscam_full
   SHELL   =  /bin/bash
-  FCOMPL  =  mpif90    
-  FFLAG   = -O1 -cpp -D_GPU_SPEEDUP -ffree-line-length-4000 -w -fopenmp -D_plot        
-  HOME    =/home/cweber
-
-#-heap-arrays  
-# FFLAG   = -p -check all -O0 -arch i386 -debug  -g   -fpe0  -cxxlib    
+  FCOMPL  =  mpifort 
+  FFLAG   =  -O1 -qopenmp -cxxlib -fpp   
+#########################################################################
+MKL              = -lmkl 
+DIERICK          = -L$(HOME)/genlib/LIB_DIERICK/ -ldierick -L$(HOME)/genlib/LIB_FIELD_SPLINE -lfield  
+SLATEC           = -L$(HOME)/genlib/LIBSLATEC/ -lslatec 
+GPU              = -L${HOME}/genlib/LIB_GPU_NUMERICS -lgpu 
+CUDA             =  
+#########################################################################
+ALL_LIB          =  ${MKL} $(DIERICK) $(SLATEC) #${X11}
 #########################################################################
 
-X11              = -L/usr/X11/lib/ -lX11 -lxcb -lXau -lXdmcp -lstdc++   
-GSL              = -L$(HOME)/MYLIBRARY/LIB_GSL_GCC/include/ -L$(HOME)/MYLIBRARY/LIB_GSL_GCC/lib/ -lgsl -lgslcblas 
-PGPLOT           = -L${HOME}/MYLIBRARY/PGLIB -lpgplot 
-MKL              = #-L/opt/intel/composerxe/mkl/lib/ -lmkl_blas95 -lmkl_lapack95 -lmkl_intel -lmkl_intel_thread -lmkl_core -liomp5 -lpthread
-MKL              = -L${HOME}/MYLIBRARY/LIBLAPACK -L${HOME}/MYLIBRARY/LIBBLAS -llapack -lblas  
-ARPACK           = -L$(HOME)/MYLIBRARY/LIB_ARPACK -lparpack -larpack  
-NMR              = -L$(HOME)/MYLIBRARY/LIBNMR/ -lnmr 
-DIERICK          = -L$(HOME)/MYLIBRARY/LIB_DIERICK/ -ldierick -L$(HOME)/MYLIBRARY/LIB_FIELD_SPLINE -lfield  
-DISLIN           = 
-#-L${HOME}/MYLIBRARY/LIB_DISLIN_10_OSX/darwin_intel_64/lib/ -ldislin.10.0.0 -ldislin_d.10.0.0 
-MPI              = #-L/opt/local/mpich2/lib/ -lmpichf90 -lfmpich -lmpich -lmpichcxx -I/opt/local/mpich2/include/   
-SLATEC           = -L$(HOME)/MYLIBRARY/LIBSLATEC/ -lslatec 
-BLZPACK          = -L$(HOME)/MYLIBRARY/LIB_BLOCK_LAPACK/lib -lblzpack 
-CULA             =  
-#-L$(HOME)/MYLIBRARY/LIB_CULA_PREMIUM_1.2/lib64/ -lcula -lcula_fortran  
-GPU              = -L${HOME}/MYLIBRARY/LIB_GPU_NUMERICS -lgpu 
-CUDA             = #-L/usr/local/cuda/lib -lcufft -lcuda -lcudart -lcublas
-CUDA             = #-I${HOME}/MYLIBRARY/LIB_GPU_NUMERICS_MAGMA/include  -I/usr/local/include/ -L${HOME}/MYLIBRARY/LIB_GPU_NUMERICS_MAGMA/lib -lmagma -lmagmablas -L/usr/local/cuda/lib -lcudart -lcufft -lcublas -lcuda
-
-#########################################################################
-ALL_LIB          = $(ARPACK) ${BLZPACK} ${PGPLOT} ${GSL} ${MKL} ${DISLIN} $(NSWC) $(NMR) $(DIERICK) $(SLATEC) $(MPI) ${X11}
-#########################################################################
- 
- LIBSOLVER   = -L/${HOME}/MYLIBRARY/LIBDMFT_SOLVER_CTQMC_V3 -L/${HOME}/MYLIBRARY/LIBDMFT_SOLVER_CTQMC_CIX_FILE_GEN -ldmft_solver_ctqmc_cix -ldmft_solver_ctqmc -L/${HOME}/MYLIBRARY/LIBDMFT_SOLVER_NCA -ldmft_solver_nca -L/${HOME}/MYLIBRARY/LIBDMFT_SOLVER_OCA -ldmft_solver_oca -L/${HOME}/MYLIBRARY/LIBDMFT_SOLVER_ED -ldmftsolverED_real -L/${HOME}/MYLIBRARY/LIBDMFT_SOLVER_ED_CIVELLI -ldmftcivelli -L/${HOME}/MYLIBRARY/LIBDMFT_SOLVER_DMRG -ldmftsolverDMRG -L/${HOME}/MYLIBRARY/LIBDMFT_SOLVER_HF -ldmftsolverHF  
- LIBSOLVER_C = -L/${HOME}/MYLIBRARY/LIBDMFT_SOLVER_CTQMC_V3 -L/${HOME}/MYLIBRARY/LIBDMFT_SOLVER_CTQMC_CIX_FILE_GEN -ldmft_solver_ctqmc_cix -ldmft_solver_ctqmc -L/${HOME}/MYLIBRARY/LIBDMFT_SOLVER_NCA -ldmft_solver_nca -L/${HOME}/MYLIBRARY/LIBDMFT_SOLVER_OCA -ldmft_solver_oca -L/${HOME}/MYLIBRARY/LIBDMFT_SOLVER_ED -ldmftsolverED_complex -L/${HOME}/MYLIBRARY/LIBDMFT_SOLVER_ED_CIVELLI -ldmftcivelli -L/${HOME}/MYLIBRARY/LIBDMFT_SOLVER_DMRG -ldmftsolverDMRG -L/${HOME}/MYLIBRARY/LIBDMFT_SOLVER_HF -ldmftsolverHF  
- 
- LIBUTILS    = -L/${HOME}/MYLIBRARY/LIBUTILS -lutils 
- LIBDMFT     = -L/${HOME}/MYLIBRARY/LIBDMFT -ldmft  -L/${HOME}/MYLIBRARY/LIBDMFT_TOOLS -ldmft_tools 
- LIBPRO      = -L/$(HOME)/MYLIBRARY/LIB_PROLONG_ANA -lproal 
- LIBVMC      = -L/${HOME}/MYLIBRARY/LIBVMC -lvmc 
+ LIBSOLVER   = -L/${HOME}/genlib/LIBDMFT_SOLVER_ED -ldmftsolverED   
+ LIBSOLVER_C = -L/${HOME}/genlib/LIBDMFT_SOLVER_ED -ldmftsolverED_complex   
+ LIBUTILS    = -L/${HOME}/genlib/LIBUTILS -lutils  
 
 #########################################################################
  
- MODFILES    = -I$(HOME)/MYLIBRARY/LIBDMFT/MODFILES -I$(HOME)/MYLIBRARY/LIBDMFT_TOOLS/MODFILES -I$(HOME)/MYLIBRARY/LIBDMFT_SOLVER_ED/MODFILES_REAL -I$(HOME)/MYLIBRARY/LIBDMFT_SOLVER_HF/MODFILES -I$(HOME)/MYLIBRARY/LIBDMFT_SOLVER_DMRG/MODFILES -I$(HOME)/MYLIBRARY/LIB_PROLONG_ANA/MODFILES -I$(HOME)/MYLIBRARY/LIBUTILS/MODFILES  -I$(HOME)/MYLIBRARY/LIB_GPU_NUMERICS/MODFILES -I$(HOME)/MYLIBRARY/LIBDMFT_SOLVER_ED_CIVELLI/MODFILES -I${HOME}/MYLIBRARY/LIB_GPU_NUMERICS/MODFILES    
- MODFILES_C  = -I$(HOME)/MYLIBRARY/LIBDMFT/MODFILES -I$(HOME)/MYLIBRARY/LIBDMFT_TOOLS/MODFILES -I$(HOME)/MYLIBRARY/LIBDMFT_SOLVER_ED/MODFILES_COMPLEX -I$(HOME)/MYLIBRARY/LIBDMFT_SOLVER_HF/MODFILES -I$(HOME)/MYLIBRARY/LIBDMFT_SOLVER_DMRG/MODFILES -I$(HOME)/MYLIBRARY/LIB_PROLONG_ANA/MODFILES -I$(HOME)/MYLIBRARY/LIBUTILS/MODFILES  -I$(HOME)/MYLIBRARY/LIB_GPU_NUMERICS/MODFILES -I$(HOME)/MYLIBRARY/LIBDMFT_SOLVER_ED_CIVELLI/MODFILES -I${HOME}/MYLIBRARY/LIB_GPU_NUMERICS/MODFILES
+ MODFILES    = -I$(HOME)/genlib/LIBDMFT_SOLVER_ED/MODFILES -I$(HOME)/genlib/LIBUTILS/MODFILES  -I$(HOME)/genlib/LIB_GPU_NUMERICS/MODFILES  -I${HOME}/genlib/LIB_GPU_NUMERICS/MODFILES    
+
+ MODFILES_C  = -I$(HOME)/genlib/LIBDMFT_SOLVER_ED/MODFILES_COMPLEX -I$(HOME)/genlib/LIBUTILS/MODFILES  -I$(HOME)/genlib/LIB_GPU_NUMERICS/MODFILES -I${HOME}/LIB_GPU_NUMERICS/MODFILES
 
 #########################################################################
 
@@ -96,13 +75,13 @@ ALL_LIB          = $(ARPACK) ${BLZPACK} ${PGPLOT} ${GSL} ${MKL} ${DISLIN} $(NSWC
 
 prog: ${FILES}
 	@echo " ........... compile : static / dynamic linking ........... "
+	${FCOMPL} -o ed_solver.out                           ${FFLAG} ${FILES3}  ${MODFILES} ${STATIC} ${CUDA}
 	${FCOMPL} -o onetep_dmft_one_iter.out                ${FFLAG} ${FILES}   ${MODFILES} ${STATIC} ${CUDA}
 	${FCOMPL} -o dmft_gen_correl.output.file.out         ${FFLAG} ${FILES43} ${MODFILES} ${STATIC} ${CUDA}       
 	${FCOMPL} -o onetep.dmft.embedding.gen.sigma.out     ${FFLAG} ${FILES42} ${MODFILES} ${STATIC} ${CUDA}  
 	${FCOMPL} -o dmft_collect_sigma_embed.out            ${FFLAG} ${FILES41} ${MODFILES} ${STATIC} ${CUDA}  
 	${FCOMPL} -o onetep.dmft.stitch.out                  ${FFLAG} ${FILES40} ${MODFILES} ${STATIC} ${CUDA}
 	${FCOMPL} -o onetep.dmft.build.heterostructure.out   ${FFLAG} ${FILES39} ${MODFILES} ${STATIC} ${CUDA}
-	${FCOMPL} -o hf_solver.out                           ${FFLAG} ${FILES38} ${MODFILES} ${STATIC} ${CUDA}
 	${FCOMPL} -o onetep.dmft.sc                          ${FFLAG} ${FILES37} ${MODFILES} ${STATIC} ${CUDA}
 	${FCOMPL} -o onetep.dmft.calculate.average.e.out     ${FFLAG} ${FILES36} ${MODFILES} ${STATIC} ${CUDA}
 	${FCOMPL} -o onetep.dmft.build.optical.tensor.out    ${FFLAG} ${FILES35} ${MODFILES} ${STATIC} ${CUDA}
@@ -116,8 +95,6 @@ prog: ${FILES}
 	${FCOMPL} -o onetep.dmft.histogram.out               ${FFLAG} ${FILES30} ${MODFILES} ${STATIC} ${CUDA}
 	${FCOMPL} -o check_convergence.out                   ${FFLAG} ${FILES5}  ${MODFILES} ${STATIC} ${CUDA}
 	${FCOMPL} -o onetep.dmft.read.overlap.matrices.out   ${FFLAG} ${FILES28} ${MODFILES} ${STATIC} ${CUDA}
-	${FCOMPL} -o ed_solver_complex.out                   ${FFLAG} ${FILES3}  ${MODFILES_C} ${STATIC_C} ${CUDA}
-	${FCOMPL} -o ed_solver.out                           ${FFLAG} ${FILES3}  ${MODFILES} ${STATIC} ${CUDA}
 	${FCOMPL} -o ed_solver_serial.out                    ${FFLAG} ${FILES24} ${MODFILES} ${STATIC} ${CUDA}
 	${FCOMPL} -o onetep.dmft.movie                       ${FFLAG} ${FILES27} ${MODFILES} ${STATIC} ${CUDA}
 	${FCOMPL} -o onetep.dmft.local.rotation.find         ${FFLAG} ${FILES26} ${MODFILES} ${STATIC} ${CUDA}
@@ -141,6 +118,7 @@ prog: ${FILES}
 	${FCOMPL} -o dmft_project_sigma.out                  ${FFLAG} ${FILES12} ${MODFILES} ${STATIC} ${CUDA}       
 	${FCOMPL} -o dmft_collect_dos.out                    ${FFLAG} ${FILES15} ${MODFILES} ${STATIC} ${CUDA}
 
+#	${FCOMPL} -o ed_solver_complex.out                   ${FFLAG} ${FILES3}  ${MODFILES_C} ${STATIC_C} ${CUDA}
 #############################
 #############################
 #############################

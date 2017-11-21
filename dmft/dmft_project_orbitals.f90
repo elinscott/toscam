@@ -15,7 +15,7 @@ real(8),allocatable    :: occup_2(:,:,:)
 type(string)           :: cc_
 logical,allocatable    :: mask_proj(:)
 integer                :: nproj
-integer                :: k_,l_,iii,kk,ll,kkk,lll
+integer                :: k_,l_,iii,kk,ll
 logical                :: check,no_dimer
 integer                :: ndimer
 
@@ -81,17 +81,13 @@ integer                :: ndimer
 
   open(unit=1010,file='mask_projections')
   write(*,*) 'reading  mask'
-  allocate(mask_proj(channels*ndimer))
-  do j=1,atom
-   read(1010,*)  (mask_proj(i),i=1,channels*ndimer)
-  enddo
-  !read(1010,*)  (mask_proj(i),i=1,channels*ndimer)
-  write(*,*)  (mask_proj(i),i=1,channels*ndimer)
+  allocate(mask_proj(channels))
+  read(1010,*)  (mask_proj(i),i=1,channels)
+  write(*,*)  (mask_proj(i),i=1,channels)
   nproj=0
-  do i=1,channels*ndimer
+  do i=1,channels
    if(mask_proj(i)) nproj=nproj+1
   enddo
-  nproj=nproj/ndimer
   write(*,*) 'THERE ARE [x] KEPT FUNCTIONS : ', nproj
   close(1010)
 
@@ -111,22 +107,22 @@ integer                :: ndimer
      !-------------------------------!
       select case(iii) 
       case(1)
-        kk=0;ll=0;kkk=0;lll=0
+        kk=0;ll=0
       case(2)
-        kk=nproj;ll=nproj;kkk=channels;lll=channels
+        kk=nproj;ll=nproj;
       case(3)
-        kk=0;ll=nproj;kkk=0;lll=channels
+        kk=0;ll=nproj
       case(4)
-        kk=nproj;ll=0;kkk=channels;lll=0
+        kk=nproj;ll=0
       end select
       k_=0
       do k=1,channels
-       if(mask_proj(k+kkk))then
+       if(mask_proj(k))then
         k_=k_+1
         write(*,*) 'k,k_=',k_
         l_=0
         do l=1,channels
-            if(mask_proj(l+lll))then
+            if(mask_proj(l))then
               l_=l_+1
               write(*,*) 'l,l_=',l,l_
               if(iii==1.or.iii==2) occup_2(k_+kk,l_+ll,:)=occupation_matrix(k,l,iii,:)
@@ -144,12 +140,9 @@ integer                :: ndimer
    write(*,*) 'MASK : ', mask_proj(:),nproj,channels
    write(*,*) '--------------------------------------------------------'
    call write_array(occupation_matrix(:,:,1,1),'OCCUPATION UP NOT PROJECTED(1)',short=.true.,unit=6)
-   call write_array(occupation_matrix(:,:,1,2),'OCCUPATION DO NOT PROJECTED(1)',short=.true.,unit=6)
-   if(num>=2) &
-&  call write_array(occupation_matrix(:,:,2,1),'OCCUPATION UP NOT PROJECTED(2)',short=.true.,unit=6)
+   call write_array(occupation_matrix(:,:,2,1),'OCCUPATION UP NOT PROJECTED(2)',short=.true.,unit=6)
    write(*,*) '--------------------------------------------------------'
    call write_array(occup_2(:,:,1),' OCCUPATION UP PROJECTED ' , short=.true., unit=6)
-   call write_array(occup_2(:,:,2),' OCCUPATION DO PROJECTED ' , short=.true., unit=6)
    write(*,*) '--------------------------------------------------------'
    call write_array(green_2,' GREEN PROJECTED ' , short=.true., unit=6)
    write(*,*) '--------------------------------------------------------'

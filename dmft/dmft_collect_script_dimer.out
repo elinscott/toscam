@@ -1,6 +1,0 @@
-#!/bin/bash
-
- ls mask_dimer  > /dev/null 2>&1 || exit
-
- dmft_group_dimers.out 
-

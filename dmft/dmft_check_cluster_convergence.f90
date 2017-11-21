@@ -6,11 +6,15 @@
 program dmft_check_convergence
 !---------------!
   use DMFT_SOLVER_ED
+  !use dmftmod
   use genvar
   use init_and_close_my_sim
   use fortran_cuda
   use matrix
   use StringManip
+  !use DLPLOT
+  !use plotlib
+  !use plot2d
 !---------------!
 implicit none
 
@@ -247,7 +251,7 @@ real(8),allocatable    :: temp(:),vvv(:,:)
         if(i1==i2) then
           dens(i1,i2)=get_dens(real(tt1(i1,i2,:)),aimag(tt1(i1,i2,:)),diag=.true.)
         else
-          dens(i1,i2)=get_dens_(real(tt1(i1,i2,:)),aimag(tt1(i1,i2,:)),diag=.false.)
+          dens(i1,i2)=get_dens(real(tt1(i1,i2,:)),aimag(tt1(i1,i2,:)),diag=.false.)
         endif
       enddo
      enddo 
@@ -322,45 +326,9 @@ real(8)    :: alpha
      endif
    enddo
    if(diag)then
-    dens    = dens + 0.5 * alpha + GlocRe(jj)*frequ/pi
-    write(*,*) 'second order correction: ', GlocRe(jj)*frequ/pi
-   endif
-   get_dens = dens
-
-return
-end function
-
-
-real(8) function get_dens_(GlocRe,GlocIm,diag)
-implicit none
-integer    :: k1,k2,i,j,k,jj
-complex(8) :: dens
-real(8)    :: frequ,pi,tau0,omega,df,GlocRe(:),GlocIm(:)
-complex(8) :: temp
-logical    :: diag
-real(8)    :: alpha
-
-   pi=dacos(-1.d0)
-   jj=size(GlocIm)-7
-   frequ=pi/beta*(2.d0*dble(jj)-1)
-   alpha=-GlocIm(jj)*frequ
-   write(*,*) 'GET DENS ALPHA COEF : ', alpha
-
-   tau0 = 1.d-8; dens = 0.d0
-   do j=1,n_frequ_long
-     omega   = pi/beta*(2.d0*dble(j)-1.d0)
-     if(abs(omega)<1.d-9) omega=1.d-9
-     temp    = CMPLX(GlocRe(j),GlocIm(j),kind=8)
-     if(diag)then
-      dens = dens + 2.d0/beta * ( MPLX( omega * tau0 ) * (temp  + imi / omega *alpha )  )
-     else
-      dens = dens + 2.d0/beta * ( MPLX( omega * tau0 ) * (temp)  )
-     endif
-   enddo
-   if(diag)then
     dens    = dens + 0.5 * alpha
    endif
-   get_dens_ = dens
+   get_dens = dens
 
 return
 end function

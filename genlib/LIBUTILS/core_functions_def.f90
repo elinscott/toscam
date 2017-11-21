@@ -4,10 +4,25 @@ MODULE common_def
 
   IMPLICIT NONE
 
+  private
+  public :: c2s
+  public :: close_safe
+  public :: create_seg_fault
+  public :: dump_message
+  public :: find_rank
+  public :: get_address
+  public :: i2c
+  public :: open_safe
+  public :: put_address
+  public :: reset_timer
+  public :: skip_line
+  public :: stats_func
+  public :: system_call
+  public :: timer_fortran
 
-  INTERFACE readfmt
-   MODULE PROCEDURE readfmt_,readfmt__,readfmt___
-  END INTERFACE
+  ! INTERFACE readfmt
+  !  MODULE PROCEDURE readfmt_,readfmt__,readfmt___
+  ! END INTERFACE
 
   INTERFACE get_address
    MODULE PROCEDURE   get_addressr,get_addressi,get_address_d,get_address_c, &
@@ -19,7 +34,6 @@ MODULE common_def
                     & put_addressc,put_addressdvec,put_addresschar,put_addresscvec,put_addressivec 
   END INTERFACE
 
- 
    contains
 
 !**************************************************************************
@@ -270,30 +284,30 @@ MODULE common_def
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-   character(80) function readfmt_(ii,ch)
-   implicit none
-    integer :: ii
-    character*(*) :: ch
-     write(readfmt_,'(A,I4,A,A)') "(",ii,ch,")"
-   end function
-
-    
-   character(80) function readfmt__(ii,ch,ii2,ch2)
-   implicit none
-    integer :: ii,ii2
-    character*(*) :: ch,ch2
-     write(readfmt__,'(A,I4,A,A,I4,A,A)') "(",ii,ch,',',ii2,ch2,")"
-   end function
-
-    
-   character(80) function readfmt___(ii,ch,ii2,ch2,ii3,ch3)
-   implicit none
-    integer :: ii,ii2,ii3
-    character*(*) :: ch,ch2,ch3
-     write(readfmt___,'(A,I4,A,A,I4,A,A,I4,A,A)') "(",ii,ch,',',ii2,ch2,',',ii3,ch3,")"
-   end function
-
+! 
+!    character(80) function readfmt_(ii,ch)
+!    implicit none
+!     integer :: ii
+!     character*(*) :: ch
+!      write(readfmt_,'(A,I4,A,A)') "(",ii,ch,")"
+!    end function
+! 
+!     
+!    character(80) function readfmt__(ii,ch,ii2,ch2)
+!    implicit none
+!     integer :: ii,ii2
+!     character*(*) :: ch,ch2
+!      write(readfmt__,'(A,I4,A,A,I4,A,A)') "(",ii,ch,',',ii2,ch2,")"
+!    end function
+! 
+!     
+!    character(80) function readfmt___(ii,ch,ii2,ch2,ii3,ch3)
+!    implicit none
+!     integer :: ii,ii2,ii3
+!     character*(*) :: ch,ch2,ch3
+!      write(readfmt___,'(A,I4,A,A,I4,A,A,I4,A,A)') "(",ii,ch,',',ii2,ch2,',',ii3,ch3,")"
+!    end function
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
@@ -411,40 +425,40 @@ MODULE common_def
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-subroutine erase(filename)
-character*(*) filename
-logical :: check
-integer :: unit_
- INQUIRE(file=filename,OPENED=check)
- if(check)then
- write(*,*) 'danger erase unit already opened...'
- endif
- call get_free_unit(unit_)
- INQUIRE(unit=unit_,OPENED=check)
- if(check)then
-  write(*,*) 'bug in erase filename routine...unit is already opened'
-  stop 'error in erase filename'
- endif
- INQUIRE(file=filename,EXIST=check)
- if(.not.check) then
-  write(*,*) 'file doesn t exist'
-  return
- endif
- open(unit=unit_,file=filename)
- close(unit_,status='delete')
-end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
+! 
+! subroutine erase(filename)
+! character*(*) filename
+! logical :: check
+! integer :: unit_
+!  INQUIRE(file=filename,OPENED=check)
+!  if(check)then
+!  write(*,*) 'danger erase unit already opened...'
+!  endif
+!  call get_free_unit(unit_)
+!  INQUIRE(unit=unit_,OPENED=check)
+!  if(check)then
+!   write(*,*) 'bug in erase filename routine...unit is already opened'
+!   stop 'error in erase filename'
+!  endif
+!  INQUIRE(file=filename,EXIST=check)
+!  if(.not.check) then
+!   write(*,*) 'file doesn t exist'
+!   return
+!  endif
+!  open(unit=unit_,file=filename)
+!  close(unit_,status='delete')
+! end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
   SUBROUTINE open_safe(unit_,filename_,status_,action_,get_unit)
    !$$$$$$$$$$$$$$$$$$$$$
    !$$ OPEN-CHECK FILE $$

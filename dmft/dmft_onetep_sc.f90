@@ -7,8 +7,9 @@
 
 module dmft_variables_sc
 #ifdef _plot
-use plotlib,only : plotarray
+ use plotlib,only : plotarray
 #endif
+
 use namelistmod             , only : namelist_set,namelist_init,putel_in_namelist, &
                                  & look_for_namelist_in_file, look_for_command_line_argument
 use strings                 , only : replace_in_string,string,assignment (=)
@@ -691,11 +692,9 @@ logical                    :: spoil,diis
       call system(" update_case_file 'write_forces '          T ")  
       if(hydrogenic_projectors<0.0)then
        call system(" update_case_file 'hubbard_proj_mixing ' -2.0 ")
-       call system(" update_case_file 'hubbard_proj_read_only  ' T ")   
        call system(" update_case_file_flip_hub +10             ")
       else
        call system(" update_case_file 'hubbard_proj_mixing ' 0.0 ")
-       call system(" update_case_file 'hubbard_proj_read_only  ' F ") 
        call system(" update_case_file_flip_hub "//trim(adjustl(tostring(hydrogenic_projectors))))
       endif
       call system(" update_case_file 'maxit_ngwf_cg ' "//trim(adjustl(toString(niter_sc_dft))))
@@ -744,11 +743,9 @@ logical                    :: spoil,diis
 
       if(hydrogenic_projectors<0.0)then
        call system(" update_case_file 'hubbard_proj_mixing ' 0.0  ")
-       call system(" update_case_file 'hubbard_proj_read_only  ' F ") 
        call system(" update_case_file_flip_hub -10             ")
       else
        call system(" update_case_file 'hubbard_proj_mixing ' 0.0 ")
-       call system(" update_case_file 'hubbard_proj_read_only  ' F ") 
        call system(" update_case_file_flip_hub "//trim(adjustl(tostring(hydrogenic_projectors))))
       endif
 
@@ -874,11 +871,9 @@ logical                    :: spoil,diis
 
     if(hydrogenic_projectors<0.0)then
       call system(" update_case_file 'hubbard_proj_mixing ' -2.0")
-      call system(" update_case_file 'hubbard_proj_read_only  ' T ") 
       call system(" update_case_file_flip_hub +10")
     else
       call system(" update_case_file 'hubbard_proj_mixing ' 0.0 ")
-      call system(" update_case_file 'hubbard_proj_read_only  ' F ") 
       call system(" update_case_file_flip_hub "//trim(adjustl(tostring(hydrogenic_projectors))))
     endif
 
@@ -904,22 +899,18 @@ logical                    :: spoil,diis
       call system("mv onetep_* sc_store_iter"//TRIM(ADJUSTL(toString(iter_dmft_sc))))
       if(hydrogenic_projectors<0.0)then
         call system(" update_case_file 'hubbard_proj_mixing ' 1.0")
-        call system(" update_case_file 'hubbard_proj_read_only  ' F ") 
         call system(" update_case_file_flip_hub +10")
       else
         call system(" update_case_file 'hubbard_proj_mixing ' 0.0 ")
-        call system(" update_case_file 'hubbard_proj_read_only  ' F ") 
         call system(" update_case_file_flip_hub "//trim(adjustl(tostring(hydrogenic_projectors))))
       endif
     else
       call system(" rm store_* > /dev/null 2>&1 ")
       if(hydrogenic_projectors<0.0)then
         call system(" update_case_file 'hubbard_proj_mixing ' -2.0")
-        call system(" update_case_file 'hubbard_proj_read_only  ' T ") 
         call system(" update_case_file_flip_hub +10")
       else
         call system(" update_case_file 'hubbard_proj_mixing ' 0.0 ")
-        call system(" update_case_file 'hubbard_proj_read_only  ' F ") 
         call system(" update_case_file_flip_hub "//trim(adjustl(tostring(hydrogenic_projectors))))
       endif
     endif
@@ -1225,11 +1216,9 @@ logical                    :: spoil,diis
        call system(" update_case_file 'write_forces '          T ")
        if(hydrogenic_projectors<0.0)then
         call system(" update_case_file 'hubbard_proj_mixing ' -2.0 ")
-        call system(" update_case_file 'hubbard_proj_read_only  ' T ") 
         call system(" update_case_file_flip_hub                +10 ")
        else
         call system(" update_case_file 'hubbard_proj_mixing '  0.0 ")
-        call system(" update_case_file 'hubbard_proj_read_only  ' F ") 
         call system(" update_case_file_flip_hub "//trim(adjustl(tostring(hydrogenic_projectors))))
        endif
        if(numa)then

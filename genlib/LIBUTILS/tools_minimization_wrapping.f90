@@ -30,6 +30,10 @@ contains
 !*********************************************
 
   SUBROUTINE minimize_func_wrapper(func_,test,nnn,FIT_METH,Niter_search_max_,dist_min,dist_max,search_step,use_mpi,pow_in_)
+
+  use random, only : drand1
+  use linalg, only : minloci
+
   implicit none
     CHARACTER(LEN=*)               :: FIT_METH
     INTEGER                        :: iparam,ii,nnn,Niter_search_max,Niter_search_max_

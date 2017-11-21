@@ -17,7 +17,7 @@ complex(8),allocatable :: green_2(:,:),green_(:,:,:,:),green_temp(:,:),frequ_(:)
 type(string)           :: cc_
 logical,allocatable    :: mask_proj(:)
 integer                :: nproj
- integer               :: k_,l_,iii,kk,ll,nnn,kkk,lll
+ integer               :: k_,l_,iii,kk,ll,nnn
 logical                :: check,no_dimer
 integer                :: ndimer,ii,atom_number
 
@@ -107,18 +107,13 @@ integer                :: ndimer,ii,atom_number
 
   open(unit=1010,file='mask_projections')
   write(*,*) 'reading  mask'
-  allocate(mask_proj(channels*ndimer))
-
-  do j=1,atom_number
-  read(1010,*)  (mask_proj(i),i=1,channels*ndimer)
-  enddo
-
-  write(*,*)  (mask_proj(i),i=1,channels*ndimer)
+  allocate(mask_proj(channels))
+  read(1010,*)  (mask_proj(i),i=1,channels)
+  write(*,*)  (mask_proj(i),i=1,channels)
   nproj=0
-  do i=1,channels*ndimer
+  do i=1,channels
    if(mask_proj(i)) nproj=nproj+1
   enddo
-  nproj=nproj/ndimer
   write(*,*) 'THERE ARE [x] KEPT FUNCTIONS : ', nproj
   close(1010)
 
@@ -137,21 +132,21 @@ integer                :: ndimer,ii,atom_number
      !-------------------------------!
       select case(iii) 
       case(1)
-        kk=0;ll=0;kkk=0;lll=0
+        kk=0;ll=0
       case(2)
-        kk=nproj;ll=nproj;kkk=channels;lll=channels
+        kk=nproj;ll=nproj;
       case(3)
-        kk=0;ll=nproj;kkk=0;lll=channels
+        kk=0;ll=nproj
       case(4)
-        kk=nproj;ll=0;kkk=channels;lll=0
+        kk=nproj;ll=0
       end select
       k_=0
       do k=1,channels
-       if(mask_proj(k+kkk))then
+       if(mask_proj(k))then
         k_=k_+1
         l_=0
         do l=1,channels
-            if(mask_proj(l+lll))then
+            if(mask_proj(l))then
               l_=l_+1
               green_2(k_+kk,l_+ll)=green_(j,k,l,iii)
             endif

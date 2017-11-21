@@ -1,6 +1,0 @@
-#!/bin/bash
-
-
-for i in `ls -F |grep atom |grep \/ ` ; do cd $i ; ls *.tar ;  tar -xf  *.tar  ; ls atom* && mv atom*/* . ; cd .. ; done ;     
-
-

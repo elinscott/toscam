@@ -3572,7 +3572,7 @@ endif
  implicit none
  integer                :: klm
  integer                :: i_,ii1,ii2
- real(8)                :: tt1_,tt2_(2),occup,occup1,occup2,Utmp,Jtmp
+ real(8)                :: tt1_,tt2_(2),occup,Utmp,Jtmp
  logical                :: test
 
       if(dmft_for_dimer)then
@@ -3638,7 +3638,7 @@ endif
            tt2_(2) = (tt2_(2) + sum(diag(occupation_matrixdn(klm+1:2*klm,klm+1:2*klm))))/2.d0
         endif
         tt1_ = sum(tt2_)
-        occup1=tt1_
+        occup=occup+tt1_
         do i_=1,2
          do ii1=1,klm
           if(checkujmat)then;Utmp=UU_ren0(ii1,ii1);Jtmp=JJ_ren0(ii1,ii1);else;Utmp=Uaverage;Jtmp=Jhund;endif;
@@ -3652,7 +3652,7 @@ endif
            tt2_(2) = (tt2_(2) + sum(diag(occupation_matrixdn(1:klm,1:klm))))/2.d0
         endif
         tt1_ = sum(tt2_)
-        occup2=tt1_
+        occup=occup+tt1_
         do i_=1,2
          do ii1=1,klm
           if(checkujmat)then;Utmp=UU_ren0(klm+ii1,klm+ii1);Jtmp=JJ_ren0(klm+ii1,klm+ii1);else;Utmp=Uaverage;Jtmp=Jhund;endif;
@@ -3675,29 +3675,19 @@ endif
        occup=0.d0
       endif
     
-         open(unit=1981,file=trim(adjustl(filename_edc)))
-
-         if(dmft_for_dimer)then
-          if(double_counting_zero_self)then
-            write(1981,*)   0.d0, 0.d0
-           else
-            write(1981,*) (-Uaverage/4.d0 + Jhund/8.d0)*occup1, (-Uaverage/4.d0 + Jhund/8.d0)*occup2
-          endif
-         else          
-          if(double_counting_zero_self)then
-            write(1981,*)   0.d0
-          else
-            write(1981,*) (-Uaverage/4.d0 + Jhund/8.d0)*occup 
-          endif
-        endif
-
+      open(unit=1981,file=trim(adjustl(filename_edc)))
+       !correction to E_DC 
+       if(double_counting_zero_self)then
+        write(1981,*)   0.d0
+       else
+        write(1981,*) (-Uaverage/4.d0 + Jhund/8.d0)*occup 
+       endif
         write(1981,*) (-Uaverage/4.d0 + Jhund/8.d0) 
         write(1981,*) '# Uav J n_LDA '
         write(1981,*) Uaverage
         write(1981,*) Jhund
         write(1981,*) occup 
-
-        close(1981)
+      close(1981)
 
 
    end subroutine

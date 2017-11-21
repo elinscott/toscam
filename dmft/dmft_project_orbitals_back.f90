@@ -17,7 +17,7 @@ logical,allocatable    :: mask_proj(:)
 integer                :: nproj
 integer                :: k_,l_,iii,kk,ll,newatom
 character(2000)        :: tt,uu
-integer                :: nnn,kkk,lll
+integer                :: nnn
 integer,allocatable    :: dimer_table(:,:)
 logical                :: check,check_test
 integer                :: ndimer,ii,atom_number
@@ -84,6 +84,21 @@ integer                :: ndimer,ii,atom_number
   enddo
   close(313)
 
+
+
+  open(unit=1010,file='mask_projections')
+  write(*,*) 'reading  mask'
+  allocate(mask_proj(nnn))
+  read(1010,*)  (mask_proj(i),i=1,nnn)
+  write(*,*)    (mask_proj(i),i=1,nnn)
+  nproj=0
+  do i=1,nnn
+    if(mask_proj(i)) nproj=nproj+1
+  enddo
+  write(*,*) 'THERE ARE [x] KEPT FUNCTIONS : ', nproj
+  close(1010)
+
+
   call process_inputs
 
   if(newatom==0)then
@@ -91,24 +106,8 @@ integer                :: ndimer,ii,atom_number
   else
    ndimer=2
   endif
+
   write(*,*) 'NDIMER = ', ndimer
-
-
-  open(unit=1010,file='mask_projections')
-  write(*,*) 'reading  mask'
-  allocate(mask_proj(nnn*ndimer))
-  do j=1,atom_number
-   read(1010,*)  (mask_proj(i),i=1,nnn*ndimer)
-  enddo
-  write(*,*)    (mask_proj(i),i=1,nnn*ndimer)
-  nproj=0
-  do i=1,nnn*ndimer
-    if(mask_proj(i)) nproj=nproj+1
-  enddo
-  nproj=nproj/ndimer
-  write(*,*) 'THERE ARE [x] KEPT FUNCTIONS : ', nproj
-  close(1010)
-
 
   write(*,*) 'scanning file .... : ', TRIM(ADJUSTL(value(1)))
 
@@ -166,25 +165,27 @@ integer                :: ndimer,ii,atom_number
   open(unit=2000,file=TRIM(ADJUSTL(value(i))),form='unformatted')
   write(*,*) 'WRITING FILE : ', TRIM(ADJUSTL(value(i))) 
   do j=1,pub_dmft_points
-        green_2=0.
+
+   ! green_func1_1_1 green_func_1_1_1_dimer green_func1v_1_1 green_func_1v_1_1_dimer
+     green_2=0.
      !-------------------------------!
       select case(i) 
       case(1)
-        kk=0;ll=0;kkk=0;lll=0;
+        kk=0;ll=0
       case(3)
-        kk=nproj;ll=nproj;kkk=nnn;lll=nnn;
+        kk=nproj;ll=nproj;
       case(2)
-        kk=0;ll=nproj;kkk=0;lll=nnn;
+        kk=0;ll=nproj
       case(4)
-        kk=nproj;ll=0;kkk=nnn;lll=0;
+        kk=nproj;ll=0
       end select
       k_=0
       do k=1,nnn
-       if(mask_proj(k+kkk))then
+       if(mask_proj(k))then
         k_=k_+1
         l_=0
         do l=1,nnn
-            if(mask_proj(l+lll))then
+            if(mask_proj(l))then
               l_=l_+1
               green_2(k,l) = green_(j,k_+kk,l_+ll)
             endif
@@ -193,6 +194,7 @@ integer                :: ndimer,ii,atom_number
       enddo
      !-------------------------------!
      write(2000) green_2
+
   enddo
   close(2000)
   enddo

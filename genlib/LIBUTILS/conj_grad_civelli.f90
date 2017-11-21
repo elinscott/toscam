@@ -1,16 +1,19 @@
 module conjg_grad_civelli
 
+ private
+ public :: minimize_civelli
 
 contains
 
-
       subroutine minimize_civelli (funct, n, x, f, g, h, w, dfn, xm, hh, eps, mode, maxfn, iprint, iexit)
+
 
       implicit double precision (a-h,o-z)
       dimension x(*), g(*), h(*), w(*), xm(*)
 
       INTERFACE
        SUBROUTINE funct(n,x,val)
+         use genvar, only: DBL
          USE common_def
          REAL(DBL), INTENT(OUT) :: val
          INTEGER,   INTENT(IN)  :: n
