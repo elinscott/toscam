@@ -1,6 +1,7 @@
 program local_rotations
-use linalg
-implicit none
+ use genvar, only: pi
+ use linalg
+ implicit none
 
  integer                    :: i,j,k,l,m,jj
  integer                    :: ii(3),k1,k2,k3,k_ez,ninplane,noutofplane

@@ -49,12 +49,13 @@ end function
 !***********************************************!
 
 subroutine add_substract_tail(nw,Giom,iom,ahh,ddd,add)
-implicit none
-integer          :: nw
-complex(8)       :: Giom(1:nw),temp(1:nw)
-real(8)          :: iom(1:nw),ah,ahh,drsign,ddd
-integer          :: t,n,i,j
-logical          :: add
+  use genvar          , only : imi
+  implicit none
+  integer          :: nw
+  complex(8)       :: Giom(1:nw),temp(1:nw)
+  real(8)          :: iom(1:nw),ah,ahh,drsign,ddd
+  integer          :: t,n,i,j
+  logical          :: add
 
   if(add)then
     drsign=  1.d0

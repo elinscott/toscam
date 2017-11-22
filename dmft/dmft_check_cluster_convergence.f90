@@ -298,15 +298,15 @@ contains
 !------------------------!
 !------------------------!
 !------------------------!
-
 real(8) function get_dens(GlocRe,GlocIm,diag)
-implicit none
-integer    :: k1,k2,i,j,k,jj
-complex(8) :: dens
-real(8)    :: frequ,pi,tau0,omega,df,GlocRe(:),GlocIm(:)
-complex(8) :: temp
-logical    :: diag
-real(8)    :: alpha
+   use linalg, only: mplx
+   implicit none
+   integer    :: k1,k2,i,j,k,jj
+   complex(8) :: dens
+   real(8)    :: frequ,pi,tau0,omega,df,GlocRe(:),GlocIm(:)
+   complex(8) :: temp
+   logical    :: diag
+   real(8)    :: alpha
 
    pi=dacos(-1.d0)
    jj=size(GlocIm)-7

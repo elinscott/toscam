@@ -14,15 +14,15 @@ CUDA             =
 ALL_LIB          =  ${MKL} $(DIERICK) $(SLATEC) #${X11}
 #########################################################################
 
- LIBSOLVER   = -L/${HOME}/genlib/LIBDMFT_SOLVER_ED -ldmftsolverED   
- LIBSOLVER_C = -L/${HOME}/genlib/LIBDMFT_SOLVER_ED -ldmftsolverED_complex   
+ LIBSOLVER   = -L/${HOME}/ed_solver -ldmftsolverED   
+ LIBSOLVER_C = -L/${HOME}/ed_solver -ldmftsolverED_complex   
  LIBUTILS    = -L/${HOME}/genlib/LIBUTILS -lutils  
 
 #########################################################################
  
- MODFILES    = -I$(HOME)/genlib/LIBDMFT_SOLVER_ED/MODFILES -I$(HOME)/genlib/LIBUTILS/MODFILES  -I$(HOME)/genlib/LIB_GPU_NUMERICS/MODFILES  -I${HOME}/genlib/LIB_GPU_NUMERICS/MODFILES    
+ MODFILES    = -I$(HOME)/ed_solver/MODFILES -I$(HOME)/genlib/LIBUTILS/MODFILES  -I$(HOME)/genlib/LIB_GPU_NUMERICS/MODFILES  -I${HOME}/genlib/LIB_GPU_NUMERICS/MODFILES    
 
- MODFILES_C  = -I$(HOME)/genlib/LIBDMFT_SOLVER_ED/MODFILES_COMPLEX -I$(HOME)/genlib/LIBUTILS/MODFILES  -I$(HOME)/genlib/LIB_GPU_NUMERICS/MODFILES -I${HOME}/LIB_GPU_NUMERICS/MODFILES
+ MODFILES_C  = -I$(HOME)/ed_solver/MODFILES_COMPLEX -I$(HOME)/genlib/LIBUTILS/MODFILES  -I$(HOME)/genlib/LIB_GPU_NUMERICS/MODFILES -I${HOME}/LIB_GPU_NUMERICS/MODFILES
 
 #########################################################################
 

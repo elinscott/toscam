@@ -1,10 +1,11 @@
 program opticaltensor
 
  use linalg
- use StringManip , only : StrInt2
+ use StringManip,           only: StrInt2, toString
+ use matrix,                only: diag
  use mesh
  !use plotlib
- use init_and_close_my_sim   , only : initialize_my_simulation,finalize_my_simulation
+ use init_and_close_my_sim, only: initialize_my_simulation,finalize_my_simulation
 
 implicit none
 

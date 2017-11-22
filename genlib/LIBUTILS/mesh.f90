@@ -12,7 +12,9 @@
 
  implicit none
  private
+ public :: bin_function
  public :: build1Dmesh
+ public :: findin1Dmesh
  public :: findin1Dmesh_d
  public :: mirror_array
  public :: mirror_arrayb__

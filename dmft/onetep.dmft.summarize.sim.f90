@@ -1,6 +1,6 @@
 program summary_script
 use linalg
-use StringManip , only : StrInt2
+use StringManip , only : StrInt2, toString
 use mesh
 use init_and_close_my_sim   , only : initialize_my_simulation,finalize_my_simulation
 

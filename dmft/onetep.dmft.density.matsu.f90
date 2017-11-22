@@ -161,12 +161,14 @@ contains
 !------------------------!
 
 real(8) function get_dens(frequ,GlocRe,GlocIm,diag)
-implicit none
-integer    :: k1,k2,i,j,k,nmatsu_frequ
-complex(8) :: dens
-real(8)    :: tau0,omega,df,frequ(:),GlocRe(:),GlocIm(:)
-complex(8) :: temp
-logical    :: diag
+   use genvar, only: imi
+   use linalg, only: mplx
+   implicit none
+   integer    :: k1,k2,i,j,k,nmatsu_frequ
+   complex(8) :: dens
+   real(8)    :: tau0,omega,df,frequ(:),GlocRe(:),GlocIm(:)
+   complex(8) :: temp
+   logical    :: diag
    nmatsu_frequ=size(frequ)
    tau0 = 1.d-8; dens = 0.d0
    do j=1,nmatsu_frequ

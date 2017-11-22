@@ -31,6 +31,7 @@ module linalg
  public :: minloci
  public :: modi
  public :: mplx
+ public :: norm
  public :: norm_real_vec
  public :: norme
  public :: outerprod
@@ -45,16 +46,17 @@ module linalg
  public :: same_array
  public :: scalprod
  public :: swap
+ public :: vecprod
  public :: write_first_el
  public :: zaxpyb
  public :: zaxpy__
  public :: zdot
  public :: zsum
-! !---------------------------------------------------!
-!  INTERFACE norm
-!    MODULE PROCEDURE norm_cplx_vec
-!    MODULE PROCEDURE norm_real_vec
-!  END INTERFACE
+!---------------------------------------------------!
+ INTERFACE norm
+   MODULE PROCEDURE norm_cplx_vec
+   MODULE PROCEDURE norm_real_vec
+ END INTERFACE
 !---------------------------------------------------!
  INTERFACE conj
    MODULE PROCEDURE conj_cplx
@@ -142,9 +144,9 @@ INTERFACE scalprod
  MODULE PROCEDURE idot_,ddot_,sdot_,cdot_
 END INTERFACE
  !---------------------------------------------------!
-! INTERFACE vecprod
-!  MODULE PROCEDURE dcross,icross,scross,ccross
-! END INTERFACE
+INTERFACE vecprod
+ MODULE PROCEDURE dcross,icross,scross,ccross
+END INTERFACE
  !---------------------------------------------------!
 INTERFACE swap
  module procedure swapi,swaps,swapr,swapa,swapc,swapqc,swapqr,zswap_,zswap__,swapcs
@@ -337,14 +339,14 @@ contains
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-! 
-!   FUNCTION norm_cplx_vec(vec) RESULT(norm)
-!     REAL(DBL)    :: norm
-!     COMPLEX(DBL) :: vec(:)
-!     norm = SQRT(DBLE(DOT_PRODUCT(vec,vec)))
-!   END FUNCTION
-! 
-! 
+
+  FUNCTION norm_cplx_vec(vec) RESULT(norm)
+    REAL(DBL)    :: norm
+    COMPLEX(DBL) :: vec(:)
+    norm = SQRT(DBLE(DOT_PRODUCT(vec,vec)))
+  END FUNCTION
+
+
   FUNCTION norm_real_vec(vec) RESULT(norm)
     REAL(DBL) :: norm
     REAL(DBL) :: vec(:)
@@ -4294,16 +4296,16 @@ integer :: j
 end function
 
 !*********************************************************************************
-! 
-! function icross(x1,y1)
-! implicit none
-! integer, dimension(3),intent(in) ::  x1,y1
-! real(8),dimension(3)::  icross
-!   icross(1) = x1(2)*y1(3) -x1(3)*y1(2)
-!   icross(2) = x1(3)*y1(1) -x1(1)*y1(3)
-!   icross(3) = x1(1)*y1(2) -x1(2)*y1(1)
-! end function
-! 
+
+function icross(x1,y1)
+implicit none
+integer, dimension(3),intent(in) ::  x1,y1
+real(8),dimension(3)::  icross
+  icross(1) = x1(2)*y1(3) -x1(3)*y1(2)
+  icross(2) = x1(3)*y1(1) -x1(1)*y1(3)
+  icross(3) = x1(1)*y1(2) -x1(2)*y1(1)
+end function
+
 !**********************************************************************************
 
 function dnorm(xx)
@@ -4405,44 +4407,44 @@ real(8), dimension(3)            ::  dcross
 end function
 
 !**********************************************************************************
-! 
-! function scross(xx,yy)
-! implicit none
-! real(4), dimension(3),intent(in) ::  xx,yy
-! real(8), dimension(3)            ::  scross
-!  scross(1) = xx(2)*yy(3) -xx(3)*yy(2)
-!  scross(2) = xx(3)*yy(1) -xx(1)*yy(3)
-!  scross(3) = xx(1)*yy(2) -xx(2)*yy(1)
-! end function
-! 
-! !**********************************************************************************
-! 
-! function ccross(x,y)
-! implicit none
-! complex(8), dimension(3),intent(in) ::  x,y
-! complex(8), dimension(3)            :: ccross
-!  ccross(1) = ( x(2)*conjg(y(3)) -x(3)*conjg(y(2)) )
-!  ccross(2) = ( x(3)*conjg(y(1)) -x(1)*conjg(y(3)) )
-!  ccross(3) = ( x(1)*conjg(y(2)) -x(2)*conjg(y(1)) )
-! return
-! end function
-! 
-! !**********************************************************************************
-! 
-! 
-! 
-! 
-! !**************************************************************************
-! !**************************************************************************
-! !**************************************************************************
-! !**************************************************************************
-! !**************************************************************************
-! !**************************************************************************
-! !**************************************************************************
-! !**************************************************************************
-! !**************************************************************************
-! !**************************************************************************
-! !**************************************************************************
+
+function scross(xx,yy)
+implicit none
+real(4), dimension(3),intent(in) ::  xx,yy
+real(8), dimension(3)            ::  scross
+ scross(1) = xx(2)*yy(3) -xx(3)*yy(2)
+ scross(2) = xx(3)*yy(1) -xx(1)*yy(3)
+ scross(3) = xx(1)*yy(2) -xx(2)*yy(1)
+end function
+
+!**********************************************************************************
+
+function ccross(x,y)
+implicit none
+complex(8), dimension(3),intent(in) ::  x,y
+complex(8), dimension(3)            :: ccross
+ ccross(1) = ( x(2)*conjg(y(3)) -x(3)*conjg(y(2)) )
+ ccross(2) = ( x(3)*conjg(y(1)) -x(1)*conjg(y(3)) )
+ ccross(3) = ( x(1)*conjg(y(2)) -x(2)*conjg(y(1)) )
+return
+end function
+
+!**********************************************************************************
+
+
+
+
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
 ! 
 ! 
 ! SUBROUTINE eigsys(ham, olm, zek, evl, evr, ndim)

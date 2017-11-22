@@ -23,6 +23,7 @@ public :: diagonalize
 public :: diagonalize_real
 public :: diagr
 public :: eigenvector_matrix
+public :: eigenvector_matrix_c_
 public :: Id
 public :: invmat
 public :: invmat_comp
@@ -32,18 +33,20 @@ public :: matmul_x
 public :: matmul_x_c 
 public :: new_diag
 public :: new_Id
+public :: offdiag
 public :: offdiagc
 public :: qr_decomp
+public :: rearrange_columns_to_identity
 public :: rearrange_columns_to_identity_c
 public :: write_array
 public :: write_real_array_rank_2
 public :: write_cplx_array_rank_2
 
 !--------------------------------------------------------------------------------!
-! INTERFACE rearrange_columns_to_identity
-!  MODULE PROCEDURE rearrange_columns_to_identity_r,rearrange_columns_to_identity_c
-! END INTERFACE
-! !--------------------------------------------------------------------------------!
+INTERFACE rearrange_columns_to_identity
+ MODULE PROCEDURE rearrange_columns_to_identity_r,rearrange_columns_to_identity_c
+END INTERFACE
+!--------------------------------------------------------------------------------!
 ! INTERFACE invmat_sym
 !  MODULE PROCEDURE invmat_sym_c,invmat_sym_r
 ! END INTERFACE
@@ -146,9 +149,9 @@ INTERFACE diag
  MODULE PROCEDURE diagr,diagc,diagi,diagrr,diagr_,diagc_,diagc__,diagr__
 END INTERFACE
 !--------------------------------------------------------------------------------!
-! INTERFACE offdiag
-!  MODULE PROCEDURE offdiagr,offdiagc
-! END INTERFACE
+INTERFACE offdiag
+ MODULE PROCEDURE offdiagr,offdiagc
+END INTERFACE
 !--------------------------------------------------------------------------------!
 INTERFACE write_array
     MODULE PROCEDURE write_bool_array_rank_3  !  write A(n1,n2,n3) boolean
@@ -2467,18 +2470,18 @@ end function
  end function
 
      !------------------------------------!
-! 
-!  function offdiagr(mat)
-!  implicit none
-!  real(8) :: mat(:,:)
-!  real(8) :: offdiagr(size(mat(:,1)),size(mat(1,:)))
-!  integer :: k,i
-!   offdiagr=mat
-!   do i=1,size(mat(1,:))
-!    offdiagr(i,i)=0.
-!   enddo
-!  end function
-! 
+
+ function offdiagr(mat)
+ implicit none
+ real(8) :: mat(:,:)
+ real(8) :: offdiagr(size(mat(:,1)),size(mat(1,:)))
+ integer :: k,i
+  offdiagr=mat
+  do i=1,size(mat(1,:))
+   offdiagr(i,i)=0.
+  enddo
+ end function
+
       !------------------------------------!
 
  function offdiagc(mat)
@@ -4822,51 +4825,51 @@ real(8)     :: vaps(lsize)
  !-----------------------!
 
 end subroutine
-! 
-!   !--------------------------------------------------!
-! 
-! subroutine rearrange_columns_to_identity_c(lsize,mat,diagdens)
-! implicit none
-! integer                   :: lsize
-! complex(8)                :: diagdenstemp(lsize),diagdens(lsize),mat(lsize,lsize),mat_temp(lsize,lsize)
-! integer                   :: i
-! integer                   :: uu(1),uuu(lsize),uuu_not_placed(lsize),j,k
-! real(8)                   :: dist(lsize)
-! 
-!  uuu=0
-!  uuu_not_placed=0
-!  k=0
-! 
-!  do i=1,lsize
-!   uu=maxloc(abs(mat(:,i)))  
-!   j=uu(1)
-!   if(uuu(j)==0)then
-!     uuu(j)=i     
-!   else
-!     k=k+1
-!     uuu_not_placed(k)=i
-!   endif
-!  enddo
-!  
-!  k=0
-!  do i=1,lsize
-!   if(uuu(i)==0)then
-!     k=k+1
-!     uuu(i)=uuu_not_placed(k)
-!   endif
-!  enddo
-! 
-!  mat_temp=mat
-!  diagdenstemp=diagdens
-!  do i=1,lsize
-!    mat(:,i)=mat_temp(:,uuu(i))
-!    diagdens(i)=diagdenstemp(uuu(i))
-!  enddo
-! 
-! return
-! end subroutine
-! 
+
   !--------------------------------------------------!
+
+subroutine rearrange_columns_to_identity_c(lsize,mat,diagdens)
+implicit none
+integer                   :: lsize
+complex(8)                :: diagdenstemp(lsize),diagdens(lsize),mat(lsize,lsize),mat_temp(lsize,lsize)
+integer                   :: i
+integer                   :: uu(1),uuu(lsize),uuu_not_placed(lsize),j,k
+real(8)                   :: dist(lsize)
+
+ uuu=0
+ uuu_not_placed=0
+ k=0
+
+ do i=1,lsize
+  uu=maxloc(abs(mat(:,i)))  
+  j=uu(1)
+  if(uuu(j)==0)then
+    uuu(j)=i     
+  else
+    k=k+1
+    uuu_not_placed(k)=i
+  endif
+ enddo
+ 
+ k=0
+ do i=1,lsize
+  if(uuu(i)==0)then
+    k=k+1
+    uuu(i)=uuu_not_placed(k)
+  endif
+ enddo
+
+ mat_temp=mat
+ diagdenstemp=diagdens
+ do i=1,lsize
+   mat(:,i)=mat_temp(:,uuu(i))
+   diagdens(i)=diagdenstemp(uuu(i))
+ enddo
+
+return
+end subroutine
+
+!--------------------------------------------------!
 
 subroutine rearrange_columns_to_identity_r(lsize,mat,diagdens)
 implicit none

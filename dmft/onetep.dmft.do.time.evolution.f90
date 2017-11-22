@@ -1,12 +1,13 @@
 program keldysh
-use linalg
-use StringManip , only : StrInt2,toString
-implicit none
-integer                :: i,j,k,l,ispin,ntime,Nc
-real(8),allocatable    :: n_v_t_matrix(:,:,:,:)
-complex(8),allocatable :: sigma(:,:,:,:)
-integer                :: hat,species,cpus
-character(60)          :: mpiline
+  use genvar,      only: imi
+  use linalg
+  use StringManip, only: StrInt2,toString
+  implicit none
+  integer                :: i,j,k,l,ispin,ntime,Nc
+  real(8),allocatable    :: n_v_t_matrix(:,:,:,:)
+  complex(8),allocatable :: sigma(:,:,:,:)
+  integer                :: hat,species,cpus
+  character(60)          :: mpiline
 
   write(*,*) 'CHECK THAT REAL_SPACE_PLOT IN RUN.DAT IS SWITCHED ON'
   write(*,*) 'TO SPEED UP CALCULATIONS YOU CAN ALSO SET pub_dmft_plot_real_space_sigma : T '

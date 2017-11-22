@@ -330,13 +330,6 @@ CONTAINS
          g_out(:,:,i) = flip_matrix(   g_out(:,:,i),flip_input_output)
        corhop_(:,:,i) = flip_matrix( corhop_(:,:,i),flip_input_output)
      enddo
-     write(*,*) a1,a2
-     write(*,*) allocated(GNAMBUret%correl(2,1)%freq%vec)
-     write(*,*) shape(gw)
-    write(*,*) shape(gw_)
-     write(*,*) shape(sigww)
-     write(*,*) shape(sigw_)
-     write(*,*) flip_input_output
 
      do i=1,a1
       do j=1,a2

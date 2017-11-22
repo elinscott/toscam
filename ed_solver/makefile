@@ -1,4 +1,4 @@
-  HOME=/scratch/ebl27/MYLIBRARY_ONETEP_stripped
+  HOME=/scratch/ebl27/toscam_full
   SHELL  = /bin/bash
   FCOMPL = mpifort  
   
@@ -19,7 +19,7 @@ ROUTINES =  mask_class.f90 masked_mat_class.f90 quantum_algebra.f90 quantum_ferm
 
 ROUTINES2 = eigen_sector_class.f90
 
-MODFILES=-I$(HOME)/MYLIBRARY/LIBUTILS_STRIPPED/MODFILES -I./MODFILES -I$(HOME)/MYLIBRARY/LIB_GPU_NUMERICS/MODFILES 
+MODFILES=-I$(HOME)/genlib/LIBUTILS/MODFILES -I./MODFILES -I$(HOME)/genlib/LIB_GPU_NUMERICS/MODFILES 
 
 comp:  ${ROUTINES} 
 	@rm *.o *.mod ./MODFILES/*.mod || echo 'files erased...'
@@ -43,9 +43,4 @@ libdmftsolverED.a:
 	@echo 'LIBRARY IS DONE.........'
 	@rm *.o || echo 'files erased....'
 	@echo ' '
-
-
-
-
-
 
