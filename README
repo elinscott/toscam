@@ -1,0 +1,35 @@
+=============================================================
+
+                        T O S C A M
+
+ - Toolbox for Strongly Correlated Approaches to Molecules -
+
+=============================================================
+
+ Authors:
+ Cedric Weber, Edward Linscott, ... (need to complete)
+
+ This is distrubuted under the GNU Lesser General Public
+ License
+
+-------------------------------------------------------------
+
+ Please cite:
+
+-------------------------------------------------------------
+
+ Website: https://bitbucket.org/cedric_79/toscam_full
+
+-------------------------------------------------------------
+ Directory Structure
+
+ dmft/      Scripts for running TOSCAM as well as pre- and 
+            post-processing
+ ed_solver/ Source code for the exact diagonalization solver
+ genlib/    Libraries
+
+-------------------------------------------------------------
+
+ For installation instructions, see INSTALL
+
+-------------------------------------------------------------

@@ -1,0 +1,19 @@
+Instructions for installing TOSCAM
+
+The following assumes that your working directory is the top level of the TOSCAM tree.
+
+To install TOSCAM, complete the following steps. Where relevant, ensure that the makefiles point to
+the correct HOME directory
+
+   1) Compile the libraries in genlib. This involves...
+      a) in genlib/LIB_DIERICK/ "make build"
+      b) in genlib/LIBSLATEC/static "make libslatec.a" and then "mv libslatec.a .."
+      c) in genlib/LIB_FIELD_SPLINE/src/ "make build" and then "mv libfield.a .."
+      d) in genlib/LIB_GPU_NUMERICS/ "make build"
+      e) in genlib/LIBUTILS/ "make build"
+   2) Compile any solvers (e.g. in ed_solver, run "make build")
+   3) Compile the dmft wrappers executables in dmft/ via "make prog", making sure the makefile is
+      directed towards the installed libraries and solvers
+
+TOSCAM Developers
+Last updated: 22 November 2017
