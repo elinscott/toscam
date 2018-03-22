@@ -27,5 +27,13 @@ ONETEP_3.1/obj/*
 # ONETEP executables
 ONETEP_3.1/bin/onetep.*
 
+# Documentation
+doc/*.aux
+doc/*.bbl
+doc/*.blg
+doc/*.log
+doc/*.toc
+doc/*.pdf
+
 # Ignore any swap files
 *swp
