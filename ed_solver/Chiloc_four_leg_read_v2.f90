@@ -1,19 +1,3 @@
-!####################################################!
-!####################################################!
-!####################################################!
-!####################################################!
-!####################################################!
-!####################################################!
-!####################################################!
-!####################################################!
-!####################################################!
-!####################################################!
-!####################################################!
-!####################################################!
-!####################################################!
-!####################################################!
-!####################################################!
-
 module cdagger
 
  INTERFACE ASSIGNMENT (=)
@@ -492,31 +476,54 @@ integer,allocatable                 :: op_(:)
 ! value arrays and c^dagger matrices ###########
 !###############################################
 ! dim_E_i
-    n2=dim_E_i; n4=dim_E_i; n11=dim_E_i; n15=dim_E_i
+    n2=dim_E_i
+ n4=dim_E_i
+ n11=dim_E_i
+ n15=dim_E_i
 ! dim_E_pup
     if (dim_E_pup == -1) then
-        n1=1; n6=1; n21=1   ! if nup(i)+1>max_up, then give n1=1, such that the 
+        n1=1
+ n6=1
+ n21=1   ! if nup(i)+1>max_up, then give n1=1, such that the 
                             ! array/matrix can be initialized. but since dim_E_pup=-1, the iteration in 
     else                    ! chi_tilde_loc() will not be executed, and thus the array/matrix will not be used anyway. 
-        n1=dim_E_pup; n6=dim_E_pup; n21=dim_E_pup
+        n1=dim_E_pup
+ n6=dim_E_pup
+ n21=dim_E_pup
     end if
 ! dim_E_pdn
     if (dim_E_pdn == -1) then
-        n3=1; n8=1; n10=1; n19=1
+        n3=1
+ n8=1
+ n10=1
+ n19=1
     else
-        n3=dim_E_pdn; n8=dim_E_pdn; n10=dim_E_pdn; n19=dim_E_pdn
+        n3=dim_E_pdn
+ n8=dim_E_pdn
+ n10=dim_E_pdn
+ n19=dim_E_pdn
     end if
 ! dim_E_mup
     if (dim_E_mup == -1) then
-        n12=1; n14=1; n25=1
+        n12=1
+ n14=1
+ n25=1
     else 
-        n12=dim_E_mup; n14=dim_E_mup; n25=dim_E_mup
+        n12=dim_E_mup
+ n14=dim_E_mup
+ n25=dim_E_mup
     end if
 ! dim_E_mdn
     if (dim_E_mdn == -1) then
-        n16=1; n18=1; n23=1; n27=1
+        n16=1
+ n18=1
+ n23=1
+ n27=1
     else
-        n16=dim_E_mdn; n18=dim_E_mdn; n23=dim_E_mdn; n27=dim_E_mdn
+        n16=dim_E_mdn
+ n18=dim_E_mdn
+ n23=dim_E_mdn
+ n27=dim_E_mdn
     end if
 ! dim_E_p2dn
     if (dim_E_p2dn == -1) then
@@ -532,27 +539,35 @@ integer,allocatable                 :: op_(:)
     end if
 ! dim_E_puppdn
     if (dim_E_puppdn == -1) then
-        n5=1; n7=1
+        n5=1
+ n7=1
     else 
-        n5=dim_E_puppdn; n7=dim_E_puppdn
+        n5=dim_E_puppdn
+ n7=dim_E_puppdn
     end if
 ! dim_E_muppdn
     if (dim_E_muppdn == -1) then
-        n13=1; n20=1
+        n13=1
+ n20=1
     else 
-        n13=dim_E_muppdn; n20=dim_E_muppdn
+        n13=dim_E_muppdn
+ n20=dim_E_muppdn
     end if
 ! dim_E_pupmdn
     if (dim_E_pupmdn == -1) then
-        n17=1; n22=1
+        n17=1
+ n22=1
     else
-        n17=dim_E_pupmdn; n22=dim_E_pupmdn
+        n17=dim_E_pupmdn
+ n22=dim_E_pupmdn
     end if
 ! dim_E_mupmdn
     if (dim_E_mupmdn == -1) then
-        n24=1; n26=1
+        n24=1
+ n26=1
     else 
-        n24=dim_E_mupmdn; n26=dim_E_mupmdn
+        n24=dim_E_mupmdn
+ n26=dim_E_mupmdn
     end if
 
 

@@ -86,7 +86,8 @@ CONTAINS
     nGS     = nlowest(GS)
 
     ALLOCATE(overlap(nvec,nGS))
-    overlap=zero ; iGS=0
+    overlap=zero 
+ iGS=0
 
     DO isector=1,GS%nsector
      DO ieigen=1,GS%es(isector)%lowest%neigen
@@ -133,7 +134,8 @@ CONTAINS
       write(log_unit,*) '----------------------------------------------------'
     ENDDO
 
-    DEALLOCATE(overlap); if(allocated(phase_)) DEALLOCATE(phase_,roverlap)
+    DEALLOCATE(overlap)
+ if(allocated(phase_)) DEALLOCATE(phase_,roverlap)
 
   END SUBROUTINE 
 

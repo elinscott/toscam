@@ -89,7 +89,8 @@ CONTAINS
       call init_sector
       if(.not.(USE_TRANSPOSE_TRICK_MPI.and.NOT_COMMENSURATE))then
       !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%!
-      DO ipm=1,2; DO jpm=1,2
+      DO ipm=1,2
+ DO jpm=1,2
       IF(                 GREEN%compute(ipm,jpm)           )then
       IF(     associated(green%correl(ipm,jpm)%MM%MASK%mat))then
       IF(            ANY(green%correl(ipm,jpm)%MM%MASK%mat))then
@@ -103,7 +104,8 @@ CONTAINS
       ENDIF
       ENDIF
       ENDIF
-      ENDDO;ENDDO
+      ENDDO
+ENDDO
       !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%!
       endif
     ENDDO 

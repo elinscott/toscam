@@ -117,16 +117,20 @@ CONTAINS
   
     ! ORDERING OF ORBITALS WITH INCREASING RANK |(site,up)> |(site,down)>
 
-    if(ASSOCIATED(BATH%iorb)) DEALLOCATE(BATH%iorb,STAT=istati); ALLOCATE(BATH%iorb(Nb,2))
+    if(ASSOCIATED(BATH%iorb)) DEALLOCATE(BATH%iorb,STAT=istati)
+ ALLOCATE(BATH%iorb(Nb,2))
 
-    CALL ramp(BATH%iorb(:,1),Nb); BATH%iorb(:,2) = BATH%iorb(:,1) + Nb ; BATH%Nc = Nc 
+    CALL ramp(BATH%iorb(:,1),Nb)
+ BATH%iorb(:,2) = BATH%iorb(:,1) + Nb 
+ BATH%Nc = Nc 
 
     BATH%fileout = ''
     BATH%nparam = 0
 
     ! CONDUCTION BATH ENERGY
     IF(PRESENT(IMASKE))THEN
-      IF(ASSOCIATED(BATH%Eb)) DEALLOCATE(BATH%Eb,STAT=istati); ALLOCATE(BATH%Eb(SIZE(IMASKE,3)))
+      IF(ASSOCIATED(BATH%Eb)) DEALLOCATE(BATH%Eb,STAT=istati)
+ ALLOCATE(BATH%Eb(SIZE(IMASKE,3)))
       DO spin=1,SIZE(IMASKE,3)
        CALL new_masked_matrix(BATH%Eb(spin),"Eb(sz="//TRIM(cspin(spin))//")",Nb,Nb,IMASK=IMASKE(:,:,spin),IS_HERM=T)
       ENDDO
@@ -135,7 +139,8 @@ CONTAINS
     
     ! HYBRIDIZATION
     IF(PRESENT(IMASKV))THEN
-      IF(ASSOCIATED(BATH%Vbc)) DEALLOCATE(BATH%Vbc,STAT=istati); ALLOCATE(BATH%Vbc(SIZE(IMASKV,3)))
+      IF(ASSOCIATED(BATH%Vbc)) DEALLOCATE(BATH%Vbc,STAT=istati)
+ ALLOCATE(BATH%Vbc(SIZE(IMASKV,3)))
       DO spin=1,SIZE(IMASKV,3)
        CALL new_masked_matrix(BATH%Vbc(spin),"Vbc(sz="//TRIM(cspin(spin))//")",Nb,Nc,IMASK=IMASKV(:,:,spin))
       ENDDO
@@ -143,7 +148,8 @@ CONTAINS
     ENDIF
    
      IF(PRESENT(IMASKPV))THEN
-      IF(ASSOCIATED(BATH%PVbc)) DEALLOCATE(BATH%PVbc,STAT=istati); ALLOCATE(BATH%PVbc(SIZE(IMASKPV,3)))
+      IF(ASSOCIATED(BATH%PVbc)) DEALLOCATE(BATH%PVbc,STAT=istati)
+ ALLOCATE(BATH%PVbc(SIZE(IMASKPV,3)))
       DO spin=1,SIZE(IMASKPV,3)
        CALL new_masked_matrix(BATH%PVbc(spin),"PVbc(sz="//TRIM(cspin(spin))//")",Nb,Nc,IMASK=IMASKPV(:,:,spin))
       ENDDO
@@ -176,10 +182,14 @@ CONTAINS
 
     IF(.NOT.ASSOCIATED(BATHIN%Eb)) STOP "ERROR IN new_bath_from_old: INPUT ISNT ALLOCATED!"
 
-    IF(ALLOCATED(IMASKE))  DEALLOCATE(IMASKE,STAT=istati);  ALLOCATE(IMASKE(BATHIN%Nb,BATHIN%Nb,2))
-    IF(ALLOCATED(IMASKV))  DEALLOCATE(IMASKV,STAT=istati);  ALLOCATE(IMASKV(BATHIN%Nb,BATHIN%Nc,2))
-    IF(ALLOCATED(IMASKPV)) DEALLOCATE(IMASKPV,STAT=istati); ALLOCATE(IMASKPV(BATHIN%Nb,BATHIN%Nc,2))
-    IF(ALLOCATED(IMASKP))  DEALLOCATE(IMASKP,STAT=istati);  ALLOCATE(IMASKP(BATHIN%Nb,BATHIN%Nb))
+    IF(ALLOCATED(IMASKE))  DEALLOCATE(IMASKE,STAT=istati)
+  ALLOCATE(IMASKE(BATHIN%Nb,BATHIN%Nb,2))
+    IF(ALLOCATED(IMASKV))  DEALLOCATE(IMASKV,STAT=istati)
+  ALLOCATE(IMASKV(BATHIN%Nb,BATHIN%Nc,2))
+    IF(ALLOCATED(IMASKPV)) DEALLOCATE(IMASKPV,STAT=istati)
+ ALLOCATE(IMASKPV(BATHIN%Nb,BATHIN%Nc,2))
+    IF(ALLOCATED(IMASKP))  DEALLOCATE(IMASKP,STAT=istati)
+  ALLOCATE(IMASKP(BATHIN%Nb,BATHIN%Nb))
 
     DO spin=1,2
       IMASKE(:,:,spin)  =  BATHIN%Eb(spin)%rc%MASK%imat
@@ -338,12 +348,15 @@ CONTAINS
     CALL open_safe(UNIT,FILEIN,'UNKNOWN','READ',get_unit=.true.)
 
     ! READ BATH SCALARS/ALLOCATE BATH
-    READ(UNIT,*) Nb; READ(UNIT,*) Nc
+    READ(UNIT,*) Nb
+ READ(UNIT,*) Nc
 
     CALL new_bath_from_scratch(BATH,Nb,Nc)
  
     ! READ BATH
-    READ(UNIT,*) BATH%fileout ; READ(UNIT,*) BATH%nparam ; READ(UNIT,*) nspin
+    READ(UNIT,*) BATH%fileout 
+ READ(UNIT,*) BATH%nparam 
+ READ(UNIT,*) nspin
 
     ALLOCATE(BATH%Eb(nspin))
     DO spin=1,nspin 
@@ -369,7 +382,9 @@ CONTAINS
     call which_basis_to_use(BATH)
  
     write(log_unit,*) ' GO WITH SUPERCONDUCTIVITY ? ' , BATH%SUPER
-    READ(UNIT,*) BATH%Niter_search_max ; READ(UNIT,*) BATH%search_step ;
+    READ(UNIT,*) BATH%Niter_search_max 
+ READ(UNIT,*) BATH%search_step 
+
     READ(UNIT,*) BATH%dist_max
 
     CALL close_safe(UNIT)
@@ -467,7 +482,9 @@ CONTAINS
 
     CALL new_bath_from_scratch(BATH,Nb,Nc)
 
-    IF(ALLOCATED(IMASKE)) DEALLOCATE(IMASKE,STAT=istati) ; ALLOCATE(IMASKE(Nb,Nb,2)); IMASKE = 0
+    IF(ALLOCATED(IMASKE)) DEALLOCATE(IMASKE,STAT=istati) 
+ ALLOCATE(IMASKE(Nb,Nb,2))
+ IMASKE = 0
 
  !---------------------------------------------------------------------------!
  !---------------------------------------------------------------------------! 
@@ -496,7 +513,8 @@ CONTAINS
  !---------------------------------------------------------------------------!
  !---------------------------------------------------------------------------!
 
-    IF(ASSOCIATED(BATH%Eb)) DEALLOCATE(BATH%Eb,STAT=istati) ; ALLOCATE(BATH%Eb(2))
+    IF(ASSOCIATED(BATH%Eb)) DEALLOCATE(BATH%Eb,STAT=istati) 
+ ALLOCATE(BATH%Eb(2))
 
     DO spin=1,2
       CALL new_masked_matrix(BATH%Eb(spin),"Eb(sz="//TRIM(cspin(spin))//")",Nb,Nb,IMASK=IMASKE(:,:,spin),IS_HERM=T)
@@ -542,7 +560,9 @@ CONTAINS
     write(*,*) 'read baths . There are ... sites in the bath : ', Nb 
     write(*,*) '====================================================='
 
-    IF(ALLOCATED(IMASKP)) DEALLOCATE(IMASKP,STAT=istati) ; ALLOCATE(IMASKP(Nb,Nb)); IMASKP = 0
+    IF(ALLOCATED(IMASKP)) DEALLOCATE(IMASKP,STAT=istati) 
+ ALLOCATE(IMASKP(Nb,Nb))
+ IMASKP = 0
   
  !---------------------------------------------------------------------------!
  !---------------------------------------------------------------------------!
@@ -623,8 +643,12 @@ CONTAINS
  !---------------------------------------------------------------------------!
  !---------------------------------------------------------------------------!
 
-    IF(ALLOCATED(IMASKV))  DEALLOCATE(IMASKV,STAT=istati)  ; ALLOCATE(IMASKV(Nb,Nc,2));  IMASKV = 0
-    IF(ALLOCATED(IMASKPV)) DEALLOCATE(IMASKPV,STAT=istati) ; ALLOCATE(IMASKPV(Nb,Nc,2)); IMASKPV = 0
+    IF(ALLOCATED(IMASKV))  DEALLOCATE(IMASKV,STAT=istati)  
+ ALLOCATE(IMASKV(Nb,Nc,2))
+  IMASKV = 0
+    IF(ALLOCATED(IMASKPV)) DEALLOCATE(IMASKPV,STAT=istati) 
+ ALLOCATE(IMASKPV(Nb,Nc,2))
+ IMASKPV = 0
 
  !---------------------------------------------------------------------------!
  !---------------------------------------------------------------------------!
@@ -684,13 +708,15 @@ CONTAINS
  !---------------------------------------------------------------------------!
  !---------------------------------------------------------------------------!
 
-    IF(ASSOCIATED(BATH%Vbc)) DEALLOCATE(BATH%Vbc,STAT=istati) ; ALLOCATE(BATH%Vbc(2))
+    IF(ASSOCIATED(BATH%Vbc)) DEALLOCATE(BATH%Vbc,STAT=istati) 
+ ALLOCATE(BATH%Vbc(2))
     DO spin=1,2
         CALL new_masked_matrix(BATH%Vbc(spin),"Vbc(sz="//TRIM(cspin(spin))//")",Nb,Nc,IMASK=IMASKV(:,:,spin))
     ENDDO
     CALL clean_redundant_imask(BATH%Vbc)
 
-    IF(ASSOCIATED(BATH%PVbc)) DEALLOCATE(BATH%PVbc,STAT=istati) ; ALLOCATE(BATH%PVbc(2))
+    IF(ASSOCIATED(BATH%PVbc)) DEALLOCATE(BATH%PVbc,STAT=istati) 
+ ALLOCATE(BATH%PVbc(2))
     DO spin=1,2
         CALL new_masked_matrix(BATH%PVbc(spin),"PVbc(sz="//TRIM(cspin(spin))//")",Nb,Nc,IMASK=IMASKPV(:,:,spin))
     ENDDO

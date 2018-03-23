@@ -258,7 +258,8 @@ CONTAINS
    
     ! ORDERING OF ORBITALS WITH INCREASING RANK  = |(site,up)> |(site,down)>
 
-    IF(ASSOCIATED(impurity%iorb)) DEALLOCATE(impurity%iorb,STAT=istati) ; ALLOCATE(impurity%iorb(Nc,2)) 
+    IF(ASSOCIATED(impurity%iorb)) DEALLOCATE(impurity%iorb,STAT=istati) 
+ ALLOCATE(impurity%iorb(Nc,2)) 
 
     CALL ramp(impurity%iorb(:,1))
 
@@ -266,7 +267,8 @@ CONTAINS
 
     IF(PRESENT(IMASKE))THEN
       ! QUADRATIC ENERGY
-      if(ASSOCIATED(impurity%Ec)) DEALLOCATE(impurity%Ec,STAT=istati) ; ALLOCATE(impurity%Ec(SIZE(IMASKE,3)))
+      if(ASSOCIATED(impurity%Ec)) DEALLOCATE(impurity%Ec,STAT=istati) 
+ ALLOCATE(impurity%Ec(SIZE(IMASKE,3)))
       DO spin=1,SIZE(IMASKE,3)
        CALL new_masked_matrix(impurity%Ec(spin),"Ec(sz="//TRIM(cspin(spin))//")",Nc,Nc,IMASK=IMASKE(:,:,spin),IS_HERM=T)
       ENDDO
@@ -371,9 +373,12 @@ CONTAINS
     ! NON-QUADRATIC ENERGY 
     !======================!
 
-    if(allocated(IMASKU)) deallocate(IMASKU,STAT=istati); ALLOCATE(IMASKU(Nc,Nc))
+    if(allocated(IMASKU)) deallocate(IMASKU,STAT=istati)
+ ALLOCATE(IMASKU(Nc,Nc))
 
-    IMASKU = 0; kkk = 0 ; val = 0.d0
+    IMASKU = 0
+ kkk = 0 
+ val = 0.d0
     
     do jj=1,Nc
       kkk           = kkk + 1
@@ -441,7 +446,8 @@ CONTAINS
     ! QUADRATIC ENERGY
     !======================!
 
-    if(associated(impurity%Ec)) deallocate(impurity%Ec,STAT=istati); ALLOCATE(impurity%Ec(2))
+    if(associated(impurity%Ec)) deallocate(impurity%Ec,STAT=istati)
+ ALLOCATE(impurity%Ec(2))
 
     call update_impurity(impurity_%N,impurity,mmu,impurity_,Himp,Eimp=Eimp)
 
@@ -488,7 +494,9 @@ CONTAINS
     INTEGER                            :: mu, spin, iind_, iind
     INTEGER                            :: IMASKE(Nc,Nc,2)
 
-   IMASKE=0; k=0; val=0.d0 
+   IMASKE=0
+ k=0
+ val=0.d0 
 
    if(.not.present(Eimp))then
 

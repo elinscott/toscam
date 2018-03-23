@@ -184,7 +184,8 @@ CONTAINS
    energy_global_shift2    =    0.d0
    energy_global_shift     =    0.d0
 
-   a1=size(sigw,1); a2=size(sigw,2)
+   a1=size(sigw,1)
+ a2=size(sigw,2)
 
   !----------------------------------------------------------------------------------------------!
   !----------------------------------------------------------------------------------------------!
@@ -469,7 +470,8 @@ end subroutine
  integer    :: i,j,a1,a2
  logical    :: flip_input_output 
 
- a1=size(mat,1) ; a2=size(mat,2)
+ a1=size(mat,1) 
+ a2=size(mat,2)
   !-----------------------------------------------------------------------------------!
      do i=1,a1
       do j=1,a2
@@ -491,7 +493,9 @@ end subroutine
  integer    :: i,j,a1,a2,Nc
  logical    :: flip_input_output
    flip_matrix_Eimp=0.d0
-   a1=size(mat,1) ; a2=size(mat,2); Nc=a1/2
+   a1=size(mat,1) 
+ a2=size(mat,2)
+ Nc=a1/2
    if(.not.flip_input_output)then
      flip_matrix_Eimp = mat
      return
@@ -548,7 +552,10 @@ end subroutine
  allocate(temp(1+2*2*cluster_problem_size),Eimp_(cluster_problem_size,cluster_problem_size),Eimp(2*cluster_problem_size,2*cluster_problem_size),rdens(2*cluster_problem_size))
  allocate(UUmatrix_loc(cluster_problem_size,cluster_problem_size))
  allocate(JJmatrix_loc(cluster_problem_size,cluster_problem_size))
- JJmatrix_loc=0.d0; UUmatrix_loc=0.d0; Eimp_=0.d0;Eimp=0.d0
+ JJmatrix_loc=0.d0
+ UUmatrix_loc=0.d0
+ Eimp_=0.d0
+Eimp=0.d0
 
  do ii=1,cluster_problem_size
     read(10001,*) (Eimp_(ii,jj),jj=1,cluster_problem_size)
@@ -603,7 +610,8 @@ end subroutine
  61 continue
  close(10001)
 
-  first_time=my_iter_dmft<0; my_iter_dmft=abs(my_iter_dmft)
+  first_time=my_iter_dmft<0
+ my_iter_dmft=abs(my_iter_dmft)
 
  if(rank==0.or.no_mpi)then
  inquire(file='ed.sector_bound_file',exist=checkit)
@@ -863,7 +871,11 @@ end subroutine
   write(*,*) 'calling ED solver, with [x] Bath parameters : ', bath_param_ed
   write(*,*) '############################################'
  endif
- self_out=0.; g_out=0.; gw=0.; sigw=0.;
+ self_out=0.
+ g_out=0.
+ gw=0.
+ sigw=0.
+
 
  if(size2>1.and..not.no_mpi)then
   write(*,*) 'CALLING ED SOLVER , RANK = ', rank
@@ -932,7 +944,8 @@ end subroutine
 
 
  if(no_cdw)then
-   k=cluster_problem_size; nn=2*k
+   k=cluster_problem_size
+ nn=2*k
    do j=1,nmatsu_frequ
     do ii=1,nn
      do jj=1,nn
@@ -1173,7 +1186,8 @@ end subroutine
   
     use_input_Eimp_matrices=.false.
     if(allocated(UUmatrix)) deallocate(UUmatrix)
-    if(allocated(JJmatrix)) deallocate(JJmatrix); allocate(JJmatrix(impurity_%N,impurity_%N))
+    if(allocated(JJmatrix)) deallocate(JJmatrix)
+ allocate(JJmatrix(impurity_%N,impurity_%N))
   
     if(present(UUmatrix_in))then
        allocate(UUmatrix(UUmatrix_in_size,UUmatrix_in_size))
@@ -1223,7 +1237,8 @@ end subroutine
 
     write(145+rank,*) ' .... dEmax .... : ', dEmax
 
-    wmin=-max(abs(wwmin),abs(wmax)); wmax= max(abs(wwmin),abs(wmax))
+    wmin=-max(abs(wwmin),abs(wmax))
+ wmax= max(abs(wwmin),abs(wmax))
 
     write(log_unit,*) '================================================'
     write(log_unit,*)         '.... DEFINE IMPURITY ....'

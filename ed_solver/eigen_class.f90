@@ -330,7 +330,8 @@ CONTAINS
   logical function is_eigen_in_window(E_,window)
   real(DBL)                :: E_,E0,E1
   REAL(DBL), INTENT(IN)    :: window(2)
-   E0 = MINVAL(window); E1 = MAXVAL(window)
+   E0 = MINVAL(window)
+ E1 = MAXVAL(window)
    is_eigen_in_window = E_>=E0.AND.E_<=E1
   end function
 
@@ -343,13 +344,15 @@ CONTAINS
     INTEGER                  :: ieigen,rank
     INTEGER                  :: rank2remove(list%neigen),neigen2remove
 
-    E0 = MINVAL(window,1); E1 = MAXVAL(window,1)
+    E0 = MINVAL(window,1)
+ E1 = MAXVAL(window,1)
 
     !--------------------------------------------------------! 
     ! EXPUNGE ALL EIGENSTATES IN list OUTSIDE [E0,E1] window !
     !--------------------------------------------------------!
 
-    rank2remove   = 0 ; neigen2remove = 0
+    rank2remove   = 0 
+ neigen2remove = 0
 
     if(list%neigen>size(list%eigen(:)))then
        write(*,*)  ' list%neigen  :  ' , list%neigen

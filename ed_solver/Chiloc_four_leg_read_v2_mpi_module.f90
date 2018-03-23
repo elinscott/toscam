@@ -515,7 +515,9 @@ integer    :: i,j,k,sizev
 
 if(size2==1) return
 
-vecmm=-99999999; vecm=0 ;sizev=size(vec,1)*size(vec,2)
+vecmm=-99999999
+ vecm=0 
+sizev=size(vec,1)*size(vec,2)
 
 do j=0,size2-1
  if(rank==j) vecm=vec
@@ -537,7 +539,9 @@ integer    :: i,j,k,sizev
 
 if(size2==1) return
 
-vecmm=-99999999; vecm=0 ;sizev=size(vec)
+vecmm=-99999999
+ vecm=0 
+sizev=size(vec)
 
 do j=0,size2-1
  if(rank==j) vecm=vec
@@ -1672,8 +1676,12 @@ real(8) :: mat(:,:,:),matm(size(mat(:,1,1)),size(mat(1,:,1)),size(mat(1,1,:))), 
            &  Imat(size(mat(:,1,1)),size(mat(1,:,1)),size(mat(1,1,:)))
 integer :: i,j,k,s1,s2,s3
 
-s1=size(mat(:,1,1));s2=size(mat(1,:,1));s3=size(mat(1,1,:))
-Imat=0.;mat2m=0.;matm=0.
+s1=size(mat(:,1,1))
+s2=size(mat(1,:,1))
+s3=size(mat(1,1,:))
+Imat=0.
+mat2m=0.
+matm=0.
 call MPI_ALLREDUCE(mat,matm,s1*s2*s3,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,ierr)
 call MPI_ALLREDUCE(mat**2,mat2m,s1*s2*s3,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,ierr)
 matm=matm/dble(size2)
@@ -1805,7 +1813,8 @@ if(size2==1) then
  vecm2=vec
  return
 endif
-vecm=0;sizev=size(vec)
+vecm=0
+sizev=size(vec)
 call MPI_ALLREDUCE(vec,vecm,sizev,MPI_DOUBLE_COMPLEX,MPI_SUM,MPI_COMM_WORLD,ierr)
 vecm2=vecm/dble(size2)
 return
@@ -1823,7 +1832,9 @@ if(size2==1) then
  matm=mat
  return
 endif
-s1=size(mat(:,1));s2=size(mat(1,:));matm=0.
+s1=size(mat(:,1))
+s2=size(mat(1,:))
+matm=0.
 call MPI_ALLREDUCE(mat,matm,s1*s2,MPI_DOUBLE_COMPLEX,MPI_SUM,MPI_COMM_WORLD,ierr)
 matm=matm/dble(size2)
 return
@@ -1841,7 +1852,10 @@ if(size2==1)then
  matm=mat
  return
 endif
-s1=size(mat(:,1,1));s2=size(mat(1,:,1));s3=size(mat(1,1,:));matm=0.
+s1=size(mat(:,1,1))
+s2=size(mat(1,:,1))
+s3=size(mat(1,1,:))
+matm=0.
 call MPI_ALLREDUCE(mat,matm,s1*s2*s3,MPI_DOUBLE_COMPLEX,MPI_SUM,MPI_COMM_WORLD,ierr)
 matm=matm/dble(size2)
 return
@@ -1858,7 +1872,8 @@ integer    :: i,j,k,sizev
 if(size2==1)then
  return
 endif
-vecm=0;sizev=size(vec)
+vecm=0
+sizev=size(vec)
 call MPI_ALLREDUCE(vec,vecm,sizev,MPI_DOUBLE_COMPLEX,MPI_SUM,MPI_COMM_WORLD,ierr)
 vec=vecm
 return
@@ -1875,7 +1890,9 @@ integer    :: i,j,k,s1,s2
 if(size2==1)then
  return
 endif
-s1=size(mat(:,1));s2=size(mat(1,:));matm=0.
+s1=size(mat(:,1))
+s2=size(mat(1,:))
+matm=0.
 call MPI_ALLREDUCE(mat,matm,s1*s2,MPI_DOUBLE_COMPLEX,MPI_SUM,MPI_COMM_WORLD,ierr)
 mat=matm
 return
@@ -1892,7 +1909,10 @@ integer    :: i,j,k,s1,s2,s3
 if(size2==1)then
  return
 endif
-s1=size(mat(:,1,1));s2=size(mat(1,:,1));s3=size(mat(1,1,:));matm=0.
+s1=size(mat(:,1,1))
+s2=size(mat(1,:,1))
+s3=size(mat(1,1,:))
+matm=0.
 call MPI_ALLREDUCE(mat,matm,s1*s2*s3,MPI_DOUBLE_COMPLEX,MPI_SUM,MPI_COMM_WORLD,ierr)
 mat=matm
 return
@@ -1951,7 +1971,8 @@ integer  :: i,j,k,sizev
    vecm2=vec
    return
  endif
- vecm=0;sizev=1
+ vecm=0
+sizev=1
  call MPI_ALLREDUCE(vec,vecm,sizev,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,ierr)
  vecm2=vecm/dble(size2)
 return
@@ -1972,7 +1993,8 @@ integer  :: i,j,k,sizev
    vecm2=vec
    return
  endif
- vecm=0;sizev=size(vec)
+ vecm=0
+sizev=size(vec)
  call MPI_ALLREDUCE(vec,vecm,sizev,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,ierr)
  vecm2=vecm/dble(size2)
 return
@@ -1990,7 +2012,9 @@ if(size2==1)then
  matm=mat
  return
 endif
- s1=size(mat(:,1));s2=size(mat(1,:));matm=0.
+ s1=size(mat(:,1))
+s2=size(mat(1,:))
+matm=0.
  call MPI_ALLREDUCE(mat,matm,s1*s2,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,ierr)
  matm=matm/dble(size2)
 return
@@ -2008,7 +2032,10 @@ integer  :: i,j,k,s1,s2,s3
    matm=mat
    return
  endif
- s1=size(mat(:,1,1));s2=size(mat(1,:,1));s3=size(mat(1,1,:));matm=0.
+ s1=size(mat(:,1,1))
+s2=size(mat(1,:,1))
+s3=size(mat(1,1,:))
+matm=0.
  call MPI_ALLREDUCE(mat,matm,s1*s2*s3,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,ierr)
  matm=matm/dble(size2)
 return
@@ -2024,7 +2051,8 @@ integer :: i,j,k,sizev
 if(size2==1)then
  return
 endif
- vecm=0;sizev=size(vec)
+ vecm=0
+sizev=size(vec)
  call MPI_ALLREDUCE(vec,vecm,sizev,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,ierr)
  vec=vecm
 return
@@ -2041,7 +2069,9 @@ integer :: i,j,k,s1,s2
  if(size2==1)then
   return
  endif
- s1=size(mat(:,1));s2=size(mat(1,:));matm=0.
+ s1=size(mat(:,1))
+s2=size(mat(1,:))
+matm=0.
  call MPI_ALLREDUCE(mat,matm,s1*s2,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,ierr)
  mat=matm
 return
@@ -2058,7 +2088,10 @@ integer :: i,j,k,s1,s2,s3
  if(size2==1)then
   return
  endif
- s1=size(mat(:,1,1));s2=size(mat(1,:,1));s3=size(mat(1,1,:));matm=0.
+ s1=size(mat(:,1,1))
+s2=size(mat(1,:,1))
+s3=size(mat(1,1,:))
+matm=0.
  call MPI_ALLREDUCE(mat,matm,s1*s2*s3,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,ierr)
  mat=matm
 return
@@ -2106,7 +2139,9 @@ logical,optional      :: onl,onlyav
  endif
  
  call MPI_BARRIER(MPI_COMM_WORLD,ierr)
- vecm=0;sizev=size(vec);maskm=0.
+ vecm=0
+sizev=size(vec)
+maskm=0.
  call MPI_ALLREDUCE(mask,maskm,1,MPI_INTEGER,MPI_SUM,MPI_COMM_WORLD,ierr)
  call MPI_ALLREDUCE(vec*dble(mask),vecm,sizev,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,ierr)
  if(.not.present(onlyav))then
@@ -2146,7 +2181,8 @@ logical,optional      :: onl,onlyav
  endif 
  call MPI_BARRIER(MPI_COMM_WORLD,ierr)
 
- vecm=0;maskm=0.
+ vecm=0
+maskm=0.
  call MPI_ALLREDUCE(mask,maskm,1,MPI_INTEGER,MPI_SUM,MPI_COMM_WORLD,ierr)
  call MPI_ALLREDUCE(vec*dble(mask),vecm,1,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,ierr)
  if(.not.present(onlyav))then
@@ -2193,7 +2229,11 @@ implicit none
  endif
 
  call MPI_BARRIER(MPI_COMM_WORLD,ierr)
- s1=size(mat,1);s2=size(mat,2); matm=0.; maskm=0; 
+ s1=size(mat,1)
+s2=size(mat,2)
+ matm=0.
+ maskm=0
+ 
  call MPI_ALLREDUCE(mask,maskm,1,MPI_INTEGER,MPI_SUM,MPI_COMM_WORLD,ierr)
  call MPI_ALLREDUCE(mat*dble(mask),matm,s1*s2,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,ierr)
  if(.not.present(onlyav))then
@@ -2237,7 +2277,9 @@ implicit none
  p=s(1)*s(2)*s(3)
 
   call MPI_BARRIER(MPI_COMM_WORLD,ierr)
-  matm=0.; maskm=0;
+  matm=0.
+ maskm=0
+
   call MPI_ALLREDUCE(mask,maskm,1,MPI_INTEGER,MPI_SUM,MPI_COMM_WORLD,ierr)
   call MPI_ALLREDUCE(mat*dble(mask),matm,p,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,ierr)
   if(.not.present(onlyav))then
@@ -2282,7 +2324,11 @@ implicit none
  
  call MPI_BARRIER(MPI_COMM_WORLD,ierr)
 
- s=shape(rmat); p=s(1)*s(2)*s(3)*s(4); matm=0.; maskm=0; 
+ s=shape(rmat)
+ p=s(1)*s(2)*s(3)*s(4)
+ matm=0.
+ maskm=0
+ 
  
  call MPI_ALLREDUCE(mask,maskm,1,MPI_INTEGER,MPI_SUM,MPI_COMM_WORLD,ierr)
  call MPI_ALLREDUCE(rmat*dble(mask),matm,p,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,ierr)
@@ -2329,7 +2375,10 @@ implicit none
  if(maxval(abs(shape(rmat)-shape(matm2)))>1.d-4) stop 'error ardim5_mask, bad shapes'
  
  call MPI_BARRIER(MPI_COMM_WORLD,ierr)
- s=shape(rmat);matm=0.; maskm=0; 
+ s=shape(rmat)
+matm=0.
+ maskm=0
+ 
  p=s(1)*s(2)*s(3)*s(4)*s(5)
  call MPI_ALLREDUCE(mask,maskm,1,MPI_INTEGER,MPI_SUM,MPI_COMM_WORLD,ierr)
  call MPI_ALLREDUCE(rmat*dble(mask),matm,p,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,ierr)

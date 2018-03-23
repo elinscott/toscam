@@ -109,7 +109,8 @@ CONTAINS
 
     call init_data
 
-    Zpart = partition(beta,GS); E0 = GSenergy(GS)
+    Zpart = partition(beta,GS)
+ E0 = GSenergy(GS)
     
     write(*,*) ' --- PARSE LIST OF GS SECTORS FOR GREEN FUNCTION --- '
     write(*,*) ' ... compute AB green functions : ', greenAB%compute(1,1:2),greenAB%compute(2,1:2)
@@ -125,7 +126,8 @@ CONTAINS
       call init_sector
       write(*,*) '..done..'    
       if(.not.(USE_TRANSPOSE_TRICK_MPI.and.NOT_COMMENSURATE))then
-      DO ipm=1,2 ; DO jpm=1,2
+      DO ipm=1,2 
+ DO jpm=1,2
       IF(greenAB%compute(ipm,jpm))then  
       IF(associated(greenAB%correl(ipm,jpm)%MM%MASK%mat))then
       IF(ANY(greenAB%correl(ipm,jpm)%MM%MASK%mat))then
@@ -139,7 +141,8 @@ CONTAINS
       ENDIF
       ENDIF
       ENDIF
-    ENDDO; ENDDO
+    ENDDO
+ ENDDO
     ENDIF
     ENDDO 
    !============================================================================!

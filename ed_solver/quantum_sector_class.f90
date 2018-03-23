@@ -1,4 +1,3 @@
-
 MODULE sector_class
 
   USE fermion_sector2_class

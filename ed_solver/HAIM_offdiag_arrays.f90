@@ -71,7 +71,8 @@ CONTAINS
          !-------------------------!
          ! SECTOR DEPENDANT ARRAYS !
          !-------------------------!
-         IF(ALLOCATED(diagup)) DEALLOCATE(diagup);IF(ALLOCATED(noffup)) DEALLOCATE(noffup)
+         IF(ALLOCATED(diagup)) DEALLOCATE(diagup)
+IF(ALLOCATED(noffup)) DEALLOCATE(noffup)
          if(.not.USE_TRANSPOSE_TRICK_MPI)then
           ALLOCATE(noffup(sector%chunk(iproc)),diagup(sector%chunk(iproc)))
          else
@@ -82,13 +83,15 @@ CONTAINS
          !------------------------------!
          CALL new_AIM2(AIM2up,AIM,SPIN=1)
          CALL tab_HAIM2(AIM2up,sector,NO_STORAGE=T)
-         IF(ALLOCATED(rankoffup)) DEALLOCATE(rankoffup); IF(ALLOCATED(offdiagup)) DEALLOCATE(offdiagup)
+         IF(ALLOCATED(rankoffup)) DEALLOCATE(rankoffup)
+ IF(ALLOCATED(offdiagup)) DEALLOCATE(offdiagup)
          ALLOCATE(rankoffup(noffdiagup),offdiagup(noffdiagup))
        CASE(2)
          !-------------------------!
          ! SECTOR DEPENDANT ARRAYS !
          !-------------------------!
-         IF(ALLOCATED(diagdo)) DEALLOCATE(diagdo); IF(ALLOCATED(noffdo)) DEALLOCATE(noffdo)
+         IF(ALLOCATED(diagdo)) DEALLOCATE(diagdo)
+ IF(ALLOCATED(noffdo)) DEALLOCATE(noffdo)
          if(.not.USE_TRANSPOSE_TRICK_MPI)then
           ALLOCATE(noffdo(sector%chunk(iproc)),diagdo(sector%chunk(iproc)))
          else
@@ -99,20 +102,23 @@ CONTAINS
          !------------------------------!
          CALL new_AIM2(AIM2do,AIM,SPIN=2)
          CALL tab_HAIM2(AIM2do,sector,NO_STORAGE=T)
-         IF(ALLOCATED(rankoffdo)) DEALLOCATE(rankoffdo); IF(ALLOCATED(offdiagdo)) DEALLOCATE(offdiagdo)
+         IF(ALLOCATED(rankoffdo)) DEALLOCATE(rankoffdo)
+ IF(ALLOCATED(offdiagdo)) DEALLOCATE(offdiagdo)
          ALLOCATE(rankoffdo(noffdiagdo),offdiagdo(noffdiagdo))
       END SELECT
 
     ELSE 
 
       ! SECTOR DEPENDANT ARRAYS
-      IF(ALLOCATED(noffsz)) DEALLOCATE(noffsz); IF(ALLOCATED(diagsz)) DEALLOCATE(diagsz)
+      IF(ALLOCATED(noffsz)) DEALLOCATE(noffsz)
+ IF(ALLOCATED(diagsz)) DEALLOCATE(diagsz)
       if(.not.ON_FLY) ALLOCATE(noffsz(sector%chunk(iproc)),diagsz(sector%chunk(iproc)))
  
       ! HAMILTONIAN DEPENDANT ARRAYS
       CALL new_AIM2(AIM2sz,AIM)
       if(.not.ON_FLY) CALL tab_HAIM2(AIM2sz,sector,NO_STORAGE=T)
-      IF(ALLOCATED(rankoffsz)) DEALLOCATE(rankoffsz); IF(ALLOCATED(offdiagsz)) DEALLOCATE(offdiagsz)
+      IF(ALLOCATED(rankoffsz)) DEALLOCATE(rankoffsz)
+ IF(ALLOCATED(offdiagsz)) DEALLOCATE(offdiagsz)
       if(.not.ON_FLY) ALLOCATE(rankoffsz(noffdiagsz),offdiagsz(noffdiagsz))
 
     ENDIF
@@ -275,12 +281,16 @@ CONTAINS
          offdiag => offdiagdo
          rankoff => rankoffdo
       END SELECT
-      diag = zero; offdiag = zero; rankoff = 0
+      diag = zero
+ offdiag = zero
+ rankoff = 0
     ENDIF
    
     if(size(noff)==0)then
       write(*,*) 'WARNING NOFF IS EMPTY -empty chunck '
-      noffdiag=0; check_sum=0; goto 35
+      noffdiag=0
+ check_sum=0
+ goto 35
     endif
  
     !=================================================================================!
@@ -315,7 +325,8 @@ CONTAINS
    endif
 #else
    if(USE_TRANSPOSE_TRICK_MPI)Then
-     write(*,*) 'USE_TRANSPOSE_TRICK_MPI not compatible with OPENMP+MPI';stop
+     write(*,*) 'USE_TRANSPOSE_TRICK_MPI not compatible with OPENMP+MPI'
+stop
    endif
    if(OPEN_MP) then
        if(sector%istatemax(iproc)>0)then
@@ -331,7 +342,8 @@ CONTAINS
           where(imin_/=0) imin_=imin_+sector%istatemin(iproc)-1
           where(imax_/=0) imax_=imax_+sector%istatemin(iproc)-1
        else
-          imin_=0;imax_=0
+          imin_=0
+imax_=0
        endif
    endif
 #endif
@@ -343,7 +355,8 @@ CONTAINS
 
    if(OPEN_MP.and.go_for_omp)then
     TID        = OMP_GET_THREAD_NUM()+1
-    istatemin0 = imin_(TID) ; istatemax0 = imax_(TID)  
+    istatemin0 = imin_(TID) 
+ istatemax0 = imax_(TID)  
     istatemin_ = 1 
 #ifdef OPENMP_MPI
     istatemin_ = istatemin
@@ -367,7 +380,10 @@ CONTAINS
         noffdiagi = 0
     endif
    else
-     istatemin0=istatemin ; istatemax0=istatemax ; istatemin_=istatemin ; noffdiagi = 0  
+     istatemin0=istatemin 
+ istatemax0=istatemax 
+ istatemin_=istatemin 
+ noffdiagi = 0  
    endif
 
    if(istatemax0==0) goto 1992
@@ -420,7 +436,9 @@ CONTAINS
       ENDIF
      
       ! IMPURITY
-      DO iorb=1,IMPnorbs; DO jorb=1,IMPnorbs; IF(iorb/=jorb.AND.Ec%rc%MASK%mat(iorb,jorb))THEN
+      DO iorb=1,IMPnorbs
+ DO jorb=1,IMPnorbs
+ IF(iorb/=jorb.AND.Ec%rc%MASK%mat(iorb,jorb))THEN
 
        if(abs(Ec%rc%mat(iorb,jorb))>cutoff_hamilt_param)then
         CALL hop(ket_out,IMPiorb(iorb),IMPiorb(jorb),ket_in)
@@ -436,12 +454,16 @@ CONTAINS
         endif
 
        ENDIF
-      ENDIF; ENDDO; ENDDO
+      ENDIF
+ ENDDO
+ ENDDO
 
 
 
       ! BATH
-      DO iorb=1,BATHnorbs; DO jorb=1,BATHnorbs; IF(iorb/=jorb.AND.Eb%rc%MASK%mat(iorb,jorb))THEN
+      DO iorb=1,BATHnorbs
+ DO jorb=1,BATHnorbs
+ IF(iorb/=jorb.AND.Eb%rc%MASK%mat(iorb,jorb))THEN
        if(abs(Eb%rc%mat(iorb,jorb))>cutoff_hamilt_param)then
 
        CALL hop(ket_out,BATHiorb(iorb),BATHiorb(jorb),ket_in)
@@ -458,12 +480,16 @@ CONTAINS
        ENDIF
 
        endif
-      ENDIF; ENDDO; ENDDO
+      ENDIF
+ ENDDO
+ ENDDO
 
 
       ! HYBRIDIZATION
 
-      DO iorb=1,BATHnorbs; DO jorb=1,IMPnorbs; IF(Vbc%rc%MASK%mat(iorb,jorb))THEN
+      DO iorb=1,BATHnorbs
+ DO jorb=1,IMPnorbs
+ IF(Vbc%rc%MASK%mat(iorb,jorb))THEN
 
        !------------------!
        ! IMPURITY -> BATH !
@@ -499,7 +525,9 @@ CONTAINS
        ENDIF
       endif
 
-      ENDIF; ENDDO; ENDDO
+      ENDIF
+ ENDDO
+ ENDDO
 
      ! number of off-diagonal elements generated by H |istate>  
       if(istateloc<0.or.noffdiagi<0.or.noffdiag_save<0) stop 'error in tabulate HAIM, negative noffdiag' 
@@ -553,7 +581,10 @@ CONTAINS
     !=================================================================================!
 
     ! CLEAN UP
-    CALL delete_masked_matrix(Ec); CALL delete_masked_matrix(Eb); CALL delete_masked_matrix(Vbc); 
+    CALL delete_masked_matrix(Ec)
+ CALL delete_masked_matrix(Eb)
+ CALL delete_masked_matrix(Vbc)
+ 
     CALL timer_fortran(start_tabH,"# TABULATION OF THE HAMILTONIAN IN SECTOR "//TRIM(sector%title)//" TOOK") 
 
     if(allocated(imin_)) deallocate(imin_,imax_)

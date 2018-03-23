@@ -295,15 +295,18 @@ CONTAINS
     eigen_out%converged = eigen_in%converged
     
     ! WE ONLY NEED TO CONSIDER A SUBSET OF ORBITALS
-    DO iorb=1,SIZE(MASK); IF(MASK(iorb))THEN
+    DO iorb=1,SIZE(MASK)
+ IF(MASK(iorb))THEN
 
       ! FIRST WE CREATE THE OUTPUT VECTOR IN THE RELEVANT SECTOR
 
-      eigen_out%rank   = iorb; eigen_out%vec%rc = zero
+      eigen_out%rank   = iorb
+ eigen_out%vec%rc = zero
 
       ! THEN PARSE THE INPUT SECTOR TO APPLY RELEVANT CREATION/ANNIHILATION OPERATOR
 
-      DO istate=1,es%sector%sz%dimen; IF(eigen_in%vec%rc(istate)/=zero)THEN
+      DO istate=1,es%sector%sz%dimen
+ IF(eigen_in%vec%rc(istate)/=zero)THEN
       CALL new_ket(ket_in,es%sector%sz%state(istate),es%sector%sz%norbs)
       IF(pm=='+') CALL  create(ket_out,AIMIMPiorbsz(iorb),ket_in)  ! |Ceigen> = c^+ |eigen>
       IF(pm=='-') CALL destroy(ket_out,AIMIMPiorbsz(iorb),ket_in)  ! |Ceigen> = c   |eigen>
@@ -313,12 +316,14 @@ CONTAINS
         eigen_out%vec%rc(jstate) = eigen_out%vec%rc(jstate) + ket_out%fermion_sign * eigen_in%vec%rc(istate)
       ENDIF
 
-      ENDIF; ENDDO
+      ENDIF
+ ENDDO
 
       ! THEN WE UPDATE THE LIST OF OUTPUT VECTORS
  
       CALL add_eigen(eigen_out,Ces%lowest)
-    ENDIF; ENDDO
+    ENDIF
+ ENDDO
     CALL delete_eigen(eigen_out)
 
   END SUBROUTINE 
@@ -358,7 +363,8 @@ CONTAINS
     eigen_out%converged  = eigen_in%converged
 
     ! WE ONLY NEED TO CONSIDER A SUBSET OF ORBITALS
-    DO site=1,SIZE(MASK); IF(MASK(site))THEN
+    DO site=1,SIZE(MASK)
+ IF(MASK(site))THEN
  
       ! FIRST WE CREATE THE OUTPUT VECTOR IN THE RELEVANT SECTOR
  
@@ -367,7 +373,8 @@ CONTAINS
  
       ! THEN PARSE THE INPUT SECTOR TO APPLY RELEVANT CREATION/ANNIHILATION OPERATOR
   
-      DO istate=1,es%sector%sz%dimen; IF(eigen_in%vec%rc(istate)/=zero)THEN
+      DO istate=1,es%sector%sz%dimen
+ IF(eigen_in%vec%rc(istate)/=zero)THEN
       CALL new_ket(ket_in,es%sector%sz%state(istate),es%sector%sz%norbs)
       SELECT CASE(spin)
         CASE(1)
@@ -381,12 +388,14 @@ CONTAINS
         jstate = Ces%sector%sz%rank(ket_out%state)
         eigen_out%vec%rc(jstate) = eigen_out%vec%rc(jstate) + ket_out%fermion_sign * eigen_in%vec%rc(istate)
       ENDIF
-      ENDIF; ENDDO
+      ENDIF
+ ENDDO
  
       ! THEN WE UPDATE THE LIST OF OUTPUT VECTORS
 
       CALL add_eigen(eigen_out,Ces%lowest)
-    ENDIF; ENDDO
+    ENDIF
+ ENDDO
     CALL delete_eigen(eigen_out)
 
   END SUBROUTINE 
@@ -429,7 +438,8 @@ CONTAINS
 
     ! WE ONLY NEED TO CONSIDER A SUBSET OF ORBITALS
 
-    DO site=1,SIZE(MASK); IF(MASK(site))THEN
+    DO site=1,SIZE(MASK)
+ IF(MASK(site))THEN
 
       ! FIRST WE CREATE THE OUTPUT VECTOR IN THE RELEVANT SECTOR
 
@@ -439,7 +449,8 @@ CONTAINS
       ! THEN PARSE THE INPUT SECTOR TO APPLY RELEVANT CREATION/ANNIHILATION
       ! OPERATOR
 
-      DO istate=1,es%sector%sz%dimen; IF(eigen_in%vec%rc(istate)/=zero)THEN
+      DO istate=1,es%sector%sz%dimen
+ IF(eigen_in%vec%rc(istate)/=zero)THEN
       CALL new_ket(ket_in,es%sector%sz%state(istate),es%sector%sz%norbs)
 
       !----------------------------------------------------------------------------------!
@@ -473,12 +484,14 @@ CONTAINS
          eigen_out%vec%rc(jstate) = eigen_out%vec%rc(jstate) + ket_out%fermion_sign * eigen_in%vec%rc(istate)
         ENDIF
 
-      ENDIF; ENDDO
+      ENDIF
+ ENDDO
 
       ! THEN WE UPDATE THE LIST OF OUTPUT VECTORS
 
       CALL add_eigen(eigen_out,Ces%lowest)
-    ENDIF; ENDDO
+    ENDIF
+ ENDDO
     CALL delete_eigen(eigen_out)
 
   END SUBROUTINE
@@ -549,11 +562,13 @@ CONTAINS
 
     call collect_on_rank0(es%lowest%eigen(esrank))
 
-    ALLOCATE(myramp(dim_stride)); CALL ramp(myramp,dim_stride)
+    ALLOCATE(myramp(dim_stride))
+ CALL ramp(myramp,dim_stride)
     ALLOCATE(tabistate(dim_stride),tabjstate(dim_stride))
     
     ! WE ONLY NEED TO CONSIDER A SUBSET OF ORBITALS
-    DO site=1,SIZE(MASK); IF(MASK(site))THEN
+    DO site=1,SIZE(MASK)
+ IF(MASK(site))THEN
 
       ! FIRST WE CREATE THE OUTPUT VECTOR IN THE RELEVANT SECTOR
 
@@ -589,7 +604,8 @@ CONTAINS
 
       CALL add_eigen(eigen_out,Ces%lowest)
 
-    ENDIF; ENDDO
+    ENDIF
+ ENDDO
 
     CALL delete_eigen(eigen_out)
 

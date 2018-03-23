@@ -77,7 +77,9 @@ CONTAINS
      endif
     endif
 
-    CALL create_fix_initial_vector(initvec,dimenvec); CALL new_rcvector(lastvec,dimenvec); CALL new_rcvector(tmp,dimenvec)
+    CALL create_fix_initial_vector(initvec,dimenvec)
+ CALL new_rcvector(lastvec,dimenvec)
+ CALL new_rcvector(tmp,dimenvec)
 
     if(testing)then
       write(*,*) 'INITIAL VEC : ', initvec%rc
@@ -98,7 +100,8 @@ CONTAINS
        CALL   submatrix_tridiag(subLmatrix,Lmatrix,(/1,iter/))
        CALL diagonalize_tridiag(subLmatrix,VALP(1:iter),VECP(1:iter,1:iter),EIGENVAL_ONLY=T)
        CALL      delete_tridiag(subLmatrix)
-       rdist(1:min(Neigen_,iter)) = ( VALP(1:min(Neigen_,iter)) - lasteigenval(1:min(Neigen_,iter)) ) ; 
+       rdist(1:min(Neigen_,iter)) = ( VALP(1:min(Neigen_,iter)) - lasteigenval(1:min(Neigen_,iter)) ) 
+ 
        converged = ABS(rdist)<tolerance.and.iter>2
 
        IF(ALL(converged(1:Neigen_)) .OR. iter==Niter .or. conv_one_step) THEN
@@ -126,7 +129,8 @@ CONTAINS
     ENDDO
     !----------------------------------------------------------------------------------------------!
 
-    IF(ALLOCATED(VALP)) DEALLOCATE(VALP); IF(ALLOCATED(VECP)) DEALLOCATE(VECP) 
+    IF(ALLOCATED(VALP)) DEALLOCATE(VALP)
+ IF(ALLOCATED(VECP)) DEALLOCATE(VECP) 
 
     if(messages3) write(log_unit,*) ' Lanczos iterations .... delete vectors ....'
 
@@ -134,8 +138,11 @@ CONTAINS
      CALL delete_eigen(eigen(jj))
     enddo
 
-    CALL delete_rcvector(initvec); CALL delete_rcvector(lastvec); 
-    CALL delete_tridiag(Lmatrix); CALL delete_tridiag(subLmatrix)
+    CALL delete_rcvector(initvec)
+ CALL delete_rcvector(lastvec)
+ 
+    CALL delete_tridiag(Lmatrix)
+ CALL delete_tridiag(subLmatrix)
 
     CALL timer_fortran(start_diagH,"# DIAGONALIZATION OF "//TRIM(ADJUSTL(title_H_()))//" TOOK "//c2s(i2c(iter))//" ITERATIONS AND ")
 
@@ -191,7 +198,8 @@ CONTAINS
                   (sector_h%updo%down%istatemax(iproc) - sector_h%updo%down%istatemin(iproc)+1)
       endif
 
-      CALL new_rcvector(lastvec,dimenvec); 
+      CALL new_rcvector(lastvec,dimenvec)
+ 
       CALL new_tridiag(Lmatrix,maxval(lowest%eigen(:)%lanczos_iter))
       CALL new_rcvector(tmp,dimenvec)
 
@@ -209,18 +217,29 @@ CONTAINS
         CALL eigen_allocate_vec(eigen,initvec)
 
        !-----------------------------------------------------------------------------------------!
-        aa=norm_rcvector(initvec); if(abs(aa)<rerror) aa=rerror; aa=1.d0/aa
+        aa=norm_rcvector(initvec)
+ if(abs(aa)<rerror) aa=rerror
+ aa=1.d0/aa
         eigen%vec%rc = eigen%lanczos_vecp(1) * initvec%rc * aa
         CALL one_step_Lanczos_fast(1,initvec%rc,tmp%rc,lastvec%rc,Lmatrix,conv_one_step)
         if(.not.conv_one_step)then
          DO iter2 = 2,iter-1
-           aa=norm_rcvector(lastvec); if(abs(aa)<rerror) aa=rerror ; aa=1.d0/aa; lastvec%rc = lastvec%rc * aa
+           aa=norm_rcvector(lastvec)
+ if(abs(aa)<rerror) aa=rerror 
+ aa=1.d0/aa
+ lastvec%rc = lastvec%rc * aa
            eigen%vec%rc = eigen%vec%rc + eigen%lanczos_vecp(iter2) * lastvec%rc
            CALL one_step_Lanczos_fast(iter2,initvec%rc,tmp%rc,lastvec%rc,Lmatrix,conv_one_step)
          ENDDO
-         aa=norm_rcvector(lastvec); if(abs(aa)<rerror) aa=rerror ; aa=1.d0/aa; lastvec%rc = lastvec%rc * aa
+         aa=norm_rcvector(lastvec)
+ if(abs(aa)<rerror) aa=rerror 
+ aa=1.d0/aa
+ lastvec%rc = lastvec%rc * aa
          eigen%vec%rc = eigen%vec%rc + eigen%lanczos_vecp(iter) * lastvec%rc
-         aa=norm_rcvector(eigen%vec); if(abs(aa)<rerror) aa=rerror; aa=1.d0/aa; eigen%vec%rc = eigen%vec%rc * aa
+         aa=norm_rcvector(eigen%vec)
+ if(abs(aa)<rerror) aa=rerror
+ aa=1.d0/aa
+ eigen%vec%rc = eigen%vec%rc * aa
         endif
        !-----------------------------------------------------------------------------------------!
 
@@ -232,7 +251,10 @@ CONTAINS
  
      enddo
 
-     CALL delete_rcvector(initvec); CALL delete_rcvector(lastvec); CALL delete_rcvector(tmp); CALL delete_tridiag(Lmatrix)
+     CALL delete_rcvector(initvec)
+ CALL delete_rcvector(lastvec)
+ CALL delete_rcvector(tmp)
+ CALL delete_tridiag(Lmatrix)
 
   END SUBROUTINE
 

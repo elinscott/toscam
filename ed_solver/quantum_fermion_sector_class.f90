@@ -1,4 +1,3 @@
-
 MODULE fermion_sector2_class
 
   USE fermion_Hilbert_class
@@ -78,10 +77,12 @@ CONTAINS
      if(messages4) write(*,*) 'build new up and dn sectors'
  
     ! spin up
-    CALL new_fermion_sector(SEC%up,  nup,Ns);   SEC%up%title = "nup = "//c2s(i2c(nup))
+    CALL new_fermion_sector(SEC%up,  nup,Ns)
+   SEC%up%title = "nup = "//c2s(i2c(nup))
 
     ! spin down
-    CALL new_fermion_sector(SEC%down,ndo,Ns); SEC%down%title = "ndo = "//c2s(i2c(ndo))
+    CALL new_fermion_sector(SEC%down,ndo,Ns)
+ SEC%down%title = "ndo = "//c2s(i2c(ndo))
 
     if(messages4) write(*,*) 'split among nodes'
 

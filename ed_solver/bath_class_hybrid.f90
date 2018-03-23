@@ -70,7 +70,9 @@ CONTAINS
     LOGICAL,OPTIONAL               ::  cpt_build_matrix
     REAL(8),OPTIONAL               ::  Vweight 
 
-    Nb=BATH%Nb; Ntot=Nb+ncpt_approx_tot;Nc=BATH%Nc
+    Nb=BATH%Nb
+ Ntot=Nb+ncpt_approx_tot
+Nc=BATH%Nc
 
                               write_ = F
     IF(PRESENT(WRITE_HYBRID)) write_ = WRITE_HYBRID
@@ -86,7 +88,10 @@ CONTAINS
 
     else
 
-      Vbc=0.d0; Vcb=0.d0; Eb=0.d0;
+      Vbc=0.d0
+ Vcb=0.d0
+ Eb=0.d0
+
 
       Eb(     1:     Nb,     1     :Nb)   =   EbNambu%rc%mat(   1:  Nb,   1:  Nb)
       Eb(Ntot+1:Ntot+Nb,Ntot+1:Ntot+Nb)   =   EbNambu%rc%mat(Nb+1:2*Nb,Nb+1:2*Nb)
@@ -234,7 +239,10 @@ CONTAINS
     END SELECT
     !-------------------------------------!
 
-    Nw=SIZE(freq);if(present(short))then;if(fit_nw>0)Nw=min(Nw,fit_nw);endif
+    Nw=SIZE(freq)
+if(present(short))then
+if(fit_nw>0)Nw=min(Nw,fit_nw)
+endif
 
   !-----------------------------------------------!
   ! Delta(iw) = Vcb * ( iw 1 - Ebath )^(-1) * Vbc !
@@ -254,7 +262,9 @@ if(freeze_poles_delta)then
     stop
    endif
    if(.not.allocated(FROZEN_POLES)) allocate(FROZEN_POLES(2*BATH%Nb))
-   Ebm1=-Eb; CALL eigenvector_matrix(lsize=size(Ebm1,1),mat=Ebm1,vaps=eigenvalues,eigenvec=Ebm1);
+   Ebm1=-Eb
+ CALL eigenvector_matrix(lsize=size(Ebm1,1),mat=Ebm1,vaps=eigenvalues,eigenvec=Ebm1)
+
    Vcb=MATMUL(Vcb,Ebm1)
    Vbc=MATMUL(conjg(transpose(Ebm1)),Vbc)
    ratio=dble(freeze_poles_delta_iter-1)/dble(freeze_poles_delta_niter)*freeze_pole_lambda
@@ -292,7 +302,10 @@ else
 !$OMP DO
 !#endif
          do iw=1,Nw
-              Ebm1=Eb ; do i=1,size(Eb,1) ; Ebm1(i,i) = Ebm1(i,i) + freq(iw) ; enddo
+              Ebm1=Eb 
+ do i=1,size(Eb,1) 
+ Ebm1(i,i) = Ebm1(i,i) + freq(iw) 
+ enddo
               CALL invmat(n=size(Ebm1,1),mat=Ebm1,block_matrix=block,diagmat=diagmat)
               if(.not.diagmat)then
                 hybrid(:,:,iw)=MATMUL(Vcb,MATMUL_x(aa=Ebm1,bb=Vbc,a_by_block=block))
@@ -300,7 +313,9 @@ else
                 hybrid(:,:,iw)=MATMUL(Vcb,MATMUL_x(aa=Ebm1,bb=Vbc,IdL=.true.))
               endif
               hybrid(:,:,iw)=-hybrid(:,:,iw)
-              do i=1,size(hybrid,1) ; hybrid(i,i,iw) = hybrid(i,i,iw) + freq(iw) ; enddo
+              do i=1,size(hybrid,1) 
+ hybrid(i,i,iw) = hybrid(i,i,iw) + freq(iw) 
+ enddo
               hybrid(:,:,iw) = hybrid(:,:,iw) - Eccc%rc%mat
               CALL invmat(n=size(hybrid,1),mat=hybrid(:,:,iw),block_matrix=block,diagmat=diagmat)
          enddo
@@ -316,7 +331,10 @@ else
 !#endif
          do iw=1,Nw
               if(.not.(diag_V.and.diagmat))then
-                Ebm1=Eb ; do i=1,size(Eb,1) ; Ebm1(i,i) = Ebm1(i,i) + freq(iw) ; enddo
+                Ebm1=Eb 
+ do i=1,size(Eb,1) 
+ Ebm1(i,i) = Ebm1(i,i) + freq(iw) 
+ enddo
                 CALL invmat(n=size(Ebm1,1),mat=Ebm1,block_matrix=block,diagmat=diagmat)
                 if(.not.diagmat)then
                   hybrid(:,:,iw)=MATMUL(Vcb,MATMUL_x(aa=Ebm1,bb=Vbc,a_by_block=block))
@@ -345,8 +363,11 @@ else
 !#endif
    endif
  else
-   Ebm1=-Eb; CALL eigenvector_matrix(lsize=size(Ebm1,1),mat=Ebm1,vaps=eigenvalues,eigenvec=Ebm1);
-   Vcb=MATMUL(Vcb,Ebm1); Vbc=MATMUL(conjg(transpose(Ebm1)),Vbc)
+   Ebm1=-Eb
+ CALL eigenvector_matrix(lsize=size(Ebm1,1),mat=Ebm1,vaps=eigenvalues,eigenvec=Ebm1)
+
+   Vcb=MATMUL(Vcb,Ebm1)
+ Vbc=MATMUL(conjg(transpose(Ebm1)),Vbc)
 !#ifndef OPENMP_MPI_SAFE
 !$OMP PARALLEL PRIVATE(iw)
 !$OMP DO
@@ -365,7 +386,8 @@ endif
 
     IF(write_.AND.iproc==1) CALL glimpse_correl(BATH%hybrid)
 
-    CALL delete_masked_matrix(EbNambu); CALL delete_masked_matrix(VbcNambu)
+    CALL delete_masked_matrix(EbNambu)
+ CALL delete_masked_matrix(VbcNambu)
 
   return
   END SUBROUTINE
@@ -447,7 +469,8 @@ endif
     write(log_unit,*)  bath%nparam,bath%search_step,bath%dist_max,bath%Niter_search_max
 
   !---------------------------------------------------------------------------------------------!
-     if(allocated(test)) deallocate(test); allocate(test(bath%nparam+ncpt_para*ncpt_tot))
+     if(allocated(test)) deallocate(test)
+ allocate(test(bath%nparam+ncpt_para*ncpt_tot))
                                      test                           =   0.d0
                                      test(1:bath%nparam)            =   bath%vec(1:bath%nparam)
      if(ncpt_tot>0)then

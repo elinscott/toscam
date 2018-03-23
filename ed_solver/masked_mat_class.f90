@@ -197,7 +197,10 @@ CONTAINS
       MM%IS_HERM = IS_HERM
     ENDIF
 
-    MM%n1 = n1 ; MM%n2 = n2 ; ALLOCATE(MM%mat(n1,n2)) ; MM%mat = 0.0_DP
+    MM%n1 = n1 
+ MM%n2 = n2 
+ ALLOCATE(MM%mat(n1,n2)) 
+ MM%mat = 0.0_DP
     
     SYMMETRY = ''
     IF(MM%IS_HERM) SYMMETRY = HERM
@@ -412,7 +415,8 @@ CONTAINS
     COMPLEX(DBL)                                 :: val
     INTEGER                                      :: i1,i2
     IF(.NOT.ASSOCIATED(MM%mat)) STOP "ERROR IN fill_masked_cplx_matrix: INPUT ISNT ALLOCATED!"
-    DO i1=1,MM%n1; DO i2=1,MM%n2
+    DO i1=1,MM%n1
+ DO i2=1,MM%n2
       IF(MM%MASK%imat(i1,i2) ==   iind) then
        if(i1==i2.and.MM%IS_HERM) val=real(val)
        MM%mat(i1,i2) = val
@@ -421,13 +425,15 @@ CONTAINS
        if(i1==i2.and.MM%IS_HERM) val=real(val)
        MM%mat(i1,i2) =-val
       endif
-    ENDDO; ENDDO
+    ENDDO
+ ENDDO
     ! SYMMETRIZE
     IF(MM%IS_HERM)THEN
      DO i1=1,MM%n1 
       DO i2=1,MM%n2
         IF(MM%MASK%imat(i1,i2)==0.AND.MM%MASK%imat(i2,i1)/=0) MM%mat(i1,i2) = CONJG(MM%mat(i2,i1)) 
-      ENDDO; 
+      ENDDO
+ 
      ENDDO
     ENDIF
   END SUBROUTINE
@@ -582,10 +588,12 @@ CONTAINS
       unit_ = log_unit ! DEFAULT: STANDARD OUTPUT
       IF(PRESENT(UNIT))  unit_  = UNIT
 
-      DO i2=1,MM%n2; DO i1=1,MM%n1
+      DO i2=1,MM%n2
+ DO i1=1,MM%n1
      IF(MM%MASK%mat(i1,i2)) WRITE(unit_,fmt_MM) '('//c2s(i2c(i1))//','//c2s(i2c(i2))//') = '//c2s(i2c(MM%MASK%imat(i1,i2)))//' = ',&
      '(',DBLE(MM%mat(i1,i2)),',',AIMAG(MM%mat(i1,i2)),')'
-      ENDDO; ENDDO
+      ENDDO
+ ENDDO
 
     ENDIF
 
@@ -663,9 +671,13 @@ CONTAINS
       ! THEN EXPAND TO FULL MATRIX
       CALL vec2masked_cplx_matrix(MMOUT)
     ENDIF
-    DO i1=1,MMOUT%n1; DO i2=1,MMOUT%n2; IF(MMOUT%MASK%mat(i1,i2))THEN
+    DO i1=1,MMOUT%n1
+ DO i2=1,MMOUT%n2
+ IF(MMOUT%MASK%mat(i1,i2))THEN
       CALL fill_masked_cplx_matrix(MMOUT,MMOUT%MASK%imat(i1,i2),MMOUT%mat(i1,i2))
-    ENDIF; ENDDO; ENDDO
+    ENDIF
+ ENDDO
+ ENDDO
   END SUBROUTINE
 
 !**************************************************************************
@@ -744,14 +756,22 @@ CONTAINS
     n1  = MM(1)%n1
     n2  = MM(1)%n2
     DO iMM=nMM,2,-1
-      DO i1=1,n1; DO i2=1,n2; IF(MM(iMM)%MASK%mat(i1,i2))THEN
+      DO i1=1,n1
+ DO i2=1,n2
+ IF(MM(iMM)%MASK%mat(i1,i2))THEN
      iind = MM(iMM)%MASK%imat(i1,i2)
      DO jMM=1,iMM-1
-       DO j1=1,n1; DO j2=1,n2; IF(MM(jMM)%MASK%mat(j1,j2).AND.MM(jMM)%MASK%imat(j1,j2)==iind)THEN
+       DO j1=1,n1
+ DO j2=1,n2
+ IF(MM(jMM)%MASK%mat(j1,j2).AND.MM(jMM)%MASK%imat(j1,j2)==iind)THEN
          MM(iMM)%MASK%mat(i1,i2) = .false.
-       ENDIF; ENDDO; ENDDO
+       ENDIF
+ ENDDO
+ ENDDO
      ENDDO
-      ENDIF; ENDDO; ENDDO
+      ENDIF
+ ENDDO
+ ENDDO
       CALL mask2vec(MM(iMM)%MASK) ! update vector of independant elements
     ENDDO
   END SUBROUTINE
@@ -974,15 +994,19 @@ CONTAINS
     REAL(DBL)                                    :: val
     INTEGER                                      :: i1,i2
     IF(.NOT.ASSOCIATED(MM%mat)) STOP "ERROR IN fill_masked_real_matrix: INPUT ISNT ALLOCATED!"
-    DO i1=1,MM%n1; DO i2=1,MM%n2
+    DO i1=1,MM%n1
+ DO i2=1,MM%n2
       IF(MM%MASK%imat(i1,i2)== iind) MM%mat(i1,i2) = val
       IF(MM%MASK%imat(i1,i2)==-iind) MM%mat(i1,i2) =-val
-    ENDDO; ENDDO
+    ENDDO
+ ENDDO
     ! SYMMETRIZE
     IF(MM%IS_HERM)THEN
-      DO i1=1,MM%n1; DO i2=1,MM%n2
+      DO i1=1,MM%n1
+ DO i2=1,MM%n2
        IF(MM%MASK%imat(i1,i2)==0.AND.MM%MASK%imat(i2,i1)/=0) MM%mat(i1,i2) = MM%mat(i2,i1) 
-      ENDDO; ENDDO
+      ENDDO
+ ENDDO
     ENDIF
   END SUBROUTINE
 
@@ -1164,9 +1188,13 @@ CONTAINS
       ! THEN EXPAND TO FULL MATRIX
       CALL vec2masked_real_matrix(MMOUT)
     ENDIF
-    DO i1=1,MMOUT%n1; DO i2=1,MMOUT%n2; IF(MMOUT%MASK%mat(i1,i2))THEN
+    DO i1=1,MMOUT%n1
+ DO i2=1,MMOUT%n2
+ IF(MMOUT%MASK%mat(i1,i2))THEN
       CALL fill_masked_real_matrix(MMOUT,MMOUT%MASK%imat(i1,i2),MMOUT%mat(i1,i2))
-    ENDIF; ENDDO; ENDDO
+    ENDIF
+ ENDDO
+ ENDDO
   END SUBROUTINE 
 
 !**************************************************************************
@@ -1242,14 +1270,22 @@ CONTAINS
     n1  = MM(1)%n1
     n2  = MM(1)%n2
     DO iMM=nMM,2,-1
-     DO i1=1,n1; DO i2=1,n2; IF(MM(iMM)%MASK%mat(i1,i2))THEN
+     DO i1=1,n1
+ DO i2=1,n2
+ IF(MM(iMM)%MASK%mat(i1,i2))THEN
      iind = MM(iMM)%MASK%imat(i1,i2)
      DO jMM=1,iMM-1
-       DO j1=1,n1; DO j2=1,n2; IF(MM(jMM)%MASK%mat(j1,j2).AND.MM(jMM)%MASK%imat(j1,j2)==iind)THEN
+       DO j1=1,n1
+ DO j2=1,n2
+ IF(MM(jMM)%MASK%mat(j1,j2).AND.MM(jMM)%MASK%imat(j1,j2)==iind)THEN
          MM(iMM)%MASK%mat(i1,i2) = .false.
-       ENDIF; ENDDO; ENDDO
+       ENDIF
+ ENDDO
+ ENDDO
      ENDDO
-     ENDIF; ENDDO; ENDDO
+     ENDIF
+ ENDDO
+ ENDDO
      CALL mask2vec(MM(iMM)%MASK) ! update vector of independant elements
     ENDDO
   END SUBROUTINE

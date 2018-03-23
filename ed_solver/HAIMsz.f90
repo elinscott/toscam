@@ -94,7 +94,9 @@ CONTAINS
 !**************************************************************************
   
   SUBROUTINE delete_HAIMsz
-    NULLIFY(sector_sz); CALL delete_HAIM2() ; IF(ALLOCATED(QUART_INT_SZ)) DEALLOCATE(QUART_INT_SZ)
+    NULLIFY(sector_sz)
+ CALL delete_HAIM2() 
+ IF(ALLOCATED(QUART_INT_SZ)) DEALLOCATE(QUART_INT_SZ)
   END SUBROUTINE
 
 !**************************************************************************
@@ -261,7 +263,10 @@ CONTAINS
        nhoffdiag  = 0
     endif
    else
-    istatemin0=istatemin ; istatemax0=istatemax ; istatemin_=istatemin ; nhoffdiag = 0
+    istatemin0=istatemin 
+ istatemax0=istatemax 
+ istatemin_=istatemin 
+ nhoffdiag = 0
    endif
 
    if(OPEN_MP.and.go_for_omp)then
@@ -325,10 +330,17 @@ CONTAINS
                           ket_out_  = IBCLR(ket_out_,IMPiorb(site1+Nc)-1)
                           ket_out_  = IBSET(ket_out_,IMPiorb(site2+Nc)-1)
                           ket_out_  = IBSET(ket_out_,IMPiorb(site2)-1)
-                          i1=min(IMPiorb(site1),IMPiorb(site2)); i2=max(IMPiorb(site1),IMPiorb(site2))
-                          fermion_sign_ = 1; DO jj=i1+1,i2-1; IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
-                          i1=min(IMPiorb(site2+Nc),IMPiorb(site1+Nc)); i2=max(IMPiorb(site2+Nc),IMPiorb(site1+Nc))
-                                             DO jj=i1+1,i2-1; IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO 
+                          i1=min(IMPiorb(site1),IMPiorb(site2))
+ i2=max(IMPiorb(site1),IMPiorb(site2))
+                          fermion_sign_ = 1
+ DO jj=i1+1,i2-1
+ IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
+                          i1=min(IMPiorb(site2+Nc),IMPiorb(site1+Nc))
+ i2=max(IMPiorb(site2+Nc),IMPiorb(site1+Nc))
+                                             DO jj=i1+1,i2-1
+ IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO 
                           jstate =sector_sz%rank(ket_out_)
                           vec_out(istate) = vec_out(istate) - vec_in(jstate)*JJmatrix(site1,site2)*dble(fermion_sign_)
                      ENDIF
@@ -340,10 +352,17 @@ CONTAINS
                           ket_out_  = IBCLR(ket_out_,IMPiorb(site2+Nc)-1)
                           ket_out_  = IBSET(ket_out_,IMPiorb(site1+Nc)-1)
                           ket_out_  = IBSET(ket_out_,IMPiorb(site1)-1)
-                          i1=min(IMPiorb(site1),IMPiorb(site2)); i2=max(IMPiorb(site1),IMPiorb(site2))
-                          fermion_sign_ = 1; DO jj=i1+1,i2-1; IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
-                          i1=min(IMPiorb(site2+Nc),IMPiorb(site1+Nc)); i2=max(IMPiorb(site2+Nc),IMPiorb(site1+Nc))
-                                             DO jj=i1+1,i2-1; IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+                          i1=min(IMPiorb(site1),IMPiorb(site2))
+ i2=max(IMPiorb(site1),IMPiorb(site2))
+                          fermion_sign_ = 1
+ DO jj=i1+1,i2-1
+ IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
+                          i1=min(IMPiorb(site2+Nc),IMPiorb(site1+Nc))
+ i2=max(IMPiorb(site2+Nc),IMPiorb(site1+Nc))
+                                             DO jj=i1+1,i2-1
+ IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
                           jstate =sector_sz%rank(ket_out_)
                           vec_out(istate) = vec_out(istate) - vec_in(jstate)*JJmatrix(site1,site2)*dble(fermion_sign_)
                      ENDIF
@@ -387,10 +406,17 @@ CONTAINS
                         ket_out_  = IBSET(ket_out_,IMPiorb(site1+Nc)-1) !do
                         ket_out_  = IBSET(ket_out_,IMPiorb(site2)-1)    !up
 
-                        i1=min(IMPiorb(site1),IMPiorb(site2)); i2=max(IMPiorb(site1),IMPiorb(site2))
-                        fermion_sign_ = 1; DO jj=i1+1,i2-1; IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
-                        i1=min(IMPiorb(site1+Nc),IMPiorb(site2+Nc)); i2=max(IMPiorb(site1+Nc),IMPiorb(site2+Nc))
-                                           DO jj=i1+1,i2-1; IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+                        i1=min(IMPiorb(site1),IMPiorb(site2))
+ i2=max(IMPiorb(site1),IMPiorb(site2))
+                        fermion_sign_ = 1
+ DO jj=i1+1,i2-1
+ IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
+                        i1=min(IMPiorb(site1+Nc),IMPiorb(site2+Nc))
+ i2=max(IMPiorb(site1+Nc),IMPiorb(site2+Nc))
+                                           DO jj=i1+1,i2-1
+ IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
                         jstate = sector_sz%rank(ket_out_)
                         vec_out(istate) = vec_out(istate) - vec_in(jstate)*JJmatrix(site1,site2)*dble(fermion_sign_)
                    !-------------------------------------------------------!
@@ -523,7 +549,10 @@ CONTAINS
        nhoffdiag  = 0
     endif
    else
-     istatemin0=istatemin ; istatemax0=istatemax ; istatemin_=istatemin ; nhoffdiag = 0
+     istatemin0=istatemin 
+ istatemax0=istatemax 
+ istatemin_=istatemin 
+ nhoffdiag = 0
    endif
 
    if(OPEN_MP.and.go_for_omp)then
@@ -640,8 +669,10 @@ CONTAINS
      stop
     ENDIF
 
-    IMPiorb  => AIM2sz%IMPiorb;  IMPnorbs  = AIM2sz%IMPnorbs
-    BATHiorb => AIM2sz%BATHiorb; BATHnorbs = AIM2sz%BATHnorbs
+    IMPiorb  => AIM2sz%IMPiorb
+  IMPnorbs  = AIM2sz%IMPnorbs
+    BATHiorb => AIM2sz%BATHiorb
+ BATHnorbs = AIM2sz%BATHnorbs
 
    emptychunks=any( sector_sz%chunk==0 )
 
@@ -676,7 +707,9 @@ CONTAINS
     istatemin_ = istatemin
 #endif
    else
-    istatemin0=istatemin ; istatemax0=istatemax ; istatemin_=istatemin 
+    istatemin0=istatemin 
+ istatemax0=istatemax 
+ istatemin_=istatemin 
    endif
 
    if(OPEN_MP.and.go_for_omp)then
@@ -712,64 +745,100 @@ CONTAINS
         IF(BTEST(ket_in_,BATHiorb(iorb)-1)) vec_out(istate) = vec_out(istate) + AIM2sz%Eb%rc%mat(iorb,iorb)*vec_in(istate)
       ENDDO
 
-      DO jorb=1,IMPnorbs; IF(BTEST(ket_in_,IMPiorb(jorb)-1)) then
-       DO iorb=1,IMPnorbs;  IF(iorb/=jorb.AND.AIM2sz%Ec%rc%MASK%mat(iorb,jorb))THEN
+      DO jorb=1,IMPnorbs
+ IF(BTEST(ket_in_,IMPiorb(jorb)-1)) then
+       DO iorb=1,IMPnorbs
+  IF(iorb/=jorb.AND.AIM2sz%Ec%rc%MASK%mat(iorb,jorb))THEN
         ket_out_= IBCLR(ket_in_,IMPiorb(jorb)-1) 
         IF(.NOT.BTEST(ket_out_,IMPiorb(iorb)-1))THEN
            ket_out_  = IBSET(ket_out_,IMPiorb(iorb)-1)
-           n1=min(IMPiorb(jorb),IMPiorb(iorb)); n2=max(IMPiorb(jorb),IMPiorb(iorb))
-           fermion_sign_ = 1; DO jj=n1+1,n2-1; IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+           n1=min(IMPiorb(jorb),IMPiorb(iorb))
+ n2=max(IMPiorb(jorb),IMPiorb(iorb))
+           fermion_sign_ = 1
+ DO jj=n1+1,n2-1
+ IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
            jstate          = sector_sz%rank(ket_out_)
            hoffdiag        = AIM2sz%Ec%rc%mat(iorb,jorb) * fermion_sign_
            vec_out(istate) = vec_out(istate) + hoffdiag * vec_in(jstate)
         ENDIF
-       ENDIF; ENDDO; 
-      ENDIF; ENDDO
+       ENDIF
+ ENDDO
+ 
+      ENDIF
+ ENDDO
 
-      DO jorb=1,BATHnorbs;  
+      DO jorb=1,BATHnorbs
+  
       if(BTEST(ket_in_,BATHiorb(jorb)-1)) then
-       DO iorb=1,BATHnorbs; IF(iorb/=jorb.AND.AIM2sz%Eb%rc%MASK%mat(iorb,jorb))THEN
+       DO iorb=1,BATHnorbs
+ IF(iorb/=jorb.AND.AIM2sz%Eb%rc%MASK%mat(iorb,jorb))THEN
         ket_out_= IBCLR(ket_in_,BATHiorb(jorb)-1)
         IF(.NOT.BTEST(ket_out_,BATHiorb(iorb)-1))THEN
            ket_out_  = IBSET(ket_out_,BATHiorb(iorb)-1)
-           n1=min(BATHiorb(jorb),BATHiorb(iorb)); n2=max(BATHiorb(jorb),BATHiorb(iorb))
-           fermion_sign_ = 1; DO jj=n1+1,n2-1; IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+           n1=min(BATHiorb(jorb),BATHiorb(iorb))
+ n2=max(BATHiorb(jorb),BATHiorb(iorb))
+           fermion_sign_ = 1
+ DO jj=n1+1,n2-1
+ IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
            jstate   = sector_sz%rank(ket_out_)
            hoffdiag = AIM2sz%Eb%rc%mat(iorb,jorb) * fermion_sign_
            vec_out(istate) = vec_out(istate) + hoffdiag * vec_in(jstate)
         ENDIF
-       ENDIF;ENDDO;
-      ENDIF;ENDDO
+       ENDIF
+ENDDO
 
-      DO jorb=1,IMPnorbs; 
+      ENDIF
+ENDDO
+
+      DO jorb=1,IMPnorbs
+ 
       if(BTEST(ket_in_,IMPiorb(jorb)-1)) then
-       DO iorb=1,BATHnorbs; IF(AIM2sz%Vbc%rc%MASK%mat(iorb,jorb))THEN
+       DO iorb=1,BATHnorbs
+ IF(AIM2sz%Vbc%rc%MASK%mat(iorb,jorb))THEN
         ket_out_= IBCLR(ket_in_,IMPiorb(jorb)-1)
         IF(.NOT.BTEST(ket_out_,BATHiorb(iorb)-1))THEN
            ket_out_  = IBSET(ket_out_,BATHiorb(iorb)-1)
-           n1=min(IMPiorb(jorb),BATHiorb(iorb)); n2=max(IMPiorb(jorb),BATHiorb(iorb))
-           fermion_sign_ = 1; DO jj=n1+1,n2-1; IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+           n1=min(IMPiorb(jorb),BATHiorb(iorb))
+ n2=max(IMPiorb(jorb),BATHiorb(iorb))
+           fermion_sign_ = 1
+ DO jj=n1+1,n2-1
+ IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
            jstate   = sector_sz%rank(ket_out_)
            hoffdiag = AIM2sz%Vbc%rc%mat(iorb,jorb) * fermion_sign_
            vec_out(istate) = vec_out(istate) + hoffdiag * vec_in(jstate)
         ENDIF
-      ENDIF;ENDDO;
-     ENDIF;ENDDO
+      ENDIF
+ENDDO
 
-     DO iorb=1,BATHnorbs; 
+     ENDIF
+ENDDO
+
+     DO iorb=1,BATHnorbs
+ 
       if(BTEST(ket_in_,BATHiorb(iorb)-1)) then
-       DO jorb=1,IMPnorbs; IF(AIM2sz%Vbc%rc%MASK%mat(iorb,jorb))THEN
+       DO jorb=1,IMPnorbs
+ IF(AIM2sz%Vbc%rc%MASK%mat(iorb,jorb))THEN
         ket_out_= IBCLR(ket_in_,BATHiorb(iorb)-1)
         IF(.NOT.BTEST(ket_out_,IMPiorb(jorb)-1))THEN
            ket_out_  = IBSET(ket_out_,IMPiorb(jorb)-1)
-           n1=min(BATHiorb(iorb),IMPiorb(jorb)); n2=max(BATHiorb(iorb),IMPiorb(jorb))
-           fermion_sign_ = 1; DO jj=n1+1,n2-1; IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+           n1=min(BATHiorb(iorb),IMPiorb(jorb))
+ n2=max(BATHiorb(iorb),IMPiorb(jorb))
+           fermion_sign_ = 1
+ DO jj=n1+1,n2-1
+ IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
            jstate   = sector_sz%rank(ket_out_)
            hoffdiag = AIM2sz%Vbc%rc%mat(iorb,jorb) * fermion_sign_
            vec_out(istate) = vec_out(istate) + hoffdiag * vec_in(jstate)
         ENDIF
-      ENDIF; ENDDO; 
-     ENDIF; ENDDO
+      ENDIF
+ ENDDO
+ 
+     ENDIF
+ ENDDO
 
    ENDDO
 
@@ -857,8 +926,10 @@ CONTAINS
 
     if(.not.USE_CC) stop 'error on fly needs USE_CC'
 
-    IMPiorb  => AIM2sz%IMPiorb;   IMPnorbs  = AIM2sz%IMPnorbs
-    BATHiorb => AIM2sz%BATHiorb;  BATHnorbs = AIM2sz%BATHnorbs
+    IMPiorb  => AIM2sz%IMPiorb
+   IMPnorbs  = AIM2sz%IMPnorbs
+    BATHiorb => AIM2sz%BATHiorb
+  BATHnorbs = AIM2sz%BATHnorbs
 
    emptychunks=any( sector_sz%chunk==0 )
 
@@ -893,7 +964,9 @@ CONTAINS
     istatemin_ = istatemin
 #endif
    else
-    istatemin0=istatemin ; istatemax0=istatemax ; istatemin_=istatemin 
+    istatemin0=istatemin 
+ istatemax0=istatemax 
+ istatemin_=istatemin 
    endif
 
    if(OPEN_MP.and.go_for_omp)then
@@ -929,64 +1002,100 @@ CONTAINS
         IF(BTEST(ket_in_,BATHiorb(iorb)-1)) vec_out(istate) = vec_out(istate) + AIM2sz%Eb%rc%mat(iorb,iorb)*vec_in(istate)
       ENDDO
 
-      DO jorb=1,IMPnorbs; IF(BTEST(ket_in_,IMPiorb(jorb)-1)) then
-       DO iorb=1,IMPnorbs;  IF(iorb/=jorb.AND.AIM2sz%Ec%rc%MASK%mat(iorb,jorb))THEN
+      DO jorb=1,IMPnorbs
+ IF(BTEST(ket_in_,IMPiorb(jorb)-1)) then
+       DO iorb=1,IMPnorbs
+  IF(iorb/=jorb.AND.AIM2sz%Ec%rc%MASK%mat(iorb,jorb))THEN
         ket_out_= IBCLR(ket_in_,IMPiorb(jorb)-1) 
         IF(.NOT.BTEST(ket_out_,IMPiorb(iorb)-1))THEN
            ket_out_  = IBSET(ket_out_,IMPiorb(iorb)-1)
-           n1=min(IMPiorb(jorb),IMPiorb(iorb)); n2=max(IMPiorb(jorb),IMPiorb(iorb))
-           fermion_sign_ = 1; DO jj=n1+1,n2-1; IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+           n1=min(IMPiorb(jorb),IMPiorb(iorb))
+ n2=max(IMPiorb(jorb),IMPiorb(iorb))
+           fermion_sign_ = 1
+ DO jj=n1+1,n2-1
+ IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
            jstate          = sector_sz%rank(ket_out_)
            hoffdiag        = AIM2sz%Ec%rc%mat(iorb,jorb) * fermion_sign_
            vec_out(istate) = vec_out(istate) + conjg(hoffdiag) * vec_in(jstate)
         ENDIF
-       ENDIF; ENDDO; 
-      ENDIF; ENDDO
+       ENDIF
+ ENDDO
+ 
+      ENDIF
+ ENDDO
 
-      DO jorb=1,BATHnorbs;  
+      DO jorb=1,BATHnorbs
+  
       if(BTEST(ket_in_,BATHiorb(jorb)-1)) then
-       DO iorb=1,BATHnorbs; IF(iorb/=jorb.AND.AIM2sz%Eb%rc%MASK%mat(iorb,jorb))THEN
+       DO iorb=1,BATHnorbs
+ IF(iorb/=jorb.AND.AIM2sz%Eb%rc%MASK%mat(iorb,jorb))THEN
         ket_out_= IBCLR(ket_in_,BATHiorb(jorb)-1)
         IF(.NOT.BTEST(ket_out_,BATHiorb(iorb)-1))THEN
            ket_out_  = IBSET(ket_out_,BATHiorb(iorb)-1)
-           n1=min(BATHiorb(jorb),BATHiorb(iorb)); n2=max(BATHiorb(jorb),BATHiorb(iorb))
-           fermion_sign_ = 1; DO jj=n1+1,n2-1; IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+           n1=min(BATHiorb(jorb),BATHiorb(iorb))
+ n2=max(BATHiorb(jorb),BATHiorb(iorb))
+           fermion_sign_ = 1
+ DO jj=n1+1,n2-1
+ IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
            jstate          = sector_sz%rank(ket_out_)
            hoffdiag        = AIM2sz%Eb%rc%mat(iorb,jorb) * fermion_sign_
            vec_out(istate) = vec_out(istate) + conjg(hoffdiag) * vec_in(jstate)
         ENDIF
-       ENDIF;ENDDO;
-      ENDIF;ENDDO
+       ENDIF
+ENDDO
 
-      DO jorb=1,IMPnorbs; 
+      ENDIF
+ENDDO
+
+      DO jorb=1,IMPnorbs
+ 
       if(BTEST(ket_in_,IMPiorb(jorb)-1)) then
-       DO iorb=1,BATHnorbs; IF(AIM2sz%Vbc%rc%MASK%mat(iorb,jorb))THEN
+       DO iorb=1,BATHnorbs
+ IF(AIM2sz%Vbc%rc%MASK%mat(iorb,jorb))THEN
         ket_out_= IBCLR(ket_in_,IMPiorb(jorb)-1)
         IF(.NOT.BTEST(ket_out_,BATHiorb(iorb)-1))THEN
            ket_out_  = IBSET(ket_out_,BATHiorb(iorb)-1)
-           n1=min(IMPiorb(jorb),BATHiorb(iorb)); n2=max(IMPiorb(jorb),BATHiorb(iorb))
-           fermion_sign_ = 1; DO jj=n1+1,n2-1; IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+           n1=min(IMPiorb(jorb),BATHiorb(iorb))
+ n2=max(IMPiorb(jorb),BATHiorb(iorb))
+           fermion_sign_ = 1
+ DO jj=n1+1,n2-1
+ IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
            jstate          = sector_sz%rank(ket_out_)
            hoffdiag        = AIM2sz%Vbc%rc%mat(iorb,jorb) * fermion_sign_
            vec_out(istate) = vec_out(istate) + conjg(hoffdiag) * vec_in(jstate)
         ENDIF
-      ENDIF;ENDDO;
-     ENDIF;ENDDO
+      ENDIF
+ENDDO
 
-     DO iorb=1,BATHnorbs; 
+     ENDIF
+ENDDO
+
+     DO iorb=1,BATHnorbs
+ 
       if(BTEST(ket_in_,BATHiorb(iorb)-1)) then
-       DO jorb=1,IMPnorbs; IF(AIM2sz%Vbc%rc%MASK%mat(iorb,jorb))THEN
+       DO jorb=1,IMPnorbs
+ IF(AIM2sz%Vbc%rc%MASK%mat(iorb,jorb))THEN
         ket_out_= IBCLR(ket_in_,BATHiorb(iorb)-1)
         IF(.NOT.BTEST(ket_out_,IMPiorb(jorb)-1))THEN
            ket_out_  = IBSET(ket_out_,IMPiorb(jorb)-1)
-           n1=min(BATHiorb(iorb),IMPiorb(jorb)); n2=max(BATHiorb(iorb),IMPiorb(jorb))
-           fermion_sign_ = 1; DO jj=n1+1,n2-1; IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+           n1=min(BATHiorb(iorb),IMPiorb(jorb))
+ n2=max(BATHiorb(iorb),IMPiorb(jorb))
+           fermion_sign_ = 1
+ DO jj=n1+1,n2-1
+ IF(BTEST(ket_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
            jstate          = sector_sz%rank(ket_out_)
            hoffdiag        = AIM2sz%Vbc%rc%mat(iorb,jorb) * fermion_sign_
            vec_out(istate) = vec_out(istate) + hoffdiag * vec_in(jstate)
         ENDIF
-      ENDIF; ENDDO; 
-     ENDIF; ENDDO
+      ENDIF
+ ENDDO
+ 
+     ENDIF
+ ENDDO
 
    ENDDO
 

@@ -61,7 +61,8 @@ CONTAINS
  integer                :: i
   do i=1,4**Nimpurity
    if(ket%state==basis(i)%state)then
-     locate_fermion=i; return
+     locate_fermion=i
+ return
    endif     
   enddo
  end function
@@ -345,7 +346,8 @@ CONTAINS
 
    v1=(/( ni__(jj,ket), jj =           1,  Nimpurity  )/)
    v2=(/( ni__(jj,ket), jj = Nimpurity+1,2*Nimpurity  )/)
-   UU=0; where(v1==1.and.v2==1) UU=1
+   UU=0
+ where(v1==1.and.v2==1) UU=1
    diag_energy_of_ket=     sum((/(U(jj)*UU(jj),jj=1,Nimpurity)/))+ &
                         &  sum((/(v2(jj)*eps(jj),jj=1,Nimpurity)/))+ &
                         &  sum((/(v1(jj)*eps(jj+Nimpurity),jj=1,Nimpurity)/)) + &

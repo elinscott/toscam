@@ -111,11 +111,18 @@ contains
      call four_leg_vertex_matrices(AIM,GS,Cup_sector,apply_Cup,cup)
      call four_leg_vertex_matrices(AIM,GS,Cdo_sector,apply_Cdo,cdn)
 
-     min_up=10000; max_up=-10000; min_dn=10000; max_dn=-10000;
+     min_up=10000
+ max_up=-10000
+ min_dn=10000
+ max_dn=-10000
+
       do i=1,GS%nsector
         nup=GS%es(i)%sector%updo%up%npart
         ndn=GS%es(i)%sector%updo%down%npart
-        if(nup>max_up) max_up=nup; if(ndn>max_dn) max_dn=ndn; if(nup<min_up) min_up=nup; if(ndn<min_dn) min_dn=ndn
+        if(nup>max_up) max_up=nup
+ if(ndn>max_dn) max_dn=ndn
+ if(nup<min_up) min_up=nup
+ if(ndn<min_dn) min_dn=ndn
       enddo
      write(*,*) 'nup ranging : ',min_up,max_up
      write(*,*) 'nup ranging : ',min_dn,max_dn
@@ -160,7 +167,8 @@ contains
      deallocate(cup_mat)
      deallocate(cdn_mat)
      do i=1,GS%nsector
-       call kill_cdagger(cup(i)); call kill_cdagger(cdn(i))
+       call kill_cdagger(cup(i))
+ call kill_cdagger(cdn(i))
      enddo
 
   return

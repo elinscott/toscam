@@ -114,7 +114,8 @@ CONTAINS
       if(associated(GREEN%Amean)) deallocate(GREEN%Amean)
       if(associated(GREEN%Bmean)) deallocate(GREEN%Bmean)
       ALLOCATE(GREEN%Amean(N,2),GREEN%Bmean(N,2))
-      GREEN%Amean = zero; GREEN%Bmean = zero
+      GREEN%Amean = zero
+ GREEN%Bmean = zero
     ENDIF
     if(messages3) write(log_unit,*) ' .. allocation  done .. '
 
@@ -199,7 +200,8 @@ CONTAINS
       if(associated(GREEN%Amean)) deallocate(GREEN%Amean)
       if(associated(GREEN%Bmean)) deallocate(GREEN%Bmean)
       ALLOCATE(GREEN%Amean(N,2),GREEN%Bmean(N,2))
-      GREEN%Amean = zero; GREEN%Bmean = zero
+      GREEN%Amean = zero
+ GREEN%Bmean = zero
     ENDIF
     if(messages3) write(log_unit,*) '...allocation done...'
 
@@ -272,7 +274,8 @@ CONTAINS
      ENDDO
     ENDDO
 
-    GREENOUT%Amean = GREENIN%Amean ; GREENOUT%Bmean = GREENIN%Bmean
+    GREENOUT%Amean = GREENIN%Amean 
+ GREENOUT%Bmean = GREENIN%Bmean
 
   END SUBROUTINE
 
@@ -299,7 +302,8 @@ CONTAINS
 
     ! FIRST PAD IN (ipm,jpm) SECTOR USING EXTERNAL GREEN'S FUNCTION IF NECESSARY
  
-    DO ipm=1,2; DO jpm=1,2
+    DO ipm=1,2
+ DO jpm=1,2
       IF(PRESENT(GREENIN))THEN
         GREENOUT%Amean = GREENIN%Amean ! WARNING: OVERRIDE!... SO PAD GREENOUT WITH GREENIN BEFORE COMPUTING GREENIN! 
         GREENOUT%Bmean = GREENIN%Bmean ! WARNING: OVERRIDE!... SO PAD GREENOUT WITH GREENIN BEFORE COMPUTING GREENIN! 
@@ -317,7 +321,8 @@ CONTAINS
         .AND. (GREENIN%compute(ipm,jpm).OR. GREENIN%compute(3-ipm,3-jpm))) &
         CALL pad_correl(GREENOUT%correl(ipm,jpm))
       ENDIF
-    ENDDO; ENDDO
+    ENDDO
+ ENDDO
 
   END SUBROUTINE 
 
@@ -334,9 +339,13 @@ CONTAINS
   SUBROUTINE write_green(GREEN)
     TYPE(green_type), INTENT(IN) :: GREEN
     INTEGER                      :: ipm,jpm
-    DO ipm=1,2; DO jpm=1,2; IF(GREEN%compute(ipm,jpm).OR.GREEN%compute(3-ipm,3-jpm))THEN
+    DO ipm=1,2
+ DO jpm=1,2
+ IF(GREEN%compute(ipm,jpm).OR.GREEN%compute(3-ipm,3-jpm))THEN
       CALL write_correl(GREEN%correl(ipm,jpm))
-    ENDIF; ENDDO; ENDDO
+    ENDIF
+ ENDDO
+ ENDDO
   END SUBROUTINE 
 
 
@@ -353,9 +362,13 @@ CONTAINS
     TYPE(green_type), INTENT(IN) :: GREEN
     INTEGER,          OPTIONAL   :: UNIT
     INTEGER                      :: ipm,jpm
-    DO ipm=1,2; DO jpm=1,2; IF(GREEN%compute(ipm,jpm).OR.GREEN%compute(3-ipm,3-jpm))THEN
+    DO ipm=1,2
+ DO jpm=1,2
+ IF(GREEN%compute(ipm,jpm).OR.GREEN%compute(3-ipm,3-jpm))THEN
       CALL glimpse_correl(GREEN%correl(ipm,jpm),UNIT)
-    ENDIF; ENDDO; ENDDO
+    ENDIF
+ ENDDO
+ ENDDO
   END SUBROUTINE 
 
 !**************************************************************************

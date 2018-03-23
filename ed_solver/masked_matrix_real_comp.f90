@@ -1,4 +1,3 @@
-
 MODULE masked_matrix_class
 
   use globalvar_ed_solver

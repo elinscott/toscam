@@ -91,7 +91,8 @@ CONTAINS
    ! COMPUTE DYNAMIC CORRELATIONS OF OPERATORS O,O^+ I.E.  <psi_(N-1)| O^+ |psi_N>  !
    !--------------------------------------------------------------------------------1
 
-    IF(iph==1) ph_sign =  one ; IF(iph==2) ph_sign = -one
+    IF(iph==1) ph_sign =  one 
+ IF(iph==2) ph_sign = -one
     SELECT CASE(stat)
       CASE(FERMIONIC)
         fermion_sign = -one
@@ -118,7 +119,8 @@ CONTAINS
       norm_Opmvec2 = norm_rcvector(Opm%vec)**2
     endif
     if(norm_Opmvec2<cutoff_dynamic) then
-      dyn=0.d0; goto 44   
+      dyn=0.d0
+ goto 44   
     endif
 
    if(rank==0)then
@@ -211,7 +213,8 @@ CONTAINS
    ! COMPUTE DYNAMIC CORRELATIONS OF OPERATORS O,O^+ I.E.  <0| O(z) * O^+ |0>  !
    !---------------------------------------------------------------------------1
 
-    IF(iph==1) ph_sign =  one ; IF(iph==2) ph_sign = -one
+    IF(iph==1) ph_sign =  one 
+ IF(iph==2) ph_sign = -one
 
     IF(iph==2.and.present(keldysh_level)) then
      write(*,*) 'ERROR keldysh in ED and should not compute hole part of the G_K function'
@@ -249,7 +252,9 @@ CONTAINS
 
     Niter = MIN(Nitergreenmax,dimen_H())
     CALL new_tridiag(Lanczos_matrix,Niter) 
-    CALL new_rcvector(lastvec,dimenvec); CALL new_rcvector(initvec,dimenvec); CALL new_rcvector(tmp,dimenvec)
+    CALL new_rcvector(lastvec,dimenvec)
+ CALL new_rcvector(initvec,dimenvec)
+ CALL new_rcvector(tmp,dimenvec)
 
     if(abs(normvec)>1.d-10)then
       norm_Opmvec2 = normvec**2
@@ -258,7 +263,8 @@ CONTAINS
     endif
 
     if(norm_Opmvec2<cutoff_dynamic) then
-      dyn=0.d0; goto 44   
+      dyn=0.d0
+ goto 44   
     endif
 
     if(messages3) write(*,*) 'start compute dynamical correlations by Lanczos'
@@ -290,7 +296,8 @@ CONTAINS
        endif
        if(conv_one_step) then
          write(*,*) 'LANCZOS CONVERGENCE AFTER ONE ITERATION'
-          lastvec%rc=initvec%rc; exit
+          lastvec%rc=initvec%rc
+ exit
        endif
     ENDDO
    !==============================================================================!
@@ -366,11 +373,14 @@ CONTAINS
     endif
     !-------------------------------------------------------------------------------!
 
-    CALL delete_tridiag(tri); CALL delete_tridiag(Lanczos_matrix)
+    CALL delete_tridiag(tri)
+ CALL delete_tridiag(Lanczos_matrix)
 
 44  continue
 
-    CALL delete_rcvector(lastvec); CALL delete_rcvector(initvec); CALL delete_rcvector(tmp)
+    CALL delete_rcvector(lastvec)
+ CALL delete_rcvector(initvec)
+ CALL delete_rcvector(tmp)
 
   contains
 
@@ -433,7 +443,8 @@ CONTAINS
 !     INTEGER                           ::  iw,iter,Niter
 !     INTEGER                           ::  ii,sizevec
 ! 
-!     IF(iph==1) ph_sign = one ; IF(iph==2) ph_sign = -one
+!     IF(iph==1) ph_sign = one 
+ IF(iph==2) ph_sign = -one
 ! 
 !     SELECT CASE(stat)
 !       CASE(FERMIONIC)
@@ -455,7 +466,8 @@ CONTAINS
 !     endif
 ! 
 !     if(norm_Opmvec2<cutoff_dynamic) then
-!       dyn=0.d0; goto 44
+!       dyn=0.d0
+ goto 44
 !     endif
 ! 
 !    if(messages3) write(*,*) 'start compute dynamical correlations by Lanczos GPU'

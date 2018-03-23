@@ -217,7 +217,8 @@ CONTAINS
 
     ! WE ONLY NEED TO CONSIDER A SUBSET OF PERMUTATIONS
 
-    DO iP=1,nP; IF(MASK(iP))THEN
+    DO iP=1,nP
+ IF(MASK(iP))THEN
 
       ! FIRST WE CREATE THE OUTPUT VECTOR IN THE RELEVANT SECTOR
 
@@ -229,22 +230,27 @@ CONTAINS
  
       IF(ASSOCIATED(es%sector%sz))THEN ! Sz-SECTOR
       ALLOCATE(Pket(nprod))
-      DO istate=1,es%sector%sz%dimen; IF(eigen_in%vec%rc(istate)/=zero)THEN
+      DO istate=1,es%sector%sz%dimen
+ IF(eigen_in%vec%rc(istate)/=zero)THEN
         CALL new_ket(ket_in,es%sector%sz%state(istate),Ns2)
         CALL Psz(Pket,multiplet(iP,:),ket_in)
         DO iprod=1,nprod
           IF(.NOT.Pket(iprod)%is_nil)THEN
             jstate = Ces%sector%sz%rank(Pket(iprod)%state)
             eigen_out%vec%rc(jstate) = eigen_out%vec%rc(jstate) + eigen_in%vec%rc(istate) * Pket(iprod)%fermion_sign
-          ENDIF;
+          ENDIF
+
         ENDDO
-      ENDIF; ENDDO
+      ENDIF
+ ENDDO
       ELSE IF(ASSOCIATED(es%sector%updo))THEN ! (nup,ndo) SECTOR
       ALLOCATE(Pket_up(0:nprod-1),Pket_do(0:nprod-1))
       DO ido=1,es%sector%updo%down%dimen
         CALL new_ket(ket_in_do,es%sector%updo%down%state(ido),Ns)
         CALL Pupdo(Pket_do,multiplet(iP,:),2,ket_in_do) 
-        DO iup=1,es%sector%updo%up%dimen; istate = rankupdo(iup,ido,es%sector%updo); IF(eigen_in%vec%rc(istate)/=zero)THEN
+        DO iup=1,es%sector%updo%up%dimen
+ istate = rankupdo(iup,ido,es%sector%updo)
+ IF(eigen_in%vec%rc(istate)/=zero)THEN
           CALL new_ket(ket_in_up,es%sector%updo%up%state(iup),Ns)
           CALL Pupdo(Pket_up,multiplet(iP,:),1,ket_in_up) 
           ! NOW IT REMAINS TO FORM THE DIRECT PRODUCT 
@@ -258,12 +264,14 @@ CONTAINS
             Pket_up(jcyc)%fermion_sign * Pket_do(icyc)%fermion_sign *  eigen_in%vec%rc(istate)
             ENDIF
           ENDDO
-        ENDIF; ENDDO
+        ENDIF
+ ENDDO
       ENDDO
       ENDIF
 
       CALL add_eigen(eigen_out,Ces%lowest)
-    ENDIF; ENDDO
+    ENDIF
+ ENDDO
 
     IF(ALLOCATED(Pket))    DEALLOCATE(Pket)
     IF(ALLOCATED(Pket_up)) DEALLOCATE(Pket_up)

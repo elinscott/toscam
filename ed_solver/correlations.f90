@@ -271,7 +271,8 @@ MODULE correlations
       ! F2[-,-](i,j) = < c[i,do](z) * c[j,up] > = TRANSPOSE(F1[+,+]) IF H IS REAL   !
       !-----------------------------------------------------------------------------!
  
-      DO ipm=1,2; mipm = 3-ipm
+      DO ipm=1,2
+ mipm = 3-ipm
 
          GNAMBU%correl    (ipm,mipm)%fctn   = zero
          GNAMBU%correlstat(ipm,mipm)%rc%mat = zero
@@ -320,30 +321,40 @@ MODULE correlations
       ! NORMAL SPIN DOWN  !
       !-------------------!
 
-      DO iorb=Nc+1,Nc*2; DO jorb=Nc+1,Nc*2; IF(.NOT.MASK%mat(iorb,jorb))THEN
+      DO iorb=Nc+1,Nc*2
+ DO jorb=Nc+1,Nc*2
+ IF(.NOT.MASK%mat(iorb,jorb))THEN
        swapvec                                  = GNAMBU%correl(2,1)%fctn(iorb,jorb,:) 
        GNAMBU%correl(2,1)%fctn(iorb,jorb,:)     = GNAMBU%correl(1,2)%fctn(iorb,jorb,:) 
        GNAMBU%correl(1,2)%fctn(iorb,jorb,:)     = swapvec
        dswapv                                   = GNAMBU%correlstat(2,1)%rc%mat(iorb,jorb) 
        GNAMBU%correlstat(2,1)%rc%mat(iorb,jorb) = GNAMBU%correlstat(1,2)%rc%mat(iorb,jorb) 
        GNAMBU%correlstat(1,2)%rc%mat(iorb,jorb) = dswapv
-      ENDIF; ENDDO; ENDDO
+      ENDIF
+ ENDDO
+ ENDDO
 
       !--------------------!
       ! ANOMALOUS UP-RIGHT !
       !--------------------!
 
-      DO iorb=1,Nc; DO jorb=Nc+1,Nc*2; IF(.NOT.MASK%mat(iorb,jorb))THEN
+      DO iorb=1,Nc
+ DO jorb=Nc+1,Nc*2
+ IF(.NOT.MASK%mat(iorb,jorb))THEN
        swapvec                                  = GNAMBU%correl(2,2)%fctn(iorb,jorb,:) 
        GNAMBU%correl(2,2)%fctn(iorb,jorb,:)     = GNAMBU%correl(1,1)%fctn(iorb,jorb,:) 
        GNAMBU%correl(1,1)%fctn(iorb,jorb,:)     = swapvec
        dswapv                                   = GNAMBU%correlstat(2,2)%rc%mat(iorb,jorb) 
        GNAMBU%correlstat(2,2)%rc%mat(iorb,jorb) = GNAMBU%correlstat(1,1)%rc%mat(iorb,jorb) 
        GNAMBU%correlstat(1,1)%rc%mat(iorb,jorb) = dswapv
-      ENDIF; ENDDO; ENDDO
+      ENDIF
+ ENDDO
+ ENDDO
 
-      CALL correl2vec(GNAMBU%correl(1,2)); CALL correl2vec(GNAMBU%correl(2,1))
-      CALL masked_matrix2vec(GNAMBU%correlstat(1,2)); CALL masked_matrix2vec(GNAMBU%correlstat(2,1))
+      CALL correl2vec(GNAMBU%correl(1,2))
+ CALL correl2vec(GNAMBU%correl(2,1))
+      CALL masked_matrix2vec(GNAMBU%correlstat(1,2))
+ CALL masked_matrix2vec(GNAMBU%correlstat(2,1))
       CALL delete_mask(MASK)
 
     ENDIF

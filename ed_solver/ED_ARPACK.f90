@@ -111,7 +111,8 @@ CONTAINS
      endif
     !----------------------------------------------------------------------------------------------!
 
-    IF(ALLOCATED(VALP)) DEALLOCATE(VALP); IF(ALLOCATED(VECP)) DEALLOCATE(VECP)
+    IF(ALLOCATED(VALP)) DEALLOCATE(VALP)
+ IF(ALLOCATED(VECP)) DEALLOCATE(VECP)
  
   return
   end subroutine
@@ -154,7 +155,9 @@ CONTAINS
     ALLOCATE(VECP(dimen_H(),dimen_H()),VALP(dimen_H()))
     if(dimen_H()==0) stop 'error Hilbert space has 0 dimension'
     dimenvec=dimen_H()
-    CALL new_rcvector(invec,dimenvec); CALL new_rcvector(outvec,dimenvec);
+    CALL new_rcvector(invec,dimenvec)
+ CALL new_rcvector(outvec,dimenvec)
+
     invec%rc=0.d0
 
 
@@ -189,7 +192,8 @@ CONTAINS
     CALL add_eigen(j,VECP,VALP,lowest)
     !----------------------------------------------------------------------------------------------!
 
-    IF(ALLOCATED(VALP)) DEALLOCATE(VALP); IF(ALLOCATED(VECP)) DEALLOCATE(VECP) 
+    IF(ALLOCATED(VALP)) DEALLOCATE(VALP)
+ IF(ALLOCATED(VECP)) DEALLOCATE(VECP) 
 
     CALL delete_rcvector(invec) 
     CALL delete_rcvector(outvec)

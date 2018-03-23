@@ -1,4 +1,3 @@
-
 MODULE readable_vec_class
 
   use fermion_ket_class, only: fermion_ket_type

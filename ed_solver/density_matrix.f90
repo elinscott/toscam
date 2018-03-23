@@ -194,14 +194,16 @@ endif
 
     IF(ierr/=0.and.size2>1.and..not.no_mpi) CALL MPI_ABORT(MPI_COMM_WORLD,1,ierr)
 
-    DO IMPrank1=1,nIMPstates; IF(IMPrank1<IMPstatemin(iproc).OR.IMPrank1>IMPstatemax(iproc))THEN
+    DO IMPrank1=1,nIMPstates
+ IF(IMPrank1<IMPstatemin(iproc).OR.IMPrank1>IMPstatemax(iproc))THEN
       thisrank = IMPrank1*(IMPrank1-1)/2
       dmat%rc(IMPrank1,IMPrank1)   = dmat_vec_tot(thisrank+IMPrank1)
       DO IMPrank2=1,IMPrank1-1
         dmat%rc(IMPrank1,IMPrank2) = dmat_vec_tot(thisrank+IMPrank2)
         dmat%rc(IMPrank2,IMPrank1) = conj(dmat%rc(IMPrank1,IMPrank2))
       ENDDO
-    ENDIF; ENDDO
+    ENDIF
+ ENDDO
 
     if(allocated(dmat_vec)    ) deallocate(dmat_vec)
     if(allocated(dmat_vec_tot)) deallocate(dmat_vec_tot)
@@ -266,7 +268,8 @@ endif
     ! NUMBER OF EIGENVALUES TO DISPLAY, NUMBER OF EIGENVECTOR COMPONENTS TO DISPLAY !
     !-------------------------------------------------------------------------------!
 
-    ncomp=min(size(dmat,1),16) ; npairs=ncomp 
+    ncomp=min(size(dmat,1),16) 
+ npairs=ncomp 
 
     if(size(dmat,1)<=16) call write_array(dmat," DENSITY MATRIX ", unit=log_unit, short=.true.)
 
@@ -319,7 +322,8 @@ endif
     write(log_unit,'(1000f6.3)') VALP
     write(log_unit,*) '-----------------------------------------'
 
-    ENTROPY = zero; TRACE = zero
+    ENTROPY = zero
+ TRACE = zero
     DO ivp = nvp,1,-1
       IF(VALP(ivp)>1.d-16) ENTROPY = ENTROPY - VALP(ivp) * LOG(VALP(ivp))
       TRACE = TRACE + VALP(ivp)

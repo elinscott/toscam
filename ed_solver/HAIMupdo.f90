@@ -84,9 +84,12 @@ CONTAINS
     CALL tab_HAIM2(AIM2do,sector%down)
 
     dimen    = sector%dimen
-    iupmin   = sector%up%istatemin(iproc); idomin   = sector%down%istatemin(iproc)
-    iupmax   = sector%up%istatemax(iproc); idomax   = sector%down%istatemax(iproc)
-    strideup = sector%strideup;            stridedo = sector%stridedown  
+    iupmin   = sector%up%istatemin(iproc)
+ idomin   = sector%down%istatemin(iproc)
+    iupmax   = sector%up%istatemax(iproc)
+ idomax   = sector%down%istatemax(iproc)
+    strideup = sector%strideup
+            stridedo = sector%stridedown  
     
     if(messages)then 
       write(log_unit,*) ' ============================================================ ' 
@@ -213,7 +216,8 @@ CONTAINS
      goto 35
     endif
 
-    min_=iupmin; max_=iupmax
+    min_=iupmin
+ max_=iupmax
 
 #ifndef OPENMP_MPI
    if(OPEN_MP) then
@@ -238,9 +242,13 @@ CONTAINS
     !$OMP PARALLEL IF(go_for_omp) PRIVATE( IMPstate,BATHup,BATHdo,iupimp,idoimp,iupimp_out,idoimp_out,AIMup,AIMdo,up_outbb_, do_outbb_, up_outbbb_, do_outbbb_, fermion_signbb_, fermion_signbbb_,fermion_signb_,site3,site4,n3,n4,is1,is2,up_outb_,do_outb_,bn3,bn4,n1,n2,iupb,idob,iupmin0,iup,iupmin,iupmax,ido,istate,TID,site1,bn,bn1,bn2,site2,iuploc,idoloc,istatemin,istatemax, nhoffdiagup,nhoffdiagdo,noff,irank,hoffdiagup,choffdiagup,hoffdiagdo,choffdiagdo,jdo,jup,jstate,up_in_,do_in_,i1,i2,jj,do_out_,up_out_,fermion_sign_,istate_,jstate_) SHARED(vec_out,vec_in,sec,diagup,diagdo)
 
     if(OPEN_MP.and.go_for_omp) then
-      TID=OMP_GET_THREAD_NUM()+1; iupmin=imin_(TID); iupmax=imax_(TID); 
+      TID=OMP_GET_THREAD_NUM()+1
+ iupmin=imin_(TID)
+ iupmax=imax_(TID)
+ 
     else
-      iupmin=min_;iupmax=max_
+      iupmin=min_
+iupmax=max_
     endif
 
     if(OPEN_MP.and.go_for_omp)then
@@ -405,13 +413,17 @@ CONTAINS
                  do_out_ = do_in_
                  fermion_sign_=1
                  i2=IMPiorbup(site4)
-                 DO jj=1,i2-1; IF(BTEST(up_in_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+                 DO jj=1,i2-1
+ IF(BTEST(up_in_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
                 else
                  do_out_ = IBCLR(do_in_,IMPiorbdo(site4)-1)
                  up_out_ = up_in_
                  fermion_sign_=1
                  i2=IMPiorbdo(site4)
-                 DO jj=1,i2-1; IF(BTEST(do_in_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+                 DO jj=1,i2-1
+ IF(BTEST(do_in_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
                 endif
 
                 DO site3=1,Nc
@@ -433,14 +445,20 @@ CONTAINS
                        up_outbb_ = IBSET(up_outb_,IMPiorbup(site2)-1)
                        do_outbb_ = do_outb_
                        fermion_signbb_=fermion_sign_
-                       i1=min(IMPiorbup(site2),IMPiorbup(site3)); i2=max(IMPiorbup(site2),IMPiorbup(site3))
-                       DO jj=i1+1,i2-1; IF(BTEST(up_outb_,jj-1)) fermion_signbb_=-fermion_signbb_; ENDDO
+                       i1=min(IMPiorbup(site2),IMPiorbup(site3))
+ i2=max(IMPiorbup(site2),IMPiorbup(site3))
+                       DO jj=i1+1,i2-1
+ IF(BTEST(up_outb_,jj-1)) fermion_signbb_=-fermion_signbb_
+ ENDDO
                       else
                        up_outbb_ = up_outb_
                        do_outbb_ = IBSET(do_outb_,IMPiorbdo(site2)-1)
                        fermion_signbb_=fermion_sign_
-                       i1=min(IMPiorbdo(site2),IMPiorbdo(site3)); i2=max(IMPiorbdo(site2),IMPiorbdo(site3))
-                       DO jj=i1+1,i2-1; IF(BTEST(do_outb_,jj-1)) fermion_signbb_=-fermion_signbb_; ENDDO
+                       i1=min(IMPiorbdo(site2),IMPiorbdo(site3))
+ i2=max(IMPiorbdo(site2),IMPiorbdo(site3))
+                       DO jj=i1+1,i2-1
+ IF(BTEST(do_outb_,jj-1)) fermion_signbb_=-fermion_signbb_
+ ENDDO
                       endif
 
                       DO site1=1,Nc
@@ -451,13 +469,17 @@ CONTAINS
                          do_outbbb_ = do_outbb_
                          fermion_signbbb_=fermion_signbb_
                          i2=IMPiorbup(site1)
-                         DO jj=1,i2-1; IF(BTEST(up_outbb_,jj-1)) fermion_signbbb_=-fermion_signbbb_; ENDDO
+                         DO jj=1,i2-1
+ IF(BTEST(up_outbb_,jj-1)) fermion_signbbb_=-fermion_signbbb_
+ ENDDO
                         else
                          up_outbbb_ = up_outbb_
                          do_outbbb_ = IBSET(do_outbb_,IMPiorbdo(site1)-1)
                          fermion_signbbb_=fermion_signbb_
                          i2=IMPiorbdo(site1)
-                         DO jj=1,i2-1; IF(BTEST(do_outbb_,jj-1)) fermion_signbbb_=-fermion_signbbb_; ENDDO
+                         DO jj=1,i2-1
+ IF(BTEST(do_outbb_,jj-1)) fermion_signbbb_=-fermion_signbbb_
+ ENDDO
                         endif
 
                         jstate_ = sector%up%rank(up_outbbb_) + (sector%down%rank(do_outbbb_)-1)*sec
@@ -522,10 +544,17 @@ CONTAINS
                         do_out_  = IBCLR(do_in_,IMPiorbdo(site2)-1)
                         do_out_  = IBSET(do_out_,IMPiorbdo(site1)-1)
                         up_out_  = IBSET(up_out_,IMPiorbup(site2)-1)
-                        i1=min(IMPiorbup(site1),IMPiorbup(site2)); i2=max(IMPiorbup(site1),IMPiorbup(site2))
-                        fermion_sign_ = 1; DO jj=i1+1,i2-1; IF(BTEST(up_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
-                        i1=min(IMPiorbdo(site2),IMPiorbdo(site1)); i2=max(IMPiorbdo(site2),IMPiorbdo(site1))
-                        DO jj=i1+1,i2-1; IF(BTEST(do_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+                        i1=min(IMPiorbup(site1),IMPiorbup(site2))
+ i2=max(IMPiorbup(site1),IMPiorbup(site2))
+                        fermion_sign_ = 1
+ DO jj=i1+1,i2-1
+ IF(BTEST(up_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
+                        i1=min(IMPiorbdo(site2),IMPiorbdo(site1))
+ i2=max(IMPiorbdo(site2),IMPiorbdo(site1))
+                        DO jj=i1+1,i2-1
+ IF(BTEST(do_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
                         iupb = sector%up%rank(up_out_)
                         idob = sector%down%rank(do_out_)
                         jstate_=iupb +(idob-1)*sec
@@ -539,10 +568,17 @@ CONTAINS
                         do_out_  = IBCLR(do_in_,IMPiorbdo(site1)-1)
                         do_out_  = IBSET(do_out_,IMPiorbdo(site2)-1)
                         up_out_  = IBSET(up_out_,IMPiorbup(site1)-1)
-                        i1=min(IMPiorbup(site2),IMPiorbup(site1)); i2=max(IMPiorbup(site2),IMPiorbup(site1))
-                        fermion_sign_ = 1; DO jj=i1+1,i2-1; IF(BTEST(up_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
-                        i1=min(IMPiorbdo(site1),IMPiorbdo(site2)); i2=max(IMPiorbdo(site1),IMPiorbdo(site2))
-                        DO jj=i1+1,i2-1; IF(BTEST(do_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+                        i1=min(IMPiorbup(site2),IMPiorbup(site1))
+ i2=max(IMPiorbup(site2),IMPiorbup(site1))
+                        fermion_sign_ = 1
+ DO jj=i1+1,i2-1
+ IF(BTEST(up_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
+                        i1=min(IMPiorbdo(site1),IMPiorbdo(site2))
+ i2=max(IMPiorbdo(site1),IMPiorbdo(site2))
+                        DO jj=i1+1,i2-1
+ IF(BTEST(do_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
                         iupb = sector%up%rank(up_out_)
                         idob = sector%down%rank(do_out_)
                         jstate_=iupb +(idob-1)*sec
@@ -593,10 +629,17 @@ CONTAINS
                         do_out_  = IBCLR(do_in_,IMPiorbdo(site1)-1)
                         do_out_  = IBSET(do_out_,IMPiorbdo(site2)-1)
                         up_out_  = IBSET(up_out_,IMPiorbup(site2)-1)
-                        i1=min(IMPiorbup(site1),IMPiorbup(site2)); i2=max(IMPiorbup(site1),IMPiorbup(site2))
-                        fermion_sign_ = 1; DO jj=i1+1,i2-1; IF(BTEST(up_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
-                        i1=min(IMPiorbdo(site1),IMPiorbdo(site2)); i2=max(IMPiorbdo(site1),IMPiorbdo(site2))
-                        DO jj=i1+1,i2-1; IF(BTEST(do_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+                        i1=min(IMPiorbup(site1),IMPiorbup(site2))
+ i2=max(IMPiorbup(site1),IMPiorbup(site2))
+                        fermion_sign_ = 1
+ DO jj=i1+1,i2-1
+ IF(BTEST(up_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
+                        i1=min(IMPiorbdo(site1),IMPiorbdo(site2))
+ i2=max(IMPiorbdo(site1),IMPiorbdo(site2))
+                        DO jj=i1+1,i2-1
+ IF(BTEST(do_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
                         iupb = sector%up%rank(up_out_)
                         idob = sector%down%rank(do_out_)
                         jstate_=iupb +(idob-1)*sec
@@ -739,7 +782,8 @@ CONTAINS
        goto 35
     endif
 
-    min_=iupmin; max_=iupmax
+    min_=iupmin
+ max_=iupmax
 
 #ifndef OPENMP_MPI
    if(OPEN_MP) then
@@ -763,9 +807,13 @@ CONTAINS
 
     !$OMP PARALLEL  IF(go_for_omp)  PRIVATE( IMPstate,BATHup,BATHdo,iupimp,idoimp,iupimp_out,idoimp_out,AIMup,AIMdo,up_outbb_, do_outbb_, up_outbbb_, do_outbbb_, fermion_signbb_, fermion_signbbb_,fermion_signb_,site3,site4,n3,n4,is1,is2,up_outb_,do_outb_,bn3,bn4,n1,n2,iupb,idob,iupmin0,iup,iupmin,iupmax,ido,istate,TID,site1,bn,bn1,bn2,site2,iuploc,idoloc,istatemin,istatemax,nhoffdiagup,nhoffdiagdo,noff,irank,hoffdiagup,choffdiagup,hoffdiagdo,choffdiagdo,jdo,jup,jstate,up_in_,do_in_,i1,i2,jj,do_out_,up_out_,fermion_sign_,istate_,jstate_) SHARED(vec_out,vec_in,sec,diagup,diagdo)
    if(OPEN_MP.and.go_for_omp) then
-     TID=OMP_GET_THREAD_NUM()+1; iupmin=imin_(TID); iupmax=imax_(TID); 
+     TID=OMP_GET_THREAD_NUM()+1
+ iupmin=imin_(TID)
+ iupmax=imax_(TID)
+ 
    else
-     iupmin=min_; iupmax=max_
+     iupmin=min_
+ iupmax=max_
    endif
 
    if(OPEN_MP.and.go_for_omp)then
@@ -916,13 +964,17 @@ CONTAINS
                  do_out_ = do_in_
                  fermion_sign_=1
                  i2=IMPiorbup(site4)
-                 DO jj=1,i2-1; IF(BTEST(up_in_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+                 DO jj=1,i2-1
+ IF(BTEST(up_in_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
                 else
                  do_out_ = IBCLR(do_in_,IMPiorbdo(site4)-1)
                  up_out_ = up_in_
                  fermion_sign_=1
                  i2=IMPiorbdo(site4)
-                 DO jj=1,i2-1; IF(BTEST(do_in_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+                 DO jj=1,i2-1
+ IF(BTEST(do_in_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
                 endif
 
                 DO site3=1,Nc
@@ -944,14 +996,20 @@ CONTAINS
                        up_outbb_ = IBSET(up_outb_,IMPiorbup(site2)-1)
                        do_outbb_ = do_outb_
                        fermion_signbb_=fermion_sign_
-                       i1=min(IMPiorbup(site2),IMPiorbup(site3)); i2=max(IMPiorbup(site2),IMPiorbup(site3))
-                       DO jj=i1+1,i2-1; IF(BTEST(up_outb_,jj-1)) fermion_signbb_=-fermion_signbb_; ENDDO
+                       i1=min(IMPiorbup(site2),IMPiorbup(site3))
+ i2=max(IMPiorbup(site2),IMPiorbup(site3))
+                       DO jj=i1+1,i2-1
+ IF(BTEST(up_outb_,jj-1)) fermion_signbb_=-fermion_signbb_
+ ENDDO
                       else
                        up_outbb_ = up_outb_
                        do_outbb_ = IBSET(do_outb_,IMPiorbdo(site2)-1)
                        fermion_signbb_=fermion_sign_
-                       i1=min(IMPiorbdo(site2),IMPiorbdo(site3)); i2=max(IMPiorbdo(site2),IMPiorbdo(site3))
-                       DO jj=i1+1,i2-1; IF(BTEST(do_outb_,jj-1)) fermion_signbb_=-fermion_signbb_; ENDDO
+                       i1=min(IMPiorbdo(site2),IMPiorbdo(site3))
+ i2=max(IMPiorbdo(site2),IMPiorbdo(site3))
+                       DO jj=i1+1,i2-1
+ IF(BTEST(do_outb_,jj-1)) fermion_signbb_=-fermion_signbb_
+ ENDDO
                       endif
 
                       DO site1=1,Nc
@@ -962,13 +1020,17 @@ CONTAINS
                          do_outbbb_ = do_outbb_
                          fermion_signbbb_=fermion_signbb_
                          i2=IMPiorbup(site1)
-                         DO jj=1,i2-1; IF(BTEST(up_outbb_,jj-1)) fermion_signbbb_=-fermion_signbbb_; ENDDO
+                         DO jj=1,i2-1
+ IF(BTEST(up_outbb_,jj-1)) fermion_signbbb_=-fermion_signbbb_
+ ENDDO
                         else
                          up_outbbb_ = up_outbb_
                          do_outbbb_ = IBSET(do_outbb_,IMPiorbdo(site1)-1)
                          fermion_signbbb_=fermion_signbb_
                          i2=IMPiorbdo(site1)
-                         DO jj=1,i2-1; IF(BTEST(do_outbb_,jj-1)) fermion_signbbb_=-fermion_signbbb_; ENDDO
+                         DO jj=1,i2-1
+ IF(BTEST(do_outbb_,jj-1)) fermion_signbbb_=-fermion_signbbb_
+ ENDDO
                         endif
 
                         jstate_ = sector%up%rank(up_outbbb_) + (sector%down%rank(do_outbbb_)-1)*sec
@@ -1034,10 +1096,17 @@ CONTAINS
                         do_out_  = IBCLR(do_in_,IMPiorbdo(site2)-1)
                         do_out_  = IBSET(do_out_,IMPiorbdo(site1)-1)
                         up_out_  = IBSET(up_out_,IMPiorbup(site2)-1)
-                        i1=min(IMPiorbup(site1),IMPiorbup(site2)); i2=max(IMPiorbup(site1),IMPiorbup(site2))
-                        fermion_sign_ = 1; DO jj=i1+1,i2-1; IF(BTEST(up_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
-                        i1=min(IMPiorbdo(site2),IMPiorbdo(site1)); i2=max(IMPiorbdo(site2),IMPiorbdo(site1))
-                        DO jj=i1+1,i2-1; IF(BTEST(do_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+                        i1=min(IMPiorbup(site1),IMPiorbup(site2))
+ i2=max(IMPiorbup(site1),IMPiorbup(site2))
+                        fermion_sign_ = 1
+ DO jj=i1+1,i2-1
+ IF(BTEST(up_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
+                        i1=min(IMPiorbdo(site2),IMPiorbdo(site1))
+ i2=max(IMPiorbdo(site2),IMPiorbdo(site1))
+                        DO jj=i1+1,i2-1
+ IF(BTEST(do_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
                         iupb = sector%up%rank(up_out_)
                         idob = sector%down%rank(do_out_)
                         jstate_=iupb +(idob-1)*sec
@@ -1052,10 +1121,17 @@ CONTAINS
                         do_out_  = IBCLR(do_in_,IMPiorbdo(site1)-1)
                         do_out_  = IBSET(do_out_,IMPiorbdo(site2)-1)
                         up_out_  = IBSET(up_out_,IMPiorbup(site1)-1)
-                        i1=min(IMPiorbup(site2),IMPiorbup(site1)); i2=max(IMPiorbup(site2),IMPiorbup(site1))
-                        fermion_sign_ = 1; DO jj=i1+1,i2-1; IF(BTEST(up_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
-                        i1=min(IMPiorbdo(site1),IMPiorbdo(site2)); i2=max(IMPiorbdo(site1),IMPiorbdo(site2))
-                        DO jj=i1+1,i2-1; IF(BTEST(do_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+                        i1=min(IMPiorbup(site2),IMPiorbup(site1))
+ i2=max(IMPiorbup(site2),IMPiorbup(site1))
+                        fermion_sign_ = 1
+ DO jj=i1+1,i2-1
+ IF(BTEST(up_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
+                        i1=min(IMPiorbdo(site1),IMPiorbdo(site2))
+ i2=max(IMPiorbdo(site1),IMPiorbdo(site2))
+                        DO jj=i1+1,i2-1
+ IF(BTEST(do_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
                         iupb = sector%up%rank(up_out_)
                         idob = sector%down%rank(do_out_)
                         jstate_=iupb +(idob-1)*sec
@@ -1107,10 +1183,17 @@ CONTAINS
                         do_out_  = IBCLR(do_in_,IMPiorbdo(site1)-1)
                         do_out_  = IBSET(do_out_,IMPiorbdo(site2)-1)
                         up_out_  = IBSET(up_out_,IMPiorbup(site2)-1)
-                        i1=min(IMPiorbup(site1),IMPiorbup(site2)); i2=max(IMPiorbup(site1),IMPiorbup(site2))
-                        fermion_sign_ = 1; DO jj=i1+1,i2-1; IF(BTEST(up_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
-                        i1=min(IMPiorbdo(site1),IMPiorbdo(site2)); i2=max(IMPiorbdo(site1),IMPiorbdo(site2))
-                        DO jj=i1+1,i2-1; IF(BTEST(do_out_,jj-1)) fermion_sign_=-fermion_sign_; ENDDO
+                        i1=min(IMPiorbup(site1),IMPiorbup(site2))
+ i2=max(IMPiorbup(site1),IMPiorbup(site2))
+                        fermion_sign_ = 1
+ DO jj=i1+1,i2-1
+ IF(BTEST(up_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
+                        i1=min(IMPiorbdo(site1),IMPiorbdo(site2))
+ i2=max(IMPiorbdo(site1),IMPiorbdo(site2))
+                        DO jj=i1+1,i2-1
+ IF(BTEST(do_out_,jj-1)) fermion_sign_=-fermion_sign_
+ ENDDO
                         iupb = sector%up%rank(up_out_)
                         idob = sector%down%rank(do_out_)
                         jstate_=iupb +(idob-1)*sec
@@ -1298,7 +1381,8 @@ CONTAINS
        nhoffdiagup =  0
 
     DO iup=1,nup
-         istatemin = iup ; 
+         istatemin = iup 
+ 
          istatemax = iup + range 
          noff      = noffup(iup)
       DO irank=1,noff
@@ -1447,7 +1531,8 @@ CONTAINS
        nhoffdiagup =  0
 
     DO iup=1,nup
-         istatemin = iup ; 
+         istatemin = iup 
+ 
          istatemax = iup + range 
          noff      = noffup(iup)
       DO irank=1,noff

@@ -147,7 +147,8 @@ CONTAINS
   ! WE ONLY NEED TO CONSIDER A SUBSET OF ORBITALS !
   !-----------------------------------------------!
 
-    DO site=1,SIZE(MASK); IF(MASK(site))THEN
+    DO site=1,SIZE(MASK)
+ IF(MASK(site))THEN
 
       !----------------------------------------------------------!
       ! FIRST WE CREATE THE OUTPUT VECTOR IN THE RELEVANT SECTOR !
@@ -161,20 +162,25 @@ CONTAINS
       !-------------------------------------------------------------!
 
       IF(ASSOCIATED(es%sector%sz))THEN ! Sz-SECTOR
-      DO istate=1,es%sector%sz%dimen; IF(eigen_in%vec%rc(istate)/=zero)THEN
+      DO istate=1,es%sector%sz%dimen
+ IF(eigen_in%vec%rc(istate)/=zero)THEN
         CALL new_ket(ket_in,es%sector%sz%state(istate),Ns2)
         sz = half * ( ni__(IMPiorbsz(site,1),ket_in) - ( 1 - ni__(IMPiorbsz(site,2),ket_in) ) ) ! NAMBU 
         IF(sz/=zero) eigen_out%vec%rc(istate) = eigen_out%vec%rc(istate) + sz * eigen_in%vec%rc(istate) 
-      ENDIF; ENDDO
+      ENDIF
+ ENDDO
       ELSE IF(ASSOCIATED(es%sector%updo))THEN ! (nup,ndo) SECTOR
       DO ido=1,es%sector%updo%down%dimen
         CALL new_ket(ket_in_do,es%sector%updo%down%state(ido),Ns)
         ndo = ni__(IMPiorbupdo(site,2),ket_in_do)
-        DO iup=1,es%sector%updo%up%dimen; istate = rankupdo(iup,ido,es%sector%updo); IF(eigen_in%vec%rc(istate)/=zero)THEN 
+        DO iup=1,es%sector%updo%up%dimen
+ istate = rankupdo(iup,ido,es%sector%updo)
+ IF(eigen_in%vec%rc(istate)/=zero)THEN 
           CALL new_ket(ket_in_up,es%sector%updo%up%state(iup),Ns)
           nup = ni__(IMPiorbupdo(site,1),ket_in_up)
           IF(nup/=ndo) eigen_out%vec%rc(istate) = eigen_out%vec%rc(istate) + half * ( nup - ndo ) * eigen_in%vec%rc(istate)
-        ENDIF; ENDDO
+        ENDIF
+ ENDDO
       ENDDO
       ENDIF
 
@@ -184,7 +190,8 @@ CONTAINS
 
       CALL add_eigen(eigen_out,Ces%lowest)
 
-    ENDIF; ENDDO
+    ENDIF
+ ENDDO
 
     CALL delete_eigen(eigen_out)
 
@@ -233,7 +240,8 @@ CONTAINS
 
     ! WE ONLY NEED TO CONSIDER A SUBSET OF ORBITALS
 
-    DO site=1,SIZE(MASK); IF(MASK(site))THEN
+    DO site=1,SIZE(MASK)
+ IF(MASK(site))THEN
 
       ! FIRST WE CREATE THE OUTPUT VECTOR IN THE RELEVANT SECTOR
 
@@ -243,7 +251,8 @@ CONTAINS
       ! THEN PARSE THE INPUT SECTOR TO APPLY RELEVANT SPIN OPERATOR
 
       IF(ASSOCIATED(es%sector%sz))THEN ! Sz-SECTOR
-      DO istate=1,es%sector%sz%dimen; IF(eigen_in%vec%rc(istate)/=zero)THEN
+      DO istate=1,es%sector%sz%dimen
+ IF(eigen_in%vec%rc(istate)/=zero)THEN
         CALL new_ket(ket_in,es%sector%sz%state(istate),es%sector%sz%norbs)
         IF(pm=='+') CALL  create_pair(ket_out,IMPiorbsz(site,1),IMPiorbsz(site,2),ket_in)
         IF(pm=='-') CALL destroy_pair(ket_out,IMPiorbsz(site,2),IMPiorbsz(site,1),ket_in)
@@ -251,14 +260,16 @@ CONTAINS
           jstate = Ces%sector%sz%rank(ket_out%state)
           eigen_out%vec%rc(jstate) = eigen_out%vec%rc(jstate) + ket_out%fermion_sign * eigen_in%vec%rc(istate) 
         ENDIF
-      ENDIF; ENDDO
+      ENDIF
+ ENDDO
       ELSE IF(ASSOCIATED(es%sector%updo))THEN ! (nup,ndo) SECTOR
       DO ido=1,es%sector%updo%down%dimen
         CALL new_ket(ket_in_do,es%sector%updo%down%state(ido),Ns)
         IF(pm=='+') CALL destroy(ket_out_do,IMPiorbupdo(site,2),ket_in_do)  
         IF(pm=='-') CALL  create(ket_out_do,IMPiorbupdo(site,2),ket_in_do) 
         IF(.NOT.ket_out_do%is_nil)THEN
-          DO iup=1,es%sector%updo%up%dimen; IF(eigen_in%vec%rc(rankupdo(iup,ido,es%sector%updo))/=zero)THEN
+          DO iup=1,es%sector%updo%up%dimen
+ IF(eigen_in%vec%rc(rankupdo(iup,ido,es%sector%updo))/=zero)THEN
             CALL new_ket(ket_in_up,es%sector%updo%up%state(iup),Ns)
             IF(pm=='+') CALL  create(ket_out_up,IMPiorbupdo(site,1),ket_in_up) ! |Ceigen> =  S^+ |eigen>
             IF(pm=='-') CALL destroy(ket_out_up,IMPiorbupdo(site,1),ket_in_up) ! |Ceigen> = -S^- |eigen>
@@ -279,7 +290,8 @@ CONTAINS
              jstate = rankupdo(jup,jdo,Ces%sector%updo)
              eigen_out%vec%rc(jstate) = eigen_out%vec%rc(jstate) + ket_out_up%fermion_sign * ket_out_do%fermion_sign *  eigen_in%vec%rc(istate)
             ENDIF
-          ENDIF; ENDDO
+          ENDIF
+ ENDDO
         ENDIF
       ENDDO
       ENDIF
@@ -287,7 +299,8 @@ CONTAINS
       ! THEN WE UPDATE THE LIST OF OUTPUT VECTORS
 
       CALL add_eigen(eigen_out,Ces%lowest)
-    ENDIF; ENDDO
+    ENDIF
+ ENDDO
     CALL delete_eigen(eigen_out)
 
   END SUBROUTINE 
@@ -333,7 +346,8 @@ CONTAINS
     eigen_out%converged = eigen_in%converged
 
     ! WE ONLY NEED TO CONSIDER A SUBSET OF ORBITALS
-    DO site=1,SIZE(MASK); IF(MASK(site))THEN
+    DO site=1,SIZE(MASK)
+ IF(MASK(site))THEN
 
       ! FIRST WE CREATE THE OUTPUT VECTOR IN THE RELEVANT SECTOR
 
@@ -343,20 +357,25 @@ CONTAINS
       ! THEN PARSE THE INPUT SECTOR TO APPLY RELEVANT SPIN OPERATOR
 
       IF(ASSOCIATED(es%sector%sz))THEN ! Sz-SECTOR
-      DO istate=1,es%sector%sz%dimen; IF(eigen_in%vec%rc(istate)/=zero)THEN
+      DO istate=1,es%sector%sz%dimen
+ IF(eigen_in%vec%rc(istate)/=zero)THEN
         CALL new_ket(ket_in,es%sector%sz%state(istate),es%sector%sz%norbs)
         n = ni__(IMPiorbsz(site,1),ket_in) + ( 1 - ni__(IMPiorbsz(site,2),ket_in) ) ! NAMBU 
         IF(n/=zero) eigen_out%vec%rc(istate) = eigen_out%vec%rc(istate) + n * eigen_in%vec%rc(istate) 
-      ENDIF; ENDDO
+      ENDIF
+ ENDDO
       ELSE IF(ASSOCIATED(es%sector%updo))THEN ! (nup,ndo) SECTOR
       DO ido=1,es%sector%updo%down%dimen
         CALL new_ket(ket_in_do,es%sector%updo%down%state(ido),Ns)
         ndo = ni__(IMPiorbupdo(site,2),ket_in_do)
-        DO iup=1,es%sector%updo%up%dimen; istate = rankupdo(iup,ido,es%sector%updo); IF(eigen_in%vec%rc(istate)/=zero)THEN
+        DO iup=1,es%sector%updo%up%dimen
+ istate = rankupdo(iup,ido,es%sector%updo)
+ IF(eigen_in%vec%rc(istate)/=zero)THEN
           CALL new_ket(ket_in_up,es%sector%updo%up%state(iup),Ns)
           nup = ni__(IMPiorbupdo(site,1),ket_in_up)
           IF(nup+ndo/=0) eigen_out%vec%rc(istate) = eigen_out%vec%rc(istate) + ( nup + ndo ) * eigen_in%vec%rc(istate)
-        ENDIF; ENDDO
+        ENDIF
+ ENDDO
       ENDDO
       ENDIF
 
@@ -364,7 +383,8 @@ CONTAINS
 
       CALL add_eigen(eigen_out,Ces%lowest)
 
-    ENDIF; ENDDO
+    ENDIF
+ ENDDO
 
     CALL delete_eigen(eigen_out)
 
@@ -395,7 +415,8 @@ CONTAINS
     eigen_out%converged = eigen_in%converged
 
     ! WE ONLY NEED TO CONSIDER A SUBSET OF ORBITALS
-    DO site=1,SIZE(MASK); IF(MASK(site))THEN
+    DO site=1,SIZE(MASK)
+ IF(MASK(site))THEN
 
       ! FIRST WE CREATE THE OUTPUT VECTOR IN THE RELEVANT SECTOR
 
@@ -405,14 +426,19 @@ CONTAINS
       ! THEN PARSE THE INPUT SECTOR TO APPLY RELEVANT SPIN OPERATOR
 
       IF(ASSOCIATED(es%sector%sz))THEN ! Sz-SECTOR
-      DO istate=1,es%sector%sz%dimen; IF(eigen_in%vec%rc(istate)/=zero)THEN
+      DO istate=1,es%sector%sz%dimen
+ IF(eigen_in%vec%rc(istate)/=zero)THEN
         eigen_out%vec%rc(istate) = eigen_out%vec%rc(istate) + eigen_in%vec%rc(istate)
-      ENDIF; ENDDO
+      ENDIF
+ ENDDO
       ELSE IF(ASSOCIATED(es%sector%updo))THEN ! (nup,ndo) SECTOR
       DO ido=1,es%sector%updo%down%dimen
-        DO iup=1,es%sector%updo%up%dimen; istate = rankupdo(iup,ido,es%sector%updo); IF(eigen_in%vec%rc(istate)/=zero)THEN
+        DO iup=1,es%sector%updo%up%dimen
+ istate = rankupdo(iup,ido,es%sector%updo)
+ IF(eigen_in%vec%rc(istate)/=zero)THEN
           eigen_out%vec%rc(istate) = eigen_out%vec%rc(istate) + eigen_in%vec%rc(istate)
-        ENDIF; ENDDO
+        ENDIF
+ ENDDO
       ENDDO
       ENDIF
 
@@ -420,7 +446,8 @@ CONTAINS
 
       CALL add_eigen(eigen_out,Ces%lowest)
 
-    ENDIF; ENDDO
+    ENDIF
+ ENDDO
 
     CALL delete_eigen(eigen_out)
 

@@ -483,7 +483,9 @@ end subroutine
   if(iter/=f1%k1) return
 
 ! OUTPUT :
-  kk=1;vecout=0.;ivecout=0
+  kk=1
+vecout=0.
+ivecout=0
 
   do i=1,f1%ifull
 

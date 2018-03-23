@@ -114,7 +114,8 @@ MODULE Block_Lanczos
         if(allocated(U))     deallocate(U)
         if(allocated(V))     deallocate(V)
 
-        ALLOCATE(ISTOR(17+ISTOR_QUERY(15))); ALLOCATE(RSTOR(5+NINT(RSTOR_QUERY(4))))
+        ALLOCATE(ISTOR(17+ISTOR_QUERY(15)))
+ ALLOCATE(RSTOR(5+NINT(RSTOR_QUERY(4))))
 
        if(Block_size>0)then
          ALLOCATE(U(ISTOR_QUERY(2),Block_size),V(ISTOR_QUERY(2),Block_size))
@@ -296,7 +297,8 @@ MODULE Block_Lanczos
     ENDIF
 
     CALL delete_eigen(eigen)
-    IF(ALLOCATED(vec_in))  DEALLOCATE(vec_in); IF(ALLOCATED(vec_out)) DEALLOCATE(vec_out)
+    IF(ALLOCATED(vec_in))  DEALLOCATE(vec_in)
+ IF(ALLOCATED(vec_out)) DEALLOCATE(vec_out)
 
     DEALLOCATE(ISTOR,RSTOR,U,V,VALP,VECP)
 

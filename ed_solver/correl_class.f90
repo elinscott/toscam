@@ -1,4 +1,3 @@
-
 MODULE correl_class
 
   !$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -315,7 +314,8 @@ CONTAINS
 
     if(ASSOCIATED(CORRELIN%fctn)) then
      if(ASSOCIATED(CORRELOUT%fctn)) DEALLOCATE(CORRELOUT%fctn,STAT=istati)
-     i=shape(CORRELIN%fctn); ALLOCATE(CORRELOUT%fctn(i(1),i(2),i(3)))
+     i=shape(CORRELIN%fctn)
+ ALLOCATE(CORRELOUT%fctn(i(1),i(2),i(3)))
      CORRELOUT%fctn = CORRELIN%fctn
     endif
 
@@ -329,7 +329,8 @@ CONTAINS
 
     IF(ASSOCIATED(CORRELIN%vec))THEN
       IF(ASSOCIATED(CORRELOUT%vec)) DEALLOCATE(CORRELOUT%vec,STAT=istati)
-      i(1:2)=shape(CORRELIN%vec); ALLOCATE(CORRELOUT%vec(i(1),i(2))) 
+      i(1:2)=shape(CORRELIN%vec)
+ ALLOCATE(CORRELOUT%vec(i(1),i(2))) 
       CORRELOUT%vec = CORRELIN%vec
     ENDIF
 
@@ -525,7 +526,9 @@ CONTAINS
     Nw=G%Nw
  
     do j=1,size(G%vec,1)
-      chi0=0.0 ; gg=0.0 ;
+      chi0=0.0 
+ gg=0.0 
+
       do iw=1,Nw
         gg(-iw) = conjg(G%vec(j,iw))
         gg( iw) =       G%vec(j,iw)
@@ -788,7 +791,9 @@ CONTAINS
     COMPLEX(DBL)                     :: CORREL1_AV(CORREL1%N,CORREL1%N,CORREL1%Nw)
     logical                          :: asym
 
-    diff=zero; tot=0; asym=abs(lambda_sym_fit)>1.d-3
+    diff=zero
+ tot=0
+ asym=abs(lambda_sym_fit)>1.d-3
  
     if(abs(fit_shift)<1.d-10)then
      fit_shift_=abs(CORREL1%freq%vec(1))
@@ -873,15 +878,21 @@ CONTAINS
     b2=nn
     w2=2.d0
     if(.not.superconducting_state)then
-     if(ii<=nn/2)then; b2=nn/2; endif
+     if(ii<=nn/2)then
+ b2=nn/2
+ endif
     endif
 #else
     b1=1
     b2=nn
     w2=1.d0
     if(.not.superconducting_state)then
-     if(ii<=nn/2)then; b2=nn/2  ; endif
-     if(ii> nn/2)then; b1=nn/2+1; endif
+     if(ii<=nn/2)then
+ b2=nn/2  
+ endif
+     if(ii> nn/2)then
+ b1=nn/2+1
+ endif
     endif
 #endif
   end subroutine
@@ -921,7 +932,9 @@ CONTAINS
       CALL vec2correl(CORRELOUT)
     ENDIF
 
-    DO i1=1,CORRELOUT%N; DO i2=1,CORRELOUT%N; IF(CORRELOUT%MM%MASK%mat(i1,i2))THEN
+    DO i1=1,CORRELOUT%N
+ DO i2=1,CORRELOUT%N
+ IF(CORRELOUT%MM%MASK%mat(i1,i2))THEN
       do ii1=1,size(CORRELOUT%MM%MASK%imat,1)
        do ii2=1,size(CORRELOUT%MM%MASK%imat,2)
         do iw=1,CORRELOUT%Nw
@@ -931,7 +944,9 @@ CONTAINS
         ENDDO
        ENDDO 
       ENDDO 
-    ENDIF; ENDDO; ENDDO
+    ENDIF
+ ENDDO
+ ENDDO
 
   END SUBROUTINE
 
@@ -1029,7 +1044,8 @@ CONTAINS
     Nw=size(Gm1,3)
   endif
 
-   siz=size(Gm1,1);si=size(Gm1,1)/2
+   siz=size(Gm1,1)
+si=size(Gm1,1)/2
 
    Gm1(:,:,1:Nw)=G%fctn(:,:,1:Nw)
 
@@ -1046,7 +1062,9 @@ CONTAINS
       CASE(RETARDED,ADVANCED)
         rvec = real(G%freq%vec)
         Gm1(si+1:siz,si+1:siz,:) = G%fctn(si+1:siz,si+1:siz,:)
-        do i=si+1,siz ;do j=si+1,siz;
+        do i=si+1,siz 
+do j=si+1,siz
+
          call mirror_array(rvec,Gm1(i,j,:))
           SELECT CASE(G%stat)
            CASE(FERMIONIC)
@@ -1056,7 +1074,9 @@ CONTAINS
            CASE DEFAULT
             stop 'average correlations'
           END SELECT
-        enddo ; enddo ;
+        enddo 
+ enddo 
+
     END SELECT
     !==========================================================!
     do iw=1,Nw
@@ -1074,7 +1094,9 @@ CONTAINS
        enddo
       CASE(RETARDED,ADVANCED)
         rvec = real(G%freq%vec)
-        do i=si+1,siz ;do j=si+1,siz;
+        do i=si+1,siz 
+do j=si+1,siz
+
           call mirror_array(rvec,Gm1(i,j,:))
           SELECT CASE(G%stat)
            CASE(FERMIONIC)
@@ -1084,7 +1106,9 @@ CONTAINS
            CASE DEFAULT
             stop 'average correlations'
           END SELECT
-        enddo; enddo;
+        enddo
+ enddo
+
     END SELECT
     !==========================================================!
 
@@ -1208,9 +1232,11 @@ CONTAINS
            do j=1,size(CORRELOUT%vec,1)
               call mirror_array(rvec,vec(j,:))
            enddo
-           do i=1,size(fctn,1); do j=1,size(fctn,2)
+           do i=1,size(fctn,1)
+ do j=1,size(fctn,2)
               call mirror_array(rvec,fctn(i,j,:))
-           enddo;enddo
+           enddo
+enddo
 
            CORRELOUT%vec  = vec
            CORRELOUT%fctn = fctn

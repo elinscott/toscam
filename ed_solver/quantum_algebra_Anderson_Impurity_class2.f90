@@ -90,14 +90,18 @@ CONTAINS
     IF(AIM2%SUPER)THEN
       ! IMPURITY ORBITALS IN NAMBU NOTATION: spin up first
       ! WE KEEP spin up FIRST IN FULL AIM BASIS, BUT WE START WE BATH ORBITALS
-      ALLOCATE( AIM2%IMPiorb( AIM2%IMPnorbs)); AIM2%IMPiorb = (/AIM% IMPiorb(:,1),AIM% IMPiorb(:,2)/)
+      ALLOCATE( AIM2%IMPiorb( AIM2%IMPnorbs))
+ AIM2%IMPiorb = (/AIM% IMPiorb(:,1),AIM% IMPiorb(:,2)/)
       ! BATH ORBITALS IN NAMBU ORDER
-      ALLOCATE(AIM2%BATHiorb(AIM2%BATHnorbs));AIM2%BATHiorb = (/AIM%BATHiorb(:,1),AIM%BATHiorb(:,2)/)
+      ALLOCATE(AIM2%BATHiorb(AIM2%BATHnorbs))
+AIM2%BATHiorb = (/AIM%BATHiorb(:,1),AIM%BATHiorb(:,2)/)
     ELSE
       ! FOR A GIVEN SPIN WE JUST START WITH BATH ORBITALS
-      ALLOCATE(AIM2%IMPiorb(SIZE(AIM%IMPiorb,1)));   AIM2% IMPiorb = AIM% IMPiorb(:,1) 
+      ALLOCATE(AIM2%IMPiorb(SIZE(AIM%IMPiorb,1)))
+   AIM2% IMPiorb = AIM% IMPiorb(:,1) 
       ! BATH ORBITALS FOR A GIVEN SPIN
-      ALLOCATE(AIM2%BATHiorb(SIZE(AIM%BATHiorb,1))); AIM2%BATHiorb = AIM%BATHiorb(:,1)
+      ALLOCATE(AIM2%BATHiorb(SIZE(AIM%BATHiorb,1)))
+ AIM2%BATHiorb = AIM%BATHiorb(:,1)
     END IF
     
     
