@@ -2,11 +2,11 @@ MODULE DMFT_SOLVER_ED
 
   use solver 
   use linalg, only : root_equation
+  use common_def, only: dump_message
 
-  IMPLICIT NONE
+  implicit none
 
-  PRIVATE
-  PUBLIC :: stand_alone_ed,solver_ED_interface,initialize_ed_solver,finalize_ed_solver,write_begin_iter
+  private
 
   LOGICAL,      PARAMETER, PRIVATE           :: F=.FALSE.,T=.TRUE.
 
@@ -32,6 +32,11 @@ MODULE DMFT_SOLVER_ED
      INTEGER, pointer  :: narr(:)
   ENDTYPE h1occup
 
+  public :: stand_alone_ed
+  public :: solver_ed_interface
+  public :: initialize_ed_solver
+  public :: finalize_ed_solver
+  public :: write_begin_iter
 CONTAINS
 
 !**************************************************************************

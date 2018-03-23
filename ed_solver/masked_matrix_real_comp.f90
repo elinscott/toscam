@@ -1,13 +1,14 @@
 
 MODULE masked_matrix_class
 
-  USE globalvar_ed_solver
+  use globalvar_ed_solver
+  use masked_matrix_class_mod, only: build_mask_, masked_real_matrix_type, &
+                                     new_masked_real_matrix_from_scratch, &
+                                     vec2masked_matrix_
 
   IMPLICIT NONE 
 
-  REAL(DBL), PARAMETER, PRIVATE  :: zero=0.0_DBL,one=1.0_DBL,two=2.0_DBL,three=3.0_DBL,four=4.0_DBL
-  LOGICAL,   PARAMETER, PRIVATE  :: F=.FALSE.,T=.TRUE.
-
+  private
 
   !$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
   !$$ GENERIC (CPLX OR REAL) MASKED MATRIX CLASS $$
@@ -28,6 +29,10 @@ MODULE masked_matrix_class
 #endif
   END TYPE
 
+  public :: masked_matrix_type
+  public :: masked_real_matrix_type
+  public :: new_masked_matrix
+  public :: write_masked_matrix
 
 CONTAINS
 

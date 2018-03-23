@@ -43,9 +43,10 @@
           CASE('NORMAL')
             write(*,*) '---start CPU Lanczos---'
             call Lanczos_get_GS_sector(lowest)
-          CASE('GPU')
-            write(*,*) '---start GPU Lanczos---'
-            call Lanczos_get_GS_sector_GPU(lowest)
+          ! ebl: removing GPU functionality
+          ! CASE('GPU')
+          !   write(*,*) '---start GPU Lanczos---'
+          !   call Lanczos_get_GS_sector_GPU(lowest)
           CASE DEFAULT
             stop 'error solver not defined in get GS'
           END SELECT
@@ -145,9 +146,10 @@
           CASE('NORMAL')
             write(*,*) '---start CPU Lanczos---'
             CALL Lanczos_fast_diagonalize(GS%es(isector)%lowest)
-          CASE('GPU')
-            write(*,*) '---start GPU Lanczos---'
-            CALL Lanczos_fast_diagonalize_GPU(GS%es(isector)%lowest) 
+          ! ebl: removing GPU functionality
+          ! CASE('GPU')
+          !   write(*,*) '---start GPU Lanczos---'
+          !   CALL Lanczos_fast_diagonalize_GPU(GS%es(isector)%lowest) 
           CASE('FULL_ED')
             write(*,*) '---start CPU/GPU ED---'
             CALL ED_diago(GS%es(isector)%lowest)

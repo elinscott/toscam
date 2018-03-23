@@ -1,12 +1,13 @@
 MODULE rcvector_class
 
-  USE masked_matrix_class 
-  use random, only : dran_tab
+  use genvar,              only: DBL
+  use globalvar_ed_solver, only: use_transpose_trick_mpi, istati
+  use mpirout,             only: mpi_dot_product
+  use random,              only: dran_tab
 
   IMPLICIT NONE
 
-  REAL(DBL),    PARAMETER, PRIVATE  :: zero=0.0_DBL
-  LOGICAL,      PARAMETER, PRIVATE  :: F=.FALSE.,T=.TRUE.
+  private
 
 ! GENERIC REAL OR COMPLEX VECTOR TYPE !
 
@@ -28,6 +29,8 @@ MODULE rcvector_class
     MODULE PROCEDURE new_rcvector_from_scratch
     MODULE PROCEDURE new_rcvector_from_old
   END INTERFACE
+
+  public :: rcvector_type
 
 CONTAINS
 
@@ -69,12 +72,19 @@ CONTAINS
 !**************************************************************************
 
   SUBROUTINE new_rcvector_from_scratch(VEC,N)
+
+    implicit none
+
     TYPE(rcvector_type), INTENT(INOUT) :: VEC
     INTEGER,             INTENT(IN)    :: N
-        CALL delete_rcvector(VEC)
-        VEC%n = N
-        IF(N>0)THEN ; ALLOCATE(VEC%rc(N)) ; ENDIF
-        VEC%rc = zero
+
+    CALL delete_rcvector(VEC)
+    VEC%n = N
+    IF(N>0)THEN
+      ALLOCATE(VEC%rc(N))
+    ENDIF
+    VEC%rc = 0.0_DBL
+
   END SUBROUTINE 
 
 !**************************************************************************
@@ -126,7 +136,7 @@ CONTAINS
 !**************************************************************************
 
   SUBROUTINE delete_rcvector(VECIN)
-    TYPE(rcvector_type), INTENT(INOUT) :: VECIN
+    type(rcvector_type), intent(inout) :: VECIN
     IF(ASSOCIATED(VECIN%rc)) DEALLOCATE(VECIN%rc,STAT=istati)
   END SUBROUTINE 
 
@@ -195,8 +205,8 @@ CONTAINS
 !**************************************************************************
 
   SUBROUTINE delete_rcvector_archive(archive)
-    TYPE(rcvector_archive_type), INTENT(INOUT) :: archive
-    INTEGER                                    :: ivec
+    type(rcvector_archive_type), intent(inout) :: archive
+    integer                                    :: ivec
     IF(ASSOCIATED(archive%vec))THEN
       DO ivec=1,archive%nvec
        CALL delete_rcvector(archive%vec(ivec))

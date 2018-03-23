@@ -6,6 +6,8 @@ MODULE solver
 
   IMPLICIT NONE
 
+  private
+
   TYPE(eigensectorlist_type),  PRIVATE,SAVE :: sector2diagH      ! sectors to diagonalize 
   TYPE(eigensectorlist_type),  PRIVATE,SAVE :: oldGS             ! GS from previous run
 

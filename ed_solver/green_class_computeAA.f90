@@ -4,6 +4,8 @@ MODULE green_class_computeAA
 
   IMPLICIT NONE
 
+  private
+
   REAL(DBL),    PARAMETER, PRIVATE  :: zero=0.0_DBL,one=1.0_DBL
   LOGICAL,      PARAMETER, PRIVATE  :: F=.FALSE.,T=.TRUE.
 

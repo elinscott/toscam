@@ -1,24 +1,18 @@
 MODULE fermion_ket_class
 
-  use genvar
-  USE common_def 
-  use matrix
-  use linalg
+  use genvar,     only:
+  USE common_def, only:
+  use matrix,     only: write_array
+  use linalg,     only:
 
   IMPLICIT NONE
-
-
-  REAL(DBL),    PARAMETER, private                 :: zero=0.0_DBL,one=1.0_DBL,two=2.0_DBL,three=3.0_DBL,four=4.0_DBL
-  LOGICAL,      PARAMETER, private                 :: F=.FALSE.,T=.TRUE.
-
-
+ 
+  private
 
   INTERFACE new_ket
     MODULE PROCEDURE new_ket_from_state
     MODULE PROCEDURE new_ket_from_old
   END INTERFACE
-
-
 
   TYPE fermion_ket_type
     !$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -34,13 +28,13 @@ MODULE fermion_ket_class
     LOGICAL :: is_nil
   END TYPE 
 
-
   TYPE fermion_ket_vec
     integer             :: dim
     real(8)             :: energy,total_S,total_Sz,total_N
     real(8),allocatable :: vec(:)    
   END TYPE
 
+  public :: fermion_ket_type
 
 CONTAINS 
 

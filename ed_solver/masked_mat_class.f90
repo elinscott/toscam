@@ -1,14 +1,15 @@
 MODULE masked_matrix_class_mod
 
-  USE common_def
-  USE mask_class
-  USE genvar
+  USE common_def, only: c2s, dump_message, find_rank, i2c
+  USE mask_class, only: mask_type, new_mask, HERM, SYM
+  use matrix,     only: write_array
+  USE genvar,     only: DBL, DP, log_unit, FERMIONIC, BOSONIC
 
   IMPLICIT NONE
 
-  REAL(DBL),    PARAMETER, private       :: zero=0.0d0
-  LOGICAL,      PARAMETER, private       :: F=.FALSE.,T=.TRUE.
-  INTEGER,private                        :: istati
+  private
+
+  INTEGER                                :: istati
 
   !$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
   !$$ REAL MASKED MATRIX CLASS $$
@@ -28,7 +29,7 @@ MODULE masked_matrix_class_mod
     ! VECTOR OF INDEPENDANT MATRIX ELEMENTS
     REAL(DBL),       POINTER :: vec(:)   => NULL()
     ! FLAGS
-    LOGICAL                  :: IS_HERM=F    ! TRUE IF HERMITIC MATRIX
+    LOGICAL                  :: IS_HERM=.false.    ! TRUE IF HERMITIC MATRIX
   END TYPE 
 
 
@@ -51,7 +52,7 @@ MODULE masked_matrix_class_mod
     COMPLEX(DBL),    POINTER :: vec(:) => NULL()
 
     ! ADDITIONAL MASKS/VECTORS IF HERMITIC
-    LOGICAL                  :: IS_HERM=F    ! TRUE IF HERMITIC MATRIX
+    LOGICAL                  :: IS_HERM=.false.    ! TRUE IF HERMITIC MATRIX
     TYPE(mask_type)          :: MASKdiag      
     REAL(DBL),       POINTER ::  vecdiag(:)    => NULL()
     TYPE(mask_type)          :: MASKoffdiag
@@ -146,7 +147,13 @@ MODULE masked_matrix_class_mod
    MODULE PROCEDURE transform_masked_cplx_matrix,transform_masked_real_matrix
   END INTERFACE
 
-
+  public :: build_mask_
+  public :: masked_real_matrix_type
+  public :: new_masked_real_matrix
+  public :: new_masked_real_matrix_from_scratch
+  public :: vec2masked_matrix_
+  public :: write_masked_matrix_
+  public :: write_masked_real_matrix
 
 CONTAINS
 
@@ -168,6 +175,7 @@ CONTAINS
   SUBROUTINE new_masked_cplx_matrix_from_scratch(MM,title,n1,n2,IMASK,IS_HERM) 
 
     ! CREATE MASKED MATRIX MM FROM SCRATCH
+    implicit none
 
     TYPE(masked_cplx_matrix_type), INTENT(INOUT) :: MM
     CHARACTER(LEN=*),              INTENT(IN)    :: title
@@ -180,7 +188,7 @@ CONTAINS
 
     MM%title = title(1:MIN(100,LEN_TRIM(title)))
 
-    MM%IS_HERM = F
+    MM%IS_HERM = .false.
     IF(PRESENT(IS_HERM))THEN
       IF(IS_HERM.AND.n1/=n2) then
        write(*,*) "ERROR in new_masked_cplx_matrix: "//TRIM(ADJUSTL(title))//" ISNT SQUARE! IS_HERM IRRELEVANT!"
@@ -189,7 +197,7 @@ CONTAINS
       MM%IS_HERM = IS_HERM
     ENDIF
 
-    MM%n1 = n1 ; MM%n2 = n2 ; ALLOCATE(MM%mat(n1,n2)) ; MM%mat = zero
+    MM%n1 = n1 ; MM%n2 = n2 ; ALLOCATE(MM%mat(n1,n2)) ; MM%mat = 0.0_DP
     
     SYMMETRY = ''
     IF(MM%IS_HERM) SYMMETRY = HERM
@@ -468,6 +476,7 @@ CONTAINS
     !--------------------------------------!
     ! BUILD LOGICAL MASK FROM INTEGER MASK ! 
     !--------------------------------------!
+    use mask_class, only: build_logical_mask
 
     TYPE(masked_cplx_matrix_type), INTENT(INOUT) :: MM
     INTEGER, OPTIONAL,             INTENT(IN)    :: IMASK(:,:)
@@ -511,7 +520,7 @@ CONTAINS
 
     IF(.NOT.is_cplx_hermitic)THEN
       CALL dump_message(TEXT="ERROR IN test_masked_cplx_matrix_hermitic: MATRIX "//TRIM(ADJUSTL(MM%title))//" ISNT HERMITIC!")
-      CALL write_masked_cplx_matrix(MM,SHOW_MASK=T)
+      CALL write_masked_cplx_matrix(MM,SHOW_MASK=.true.)
       call write_array(MM%mat-TRANSPOSE(CONJG(MM%mat)),'M-M\dag',UNIT=6)
       CALL dump_message(TEXT=" n,m "//c2s(i2c(MM%n1))//" "//c2s(i2c(MM%n2)))
       write(*,*) 'mat :' 
@@ -543,7 +552,7 @@ CONTAINS
     CHARACTER(LEN=400)                        :: fmt_MM
     IF(.NOT.ASSOCIATED(MM%mat)) STOP "ERROR IN write_masked_cplx_matrix: INPUT ISNT ALLOCATED!"
 
-    show_mask_ = T ! DEFAULT: SHOW INTEGER MASK
+    show_mask_ = .true. ! DEFAULT: SHOW INTEGER MASK
     IF(PRESENT(SHOW_MASK)) show_mask_ = SHOW_MASK
 
     ! PRINT INTEGER MASK
@@ -561,7 +570,7 @@ CONTAINS
     IF(ANY(MM%MASK%mat))THEN
       IF(show_mask_) CALL dump_message(TEXT="# with",UNIT=UNIT)
 
-      short_ = F ! DEFAULT: LONG FORMAT
+      short_ = .false. ! DEFAULT: LONG FORMAT
       IF(PRESENT(SHORT)) short_ = SHORT
 
       IF(short_)THEN
@@ -675,7 +684,7 @@ CONTAINS
     IF(SIZE(FILTER,1)/=MM%n1.OR.SIZE(FILTER,2)/=MM%n2) STOP "ERROR IN filter_masked_cplx_matrix: INCONSISTENT DIMENSIONS!"
     CALL new_masked_cplx_matrix(diag,MM)
     CALL filter_mask(diag%MASK,MM%MASK,FILTER)
-    diag%mat  = MERGE(MM%mat,CMPLX(zero,zero,8),FILTER)
+    diag%mat  = MERGE(MM%mat,CMPLX(0.0_DP,0.0_DP,8),FILTER)
   END SUBROUTINE
 
 !**************************************************************************
@@ -701,7 +710,7 @@ CONTAINS
     n2slice = cbounds(2)-cbounds(1)+1
     IF(n1slice<=0) STOP "ERROR IN slice_masked_cplx_matrix: NON-NULL ROW    DIMENSIONS REQUIRED!"
     IF(n2slice<=0) STOP "ERROR IN slice_masked_cplx_matrix: NON-NULL COLUMN DIMENSIONS REQUIRED!"
-    IS_HERMslice = F
+    IS_HERMslice = .false.
     IF(ALL(rbounds==cbounds)) IS_HERMslice = MMIN%IS_HERM ! SLICE=DIAGONAL BLOCK
     cslice = c2s(i2c(rbounds(1)))//"_"//c2s(i2c(rbounds(2)))//"_"//c2s(i2c(cbounds(1)))//"_"//c2s(i2c(cbounds(2)))
     CALL new_masked_cplx_matrix(MMOUT,TRIM(ADJUSTL(MMIN%title))//"_"//TRIM(ADJUSTL(cslice)),n1slice,n2slice,IS_HERM=IS_HERMslice)
@@ -739,7 +748,7 @@ CONTAINS
      iind = MM(iMM)%MASK%imat(i1,i2)
      DO jMM=1,iMM-1
        DO j1=1,n1; DO j2=1,n2; IF(MM(jMM)%MASK%mat(j1,j2).AND.MM(jMM)%MASK%imat(j1,j2)==iind)THEN
-         MM(iMM)%MASK%mat(i1,i2) = F
+         MM(iMM)%MASK%mat(i1,i2) = .false.
        ENDIF; ENDDO; ENDDO
      ENDDO
       ENDIF; ENDDO; ENDDO
@@ -800,7 +809,7 @@ CONTAINS
 
     MM%title = title(1:MIN(100,LEN_TRIM(title)))
     
-    MM%IS_HERM = F
+    MM%IS_HERM = .false.
     IF(PRESENT(IS_HERM))THEN
       IF(IS_HERM.AND.n1/=n2) then
        write(*,*) "ERROR in new_masked_real_matrix: "//TRIM(ADJUSTL(title))//" ISNT SQUARE! IS_HERM IRRELEVANT!"
@@ -815,7 +824,7 @@ CONTAINS
     MM%n2 = n2
     ! MATRIX
     ALLOCATE(MM%mat(n1,n2))
-    MM%mat = zero
+    MM%mat = 0.0_DP
 
     ! MASKS
     SYMMETRY = ''
@@ -944,7 +953,7 @@ CONTAINS
        CALL fill_masked_real_matrix(MM,MMEXT%MASK%ivec(iind),MMEXT%vec(iind))
       ENDDO
     ELSE
-      !MM%mat = zero
+      !MM%mat = 0.0_DP
       DO iind=1,MM%MASK%nind ! NOTHING HAPPENS IF nind=0
         CALL fill_masked_real_matrix(MM,MM%MASK%ivec(iind),MM%vec(iind))
       ENDDO
@@ -988,10 +997,18 @@ CONTAINS
     !--------------------------------------!
     ! BUILD LOGICAL MASK FROM INTEGER MASK !
     !--------------------------------------!
+
+    use mask_class, only: build_logical_mask
+
+    implicit none
+
     TYPE(masked_real_matrix_type), INTENT(INOUT) :: MM
     INTEGER, OPTIONAL,             INTENT(IN)    :: IMASK(:,:)
+
     IF(.NOT.ASSOCIATED(MM%mat)) STOP "ERROR IN build_mask_real: INPUT ISNT ALLOCATED!"
+
     CALL build_logical_mask(MM%MASK,IMASK=IMASK)
+
   END SUBROUTINE
 
 !**************************************************************************
@@ -1018,7 +1035,7 @@ CONTAINS
 
     IF(.NOT.is_real_symmetric)THEN
       CALL dump_message(TEXT="ERROR IN test_masked_real_matrix_symmetric: MATRIX "//TRIM(ADJUSTL(MM%title))//" ISNT SYMMETRIC!")
-      CALL write_masked_real_matrix(MM,SHOW_MASK=T)
+      CALL write_masked_real_matrix(MM,SHOW_MASK=.true.)
       call write_array(MM%mat-TRANSPOSE(MM%mat),'M-M\dag',UNIT=6)
       STOP 'critical error'
     ENDIF
@@ -1044,7 +1061,7 @@ CONTAINS
     CHARACTER(LEN=400)                        :: fmt_MM
     IF(.NOT.ASSOCIATED(MM%mat)) STOP "ERROR IN write_masked_real_matrix: INPUT ISNT ALLOCATED!"
 
-    show_mask_ = T ! DEFAULT: SHOW INTEGER MASK
+    show_mask_ = .true. ! DEFAULT: SHOW INTEGER MASK
     IF(PRESENT(SHOW_MASK)) show_mask_ = SHOW_MASK
     ! PRINT INTEGER MASK
     IF(show_mask_)THEN 
@@ -1061,7 +1078,7 @@ CONTAINS
     IF(ANY(MM%MASK%mat))THEN
       IF(show_mask_) CALL dump_message(TEXT="# with",UNIT=UNIT)
 
-      short_ = F ! DEFAULT: LONG FORMAT
+      short_ = .false. ! DEFAULT: LONG FORMAT
       IF(PRESENT(SHORT)) short_ = SHORT
 
       IF(short_)THEN
@@ -1073,9 +1090,12 @@ CONTAINS
       unit_ = log_unit ! DEFAULT: STANDARD OUTPUT
       IF(PRESENT(UNIT)) unit_ = UNIT
 
-      DO i2=1,MM%n2; DO i1=1,MM%n1
-     IF(MM%MASK%mat(i1,i2)) WRITE(unit_,fmt_MM) '('//c2s(i2c(i1))//','//c2s(i2c(i2))//') = '//c2s(i2c(MM%MASK%imat(i1,i2)))//' = ',MM%mat(i1,i2)
-      ENDDO; ENDDO
+      DO i2=1,MM%n2
+       DO i1=1,MM%n1
+        IF(MM%MASK%mat(i1,i2)) WRITE(unit_,fmt_MM) '('//c2s(i2c(i1))//','//&
+           &c2s(i2c(i2))//') = '//c2s(i2c(MM%MASK%imat(i1,i2)))//' = ',MM%mat(i1,i2)
+      ENDDO
+     ENDDO
 
     ENDIF
     CALL flush(unit_)
@@ -1165,7 +1185,7 @@ CONTAINS
     IF(SIZE(FILTER,1)/=MM%n1.OR.SIZE(FILTER,2)/=MM%n2) STOP "ERROR IN filter_masked_real_matrix: INCONSISTENT DIMENSIONS!"
     CALL new_masked_real_matrix(diag,MM)
     CALL filter_mask(diag%MASK,MM%MASK,FILTER)
-    diag%mat  = MERGE(MM%mat,zero,FILTER)
+    diag%mat  = MERGE(MM%mat,0.0_DP,FILTER)
   END SUBROUTINE 
 
 !**************************************************************************
@@ -1192,7 +1212,7 @@ CONTAINS
     n2slice = cbounds(2)-cbounds(1)+1 
     IF(n1slice<=0) STOP "ERROR IN slice_masked_real_matrix: NON-NULL ROW    DIMENSIONS REQUIRED!"
     IF(n2slice<=0) STOP "ERROR IN slice_masked_real_matrix: NON-NULL COLUMN DIMENSIONS REQUIRED!"
-    IS_HERMslice = F
+    IS_HERMslice = .false.
     IF(ALL(rbounds==cbounds)) IS_HERMslice = MMIN%IS_HERM ! SLICE=DIAGONAL BLOCK
     cslice = c2s(i2c(rbounds(1)))//"_"//c2s(i2c(rbounds(2)))//"_"//c2s(i2c(cbounds(1)))//"_"//c2s(i2c(cbounds(2)))
     CALL new_masked_real_matrix(MMOUT,TRIM(ADJUSTL(MMIN%title))//"_"//TRIM(ADJUSTL(cslice)),&
@@ -1226,7 +1246,7 @@ CONTAINS
      iind = MM(iMM)%MASK%imat(i1,i2)
      DO jMM=1,iMM-1
        DO j1=1,n1; DO j2=1,n2; IF(MM(jMM)%MASK%mat(j1,j2).AND.MM(jMM)%MASK%imat(j1,j2)==iind)THEN
-         MM(iMM)%MASK%mat(i1,i2) = F
+         MM(iMM)%MASK%mat(i1,i2) = .false.
        ENDIF; ENDDO; ENDDO
      ENDDO
      ENDIF; ENDDO; ENDDO
@@ -1273,5 +1293,3 @@ CONTAINS
 !**************************************************************************
 
 END MODULE
-
-

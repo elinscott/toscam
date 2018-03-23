@@ -1,40 +1,38 @@
 MODULE eigen_sector_class
 
-  USE sector_class
-  USE eigen_class
+  use common_def,          only: c2s, dump_message, i2c, open_safe
+  use eigen_class,         only: eigenlist_type, min_eigen, print_eigenlist, &
+                                 sum_boltz, sum_boltz_times_E
+  use genvar,              only: DBL, DP, huge_, log_unit, messages3, &
+                                 messages4, size2, strongstop
+  use globalvar_ed_solver, only: energy_global_shift, energy_global_shift2
+  USE sector_class,        only: dimen_func, equal_sector, sector_type, &
+                                 rank_func, title_sector
 
-  IMPLICIT NONE
+  implicit none
 
-  REAL(DBL),    PARAMETER, PRIVATE       :: zero=0.0_DBL,one=1.0_DBL,two=2.0_DBL,three=3.0_DBL,four=4.0_DBL
-  LOGICAL,      PARAMETER, PRIVATE       :: F=.FALSE.,T=.TRUE.
+  private
 
-! PAIR (SECTOR,LOWEST EIGENSTATES)
-  
-  TYPE eigensector_type
-     TYPE(sector_type)    :: sector
-     TYPE(eigenlist_type) :: lowest
-  END TYPE
+  type eigensector_type
+     type(sector_type)    :: sector
+     type(eigenlist_type) :: lowest
+  end type
 
+  interface new_eigensector
+     module procedure copy_eigensector
+     module procedure new_eigensector_from_scratch
+  end interface
 
-  INTERFACE new_eigensector
-     MODULE PROCEDURE copy_eigensector
-     MODULE PROCEDURE new_eigensector_from_scratch
-  END INTERFACE
+  type eigensectorlist_type
+     integer                         :: nsector=0
+     type(eigensector_type), pointer :: es(:) => null()
+  end type
 
+  interface new_rcvec_from_file
+     module procedure new_rcvec_from_file_c,new_rcvec_from_file_r
+  end interface
 
-  TYPE eigensectorlist_type
-!CEDRIC
-     INTEGER                         :: nsector=0
-     TYPE(eigensector_type), POINTER :: es(:) => NULL()
-  END TYPE
-
-
-  INTERFACE new_rcvec_from_file
-     MODULE PROCEDURE new_rcvec_from_file_c,new_rcvec_from_file_r
-  END INTERFACE
-
-
-CONTAINS
+contains
 
 
 !**************************************************************************
@@ -436,7 +434,7 @@ CONTAINS
     REAL(DBL)                              :: E0 
 
     E0    =  GSenergy(list)  
-    Zpart =  zero
+    Zpart =  0.0_DP
     DO isector=1,list%nsector
       Zpart = Zpart + sum_boltz(list%es(isector)%lowest,beta,E0) 
     ENDDO
@@ -453,8 +451,8 @@ CONTAINS
     REAL(DBL)                              :: E0
 
     E0    =  GSenergy(list)
-    Zpart =  zero
-    EE    =  zero
+    Zpart =  0.0_DP
+    EE    =  0.0_DP
     DO isector=1,list%nsector
      Zpart = Zpart +         sum_boltz(list%es(isector)%lowest,beta,E0)
      EE    = EE    + sum_boltz_times_E(list%es(isector)%lowest,beta,E0)
@@ -518,11 +516,11 @@ CONTAINS
     INTEGER                                :: UNIT 
     CALL open_safe(UNIT,FILEOUT,'UNKNOWN','WRITE',get_unit=.true.)
     DO isector=1,list%nsector
-      WRITE(UNIT,*) T ! there is a new item
+      WRITE(UNIT,*) .true. ! there is a new item
       CALL write_raw_sector   (list%es(isector)%sector,UNIT)
       CALL write_raw_eigenlist(list%es(isector)%lowest,UNIT)
     ENDDO
-    WRITE(UNIT,*) F ! last item
+    WRITE(UNIT,*) .false. ! last item
     CALL close_safe(UNIT)
   END SUBROUTINE 
 

@@ -4,6 +4,8 @@ MODULE ED_ARPACK
 
   IMPLICIT NONE
 
+  private
+
  !-------------------------------!
  ! DIAGONALIZATION FULL SPETRUM  !
  !-------------------------------!

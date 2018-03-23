@@ -5,6 +5,8 @@ MODULE fermion_Hilbert_class
   use readable_vec_class
 
   IMPLICIT NONE
+
+  private
  
   !-----------------------------------------------------------------------------------------------------------------------! 
   ! BREAK DOWN HILBERT SPACE 2^Ns WITH norbs FERMION ORBITALS INTO ORTHOGONAL SECTORS CONTAINING 0 <= N <= norbs FERMIONS !

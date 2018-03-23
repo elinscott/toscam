@@ -5,6 +5,8 @@ MODULE green_class_compute_symmetric
 
   IMPLICIT NONE
 
+  private
+
   REAL(DBL),    PARAMETER, PRIVATE  :: zero=0.0_DBL,one=1.0_DBL
   LOGICAL,      PARAMETER, PRIVATE  :: F=.FALSE.,T=.TRUE.
   COMPLEX(DBL) ,PARAMETER, PRIVATE  :: coef1=1.d0,coef2=1.d0

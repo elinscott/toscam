@@ -5,6 +5,8 @@ MODULE fermion_sector2_class
 
   IMPLICIT NONE
 
+  private
+
   LOGICAL,   PARAMETER, PRIVATE  :: F=.FALSE.,T=.TRUE.
 
   !-----------------------------------------------------!

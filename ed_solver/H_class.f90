@@ -4,6 +4,8 @@ MODULE H_class
 
   IMPLICIT NONE
 
+  private
+
   !------------------------------------------!  
   ! sector WILL SELECT APPROPRIATE ROUTINES  !
   !------------------------------------------!
@@ -13,6 +15,8 @@ MODULE H_class
   INTERFACE Hmult__
     MODULE PROCEDURE Hmultr,Hmultc
   END INTERFACE 
+
+  public :: dimen_H
  
 CONTAINS 
 
@@ -82,15 +86,16 @@ CONTAINS
       stop 'ON FLY and up dn basis'
      endif
     ELSE IF(ASSOCIATED(sector_h%sz))THEN
-     if(use_cuda_lanczos)then
-      CALL Hmult_sz_complex_cuda(vec_out,vec_in)
+     ! ebl: removing GPU functionality
+     ! if(use_cuda_lanczos)then
+     !  CALL Hmult_sz_complex_cuda(vec_out,vec_in)
+     ! else
+     if(.not.ON_FLY)then
+       CALL HAIMsz_mult(vec_out,vec_in) 
      else
-      if(.not.ON_FLY)then
-        CALL HAIMsz_mult(vec_out,vec_in) 
-      else
-        CALL HAIMsz_mult_fly(vec_out,vec_in) 
-      endif
+       CALL HAIMsz_mult_fly(vec_out,vec_in) 
      endif
+     ! endif
     ELSEIF(.true.) then
       STOP 'Hmultc, no array are associated!'
     ENDIF
@@ -121,15 +126,16 @@ CONTAINS
       stop 'ON FLY and up dn basis'
      endif
     ELSE IF(ASSOCIATED(sector_h%sz))THEN
-     if(use_cuda_lanczos)then
-       CALL Hmult_sz_real_cuda(vec_out,vec_in)
-      else
-       if(.not.ON_FLY)then
-         CALL HAIMsz_mult(vec_out,vec_in)
-       else
-         CALL HAIMsz_mult_fly(vec_out,vec_in)
-       endif
-      endif
+     ! ebl: remove GPU functionality
+     ! if(use_cuda_lanczos)then
+     !    CALL Hmult_sz_real_cuda(vec_out,vec_in)
+     ! else
+     if(.not.ON_FLY)then
+       CALL HAIMsz_mult(vec_out,vec_in)
+     else
+       CALL HAIMsz_mult_fly(vec_out,vec_in)
+     endif
+     ! endif
     ELSEIF(.true.) then
       STOP 'Hmultr, no array are associated!'
     ENDIF

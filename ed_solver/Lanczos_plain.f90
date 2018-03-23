@@ -1,8 +1,16 @@
 MODULE Lanczos_fast
 
-  use Lanczos_gpu_mod
+  use eigen_class,    only: eigen_type, eigenlist_type
+  use genvar,         only: DBL
+  use h_class,        only: dimen_H
+  use tridiag_class,  only: tridiag_type
+  use rcvector_class, only: rcvector_type
+  ! ebl: removing GPU functionality
+  ! use Lanczos_gpu_mod
 
   IMPLICIT NONE
+
+  private
 
  !-----------------------------------------------------------------------------!
  ! DIAGONALIZATION USING PLAIN LANCZOS ALGORITHM TO GET LOWEST EIGENVALUE ONLY !

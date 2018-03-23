@@ -12,6 +12,8 @@ MODULE frequency_class
   
   IMPLICIT NONE
 
+  private
+
   REAL(DBL),    PARAMETER, PRIVATE                 :: zero=0.0_DBL,one=1.0_DBL,two=2.0_DBL,three=3.0_DBL,four=4.0_DBL
   LOGICAL,      PARAMETER, PRIVATE                 :: F=.FALSE.,T=.TRUE.
   INTEGER,PRIVATE                                  :: istati 

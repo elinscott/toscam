@@ -10,6 +10,8 @@ MODULE HAIMsz_class
 
   IMPLICIT NONE
 
+  private
+
   INTERFACE HAIMsz_mult
      MODULE PROCEDURE HAIMsz_multc,HAIMsz_multr
   END INTERFACE 
@@ -33,7 +35,8 @@ CONTAINS
 !**************************************************************************
 !**************************************************************************
 
-#include "HAIMsz_gpu.h"
+! ebl: removing GPU functionality
+! #include "HAIMsz_gpu.h"
 
 !**************************************************************************
 !**************************************************************************

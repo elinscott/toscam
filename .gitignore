@@ -5,6 +5,7 @@ genlib/**/*.a
 ed_solver/**/*.mod
 ed_solver/**/*.out
 ed_solver/**/*.a
+ed_solver/*.o
 dmft/**/*.mod
 error_output
 

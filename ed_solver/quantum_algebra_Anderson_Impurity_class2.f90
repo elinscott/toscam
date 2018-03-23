@@ -4,6 +4,8 @@ MODULE AIM2_class
 
   IMPLICIT NONE 
 
+  private
+
   REAL(DBL), PARAMETER, PRIVATE  :: zero=0.0_DBL
   LOGICAL,   PARAMETER, PRIVATE  :: F=.FALSE.,T=.TRUE.
 

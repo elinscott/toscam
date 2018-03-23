@@ -1,16 +1,16 @@
 MODULE eigen_class
 
-  USE rcmatrix_class
- 
-  IMPLICIT NONE
+  use common_def,          only: c2s, i2c
+  use genvar,              only: log_unit, DBL
+  use globalvar_ed_solver, only: flag_full_ed_green, istati
+  use rcvector_class,      only: rcvector_type
 
-  REAL(DBL), PARAMETER, PRIVATE    :: zero=0.0_DBL,one=1.0_DBL
-  LOGICAL,   PARAMETER, PRIVATE    :: F=.FALSE.,T=.TRUE.
+  private
 
   TYPE eigen_type
     INTEGER             :: rank      = 0                  ! NECESSARY TO IDENTIFY THE EIGENPAIR
-    LOGICAL             :: converged = F                  ! TRUE IF CONVERGED
-    REAL(DBL)           :: val       = zero               ! Hermitian matrix has real eigenvalues
+    LOGICAL             :: converged = .false.            ! TRUE IF CONVERGED
+    REAL(DBL)           :: val       = 0.0_DBL            ! Hermitian matrix has real eigenvalues
     TYPE(rcvector_type) :: vec                            ! EIGENVECTOR
     REAL(DBL)           :: lanczos_vecp(1000),rdist 
     INTEGER             :: lanczos_iter
@@ -29,11 +29,16 @@ MODULE eigen_class
    TYPE(eigen_type), POINTER   ::  eigen(:) => NULL()
   END TYPE 
 
-
   INTERFACE add_eigen
     MODULE PROCEDURE add_eigen_,add_eigen__
   END INTERFACE
 
+  public :: eigen_type
+  public :: eigenlist_type
+  public :: min_eigen
+  public :: print_eigenlist
+  public :: sum_boltz
+  public :: sum_boltz_times_E
 
 CONTAINS
 
@@ -281,9 +286,9 @@ CONTAINS
   SUBROUTINE delete_eigen(eigen)
     TYPE(eigen_type), INTENT(INOUT) :: eigen
     CALL delete_rcvector(eigen%vec)
-    eigen%val       = zero
+    eigen%val       = 0.0_DBL
     eigen%rank      = 0
-    eigen%converged = F
+    eigen%converged = .false.
   END SUBROUTINE 
 
 !**************************************************************************
@@ -295,15 +300,21 @@ CONTAINS
 !**************************************************************************
 !**************************************************************************
 
-  SUBROUTINE delete_eigenlist(list)
-    TYPE(eigenlist_type), INTENT(INOUT) :: list
-    INTEGER                             :: ieigen   
-    DO ieigen=1,list%neigen
-      CALL delete_eigen(list%eigen(ieigen))
-    ENDDO
-    IF(ASSOCIATED(list%eigen)) DEALLOCATE(list%eigen,STAT=istati)
+  subroutine delete_eigenlist(list)
+
+    implicit none
+
+    type(eigenlist_type), intent(inout) :: list
+
+    integer                             :: ieigen   
+
+    do ieigen=1,list%neigen
+      call delete_eigen(list%eigen(ieigen))
+    enddo
+    if(associated(list%eigen)) deallocate(list%eigen,stat=istati)
     list%neigen = 0
-  END SUBROUTINE 
+
+  end subroutine 
 
 !**************************************************************************
 !**************************************************************************

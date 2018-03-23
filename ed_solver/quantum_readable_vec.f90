@@ -1,36 +1,30 @@
 
 MODULE readable_vec_class
 
-  USE fermion_ket_class
+  use fermion_ket_class, only: fermion_ket_type
+  use genvar,            only: DBL
 
   IMPLICIT NONE
 
-
-  REAL(DBL),    PARAMETER, private                 :: zero=0.0_DBL,one=1.0_DBL,two=2.0_DBL,three=3.0_DBL,four=4.0_DBL
-  LOGICAL,      PARAMETER, private                 :: F=.FALSE.,T=.TRUE.
-
+  private
 
   !-----------------------!
   ! KETS IN READABLE FORM !
   !-----------------------!
 
-
   TYPE readable_vec_type
     INTEGER                    :: nket   = 0 ! number of components
     CHARACTER(LEN=100)         :: title  = '\0'
-    REAL(DBL)                  :: weight = zero
+    REAL(DBL)                  :: weight = 0.0_DBL
     COMPLEX(DBL),      POINTER :: coeff(:) => NULL()
     CHARACTER(LEN=10), POINTER :: cket(:)  => NULL()
     INTEGER,           POINTER :: state(:) => NULL()
   END TYPE
 
-
   INTERFACE new_readable_vec
     MODULE PROCEDURE new_readable_vec_from_scratch
     MODULE PROCEDURE new_readable_vec_from_old
   END INTERFACE
-
-
 
 CONTAINS
 
@@ -172,10 +166,10 @@ CONTAINS
     INTEGER,                 INTENT(IN)    :: nket
     CHARACTER(LEN=*),        INTENT(IN)    :: title
     vec%title  = TRIM(ADJUSTL(title))
-    vec%weight = zero
+    vec%weight = 0.0_DP
     vec%nket   = nket
     ALLOCATE(vec%coeff(nket))
-    vec%coeff  = zero
+    vec%coeff  = 0.0_DP
     ALLOCATE(vec%cket(nket))
     ALLOCATE(vec%state(nket))
     vec%state  = -1

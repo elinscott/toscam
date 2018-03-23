@@ -4,6 +4,8 @@ MODULE AIM_class
 
   IMPLICIT NONE
 
+  private
+
   !-------------!
   ! GENERIC AIM !
   !-------------!

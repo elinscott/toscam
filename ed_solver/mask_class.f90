@@ -1,10 +1,13 @@
 MODULE mask_class
 
-  USE common_def
-  use matrix
-  use linalg
+  USE common_def, only: i2c, c2s, dump_message
+  use genvar,     only: DBL
+  use matrix,     only: write_array
+  use linalg,     only:
 
-  IMPLICIT NONE 
+  implicit none 
+
+  private
 
   !$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
   !$$ INTEGER/LOGICAL MASK CLASS $$
@@ -13,7 +16,6 @@ MODULE mask_class
   CHARACTER(LEN=9), PARAMETER :: SYM  ='SYMMETRIC'
   CHARACTER(LEN=9), PARAMETER :: HERM ='HERMITIC '
   CHARACTER(LEN=9), PARAMETER :: EMPTY='NOSYM    '
-  LOGICAL,PARAMETER, private  :: F=.FALSE.,T=.TRUE.
   INTEGER,PRIVATE             :: istati 
   
   TYPE mask_type
@@ -35,12 +37,16 @@ MODULE mask_class
     INTEGER, dimension(:), pointer :: ivec => NULL()
   END TYPE 
 
-
   INTERFACE new_mask
     MODULE PROCEDURE new_mask_from_scratch
     MODULE PROCEDURE new_mask_from_old
   END INTERFACE
 
+  public :: build_logical_mask
+  public :: HERM
+  public :: mask_type
+  public :: new_mask
+  public :: SYM
 
 CONTAINS
 
@@ -429,23 +435,23 @@ CONTAINS
       write(*,*) "ERROR IN imask2mask: INPUT ISNT ALLOCATED!"
       STOP
     ENDIF
-    MASK%mat  = F
+    MASK%mat  = .false.
     MASK%nind = 0
     ALLOCATE(list_new_elemt(MASK%n1*MASK%n2))
     DO i2=1,MASK%n2
       DO i1=1,MASK%n1
      IF(MASK%imat(i1,i2)/=0)THEN
        ! IS THIS A NEW ARRAY ELEMENT?
-       new_elemt=T
+       new_elemt=.true.
        DO iind=1,MASK%nind
          IF(list_new_elemt(iind)==ABS(MASK%imat(i1,i2)))THEN
-           new_elemt=F
+           new_elemt=.false.
            EXIT
          ENDIF
        ENDDO
        IF(new_elemt)THEN
          ! IF IT IS NEW THEN MASK=TRUE
-         MASK%mat(i1,i2)=T
+         MASK%mat(i1,i2)=.true.
          MASK%nind=MASK%nind+1
          list_new_elemt(MASK%nind)=ABS(MASK%imat(i1,i2))
        ENDIF
@@ -464,19 +470,19 @@ CONTAINS
     IF(ANY(MASK%mat).AND.MASK%n1==MASK%n2)THEN
       ! NOW WE TRY TO COMPACTIFY THE MASK
       ! IN A SYMMETRIC WAY
-      MASK%mat = F
+      MASK%mat = .false.
       iind_loop: DO iind=1,MASK%nind
      ! FIRST THE UPPER RIGHT PART
      DO i2=1,MASK%n2;DO i1=1,i2
        IF(MASK%imat(i1,i2)==list_new_elemt(iind))THEN
-         MASK%mat(i1,i2) = T
+         MASK%mat(i1,i2) = .true.
          CYCLE iind_loop
        ENDIF
      ENDDO;ENDDO
      ! THEN THE LOWER LEFT PART IF NECESSARY
       DO i1=1,MASK%n1;DO i2=1,i1
        IF(MASK%imat(i1,i2)==list_new_elemt(iind))THEN
-         MASK%mat(i1,i2) = T
+         MASK%mat(i1,i2) = .true.
          CYCLE iind_loop
        ENDIF
       ENDDO;ENDDO

@@ -4,6 +4,8 @@ MODULE HAIMupdo_class
 
   IMPLICIT NONE
 
+  private
+
   !-------------------------------------------------!
   ! FULL HAMILTONIAN IN FERMION SECTOR (nup,ndo)    !
   !-------------------------------------------------!

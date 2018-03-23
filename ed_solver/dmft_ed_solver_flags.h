@@ -18,9 +18,10 @@
    if(OPEN_MP) then
      if(.not.USE_CC) stop 'error cannot use OPEN_MP if USE_CC is off'
    endif
-   if(use_cuda_lanczos.or.which_lanczos=='GPU') then
-     if(.not.USE_CC) stop 'error cannot use GPU if USE_CC is off'
-   endif
+   ! ebl: removing GPU functionality
+   ! if(use_cuda_lanczos.or.which_lanczos=='GPU') then
+   !   if(.not.USE_CC) stop 'error cannot use GPU if USE_CC is off'
+   ! endif
    if(USE_TRANSPOSE_TRICK_MPI.and..not.enable_mpi_dot)then
      stop 'ERROR USE_TRANSPOSE_TRICK_MPI needs enable_mpi_dot enabled, because the lanczos vector are split among the cpu'
    endif

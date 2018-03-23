@@ -4,7 +4,7 @@ module init_and_close_my_sim
  use linalg, only : ramp, swap
  use common_def
  use namelistmod
- use fortran_cuda
+ ! use fortran_cuda
  use random
 
  REAL(DBL),PARAMETER,private :: zero=0.0_DBL,one=1.0_DBL,two=2.0_DBL,three=3.0_DBL

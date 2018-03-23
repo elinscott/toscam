@@ -9,6 +9,7 @@ MKL              = -lmkl
 DIERICK          = -L$(HOME)/genlib/LIB_DIERICK/ -ldierick -L$(HOME)/genlib/LIB_FIELD_SPLINE -lfield  
 SLATEC           = -L$(HOME)/genlib/LIBSLATEC/ -lslatec 
 GPU              = -L${HOME}/genlib/LIB_GPU_NUMERICS -lgpu 
+GPU              =
 CUDA             =  
 #########################################################################
 ALL_LIB          =  ${MKL} $(DIERICK) $(SLATEC) #${X11}
@@ -21,8 +22,10 @@ ALL_LIB          =  ${MKL} $(DIERICK) $(SLATEC) #${X11}
 #########################################################################
  
  MODFILES    = -I$(HOME)/ed_solver/MODFILES -I$(HOME)/genlib/LIBUTILS/MODFILES  -I$(HOME)/genlib/LIB_GPU_NUMERICS/MODFILES  -I${HOME}/genlib/LIB_GPU_NUMERICS/MODFILES    
+ MODFILES    = -I$(HOME)/ed_solver/MODFILES -I$(HOME)/genlib/LIBUTILS/MODFILES
 
  MODFILES_C  = -I$(HOME)/ed_solver/MODFILES_COMPLEX -I$(HOME)/genlib/LIBUTILS/MODFILES  -I$(HOME)/genlib/LIB_GPU_NUMERICS/MODFILES -I${HOME}/LIB_GPU_NUMERICS/MODFILES
+ MODFILES_C  = -I$(HOME)/ed_solver/MODFILES_COMPLEX -I$(HOME)/genlib/LIBUTILS/MODFILES
 
 #########################################################################
 

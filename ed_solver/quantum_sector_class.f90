@@ -5,9 +5,8 @@ MODULE sector_class
 
   IMPLICIT NONE
  
-  REAL(DBL),    PARAMETER, private   :: zero=0.0_DBL,one=1.0_DBL,two=2.0_DBL,three=3.0_DBL,four=4.0_DBL
-  LOGICAL,      PARAMETER, private   :: F=.FALSE.,T=.TRUE.
- 
+  private
+
   !----------------------!
   ! GENERIC SECTOR TYPE  ! 
   !----------------------!
@@ -21,6 +20,12 @@ MODULE sector_class
     MODULE PROCEDURE   sz_to_sector
     MODULE PROCEDURE updo_to_sector
   END INTERFACE
+
+  public :: dimen_func
+  public :: equal_sector
+  public :: sector_type
+  public :: rank_func
+  public :: title_sector
 
 CONTAINS 
 
@@ -151,14 +156,14 @@ CONTAINS
   FUNCTION equal_sector(SEC1,SEC2)
     TYPE(sector_type), INTENT(IN) :: SEC1,SEC2
     LOGICAL                       :: equal_sector
-    equal_sector = F
+    equal_sector = .false.
     IF       (ASSOCIATED(SEC1%updo)) THEN ! fermion_sector2 defined by (nup,ndo,Ns)
       IF(.NOT.ASSOCIATED(SEC2%updo)) STOP "ERROR IN equal_sector: INCONSISTENT INPUT SECTORS!"
       IF(  SEC1%updo%up%npart==SEC2%updo%up%npart.AND.SEC1%updo%down%npart==SEC2%updo%down%npart&
-      .AND.SEC1%updo%up%norbs==SEC2%updo%up%norbs.AND.SEC1%updo%down%norbs==SEC2%updo%down%norbs) equal_sector = T
+      .AND.SEC1%updo%up%norbs==SEC2%updo%up%norbs.AND.SEC1%updo%down%norbs==SEC2%updo%down%norbs) equal_sector = .true.
     ELSE IF  (ASSOCIATED(SEC1%sz))   THEN ! fermion_sector defined by (npart,norbs)
       IF(.NOT.ASSOCIATED(SEC2%sz))   STOP "ERROR IN equal_sector: INCONSISTENT INPUT SECTORS!"
-      IF(  SEC1%sz%npart==SEC2%sz%npart.AND.SEC1%sz%norbs==SEC2%sz%norbs) equal_sector = T
+      IF(  SEC1%sz%npart==SEC2%sz%npart.AND.SEC1%sz%norbs==SEC2%sz%norbs) equal_sector = .false.
     ENDIF
   END FUNCTION 
 

@@ -4,6 +4,8 @@ MODULE apply_C
 
   IMPLICIT NONE
 
+  private
+
   !--------------------------------------------------------------------!
   ! CLASS TO APPLY BASIS CREATION/DESTRUCTION OPERATORS ON EIGENSTATE  !
   !--------------------------------------------------------------------!

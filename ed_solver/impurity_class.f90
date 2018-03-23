@@ -4,13 +4,20 @@ MODULE impurity_class
   !$$ IMPURITY CLASS $$
   !$$$$$$$$$$$$$$$$$$$$
 
-  use eigen_sector_class 
-
+  use common_def,              only: dump_message
+  use genvar,                  only: DBL, cspin, log_unit, rank
+  use globalvar_ed_solver,     only: istati, uumatrix
+  use linalg,                  only: arrayi
+  use matrix,                  only: diag, write_array
+  use masked_matrix_class,     only: masked_matrix_type, masked_real_matrix_type, &
+                                     new_masked_matrix, write_masked_matrix
+  use masked_matrix_class_mod, only: new_masked_real_matrix
   !use latticerout    , only : web,T1_T2_connect_unitcells
   !use quantum_hamilt , only : Hamiltonian
-  use matrix         , only : diag
 
   IMPLICIT NONE
+
+  private
 
 TYPE symmetry
 

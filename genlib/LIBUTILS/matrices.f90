@@ -8,7 +8,7 @@ module matrix
    use sorting
    use common_def,   only : reset_timer, timer_fortran, dump_message, c2s, i2c, &
        create_seg_fault
-   use fortran_cuda
+   ! use fortran_cuda
 
 private
 public :: average_matrix

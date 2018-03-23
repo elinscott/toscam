@@ -1,8 +1,11 @@
 MODULE rcmatrix_class
 
   use rcvector_class
+  use genvar, only: DBL
 
   IMPLICIT NONE
+
+  private
 
   !----------------------------------------! 
   ! GENERIC REAL OR COMPLEX MATRIX TYPE    !
@@ -10,7 +13,6 @@ MODULE rcmatrix_class
 
   REAL(DBL),    PARAMETER, PRIVATE  :: zero=0.0_DBL,one=1.0_DBL,two=2.0_DBL,three=3.0_DBL,four=4.0_DBL
   LOGICAL,      PARAMETER, PRIVATE  :: F=.FALSE.,T=.TRUE.
-
 
   TYPE rcmatrix_type
     INTEGER :: n1=0,n2=0
@@ -27,17 +29,12 @@ MODULE rcmatrix_class
     TYPE(rcmatrix_type), POINTER :: mat(:) => NULL() ! pile of archived matrix
   END TYPE
 
-
-
   INTERFACE new_rcmatrix
     MODULE PROCEDURE new_rcmatrix_from_scratch
     MODULE PROCEDURE new_rcmatrix_from_old
   END INTERFACE
 
-
-
 CONTAINS
-
 
 !**************************************************************************
 !**************************************************************************

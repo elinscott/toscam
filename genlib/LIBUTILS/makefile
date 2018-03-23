@@ -118,7 +118,8 @@ ROUTINESC=IEEE.c
 
 ROUTINESCXX=
 
-MODFILES=-I$(HOME)/genlib/LIB_GPU_NUMERICS/MODFILES 
+MODFILES=
+#MODFILES=-I$(HOME)/genlib/LIB_GPU_NUMERICS/MODFILES 
 
 ###########################################################################################################
 

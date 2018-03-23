@@ -4,6 +4,8 @@ MODULE green_class_compute_dynamic
 
   IMPLICIT NONE
 
+  private
+
   REAL(DBL),    PARAMETER, PRIVATE   :: zero=0.0_DBL,one=1.0_DBL
   LOGICAL,      PARAMETER, PRIVATE   :: F=.FALSE.,T=.TRUE.
 
@@ -44,8 +46,9 @@ CONTAINS
        call compute_dynamic_cpu(iph,dyn,freq,Opm,stat,title,normvec)
      CASE('ARPACK')
        call compute_dynamic_cpu(iph,dyn,freq,Opm,stat,title,normvec)
-     CASE('GPU') 
-       call compute_dynamic_gpu(iph,dyn,freq,Opm,stat,title,normvec)
+     ! ebl: removing GPU functionality
+     ! CASE('GPU') 
+     !   call compute_dynamic_gpu(iph,dyn,freq,Opm,stat,title,normvec)
      CASE('FULL_ED')
       if(.not.FLAG_FULL_ED_GREEN)Then
         call compute_dynamic_cpu(iph,dyn,freq,Opm,stat,title,normvec)
@@ -417,68 +420,68 @@ CONTAINS
 !**************************************************************************
 !**************************************************************************
 
-  SUBROUTINE compute_dynamic_gpu(iph,dyn,freq,Opm,stat,title,normvec)
-    implicit none
-    INTEGER,          INTENT(IN)      ::  iph
-    COMPLEX(DBL),     INTENT(INOUT)   ::  dyn(:)
-    TYPE(freq_type),  INTENT(IN)      ::  freq
-    TYPE(eigen_type), INTENT(IN)      ::  Opm
-    CHARACTER(LEN=*), INTENT(IN)      ::  stat,title
-    TYPE(tridiag_type)                ::  tri
-    COMPLEX(DBL)                      ::  z
-    REAL(DBL)                         ::  fermion_sign,ph_sign,norm_Opmvec2,normvec
-    INTEGER                           ::  iw,iter,Niter
-    INTEGER                           ::  ii,sizevec
-
-    IF(iph==1) ph_sign = one ; IF(iph==2) ph_sign = -one
-
-    SELECT CASE(stat)
-      CASE(FERMIONIC)
-        fermion_sign = -one
-      CASE(BOSONIC)
-                   fermion_sign =  one
-        if(iph==1) fermion_sign = -one
-    END SELECT
-
-    Niter = MIN(Nitergreenmax,dimen_H())
-    CALL new_tridiag(tri,Niter) 
-
-    sizevec=dimen_H()
-
-    if(abs(normvec)>1.d-10)then
-     norm_Opmvec2 = normvec**2
-    else
-     norm_Opmvec2 = norm_rcvector(Opm%vec)**2
-    endif
-
-    if(norm_Opmvec2<cutoff_dynamic) then
-      dyn=0.d0; goto 44
-    endif
-
-   if(messages3) write(*,*) 'start compute dynamical correlations by Lanczos GPU'
-   if(.not.ON_FLY)then
-    IF(ASSOCIATED(sector_h%updo))THEN
-     call Lanczos_dynamic_GPU_updo(Niter,sizevec,tri%diag,tri%subdiag,Opm%vec%rc)
-    else
-     call Lanczos_dynamic_GPU_memory(Niter,sizevec,tri%diag,tri%subdiag,Opm%vec%rc) 
-    endif
-   else
-    IF(ASSOCIATED(sector_h%updo))THEN
-     stop 'on fly updo GPU not done'
-    else
-     call Lanczos_dynamic_GPU(Niter,sizevec,tri%diag,tri%subdiag,Opm%vec%rc)
-    endif
-   endif
-
-    tri%diag=ph_sign * (tri%diag - Opm%val) 
-    DO iw=1,freq%Nw
-      dyn(iw) = - fermion_sign * invert_zmtridiag(freq%vec(iw),tri) * norm_Opmvec2 
-    ENDDO
-44  continue
-
-    CALL delete_tridiag(tri)
-
-  END SUBROUTINE 
+!   SUBROUTINE compute_dynamic_gpu(iph,dyn,freq,Opm,stat,title,normvec)
+!     implicit none
+!     INTEGER,          INTENT(IN)      ::  iph
+!     COMPLEX(DBL),     INTENT(INOUT)   ::  dyn(:)
+!     TYPE(freq_type),  INTENT(IN)      ::  freq
+!     TYPE(eigen_type), INTENT(IN)      ::  Opm
+!     CHARACTER(LEN=*), INTENT(IN)      ::  stat,title
+!     TYPE(tridiag_type)                ::  tri
+!     COMPLEX(DBL)                      ::  z
+!     REAL(DBL)                         ::  fermion_sign,ph_sign,norm_Opmvec2,normvec
+!     INTEGER                           ::  iw,iter,Niter
+!     INTEGER                           ::  ii,sizevec
+! 
+!     IF(iph==1) ph_sign = one ; IF(iph==2) ph_sign = -one
+! 
+!     SELECT CASE(stat)
+!       CASE(FERMIONIC)
+!         fermion_sign = -one
+!       CASE(BOSONIC)
+!                    fermion_sign =  one
+!         if(iph==1) fermion_sign = -one
+!     END SELECT
+! 
+!     Niter = MIN(Nitergreenmax,dimen_H())
+!     CALL new_tridiag(tri,Niter) 
+! 
+!     sizevec=dimen_H()
+! 
+!     if(abs(normvec)>1.d-10)then
+!      norm_Opmvec2 = normvec**2
+!     else
+!      norm_Opmvec2 = norm_rcvector(Opm%vec)**2
+!     endif
+! 
+!     if(norm_Opmvec2<cutoff_dynamic) then
+!       dyn=0.d0; goto 44
+!     endif
+! 
+!    if(messages3) write(*,*) 'start compute dynamical correlations by Lanczos GPU'
+!    if(.not.ON_FLY)then
+!     IF(ASSOCIATED(sector_h%updo))THEN
+!      call Lanczos_dynamic_GPU_updo(Niter,sizevec,tri%diag,tri%subdiag,Opm%vec%rc)
+!     else
+!      call Lanczos_dynamic_GPU_memory(Niter,sizevec,tri%diag,tri%subdiag,Opm%vec%rc) 
+!     endif
+!    else
+!     IF(ASSOCIATED(sector_h%updo))THEN
+!      stop 'on fly updo GPU not done'
+!     else
+!      call Lanczos_dynamic_GPU(Niter,sizevec,tri%diag,tri%subdiag,Opm%vec%rc)
+!     endif
+!    endif
+! 
+!     tri%diag=ph_sign * (tri%diag - Opm%val) 
+!     DO iw=1,freq%Nw
+!       dyn(iw) = - fermion_sign * invert_zmtridiag(freq%vec(iw),tri) * norm_Opmvec2 
+!     ENDDO
+! 44  continue
+! 
+!     CALL delete_tridiag(tri)
+! 
+!   END SUBROUTINE 
 
 !**************************************************************************
 !**************************************************************************

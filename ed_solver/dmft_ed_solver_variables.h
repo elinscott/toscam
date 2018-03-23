@@ -1,4 +1,5 @@
-  call putel_in_namelist(nm,  which_lanczos,        'which_lanczos'       ,   'NORMAL'            , 'NORMAL,GPU,FULL_ED,ARPACK')
+  ! call putel_in_namelist(nm,  which_lanczos,        'which_lanczos'       ,   'NORMAL'            , 'NORMAL,GPU,FULL_ED,ARPACK')
+  call putel_in_namelist(nm,  which_lanczos,        'which_lanczos'       ,   'NORMAL'            , 'NORMAL,FULL_ED,ARPACK')
   call putel_in_namelist(nm,  EDfile                ,'EDfile              ', './ED/ED.in'                               ,'ED-SOLVER    PARAMETERS FILE')
   call putel_in_namelist(nm,  BATHfile              ,'BATHfile            ', TRIM(ADJUSTL('./ED/'//fileb))              ,'BATH         PARAMETERS FILE')
   call putel_in_namelist(nm,  CORRELfile            ,'CORRELfile          ', TRIM(ADJUSTL('./ED/'//filec))              ,'CORRELATIONS PARAMETERS FILE')
@@ -33,9 +34,11 @@
   call putel_in_namelist(nm,  FLAG_BUILD_CORREL_LOW_PART, 'FLAG_BUILD_CORREL_LOW_PART', .true.      , 'build automatically the lower part of the correl mask')
   call putel_in_namelist(nm,  cutoff_rvb             ,'cutoff_rvb' ,               0.01d0            , 'cutoff under which it is considered no more as rvb state but as normal state, under this cutoff the inversion of the Green Function matrix could lead to artificial strong anomalous weight in the self energt')
   call putel_in_namelist(nm,  dump_ground_state      ,'dump_ground_state',        .false.            , 'write the ground state to a file during the Lanczos process')
-  call putel_in_namelist(nm,  use_cuda_lanczos,       'use_cuda_lanczos',         .false.            , 'run Lanczos on the GPU if present in the hardware')
+  ! ebl: removing GPU functionality
+  ! call putel_in_namelist(nm,  use_cuda_lanczos,       'use_cuda_lanczos',         .false.            , 'run Lanczos on the GPU if present in the hardware')
   call putel_in_namelist(nm,  weight_expo,            'weight_expo',                 2.d0            , 'exponent power of the fitting difference |a-b|^weight_exop')
-  call putel_in_namelist(nm,  cuda_blocksize,         'cuda_blocksize',              8               , 'the number of GPU threads working in cuda')
+  ! ebl: removing GPU functionality
+  ! call putel_in_namelist(nm,  cuda_blocksize,         'cuda_blocksize',              8               , 'the number of GPU threads working in cuda')
   call putel_in_namelist(nm,  track_sectors,          'track_sectors',             .false.            , 'if true the code is tracking the ground state sector along the DMFT iterations, and only scanning the previous sector +- 1 sectors')
   call putel_in_namelist(nm,  ON_FLY ,                'ON_FLY',                     .false.          , ' do not store the sparse hamiltonian matrix for the Sz case')
   call putel_in_namelist(nm, diag_bath  ,             'diag_bath' ,                 .false.          , 'takes into account only the diagonal elements of the bath, no bath to bath hoppings')

@@ -4,6 +4,9 @@
    use matrix
    use linalg  
 
+   implicit none
+
+   private
 !-----------------------------------------------------------------!
 TYPE fermion
  integer    :: nstate !2**state
