@@ -1,9 +1,9 @@
 module globalvar_ed_solver
 
-  USE genvar
-  USE masked_matrix_class_mod
-  use mpirout
-  use openmpmod 
+  ! USE genvar
+  ! USE masked_matrix_class_mod
+  ! use mpirout
+  ! use openmpmod 
 
 !**************************************************************************
 !**************************************************************************
