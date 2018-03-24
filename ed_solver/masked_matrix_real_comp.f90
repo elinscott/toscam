@@ -33,6 +33,7 @@ MODULE masked_matrix_class
    public :: fill_masked_matrix
    public :: masked_matrix2vec
    public :: masked_matrix_type
+   public :: masked_real_matrix_type
    public :: new_masked_matrix
    public :: pad_masked_matrix
    public :: read_raw_masked_matrix
