@@ -1,10 +1,6 @@
 MODULE fermion_Hilbert_class
 
-   ! use specialFunction,      only : factorial_rec, combination
-   ! use mpirout,              only : split
-   ! use readable_vec_class
-
-   IMPLICIT NONE
+   implicit none
 
    private
 
@@ -23,7 +19,6 @@ MODULE fermion_Hilbert_class
    END TYPE
 
    ! FERMION SECTOR TYPE
-
    TYPE fermion_sector_type
       LOGICAL            :: SZ        = .false.      !
       LOGICAL            :: not_physical = .false.
@@ -44,7 +39,6 @@ MODULE fermion_Hilbert_class
       MODULE PROCEDURE new_fermion_sector_from_old
    END INTERFACE
 
-
    LOGICAL                     :: HILBERT_SPACE_SPLITED_AMONG_NODES, &
                                   FLAG_FORBID_SPLITTING = .false.
    INTEGER,            private :: istati
@@ -52,6 +46,13 @@ MODULE fermion_Hilbert_class
    ! gfortran
    TYPE(fermion_Hilbert_type), private, save        :: Hilbert
 
+   public :: copy_fermion_sector
+   public :: delete_fermion_sector
+   public :: fermion_sector_type
+   public :: is_in_fermion_sector
+   public :: new_fermion_sector
+   public :: read_raw_fermion_sector
+   public :: write_raw_fermion_sector
 
 contains
 
