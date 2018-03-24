@@ -24,6 +24,7 @@ MODULE sector_class
    public :: chunk_func
    public :: copy_sector
    public :: delete_sector
+   public :: dimen_func
    public :: equal_sector
    public :: is_in_sector
    public :: istatemax__
