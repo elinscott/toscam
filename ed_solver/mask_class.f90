@@ -1,10 +1,5 @@
 MODULE mask_class
 
-   USE common_def, only: i2c, c2s, dump_message
-   use genvar,     only: DBL
-   use matrix,     only: write_array
-   use linalg,     only:
-
    implicit none
 
    private
@@ -46,11 +41,13 @@ MODULE mask_class
    public :: copy_mask
    public :: delete_mask
    public :: filter_mask
+   public :: HERM
    public :: mask2vec
    public :: mask_type
    public :: new_mask
    public :: read_raw_mask
    public :: slice_mask
+   public :: SYM
    public :: write_raw_mask
 
 contains
@@ -506,8 +503,6 @@ end subroutine
 
    subroutine slice_mask(MASKOUT, MASKIN, rbounds, cbounds)
 
-      use impurity_class, only: symmetry
-
       implicit none
 
       TYPE(mask_type), INTENT(INOUT) :: MASKOUT
@@ -555,3 +550,4 @@ end subroutine
 
    end subroutine
 
+end module
