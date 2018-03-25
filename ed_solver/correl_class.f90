@@ -4,9 +4,13 @@ MODULE correl_class
    !$$ CORRELATION CLASS FOR SPIN INDEPENDANT CORRELATIONS $$
    !$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-   USE frequency_class
-   USE impurity_class
-   USE mesh
+   ! USE frequency_class
+   ! USE impurity_class
+   ! USE mesh
+   use frequency_class,         only: freq_type
+   use genvar,                  only: DBL
+   use globalvar_ed_solver,     only: istati
+   use masked_matrix_class_mod, only: masked_cplx_matrix_type
 
    IMPLICIT NONE
 
@@ -138,6 +142,7 @@ contains
       ! CREATE NEW REAL FREQ. CORRELATION FROM SCRATCH
 
       use frequency_class, only: new_freq
+      use genvar,          only: ADVANCED, RETARDED
 
       implicit none
 
@@ -151,11 +156,9 @@ contains
       LOGICAL, OPTIONAL, INTENT(IN)    :: AB
       REAL(DBL) , INTENT(IN)           :: wmin
 
-
-
       if(Nw == 0) stop 'new correl from scratch rfrequNw = 0'
       CALL new_correl_from_scratch(CORREL, title, N, Nw, STAT, IMASK, AB = AB)
-      IF(width > zero)THEN
+      IF(width > 0.0_DBL)THEN
          CALL new_freq(CORREL%freq, Nw, wmin, wmax, width, RETARDED)
       ELSE
          CALL new_freq(CORREL%freq, Nw, wmin, wmax, width, ADVANCED)
@@ -170,9 +173,10 @@ contains
 
       ! CREATE NEW CORRELATION (WITHOUT FREQUENCY ARRAY) FROM SCRATCH
 
+      use common_def,              only: dump_message
+      use genvar,                  only: strongstop
       use masked_matrix_class_mod, only: new_masked_cplx_matrix
       use matrix,                  only: new_diag
-      use common_def,              only: dump_message
 
       implicit none
 
@@ -197,9 +201,9 @@ contains
       CORREL%Nw    = Nw
 
       ALLOCATE(CORREL%fctn(N, N, Nw))
-      CORREL%fctn  = zero
+      CORREL%fctn  = 0.0_DBL
 
-      AB_ = F
+      AB_ = .false.
       IF(PRESENT(AB)) AB_ = AB
 
 #ifdef _complex
@@ -230,6 +234,8 @@ contains
 
    subroutine new_correl_from_old(CORRELOUT, CORRELIN)
 
+      use genvar, only: ADVANCED, BOSONIC, FERMIONIC, RETARDED
+
       implicit none
 
       TYPE(correl_type), INTENT(INOUT) :: CORRELOUT
@@ -244,12 +250,12 @@ contains
       CASE(BOSONIC, FERMIONIC)
          CALL new_correl_from_scratch_ifreq(CORRELOUT, CORRELIN%title, &
               CORRELIN%N, CORRELIN%Nw, CORRELIN%freq%beta, CORRELIN%stat, &
-              IMASK = CORRELIN%MM%MASK%imat, AB = T)
+              IMASK = CORRELIN%MM%MASK%imat, AB = .true.)
       CASE(RETARDED, ADVANCED)
          CALL new_correl_from_scratch_rfreq(CORRELOUT, CORRELIN%title, &
               CORRELIN%N, CORRELIN%Nw, CORRELIN%freq%wmin, CORRELIN%freq%wmax, &
               CORRELIN%freq%width, CORRELIN%stat, IMASK = &
-              CORRELIN%MM%MASK%imat, AB = T)
+              CORRELIN%MM%MASK%imat, AB = .true.)
       END SELECT
 
       CALL copy_correl(CORRELOUT, CORRELIN)
@@ -305,6 +311,7 @@ contains
    subroutine delete_correl(CORREL)
 
       use frequency_class,         only: delete_frequency
+      use genvar,                  only: log_unit, messages3
       use masked_matrix_class_mod, only: delete_masked_matrix_
 
       implicit none
@@ -371,8 +378,10 @@ contains
 
       ! CREATE NEW CORRELATION FROM RAW FILE
 
-      use frequency_class, only: delete_frequency, freq_type, read_raw_freq
       use common_def,              only: close_safe, dump_message, open_safe
+      use genvar,                  only: ADVANCED, BOSONIC, FERMIONIC, RETARDED
+      use frequency_class,         only: delete_frequency, freq_type, &
+           read_raw_freq
       use masked_matrix_class_mod, only: masked_cplx_matrix_type, &
            read_raw_masked_cplx_matrix
       use string5,                 only: get_unit
@@ -387,8 +396,6 @@ contains
       INTEGER                       :: N, Nw, unit_
       TYPE(masked_cplx_matrix_type) :: MM
       TYPE(freq_type)               :: FREQ
-
-
 
       if(Nw == 0) stop 'read raw correl Nw = 0'
 
@@ -420,11 +427,11 @@ contains
       SELECT CASE(FREQ%title)
       CASE(FERMIONIC, BOSONIC)
          CALL new_correl_from_scratch_ifreq(CORREL, title, N, FREQ%Nw, &
-              FREQ%beta, STAT = stat, IMASK = MM%MASK%imat, AB = T)
+              FREQ%beta, STAT = stat, IMASK = MM%MASK%imat, AB = .true.)
       CASE(RETARDED, ADVANCED)
          CALL new_correl_from_scratch_rfreq(CORREL, title, N, FREQ%Nw, &
               FREQ%wmin, FREQ%wmax, FREQ%width, STAT = stat, IMASK = &
-              MM%MASK%imat, AB = T)
+              MM%MASK%imat, AB = .true.)
       END SELECT
 
       READ(unit_, *) CORREL%fctn
@@ -496,6 +503,7 @@ contains
       ! CREATE OUTPUT FILE NAME
 
       use common_def, only: close_safe, dump_message, open_safe
+      use genvar,     only: ADVANCED, BOSONIC, FERMIONIC, pi2, RETARDED
       use string5,    only: get_unit
 
       implicit none
@@ -578,6 +586,8 @@ contains
 
       use common_def,              only: close_safe, open_safe, skip_line
       use frequency_class,         only: new_freq
+      use genvar,                  only: ADVANCED, BOSONIC, FERMIONIC, &
+           log_unit, MATSUBARA, messages3, RETARDED
       use masked_matrix_class_mod, only: masked_cplx_matrix2vec
       use string5,                 only: get_unit
 
@@ -594,8 +604,6 @@ contains
       CHARACTER(LEN = 300)   :: header, fmtmask, fmtcorrel, title
       CHARACTER(LEN = 9)     :: FTYPE, STAT
       CHARACTER(LEN = 4)     :: junk
-
-
 
       CALL delete_correl(CORREL)
 
@@ -626,8 +634,8 @@ contains
            &x)/), a4, 10x, ', N, '(I2, x), 3x, ', N, '(I2, x))'
       ALLOCATE(IMASK(N, N))
       READ(UNIT, fmtmask) (junk, (IMASK(mu, nu), nu = 1, N), mu = 1, N)
-      is_sym_ = F
-      IF(ALL(IMASK == TRANSPOSE(IMASK))) is_sym_ = T
+      is_sym_ = .false.
+      IF(ALL(IMASK == TRANSPOSE(IMASK))) is_sym_ = .true.
       READ(UNIT, '(a)') header
       READ(header(INDEX(header, " = ") + 1:), *) Nw
 
@@ -635,7 +643,7 @@ contains
 
       ! CREATE CORRELATION
       CALL new_correl_from_scratch(CORREL, title, N, Nw, STAT = STAT, IMASK = &
-           IMASK, AB = T)
+           IMASK, AB = .true.)
 
       ! DUMMY TO CREATE INTEGER MAP imaskvec
       CALL masked_cplx_matrix2vec(CORREL%MM)
@@ -709,16 +717,23 @@ contains
    end subroutine
 
    subroutine diff_correl(diff,CORREL1,CORREL2)
+
+      use globalvar_ed_solver, only: average_G, fit_nw, fit_shift, &
+           fit_weight_power, lambda_sym_fit, MASK_AVERAGE_SIGMA, weight_expo, &
+           window_hybrid, window_hybrid2, window_weight
+
       REAL(DBL),         INTENT(INOUT) :: diff
-      REAL(8)                          :: ww_,fit_shift_,sumr,asym_,w2,w1
-      TYPE(correl_type), INTENT(IN)    :: CORREL1,CORREL2
-      integer                          :: iw,window1_,window2_,tot,boundup,ii,jj,nn,b1,b2
-      COMPLEX(DBL)                     :: CORREL1_AV(CORREL1%N,CORREL1%N,CORREL1%Nw)
+      REAL(8)                          :: ww_, fit_shift_, sumr, asym_, w2, w1
+      TYPE(correl_type), INTENT(IN)    :: CORREL1, CORREL2
+      integer                          :: iw, window1_, window2_, tot, &
+                                          boundup, ii, jj, nn, b1, b2
+      COMPLEX(DBL)                     :: CORREL1_AV(CORREL1%N, CORREL1%N, &
+                                          CORREL1%Nw)
       logical                          :: asym
 
-      diff=zero
-      tot=0
-      asym=abs(lambda_sym_fit)>1.d-3
+      diff = 0.0_DBL
+      tot = 0
+      asym = abs(lambda_sym_fit) > 1.d-3
  
       if(abs(fit_shift)<1.d-10)then
          fit_shift_=abs(CORREL1%freq%vec(1))
@@ -736,10 +751,10 @@ contains
          ww_      = 1.d0
       endif
 
-      if(fit_nw<0) then
-         boundup=CORREL1%Nw
+      if(fit_nw < 0) then
+         boundup = CORREL1%Nw
       else
-         boundup=min(fit_nw,CORREL1%Nw)
+         boundup = min(fit_nw,CORREL1%Nw)
       endif
       nn = size(CORREL1%fctn,1)
 
@@ -794,6 +809,8 @@ contains
       end subroutine
 
       subroutine get_b1()
+
+         use globalvar_ed_solver, only: fast_fit, fmos, superconducting_state
 
          implicit none
 
@@ -877,6 +894,7 @@ contains
    subroutine slice_correl(CORRELOUT, CORRELIN, rbounds, cbounds)
 
       use common_def,              only: c2s, i2c
+      use genvar,                  only: ADVANCED, BOSONIC, FERMIONIC, pi2, RETARDED
       use masked_matrix_class_mod, only: slice_masked_cplx_matrix
 
       implicit none
@@ -914,14 +932,14 @@ contains
          beta  = pi2 / AIMAG(CORRELIN%freq%vec(2)-CORRELIN%freq%vec(1))
          CALL new_correl_from_scratch_ifreq(CORRELOUT, title, CORRELIN%N, &
               CORRELIN%Nw, beta, STAT = CORRELIN%STAT, IMASK = &
-              CORRELIN%MM%MASK%imat, AB = T)
+              CORRELIN%MM%MASK%imat, AB = .true.)
       CASE(RETARDED, ADVANCED)
          wmin  = CORRELIN%freq%wmin
          wmax  = CORRELIN%freq%wmax
          width = AIMAG(CORRELIN%freq%vec(1))
          CALL new_correl_from_scratch_rfreq(CORRELOUT, title, CORRELIN%N, &
               CORRELIN%Nw, wmin, wmax, width, STAT = CORRELIN%STAT, IMASK = &
-              CORRELIN%MM%MASK%imat, AB = T)
+              CORRELIN%MM%MASK%imat, AB = .true.)
       END SELECT
 
       CALL slice_masked_cplx_matrix(CORRELOUT%MM, CORRELIN%MM, rbounds, cbounds)
@@ -940,6 +958,7 @@ contains
 
    subroutine average_correlations(G, Gm1, offdiag_also, mask, boundup)
 
+      use genvar, only: ADVANCED, BOSONIC, FERMIONIC, RETARDED
       use matrix, only: average_matrix
       use mesh,   only: mirror_array
 
@@ -1033,9 +1052,9 @@ contains
 
    SUBROUTINE transform_correl(CORRELOUT,CORRELIN)
 
-   !---------------------------------------!
-   ! CORRELOUT(z) = (-1)^F * CORRELIN(-z*) !
-   !---------------------------------------!
+   ! CORRELOUT(z) = (-1)^F * CORRELIN(-z*)
+
+   use genvar,                  only: ADVANCED, BOSONIC, FERMIONIC, pi2, RETARDED
 
    implicit none
 
@@ -1078,6 +1097,8 @@ contains
    contains
 
       subroutine dump_graphs()
+
+         use genvar, only: rank
 
          implicit none
 
