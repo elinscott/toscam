@@ -27,6 +27,7 @@ MODULE AIM_class
    END TYPE
 
    public :: AIM_type
+   public :: IMPBATH2AIMstate
 
 contains
 
