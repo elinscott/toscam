@@ -20,6 +20,9 @@ MODULE H_class
    public :: dimen_H
    public :: sector_H
    public :: title_H_
+   public :: hmultc
+   public :: hmultr
+   public :: Hmult__
 
 contains
 
