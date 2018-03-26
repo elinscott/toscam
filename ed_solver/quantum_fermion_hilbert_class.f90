@@ -53,6 +53,7 @@ MODULE fermion_Hilbert_class
    public :: new_fermion_sector
    public :: read_raw_fermion_sector
    public :: write_raw_fermion_sector
+   public :: HILBERT_SPACE_SPLITED_AMONG_NODES
 
 contains
 

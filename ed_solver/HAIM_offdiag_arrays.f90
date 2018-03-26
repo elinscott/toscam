@@ -23,12 +23,10 @@ MODULE HAIM2_class
    ! OFF-DIAGONAL PART  !
    !--------------------!
 
-   !------------------------------------------------------------------------------------------------------------------------------!
    ! applying Hod on |istate > generates noff(istate) states whose ranks are
    ! stored in rankoff(nnnft + 1 <= k <= shift + noff(istate)) !
    ! where shift = SUM(noff(1:istate-1)) while the matrix elements are stored
    ! in H%offdiag(k) = < rankoff(k)|Hod|istate > !
-   !------------------------------------------------------------------------------------------------------------------------------!
 
    INTEGER(8), TARGET                :: noffdiagup = 0, noffdiagdo = 0, &
                                         noffdiagsz = 0
@@ -43,6 +41,14 @@ MODULE HAIM2_class
                                         rankoffsz(:)
    INTEGER,      ALLOCATABLE, TARGET ::     noffup(:),   noffdo(:),   noffsz(:)
 
+   public :: AIM2sz
+   public :: delete_haim2
+   public :: diagsz
+   public :: new_haim2
+   public :: noffsz
+   public :: offdiagsz
+   public :: rankoffsz
+   public :: tab_haim2
 
 contains
 

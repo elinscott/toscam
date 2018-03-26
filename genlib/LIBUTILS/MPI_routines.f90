@@ -5,27 +5,27 @@ module mpirout
     use linalg
     use random
  !--------------!
-implicit none
-private
-public :: adim0r_
-public :: adim1s
-public :: distributed_memory_transpose_mat
-public :: distributed_memory_transpose_mat_c
-public :: distributed_memory_transpose_mat_r
-public :: mpibarrier
-public :: mpibcast
-public :: mpibcastb_
-public :: mpibcastb___
-public :: mpibcastb____
-public :: mpigather_on_masternode
-public :: mpigather_on_masternode_r
-public :: mpisum
-public :: MPI_DOT_PRODUCT
-public :: MPI_DOT_PRODUCTc
-public :: MPI_DOT_PRODUCTr
-public :: scatter_it
-public :: scatter_it_r
-public :: split
+   implicit none
+   private
+   public :: adim0r_
+   public :: adim1s
+   public :: distributed_memory_transpose_mat
+   public :: distributed_memory_transpose_mat_c
+   public :: distributed_memory_transpose_mat_r
+   public :: mpibarrier
+   public :: mpibcast
+   public :: mpibcastb_
+   public :: mpibcastb___
+   public :: mpibcastb____
+   public :: mpigather_on_masternode
+   public :: mpigather_on_masternode_r
+   public :: mpisum
+   public :: MPI_DOT_PRODUCT
+   public :: MPI_DOT_PRODUCTc
+   public :: MPI_DOT_PRODUCTr
+   public :: scatter_it
+   public :: scatter_it_r
+   public :: split
 
 !--------------------------------------------------------------------------!
 INTERFACE mpigather_on_masternode
