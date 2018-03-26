@@ -41,13 +41,23 @@ MODULE HAIM2_class
                                         rankoffsz(:)
    INTEGER,      ALLOCATABLE, TARGET ::     noffup(:),   noffdo(:),   noffsz(:)
 
+   public :: AIM2do
    public :: AIM2sz
+   public :: AIM2up
    public :: delete_haim2
+   public :: diagdo
    public :: diagsz
+   public :: diagup
    public :: new_haim2
+   public :: noffdo
    public :: noffsz
+   public :: noffup
+   public :: offdiagdo
    public :: offdiagsz
+   public :: offdiagup
+   public :: rankoffdo
    public :: rankoffsz
+   public :: rankoffup
    public :: tab_haim2
 
 contains
