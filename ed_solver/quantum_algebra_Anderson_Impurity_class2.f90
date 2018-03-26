@@ -41,6 +41,10 @@ MODULE AIM2_class
       INTEGER, POINTER :: BATHiorb(:) => NULL()
    END TYPE
 
+   public :: AIM2_type
+   public :: delete_AIM2
+   public :: new_AIM2
+
 contains
 
    subroutine new_AIM2(AIM2, AIM, SPIN)
