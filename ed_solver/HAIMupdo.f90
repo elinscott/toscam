@@ -32,6 +32,12 @@ MODULE HAIMupdo_class
       MODULE PROCEDURE HAIMupdo_multr_split, HAIMupdo_multc_split
    END INTERFACE
 
+   public :: delete_HAIMupdo
+   public :: HAIMupdo_mult
+   public :: HAIMupdo_mult_split
+   public :: new_HAIMupdo
+
+
 contains
 
    subroutine new_HAIMupdo(AIM, sector_in)

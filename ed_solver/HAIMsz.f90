@@ -25,6 +25,11 @@ MODULE HAIMsz_class
                                                 dimen
    LOGICAL                         , PRIVATE :: offdiag_coulomb
 
+   public :: delete_HAIMsz
+   public :: HAIMsz_mult
+   public :: HAIMsz_mult_fly
+   public :: new_HAIMsz
+
 contains
 
    subroutine new_HAIMsz(AIM, sector_in)

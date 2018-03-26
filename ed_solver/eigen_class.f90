@@ -41,6 +41,7 @@ MODULE eigen_class
    public :: eigen_type
    public :: eigenlist_type
    public :: filter_eigen
+   public :: is_eigen_in_window
    public :: min_eigen
    public :: new_eigen
    public :: print_eigenlist
