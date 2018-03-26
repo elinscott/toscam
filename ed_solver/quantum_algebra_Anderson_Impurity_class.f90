@@ -26,6 +26,8 @@ MODULE AIM_class
       INTEGER, POINTER :: BATHiorb(:, :) => NULL()
    END TYPE
 
+   public :: AIM_type
+
 contains
 
    subroutine update_AIM_pointer(AIM, impurity, bath)
