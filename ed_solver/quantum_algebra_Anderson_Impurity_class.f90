@@ -28,7 +28,10 @@ MODULE AIM_class
 
    public :: AIM_type
    public :: AIM2IMPBATHstate
+   public :: delete_AIM
    public :: IMPBATH2AIMstate
+   public :: new_AIM
+   public :: update_AIM_pointer
 
 contains
 

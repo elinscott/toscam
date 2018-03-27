@@ -221,6 +221,7 @@ MODULE impurity_class
    public :: symmetry
    public :: update_impurity
    public :: web
+   public :: write_impurity
 
 contains
 

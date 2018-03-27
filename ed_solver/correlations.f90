@@ -44,6 +44,8 @@ module correlations
 
    public :: compute_correlations
    public :: init_correlations
+   public :: write_info_correlations
+   public :: write_static
 
 contains
 

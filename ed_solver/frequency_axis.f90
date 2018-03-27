@@ -36,6 +36,7 @@ MODULE frequency_class
    public :: copy_frequency
    public :: delete_frequency
    public :: freq_type
+   public :: init_frequency_module
    public :: new_freq
    public :: read_raw_freq
    public :: write_raw_freq

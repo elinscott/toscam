@@ -12,6 +12,7 @@ module mpirout
    public :: distributed_memory_transpose_mat
    public :: distributed_memory_transpose_mat_c
    public :: distributed_memory_transpose_mat_r
+   public :: mpi_stop
    public :: mpibarrier
    public :: mpibcast
    public :: mpibcastb_
@@ -644,23 +645,23 @@ contains
 !*********************************************
 !*********************************************
 !*********************************************
-! 
-!  subroutine mpi_stop(string)
-!  character*(*) :: string
-!      write(*,*) ' my rank is : ', rank,size2
-!      write(*,*) ' I am done...'
-!      if(.not.no_mpi) call mpi_finalize(ierr)
-!      write(*,*) ' mpi termination successfull'
-!      write(*,*) ' message : ', string
-!      stop 
-!  end subroutine
-! 
-! !*********************************************
-! !*********************************************
-! !*********************************************
-! !*********************************************
-! !*********************************************
-! !*********************************************
+
+ subroutine mpi_stop(string)
+ character*(*) :: string
+     write(*,*) ' my rank is : ', rank,size2
+     write(*,*) ' I am done...'
+     if(.not.no_mpi) call mpi_finalize(ierr)
+     write(*,*) ' mpi termination successfull'
+     write(*,*) ' message : ', string
+     stop 
+ end subroutine
+
+!*********************************************
+!*********************************************
+!*********************************************
+!*********************************************
+!*********************************************
+!*********************************************
 ! 
 !  subroutine test_mpi_dot
 !  real(8)    :: v1(3),v2(3)

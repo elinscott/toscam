@@ -14,6 +14,7 @@ MODULE apply_NS
    integer              :: Ns, Ns2
    logical, parameter   :: force_reset_list = .false.
 
+   public :: apply_id
    public :: apply_n
    public :: apply_s
    public :: apply_sz

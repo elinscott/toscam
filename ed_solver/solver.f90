@@ -15,6 +15,7 @@ MODULE solver
    public :: init_solver
    public :: remove_filef
    public :: solve_aim
+   public :: write_info_solver
 
 contains
 

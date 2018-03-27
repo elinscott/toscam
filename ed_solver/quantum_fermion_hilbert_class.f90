@@ -49,11 +49,12 @@ MODULE fermion_Hilbert_class
    public :: copy_fermion_sector
    public :: delete_fermion_sector
    public :: fermion_sector_type
+   public :: FLAG_FORBID_SPLITTING
+   public :: HILBERT_SPACE_SPLITED_AMONG_NODES
    public :: is_in_fermion_sector
    public :: new_fermion_sector
    public :: read_raw_fermion_sector
    public :: write_raw_fermion_sector
-   public :: HILBERT_SPACE_SPLITED_AMONG_NODES
 
 contains
 
