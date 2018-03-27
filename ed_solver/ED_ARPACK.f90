@@ -10,6 +10,8 @@ MODULE ED_ARPACK
    ! DIAGONALIZATION FULL SPETRUM  !
    !-------------------------------!
 
+   public :: arpack_diago, ed_diago
+
 contains
 
    subroutine ARPACK_diago(lowest)

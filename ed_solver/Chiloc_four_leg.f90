@@ -19,6 +19,8 @@ module vertex
 
    logical, parameter :: verbose=.false.
 
+   public :: four_leg_vertex_matrices_routine
+
 contains
 
    subroutine cdagger_copy(cout, cin)

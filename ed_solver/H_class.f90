@@ -17,12 +17,14 @@ MODULE H_class
       MODULE PROCEDURE Hmultr, Hmultc
    END INTERFACE
 
+   public :: delete_H
    public :: dimen_H
    public :: sector_H
    public :: title_H_
    public :: hmultc
    public :: hmultr
    public :: Hmult__
+   public :: new_H
 
 contains
 

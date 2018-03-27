@@ -11,6 +11,8 @@ MODULE Lanczos_fast
    ! DIAGONALIZATION USING PLAIN LANCZOS ALGORITHM TO GET LOWEST EIGENVALUE
    ! ONLY !
 
+   public :: lanczos_fast_diagonalize
+   public :: lanczos_get_gs_sector
    public :: one_step_lanczos_fast
 
 contains

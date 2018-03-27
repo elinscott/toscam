@@ -27,6 +27,8 @@ MODULE eigen_sector_class
       module procedure new_rcvec_from_file_c, new_rcvec_from_file_r
    end interface
 
+   public :: add_eigensector
+   public :: copy_eigensector
    public :: copy_eigensectorlist
    public :: delete_eigensector
    public :: delete_eigensectorlist
@@ -36,10 +38,13 @@ MODULE eigen_sector_class
    public :: gsenergy
    public :: nambu_energy_shift
    public :: new_eigensector
+   public :: not_commensurate_sector
    public :: not_commensurate_sector_
    public :: nlowest
    public :: partition
    public :: print_eigensectorlist
+   public :: rank_sector_in_list
+   public :: read_raw_eigensectorlist
    public :: write_raw_eigensectorlist
 
 contains

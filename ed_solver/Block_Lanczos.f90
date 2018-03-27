@@ -9,6 +9,8 @@ MODULE Block_Lanczos
    ! DIAGONALIZATION STRATEGIES USING LANCZOS ALGORITHM TO GET *SEVERAL*
    ! EIGENVALUES
 
+   public :: block_lanczos_diagonalize
+
 contains
 
    subroutine Block_Lanczos_diagonalize(lowest)
