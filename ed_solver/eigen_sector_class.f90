@@ -36,6 +36,7 @@ MODULE eigen_sector_class
    public :: gsenergy
    public :: nambu_energy_shift
    public :: new_eigensector
+   public :: not_commensurate_sector_
    public :: nlowest
    public :: partition
    public :: print_eigensectorlist
