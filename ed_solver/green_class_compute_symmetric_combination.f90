@@ -8,6 +8,8 @@ MODULE green_class_compute_symmetric
 
    COMPLEX(DBL), PARAMETER :: coef1 = 1.d0, coef2 = 1.d0
 
+   public :: symmetric_combineAB
+
 contains
 
 #include "green_class_compute_symmetric_combination_AA.h"
