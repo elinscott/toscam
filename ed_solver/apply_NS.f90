@@ -99,7 +99,6 @@ contains
            eigen_type, new_eigen
       use fermion_sector2_class, only: rankupdo
       use fermion_ket_class,     only: fermion_ket_type, new_ket, ni__
-      use genvar,                only: dbl, half
       use eigen_sector_class,    only: eigensector_type
       use sector_class,          only: dimen_func
 
@@ -145,7 +144,7 @@ contains
                DO istate = 1, es%sector%sz%dimen
                   IF(eigen_in%vec%rc(istate) /= 0.0_DBL)THEN
                      CALL new_ket(ket_in, es%sector%sz%state(istate), Ns2)
-                     sz = half * ( ni__(IMPiorbsz(site, 1), ket_in) - ( 1 - &
+                     sz = 0.5_DBL * ( ni__(IMPiorbsz(site, 1), ket_in) - ( 1 - &
                           ni__(IMPiorbsz(site, 2), ket_in) ) ) ! NAMBU
                      IF(sz /= 0.0_DBL) eigen_out%vec%rc(istate) = &
                           eigen_out%vec%rc(istate) + sz * &
@@ -163,7 +162,7 @@ contains
                              Ns)
                         nup = ni__(IMPiorbupdo(site, 1), ket_in_up)
                         IF(nup /= ndo) eigen_out%vec%rc(istate) = &
-                             eigen_out%vec%rc(istate) + half * ( nup - ndo ) * &
+                             eigen_out%vec%rc(istate) + 0.5_DBL * ( nup - ndo ) * &
                              eigen_in%vec%rc(istate)
                      ENDIF
                   ENDDO
