@@ -11,6 +11,8 @@ MODULE Lanczos_fast
    ! DIAGONALIZATION USING PLAIN LANCZOS ALGORITHM TO GET LOWEST EIGENVALUE
    ! ONLY !
 
+   public :: one_step_lanczos_fast
+
 contains
 
    subroutine Lanczos_fast_diagonalize(lowest)
