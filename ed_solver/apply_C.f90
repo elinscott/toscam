@@ -8,13 +8,21 @@ MODULE apply_C
    ! CLASS TO APPLY BASIS CREATION/DESTRUCTION OPERATORS ON EIGENSTATE  !
    !--------------------------------------------------------------------!
 
-   INTEGER, POINTER   , PRIVATE   :: IMPiorb(:, :) => NULL(), &
-                                     AIMIMPiorbupdo(:, :) => NULL()
-   INTEGER, POINTER   , PRIVATE   :: AIMIMPiorbsz_updo(:, :) => NULL(), &
-                                     AIMIMPiorbsz(:) => NULL()
-   INTEGER           , PRIVATE   ::  Nc
+   INTEGER, POINTER   :: IMPiorb(:, :) => NULL(), &
+                         AIMIMPiorbupdo(:, :) => NULL()
+   INTEGER, POINTER   :: AIMIMPiorbsz_updo(:, :) => NULL(), &
+                         AIMIMPiorbsz(:) => NULL()
+   INTEGER            ::  Nc
 
-   logical, parameter, private :: force_reset_list = .false.
+   logical, parameter :: force_reset_list = .false.
+
+   public :: apply_cdo
+   public :: apply_cup
+   public :: apply_n_cdo
+   public :: apply_n_cup
+   public :: cdo_sector
+   public :: cup_sector
+   public :: init_apply_c
 
 contains
 

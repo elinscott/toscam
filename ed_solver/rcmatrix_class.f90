@@ -31,6 +31,8 @@ MODULE rcmatrix_class
    END INTERFACE
 
    public :: rcmatrix_type
+   public :: new_rcmatrix
+   public :: write_raw_rcmatrix
 
 contains
 

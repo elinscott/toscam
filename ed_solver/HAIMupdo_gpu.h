@@ -48,7 +48,14 @@
     CALL reset_timer(start_diagH)
     write(log_unit,*) '.... start Lanczos on gpu, go get GS ....'
 
-    n1=size(U,1);n2=size(offdiagup);n3=size(offdiagdo);n4=size(rankoffup);n5=size(rankoffdo);n6=size(noffup);n7=size(noffdo);
+    n1=size(U,1)
+n2=size(offdiagup)
+n3=size(offdiagdo)
+n4=size(rankoffup)
+n5=size(rankoffdo)
+n6=size(noffup)
+n7=size(noffdo)
+
 #ifndef _complex
     call lanczos_real_updo_gs_cuda(n1,cuda_blocksize,Niter,n2,n3,n4,n5, &
                          & dimen,n6,n7,U,diagup,diagdo,noffup,noffdo,rankoffup,rankoffdo,offdiagup,offdiagdo,UMASK, &
@@ -122,7 +129,14 @@
     CALL reset_timer(start_diagH)
     if(sizvec==0) stop 'error Hilbert space has 0 dimension'
     write(log_unit,*) '.... start Lanczos on gpu ....'
-    n1=size(U,1);n2=size(offdiagup);n3=size(offdiagdo);n4=size(rankoffup);n5=size(rankoffdo);n6=size(noffup);n7=size(noffdo);
+    n1=size(U,1)
+n2=size(offdiagup)
+n3=size(offdiagdo)
+n4=size(rankoffup)
+n5=size(rankoffdo)
+n6=size(noffup)
+n7=size(noffdo)
+
 #ifndef _complex
     call lanczos_real_updo_dynamic_cuda(n1,cuda_blocksize,Niter,n2,n3,n4,n5, &
                          & dimen,n6,n7,U,diagup,diagdo,noffup,noffdo,rankoffup,rankoffdo,offdiagup,offdiagdo,diag,subdiag,UMASK, &
@@ -187,7 +201,14 @@
 
     CALL reset_timer(start_diagH)
     write(log_unit,*) '.... start Lanczos on gpu ....'
-    n1=size(U,1);n2=size(offdiagup);n3=size(offdiagdo);n4=size(rankoffup);n5=size(rankoffdo);n6=size(noffup);n7=size(noffdo);
+    n1=size(U,1)
+n2=size(offdiagup)
+n3=size(offdiagdo)
+n4=size(rankoffup)
+n5=size(rankoffdo)
+n6=size(noffup)
+n7=size(noffdo)
+
 #ifndef _complex
     call lanczos_real_updo_cuda(n1,cuda_blocksize,Niter,n2,n3,n4,n5, &
                          & dimen,n6,n7,U,diagup,diagdo,noffup,noffdo,rankoffup,rankoffdo,offdiagup,offdiagdo,diag,subdiag,UMASK, &

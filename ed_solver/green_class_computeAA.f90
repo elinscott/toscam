@@ -6,6 +6,8 @@ module green_class_computeAA
 
    private
 
+   public :: compute_greenaa
+
 contains
 
    SUBROUTINE compute_greenAA(green, AIM, beta, GS, Asector, applyA, &

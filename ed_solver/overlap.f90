@@ -8,6 +8,8 @@ MODULE overlap_module
    ! COMPUTE THE WEIGHT OF THE GROUND STATE ON CERTAIN REFERENCE VECTORS !
    !---------------------------------------------------------------------!
 
+   public :: compute_overlap
+
 contains
 
    subroutine compute_overlap(AIM, beta, GS, vec_list)

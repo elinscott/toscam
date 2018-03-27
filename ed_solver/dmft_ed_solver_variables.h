@@ -65,7 +65,8 @@
   call putel_in_namelist(nm,FLAG_GUP_IS_GDN,         'FLAG_GUP_IS_GDN',                  .false.     , 'take care, if true it will explicitely enforce Gup to be the same as Gdn, usefull to speed up calculations for force_para_state')
   call putel_in_namelist(nm,always_compute_static_obs,'always_compute_static_obs',       .true.      , 'if true will always compute static bosonic observables, whatever flags in ed_correl for N,Sz ...')
   call putel_in_namelist(nm,Niter_search_max_0,       'Niter_search_max_0',                  0       , 'if non zero, will use Niter_search_max_0 steps for the first iter for the minimization, if 0 Niter_search_max_0=Niter_search_max')
-  call putel_in_namelist(nm,FLAG_NCUP,                'FLAG_NCUP',                        .false.    , 'compute cor hopping green function n_dn C_iup ; C_iup^dagger')                            
+  call putel_in_namelist(nm,FLAG_NCUP,                'FLAG_NCUP',                        .false.    , 'compute cor hopping green function n_dn C_iup 
+ C_iup^dagger')                            
   call putel_in_namelist(nm,FLAG_DUMP_INFO_FOR_GAMMA_VERTEX,'FLAG_DUMP_INFO_FOR_GAMMA_VERTEX', .false. , 'if true will dump out the necessary files to compute Gamma (four leg vertex) for later postprocessing, only works with FULL_ED on')
   call putel_in_namelist(nm,fit_all_elements_show_graphs,'fit_all_elements_show_graphs',.false.,'if true will show the fit in agr files for all matrix elements, not only the diagonal ones')
   call putel_in_namelist(nm, keldysh_t0            ,'keldysh_t0  ', 0.d0   , 'keldysh : t0                    ')

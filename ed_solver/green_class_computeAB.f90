@@ -6,6 +6,8 @@ MODULE green_class_computeAB
 
    private
 
+   public :: compute_greenab
+
 contains
 
    SUBROUTINE compute_greenAB(greenAB, greenBA, greenAA, greenBB, AIM, beta, &

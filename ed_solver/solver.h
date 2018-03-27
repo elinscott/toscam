@@ -14,9 +14,11 @@
   INTEGER                       :: rank_,size2_
 
      if(FLAG_MPI_GREENS>0)then
-      rank_=rank; size2_=size2
+      rank_=rank
+ size2_=size2
      else
-      rank_=0; size2_=1
+      rank_=0
+ size2_=1
      endif
 
      !======================================================================!
@@ -110,9 +112,11 @@
      endif
 
      if(FLAG_MPI_GREENS>0)then
-       rank_=rank; size2_=size2
+       rank_=rank
+ size2_=size2
      else
-       rank_=0; size2_=1
+       rank_=0
+ size2_=1
      endif
 
      !======================================================================!
@@ -245,14 +249,23 @@
    call mpibarrier
    DO iii=1,GS%nsector
     ii=mod(iii-1,size2)
-    if(ii==rank)then; neigen=GS%es(iii)%lowest%neigen; endif
+    if(ii==rank)then
+ neigen=GS%es(iii)%lowest%neigen
+ endif
     call mpibcast(neigen,iii=ii)
       !--------------------------------------------------------!
        if(neigen>0)then
-        if(ii==rank)then; dim_space=GS%es(iii)%lowest%eigen(1)%dim_space; endif
+        if(ii==rank)then
+ dim_space=GS%es(iii)%lowest%eigen(1)%dim_space
+ endif
         call mpibcast(dim_space,iii=ii)
-        if(allocated(VECP)) deallocate(VECP); allocate(VECP(dim_space,neigen))
-        if(ii==rank)then; do kk=1,neigen; VECP(:,kk)=GS%es(iii)%lowest%eigen(kk)%vec%rc; enddo; endif
+        if(allocated(VECP)) deallocate(VECP)
+ allocate(VECP(dim_space,neigen))
+        if(ii==rank)then
+ do kk=1,neigen
+ VECP(:,kk)=GS%es(iii)%lowest%eigen(kk)%vec%rc
+ enddo
+ endif
         call mpibcast(VECP,iii=ii)
         if(rank/=ii)then
          do jj=1,neigen
@@ -285,21 +298,36 @@
    call mpibarrier 
    DO iii=1,GS%nsector
     ii=mod(iii-1,size2)
-    if(ii==rank)then; neigen=GS%es(iii)%lowest%neigen; endif 
+    if(ii==rank)then
+ neigen=GS%es(iii)%lowest%neigen
+ endif 
     call mpibcast(neigen,iii=ii)
       !--------------------------------------------------------!
        if(neigen>0)then
-        if(allocated(dim_lanc)) deallocate(dim_lanc); allocate(dim_lanc(neigen))
-        if(ii==rank)then; dim_lanc=GS%es(iii)%lowest%eigen(1:neigen)%lanczos_iter; endif
+        if(allocated(dim_lanc)) deallocate(dim_lanc)
+ allocate(dim_lanc(neigen))
+        if(ii==rank)then
+ dim_lanc=GS%es(iii)%lowest%eigen(1:neigen)%lanczos_iter
+ endif
         call mpibcast(dim_lanc,iii=ii)
-        if(ii==rank)then; dim_space=GS%es(iii)%lowest%eigen(1)%dim_sector; endif
+        if(ii==rank)then
+ dim_space=GS%es(iii)%lowest%eigen(1)%dim_sector
+ endif
         call mpibcast(dim_space,iii=ii)
-        if(allocated(VAL)) deallocate(VAL); allocate(VAL(neigen))
-        if(ii==rank)then; VAL=GS%es(iii)%lowest%eigen(1:neigen)%val; endif 
+        if(allocated(VAL)) deallocate(VAL)
+ allocate(VAL(neigen))
+        if(ii==rank)then
+ VAL=GS%es(iii)%lowest%eigen(1:neigen)%val
+ endif 
         call mpibcast(VAL,iii=ii)
 
-        if(allocated(coef_lanc)) deallocate(coef_lanc); allocate(coef_lanc(maxval(dim_lanc(:)),neigen))
-        if(ii==rank)then; do kk=1,neigen; coef_lanc(1:dim_lanc(kk),kk)=GS%es(iii)%lowest%eigen(kk)%lanczos_vecp(1:dim_lanc(kk)) ; enddo; endif
+        if(allocated(coef_lanc)) deallocate(coef_lanc)
+ allocate(coef_lanc(maxval(dim_lanc(:)),neigen))
+        if(ii==rank)then
+ do kk=1,neigen
+ coef_lanc(1:dim_lanc(kk),kk)=GS%es(iii)%lowest%eigen(kk)%lanczos_vecp(1:dim_lanc(kk)) 
+ enddo
+ endif
         call mpibcast(coef_lanc,iii=ii)
 
         if(ii/=rank)then
@@ -310,7 +338,8 @@
           eigen%rdist=0.
           eigen%dim_space=dim_space
           eigen%dim_sector=dim_space
-          CALL add_eigen(eigen,GS%es(iii)%lowest); CALL delete_eigen(eigen)
+          CALL add_eigen(eigen,GS%es(iii)%lowest)
+ CALL delete_eigen(eigen)
           write(*,*) '  sync eigenvalues from Lanzcos, FLAG_MPI_GREENS '
           write(*,*) '  N eigenvalues    : ', GS%es(iii)%lowest%neigen
           write(*,*) '  eigenvalues      : ', GS%es(iii)%lowest%eigen(jj)%val
@@ -336,8 +365,12 @@
   implicit none
   logical :: sector_bound_file_present
 
-    szmin= 1000;nupmin= 1000;ndnmin= 1000
-    szmax=-1000;nupmax=-1000;ndnmax=-1000
+    szmin= 1000
+nupmin= 1000
+ndnmin= 1000
+    szmax=-1000
+nupmax=-1000
+ndnmax=-1000
     DO isector=1,GS%nsector
       if(GS%es(isector)%lowest%neigen>0)then
          if(AIM%bath%SUPER)then

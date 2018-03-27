@@ -106,7 +106,8 @@
    Vb( 1,:,:)=transpose(BATH%Vbc(1)%rc%mat)
    Ei_( 1,:,:)=Eimp(1:Nc,1:Nc)
    Ei_(-1,:,:)=Eimp(Nc+1:2*Nc,Nc+1:2*Nc)
-   S_ff_m=0.;S_ff_r=0.
+   S_ff_m=0.
+S_ff_r=0.
 
    mstep=Nb/Nc
    do s1=-1,1,2

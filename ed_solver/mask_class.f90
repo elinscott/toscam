@@ -45,6 +45,7 @@ MODULE mask_class
    public :: mask2vec
    public :: mask_type
    public :: new_mask
+   public :: order_matrix_elements
    public :: read_raw_mask
    public :: slice_mask
    public :: SYM

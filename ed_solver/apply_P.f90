@@ -15,6 +15,11 @@ MODULE apply_P
    integer              :: nCYC3, nCYC4, Ns, Ns2
    logical, parameter   :: force_reset_list = .false.
 
+   public :: apply_p3
+   public :: apply_p4
+   public :: init_apply_p
+   public :: p_sector
+
 contains
 
    subroutine init_apply_P(triplets, quadruplets, AIM)

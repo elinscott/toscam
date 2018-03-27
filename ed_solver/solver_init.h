@@ -81,7 +81,8 @@
         write(log_unit,*) 'list of sectors                    : ' , list_sectors(isec)
         write(log_unit,*) 'Npart                              : ' , npart
         write(log_unit,*) '------------------------------------------------------------'
-        CALL delete_sector(sec); ALLOCATE(sec%sz)
+        CALL delete_sector(sec)
+ ALLOCATE(sec%sz)
         CALL new_fermion_sector(sec%sz,npart,AIM%norbs,SZ=T) 
         CALL new_eigensector(es,sec) 
         CALL add_eigensector(es,sector2diagH) 
@@ -116,14 +117,18 @@
        !##############################################################################################!
       else
        !##############################################################################################!
-       k=2*(nsec_**2); 
+       k=2*(nsec_**2)
+ 
        if(nsec0+nsec_-1==fillup.and.discard_full_state) k=k-2
        ALLOCATE(list_sectors(k),list0(k))
        k=0
        do i=nsec0,nsec0+nsec_-1
         do j=nsec0,nsec0+nsec_-1
          if((i/=fillup.or.j/=fillup).or..not.discard_full_state)then
-           k=k+1; list0(k)=i; k=k+1; list0(k)=j
+           k=k+1
+ list0(k)=i
+ k=k+1
+ list0(k)=j
          endif
         enddo
        enddo
@@ -186,7 +191,8 @@
 
     if(allocated(list_sectors)) DEALLOCATE(list_sectors,STAT=istati)
     if(allocated(list0))        DEALLOCATE(list0,STAT=istati)
-    CALL delete_eigensector(es) ; CALL delete_sector(sec)
+    CALL delete_eigensector(es) 
+ CALL delete_sector(sec)
 
   END SUBROUTINE
 

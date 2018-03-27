@@ -277,7 +277,8 @@ SUBROUTINE gf_HI_fullU(GF,Tail,e0f,Ur,umn,ujmn,zmsb,nlm,Iwmax,nmom,ns,atocc,atma
   DO i=0,nso
      LEFT=.FALSE.
      RIGHT=.FALSE.
-     k=i; l=i
+     k=i
+ l=i
      IF(i>0.AND.N_occ(i)%ndeg>0) THEN
         k=i-1
         LEFT=.TRUE.

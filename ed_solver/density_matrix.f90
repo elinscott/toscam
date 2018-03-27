@@ -8,6 +8,9 @@ MODULE density_matrix
    ! COMPUTE THE REDUCED DENSITY MATRIX OF THE IMPURITY !
    !----------------------------------------------------!
 
+   public :: analyze_density_matrix
+   public :: compute_density_matrix
+
 contains
 
    subroutine compute_density_matrix(dmat, AIM, beta, GS)

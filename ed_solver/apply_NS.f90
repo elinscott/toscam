@@ -14,6 +14,14 @@ MODULE apply_NS
    integer              :: Ns, Ns2
    logical, parameter   :: force_reset_list = .false.
 
+   public :: apply_n
+   public :: apply_s
+   public :: apply_sz
+   public :: init_apply_ns
+   public :: n_sector
+   public :: s_sector
+   public :: sz_sector
+
 contains
 
    subroutine init_apply_NS(AIM)

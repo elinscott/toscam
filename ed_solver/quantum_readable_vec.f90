@@ -25,6 +25,7 @@ MODULE readable_vec_class
    END INTERFACE
 
    public :: cket_from_state
+   public :: new_readable_veclist_from_file
    public :: readable_vec_type
 
 contains

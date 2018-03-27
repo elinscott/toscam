@@ -42,7 +42,8 @@ real(8)                :: mmu_
      allocate(umn(Nc,Nc),ujmn(Nc,Nc),Ur(Nc,Nc,Nc,Nc))
      allocate(mout(Nc),nout(2*Nc))
 
-     umn=0.; ujmn=0.
+     umn=0.
+ ujmn=0.
 
      if(.not.flag_slater_int)then
        write(*,*) 'HUBBARD I SOLVER IMPLEMENTED FOR SLATER INTERACTION'
@@ -75,7 +76,8 @@ real(8)                :: mmu_
 
      matsubara(:)=(/( imi*pi/beta_ED*dble(2*i-1),i=1,nw_m)/)
 
-     if(allocated(frequ__)) deallocate(frequ__); allocate(frequ__(nw_r))
+     if(allocated(frequ__)) deallocate(frequ__)
+ allocate(frequ__(nw_r))
      frequ__ = bath%hybridret%freq%vec
 
      write(*,*) ' FMOS WITH [x] REAL  FREQUENCIES : ', nw_r
@@ -89,7 +91,9 @@ real(8)                :: mmu_
 
      mu_range=0.00001d0
      nmu_adapt=1
-     target=0.0;target1=0.;target2=0.
+     target=0.0
+target1=0.
+target2=0.
      inquire(file='ed.hub1.target',exist=check)
      if(check)then
        open(unit=10015,file='ed.hub1.target')

@@ -41,6 +41,7 @@ MODULE correl_class
    public :: correl_type
    public :: delete_correl
    public :: diff_correl
+   public :: dump_chi0
    public :: glimpse_correl
    public :: new_correl
    public :: pad_correl

@@ -34,7 +34,11 @@ MODULE green_class
       MODULE PROCEDURE new_green_ifreq
    END INTERFACE
 
+   public :: copy_green
    public :: green_type
+   public :: new_green
+   public :: pad_green
+   public :: write_green
 
 contains
 
