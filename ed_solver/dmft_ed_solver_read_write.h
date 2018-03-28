@@ -90,7 +90,8 @@
       use lockmod,               only: MAXT
       use mpirout,               only: mpibarrier
       use namelistmod,           only: look_for_command_line_argument, &
-           look_for_namelist_in_file, namelist_init, namelist_set
+           look_for_namelist_in_file, namelist_init, namelist_set, &
+           putel_in_namelist
       use stringmanip,           only: tostring
 
       implicit none

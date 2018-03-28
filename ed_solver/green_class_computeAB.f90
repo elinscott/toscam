@@ -13,14 +13,18 @@ contains
    SUBROUTINE compute_greenAB(greenAB, greenBA, greenAA, greenBB, AIM, beta, &
         GS, Asector, Bsector, applyA, applyB, COMPUTE_DYN)
 
-      use aim_class,           only: aim_type
-      use eigen_class,         only: eigen_type
-      use eigen_sector_class,  only: eigensector_type, eigensectorlist_type, gsenergy, partition
-      use genvar,              only: messages3, rank, size2
-      use globalvar_ed_solver, only: FLAG_MPI_GREENS, USE_TRANSPOSE_TRICK_MPI
-      use green_class,         only: green_type
-      use mask_class,          only: mask_type
-      use sector_class,        only: sector_type
+      use aim_class,                     only: aim_type
+      use eigen_class,                   only: eigen_type
+      use eigen_sector_class,            only: eigensector_type, &
+           eigensectorlist_type, gsenergy, partition
+      use genvar,                        only: messages3, rank, size2
+      use globalvar_ed_solver,           only: FLAG_MPI_GREENS, &
+           USE_TRANSPOSE_TRICK_MPI
+      use green_class,                   only: green_type
+      use mask_class,                    only: mask_type
+      use mpirout,                       only: mpisum
+      use sector_class,                  only: sector_type
+      use green_class_compute_symmetric, only: reshuffle_vecAB
 
       implicit none
 

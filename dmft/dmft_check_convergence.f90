@@ -9,7 +9,7 @@ program dmft_check_convergence
   !use dmftmod
   use genvar
   use init_and_close_my_sim
-  use fortran_cuda
+  ! use fortran_cuda
   use matrix
   use StringManip
 !  use DLPLOT

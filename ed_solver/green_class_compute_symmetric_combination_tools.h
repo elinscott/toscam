@@ -1,8 +1,9 @@
    subroutine dump_output_test(greenAB, greenBA, BA)
 
-      use common_def,  only: find_rank
-      use green_class, only: green_type
-      use mask_class,  only: mask_type
+      use common_def,   only: find_rank
+      use correl_class, only: transform_correl
+      use green_class,  only: green_type
+      use mask_class,   only: mask_type, new_mask
 
       TYPE(green_type),    INTENT(INOUT) :: greenAB
       TYPE(green_type),    INTENT(INOUT) :: greenBA

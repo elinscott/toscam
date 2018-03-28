@@ -15,8 +15,8 @@ implicit none
 
  testing=.false.
  fast_invmat=.true.
- use_cuda_routines=.false.
- use_cula_routines=.false.
+ ! use_cuda_routines=.false.
+ ! use_cula_routines=.false.
  force_invmat_single_prec=.false.
  use_openmp_invmat=.false.
  diag_use_LU_instead_of_pivot=.false.

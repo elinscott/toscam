@@ -534,10 +534,11 @@ contains
  integer       :: nnn,piv(:),INFO
  real(4)       :: mat(:,:)
     nnn=size(mat,1)
-    if(use_cula_routines)then
-     call cula__getrf(nnn,mat,piv)
-     return
-    endif
+    ! ebl: Removing GPU functionality
+    ! if(use_cula_routines)then
+    !  call cula__getrf(nnn,mat,piv)
+    !  return
+    ! endif
     CALL SGETRF(nnn,nnn,mat,nnn,piv,INFO)
     IF(info>0)THEN
       CALL dump_message(TEXT="ERROR IN 'invert[GETRF]': MATRIX IS SINGULAR : ")
@@ -552,10 +553,11 @@ contains
  integer       :: nnn,piv(:),INFO
  complex(4)    :: mat(:,:)
     nnn=size(mat,1)
-    if(use_cula_routines)then
-      call cula__getrf(nnn,mat,piv)
-      return
-    endif
+    ! ebl: Removing GPU functionality
+    ! if(use_cula_routines)then
+    !   call cula__getrf(nnn,mat,piv)
+    !   return
+    ! endif
     CALL CGETRF(nnn,nnn,mat,nnn,piv,INFO)
     IF(info>0)THEN
       CALL dump_message(TEXT="ERROR IN 'invert[GETRF]': MATRIX IS SINGULAR : ")
@@ -570,10 +572,11 @@ contains
  integer       :: nnn,piv(:),INFO
  complex(8)    :: mat(:,:)
     nnn=size(mat,1)
-    if(use_cula_routines)then
-      call cula__getrf(nnn,mat,piv)
-      return
-    endif
+    ! ebl: Removing GPU functionality
+    ! if(use_cula_routines)then
+    !   call cula__getrf(nnn,mat,piv)
+    !   return
+    ! endif
     CALL ZGETRF(nnn,nnn,mat,nnn,piv,INFO)
     IF(info>0)THEN
       CALL dump_message(TEXT="ERROR IN 'invert[GETRF]': MATRIX IS SINGULAR : ")
@@ -589,10 +592,11 @@ contains
  integer    :: nnn,piv(:),INFO
  real(8)    :: mat(:,:)
     nnn=size(mat,1)
-    if(use_cula_routines)then
-     call cula__getrf(nnn,mat,piv)
-     return
-    endif
+    ! ebl: Removing GPU functionality
+    ! if(use_cula_routines)then
+    !  call cula__getrf(nnn,mat,piv)
+    !  return
+    ! endif
     CALL DGETRF(nnn,nnn,mat,nnn,piv,INFO) 
     IF(info>0)THEN
       CALL dump_message(TEXT="ERROR IN 'invert[GETRF]': MATRIX IS SINGULAR : ")
@@ -608,10 +612,11 @@ contains
  integer    :: nnn,piv(:),INFO
  real(4)    :: mat(:,:),WORK(size(mat,1))
     nnn=size(mat,1)
-    if(use_cula_routines)then
-     call cula__getri(nnn,mat,piv)
-     return
-    endif
+    ! ebl: Removing GPU functionality
+    ! if(use_cula_routines)then
+    !  call cula__getri(nnn,mat,piv)
+    !  return
+    ! endif
     call SGETRI(nnn,mat,nnn,piv,WORK,nnn,INFO)
     IF(info>0)THEN
       CALL dump_message(TEXT="ERROR IN 'invert[GETRI]': MATRIX IS SINGULAR : ")
@@ -626,10 +631,11 @@ contains
  integer    :: nnn,piv(:),INFO
  real(8)    :: mat(:,:),WORK(size(mat,1))
     nnn=size(mat,1)
-    if(use_cula_routines)then
-     call cula__getri(nnn,mat,piv)
-     return
-    endif
+    ! ebl: Removing GPU functionality
+    ! if(use_cula_routines)then
+    !  call cula__getri(nnn,mat,piv)
+    !  return
+    ! endif
     call DGETRI(nnn,mat,nnn,piv,WORK,nnn,INFO)
     IF(info>0)THEN
       CALL dump_message(TEXT="ERROR IN 'invert[GETRI]': MATRIX IS SINGULAR : ")
@@ -645,10 +651,11 @@ contains
  integer    :: nnn,piv(:),INFO
  complex(4) :: mat(:,:),WORK(size(mat,1))
     nnn=size(mat,1)
-    if(use_cula_routines)then
-     call cula__getri(nnn,mat,piv)
-     return
-    endif
+    ! ebl: Removing GPU functionality
+    ! if(use_cula_routines)then
+    !  call cula__getri(nnn,mat,piv)
+    !  return
+    ! endif
     call CGETRI(nnn,mat,nnn,piv,WORK,nnn,INFO)
     IF(info>0)THEN
       CALL dump_message(TEXT="ERROR IN 'invert[GETRI]': MATRIX IS SINGULAR : ")
@@ -663,10 +670,11 @@ contains
  integer    :: nnn,piv(:),INFO
  complex(8) :: mat(:,:),WORK(size(mat,1))
     nnn=size(mat,1)
-    if(use_cula_routines)then
-     call cula__getri(nnn,mat,piv)
-     return
-    endif
+    ! ebl: Removing GPU functionality
+    ! if(use_cula_routines)then
+    !  call cula__getri(nnn,mat,piv)
+    !  return
+    ! endif
     call ZGETRI(nnn,mat,nnn,piv,WORK,nnn,INFO)
     IF(info>0)THEN
       CALL dump_message(TEXT="ERROR IN 'invert[GETRI]': MATRIX IS SINGULAR : ")
@@ -2134,10 +2142,11 @@ real(8) :: AA(:,:),BB(:,:),MATMULr(size(AA,1),size(BB,2)),dd
 integer :: i,j,k,kk,ii
  i=size(AA,1); j=size(AA,2); k=size(BB,2)
  ii=max(max(i,j),k)
- if(ii>n_cuda_rout.and.use_cuda_routines)then
-  CALL matmulcuda_r(AA,BB,MATMULr,i,j,k)
-  return
- endif
+ ! ebl: Removing GPU functionality
+ ! if(ii>n_cuda_rout.and.use_cuda_routines)then
+ !  CALL matmulcuda_r(AA,BB,MATMULr,i,j,k)
+ !  return
+ ! endif
  MATMULr=MATMUL(AA,BB)
 end function
 
@@ -2149,10 +2158,11 @@ complex(8) :: AA(:,:),BB(:,:),MATMULc(size(AA,1),size(BB,2)),dd
 integer    :: i,j,k,kk,ii
  i=size(AA,1); j=size(AA,2); k=size(BB,2)
  ii=max(max(i,j),k)
- if(ii>n_cuda_rout.and.use_cuda_routines)then
-  CALL matmulcuda_c(AA,BB,MATMULc,i,j,k)
-  return
- endif
+ ! ebl: Removing GPU functionality
+ ! if(ii>n_cuda_rout.and.use_cuda_routines)then
+ !  CALL matmulcuda_c(AA,BB,MATMULc,i,j,k)
+ !  return
+ ! endif
  MATMULc=MATMUL(AA,BB)
 end function
 
@@ -4794,12 +4804,13 @@ real(8)     :: vaps(lsize)
 
    if(.not.same_array(mat,eigenvec)) eigenvec=mat
 
-   if(lsize>n_cuda_rout.and.lsize<10000.and.use_cula_routines)then
-     call cula_eigenvector_square_c(lsize,eigenvec,vaps,mat)
-     call qsort_array(vaps,order)
-     call qsort_adj_array(eigenvec,order)
-     return
-   endif
+   ! ebl: Removing GPU functionality
+   ! if(lsize>n_cuda_rout.and.lsize<10000.and.use_cula_routines)then
+   !   call cula_eigenvector_square_c(lsize,eigenvec,vaps,mat)
+   !   call qsort_array(vaps,order)
+   !   call qsort_adj_array(eigenvec,order)
+   !   return
+   ! endif
 
    call ZHEEV('V','U',lsize,eigenvec,lsize,vaps,WORK,3*lsize,RWORK,INFO)
 
@@ -4972,12 +4983,13 @@ real(4)                   :: vaps(lsize)
 
    if(.not.same_array(mat,eigenvec))eigenvec=mat
 
-   if(lsize>n_cuda_rout.and.lsize<10000.and.use_cula_routines)then
-     call cula_eigenvector_square_cs(lsize,eigenvec,vaps,mat)
-     call qsort_array(vaps,order)
-     call qsort_adj_array(eigenvec,order)
-     return
-   endif
+   ! ebl: Removing GPU functionality
+   ! if(lsize>n_cuda_rout.and.lsize<10000.and.use_cula_routines)then
+   !   call cula_eigenvector_square_cs(lsize,eigenvec,vaps,mat)
+   !   call qsort_array(vaps,order)
+   !   call qsort_adj_array(eigenvec,order)
+   !   return
+   ! endif
 
    call CHEEV('V','U',lsize,eigenvec,lsize,W,WORK,3*lsize,RWORK,INFO)
 
@@ -5032,13 +5044,14 @@ real(8)                   :: vaps(lsize),temp(1,lsize)
     eigenvec=mat
    endif
 
-   if(lsize>n_cuda_rout.and.lsize<10000.and.use_cula_routines)then
-     write(*,*) 'eigenvector_matrix, calling cula'
-     call cula_eigenvector_square_d(lsize,eigenvec,vaps,mat)
-     call qsort_array(vaps,order)
-     call qsort_adj_array(eigenvec,order)
-     return
-   endif
+   ! ebl: Removing GPU functionality
+   ! if(lsize>n_cuda_rout.and.lsize<10000.and.use_cula_routines)then
+   !   write(*,*) 'eigenvector_matrix, calling cula'
+   !   call cula_eigenvector_square_d(lsize,eigenvec,vaps,mat)
+   !   call qsort_array(vaps,order)
+   !   call qsort_adj_array(eigenvec,order)
+   !   return
+   ! endif
 
    call DSYEV('V','U',lsize,eigenvec,lsize,vaps,WORK,3*lsize,INFO)
 
@@ -5105,12 +5118,13 @@ real(4)                   :: vaps(lsize)
 
    if(.not.same_array(mat,eigenvec)) eigenvec=mat
 
-   if(lsize>n_cuda_rout.and.lsize<10000.and.use_cula_routines)then
-     call cula_eigenvector_square_r(lsize,eigenvec,vaps,mat)
-     call qsort_array(vaps,order)
-     call qsort_adj_array(eigenvec,order)
-     return 
-   endif
+   ! ebl: Removing GPU functionality
+   ! if(lsize>n_cuda_rout.and.lsize<10000.and.use_cula_routines)then
+   !   call cula_eigenvector_square_r(lsize,eigenvec,vaps,mat)
+   !   call qsort_array(vaps,order)
+   !   call qsort_adj_array(eigenvec,order)
+   !   return 
+   ! endif
 
    call SSYEV('V','U',lsize,eigenvec,lsize,vaps,WORK,3*lsize,INFO)
 
@@ -5980,16 +5994,17 @@ end subroutine
           call invert_openmp(mat(i1:i2,i1:i2)) 
           return
         endif
-        if(use_cuda_routines.and.nn>n_cuda_rout)then
-          call diago_cuda_it_c(nn,mat(i1:i2,i1:i2))
-          return
-        else
+        ! ebl: Removing GPU functionality
+        ! if(use_cuda_routines.and.nn>n_cuda_rout)then
+        !   call diago_cuda_it_c(nn,mat(i1:i2,i1:i2))
+        !   return
+        ! else
          if(.not.flag_use_invmat_jordan)then
            call invmat_comp2(n,mat(i1:i2,i1:i2))
          else
            call invmat_jordan(n,mat(i1:i2,i1:i2))
          endif
-        endif
+        ! endif
        endif
 
     end subroutine
@@ -6730,10 +6745,11 @@ end subroutine
          call invert_openmp(mat)
          return
        endif
-       if(use_cuda_routines.and.n>n_cuda_rout)then
-         call diago_cuda_it_r(n,mat)
-         return
-       endif
+       ! ebl: Removing GPU functionality
+       ! if(use_cuda_routines.and.n>n_cuda_rout)then
+       !   call diago_cuda_it_r(n,mat)
+       !   return
+       ! endif
        if(flag_use_invmat_jordan_real)then
          call invmat_jordan(n,mat)
          return

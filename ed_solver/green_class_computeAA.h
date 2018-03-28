@@ -99,6 +99,14 @@
 
    subroutine clean_everything()
 
+      use common_def,          only: timer_fortran
+      use correl_class,        only: vec2correl
+      use eigen_class,         only: delete_eigen
+      use eigen_sector_class,  only: delete_eigensector
+      use mask_class,          only: delete_mask
+      use masked_matrix_class, only: vec2masked_matrix
+      use sector_class,        only: delete_sector
+
       implicit none
 
       integer :: i
@@ -137,11 +145,14 @@
 
    subroutine lanczos_part()
 
-      use common_def,     only: c2s, find_rank, i2c
-      use eigen_class,    only: rank_eigen_in_list
-      use genvar,         only: pm
-      use linalg,         only: k_to_ij
-      use rcvector_class, only: norm_rcvector
+      use common_def,                    only: c2s, find_rank, i2c, &
+           reset_timer, timer_fortran
+      use eigen_class,                   only: rank_eigen_in_list
+      use genvar,                        only: pm
+      use green_class_compute_symmetric, only: symmetric_combineAA
+      use green_class_compute_dynamic,   only: compute_dynamic
+      use linalg,                        only: k_to_ij
+      use rcvector_class,                only: norm_rcvector
 
       implicit none
 
@@ -249,7 +260,8 @@
 
    subroutine apply_creat()
 
-      use eigen_class,  only: rank_eigen_in_list
+      use common_def,   only: reset_timer, timer_fortran
+      use eigen_class,  only: delete_eigenlist, rank_eigen_in_list
       use genvar,       only: pm, rank
       use mpirout,      only: MPI_DOT_PRODUCT
       use sector_class, only: equal_sector
@@ -303,6 +315,7 @@
    subroutine init_iph()
 
       use common_def, only: dump_message
+      use H_class,    only: new_H
 
       implicit none
 
@@ -343,7 +356,8 @@
 
    subroutine init_sector()
 
-      use eigen_sector_class, only: not_commensurate_sector_
+      use eigen_sector_class, only: new_eigensector, &
+           not_commensurate_sector_
       use genvar,             only: pm
 
       implicit none
@@ -405,9 +419,10 @@
 
    subroutine init_data()
 
-      use common_def,          only: dump_message, find_rank
+      use common_def,          only: dump_message, find_rank, reset_timer
       use globalvar_ed_solver, only: force_para_state, para_state 
       use eigen_sector_class,  only: gsenergy, partition
+      use mask_class,          only: new_mask
 
       implicit none
 

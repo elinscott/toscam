@@ -23,8 +23,11 @@
       write(unit,*) '==============================='
    end subroutine
 
-   subroutine prepare_anomalous
+   subroutine prepare_anomalous()
    
+      use correl_class,        only: new_correl
+      use masked_matrix_class, only: new_masked_matrix
+
       implicit none
 
       integer :: ipm
@@ -122,6 +125,8 @@
 
    subroutine new_masks_()
 
+      use mask_class, only: new_mask
+
       implicit none
 
       DO ipm = 1, 2
@@ -139,6 +144,9 @@
    end subroutine
 
    subroutine cleanup
+
+      use correl_class, only: delete_correl
+      use mask_class,   only: delete_mask
 
       implicit none
 
@@ -160,6 +168,9 @@
 
    subroutine clean_it()
 
+      use correl_class, only: delete_correl
+      use mask_class,   only: delete_mask
+
       implicit none
 
       integer :: ipm, jpm
@@ -178,6 +189,8 @@
    end subroutine
 
    subroutine fill_the_blanks()
+
+      use correl_class, only: transform_correl
 
       implicit none
 
@@ -203,6 +216,8 @@
    end subroutine
 
    subroutine fill_the_blanks_()
+
+      use correl_class, only: transform_correl
 
       implicit none
 

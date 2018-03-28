@@ -81,6 +81,7 @@
    subroutine do_ba()
 
       use globalvar_ed_solver, only: dEmax0, FLAG_FULL_ED_GREEN
+      use H_class,             only: delete_H
       use linalg,              only: dexpc
 
       implicit none
@@ -107,6 +108,7 @@
    subroutine do_ab()
 
       use globalvar_ed_solver, only: dEmax0, FLAG_FULL_ED_GREEN
+      use H_class,             only: delete_H
       use linalg,              only: dexpc
 
       implicit none
@@ -130,6 +132,7 @@
    subroutine build_H_ba()
 
       use common_def, only: dump_message
+      use H_class,    only: new_H
 
       implicit none
 
@@ -157,6 +160,7 @@
    subroutine build_H_ab()
 
       use common_def, only: dump_message
+      use H_class,    only: new_H
 
       implicit none
 
@@ -184,6 +188,7 @@
    subroutine print_label()
 
       use genvar, only: log_unit
+      use matrix, only: write_array
 
       implicit none
 
@@ -210,8 +215,9 @@
 
    subroutine init_data()
 
-      use common_def, only: dump_message, find_rank
+      use common_def, only: dump_message, find_rank, reset_timer
       use genvar,     only: log_unit
+      use mask_class, only: new_mask
 
       implicit none
 
@@ -312,7 +318,8 @@
 
    subroutine init_sector()
 
-      use eigen_sector_class, only: not_commensurate_sector_
+      use eigen_sector_class, only: new_eigensector, &
+           not_commensurate_sector_
       use genvar,             only: log_unit, pm
       use sector_class,       only: equal_sector
 
@@ -381,8 +388,14 @@
 
    subroutine clean_everything()
 
-      use common_def,          only: find_rank
+      use common_def,          only: find_rank, timer_fortran
+      use correl_class,        only: vec2correl
+      use eigen_class,         only: delete_eigen
+      use eigen_sector_class,  only: delete_eigensector
       use globalvar_ed_solver, only: donot_compute_holepart
+      use mask_class,          only: delete_mask
+      use masked_matrix_class, only: vec2masked_matrix
+      use sector_class,        only: delete_sector
 
       implicit none
 
@@ -462,10 +475,12 @@
 
    subroutine greenba_()
 
-      use common_def,                    only: c2s, find_rank, i2c
+      use common_def,                    only: c2s, find_rank, i2c, &
+           reset_timer, timer_fortran
       use genvar,                        only: log_unit
       use linalg,                        only: k_to_ij
       use green_class_compute_symmetric, only: symmetric_combineAB
+      use green_class_compute_dynamic,   only: compute_dynamic
       use rcvector_class,                only: norm_rcvector
 
       implicit none
@@ -541,8 +556,10 @@
 
    subroutine greenab_()
 
-      use common_def,                    only: c2s, find_rank, i2c
+      use common_def,                    only: c2s, find_rank, i2c, &
+           reset_timer, timer_fortran
       use genvar,                        only: log_unit, pm
+      use green_class_compute_dynamic,   only: compute_dynamic
       use green_class_compute_symmetric, only: symmetric_combineAB
       use linalg,                        only: k_to_ij
       use rcvector_class,                only: norm_rcvector
@@ -623,7 +640,8 @@
 
    subroutine apply_creatab()
 
-      use eigen_class,        only: rank_eigen_in_list
+      use common_def,         only: reset_timer, timer_fortran
+      use eigen_class,        only: delete_eigenlist, rank_eigen_in_list
       use genvar,             only: log_unit, logfile, pm
       use mpirout,            only: MPI_DOT_PRODUCT
       use sector_class,       only: equal_sector
@@ -696,7 +714,8 @@
 
    subroutine apply_creatba()
 
-      use eigen_class,        only: rank_eigen_in_list
+      use common_def,         only: reset_timer, timer_fortran
+      use eigen_class,        only: delete_eigenlist, rank_eigen_in_list
       use genvar,             only: log_unit, logfile, pm
       use mpirout,            only: MPI_DOT_PRODUCT
       use sector_class,       only: equal_sector

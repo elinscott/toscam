@@ -13,15 +13,19 @@ contains
    SUBROUTINE compute_greenAA(green, AIM, beta, GS, Asector, applyA, &
         COMPUTE_DYN, keldysh_level, GS_out)
 
-      use aim_class,           only: aim_type
-      use eigen_class,         only: eigen_type
-      use eigen_sector_class,  only: eigensector_type, eigensectorlist_type
-      use genvar,              only: log_unit, messages3, rank, size2
-      use globalvar_ed_solver, only: donot_compute_holepart, FLAG_MPI_GREENS, &
-                                     USE_TRANSPOSE_TRICK_MPI
-      use green_class,         only: green_type
-      use mask_class,          only: mask_type
-      use sector_class,        only: sector_type 
+      use aim_class,                     only: aim_type
+      use eigen_class,                   only: eigen_type
+      use eigen_sector_class,            only: eigensector_type, &
+           eigensectorlist_type
+      use genvar,                        only: log_unit, messages3, rank, size2
+      use globalvar_ed_solver,           only: donot_compute_holepart, &
+           FLAG_MPI_GREENS, USE_TRANSPOSE_TRICK_MPI
+      use green_class,                   only: green_type
+      use H_class,                       only: delete_H
+      use mask_class,                    only: mask_type
+      use mpirout,                       only: mpisum
+      use sector_class,                  only: sector_type 
+      use green_class_compute_symmetric, only: reshuffle_vecAA
 
       implicit none
 

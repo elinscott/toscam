@@ -171,11 +171,12 @@ contains
    SUBROUTINE four_leg_vertex_matrices(AIM, GS, Asector, applyA, cdagger)
 
       use aim_class,          only: aim_type
-      use eigen_class,        only: eigen_type
-      use eigen_sector_class, only: eigensector_type, eigensectorlist_type
+      use eigen_class,        only: eigen_type, delete_eigenlist
+      use eigen_sector_class, only: delete_eigensector, eigensector_type, &
+           eigensectorlist_type, new_eigensector
       use genvar,             only: pm
       use linalg,             only: scalprod
-      use sector_class,       only: sector_type
+      use sector_class,       only: delete_sector, sector_type
 
       implicit none
 

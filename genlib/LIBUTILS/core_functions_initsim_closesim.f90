@@ -115,8 +115,9 @@ contains
    call initialize_MPI
    write(*,*) 'INIT OPENMP : '
    call init_openmp
-   write(*,*) 'INIT GPU : '
-   if(use_cuda_routines) call init_gpu_device
+   ! ebl: Removing GPU functionality
+   ! write(*,*) 'INIT GPU : '
+   ! if(use_cuda_routines) call init_gpu_device
    write(*,*) 'INIT SCREEN/PS FILE : '
    messages                = .true.
    messages2               = .true.

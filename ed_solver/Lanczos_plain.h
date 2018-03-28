@@ -1,6 +1,7 @@
    subroutine lanc_simp()
 
       use globalvar_ed_solver, only: cutoff_min_lanczos_vec, USE_TRANSPOSE_TRICK_MPI
+      use H_class,             only: Hmult__
 
       implicit none
  
@@ -52,6 +53,7 @@
    subroutine lanc_opt()
 
       use globalvar_ed_solver, only: cutoff_min_lanczos_vec, USE_TRANSPOSE_TRICK_MPI
+      use H_class,             only: Hmult__
 
       implicit none
 

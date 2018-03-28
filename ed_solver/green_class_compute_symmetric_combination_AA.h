@@ -2,8 +2,8 @@
 
       use green_class,  only: green_type
       use common_def,   only: find_rank
-      use correl_class, only: correl_type
-      use mask_class,   only: mask_type
+      use correl_class, only: correl_type, delete_correl, transform_correl
+      use mask_class,   only: delete_mask, mask_type, new_mask
 
       TYPE(green_type)      :: green
       LOGICAL               :: reshuffle_dyn

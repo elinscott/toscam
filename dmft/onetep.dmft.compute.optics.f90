@@ -174,7 +174,7 @@ end module
 program optical_cond
 
  use local_vars
- use fortran_cuda  
+ ! use fortran_cuda  
  
 implicit none
 

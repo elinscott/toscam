@@ -6,6 +6,8 @@ MODULE green_class_compute_dynamic
 
    private
 
+   public :: compute_dynamic
+
 contains
 
    subroutine compute_dynamic(iph, dyn, freq, Opm, stat, title, normvec, &

@@ -46,6 +46,8 @@ MODULE correl_class
    public :: new_correl
    public :: pad_correl
    public :: slice_correl
+   public :: transform_correl
+   public :: vec2correl
    public :: write_correl
 
 contains

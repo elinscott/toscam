@@ -3,7 +3,7 @@ program band
   !use dmftmod
   use genvar
   use init_and_close_my_sim
-  use fortran_cuda
+  ! use fortran_cuda
   use linalg
 !  use DLPLOT
 !  use plotlib

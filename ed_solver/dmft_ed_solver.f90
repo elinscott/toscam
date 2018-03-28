@@ -31,6 +31,8 @@ module dmft_solver_ed
       INTEGER, pointer  :: narr(:)
    ENDTYPE h1occup
 
+   public :: stand_alone_ed
+
 contains
 
 #include "dmft_ed_solver_read_write.h"
@@ -1213,7 +1215,7 @@ contains
       use strings,             only: remove
       use bath_class,          only: read_bath
       use matrix,              only: write_array
-      use correlations,        only: SNAMBU, SNAMBUret
+      use correlations,        only: init_correlations, SNAMBU, SNAMBUret
       use solver,              only: init_solver
 
       implicit none
