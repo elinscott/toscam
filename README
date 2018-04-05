@@ -23,10 +23,22 @@
 -------------------------------------------------------------
  Directory Structure
 
- dmft/      Scripts for running TOSCAM as well as pre- and 
+ bin/       contains all compiled TOSCAM executables for 
+            running TOSCAM as well as pre- and 
             post-processing
+
+ config/    configuration files for compilation on different
+            architectures
+
+ doc/       Documentation
+
  ed_solver/ Source code for the exact diagonalization solver
- genlib/    Libraries
+
+ lib/       Libraries
+
+ src/       Source code for TOSCAM executables
+
+ utils/     Basic bash script utilities
 
 -------------------------------------------------------------
 

@@ -1,19 +1,56 @@
 Instructions for installing TOSCAM
 
-The following assumes that your working directory is the top level of the TOSCAM tree.
+You will need to supply:
+ - BLAS and LAPACK libraries
+ - a fortran compiler (set up for MPI if compiling a parallel version)
+ - C and C++ compilers
 
-To install TOSCAM, complete the following steps. Where relevant, ensure that the makefiles point to
-the correct HOME directory
+You will need to decide if you would like to use the hybrid OpenMP/MPI
+parallelism, in which case OpenMP will need to be enabled for your compiler
 
-   1) Compile the libraries in genlib. This involves...
-      a) in genlib/LIB_DIERICK/ "make build"
-      b) in genlib/LIBSLATEC/static "make libslatec.a" and then "mv libslatec.a .."
-      c) in genlib/LIB_FIELD_SPLINE/src/ "make build" and then "mv libfield.a .."
-      d) in genlib/LIB_GPU_NUMERICS/ "make build"
-      e) in genlib/LIBUTILS/ "make build"
-   2) Compile any solvers (e.g. in ed_solver, run "make build")
-   3) Compile the dmft wrappers executables in dmft/ via "make prog", making sure the makefile is
-      directed towards the installed libraries and solvers
+1) If there is a configuration file already present in the config folder which 
+   is set up for your HPC system, then you will want to use it, otherwise you 
+   may want to create one by making a copy of an existing one for a system 
+   which is similar.
+
+   The build system will by default use the flags defined in 
+   config/conf.default. However you may use any file by defining the variable 
+   $(ARCH) on the make command line: make onetep ARCH=xxx
+
+2) The build system is designed to work with GNU make and may not work with 
+   other versions. Compiled objects are stored in obj directories and the 
+   final binaries in bin.
+
+3) Edit (or create) the relevant file in the config directory. This might look 
+   something like:
+
+      # TOSCAM configuration file
+
+      F90       = mpifort -qopenmp
+      FFLAGS    = -O1
+      MKL       = -mkl
+      CCOMPL    = mpicc
+      CFLAGS    = -O1
+      C++       = mpicpc
+      CXXFLAGS  = -O1
+      RANLIB    = ranlib
+
+  a) F90 is simply the Fortran compiler to be used. To enable OpenMP, you
+     will need the appropriate directive for your compiler, eg: 
+        -qopenmp for ifort
+        -fopenmp for gfortran
+  b) FFLAGS are the default compiler flags, including preprocessor directives
+        # TO DISCUSS WITH CEDRIC
+  c) MKL must point to the BLAS and LACPACK libraries
+  d) CCOMPL is the C compiler to use
+  e) CFLAGS are the C flags to use
+  f) C++ is the C++ compiler to use
+  g) CXXFLAGS are the C++ flags to use
+  h) RANLIB is the local installation of ranlib
+
+4) Running make with no target in the ONETEP directory lists the available 
+   options. The normal target is 'toscam' but there are also options for 
+   step-by-step compilation of the libraries and solver.
 
 TOSCAM Developers
-Last updated: 22 November 2017
+Last updated: 5 April 2018

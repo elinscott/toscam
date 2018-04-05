@@ -1,4 +1,0 @@
-# In order to ensure an empty MODFILES directory is commited, ignore everything in this directory...
-*
-# ...except this file
-!.gitignore

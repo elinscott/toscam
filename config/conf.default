@@ -1,0 +1,9 @@
+# Default config file
+F90       = mpif90
+FFLAGS    = 
+MKL       = -lmkl
+CCOMPL    = mpicc
+CFLAGS    =
+C++       = mpicpc
+CXXFLAGS  =
+RANLIB    = ranlib

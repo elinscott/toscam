@@ -1,0 +1,9 @@
+# Config file for TCM PC
+F90       = mpifort
+FFLAGS    = -O1 -qopenmp
+MKL       = -mkl
+CCOMPL    = mpicc
+CFLAGS    = -O1
+C++       = mpicpc
+CXXFLAGS  = -O1
+RANLIB    = ranlib
