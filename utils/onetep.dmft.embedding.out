@@ -1,0 +1,220 @@
+#!/bin/bash
+
+EXPECTED_ARGS=2
+
+if [ $# -ne $EXPECTED_ARGS ]
+then
+  echo "Usage: `basename $0` ERROR embeding : expecting 1 argument"
+  echo "Usage : argument 1, number of planes for each individual structures"
+  echo "        argument 2, 0 if no sandwitch, 1 or 2 for sandwitch"
+  exit
+fi
+
+if [ $1 -eq 1 ]
+then
+ echo " ERROR : ARGUMENT SHOULD BE >1 (not gonna work out otherwise) "
+ exit
+fi
+
+if [ $2 -eq 0 ]
+then
+ echo " NO SANDWITCH STRUCTURE "
+fi
+if [ $2 -eq 1 ]
+then
+ echo "SANDWITCH STRUCTURE SCHEME 1"
+fi
+if [ $2 -eq 2 ]
+then
+ echo "SANDWITCH STRUCTURE SCHEME 2"
+fi
+
+dir1=_structmixt
+dir2=_struct1
+dir3=_struct2
+dir4=_structmixt_open
+dir5=_structstitch
+dir6=_potentials
+
+rm -r $dir1 $dir2 $dir3 $dir4 $dir5 $dir6
+
+mkdir $dir1
+cp var.txt *.input* $dir1
+cp -r $dir1 $dir2
+cp -r $dir1 $dir3
+cp -r $dir1 $dir4
+cp -r $dir1 $dir5
+
+k=`pwd`
+
+mkdir ${dir6}
+mkdir ${dir6}/L1
+mkdir ${dir6}/L2
+mkdir ${dir6}/R1
+mkdir ${dir6}/R2
+
+cp -r mask_freq* gpu_profile gpu_max input_onetep_dmft.txt pseudo machines_onetep machines_dmft $dir1
+cp -r mask_freq* gpu_profile gpu_max input_onetep_dmft.txt pseudo machines_onetep machines_dmft $dir2 
+cp -r mask_freq* gpu_profile gpu_max input_onetep_dmft.txt pseudo machines_onetep machines_dmft $dir3
+cp -r mask_freq* gpu_profile gpu_max input_onetep_dmft.txt pseudo machines_onetep machines_dmft $dir4
+
+cd $dir1
+ echo "sandwitch="$2 >> var.txt
+ onetep.dmft.build.heterostructure.out > output_structure
+ mv stitch_coord stitch_device
+ echo "second_order_correction_to_eimp=.false."  >> input_onetep_dmft.txt
+ echo "use_eimp_from_onetep=.false."             >> input_onetep_dmft.txt
+ echo "use_simp_from_onetep=.false."             >> input_onetep_dmft.txt
+cd $k
+
+cd $dir4
+ echo "open_boundary=5.0" >>  var.txt
+ echo "sandwitch="$2 >> var.txt
+ onetep.dmft.build.heterostructure.out > output_structure
+ echo "second_order_correction_to_eimp=.false."  >> input_onetep_dmft.txt
+ echo "use_eimp_from_onetep=.false."             >> input_onetep_dmft.txt
+ echo "use_simp_from_onetep=.false."             >> input_onetep_dmft.txt
+cd $k
+
+cd $dir2
+echo "periodic_plane=.true." >> var.txt
+echo "nplane1=0" >>  var.txt
+echo "nplane2="$1 >> var.txt
+onetep.dmft.build.heterostructure.out > output_structure
+cd $k
+
+cd $dir3
+echo "periodic_plane=.true." >> var.txt
+echo "nplane2=0" >>  var.txt
+echo "nplane1="$1 >> var.txt
+onetep.dmft.build.heterostructure.out > output_structure
+cd $k
+
+if [ $2 -eq 0 ]
+then
+ echo "SANDWITCH STRUCTURE SCHEME 0"
+ echo " STITCH STRUCTURE "
+ cp $dir2/stitch_coord               $dir5/stitch_right
+ cp $dir2/stitch_coord_shifted_left  $dir5/stitch_right_shifted
+ cp $dir3/stitch_coord               $dir5/stitch_left
+ cp $dir3/stitch_coord_shifted_right $dir5/stitch_left_shifted
+ cp $dir1/stitch_device              $dir5/
+fi
+if [ $2 -eq 2 ]
+then
+ echo "SANDWITCH STRUCTURE SCHEME 1"
+ echo " STITCH STRUCTURE "
+ cp $dir2/stitch_coord               $dir5/stitch_right
+ cp $dir2/stitch_coord_shifted_left  $dir5/stitch_right_shifted
+ cp $dir2/stitch_coord               $dir5/stitch_left
+ cp $dir2/stitch_coord_shifted_right $dir5/stitch_left_shifted
+ cp $dir1/stitch_device              $dir5/
+fi
+if [ $2 -eq 1 ]
+then
+ echo "SANDWITCH STRUCTURE SCHEME 2"
+ echo " STITCH STRUCTURE "
+ cp $dir3/stitch_coord               $dir5/stitch_right
+ cp $dir3/stitch_coord_shifted_left  $dir5/stitch_right_shifted
+ cp $dir3/stitch_coord               $dir5/stitch_left
+ cp $dir3/stitch_coord_shifted_right $dir5/stitch_left_shifted
+ cp $dir1/stitch_device              $dir5/
+fi
+
+cd $dir5
+
+onetep.dmft.stitch.out > output_stitch
+
+cp connections_D_L_device_sites ../${dir6}/L1
+cp connections_D_L_device_sites ../${dir6}/L2
+cp connections_D_R_device_sites ../${dir6}/R1
+cp connections_D_R_device_sites ../${dir6}/R2
+cp connections_D_*_lead_sites   ../${dir1} 
+
+if [ $2 -eq 0 ]
+then
+mv connections_D_L*             ../${dir3}
+mv connections_D_R*             ../${dir2}
+fi
+if [ $2 -eq 1 ]
+then
+mv connections_D_L*             ../${dir3}
+mv connections_D_R*             ../${dir3}
+rm -r ../${dir2}
+echo "sandwitch_embedding=.true." >> ../${dir3}/input_onetep_dmft.txt
+fi
+if [ $2 -eq 2 ]
+then
+mv connections_D_L*             ../${dir2}
+mv connections_D_R*             ../${dir2}
+rm -r ../${dir3}
+echo "sandwitch_embedding=.true." >> ../${dir2}/input_onetep_dmft.txt
+fi
+
+cd $k
+
+cd ${dir6}/L1
+mv connections_D_*_device_sites connections_D_device_sites
+cd $k 
+cd ${dir6}/L2
+mv connections_D_*_device_sites connections_D_device_sites
+cd $k
+cd ${dir6}/R1
+mv connections_D_*_device_sites connections_D_device_sites
+cd $k
+cd ${dir6}/R2
+mv connections_D_*_device_sites connections_D_device_sites
+
+cd $k
+
+
+echo "================================================================================================================="
+echo " PROCEDURE : "
+echo " "
+echo "             1) run onetep.dmft.sc in dir (RIGHT) : " $dir2
+echo " "
+echo "             2) run onetep.dmft.sc in dir (LEFT)  : " $dir3
+echo " "
+echo "             3) for each case: L,R and spin up/down :                                 "
+echo "                 3.1-copy to _L1 _L2 _R1 and _R2 the related files and rename them :  "
+echo "                             _H0_ , _H1_ , embedding_potentials                       "
+echo " "
+echo "                 3.2-generate sigma_embedding with the script -> onetep.dmft.embedding.gen.sigma.out "
+echo "                   generate sigma_embedding_real with the script and embedding_potentials_real "
+echo "                   the latter can be obtained by running:                 "
+echo " "
+echo "                   /onetep.dmft compute_dos=.true. just_onetep=.false. nproc_onetep=16/  "
+echo " "
+echo "                     at step  (1-2) above after (1-2) are finished        "
+echo " "
+echo "                 3.3-rename it : sigma_embedding(L,R)(1,2) and sigma_embedding_real(L,R)(1,2)" 
+if [ $2 -eq 1 ]
+then
+echo "               Since you are doing a sandwitch calculation, you only need to run in : " ${dir3}
+echo "               both H0(L,R),H1(L,R),and embedding_potential(L,R) will be generated there  "
+echo "               to get matsu pot run : onetep.dmft.embedding.obtain.matsu.potentials.out   "
+echo "               to get real  pot run : onetep.dmft.embedding.obtain.real.potentials.out 16 "
+echo "               this will prepare all the files in _structmixt                             "
+fi
+if [ $2 -eq 2 ]
+then
+echo "               Since you are doing a sandwitch calculation, you only need to run in : " ${dir2}
+echo "               both H0(L,R),H1(L,R),and embedding_potential(L,R) will be generated there  "
+echo "               to get matsu pot run : onetep.dmft.embedding.obtain.matsu.potentials.out   "
+echo "               to get real  pot run : onetep.dmft.embedding.obtain.real.potentials.out 16 "
+echo "               this will prepare all the files in _structmixt                             "
+fi
+echo " "
+echo "             4) copy sigma_embedding(L,R)(1,2) and _real from _potentials/{L1,L2,R1,R2} to : " $dir1 
+echo "                run a full onetep calculation "
+echo " "
+echo "                Warning : make sure that sc_start_from_previous_run is turned off  "
+echo " "
+echo "                DOUBLE CHECK THAT IN MASK_U AND MASK_J THE ORDER OF ORBITALS IS OK  "
+echo "                ESPECIALLY IF TWO DIFFERENT ORBITALS                                "
+echo "================================================================================================================="
+echo " "
+
+
+
+

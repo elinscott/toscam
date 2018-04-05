@@ -1,0 +1,20 @@
+#!/bin/bash
+
+echo "#monitoring GPU temperature" > gpu_temp_dmft_run
+echo "#units : Iteration/Celsius" >> gpu_temp_dmft_run
+echo "#date  : " `date` >> gpu_temp_dmft_run
+echo "#monitoring GPU temperature" > gpu_temp_dmft_run2
+echo "#units : Hours/Minutes/Seconds/Celsius" >> gpu_temp_dmft_run2
+echo "#date  : " `date` >> gpu_temp_dmft_run2
+
+for i in `seq 1 30000`
+do
+# k=`temp_gpu`
+  k=`temp_multi_gpu`
+ l=`date +%H" "%M" "%S" "`
+ echo $i $k >> gpu_temp_dmft_run
+ echo $l $k >> gpu_temp_dmft_run2
+ sleep 60
+done 
+
+

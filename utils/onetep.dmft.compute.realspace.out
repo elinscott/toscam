@@ -1,0 +1,59 @@
+#!/bin/bash
+
+EXPECTED_ARGS=1
+
+if [ $# -ne $EXPECTED_ARGS ]
+then
+  echo "Usage: `basename $0` ERROR expecting 1 argument, number of cpu"
+  exit
+fi
+
+rm scratchdir 2> /dev/null 
+
+echo "REQUESTING [X] MPI CPUS (input) : " $1
+
+echo "ONETEP MPI COMMAND : "  ${DMFT_ONETEP_MPI_EXEC}
+
+echo "switch off gpu "
+echo "0" >> ./gpu_max
+
+min=`cat input_onetep_dmft.txt |grep ed_frequ_min |tail -1`
+max=`cat input_onetep_dmft.txt |grep ed_frequ_max |tail -1`
+ nn=`cat input_onetep_dmft.txt |grep ed_real_frequ_last |tail -1`
+min=`echo ${min#*=}`
+max=`echo ${max#*=}`
+nn=`echo ${nn#*=}`
+
+CASE=`ls *.dat`
+CASE=`echo ${CASE%.*}`
+echo "CASE IS " ${CASE}
+
+
+echo "frequ min-max " ${min} ${max}
+echo "n frequ " ${nn}
+
+echo "############################################"
+echo "PLEASE ADD IN run.dat the following lines : "
+echo "dmft_plot_real_space  : T"
+echo "dmft_integrate_green  : T"
+echo " WARNING "
+echo "now it is set to  : "
+echo "   -----------------    "
+cat *.dat |grep dmft_plot_real_space
+cat *.dat |grep dmft_integrate_green
+echo "   -----------------    "
+
+sleep 4
+
+#example:
+#/opt/mpich2/intel/11.1/bin/mpiexec  -env OMP_NUM_THREADS 1 -np 6 ed.biggie.cpu run 1 1 2000 -1 -1. 1.
+
+command=`echo ${DMFT_ONETEP_MPI_EXEC} -np $1 ${ONETEP} ${CASE} 1 1 ${nn} -1 ${min} ${max} `
+
+echo "command line " ${command}
+echo "starts in 3 seconds..."
+
+sleep 3
+${command}
+
+rm ./gpu_max

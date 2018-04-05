@@ -1,0 +1,112 @@
+#!/bin/bash
+
+ ONETEP_DMFT_TEMP_DIR=$4
+
+ echo ${ONETEP_DMFT_TEMP_DIR}
+
+ if [ "${ONETEP_DMFT_TEMP_DIR}" == "  " ]
+ then
+   export ONETEP_DMFT_TEMP_DIR=`pwd`
+ fi
+ if [ "${ONETEP_DMFT_TEMP_DIR}" == " " ]
+ then
+   export ONETEP_DMFT_TEMP_DIR=`pwd`
+ fi
+ if [ "${ONETEP_DMFT_TEMP_DIR}" == "" ]
+ then
+   export ONETEP_DMFT_TEMP_DIR=`pwd`
+ fi
+ if [ "${ONETEP_DMFT_TEMP_DIR}" == "." ]
+ then
+   export ONETEP_DMFT_TEMP_DIR=`pwd`
+ fi
+ if [ "${ONETEP_DMFT_TEMP_DIR}" == "./" ]
+ then
+   export ONETEP_DMFT_TEMP_DIR=`pwd`
+ fi
+
+ mydirnow=`pwd`
+
+echo "MY DIRECTORY                       : " $1
+echo "MY GREEN FUNCTION FILE 1           : " $2 
+echo "MY DMFT ITERATION                  : " $3
+echo "MY LOCAL DIR INPUT                 : " $4
+echo "TEMP DIR FOR WORKING WITH ATOM DIR : " ${ONETEP_DMFT_TEMP_DIR}
+echo "MY DIRECTORY IS NOW                : " ${mydirnow}
+
+################ SYMLINKS ##############
+if [ "${ONETEP_DMFT_TEMP_DIR}" != "${mydirnow}" ]
+ then
+  echo "running into local node dir, will use symlinks"
+  mkdir ${ONETEP_DMFT_TEMP_DIR}      || echo "local directory already exist"
+ else
+  echo "no symlink will be used, running into shared nfs volume"
+ fi
+
+mkdir ${ONETEP_DMFT_TEMP_DIR}/atom$1 || echo "atom directory already exists"
+
+if [ "${ONETEP_DMFT_TEMP_DIR}" != "${mydirnow}" ]
+ then
+  ls ./atom$1 || ln -s ${ONETEP_DMFT_TEMP_DIR}/atom$1 ./atom$1
+ else
+  echo "no symlink will be used, running into shared nfs volume"
+ fi
+################ SYMLINKS ##############
+
+cp actqmc.cix$1 atom$1/actqmc.cix      > /dev/null 2>&1
+cp LOCAL_DOS_atom* FULL_DOS* atom$1/   > /dev/null 2>&1
+cp input_onetep_dmft.txt atom$1/       > /dev/null 2>&1
+
+ls i_am_dimer$1     > /dev/null 2>&1  && echo "dmft_for_dimer=.true."                 >> ./atom$1/input_onetep_dmft.txt
+ls mask_norb        > /dev/null 2>&1  && cat mask_norb        | head -n $1 | tail -1  >> ./atom$1/input_onetep_dmft.txt
+ls mask_u           > /dev/null 2>&1  && cat mask_u           | head -n $1 | tail -1  >> ./atom$1/input_onetep_dmft.txt
+ls mask_j           > /dev/null 2>&1  && cat mask_j           | head -n $1 | tail -1  >> ./atom$1/input_onetep_dmft.txt
+ls mask_ngwfs       > /dev/null 2>&1  && cat mask_ngwfs       | head -n $1 | tail -1  >  ./atom$1/mask_ngwfs
+ls mask_sym_break   > /dev/null 2>&1  && cat mask_sym_break   | head -n $1 | tail -1  >> ./atom$1/input_onetep_dmft.txt
+ls compound_tot_orb > /dev/null 2>&1  && cat compound_tot_orb | head -n $1 | tail -1  >  ./atom$1/atom_number_of_orbitals
+ls mask_projections > /dev/null 2>&1  && cat mask_projections | head -n $1 | tail -1  >  ./atom$1/mask_projections
+#ls mask_projections> /dev/null 2>&1  && cp mask_projections ./atom$1/
+
+
+cp mask_sym_green_ed         atom$1/                       > /dev/null 2>&1        
+cp mask_j_matrix             atom$1/                       > /dev/null 2>&1      
+cp mask_u_matrix             atom$1/                       > /dev/null 2>&1  
+cp mask_user_rot_$1          atom$1/mask_user_rot          > /dev/null 2>&1      
+cp mask_loc_rot_atom_pm_$1   atom$1/Trans.loc.pm.dat       > /dev/null 2>&1        
+cp mask_loc_rot_atom_spin_$1 atom$1/Trans.loc.spin.dat     > /dev/null 2>&1          
+
+rm atom$1/sigma_output*_*                                  > /dev/null 2>&1        
+cp sigma_output*_* atom$1/                                 > /dev/null 2>&1             
+mv $2 atom$1/
+cd atom$1
+echo "calling ONE ITER DMFT in directory " `pwd`
+echo "command line is : onetep_dmft_one_iter.out " $2 $3 
+onetep_dmft_one_iter.out $2 $3 
+
+echo "OBTAINED SIGMA FILES : " `ls sigma_output*_* 2> /dev/null`
+
+echo "OBTAINED REAL FREQU SIGMA FILES (FROM REAL/MATSU SOLVERS) : " `ls real_sigma_output*_* 2> /dev/null`
+
+echo "OBTAINED DOUBLE COUNTING FILES : " 
+echo `ls edc_output* 2> /dev/null`
+
+for i in `ls green_output*_* 2> /dev/null` 
+ do
+   mv $i dir_${2}_iter${3}/$i.backup
+ done
+rm sigma_output*2 > /dev/null 2>&1
+
+mv          edc_output* ${mydirnow}/   > /dev/null 2>&1
+mv      sigma_output*_* ${mydirnow}/   > /dev/null 2>&1
+mv real_sigma_output*_* ${mydirnow}/   > /dev/null 2>&1
+mv _actqmc.cix_ actqmc.cix$1           > /dev/null 2>&1 
+
+cd ${mydirnow}
+
+
+
+
+
+
+
+
