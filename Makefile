@@ -14,18 +14,22 @@ ARCH = `$(ROOTDIR)/bin/arch`
 default: help
 
 toscam: src_obj lib ed_solver
+	@echo Compiling toscam scripts
 	@( cd bin ; \
 	$(MAKE) -f $(ROOTDIR)/src/makefile ARCH=$(ARCH) ROOTDIR=$(ROOTDIR))
+	@echo Compilation complete
 
 ed_solver: solver_obj
+	@echo Compiling exact diagonalisation solver
 	@( cd ed_solver/obj ; \
 	$(MAKE) -f $(ROOTDIR)/ed_solver/makefile ARCH=$(ARCH) ROOTDIR=$(ROOTDIR))
 
 lib: lib_obj
+	@echo Compiling libraries
 	@( cd lib/fields/src ; \
 	$(MAKE) -f makefile)
 	@( cd lib/slatec/static ; \
-	$(MAKE) -f makefile VPATH=$(ROOTDIR)/lib/slatec/src)
+	$(MAKE) -f makefile)
 	@( cd lib/splines/obj ; \
 	$(MAKE) -f $(ROOTDIR)/lib/splines/makefile ARCH=$(ARCH) ROOTDIR=$(ROOTDIR))
 	@( cd lib/utils/obj ; \
@@ -43,9 +47,9 @@ cleanlib:
 	$(MAKE) -f makefile clean)
 	@( cd lib/slatec/static ; \
 	$(MAKE) -f makefile clean)
-	@( cd lib/splines/obj ; \
+	@( cd lib/splines ; \
 	$(MAKE) -f makefile clean)
-	@( cd lib/utils/obj ; \
+	@( cd lib/utils ; \
 	$(MAKE) -f makefile clean)
 
 cleanall: clean cleanlib

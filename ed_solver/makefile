@@ -13,8 +13,22 @@ else
    include $(ROOTDIR)/config/conf.default
 endif
 
-# Directing to utils and facilitating execution from a different directory
-VPATH=$(ROOTDIR)/ed_solver
+#
+# Facilitating execution from a different directory
+#
+
+VPATH=$(ROOTDIR)/ed_solver:$(ROOTDIR)/ed_solver/obj
+
+#
+# Module redirection
+#
+
+ifeq ($(F90),$(filter $(F90),ifort mpifort))
+   REDIRECT = -module $(ROOTDIR)/ed_solver/obj
+endif
+ifeq ($(F90),$(filter $(F90),gfortran, mpif90))
+   REDIRECT = -J$(ROOTDIR)/ed_solver/obj
+endif
 
 prep = -fpp -D__complex
 
@@ -92,18 +106,19 @@ default: build
 build: $(MODULES)
 
 lib: 
+
 	ar ru libdmftsolverED.a `ls *.o | sort | uniq`
 	${RANLIB} libdmftsolverED.a
 
 clean:
-	$(RM) obj/* *.o *.mod
+	$(RM) obj/*
 
 #
 # General rules
 #
 
 %.mod: %.f90
-	$(F90) -c $(prof) $(FFLAGS) $(prep) $< $(MKL) $(LIBS) $(INC)
+	$(F90) -c $(prof) $(FFLAGS) $(prep) $< $(MKL) $(LIBS) $(INC) -o $(ROOTDIR)/ed_solver/obj/$(@:.mod=.o) $(REDIRECT)
 
 #
 # Dependencies

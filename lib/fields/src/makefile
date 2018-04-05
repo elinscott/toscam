@@ -31,6 +31,10 @@ libdo:
 	#@rm *.o || echo "no such files...."
 	@echo 'LIBRARY IS DONE.........'
 
+clean:
+	$(RM) *.o *.a
+
+
 .SUFFIXES : .cc
 .cc.o:
 	$(C++) $(CFLAGS) -c $<

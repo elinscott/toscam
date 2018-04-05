@@ -13,13 +13,24 @@ else
    include $(ROOTDIR)/config/conf.default
 endif
 
-VPATH=$(ROOTDIR)/lib/utils
+VPATH=$(ROOTDIR)/lib/utils/obj:$(ROOTDIR)/lib/utils
 
 prep     = -fpp -D__DUMP_DISLIN -DNOSVD
 
 LIBSLATEC = -L$(ROOTDIR)/lib/slatec/static
 LIBFIELD  = -L$(ROOTDIR)/lib/field_spline/src
 LIBS      = $(LIBSLATEC) $(LIBFIELD)
+
+#
+# Module redirection
+#
+
+ifeq ($(F90),$(filter $(F90),ifort mpifort))
+   REDIRECT = -module $(ROOTDIR)/lib/utils/obj
+endif
+ifeq ($(F90),$(filter $(F90),gfortran, mpif90))
+   REDIRECT = -J$(ROOTDIR)/lib/utils/obj
+endif
 
 #
 # List of source files
@@ -80,24 +91,25 @@ routines: $(MODULES) $(ROUTINESC) $(ROUTINESCXX)
 build: routines lib
 
 lib: 
-	ar ru libutils.a $(MODULES_C) $(MODULES_CC)
-	$(RANLIB) libutils.a
+	@( cd $(ROOTDIR)/lib/utils/obj ; \
+	ar ru libutils.a $(MODULES_C) $(MODULES_CC); \
+	$(RANLIB) libutils.a)
 
 clean:
-	$(RM) obj/* *.o *.a *.mod
+	$(RM) obj/*
 
 #
 # General rules
 #
 
 %.mod: %.f90
-	$(F90) -c $(prep) $(FFLAGS) $(LIBS) $< 
+	$(F90) -c $(prep) $(FFLAGS) $(LIBS) $< -o $(ROOTDIR)/lib/utils/obj/$(@:.mod=.o) $(REDIRECT)
 
 %.o: %.c
-	$(CCOMPL) -c $(CFLAGS) $(prof) $<
+	$(CCOMPL) -c $(CFLAGS) $< -o $(ROOTDIR)/lib/utils/obj/$(@:.c=.o)
 
 %.o: %.cc
-	$(C++) -c $(CXXFLAGS) $<
+	$(C++) -c $(CXXFLAGS) $< -o $(ROOTDIR)/lib/utils/obj/$(@:.cc=.o)
 
 #
 # Dependencies

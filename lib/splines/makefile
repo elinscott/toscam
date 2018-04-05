@@ -13,7 +13,18 @@ else
    include $(ROOTDIR)/config/conf.default
 endif
 
-VPATH = $(ROOTDIR)/lib/splines
+VPATH = $(ROOTDIR)/lib/splines:$(ROOTDIR)/lib/splines/obj
+
+#
+# Module redirection
+#
+
+ifeq ($(F90),$(filter $(F90),ifort mpifort))
+   REDIRECT = -module $(ROOTDIR)/lib/splines/obj
+endif
+ifeq ($(F90),$(filter $(F90),gfortran, mpif90))
+   REDIRECT = -J$(ROOTDIR)/lib/splines/obj
+endif
 
 #
 # List of source files
@@ -46,18 +57,19 @@ build: routines lib
 routines: $(OUTPUTS)
 
 lib: 
-	ar r libsplines.a `ls *.o | sort | uniq `
-	${RANLIB} libsplines.a
+	@( cd $(ROOTDIR)/lib/splines/obj ; \
+	ar r libsplines.a `ls *.o | sort | uniq `; \
+	$(RANLIB) libsplines.a)
 
 clean: 
-	$(RM) obj/*.o *.o
+	$(RM) obj/*
 
 #
 # General rules
 #
 
 %.o: %.f
-	$(FCOMPL) -c $(FFLAG) $<
+	$(F90) -c $(FFLAGS) $< -o $(ROOTDIR)/lib/splines/obj/$@ $(REDIRECT)
 
 #
 # Dependencies
