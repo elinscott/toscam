@@ -1,6 +1,7 @@
 MODULE fermion_sector2_class
 
    use fermion_hilbert_class, only: fermion_sector_type
+   use genvar,                only: log_unit
 
    IMPLICIT NONE
 
@@ -137,6 +138,10 @@ contains
       TYPE(fermion_sector2_type), INTENT(INOUT) :: SECOUT
       TYPE(fermion_sector2_type), INTENT(IN)    :: SECIN
 
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: entering fermion_sector2_class_copy_&
+           &fermion_sector2"
+#endif DEBUG
 
       SECOUT%NAMBU   = SECIN%NAMBU
       SECOUT%title   = TRIM(SECIN%title)
@@ -147,6 +152,12 @@ contains
       CALL copy_fermion_sector(SECOUT%up,  SECIN%up)
       CALL copy_fermion_sector(SECOUT%down, SECIN%down)
       CALL split_fermion_sector2(SECOUT)
+
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: leaving fermion_sector2_class_copy_&
+           &fermion_sector2"
+#endif DEBUG
+
    end subroutine
 
    subroutine delete_fermion_sector2(sector2)

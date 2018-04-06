@@ -1,7 +1,7 @@
 MODULE eigen_sector_class
 
    use eigen_class,  only: eigenlist_type
-   use genvar,       only: DBL, DP
+   use genvar,       only: DBL, DP, log_unit
    use sector_class, only: sector_type
 
    implicit none
@@ -170,8 +170,19 @@ contains
       TYPE(eigensector_type), INTENT(INOUT) :: es
       TYPE(sector_type), INTENT(IN)         :: sector_in
 
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: entering eigen_sector_class_new_eigensector_from_&
+           &scratch"
+#endif DEBUG
+
       CALL delete_eigensector(es)
       CALL copy_sector(es%sector, sector_in)
+
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: leaving eigen_sector_class_new_eigensector_from_&
+           &scratch"
+#endif DEBUG
+
    end subroutine
 
    subroutine copy_eigensector(esout, esin)
@@ -184,9 +195,18 @@ contains
       TYPE(eigensector_type), INTENT(INOUT) :: esout
       TYPE(eigensector_type), INTENT(IN)    :: esin
 
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: entering eigen_sector_class_copy_eigensector"
+#endif DEBUG
+
       CALL delete_eigensector(esout)
       CALL copy_sector(esout%sector, esin%sector)
       CALL copy_eigenlist(esout%lowest, esin%lowest)
+
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: leaving eigen_sector_class_copy_eigensector"
+#endif DEBUG
+
    end subroutine
 
    subroutine copy_eigensectorlist(listout, listin)
@@ -381,6 +401,10 @@ contains
 
       TYPE(sector_type), INTENT(IN) :: sector
 
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: entering eigen_sector_class_not_commensurate_sector_"
+#endif
+
       if(.not.associated(sector%updo))then
          not_commensurate_sector_ = .true.
          return
@@ -390,6 +414,11 @@ contains
            sector%updo%up%chunk(1)) .or. ANY(sector%updo%down%chunk /= &
            sector%updo%down%chunk(1)) .or. mod(sector%updo%up%chunk(1), size2) &
            /= 0
+
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: leaving eigen_sector_class_not_commensurate_sector_"
+#endif
+
    end function
 
    function partition(beta, list) RESULT(Zpart)

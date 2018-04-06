@@ -1,6 +1,6 @@
 MODULE green_class
 
-   use genvar,              only: DBL
+   use genvar,              only: DBL, log_unit
    use correl_class,        only: correl_type
    use masked_matrix_class, only: masked_matrix_type
 
@@ -311,7 +311,9 @@ contains
       TYPE(green_type), INTENT(IN), OPTIONAL :: GREENIN
       INTEGER :: ipm, jpm, mipm, mjpm, iw, miw
 
-
+#ifdef DEBUG
+      write(log_unit, *) "DEBUG: entering green_class_pad_green"
+#endif
 
       DO ipm = 1, 2
          DO jpm = 1, 2
@@ -340,6 +342,10 @@ contains
             ENDIF
          ENDDO
       ENDDO
+
+#ifdef DEBUG
+      write(log_unit, *) "DEBUG: leaving green_class_pad_green"
+#endif
 
    end subroutine
 

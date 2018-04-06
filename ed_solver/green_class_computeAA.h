@@ -268,6 +268,10 @@
 
       implicit none
 
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: entering green_class_computeAA_apply_creat"
+#endif
+
       !------------------------------------------------------!
       ! APPLY CREATION/ANNIHILATION OPERATORS ON THE STATES  !
       !------------------------------------------------------!
@@ -276,10 +280,19 @@
 
          CALL reset_timer(applyA_timer)
          CALL delete_eigenlist(Apm_es(kpm)%lowest)
+         write(log_unit, *) Apm_es(kpm)%sector%updo%up%chunk
+         write(log_unit, *) Apm_es(kpm)%sector%updo%up%title
+         write(log_unit, *) Apm_es(kpm)%sector%updo%down%title
+         write(log_unit, *) Apm_es(kpm)%lowest%neigen
+         write(log_unit, *) ORBMASKvec(ipm, jpm, :)
          CALL applyA(Apm_es(kpm), pm(kpm), ORBMASKvec(ipm, jpm, :), es, ieigen)
+         write(log_unit, *) Apm_es(kpm)%sector%updo%up%chunk
+         write(log_unit, *) Apm_es(kpm)%sector%updo%up%title
+         write(log_unit, *) Apm_es(kpm)%sector%updo%down%title
+         write(log_unit, *) Apm_es(kpm)%lowest%neigen
          if(Apm_es(kpm)%lowest%neigen == 0) then
-            write(*, *) 'houston I get a problem.. my rank = ', rank
-            stop 'error Apm_es in computeAA : neigen = 0'
+            write(*,'(a,i3,a)') "Error on rank ", rank, " in computeAA: Apm_es neigen = 0"
+            stop
          endif
          CALL timer_fortran(applyA_timer, "# APPLYING A" // pm(kpm) // " ON &
               &EIGENSTATE TOOK")
@@ -309,7 +322,12 @@
 
       ENDDO
 
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: leaving green_class_computeAA_apply_creat"
+#endif
+
       return
+
    end subroutine
 
    subroutine init_iph()
@@ -362,6 +380,10 @@
 
       implicit none
 
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: entering green_class_computeAA_init_sector"
+#endif
+
       es => GS%es(isector)
 
       if(AIM%BATH%SUPER)then
@@ -379,12 +401,16 @@
       write(log_unit, *) ' ...... eigenvector ...... : ', (/( maxval(abs( &
            es%lowest%eigen(ii)%vec%rc )), ii = 1, es%lowest%neigen )/)
 
-      if(es%lowest%neigen == 0) stop 'ERROR in green_computeAA : &
-           &es%lowest%neigen = 0'
+      if(es%lowest%neigen == 0) then
+         write(*,*) 'ERROR in green_computeAA : es%lowest%neigen = 0'
+         stop
+      end if
       if(associated(GS%es(isector)%lowest%eigen)) then
-         if(GS%es(isector)%lowest%neigen == 0) stop 'ERROR in green_computeAA &
-              &: GS%es%lowest%neigen = 0'
-      endif
+         if(GS%es(isector)%lowest%neigen == 0) then
+            write(*,*)'ERROR in green_computeAA : GS%es%lowest%neigen = 0'
+            stop
+         end if
+      end if
 
       !------------------------------!
       ! WE CREATE THE TARGET SECTORS !
@@ -415,11 +441,16 @@
          if(not_commensurate_sector_(Asec)) NOT_COMMENSURATE = .true.
       ENDDO
 
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: leaving green_class_computeAA_init_sector"
+#endif
+
    end subroutine
 
    subroutine init_data()
 
       use common_def,          only: dump_message, find_rank, reset_timer
+      use genvar,              only: log_unit
       use globalvar_ed_solver, only: force_para_state, para_state 
       use eigen_sector_class,  only: gsenergy, partition
       use mask_class,          only: new_mask
@@ -427,6 +458,10 @@
       implicit none
 
       integer :: ika1, ikb1
+
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: entering green_class_computeAA_init_data"
+#endif
 
       iph_max = 2
       if(present(keldysh_level)) iph_max = 1
@@ -451,7 +486,7 @@
             ! VECTOR MASK OF ORBITALS: MASK(i) = T IF NEED TO APPLY C(i)
             DO iorb = 1, green%N
                IF(ANY(MASK(ipm, jpm)%mat(iorb, :)) .OR. ANY(MASK(ipm, &
-                    jpm)%mat(:, iorb))) ORBMASKvec(ipm, jpm, iorb) = .false.
+                    jpm)%mat(:, iorb))) ORBMASKvec(ipm, jpm, iorb) = .true.
             ENDDO
          ENDDO
       ENDDO
@@ -523,4 +558,9 @@
       write(log_unit, *) GREEN%compute(1, :)
       write(log_unit, *) GREEN%compute(2, :)
       write(log_unit, *) '-------------------'
+
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: leaving green_class_computeAA_init_data"
+#endif
+
    end subroutine

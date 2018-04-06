@@ -25,6 +25,7 @@ contains
       use h_class,             only: hmult__, title_h_, dimen_H
       use mpi
       use mpirout,             only: split
+      use random,              only: randomize_mat
 
       implicit none
 

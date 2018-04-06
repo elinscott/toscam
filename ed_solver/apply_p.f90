@@ -137,9 +137,9 @@ contains
 
       if(force_reset_list) CALL delete_eigenlist(Ces%lowest)
       ! APPLY P3 +
-      CALL P_sector(Psecp, ' + ', es%sector)
+      CALL P_sector(Psecp, '+', es%sector)
       CALL new_eigensector(P3p, Psecp)
-      CALL apply_Pn(P3p, 3, ' + ', MASK, es, esrank)
+      CALL apply_Pn(P3p, 3, '+', MASK, es, esrank)
       ! APPLY P3-
       CALL P_sector(Psecm, '-', es%sector)
       CALL new_eigensector(P3m, Psecm)
@@ -196,12 +196,12 @@ contains
       CASE(3)
          nP = nCYC3
          ALLOCATE(multiplet(nP, 3))
-         IF(pm == ' + ') multiplet = CYC3(:, :, 1)
+         IF(pm == '+') multiplet = CYC3(:, :, 1)
          IF(pm == '-') multiplet = CYC3(:, :, 2)
       CASE(4)
          nP = nCYC4
          ALLOCATE(multiplet(nP, 4))
-         IF(pm == ' + ') multiplet = CYC4(:, :, 1)
+         IF(pm == '+') multiplet = CYC4(:, :, 1)
          IF(pm == '-') multiplet = CYC4(:, :, 2)
       END SELECT
 

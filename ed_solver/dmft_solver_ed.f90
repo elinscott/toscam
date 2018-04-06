@@ -717,11 +717,11 @@ contains
       iter_ = 1
 
       if(first_time)then
-         write(*, *) ' ==================================== &
+         write(*, *) ' ====================================&
               &======================= '
          write(*, *) 'THIS INTERFACE WAS NOT YET CALLED - INITIALIZATION '
          write(*, *) ' RANK = ', rank
-         write(*, *) ' ==================================== &
+         write(*, *) ' ====================================&
               &======================= '
       endif
       if(.not.allocated(Himp%dU)) allocate(Himp%dU(1), Himp%eps(1), &
@@ -1366,14 +1366,14 @@ contains
       wmin = -max(abs(wwmin), abs(wmax))
       wmax = max(abs(wwmin), abs(wmax))
 
-      write(log_unit, *) ' ================================== &
+      write(log_unit, *) ' ==================================&
            &============== '
       write(log_unit, *)         '.... DEFINE IMPURITY ....'
       CALL define_impurity(impurity, mmu, impurity_, Himp)
       write(log_unit, *) '......INITIALIZE CORRELATIONS MATRIX......'
       CALL init_correlations(impurity, bbeta, CORRELfile, rdelta_width, wmin, &
            wmax, nmatsu_frequ, Nww)
-      write(log_unit, *) ' ================================== &
+      write(log_unit, *) ' ==================================&
            &============== '
 
       ! =============================================== !

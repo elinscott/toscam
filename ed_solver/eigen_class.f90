@@ -1,6 +1,6 @@
 MODULE eigen_class
 
-   use genvar,         only: DBL
+   use genvar,         only: DBL, log_unit
    use rcvector_class, only: rcvector_type
 
    private
@@ -111,6 +111,10 @@ contains
       INTEGER              :: ieigen
       TYPE(eigenlist_type) :: tmp
 
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: entering eigen_class_add_eigen_"
+#endif
+
       CALL copy_eigenlist(tmp, list)
       CALL  new_eigenlist(list, list%neigen + 1)
       DO ieigen = 1, tmp%neigen
@@ -118,6 +122,11 @@ contains
       ENDDO
       CALL copy_eigen(list%eigen(list%neigen), eigen)
       CALL delete_eigenlist(tmp)
+
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: leaving eigen_class_add_eigen_"
+#endif
+
    end subroutine
 
    subroutine add_eigen__(n, VECP, VALP, list)
@@ -134,6 +143,10 @@ contains
       REAL(DBL)            :: VECP(:,:)
 #endif
 
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: entering eigen_class_add_eigen__"
+#endif
+
       CALL delete_eigenlist(list)
       list%neigen = n
       IF(n == 0) stop 'error add_eigen 0 dimension space'
@@ -147,6 +160,11 @@ contains
          list%eigen(i)%rank      =  i
          list%eigen(i)%dim_space =  size(VECP(:, 1))
       enddo
+
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: leaving eigen_class_add_eigen__"
+#endif
+
    end subroutine
 
    subroutine allocate_new_eigen(eigen, n)
@@ -270,12 +288,19 @@ contains
       type(eigenlist_type), intent(inout) :: list
       integer :: ieigen
 
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: entering eigen_class_delete_eigenlist"
+#endif
 
       do ieigen = 1, list%neigen
          call delete_eigen(list%eigen(ieigen))
       enddo
       if(associated(list%eigen)) deallocate(list%eigen, stat = istati)
       list%neigen = 0
+
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: leaving eigen_class_delete_eigenlist"
+#endif
 
    end subroutine
 

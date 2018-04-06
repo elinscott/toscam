@@ -82,7 +82,7 @@
                  apply_N_Cdo, COMPUTE_DYN = .not.only_dens)
          endif
       else
-         write(*, *) '---ASSUME PARA-MAGNETIC STATE---'
+         write(*, *) '---ASSUME PARAMAGNETIC STATE---'
          CALL copy_green(G(2), G(1))
          if(FLAG_NCUP)then
             CALL copy_green(GN(2), GN(1))
@@ -165,7 +165,7 @@
          write(*, *) '--- COMPUTE DOWN PART AS WELL ---'
          CALL compute_greenAA(Gret(2), AIM, beta_ED, GS, Cdo_sector, apply_Cdo)
       else
-         write(*, *) '---ASSUME PARA-MAGNETIC STATE---'
+         write(*, *) '---ASSUME PARAMAGNETIC STATE---'
          call copy_green(Gret(2), Gret(1))
       endif
 

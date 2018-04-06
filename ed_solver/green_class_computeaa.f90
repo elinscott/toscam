@@ -14,6 +14,7 @@ contains
         COMPUTE_DYN, keldysh_level, GS_out)
 
       use aim_class,                     only: aim_type
+      use common_def,                    only: dump_message
       use eigen_class,                   only: eigen_type
       use eigen_sector_class,            only: eigensector_type, &
            eigensectorlist_type
@@ -93,8 +94,11 @@ contains
       INTEGER, allocatable                   :: indices_state_sector(:, :)
       INTEGER                                :: ktot, iiorb, jjorb, kk, jj, &
                                                 iorb_f, jorb_f
-  
-      call init_data
+
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: entering green_class_computeaa_compute_greenaa"
+#endif
+      call init_data()
      
       !--------------------------! 
       ! PARSE LIST OF GS SECTORS !
@@ -102,7 +106,7 @@ contains
   
       if(FLAG_MPI_GREENS < 2)then
          DO isector = 1, GS%nsector
-            call init_sector
+            call init_sector()
             if(.not.(USE_TRANSPOSE_TRICK_MPI.and.NOT_COMMENSURATE))then
                DO ipm = 1, 2
                   DO jpm = 1, 2
@@ -110,7 +114,7 @@ contains
                         IF(associated(green%correl(ipm, jpm)%MM%MASK%mat))then
                            IF(ANY(green%correl(ipm, jpm)%MM%MASK%mat))then
                               DO iph = 1, iph_max 
-                                 call init_iph
+                                 call init_iph()
                                  DO ieigen = 1, GS%es(isector)%lowest%neigen
                                     call loop_over_states          
                                  ENDDO
@@ -173,6 +177,10 @@ contains
       call clean_everything()
       write(log_unit, *) 'The partition function is : ', Zpart
   
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: leaving green_class_computeaa_compute_greenaa"
+#endif
+
       contains
      
 #include "green_class_computeAA.h"

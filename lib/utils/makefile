@@ -37,7 +37,7 @@ endif
 #
 
 ROUTINES= common_def.f90 \
-          conjg_grad_civelli.f90 \
+          conj_grad.f90 \
           derivative_noise.f90 \
           fourier_transform_f90.mod \
           genvar.f90 \
@@ -115,7 +115,7 @@ clean:
 # Dependencies
 #
 
-conjg_grad_civelli.mod: conjg_grad_civelli.f90 common_def.mod genvar.mod
+conj_grad.mod: conj_grad.f90 common_def.mod genvar.mod
  
 common_def.mod: common_def.f90 genvar.mod
  
@@ -149,7 +149,7 @@ mesh.mod: mesh.f90 genvar.mod geometry.mod linalg.mod sorting.mod splines.mod \
           stringmanip.mod
  
 minimization_wrapping.mod: minimization_wrapping.f90 \
-                           conjg_grad_civelli.mod genvar.mod linalg.mod \
+                           conj_grad.mod genvar.mod linalg.mod \
                            mpirout.mod random.mod stringmanip.mod
 
 mpirout.mod: mpirout.f90 genvar.mod linalg.mod random.mod

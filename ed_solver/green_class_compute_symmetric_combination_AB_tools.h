@@ -168,8 +168,8 @@
 
    subroutine clean_it()
 
-      use correl_class, only: delete_correl
-      use mask_class,   only: delete_mask
+      use correl_class,        only: delete_correl
+      use masked_matrix_class, only: delete_masked_matrix
 
       implicit none
 
@@ -186,6 +186,7 @@
             CALL delete_masked_matrix(statBA(ipm, jpm))
          ENDDO
       ENDDO
+
    end subroutine
 
    subroutine fill_the_blanks()

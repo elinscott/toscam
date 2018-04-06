@@ -87,7 +87,7 @@ contains
       CALL delete_sector(Csec)
       IF(ASSOCIATED(sector_in%sz))THEN ! Sz-SECTOR
          ALLOCATE(Csec%sz)
-         IF(pm == ' + ') CALL new_fermion_sector(Csec%sz, &
+         IF(pm == '+') CALL new_fermion_sector(Csec%sz, &
               npart_func(sector_in) + 2, Ns2, SZ = .true.)
          IF(pm == '-') CALL new_fermion_sector(Csec%sz, &
               npart_func(sector_in)-2, Ns2, SZ = .true.)
@@ -95,7 +95,7 @@ contains
          nup = npart_func(sector_in, 1)
          ndo = npart_func(sector_in, 2)
          ALLOCATE(Csec%updo)
-         IF(pm == ' + ') CALL new_fermion_sector2(Csec%updo, nup + 1, ndo-1, Ns)
+         IF(pm == '+') CALL new_fermion_sector2(Csec%updo, nup + 1, ndo-1, Ns)
          IF(pm == '-') CALL new_fermion_sector2(Csec%updo, nup-1, ndo + 1, Ns)
       ENDIF
    end subroutine
@@ -241,7 +241,7 @@ contains
                   IF(eigen_in%vec%rc(istate) /= 0.0_DBL)THEN
                      CALL new_ket(ket_in, es%sector%sz%state(istate), &
                           es%sector%sz%norbs)
-                     IF(pm == ' + ') CALL create_pair(ket_out, IMPiorbsz(site, &
+                     IF(pm == '+') CALL create_pair(ket_out, IMPiorbsz(site, &
                           1), IMPiorbsz(site, 2), ket_in)
                      IF(pm == '-') CALL destroy_pair(ket_out, IMPiorbsz(site, &
                           2), IMPiorbsz(site, 1), ket_in)
@@ -255,7 +255,7 @@ contains
             ELSE IF(ASSOCIATED(es%sector%updo))THEN ! (nup, ndo) SECTOR
                DO ido = 1, es%sector%updo%down%dimen
                   CALL new_ket(ket_in_do, es%sector%updo%down%state(ido), Ns)
-                  IF(pm == ' + ') CALL destroy(ket_out_do, IMPiorbupdo(site, &
+                  IF(pm == '+') CALL destroy(ket_out_do, IMPiorbupdo(site, &
                        2), ket_in_do)
                   IF(pm == '-') CALL create(ket_out_do, IMPiorbupdo(site, 2), &
                        ket_in_do)
@@ -265,7 +265,7 @@ contains
                              /= 0.0_DBL)THEN
                            CALL new_ket(ket_in_up, &
                                 es%sector%updo%up%state(iup), Ns)
-                           IF(pm == ' + ') CALL create(ket_out_up, &
+                           IF(pm == '+') CALL create(ket_out_up, &
                                 IMPiorbupdo(site, 1), ket_in_up) ! |Ceigen >=
                            ! S^ + |eigen >
                            IF(pm == '-') CALL destroy(ket_out_up, &

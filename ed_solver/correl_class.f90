@@ -1106,7 +1106,7 @@ contains
          implicit none
 
          if(rank /= 0) return
-         call PGSUBP(1, 1)
+         ! call PGSUBP(1, 1)
          do j = 1, size(CORRELIN%vec, 1)
             !!call plotarray( real(CORRELIN%freq%vec), real(vecin(j, :)),
             ! real(CORRELIN%freq%vec), real(CORRELOUT%vec(j, :)), 're transfo

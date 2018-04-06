@@ -409,14 +409,14 @@
          close(13910)
       endif
 
-      write(log_unit, *) ' ================================== &
+      write(log_unit, *) ' ==================================&
            &======================= '
       write(log_unit, *) ' NEW BOUNDS (Min, Max) sectors to scan for next &
            &iteration '
       write(log_unit, *) '  nup bounds : ', nupmin, nupmax
       write(log_unit, *) '  ndn bounds : ', ndnmin, ndnmax
       write(log_unit, *) '  Sz  bounds : ', szmin, szmax
-      write(log_unit, *) ' ================================== &
+      write(log_unit, *) ' ==================================&
            &======================= '
 
    end subroutine
@@ -455,16 +455,16 @@
       integer :: unit
 
       if(AIM%bath%SUPER)then
-         write(unit, *) ' ================================== &
+         write(unit, *) ' ==================================&
               &=================== '
          write(unit, *) 'diagonalize sector Sz, # sites : ', ssz, isector, &
               GS%nsector, itot
          write(unit, *) 'label of sector                   : ', isector
          write(unit, *) 'number of mpi nodes               : ', size2
-         write(unit, *) ' ================================== &
+         write(unit, *) ' ==================================&
               &=================== '
       else
-         write(unit, *) ' ================================== &
+         write(unit, *) ' ==================================&
               &=================== '
          write(unit, *) 'diagonalize sector up/dn, # sites : ', uup, ddn, itot
          write(unit, *) 'number of up and dn states        : ', nstu, nstd
@@ -474,7 +474,7 @@
               GS%es(isector)%sector%updo%up%chunk
          write(unit, *) 'chunk dn spin : ', &
               GS%es(isector)%sector%updo%down%chunk
-         write(unit, *) ' ================================== &
+         write(unit, *) ' ==================================&
               &=================== '
       endif
    end subroutine

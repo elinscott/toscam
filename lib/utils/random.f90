@@ -14,6 +14,7 @@ module random
   public :: initialize_random_numbers
   public :: init_rantab
   public :: rand_init
+  public :: randomize_mat
   public :: randomize_matrix
 
   real(8),parameter,    private :: rerror=1.d-3
@@ -43,9 +44,9 @@ module random
   !   MODULE PROCEDURE random_vec_r,random_vec_c
   ! END INTERFACE
 
-  ! INTERFACE randomize_mat
-  !   MODULE PROCEDURE randomize_mat_r,randomize_mat_c
-  ! END INTERFACE
+  INTERFACE randomize_mat
+    MODULE PROCEDURE randomize_mat_r,randomize_mat_c
+  END INTERFACE
 
 contains
 
@@ -429,27 +430,27 @@ contains
 ! enddo
 ! end function
 ! 
-! subroutine randomize_mat_c(mat)
-! integer    :: n
-! complex(8) :: mat(:,:)
-! integer    :: i,j
-! do i=1,size(mat,1)
-!  do j=1,size(mat,2)
-!   mat(i,j)=dran_tabc(i+j*2)
-!  enddo
-! enddo
-! end subroutine
-! 
-! subroutine randomize_mat_r(mat)
-! integer    :: n
-! real(8)    :: mat(:,:)
-! integer    :: i,j
-! do i=1,size(mat,1)
-!  do j=1,size(mat,2)
-!   mat(i,j)=dran_tab(i+j*2)
-!  enddo
-! enddo
-! end subroutine
+subroutine randomize_mat_c(mat)
+integer    :: n
+complex(8) :: mat(:,:)
+integer    :: i,j
+do i=1,size(mat,1)
+ do j=1,size(mat,2)
+  mat(i,j)=dran_tabc(i+j*2)
+ enddo
+enddo
+end subroutine
+
+subroutine randomize_mat_r(mat)
+integer    :: n
+real(8)    :: mat(:,:)
+integer    :: i,j
+do i=1,size(mat,1)
+ do j=1,size(mat,2)
+  mat(i,j)=dran_tab(i+j*2)
+ enddo
+enddo
+end subroutine
 ! 
 ! 
 ! !********************************************
@@ -612,20 +613,20 @@ integer, intent(in) :: jjj
   dran_tab = ran_tab(jj)
 return
 end function
-! 
-!  !======!
-! 
-! complex(8) function dran_tabc(jjj)
-! implicit none
-! integer             :: jj
-! integer, intent(in) :: jjj
-!   jj=modi(jjj,size(ran_tab-2))
-!   dran_tabc=CMPLX(-1.d0+2.d0*ran_tab(jj),-1.d0+2.d0*ran_tab(jj+1),kind=8)
-! return
-! end function
-! 
-!  !======!
-! 
+
+ !======!
+
+complex(8) function dran_tabc(jjj)
+implicit none
+integer             :: jj
+integer, intent(in) :: jjj
+  jj=modi(jjj,size(ran_tab-2))
+  dran_tabc=CMPLX(-1.d0+2.d0*ran_tab(jj),-1.d0+2.d0*ran_tab(jj+1),kind=8)
+return
+end function
+
+ !======!
+
 subroutine init_rantab(iseed_)
 implicit none
 integer          :: i,j,k,l,m

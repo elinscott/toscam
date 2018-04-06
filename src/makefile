@@ -127,7 +127,7 @@ objdir:
 
 check_convergence.out: check_convergence.f90 aim2_class.o aim_class.o apply_c.o apply_ns.o \
     apply_p.o bath_class.o bath_class_hybrid.o bath_class_vec.o block_lanczos.o common_def.o \
-    conjg_grad_civelli.o correl_class.o correlations.o density_matrix.o derivative_noise.o \
+    conj_grad.o correl_class.o correlations.o density_matrix.o derivative_noise.o \
     dmft_solver_ed.o ed_arpack.o eigen_class.o eigen_sector_class.o fermion_hilbert_class.o \
     fermion_ket_class.o fermion_sector2_class.o fourier_transform_mod.o frequency_class.o genvar.o \
     geometry.o geomlib.o globalvar_ed_solver.o green_class.o green_class_compute_dynamic.o \
@@ -142,7 +142,7 @@ check_convergence.out: check_convergence.f90 aim2_class.o aim_class.o apply_c.o 
 
 check_convergence_full.out: check_convergence_full.f90 aim2_class.o aim_class.o apply_c.o \
     apply_ns.o apply_p.o bath_class.o bath_class_hybrid.o bath_class_vec.o block_lanczos.o \
-    common_def.o conjg_grad_civelli.o correl_class.o correlations.o density_matrix.o \
+    common_def.o conj_grad.o correl_class.o correlations.o density_matrix.o \
     derivative_noise.o dmft_solver_ed.o ed_arpack.o eigen_class.o eigen_sector_class.o \
     fermion_hilbert_class.o fermion_ket_class.o fermion_sector2_class.o fourier_transform_mod.o \
     frequency_class.o genvar.o geometry.o geomlib.o globalvar_ed_solver.o green_class.o \
@@ -157,7 +157,7 @@ check_convergence_full.out: check_convergence_full.f90 aim2_class.o aim_class.o 
 
 check_convergence_renorm.out: check_convergence_renorm.f90 aim2_class.o aim_class.o apply_c.o \
     apply_ns.o apply_p.o bath_class.o bath_class_hybrid.o bath_class_vec.o block_lanczos.o \
-    common_def.o conjg_grad_civelli.o correl_class.o correlations.o density_matrix.o \
+    common_def.o conj_grad.o correl_class.o correlations.o density_matrix.o \
     derivative_noise.o dmft_solver_ed.o ed_arpack.o eigen_class.o eigen_sector_class.o \
     fermion_hilbert_class.o fermion_ket_class.o fermion_sector2_class.o fourier_transform_mod.o \
     frequency_class.o genvar.o geometry.o geomlib.o globalvar_ed_solver.o green_class.o \
@@ -172,7 +172,7 @@ check_convergence_renorm.out: check_convergence_renorm.f90 aim2_class.o aim_clas
 
 check_convergence_single_renorm.out: check_convergence_single_renorm.f90 aim2_class.o aim_class.o \
     apply_c.o apply_ns.o apply_p.o bath_class.o bath_class_hybrid.o bath_class_vec.o \
-    block_lanczos.o common_def.o conjg_grad_civelli.o correl_class.o correlations.o \
+    block_lanczos.o common_def.o conj_grad.o correl_class.o correlations.o \
     density_matrix.o derivative_noise.o dmft_solver_ed.o ed_arpack.o eigen_class.o \
     eigen_sector_class.o fermion_hilbert_class.o fermion_ket_class.o fermion_sector2_class.o \
     fourier_transform_mod.o frequency_class.o genvar.o geometry.o geomlib.o globalvar_ed_solver.o \
@@ -189,7 +189,7 @@ dmft_all_iterations_onetep.out: dmft_all_iterations_onetep.f90 stringmanip.o
 
 dmft_check_cluster_convergence.out: dmft_check_cluster_convergence.f90 aim2_class.o aim_class.o \
     apply_c.o apply_ns.o apply_p.o bath_class.o bath_class_hybrid.o bath_class_vec.o \
-    block_lanczos.o common_def.o conjg_grad_civelli.o correl_class.o correlations.o \
+    block_lanczos.o common_def.o conj_grad.o correl_class.o correlations.o \
     density_matrix.o derivative_noise.o dmft_solver_ed.o ed_arpack.o eigen_class.o \
     eigen_sector_class.o fermion_hilbert_class.o fermion_ket_class.o fermion_sector2_class.o \
     fourier_transform_mod.o frequency_class.o genvar.o geometry.o geomlib.o globalvar_ed_solver.o \
@@ -228,7 +228,7 @@ dmft_project_sigma.out: dmft_project_sigma.f90 common_def.o genvar.o geomlib.o l
     matrix.o openmpmod.o random.o sorting.o stringmanip.o strings.o tools_algebra.o
 
 ed_solver.out: ed_solver.f90 aim2_class.o aim_class.o apply_c.o apply_ns.o apply_p.o bath_class.o \
-    bath_class_hybrid.o bath_class_vec.o block_lanczos.o common_def.o conjg_grad_civelli.o \
+    bath_class_hybrid.o bath_class_vec.o block_lanczos.o common_def.o conj_grad.o \
     correl_class.o correlations.o density_matrix.o derivative_noise.o dmft_solver_ed.o ed_arpack.o \
     eigen_class.o eigen_sector_class.o fermion_hilbert_class.o fermion_ket_class.o \
     fermion_sector2_class.o fourier_transform_mod.o frequency_class.o genvar.o geometry.o \
@@ -244,7 +244,7 @@ ed_solver.out: ed_solver.f90 aim2_class.o aim_class.o apply_c.o apply_ns.o apply
 
 ed_solver_complex.out: ed_solver_complex.f90 aim2_class.o aim_class.o apply_c.o apply_ns.o \
     apply_p.o bath_class.o bath_class_hybrid.o bath_class_vec.o block_lanczos.o common_def.o \
-    conjg_grad_civelli.o correl_class.o correlations.o density_matrix.o derivative_noise.o \
+    conj_grad.o correl_class.o correlations.o density_matrix.o derivative_noise.o \
     dmft_solver_ed.o ed_arpack.o eigen_class.o eigen_sector_class.o fermion_hilbert_class.o \
     fermion_ket_class.o fermion_sector2_class.o fourier_transform_mod.o frequency_class.o genvar.o \
     geometry.o geomlib.o globalvar_ed_solver.o green_class.o green_class_compute_dynamic.o \
@@ -259,7 +259,7 @@ ed_solver_complex.out: ed_solver_complex.f90 aim2_class.o aim_class.o apply_c.o 
 
 ed_solver_serial.out: ed_solver_serial.f90 aim2_class.o aim_class.o apply_c.o apply_ns.o apply_p.o \
     bath_class.o bath_class_hybrid.o bath_class_vec.o block_lanczos.o common_def.o \
-    conjg_grad_civelli.o correl_class.o correlations.o density_matrix.o derivative_noise.o \
+    conj_grad.o correl_class.o correlations.o density_matrix.o derivative_noise.o \
     dmft_solver_ed.o ed_arpack.o eigen_class.o eigen_sector_class.o fermion_hilbert_class.o \
     fermion_ket_class.o fermion_sector2_class.o fourier_transform_mod.o frequency_class.o genvar.o \
     geometry.o geomlib.o globalvar_ed_solver.o green_class.o green_class_compute_dynamic.o \
@@ -315,7 +315,7 @@ onetep_dmft_local_rotation.out: onetep_dmft_local_rotation.f90 genvar.o geometry
     linalg.o lockmod.o openmpmod.o
 
 onetep_dmft_local_rotation_find.out: onetep_dmft_local_rotation_find.f90 common_def.o \
-    conjg_grad_civelli.o genvar.o geomlib.o init_and_close_my_sim.o linalg.o lockmod.o \
+    conj_grad.o genvar.o geomlib.o init_and_close_my_sim.o linalg.o lockmod.o \
     minimization_wrapping.o mpirout.o namelistmod.o openmpmod.o random.o string4.o string5.o \
     stringmanip.o
 

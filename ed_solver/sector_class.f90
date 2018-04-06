@@ -2,6 +2,7 @@ MODULE sector_class
 
    use fermion_hilbert_class, only: fermion_sector_type
    use fermion_sector2_class, only: fermion_sector2_type
+   use genvar,                only: log_unit
 
    IMPLICIT NONE
 

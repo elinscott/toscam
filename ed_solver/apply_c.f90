@@ -1,5 +1,7 @@
 MODULE apply_C
 
+   use genvar, only: log_unit
+
    implicit none
 
    private
@@ -63,7 +65,7 @@ contains
 
       CALL delete_sector(Csec)
       ALLOCATE(Csec%sz)
-      IF(pm == ' + ') CALL new_fermion_sector(Csec%sz, npart_func(sector_in) + &
+      IF(pm == '+') CALL new_fermion_sector(Csec%sz, npart_func(sector_in) + &
            1, norbs__(sector_in), SZ = .true.)
       IF(pm == '-') CALL new_fermion_sector(Csec%sz, npart_func(sector_in)-1, &
            norbs__(sector_in), SZ = .true.)
@@ -79,11 +81,20 @@ contains
       TYPE(sector_type), INTENT(IN)    :: sector_in
       CHARACTER(LEN = 1), INTENT(IN)   :: pm
 
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: entering apply_C_Cup_sector"
+#endif
+
       IF     (ASSOCIATED(sector_in%sz))  THEN
          CALL Csz_sector_updo(Csec, pm, 1, sector_in)
       ELSE IF(ASSOCIATED(sector_in%updo))THEN
          CALL    Cupdo_sector(Csec, pm, 1, sector_in)
       ENDIF
+
+
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: leaving apply_C_Cup_sector"
+#endif
    end subroutine
 
    subroutine Cdo_sector(Csec, pm, sector_in)
@@ -96,11 +107,20 @@ contains
       TYPE(sector_type), INTENT(IN)    :: sector_in
       CHARACTER(LEN = 1), INTENT(IN)   :: pm
 
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: entering apply_C_Cdo_sector"
+#endif
+
       IF     (ASSOCIATED(sector_in%sz))  THEN
          CALL Csz_sector_updo(Csec, pm, 2, sector_in)
       ELSE IF(ASSOCIATED(sector_in%updo))THEN
          CALL    Cupdo_sector(Csec, pm, 2, sector_in)
       ENDIF
+
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: leaving apply_C_Cdo_sector"
+#endif
+
    end subroutine
 
    subroutine apply_Cup(Ces, pm, MASK, es, esrank)
@@ -115,11 +135,20 @@ contains
       LOGICAL, INTENT(IN)                   :: MASK(:)
       INTEGER, INTENT(IN)                   :: esrank
 
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: entering apply_C_apply_Cup"
+#endif
+
       IF     (ASSOCIATED(es%sector%sz))  THEN
          CALL apply_Csz_updo(Ces, pm, 1, MASK, es, esrank)
       ELSE IF(ASSOCIATED(es%sector%updo))THEN
          CALL    apply_Cupdo(Ces, pm, 1, MASK, es, esrank)
       ENDIF
+
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: leaving apply_C_apply_Cup"
+#endif
+
    end subroutine
 
    subroutine apply_N_Cup(Ces, pm, MASK, es, esrank)
@@ -154,11 +183,20 @@ contains
       TYPE(eigensector_type), INTENT(IN)    :: es
       INTEGER, INTENT(IN)                   :: esrank
 
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: entering apply_C_apply_Cdo"
+#endif
+
       IF     (ASSOCIATED(es%sector%sz))  THEN
          CALL apply_Csz_updo(Ces, pm, 2, MASK, es, esrank)
       ELSE IF(ASSOCIATED(es%sector%updo))THEN
          CALL    apply_Cupdo(Ces, pm, 2, MASK, es, esrank)
       ENDIF
+
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: leaving apply_C_apply_Cdo"
+#endif
+
    end subroutine
 
    subroutine apply_N_Cdo(Ces, pm, MASK, es, esrank)
@@ -200,12 +238,12 @@ contains
 
       SELECT CASE(spin)
       CASE(1)
-         IF(pm == ' + ') CALL new_fermion_sector(Csec%sz, &
+         IF(pm == '+') CALL new_fermion_sector(Csec%sz, &
               npart_func(sector_in) + 1, norbs__(sector_in), SZ = .true.)
          IF(pm == '-') CALL new_fermion_sector(Csec%sz, &
               npart_func(sector_in)-1, norbs__(sector_in), SZ = .true.)
       CASE(2) ! NAMBU
-         IF(pm == ' + ') CALL new_fermion_sector(Csec%sz, &
+         IF(pm == '+') CALL new_fermion_sector(Csec%sz, &
               npart_func(sector_in)-1, norbs__(sector_in), SZ = .true.)
          IF(pm == '-') CALL new_fermion_sector(Csec%sz, npart_func(sector_in) &
               + 1, norbs__(sector_in), SZ = .true.)
@@ -236,14 +274,14 @@ contains
 
       SELECT CASE(spin)
       CASE(1) ! SPIN UP
-         IF(pm == ' + ') then
+         IF(pm == '+') then
             CALL new_fermion_sector2(Csec%updo, nup + 1, ndo, Ns)
          endif
          IF(pm == '-') then
             CALL new_fermion_sector2(Csec%updo, nup-1, ndo, Ns)
          endif
       CASE(2) ! SPIN DOWN
-         IF(pm == ' + ') then
+         IF(pm == '+') then
             CALL new_fermion_sector2(Csec%updo, nup, ndo + 1, Ns)
          endif
          IF(pm == '-') then
@@ -256,7 +294,7 @@ contains
 
    subroutine apply_Csz(Ces, pm, MASK, es, esrank)
 
-      ! $$ COMPUTE c[site]|0 >, c^ + [site]|0 >
+      ! $$ COMPUTE c[site]|0>, c^+[site]|0>
 
       use eigen_class, only: add_eigen, delete_eigen, delete_eigenlist, &
            eigen_type, new_eigen
@@ -300,7 +338,7 @@ contains
                IF(eigen_in%vec%rc(istate) /= 0.0_DBL)THEN
                   CALL new_ket(ket_in, es%sector%sz%state(istate), &
                        es%sector%sz%norbs)
-                  IF(pm == ' + ') CALL create(ket_out, AIMIMPiorbsz(iorb), &
+                  IF(pm == '+') CALL create(ket_out, AIMIMPiorbsz(iorb), &
                        ket_in) ! |Ceigen >= c^ + |eigen >
                   IF(pm == '-') CALL destroy(ket_out, AIMIMPiorbsz(iorb), &
                        ket_in) ! |Ceigen >= c |eigen >
@@ -372,14 +410,14 @@ contains
                        es%sector%sz%norbs)
                   SELECT CASE(spin)
                   CASE(1)
-                     IF(pm == ' + ') CALL create(ket_out, &
+                     IF(pm == '+') CALL create(ket_out, &
                           AIMIMPiorbsz_updo(site, spin), ket_in) ! |Ceigen >=
                      ! c^ + |eigen >
                      IF(pm == '-') CALL destroy(ket_out, &
                           AIMIMPiorbsz_updo(site, spin), ket_in) ! |Ceigen >=
                      ! c |eigen >
                   CASE(2) ! NAMBU
-                     IF(pm == ' + ') CALL destroy(ket_out, &
+                     IF(pm == '+') CALL destroy(ket_out, &
                           AIMIMPiorbsz_updo(site, spin), ket_in) ! |Ceigen >=
                      ! c |eigen >
                      IF(pm == '-') CALL create(ket_out, &
@@ -450,8 +488,7 @@ contains
             eigen_out%vec%rc = 0.0_DBL
 
             ! THEN PARSE THE INPUT SECTOR TO APPLY RELEVANT
-            ! CREATION/ANNIHILATION
-            ! OPERATOR
+            ! CREATION/ANNIHILATION OPERATOR
 
             DO istate = 1, es%sector%sz%dimen
                IF(eigen_in%vec%rc(istate) /= 0.0_DBL)THEN
@@ -472,14 +509,14 @@ contains
                   if(goforit == 1)then
                      SELECT CASE(spin)
                      CASE(1)
-                        IF(pm == ' + ') CALL create(ket_out, &
+                        IF(pm == '+') CALL create(ket_out, &
                              AIMIMPiorbsz_updo(site, spin), ket_in) ! |Ceigen
                         ! >= c^ + |eigen >
                         IF(pm == '-') CALL destroy(ket_out, &
                              AIMIMPiorbsz_updo(site, spin), ket_in) ! |Ceigen
                         ! >= c |eigen >
                      CASE(2) ! NAMBU
-                        IF(pm == ' + ') CALL destroy(ket_out, &
+                        IF(pm == '+') CALL destroy(ket_out, &
                              AIMIMPiorbsz_updo(site, spin), ket_in) ! |Ceigen
                         ! >= c |eigen >
                         IF(pm == '-') CALL create(ket_out, &
@@ -547,6 +584,10 @@ contains
       REAL(8), ALLOCATABLE               :: tempp(:)
 #endif
 
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: entering apply_C_apply_Cupdo"
+#endif
+
       eigen_in => es%lowest%eigen(esrank)
       if(force_reset_list) CALL delete_eigenlist(Ces%lowest)
 
@@ -597,7 +638,7 @@ contains
 
             DO istate = 1, sec%dimen
                CALL new_ket(ket_in, sec%state(istate), sec%norbs)
-               IF(pm == ' + ') CALL create(ket_out, AIMIMPiorbupdo(site, &
+               IF(pm == '+') CALL create(ket_out, AIMIMPiorbupdo(site, &
                     spin), ket_in) ! |Ceigen >= c^ + |eigen >
                IF(pm == '-') CALL destroy(ket_out, AIMIMPiorbupdo(site, spin), &
                     ket_in) ! |Ceigen >= c |eigen >
@@ -634,6 +675,10 @@ contains
       IF(ALLOCATED(tabjstate)) DEALLOCATE(tabjstate)
 
       call scatter_rank0(es%lowest%eigen(esrank))
+
+#ifdef DEBUG
+      write(log_unit, '(a)') "DEBUG: leaving apply_C_apply_Cupdo"
+#endif
 
    contains
 

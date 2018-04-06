@@ -2,8 +2,8 @@ module minimization_wrapping
 
   use genvar
   use mpirout
-  use conjg_grad_civelli
-  use StringManip, only : tostring
+  use conj_grad, only: minimize
+  use StringManip, only: tostring
 
   IMPLICIT NONE 
   PRIVATE
@@ -128,10 +128,14 @@ contains
 
   !---------------------------------------------------------------------------------------------!
     SELECT CASE (TRIM(ADJUSTL(FIT_METH)))
-     CASE('CIVELLI')
+     CASE('MINIMIZE')
         call init_minimize
-        CALL minimize_civelli(distance_func______,nnn,xtemp,dist_min,g,hess,wcivelli,dfn,xprmt,search_step,dist_max,mode,Niter_search_max,iprint,iexit)
+        CALL minimize(func_,nnn,xtemp,dist_min,g,hess,w,dfn,xprmt,search_step,dist_max,mode,Niter_search_max,iprint,iexit)
         test = xtemp(1:nnn)
+     ! CASE('CIVELLI')
+     !    call init_minimize
+     !    CALL minimize_civelli(distance_func______,nnn,xtemp,dist_min,g,hess,wcivelli,dfn,xprmt,search_step,dist_max,mode,Niter_search_max,iprint,iexit)
+     !    test = xtemp(1:nnn)
      CASE DEFAULT
         write(*,*) 'error minimize wrapper case not found' 
         write(*,*) 'MY RANK : ', rank

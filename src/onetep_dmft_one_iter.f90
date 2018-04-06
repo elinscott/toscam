@@ -743,6 +743,7 @@ contains
     write(*,*) 'substracting double counting from Sigma : ', double_counting(kk_,:)
 
     if((solver==1.or.solver==2.or.solver==3).and.nmatsu_long>0)then
+      write(*,*) "entering if 1"
       call copy_sigma_position_nlong_to_position_nw_minus_1(filename_sigma(kk_))
     endif
 
@@ -750,6 +751,7 @@ contains
 
       full_=.false.
     if(cluster_dmft_green_for_self_consistence)then
+      write(*,*) "entering if 2"
       full_=.true.
       if(kk_==1) INQUIRE(file='_sigma_output_full_1',EXIST=test_1)
       if(kk_==2) INQUIRE(file='_sigma_output_full_2',EXIST=test_2)
@@ -2327,7 +2329,7 @@ endif
  write(*,*) 'output double counting filename is : ', TRIM(ADJUSTL(filename_edc))
 
  write(*,*) '==========================================='
- write(*,*) 'getting rid off other sigmas present in dir'
+ write(*,*) 'getting rid of other sigmas present in dir'
  if(.not.verysilent)then
  if(kkk==1)then
   call system(" get_rid_other_sigmas.out "//TRIM(ADJUSTL(filename_sigma(1))))
