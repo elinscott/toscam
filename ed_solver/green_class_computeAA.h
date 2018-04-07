@@ -280,16 +280,7 @@
 
          CALL reset_timer(applyA_timer)
          CALL delete_eigenlist(Apm_es(kpm)%lowest)
-         write(log_unit, *) Apm_es(kpm)%sector%updo%up%chunk
-         write(log_unit, *) Apm_es(kpm)%sector%updo%up%title
-         write(log_unit, *) Apm_es(kpm)%sector%updo%down%title
-         write(log_unit, *) Apm_es(kpm)%lowest%neigen
-         write(log_unit, *) ORBMASKvec(ipm, jpm, :)
          CALL applyA(Apm_es(kpm), pm(kpm), ORBMASKvec(ipm, jpm, :), es, ieigen)
-         write(log_unit, *) Apm_es(kpm)%sector%updo%up%chunk
-         write(log_unit, *) Apm_es(kpm)%sector%updo%up%title
-         write(log_unit, *) Apm_es(kpm)%sector%updo%down%title
-         write(log_unit, *) Apm_es(kpm)%lowest%neigen
          if(Apm_es(kpm)%lowest%neigen == 0) then
             write(*,'(a,i3,a)') "Error on rank ", rank, " in computeAA: Apm_es neigen = 0"
             stop
