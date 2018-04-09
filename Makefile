@@ -26,8 +26,6 @@ ed_solver: solver_obj
 
 lib: lib_obj
 	@echo Compiling libraries
-	@( cd lib/fields/src ; \
-	$(MAKE) -f makefile)
 	@( cd lib/slatec/static ; \
 	$(MAKE) -f makefile)
 	@( cd lib/splines/obj ; \
@@ -43,8 +41,6 @@ clean:
 	$(MAKE) -f makefile clean)
 
 cleanlib:
-	@( cd lib/fields/src ; \
-	$(MAKE) -f makefile clean)
 	@( cd lib/slatec/static ; \
 	$(MAKE) -f makefile clean)
 	@( cd lib/splines ; \

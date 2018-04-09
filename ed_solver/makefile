@@ -83,12 +83,9 @@ MODULES = $(MODULE_SOURCES:.f90=.mod)
 # Libraries
 #
 
-# LIBUTILS   = -L$(ROOTDIR)/lib/utils/obj -lutils
-LIBUTILS   =
 LIBSPLINES = -L$(ROOTDIR)/lib/splines/obj -lsplines
 LIBSLATEC  = -L$(ROOTDIR)/lib/slatec/static -lslatec
-LIBFIELD   = -L$(ROOTDIR)/lib/fields/src -lfield
-LIBS       = $(LIBSPLINES) $(LIBUTILS) $(LIBSLATEC) $(LIBFIELD)
+LIBS       = $(LIBSPLINES) $(LIBSLATEC)
 
 #
 # Include

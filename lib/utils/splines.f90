@@ -1541,38 +1541,38 @@ contains
   !--------------------------------!
   !--------------------------------!
 
- subroutine resampleit_matrix___(xin,yin,xx,yy,ss)
- implicit none
- real(8)    :: xin(:),xx(:),trace,diag_(size(xin)),vlam,w(size(xin)),sy(size(xin))
- complex(8) :: yin(:,:,:,:)
- complex(8) :: yy(:,:,:,:)
- real(8)    :: ss,tt(size(yin(1,1,1,:))),ttr(size(yin(1,1,1,:)))
- integer    :: i,j,k,u(4),ierr,v(3)
-
- if(size(xin)==size(xx))then
-  if(maxval(abs(xin-xx))<1.d-12) then
-   yy=yin
-   return
-  endif
- endif
- if(maxval(abs(yin))<1.d-15) then
-   yy=0.d0
-   return
- endif
-
- v(1)=2; v(2)=3; v(3)=1; w=1.d0; yy=0.; u=shape(yin)
- do k=1,u(3)
-  do i=1,u(1)
-   do j=1,u(2)
-    call css(-2000.d0,xin,real(yin(i,j,k,:)),w,sy,trace,diag_,vlam,size(xx),xx,ttr,v,0,ierr)
-    call css(-2000.d0,xin,aimag(yin(i,j,k,:)),w,sy,trace,diag_,vlam,size(xx),xx,tt,v,0,ierr)
-    yy(i,j,k,:)=CMPLX(ttr,tt,kind=8)
-   enddo
-  enddo
- enddo
-
- return
- end subroutine
+!  subroutine resampleit_matrix___(xin,yin,xx,yy,ss)
+!  implicit none
+!  real(8)    :: xin(:),xx(:),trace,diag_(size(xin)),vlam,w(size(xin)),sy(size(xin))
+!  complex(8) :: yin(:,:,:,:)
+!  complex(8) :: yy(:,:,:,:)
+!  real(8)    :: ss,tt(size(yin(1,1,1,:))),ttr(size(yin(1,1,1,:)))
+!  integer    :: i,j,k,u(4),ierr,v(3)
+! 
+!  if(size(xin)==size(xx))then
+!   if(maxval(abs(xin-xx))<1.d-12) then
+!    yy=yin
+!    return
+!   endif
+!  endif
+!  if(maxval(abs(yin))<1.d-15) then
+!    yy=0.d0
+!    return
+!  endif
+! 
+!  v(1)=2; v(2)=3; v(3)=1; w=1.d0; yy=0.; u=shape(yin)
+!  do k=1,u(3)
+!   do i=1,u(1)
+!    do j=1,u(2)
+!     call css(-2000.d0,xin,real(yin(i,j,k,:)),w,sy,trace,diag_,vlam,size(xx),xx,ttr,v,0,ierr)
+!     call css(-2000.d0,xin,aimag(yin(i,j,k,:)),w,sy,trace,diag_,vlam,size(xx),xx,tt,v,0,ierr)
+!     yy(i,j,k,:)=CMPLX(ttr,tt,kind=8)
+!    enddo
+!   enddo
+!  enddo
+! 
+!  return
+!  end subroutine
 
   !--------------------------------!
   !--------------------------------!
