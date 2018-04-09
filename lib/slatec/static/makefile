@@ -1,6 +1,12 @@
-#FFLAGS= -O3 -arch i386 
-FFLAGS= -O1 
-#FFLAGS= -O0 -debug -fpe0 -check all -g 
+ifndef ROOTDIR
+   ROOTDIR=../../..
+endif
+ifdef ARCH
+   include $(ROOTDIR)/config/conf.$(ARCH)
+else
+   include $(ROOTDIR)/config/conf.default
+endif
+
 OBJ = \
 aaaaaa.o  cnbdi.o   dcv.o     dqc25f.o  hpperm.o  qc25s.o       spoco.o \
 acosh.o   cnbfa.o   ddaini.o  dqc25s.o  hpsort.o  qcheb.o       spodi.o \
@@ -214,13 +220,14 @@ cnbco.o   dcsevl.o  dqc25c.o  hkseq.o   qc25f.o   splpup.o
 #  Static library target
 #
 
+default: libslatec.a
+
 libslatec.a:  $(OBJ)
 	ar r $@ $(OBJ); ranlib $@
 
-${OBJ}: %.o: ../src/%.f
+$(OBJ): %.o: ../src/%.f
 #	ifort ${FFLAGS} -c -o $@ $<
-	mpifort ${FFLAGS} -c -o $@ $<
-
+	$(F90) $(FFLAGS) -c -o $@ $<
 
 clean:
 	rm -f *.o libslatec.a

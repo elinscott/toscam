@@ -18,8 +18,7 @@ VPATH=$(ROOTDIR)/lib/utils/obj:$(ROOTDIR)/lib/utils
 prep     = -fpp -D__DUMP_DISLIN -DNOSVD
 
 LIBSLATEC = -L$(ROOTDIR)/lib/slatec/static
-LIBFIELD  = -L$(ROOTDIR)/lib/field_spline/src
-LIBS      = $(LIBSLATEC) $(LIBFIELD)
+LIBS      = 
 
 #
 # Module redirection

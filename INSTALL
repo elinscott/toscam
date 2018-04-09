@@ -26,8 +26,8 @@ parallelism, in which case OpenMP will need to be enabled for your compiler
 
       # TOSCAM configuration file
 
-      F90       = mpifort -qopenmp
-      FFLAGS    = -O1
+      F90       = mpifort
+      FFLAGS    = -O1 -qopenmp
       MKL       = -mkl
       CCOMPL    = mpicc
       CFLAGS    = -O1
@@ -35,13 +35,13 @@ parallelism, in which case OpenMP will need to be enabled for your compiler
       CXXFLAGS  = -O1
       RANLIB    = ranlib
 
-  a) F90 is simply the Fortran compiler to be used. To enable OpenMP, you
-     will need the appropriate directive for your compiler, eg: 
+  a) F90 is simply the Fortran compiler to be used.
+  b) FFLAGS are the default compiler flags, including preprocessor directives. 
+     To enable OpenMP, you will need the appropriate directive for your 
+     compiler, eg: 
         -qopenmp for ifort
         -fopenmp for gfortran
-  b) FFLAGS are the default compiler flags, including preprocessor directives
-        # TO DISCUSS WITH CEDRIC
-  c) MKL must point to the BLAS and LACPACK libraries
+  c) MKL must point to the BLAS and LAPACK libraries
   d) CCOMPL is the C compiler to use
   e) CFLAGS are the C flags to use
   f) C++ is the C++ compiler to use

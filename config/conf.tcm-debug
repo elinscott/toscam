@@ -1,6 +1,6 @@
 # Config file for TCM PC
-F90       = mpifort -qopenmp
-FFLAGS    = -O0 -g -traceback -DDEBUG
+F90       = mpifort
+FFLAGS    = -qopenmp -O0 -g -traceback -DDEBUG
 MKL       = -mkl
 CCOMPL    = mpicc
 CFLAGS    = -O0

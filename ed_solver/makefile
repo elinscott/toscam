@@ -85,7 +85,7 @@ MODULES = $(MODULE_SOURCES:.f90=.mod)
 
 LIBSPLINES = -L$(ROOTDIR)/lib/splines/obj -lsplines
 LIBSLATEC  = -L$(ROOTDIR)/lib/slatec/static -lslatec
-LIBS       = $(LIBSPLINES) $(LIBSLATEC)
+LIBS       = $(LIBSPLINES)
 
 #
 # Include

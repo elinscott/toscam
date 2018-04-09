@@ -1,6 +1,6 @@
 # Config file for TCM PC
-F90       = mpifort -qopenmp
-FFLAGS    = -O1
+F90       = mpifort
+FFLAGS    = -O1 -qopenmp
 MKL       = -mkl
 CCOMPL    = mpicc
 CFLAGS    = -O1
