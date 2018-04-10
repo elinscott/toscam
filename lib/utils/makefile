@@ -15,10 +15,9 @@ endif
 
 VPATH=$(ROOTDIR)/lib/utils/obj:$(ROOTDIR)/lib/utils
 
-prep     = -fpp -D__DUMP_DISLIN -DNOSVD
+prep     = -fpp
 
-LIBSLATEC = -L$(ROOTDIR)/lib/slatec/static
-LIBS      = 
+LIBS     = 
 
 #
 # Module redirection

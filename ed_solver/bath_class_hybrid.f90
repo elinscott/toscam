@@ -358,8 +358,7 @@ contains
                   do i = 1, size(Eb, 1)
                      Ebm1(i, i) = Ebm1(i, i) + freq(iw)
                   enddo
-                  CALL invmat(n = size(Ebm1, 1), mat = Ebm1, block_matrix = &
-                       block, diagmat = diagmat)
+                  CALL invmat(size(Ebm1, 1), Ebm1)
                   if(.not.diagmat)then
                      hybrid(:, :, iw) = MATMUL(Vcb, MATMUL_x(aa = Ebm1, bb = &
                           Vbc, a_by_block = block))
@@ -372,8 +371,7 @@ contains
                      hybrid(i, i, iw) = hybrid(i, i, iw) + freq(iw)
                   enddo
                   hybrid(:, :, iw) = hybrid(:, :, iw) - Eccc%rc%mat
-                  CALL invmat(n = size(hybrid, 1), mat = hybrid(:, :, iw), &
-                       block_matrix = block, diagmat = diagmat)
+                  CALL invmat(size(hybrid, 1), hybrid(:, :, iw))
                enddo
                !#ifndef OPENMP_MPI_SAFE
                !$OMP END DO
@@ -391,8 +389,7 @@ contains
                      do i = 1, size(Eb, 1)
                         Ebm1(i, i) = Ebm1(i, i) + freq(iw)
                      enddo
-                     CALL invmat(n = size(Ebm1, 1), mat = Ebm1, block_matrix = &
-                          block, diagmat = diagmat)
+                     CALL invmat(size(Ebm1, 1), Ebm1)
                      if(.not.diagmat)then
                         hybrid(:, :, iw) = MATMUL(Vcb, MATMUL_x(aa = Ebm1, bb &
                              = Vbc, a_by_block = block))
@@ -515,8 +512,7 @@ contains
             enddo
             hybrid2fit%fctn(:, :, iw) = hybrid2fit%fctn(:, :, iw) - &
                  Eccc%rc%mat(:, :)
-            CALL invmat(n = size(hybrid2fit%fctn, 1), mat = hybrid2fit%fctn(:, &
-                 :, iw))
+            CALL invmat(size(hybrid2fit%fctn, 1), hybrid2fit%fctn(:, :, iw))
          enddo
          write(*, *) 'Weiss Field Function to fit defined'
          call write_array( Eccc%rc%mat(:, :), 'Ec for Fit', unit = 6, short = &

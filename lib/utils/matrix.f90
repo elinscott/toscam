@@ -26,9 +26,6 @@ public :: eigenvector_matrix
 public :: eigenvector_matrix_c_
 public :: Id
 public :: invmat
-public :: invmat_comp
-public :: invmat_comp2
-public :: invmat_comps
 public :: matmul_x
 public :: matmul_x_c 
 public :: new_diag
@@ -55,21 +52,21 @@ INTERFACE bande_mat
  MODULE PROCEDURE bande_matr,bande_matc 
 END INTERFACE 
 !--------------------------------------------------------------------------------!
-INTERFACE getrf__
- MODULE PROCEDURE getrfc__,getrfcs__,getrfr__,getrfs__
-END INTERFACE
-!--------------------------------------------------------------------------------!
-INTERFACE getri__
- MODULE PROCEDURE getric__,getrics__,getrir__,getrirs__
-END INTERFACE
-!--------------------------------------------------------------------------------!
-INTERFACE gedi__
- MODULE PROCEDURE gedic__,gedics__,gedicq__
-END INTERFACE
-!--------------------------------------------------------------------------------!
-INTERFACE geco__
- MODULE PROCEDURE gecoc__,gecocs__,gecocq__
-END INTERFACE
+! INTERFACE getrf__
+!  MODULE PROCEDURE getrfc__,getrfcs__,getrfr__,getrfs__
+! END INTERFACE
+! !--------------------------------------------------------------------------------!
+! INTERFACE getri__
+!  MODULE PROCEDURE getric__,getrics__,getrir__,getrirs__
+! END INTERFACE
+! !--------------------------------------------------------------------------------!
+! INTERFACE gedi__
+!  MODULE PROCEDURE gedic__,gedicq__
+! END INTERFACE
+! !--------------------------------------------------------------------------------!
+! INTERFACE geco__
+!  MODULE PROCEDURE gecoc__,gecocs__,gecocq__
+! END INTERFACE
 !--------------------------------------------------------------------------------!
 ! INTERFACE svd_wrapper
 !     MODULE PROCEDURE svd_wrapper_cs,svd_wrapper_c,svd_wrapper_r,svd_wrapper_rs,svd_wrapper_rq
@@ -83,13 +80,18 @@ END INTERFACE
 !     MODULE PROCEDURE tqli_,tqli__,tqliq
 ! END INTERFACE
 !--------------------------------------------------------------------------------!
-INTERFACE invmat
-    MODULE PROCEDURE invmat_comp,invmat_comps,invmat_real,invmat_reals,invmat_real_quad,invmat_comp_quad
-END INTERFACE
+interface invmat
+   module procedure invert_lapack_real
+   module procedure invert_lapack_complex
+end interface
 !--------------------------------------------------------------------------------!
-INTERFACE invmat_jordan
-    MODULE PROCEDURE inverse_,inverse__,inverses_,inverses__
-END INTERFACE
+! INTERFACE invmat
+!     MODULE PROCEDURE invmat_comp,invmat_comps,invmat_real,invmat_reals,invmat_real_quad,invmat_comp_quad
+! END INTERFACE
+! !--------------------------------------------------------------------------------!
+! INTERFACE invmat_jordan
+!     MODULE PROCEDURE inverse_,inverse__,inverses_,inverses__
+! END INTERFACE
 !--------------------------------------------------------------------------------!
 INTERFACE ludcmp
     MODULE PROCEDURE ludcmpd,ludcmpq
@@ -137,9 +139,9 @@ INTERFACE MATMUL_x
   MODULE PROCEDURE MATMUL_x_c,MATMUL_x_r
 END INTERFACE
 !--------------------------------------------------------------------------------!
-INTERFACE get_det_from_zgeco
- MODULE PROCEDURE get_det_from_zgeco_,get_det_from_zgeco__,get_det_from_zgeco___
-END INTERFACE
+! INTERFACE get_det_from_zgeco
+!  MODULE PROCEDURE get_det_from_zgeco_,get_det_from_zgeco__,get_det_from_zgeco___
+! END INTERFACE
 !--------------------------------------------------------------------------------!
 ! INTERFACE INVMG
 !  MODULE PROCEDURE D_INVMG,Q_INVMG
@@ -176,18 +178,94 @@ END INTERFACE
 !     MODULE PROCEDURE invert_lapack_r,invert_lapack_C
 ! END INTERFACE
 !--------------------------------------------------------------------------------!
-INTERFACE invert_openmp
-    MODULE PROCEDURE invert_pivot_double_,invert_pivot_complex_,invert_pivot_single_,invert_pivot_complexs_
-END INTERFACE
+! INTERFACE invert_openmp
+!     MODULE PROCEDURE invert_pivot_double_,invert_pivot_complex_,invert_pivot_single_,invert_pivot_complexs_
+! END INTERFACE
 
 !--------------------------------------------------------------------------------!
- real(8),parameter,private :: rerror=1.d-12,invmat_error=1.d-13,rrerror=1.d-28 
- real(8),parameter,private :: smallest_pivot=1.d-12,zero=0.d0,one=1.d0
- integer,parameter,private :: n_cuda_rout=100,n_openmp_rout=30
+!  real(8),parameter,private :: rerror=1.d-12,invmat_error=1.d-13,rrerror=1.d-28 
+!  real(8),parameter,private :: smallest_pivot=1.d-12,zero=0.d0,one=1.d0
+!  integer,parameter,private :: n_cuda_rout=100,n_openmp_rout=30
 !--------------------------------------------------------------------------------!
 
 contains
-! 
+
+   subroutine invert_lapack_real(n, A)
+   
+      implicit none
+   
+      integer,           intent(in   ) :: n
+      real(8),           intent(inout) :: A(:,:)
+   
+      integer, allocatable :: piv(:)
+      real(8), allocatable :: WORK(:)
+      integer              :: ierr
+   
+      external :: dgetrf, dgetri
+   
+      ! Check we have correct dimensions
+      if (size(A, dim=1) /= n .or. size(A, dim=2) /= n) then
+         write(*,*) "Error in invert_lapack_real: matrix dimensions do not match input"
+         stop
+      end if
+
+      ! Allocate local variables
+      allocate(piv(n), stat = ierr)
+      allocate(WORK(n), stat = ierr)
+   
+      ! Perform inversion
+      call dgetrf(n, n, A, n, piv, ierr)
+      call dgetri(n, A, n, piv, WORK, n, ierr)
+   
+      ! Check error flag
+      if (ierr /= 0) then
+         write(*,*) 'Error in invert_lapack_real: matrix has no inverse'
+      endif
+   
+      ! Deallocate local variables
+      deallocate(piv, stat=ierr)
+      deallocate(WORK, stat=ierr)
+   
+   end subroutine
+   
+   subroutine invert_lapack_complex(n, A)
+   
+      implicit none
+   
+      integer,           intent(in   ) :: n
+      complex(8),        intent(inout) :: A(:,:)
+   
+      integer, allocatable    :: piv(:)
+      complex(8), allocatable :: WORK(:)
+      integer                 :: ierr
+   
+      external :: zgetrf, zgetri
+   
+      ! Check we have correct dimensions
+      if (size(A, dim=1) /= n .or. size(A, dim=2) /= n) then
+         write(*,*) "Error in invert_lapack_complex: matrix dimensions do not match input"
+         stop
+      end if
+   
+      ! Allocate local variables
+      allocate(piv(n), stat = ierr)
+      allocate(WORK(n), stat = ierr)
+   
+      ! Perform inversion
+      call zgetrf(n, n, A, n, piv, ierr)
+      call zgetri(n, A, n, piv, WORK, n, ierr)
+   
+      ! Check error flag
+      if (ierr /= 0) then
+         write(*,*) 'Error in invert_lapack_complex: matrix has no inverse'
+      endif
+   
+      ! Deallocate local variables
+      deallocate(piv, stat=ierr)
+      deallocate(WORK, stat=ierr)
+   
+   end subroutine
+
 ! !**************************************************************************
 ! !**************************************************************************
 ! !**************************************************************************
@@ -527,237 +605,237 @@ contains
 !**************************************************************************
 !**************************************************************************
 
-    !-----------------------!
-
- subroutine getrfs__(mat,piv)
- implicit none
- integer       :: nnn,piv(:),INFO
- real(4)       :: mat(:,:)
-    nnn=size(mat,1)
-    ! ebl: Removing GPU functionality
-    ! if(use_cula_routines)then
-    !  call cula__getrf(nnn,mat,piv)
-    !  return
-    ! endif
-    CALL SGETRF(nnn,nnn,mat,nnn,piv,INFO)
-    IF(info>0)THEN
-      CALL dump_message(TEXT="ERROR IN 'invert[GETRF]': MATRIX IS SINGULAR : ")
-      STOP 'error invert_lapack singulat matrix , getrf'
-    ENDIF
- end subroutine
-
-    !-----------------------!
-
- subroutine getrfcs__(mat,piv)
- implicit none
- integer       :: nnn,piv(:),INFO
- complex(4)    :: mat(:,:)
-    nnn=size(mat,1)
-    ! ebl: Removing GPU functionality
-    ! if(use_cula_routines)then
-    !   call cula__getrf(nnn,mat,piv)
-    !   return
-    ! endif
-    CALL CGETRF(nnn,nnn,mat,nnn,piv,INFO)
-    IF(info>0)THEN
-      CALL dump_message(TEXT="ERROR IN 'invert[GETRF]': MATRIX IS SINGULAR : ")
-      STOP 'error invert_lapack singulat matrix , getrf'
-    ENDIF
- end subroutine
-
-    !-----------------------!
-
- subroutine getrfc__(mat,piv)
- implicit none
- integer       :: nnn,piv(:),INFO
- complex(8)    :: mat(:,:)
-    nnn=size(mat,1)
-    ! ebl: Removing GPU functionality
-    ! if(use_cula_routines)then
-    !   call cula__getrf(nnn,mat,piv)
-    !   return
-    ! endif
-    CALL ZGETRF(nnn,nnn,mat,nnn,piv,INFO)
-    IF(info>0)THEN
-      CALL dump_message(TEXT="ERROR IN 'invert[GETRF]': MATRIX IS SINGULAR : ")
-      CALL write_array(mat,'mat')
-      STOP 'error invert_lapack singulat matrix , getrf'
-    ENDIF
- end subroutine
-
-    !-----------------------!
-
- subroutine getrfr__(mat,piv)
- implicit none
- integer    :: nnn,piv(:),INFO
- real(8)    :: mat(:,:)
-    nnn=size(mat,1)
-    ! ebl: Removing GPU functionality
-    ! if(use_cula_routines)then
-    !  call cula__getrf(nnn,mat,piv)
-    !  return
-    ! endif
-    CALL DGETRF(nnn,nnn,mat,nnn,piv,INFO) 
-    IF(info>0)THEN
-      CALL dump_message(TEXT="ERROR IN 'invert[GETRF]': MATRIX IS SINGULAR : ")
-      CALL write_array(mat,'mat')
-      STOP 'error invert_lapack singulat matrix , getrf'
-    ENDIF
- end subroutine
-
-    !-----------------------!
-
- subroutine getrirs__(mat,piv)
- implicit none
- integer    :: nnn,piv(:),INFO
- real(4)    :: mat(:,:),WORK(size(mat,1))
-    nnn=size(mat,1)
-    ! ebl: Removing GPU functionality
-    ! if(use_cula_routines)then
-    !  call cula__getri(nnn,mat,piv)
-    !  return
-    ! endif
-    call SGETRI(nnn,mat,nnn,piv,WORK,nnn,INFO)
-    IF(info>0)THEN
-      CALL dump_message(TEXT="ERROR IN 'invert[GETRI]': MATRIX IS SINGULAR : ")
-      STOP 'error invert_lapack singulat matrix , getri'
-    ENDIF
- end subroutine
-
-    !-----------------------!
-
- subroutine getrir__(mat,piv)
- implicit none
- integer    :: nnn,piv(:),INFO
- real(8)    :: mat(:,:),WORK(size(mat,1))
-    nnn=size(mat,1)
-    ! ebl: Removing GPU functionality
-    ! if(use_cula_routines)then
-    !  call cula__getri(nnn,mat,piv)
-    !  return
-    ! endif
-    call DGETRI(nnn,mat,nnn,piv,WORK,nnn,INFO)
-    IF(info>0)THEN
-      CALL dump_message(TEXT="ERROR IN 'invert[GETRI]': MATRIX IS SINGULAR : ")
-      CALL write_array(mat,'mat')
-      STOP 'error invert_lapack singulat matrix , getri'
-    ENDIF
- end subroutine
-
-    !-----------------------!
-
- subroutine getrics__(mat,piv)
- implicit none
- integer    :: nnn,piv(:),INFO
- complex(4) :: mat(:,:),WORK(size(mat,1))
-    nnn=size(mat,1)
-    ! ebl: Removing GPU functionality
-    ! if(use_cula_routines)then
-    !  call cula__getri(nnn,mat,piv)
-    !  return
-    ! endif
-    call CGETRI(nnn,mat,nnn,piv,WORK,nnn,INFO)
-    IF(info>0)THEN
-      CALL dump_message(TEXT="ERROR IN 'invert[GETRI]': MATRIX IS SINGULAR : ")
-      STOP 'error invert_lapack singulat matrix , getri'
-    ENDIF
- end subroutine
-
-    !-----------------------!
-
- subroutine getric__(mat,piv)
- implicit none
- integer    :: nnn,piv(:),INFO
- complex(8) :: mat(:,:),WORK(size(mat,1))
-    nnn=size(mat,1)
-    ! ebl: Removing GPU functionality
-    ! if(use_cula_routines)then
-    !  call cula__getri(nnn,mat,piv)
-    !  return
-    ! endif
-    call ZGETRI(nnn,mat,nnn,piv,WORK,nnn,INFO)
-    IF(info>0)THEN
-      CALL dump_message(TEXT="ERROR IN 'invert[GETRI]': MATRIX IS SINGULAR : ")
-      CALL write_array(mat,'mat')
-      STOP 'error invert_lapack singulat matrix , getri'
-    ENDIF
- end subroutine
-
-    !-----------------------!
-
- subroutine gecoc__(nnn,mat,piv)
- implicit none
- integer      :: nnn
- real(8)      :: rcond
- integer      :: piv(nnn)
- complex(8)   :: mat(nnn,nnn),WORK2(size(mat,1))
-   if(.not.fast_invmat)then
-     call zgeco(mat,nnn,nnn,piv,rcond,WORK2)
-    else
-     call zgeco_(mat,nnn,nnn,piv,rcond,WORK2)
-   endif
- end subroutine
-
-  !-----------------------!
-
- subroutine gedic__(nnn,mat,piv,deti)
- implicit none
- integer      :: nnn
- real(8)      :: rcond
- integer      :: piv(nnn)
- complex(8)   :: mat(nnn,nnn),WORK(2*size(mat,1)),deti(2)
-   if(.not.fast_invmat)then
-     call zgedi(mat,nnn,nnn,piv,deti,WORK,11)
-    else
-     call zgedi_(mat,nnn,nnn,piv,deti,WORK,11)
-   endif
- end subroutine
-
-    !-----------------------!
-
- subroutine gecocs__(nnn,mat,piv)
- implicit none
- integer      :: nnn
- real(4)      :: rcond
- integer      :: piv(nnn)
- complex(4)   :: mat(nnn,nnn),WORK2(size(mat,1))
-   call cgeco(mat,nnn,nnn,piv,rcond,WORK2)
- end subroutine
-
-    !-----------------------!
-
- subroutine gedics__(nnn,mat,piv,deti)
- implicit none
- integer      :: nnn
- real(4)      :: rcond
- integer      :: piv(nnn)
- complex(4)   :: mat(nnn,nnn),WORK(2*size(mat,1)),deti(2)
-   call cgedi(mat,nnn,nnn,piv,deti,WORK,11)
- end subroutine
-
-    !-----------------------!
-
- subroutine gecocq__(nnn,mat,piv)
- implicit none
- integer      :: nnn
- real(16)     :: rcond
- integer      :: piv(nnn)
- complex(16)  :: mat(nnn,nnn),WORK2(size(mat,1))
-   call q_zgeco(mat,nnn,nnn,piv,rcond,WORK2)
- end subroutine
-
-    !-----------------------!
-
- subroutine gedicq__(nnn,mat,piv,deti)
- implicit none
- integer      :: nnn
- real(16)     :: rcond
- integer      :: piv(nnn)
- complex(16)  :: mat(nnn,nnn),WORK(2*size(mat,1)),deti(2)
-     call q_zgedi(mat,nnn,nnn,piv,deti,WORK,11)
- end subroutine
-
-    !-----------------------!
+!     !-----------------------!
+! 
+!  subroutine getrfs__(mat,piv)
+!  implicit none
+!  integer       :: nnn,piv(:),INFO
+!  real(4)       :: mat(:,:)
+!     nnn=size(mat,1)
+!     ! ebl: Removing GPU functionality
+!     ! if(use_cula_routines)then
+!     !  call cula__getrf(nnn,mat,piv)
+!     !  return
+!     ! endif
+!     CALL SGETRF(nnn,nnn,mat,nnn,piv,INFO)
+!     IF(info>0)THEN
+!       CALL dump_message(TEXT="ERROR IN 'invert[GETRF]': MATRIX IS SINGULAR : ")
+!       STOP 'error invert_lapack singulat matrix , getrf'
+!     ENDIF
+!  end subroutine
+! 
+!     !-----------------------!
+! 
+!  subroutine getrfcs__(mat,piv)
+!  implicit none
+!  integer       :: nnn,piv(:),INFO
+!  complex(4)    :: mat(:,:)
+!     nnn=size(mat,1)
+!     ! ebl: Removing GPU functionality
+!     ! if(use_cula_routines)then
+!     !   call cula__getrf(nnn,mat,piv)
+!     !   return
+!     ! endif
+!     CALL CGETRF(nnn,nnn,mat,nnn,piv,INFO)
+!     IF(info>0)THEN
+!       CALL dump_message(TEXT="ERROR IN 'invert[GETRF]': MATRIX IS SINGULAR : ")
+!       STOP 'error invert_lapack singulat matrix , getrf'
+!     ENDIF
+!  end subroutine
+! 
+!     !-----------------------!
+! 
+!  subroutine getrfc__(mat,piv)
+!  implicit none
+!  integer       :: nnn,piv(:),INFO
+!  complex(8)    :: mat(:,:)
+!     nnn=size(mat,1)
+!     ! ebl: Removing GPU functionality
+!     ! if(use_cula_routines)then
+!     !   call cula__getrf(nnn,mat,piv)
+!     !   return
+!     ! endif
+!     CALL ZGETRF(nnn,nnn,mat,nnn,piv,INFO)
+!     IF(info>0)THEN
+!       CALL dump_message(TEXT="ERROR IN 'invert[GETRF]': MATRIX IS SINGULAR : ")
+!       CALL write_array(mat,'mat')
+!       STOP 'error invert_lapack singulat matrix , getrf'
+!     ENDIF
+!  end subroutine
+! 
+!     !-----------------------!
+! 
+!  subroutine getrfr__(mat,piv)
+!  implicit none
+!  integer    :: nnn,piv(:),INFO
+!  real(8)    :: mat(:,:)
+!     nnn=size(mat,1)
+!     ! ebl: Removing GPU functionality
+!     ! if(use_cula_routines)then
+!     !  call cula__getrf(nnn,mat,piv)
+!     !  return
+!     ! endif
+!     CALL DGETRF(nnn,nnn,mat,nnn,piv,INFO) 
+!     IF(info>0)THEN
+!       CALL dump_message(TEXT="ERROR IN 'invert[GETRF]': MATRIX IS SINGULAR : ")
+!       CALL write_array(mat,'mat')
+!       STOP 'error invert_lapack singulat matrix , getrf'
+!     ENDIF
+!  end subroutine
+! 
+!     !-----------------------!
+! 
+!  subroutine getrirs__(mat,piv)
+!  implicit none
+!  integer    :: nnn,piv(:),INFO
+!  real(4)    :: mat(:,:),WORK(size(mat,1))
+!     nnn=size(mat,1)
+!     ! ebl: Removing GPU functionality
+!     ! if(use_cula_routines)then
+!     !  call cula__getri(nnn,mat,piv)
+!     !  return
+!     ! endif
+!     call SGETRI(nnn,mat,nnn,piv,WORK,nnn,INFO)
+!     IF(info>0)THEN
+!       CALL dump_message(TEXT="ERROR IN 'invert[GETRI]': MATRIX IS SINGULAR : ")
+!       STOP 'error invert_lapack singulat matrix , getri'
+!     ENDIF
+!  end subroutine
+! 
+!     !-----------------------!
+! 
+!  subroutine getrir__(mat,piv)
+!  implicit none
+!  integer    :: nnn,piv(:),INFO
+!  real(8)    :: mat(:,:),WORK(size(mat,1))
+!     nnn=size(mat,1)
+!     ! ebl: Removing GPU functionality
+!     ! if(use_cula_routines)then
+!     !  call cula__getri(nnn,mat,piv)
+!     !  return
+!     ! endif
+!     call DGETRI(nnn,mat,nnn,piv,WORK,nnn,INFO)
+!     IF(info>0)THEN
+!       CALL dump_message(TEXT="ERROR IN 'invert[GETRI]': MATRIX IS SINGULAR : ")
+!       CALL write_array(mat,'mat')
+!       STOP 'error invert_lapack singulat matrix , getri'
+!     ENDIF
+!  end subroutine
+! 
+!     !-----------------------!
+! 
+!  subroutine getrics__(mat,piv)
+!  implicit none
+!  integer    :: nnn,piv(:),INFO
+!  complex(4) :: mat(:,:),WORK(size(mat,1))
+!     nnn=size(mat,1)
+!     ! ebl: Removing GPU functionality
+!     ! if(use_cula_routines)then
+!     !  call cula__getri(nnn,mat,piv)
+!     !  return
+!     ! endif
+!     call CGETRI(nnn,mat,nnn,piv,WORK,nnn,INFO)
+!     IF(info>0)THEN
+!       CALL dump_message(TEXT="ERROR IN 'invert[GETRI]': MATRIX IS SINGULAR : ")
+!       STOP 'error invert_lapack singulat matrix , getri'
+!     ENDIF
+!  end subroutine
+! 
+!     !-----------------------!
+! 
+!  subroutine getric__(mat,piv)
+!  implicit none
+!  integer    :: nnn,piv(:),INFO
+!  complex(8) :: mat(:,:),WORK(size(mat,1))
+!     nnn=size(mat,1)
+!     ! ebl: Removing GPU functionality
+!     ! if(use_cula_routines)then
+!     !  call cula__getri(nnn,mat,piv)
+!     !  return
+!     ! endif
+!     call ZGETRI(nnn,mat,nnn,piv,WORK,nnn,INFO)
+!     IF(info>0)THEN
+!       CALL dump_message(TEXT="ERROR IN 'invert[GETRI]': MATRIX IS SINGULAR : ")
+!       CALL write_array(mat,'mat')
+!       STOP 'error invert_lapack singulat matrix , getri'
+!     ENDIF
+!  end subroutine
+! 
+!     !-----------------------!
+! 
+!  subroutine gecoc__(nnn,mat,piv)
+!  implicit none
+!  integer      :: nnn
+!  real(8)      :: rcond
+!  integer      :: piv(nnn)
+!  complex(8)   :: mat(nnn,nnn),WORK2(size(mat,1))
+!    if(.not.fast_invmat)then
+!      call zgeco(mat,nnn,nnn,piv,rcond,WORK2)
+!     else
+!      call zgeco_(mat,nnn,nnn,piv,rcond,WORK2)
+!    endif
+!  end subroutine
+! 
+!   !-----------------------!
+! 
+!  subroutine gedic__(nnn,mat,piv,deti)
+!  implicit none
+!  integer      :: nnn
+!  real(8)      :: rcond
+!  integer      :: piv(nnn)
+!  complex(8)   :: mat(nnn,nnn),WORK(2*size(mat,1)),deti(2)
+!    if(.not.fast_invmat)then
+!      call zgedi(mat,nnn,nnn,piv,deti,WORK,11)
+!     else
+!      call zgedi_(mat,nnn,nnn,piv,deti,WORK,11)
+!    endif
+!  end subroutine
+! 
+!     !-----------------------!
+! 
+!  subroutine gecocs__(nnn,mat,piv)
+!  implicit none
+!  integer      :: nnn
+!  real(4)      :: rcond
+!  integer      :: piv(nnn)
+!  complex(4)   :: mat(nnn,nnn),WORK2(size(mat,1))
+!    call cgeco(mat,nnn,nnn,piv,rcond,WORK2)
+!  end subroutine
+! 
+!     !-----------------------!
+! 
+!  subroutine gedics__(nnn,mat,piv,deti)
+!  implicit none
+!  integer      :: nnn
+!  real(4)      :: rcond
+!  integer      :: piv(nnn)
+!  complex(4)   :: mat(nnn,nnn),WORK(2*size(mat,1)),deti(2)
+!    call cgedi(mat,nnn,nnn,piv,deti,WORK,11)
+!  end subroutine
+! 
+!     !-----------------------!
+! 
+!  subroutine gecocq__(nnn,mat,piv)
+!  implicit none
+!  integer      :: nnn
+!  real(16)     :: rcond
+!  integer      :: piv(nnn)
+!  complex(16)  :: mat(nnn,nnn),WORK2(size(mat,1))
+!    call q_zgeco(mat,nnn,nnn,piv,rcond,WORK2)
+!  end subroutine
+! 
+!     !-----------------------!
+! 
+!  subroutine gedicq__(nnn,mat,piv,deti)
+!  implicit none
+!  integer      :: nnn
+!  real(16)     :: rcond
+!  integer      :: piv(nnn)
+!  complex(16)  :: mat(nnn,nnn),WORK(2*size(mat,1)),deti(2)
+!      call q_zgedi(mat,nnn,nnn,piv,deti,WORK,11)
+!  end subroutine
+! 
+!     !-----------------------!
 
 !**************************************************************************
 !**************************************************************************
@@ -1627,246 +1705,113 @@ contains
 ! !**************************************************************************
 ! !**************************************************************************
 ! 
-subroutine invert_pivot_complexs_(matrix)
- implicit none
-   complex(4) :: matrix(:,:)
-   integer    :: size_
-   integer    :: switch(size(matrix,1),2),k,jj,kp1,i,j,l,krow,irow
-   complex(4) :: pivot,temp,dkk
- 
-    size_=size(matrix,1)
-
-        do  k = 1,size_
-
-                jj = k
-                if (k .ne. size_) then
-                        kp1 = k + 1
-                        pivot = (matrix(k, k))
-!$OMP PARALLEL PRIVATE(i,pivot,temp,jj) 
-!$OMP DO
-                        do i = kp1,size_
-                                temp = (matrix(i, k))
-                                if ( abs(pivot) .lt.  abs(temp)) then
-                                        pivot = temp
-                                        jj = i
-                                endif
-                        enddo
-!$OMP END DO
-!$OMP END PARALLEL
-                endif
-
-                switch(k,1)=k; switch(k,2)=jj
-
-                if (jj .ne. k) then
-!$OMP PARALLEL PRIVATE(j,temp)
-!$OMP DO
-                    do  j = 1 ,size_
-                         temp = matrix(jj, j)
-                         matrix(jj, j) = matrix(k, j)
-                         matrix(k, j) = temp
-                    enddo
-!$OMP END DO
-!$OMP END PARALLEL
-                endif
-
-                if(abs(matrix(k,k))>rerror)then
-                 dkk=matrix(k,k)
-                else
-                 dkk=rerror
-                endif
-
-!$OMP PARALLEL PRIVATE(j)
-!$OMP DO
-                do j = 1,size_
-                   if (j.ne.k) then 
-                      matrix(k,j) = matrix(k,j)/dkk
-                   endif
-                enddo
-!$OMP END DO
-!$OMP END PARALLEL
-
-              if(abs(matrix(k,k))>rerror)then
-                matrix(k, k) = 1.d0 / matrix(k, k)
-              else
-                matrix(k, k) = 1.d0 / rerror 
-              endif
-
-!$OMP PARALLEL PRIVATE(i,j)
-!$OMP DO
-                do  i = 1,size_
-                 if (i.ne.k) then
-                     do  j = 1,size_
-                       if(j.ne.k) matrix(i,j)=matrix(i,j)-matrix(k,j)*matrix(i,k)
-                     enddo
-                 endif
-                enddo
-!$OMP END DO
-!$OMP END PARALLEL
-
-
-
-!$OMP PARALLEL PRIVATE(i)
-!$OMP DO
-                do i = 1, size_
-                        if (i.ne.k)  matrix(i,k) = -matrix(i,k) * matrix(k,k)
-                enddo
-!$OMP END DO
-!$OMP END PARALLEL
-
-        enddo
-
-        do  l = 1,size_
-                k = size_ - l + 1
-                krow = switch(k, 1)
-                irow = switch(k, 2)
-                if (krow.ne.irow) then
-!$OMP PARALLEL PRIVATE(i,temp)
-!$OMP DO
-                        do  i = 1,size_
-                         temp = matrix(i, krow)
-                         matrix(i, krow) = matrix(i, irow)
-                         matrix(i, irow) = temp
-                        enddo
-!$OMP END DO
-!$OMP END PARALLEL
-                endif
-        enddo
-
-
-end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-subroutine invert_pivot_single_(matrix)
- implicit none
-   real(4) :: matrix(:,:)
-   integer :: size_
-   integer :: switch(size(matrix,1),2),k,jj,kp1,i,j,l,krow,irow
-   real(4) :: pivot,temp,dkk
- 
-    size_=size(matrix,1)
-
-        do  k = 1,size_
-
-                jj = k
-                if (k .ne. size_) then
-                        kp1 = k + 1
-                        pivot = (matrix(k, k))
-!$OMP PARALLEL PRIVATE(i,pivot,temp,jj) 
-!$OMP DO
-                        do i = kp1,size_
-                                temp = (matrix(i, k))
-                                if ( abs(pivot) .lt.  abs(temp)) then
-                                        pivot = temp
-                                        jj = i
-                                endif
-                        enddo
-!$OMP END DO
-!$OMP END PARALLEL
-                endif
-
-                switch(k,1)=k; switch(k,2)=jj
-
-                if (jj .ne. k) then
-!$OMP PARALLEL PRIVATE(j,temp)
-!$OMP DO
-                    do  j = 1 ,size_
-                         temp = matrix(jj, j)
-                         matrix(jj, j) = matrix(k, j)
-                         matrix(k, j) = temp
-                    enddo
-!$OMP END DO
-!$OMP END PARALLEL
-                endif
-
-                if(abs(matrix(k,k))>rerror)then
-                 dkk=matrix(k,k)
-                else
-                 dkk=rerror
-                endif
-
-!$OMP PARALLEL PRIVATE(j)
-!$OMP DO
-                do j = 1,size_
-                   if (j.ne.k) then 
-                      matrix(k,j) = matrix(k,j)/dkk
-                   endif
-                enddo
-!$OMP END DO
-!$OMP END PARALLEL
-
-              if(abs(matrix(k,k))>rerror)then
-                matrix(k, k) = 1.d0 / matrix(k, k)
-              else
-                matrix(k, k) = 1.d0 / rerror 
-              endif
-
-!$OMP PARALLEL PRIVATE(i,j)
-!$OMP DO
-                do  i = 1,size_
-                 if (i.ne.k) then
-                     do  j = 1,size_
-                       if(j.ne.k) matrix(i,j)=matrix(i,j)-matrix(k,j)*matrix(i,k)
-                     enddo
-                 endif
-                enddo
-!$OMP END DO
-!$OMP END PARALLEL
-
-
-
-!$OMP PARALLEL PRIVATE(i)
-!$OMP DO
-                do i = 1, size_
-                        if (i.ne.k)  matrix(i,k) = -matrix(i,k) * matrix(k,k)
-                enddo
-!$OMP END DO
-!$OMP END PARALLEL
-
-        enddo
-
-        do  l = 1,size_
-                k = size_ - l + 1
-                krow = switch(k, 1)
-                irow = switch(k, 2)
-                if (krow.ne.irow) then
-!$OMP PARALLEL PRIVATE(i,temp)
-!$OMP DO
-                        do  i = 1,size_
-                         temp = matrix(i, krow)
-                         matrix(i, krow) = matrix(i, irow)
-                         matrix(i, irow) = temp
-                        enddo
-!$OMP END DO
-!$OMP END PARALLEL
-                endif
-        enddo
-
-
-end subroutine
+! subroutine invert_pivot_complexs_(matrix)
+!  implicit none
+!    complex(4) :: matrix(:,:)
+!    integer    :: size_
+!    integer    :: switch(size(matrix,1),2),k,jj,kp1,i,j,l,krow,irow
+!    complex(4) :: pivot,temp,dkk
+!  
+!     size_=size(matrix,1)
+! 
+!         do  k = 1,size_
+! 
+!                 jj = k
+!                 if (k .ne. size_) then
+!                         kp1 = k + 1
+!                         pivot = (matrix(k, k))
+! !$OMP PARALLEL PRIVATE(i,pivot,temp,jj) 
+! !$OMP DO
+!                         do i = kp1,size_
+!                                 temp = (matrix(i, k))
+!                                 if ( abs(pivot) .lt.  abs(temp)) then
+!                                         pivot = temp
+!                                         jj = i
+!                                 endif
+!                         enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+!                 endif
+! 
+!                 switch(k,1)=k; switch(k,2)=jj
+! 
+!                 if (jj .ne. k) then
+! !$OMP PARALLEL PRIVATE(j,temp)
+! !$OMP DO
+!                     do  j = 1 ,size_
+!                          temp = matrix(jj, j)
+!                          matrix(jj, j) = matrix(k, j)
+!                          matrix(k, j) = temp
+!                     enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+!                 endif
+! 
+!                 if(abs(matrix(k,k))>rerror)then
+!                  dkk=matrix(k,k)
+!                 else
+!                  dkk=rerror
+!                 endif
+! 
+! !$OMP PARALLEL PRIVATE(j)
+! !$OMP DO
+!                 do j = 1,size_
+!                    if (j.ne.k) then 
+!                       matrix(k,j) = matrix(k,j)/dkk
+!                    endif
+!                 enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+! 
+!               if(abs(matrix(k,k))>rerror)then
+!                 matrix(k, k) = 1.d0 / matrix(k, k)
+!               else
+!                 matrix(k, k) = 1.d0 / rerror 
+!               endif
+! 
+! !$OMP PARALLEL PRIVATE(i,j)
+! !$OMP DO
+!                 do  i = 1,size_
+!                  if (i.ne.k) then
+!                      do  j = 1,size_
+!                        if(j.ne.k) matrix(i,j)=matrix(i,j)-matrix(k,j)*matrix(i,k)
+!                      enddo
+!                  endif
+!                 enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+! 
+! 
+! 
+! !$OMP PARALLEL PRIVATE(i)
+! !$OMP DO
+!                 do i = 1, size_
+!                         if (i.ne.k)  matrix(i,k) = -matrix(i,k) * matrix(k,k)
+!                 enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+! 
+!         enddo
+! 
+!         do  l = 1,size_
+!                 k = size_ - l + 1
+!                 krow = switch(k, 1)
+!                 irow = switch(k, 2)
+!                 if (krow.ne.irow) then
+! !$OMP PARALLEL PRIVATE(i,temp)
+! !$OMP DO
+!                         do  i = 1,size_
+!                          temp = matrix(i, krow)
+!                          matrix(i, krow) = matrix(i, irow)
+!                          matrix(i, irow) = temp
+!                         enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+!                 endif
+!         enddo
+! 
+! 
+! end subroutine
 
 !**************************************************************************
 !**************************************************************************
@@ -1893,113 +1838,246 @@ end subroutine
 !**************************************************************************
 !**************************************************************************
 
-subroutine invert_pivot_double_(matrix)
- implicit none
-   real(8) :: matrix(:,:)
-   integer :: size_
-   integer :: switch(size(matrix,1),2),k,jj,kp1,i,j,l,krow,irow
-   real(8) :: pivot,temp,dkk
- 
-    size_=size(matrix,1)
+! subroutine invert_pivot_single_(matrix)
+!  implicit none
+!    real(4) :: matrix(:,:)
+!    integer :: size_
+!    integer :: switch(size(matrix,1),2),k,jj,kp1,i,j,l,krow,irow
+!    real(4) :: pivot,temp,dkk
+!  
+!     size_=size(matrix,1)
+! 
+!         do  k = 1,size_
+! 
+!                 jj = k
+!                 if (k .ne. size_) then
+!                         kp1 = k + 1
+!                         pivot = (matrix(k, k))
+! !$OMP PARALLEL PRIVATE(i,pivot,temp,jj) 
+! !$OMP DO
+!                         do i = kp1,size_
+!                                 temp = (matrix(i, k))
+!                                 if ( abs(pivot) .lt.  abs(temp)) then
+!                                         pivot = temp
+!                                         jj = i
+!                                 endif
+!                         enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+!                 endif
+! 
+!                 switch(k,1)=k; switch(k,2)=jj
+! 
+!                 if (jj .ne. k) then
+! !$OMP PARALLEL PRIVATE(j,temp)
+! !$OMP DO
+!                     do  j = 1 ,size_
+!                          temp = matrix(jj, j)
+!                          matrix(jj, j) = matrix(k, j)
+!                          matrix(k, j) = temp
+!                     enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+!                 endif
+! 
+!                 if(abs(matrix(k,k))>rerror)then
+!                  dkk=matrix(k,k)
+!                 else
+!                  dkk=rerror
+!                 endif
+! 
+! !$OMP PARALLEL PRIVATE(j)
+! !$OMP DO
+!                 do j = 1,size_
+!                    if (j.ne.k) then 
+!                       matrix(k,j) = matrix(k,j)/dkk
+!                    endif
+!                 enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+! 
+!               if(abs(matrix(k,k))>rerror)then
+!                 matrix(k, k) = 1.d0 / matrix(k, k)
+!               else
+!                 matrix(k, k) = 1.d0 / rerror 
+!               endif
+! 
+! !$OMP PARALLEL PRIVATE(i,j)
+! !$OMP DO
+!                 do  i = 1,size_
+!                  if (i.ne.k) then
+!                      do  j = 1,size_
+!                        if(j.ne.k) matrix(i,j)=matrix(i,j)-matrix(k,j)*matrix(i,k)
+!                      enddo
+!                  endif
+!                 enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+! 
+! 
+! 
+! !$OMP PARALLEL PRIVATE(i)
+! !$OMP DO
+!                 do i = 1, size_
+!                         if (i.ne.k)  matrix(i,k) = -matrix(i,k) * matrix(k,k)
+!                 enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+! 
+!         enddo
+! 
+!         do  l = 1,size_
+!                 k = size_ - l + 1
+!                 krow = switch(k, 1)
+!                 irow = switch(k, 2)
+!                 if (krow.ne.irow) then
+! !$OMP PARALLEL PRIVATE(i,temp)
+! !$OMP DO
+!                         do  i = 1,size_
+!                          temp = matrix(i, krow)
+!                          matrix(i, krow) = matrix(i, irow)
+!                          matrix(i, irow) = temp
+!                         enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+!                 endif
+!         enddo
+! 
+! 
+! end subroutine
 
-        do  k = 1,size_
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
 
-                jj = k
-                if (k .ne. size_) then
-                        kp1 = k + 1
-                        pivot = (matrix(k, k))
-!$OMP PARALLEL PRIVATE(i,pivot,temp,jj) 
-!$OMP DO
-                        do i = kp1,size_
-                                temp = (matrix(i, k))
-                                if ( abs(pivot) .lt.  abs(temp)) then
-                                        pivot = temp
-                                        jj = i
-                                endif
-                        enddo
-!$OMP END DO
-!$OMP END PARALLEL
-                endif
-
-                switch(k,1)=k; switch(k,2)=jj
-
-                if (jj .ne. k) then
-!$OMP PARALLEL PRIVATE(j,temp)
-!$OMP DO
-                    do  j = 1 ,size_
-                         temp = matrix(jj, j)
-                         matrix(jj, j) = matrix(k, j)
-                         matrix(k, j) = temp
-                    enddo
-!$OMP END DO
-!$OMP END PARALLEL
-                endif
-
-                if(abs(matrix(k,k))>rerror)then
-                 dkk=matrix(k,k)
-                else
-                 dkk=rerror
-                endif
-
-!$OMP PARALLEL PRIVATE(j)
-!$OMP DO
-                do j = 1,size_
-                   if (j.ne.k) then 
-                      matrix(k,j) = matrix(k,j)/dkk
-                   endif
-                enddo
-!$OMP END DO
-!$OMP END PARALLEL
-
-              if(abs(matrix(k,k))>rerror)then
-                matrix(k, k) = 1.d0 / matrix(k, k)
-              else
-                matrix(k, k) = 1.d0 / rerror 
-              endif
-
-!$OMP PARALLEL PRIVATE(i,j)
-!$OMP DO
-                do  i = 1,size_
-                 if (i.ne.k) then
-                     do  j = 1,size_
-                       if(j.ne.k) matrix(i,j)=matrix(i,j)-matrix(k,j)*matrix(i,k)
-                     enddo
-                 endif
-                enddo
-!$OMP END DO
-!$OMP END PARALLEL
-
-
-
-!$OMP PARALLEL PRIVATE(i)
-!$OMP DO
-                do i = 1, size_
-                        if (i.ne.k)  matrix(i,k) = -matrix(i,k) * matrix(k,k)
-                enddo
-!$OMP END DO
-!$OMP END PARALLEL
-
-        enddo
-
-        do  l = 1,size_
-                k = size_ - l + 1
-                krow = switch(k, 1)
-                irow = switch(k, 2)
-                if (krow.ne.irow) then
-!$OMP PARALLEL PRIVATE(i,temp)
-!$OMP DO
-                        do  i = 1,size_
-                         temp = matrix(i, krow)
-                         matrix(i, krow) = matrix(i, irow)
-                         matrix(i, irow) = temp
-                        enddo
-!$OMP END DO
-!$OMP END PARALLEL
-                endif
-        enddo
-
-
-end subroutine
+! subroutine invert_pivot_double_(matrix)
+!  implicit none
+!    real(8) :: matrix(:,:)
+!    integer :: size_
+!    integer :: switch(size(matrix,1),2),k,jj,kp1,i,j,l,krow,irow
+!    real(8) :: pivot,temp,dkk
+!  
+!     size_=size(matrix,1)
+! 
+!         do  k = 1,size_
+! 
+!                 jj = k
+!                 if (k .ne. size_) then
+!                         kp1 = k + 1
+!                         pivot = (matrix(k, k))
+! !$OMP PARALLEL PRIVATE(i,pivot,temp,jj) 
+! !$OMP DO
+!                         do i = kp1,size_
+!                                 temp = (matrix(i, k))
+!                                 if ( abs(pivot) .lt.  abs(temp)) then
+!                                         pivot = temp
+!                                         jj = i
+!                                 endif
+!                         enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+!                 endif
+! 
+!                 switch(k,1)=k; switch(k,2)=jj
+! 
+!                 if (jj .ne. k) then
+! !$OMP PARALLEL PRIVATE(j,temp)
+! !$OMP DO
+!                     do  j = 1 ,size_
+!                          temp = matrix(jj, j)
+!                          matrix(jj, j) = matrix(k, j)
+!                          matrix(k, j) = temp
+!                     enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+!                 endif
+! 
+!                 if(abs(matrix(k,k))>rerror)then
+!                  dkk=matrix(k,k)
+!                 else
+!                  dkk=rerror
+!                 endif
+! 
+! !$OMP PARALLEL PRIVATE(j)
+! !$OMP DO
+!                 do j = 1,size_
+!                    if (j.ne.k) then 
+!                       matrix(k,j) = matrix(k,j)/dkk
+!                    endif
+!                 enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+! 
+!               if(abs(matrix(k,k))>rerror)then
+!                 matrix(k, k) = 1.d0 / matrix(k, k)
+!               else
+!                 matrix(k, k) = 1.d0 / rerror 
+!               endif
+! 
+! !$OMP PARALLEL PRIVATE(i,j)
+! !$OMP DO
+!                 do  i = 1,size_
+!                  if (i.ne.k) then
+!                      do  j = 1,size_
+!                        if(j.ne.k) matrix(i,j)=matrix(i,j)-matrix(k,j)*matrix(i,k)
+!                      enddo
+!                  endif
+!                 enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+! 
+! 
+! 
+! !$OMP PARALLEL PRIVATE(i)
+! !$OMP DO
+!                 do i = 1, size_
+!                         if (i.ne.k)  matrix(i,k) = -matrix(i,k) * matrix(k,k)
+!                 enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+! 
+!         enddo
+! 
+!         do  l = 1,size_
+!                 k = size_ - l + 1
+!                 krow = switch(k, 1)
+!                 irow = switch(k, 2)
+!                 if (krow.ne.irow) then
+! !$OMP PARALLEL PRIVATE(i,temp)
+! !$OMP DO
+!                         do  i = 1,size_
+!                          temp = matrix(i, krow)
+!                          matrix(i, krow) = matrix(i, irow)
+!                          matrix(i, irow) = temp
+!                         enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+!                 endif
+!         enddo
+! 
+! 
+! end subroutine
 
 !**************************************************************************
 !**************************************************************************
@@ -2014,114 +2092,114 @@ end subroutine
 !**************************************************************************
 !**************************************************************************
 
-subroutine invert_pivot_complex_(matrix)
- implicit none
-   complex(8) :: matrix(:,:)
-   integer    :: size_
-   integer    :: switch(size(matrix,1),2),k,jj,kp1,i,j,l,krow,irow
-   complex(8) :: pivot,temp,dkk
- 
-    size_=size(matrix,1)
-
-        do  k = 1,size_
-
-                jj = k
-                if (k .ne. size_) then
-                        kp1 = k + 1
-                        pivot = (matrix(k, k))
-!$OMP PARALLEL PRIVATE(i,pivot,temp,jj)
-!$OMP DO
-                        do i = kp1,size_
-                                temp = (matrix(i, k))
-                                if ( abs(pivot) .lt.  abs(temp)) then
-                                        pivot = temp
-                                        jj = i
-                                endif
-                        enddo
-!$OMP END DO
-!$OMP END PARALLEL
-                endif
-
-                switch(k, 1) = k
-                switch(k, 2) = jj
-
-                if (jj .ne. k) then
-!$OMP PARALLEL PRIVATE(j,temp)
-!$OMP DO
-                    do  j = 1 ,size_
-                         temp = matrix(jj, j)
-                         matrix(jj, j) = matrix(k, j)
-                         matrix(k, j) = temp
-                    enddo
-!$OMP END DO
-!$OMP END PARALLEL
-                endif
-
-                if(abs(matrix(k,k))>rerror)then
-                 dkk=matrix(k,k)
-                else
-                 dkk=rerror
-                endif
-
-!$OMP PARALLEL PRIVATE(j)
-!$OMP DO
-                do j = 1,size_
-                   if (j.ne.k) then 
-                      matrix(k,j) = matrix(k,j) / dkk
-                   endif
-                enddo
-!$OMP END DO
-!$OMP END PARALLEL
-
-              if(abs(matrix(k,k))>rerror)then
-                matrix(k, k) = 1.d0 / matrix(k, k)
-              else
-                matrix(k, k) = 1.d0 / rerror 
-              endif
-
-!$OMP PARALLEL PRIVATE(i,j)
-!$OMP DO
-                do  i = 1,size_
-                 if (i.ne.k) then
-                     do  j = 1,size_
-                       if(j.ne.k) matrix(i,j)=matrix(i,j)-matrix(k,j)*matrix(i,k)
-                     enddo
-                 endif
-                enddo
-!$OMP END DO
-!$OMP END PARALLEL
-
-
-
-!$OMP PARALLEL PRIVATE(i)
-!$OMP DO
-                do i = 1, size_
-                        if (i.ne.k)  matrix(i, k) = -matrix(i, k) * matrix(k, k)
-                enddo
-!$OMP END DO
-!$OMP END PARALLEL
-
-        enddo
-
-        do  l = 1,size_
-                k = size_ - l + 1
-                krow = switch(k, 1)
-                irow = switch(k, 2)
-                if (krow.ne.irow) then
-!$OMP PARALLEL PRIVATE(i,temp)
-!$OMP DO
-                        do  i = 1,size_
-                         temp = matrix(i, krow)
-                         matrix(i, krow) = matrix(i, irow)
-                         matrix(i, irow) = temp
-                        enddo
-!$OMP END DO
-!$OMP END PARALLEL
-                endif
-        enddo
-
-
-end subroutine
+! subroutine invert_pivot_complex_(matrix)
+!  implicit none
+!    complex(8) :: matrix(:,:)
+!    integer    :: size_
+!    integer    :: switch(size(matrix,1),2),k,jj,kp1,i,j,l,krow,irow
+!    complex(8) :: pivot,temp,dkk
+!  
+!     size_=size(matrix,1)
+! 
+!         do  k = 1,size_
+! 
+!                 jj = k
+!                 if (k .ne. size_) then
+!                         kp1 = k + 1
+!                         pivot = (matrix(k, k))
+! !$OMP PARALLEL PRIVATE(i,pivot,temp,jj)
+! !$OMP DO
+!                         do i = kp1,size_
+!                                 temp = (matrix(i, k))
+!                                 if ( abs(pivot) .lt.  abs(temp)) then
+!                                         pivot = temp
+!                                         jj = i
+!                                 endif
+!                         enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+!                 endif
+! 
+!                 switch(k, 1) = k
+!                 switch(k, 2) = jj
+! 
+!                 if (jj .ne. k) then
+! !$OMP PARALLEL PRIVATE(j,temp)
+! !$OMP DO
+!                     do  j = 1 ,size_
+!                          temp = matrix(jj, j)
+!                          matrix(jj, j) = matrix(k, j)
+!                          matrix(k, j) = temp
+!                     enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+!                 endif
+! 
+!                 if(abs(matrix(k,k))>rerror)then
+!                  dkk=matrix(k,k)
+!                 else
+!                  dkk=rerror
+!                 endif
+! 
+! !$OMP PARALLEL PRIVATE(j)
+! !$OMP DO
+!                 do j = 1,size_
+!                    if (j.ne.k) then 
+!                       matrix(k,j) = matrix(k,j) / dkk
+!                    endif
+!                 enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+! 
+!               if(abs(matrix(k,k))>rerror)then
+!                 matrix(k, k) = 1.d0 / matrix(k, k)
+!               else
+!                 matrix(k, k) = 1.d0 / rerror 
+!               endif
+! 
+! !$OMP PARALLEL PRIVATE(i,j)
+! !$OMP DO
+!                 do  i = 1,size_
+!                  if (i.ne.k) then
+!                      do  j = 1,size_
+!                        if(j.ne.k) matrix(i,j)=matrix(i,j)-matrix(k,j)*matrix(i,k)
+!                      enddo
+!                  endif
+!                 enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+! 
+! 
+! 
+! !$OMP PARALLEL PRIVATE(i)
+! !$OMP DO
+!                 do i = 1, size_
+!                         if (i.ne.k)  matrix(i, k) = -matrix(i, k) * matrix(k, k)
+!                 enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+! 
+!         enddo
+! 
+!         do  l = 1,size_
+!                 k = size_ - l + 1
+!                 krow = switch(k, 1)
+!                 irow = switch(k, 2)
+!                 if (krow.ne.irow) then
+! !$OMP PARALLEL PRIVATE(i,temp)
+! !$OMP DO
+!                         do  i = 1,size_
+!                          temp = matrix(i, krow)
+!                          matrix(i, krow) = matrix(i, irow)
+!                          matrix(i, irow) = temp
+!                         enddo
+! !$OMP END DO
+! !$OMP END PARALLEL
+!                 endif
+!         enddo
+! 
+! 
+! end subroutine
 
 !**************************************************************************
 !**************************************************************************
@@ -2351,64 +2429,64 @@ end function
 !**************************************************************************
 !**************************************************************************
 
-          !-------------------------------------!
-
-    subroutine get_det_from_zgeco___(deti,det,det2,pdet)
-    implicit none
-    complex(4) :: deti(2),det2
-    real(4)    :: det
-    integer    :: pdet
-     ! convert it to the form 2**pdet * abs(=det) * phase(=det2)
-        pdet=NINT(real(deti(2))/LOG10(2.d0))
-        det2=(deti(1))*(2.d0**(real(deti(2))/LOG10(2.d0)-dble(pdet)))
-        det=abs(det2)
-        if(det>1.d-23)then
-         det2=det2/det
-        else
-         det2=1.
-        endif
-        call rescale(det,pdet)
-    end subroutine
-
-          !-------------------------------------!
-
-    subroutine get_det_from_zgeco__(deti,det,det2,pdet)
-    implicit none
-    complex(16) :: deti(2),det2
-    real(16)    :: det
-    integer     :: pdet
-     ! convert it to the form 2**pdet * abs(=det) * phase(=det2)
-        pdet=NINT(real(deti(2))/LOG10(2.d0))
-        det2=(deti(1))*(2.d0**(real(deti(2))/LOG10(2.d0)-dble(pdet)))
-        det=abs(det2)
-        if(det>1.d-23)then
-         det2=det2/det
-        else
-         det2=1.
-        endif
-        call rescale(det,pdet)
-    end subroutine
-
-          !-------------------------------------!
-
-    subroutine get_det_from_zgeco_(deti,det,det2,pdet)
-    implicit none
-    complex(8) :: deti(2),det2
-    real(8)    :: det
-    integer    :: pdet
-     ! convert it to the form 2**pdet * abs(=det) * phase(=det2)
-        pdet=NINT(real(deti(2))/LOG10(2.d0))
-        det2=(deti(1))*(2.d0**(real(deti(2))/LOG10(2.d0)-dble(pdet)))
-        det=abs(det2)
-        call erase_divergence(det)
-        call erase_divergence(det2)
-        if(det>1.d-12)then
-         det2=det2/det
-        else
-         det2=1.
-        endif
-        call rescale(det,pdet)
-    end subroutine
+!           !-------------------------------------!
+! 
+!     subroutine get_det_from_zgeco___(deti,det,det2,pdet)
+!     implicit none
+!     complex(4) :: deti(2),det2
+!     real(4)    :: det
+!     integer    :: pdet
+!      ! convert it to the form 2**pdet * abs(=det) * phase(=det2)
+!         pdet=NINT(real(deti(2))/LOG10(2.d0))
+!         det2=(deti(1))*(2.d0**(real(deti(2))/LOG10(2.d0)-dble(pdet)))
+!         det=abs(det2)
+!         if(det>1.d-23)then
+!          det2=det2/det
+!         else
+!          det2=1.
+!         endif
+!         call rescale(det,pdet)
+!     end subroutine
+! 
+!           !-------------------------------------!
+! 
+!     subroutine get_det_from_zgeco__(deti,det,det2,pdet)
+!     implicit none
+!     complex(16) :: deti(2),det2
+!     real(16)    :: det
+!     integer     :: pdet
+!      ! convert it to the form 2**pdet * abs(=det) * phase(=det2)
+!         pdet=NINT(real(deti(2))/LOG10(2.d0))
+!         det2=(deti(1))*(2.d0**(real(deti(2))/LOG10(2.d0)-dble(pdet)))
+!         det=abs(det2)
+!         if(det>1.d-23)then
+!          det2=det2/det
+!         else
+!          det2=1.
+!         endif
+!         call rescale(det,pdet)
+!     end subroutine
+! 
+!           !-------------------------------------!
+! 
+!     subroutine get_det_from_zgeco_(deti,det,det2,pdet)
+!     implicit none
+!     complex(8) :: deti(2),det2
+!     real(8)    :: det
+!     integer    :: pdet
+!      ! convert it to the form 2**pdet * abs(=det) * phase(=det2)
+!         pdet=NINT(real(deti(2))/LOG10(2.d0))
+!         det2=(deti(1))*(2.d0**(real(deti(2))/LOG10(2.d0)-dble(pdet)))
+!         det=abs(det2)
+!         call erase_divergence(det)
+!         call erase_divergence(det2)
+!         if(det>1.d-12)then
+!          det2=det2/det
+!         else
+!          det2=1.
+!         endif
+!         call rescale(det,pdet)
+!     end subroutine
 
 !**************************************************************************
 !**************************************************************************
@@ -5658,7 +5736,7 @@ end subroutine
       sizemat=size(vec(:))
       if(sizemat/=size(matrice(1,:))) stop 'error decomposevec : dimensions'
       matrice=transpose(base)
-      call invmat_real(n=sizemat,mat=matrice)
+      call invmat(sizemat,matrice)
       coef=matmul(matrice,vec)
      end subroutine
 
@@ -5866,1682 +5944,1682 @@ end subroutine
 !         call invmat(n,invmat_)
 !       end function
 ! 
-       !---------------------!
-
-      subroutine invmat_comp(n,mat,det2b,detb,pdetb,check_nan,c,block_matrix,diagmat)
-      implicit none
-      integer                   :: pdet,ppdet,n,nnn,i,j
-      real(8)                   :: big,det,ddet,rcond
-      complex(8),intent(inout)  :: mat(:,:)
-      real(8),optional          :: detb
-      integer,optional          :: pdetb
-      complex(8),optional       :: det2b
-      complex(8)                :: det2,ddet2,deti(2),q
-      complex(8)                :: WORK(2*size(mat,1)),WORK2(size(mat,1))
-      integer(4)                :: INFO,INFO2
-      integer                   :: piv(size(mat,1))
-      logical,optional          :: check_nan,block_matrix,diagmat
-      integer,optional          :: c
-
-     if(present(diagmat))then
-      if(diagmat)then
-       do i=1,size(mat,1) 
-        if(abs(mat(i,i))>1.d-15)then
-         mat(i,i)=1.d0/mat(i,i)
-        else
-         mat(i,i)=1.d15
-        endif
-       enddo
-       return
-      endif
-     endif
-
-     if(mat_3_3_c(mat,detb,det2b,pdetb)) return
-
-     if(size(mat,1)/=size(mat,2)) then
-       write(*,*) 'DIMENSION OF MATRIX : ', shape(mat)
-       call create_seg_fault
-       stop 'error invmat_comp try to inverse rectangular matrix'
-     endif
- 
-     if(present(det2b)) det2b=0.; if(present(detb))  detb=0.; if(present(pdetb)) pdetb=0
-     if(present(check_nan)) call erase_divergence(mat)
-     call force_real_inv
-
-     if(present(c))then
-       call randomize_matrix(mat,amp=invmat_error,flag=.true.,kk2=c)
-     else
-       call randomize_matrix(mat,amp=invmat_error,flag=.true.)
-     endif
-
-      if(present(block_matrix))then
-       if(block_matrix)then
-         nnn=n/2
-         if(mod(n,2)>0) stop 'error invmat_comp block_matrix, but linear size is odd'
-         if(present(detb))then
-           call invit(1,nnn,det,det2,pdet)
-           call invit(nnn+1,n,ddet,ddet2,ppdet)
-           mat(1:nnn,nnn+1:n)=0.
-           mat(nnn+1:n,1:nnn)=0.
-           pdetb = pdet + ppdet
-           detb  = det  * ddet
-           det2b = det2 * ddet2
-         else
-           call invit(1,nnn)
-           call invit(nnn+1,n)
-           mat(1:nnn,nnn+1:n)=0.
-           mat(nnn+1:n,1:nnn)=0.
-         endif
-         goto 35
-       endif
-      endif
-
-      call invit(1,n,detb,det2b,pdetb)
-35    continue
-
-      if(present(check_nan)) call erase_divergence(mat)
-
-      return
-
-      contains
-
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-
-   subroutine zgeco_zgedi(i1,i2)
-   implicit none
-   integer :: i1,i2,nnn
-     nnn=i2-i1+1
-     call geco__(nnn,mat(i1:i2,i1:i2),piv(i1:i2))
-     call gedi__(nnn,mat(i1:i2,i1:i2),piv(i1:i2),deti)
-   end subroutine
-
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-
-    subroutine invit(i1,i2,det,det2,pdet)
-    implicit none
-    integer                   :: i1,i2
-    real(8),optional          :: det
-    integer,optional          :: pdet
-    complex(8),optional       :: det2
-    integer                   :: nn
-
-       nn = i2-i1+1
-  
-       if(mat_3_3_c(mat(i1:i2,i1:i2),det,det2,pdet)) return
-
-       if(force_invmat_single_prec)then
-        call force_sing_prec(mat(i1:i2,i1:i2),det,det2,pdet)
-        return 
-       endif
-
-       if(present(det).or.flag_force_invmat_lapack)then
-        call zgeco_zgedi(i1,i2)
-        call get_det_from_zgeco(deti,det,det2,pdet)
-       else
-        if(nn>n_openmp_rout.and.use_openmp_invmat)then
-          call invert_openmp(mat(i1:i2,i1:i2)) 
-          return
-        endif
-        ! ebl: Removing GPU functionality
-        ! if(use_cuda_routines.and.nn>n_cuda_rout)then
-        !   call diago_cuda_it_c(nn,mat(i1:i2,i1:i2))
-        !   return
-        ! else
-         if(.not.flag_use_invmat_jordan)then
-           call invmat_comp2(n,mat(i1:i2,i1:i2))
-         else
-           call invmat_jordan(n,mat(i1:i2,i1:i2))
-         endif
-        ! endif
-       endif
-
-    end subroutine
-
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-
-    subroutine force_sing_prec(mat,det,det2,pdet)
-     complex(8)                :: mat(:,:)
-     complex(4)                :: mat_(size(mat,1),size(mat,2))
-     real(8),optional          :: det
-     integer,optional          :: pdet
-     complex(8),optional       :: det2
-     real(4)                   :: det_
-     complex(4)                :: det2_
-     integer                   :: pdet_
-     if(present(det))then 
-      mat_=mat
-      call invmat_comps(size(mat,1),mat_,det2_,det_,pdet_)
-      mat=mat_
-      pdet=pdet_
-      det2=det2_
-      det=det_
-     else
-      mat_=mat
-      call invmat_comps(size(mat_,1),mat_)
-      mat=mat_
-     endif
-    end subroutine
-
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-
-    subroutine force_real_inv
-     real(8) :: matr(n,n)
-     if(testing)then
-       if(maxval(abs(real(mat)))>1.d-9)then
-       if(maxval(abs(aimag(mat))/maxval(abs(real(mat))))<1.d-4)then
-        matr=mat
-        if(messages3) &
-     &  write(*,*) 'DANGER: invmat_comp, &
-     &              diagonalize real matrix, too small complex part'
-        if(present(det2b)) then
-        call invmat_real(n,matr,det2b,detb,pdetb)
-        else
-         call invmat_real(n,matr)
-        endif
-        mat=matr
-        return
-       endif
-       endif
-      endif
-    end subroutine
-
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-
-      end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-      subroutine invmat_comps(n,mat,det2b,detb,pdetb,check_nan,c,block_matrix,diagmat)
-      implicit none
-      integer                   :: pdet,ppdet,n,nnn,i,j
-      real(4)                   :: big,det,ddet
-      complex(4),intent(inout)  :: mat(:,:)
-      real(4),optional          :: detb
-      integer,optional          :: pdetb
-      complex(4),optional       :: det2b
-      complex(4)                :: det2,ddet2,deti(2),q
-      integer(4)                :: INFO,INFO2
-      integer                   :: piv(size(mat,1))
-      logical,optional          :: check_nan,block_matrix,diagmat
-      integer,optional          :: c
-
-     if(present(diagmat))then
-      if(diagmat)then
-       do i=1,size(mat,1) 
-        if(abs(mat(i,i))>1.d-15)then
-         mat(i,i)=1.d0/mat(i,i)
-        else
-         mat(i,i)=1.d15
-        endif
-       enddo
-       return
-      endif
-     endif
-
-     if(size(mat,1)/=size(mat,2)) then
-       write(*,*) 'DIMENSION OF MATRIX : ', shape(mat)
-       call create_seg_fault
-       stop 'error invmat_comp try to inverse rectangular matrix'
-     endif
-
-     if(mat_3_3_cs(mat,detb,det2b,pdetb)) return
- 
-     if(present(det2b)) det2b=0.; if(present(detb))  detb=0.; if(present(pdetb)) pdetb=0
-
-      if(present(block_matrix))then
-       if(block_matrix)then
-         nnn=n/2
-         if(mod(n,2)>0) stop 'error invmat_comp block_matrix, but linear size is odd'
-         if(present(detb))then
-           call invit(1,nnn,det,det2,pdet)
-           call invit(nnn+1,n,ddet,ddet2,ppdet)
-           mat(1:nnn,nnn+1:n)=0.
-           mat(nnn+1:n,1:nnn)=0.
-           pdetb = pdet + ppdet
-           detb  = det  * ddet
-           det2b = det2 * ddet2
-         else
-           call invit(1,nnn)
-           call invit(nnn+1,n)
-           mat(1:nnn,nnn+1:n)=0.
-           mat(nnn+1:n,1:nnn)=0.
-         endif
-         goto 35
-       endif
-      endif
-
-      call invit(1,n,detb,det2b,pdetb)
-35    continue
-
-      return
-
-      contains
-
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-
-    subroutine zgeco_zgedi(i1,i2)
-    implicit none
-    integer :: i1,i2,nnn
-      nnn=i2-i1+1
-     call geco__(nnn,mat(i1:i2,i1:i2),piv(i1:i2))
-     call gedi__(nnn,mat(i1:i2,i1:i2),piv(i1:i2),deti)
-    end subroutine
-
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-
-    subroutine invit(i1,i2,det,det2,pdet)
-    implicit none
-    integer :: i1,i2
-    real(4),optional          :: det
-    integer,optional          :: pdet
-    complex(4),optional       :: det2
-       if(mat_3_3_cs(mat(i1:i2,i1:i2),det,det2,pdet)) return
-       if(present(det).or.flag_force_invmat_lapack)then
-        call zgeco_zgedi(i1,i2)
-        call get_det_from_zgeco(deti,det,det2,pdet)
-       else
-        if(n>n_openmp_rout.and.use_openmp_invmat)then
-          call invert_openmp(mat(i1:i2,i1:i2)) 
-          return         
-        endif
-          call invmat_jordan(n,mat(i1:i2,i1:i2))
-       endif
-    end subroutine
-
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-
-      end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-      subroutine invmat_comp_quad(n,mat,det2b,detb,pdetb,check_nan,c,block_matrix)
-      implicit none
-      real(16),optional          :: detb
-      integer,optional           :: pdetb
-      complex(16),optional       :: det2b
-      integer                    :: ppdet,pdet,n,i,j,piv(n)
-      real(16)                   :: big,det,ddet
-      complex(16),intent(inout)  :: mat(n,n)
-      complex(16)                :: ddet2,det2,deti(2)
-      complex(16)                :: q
-      integer                    :: INFO,INFO2
-      integer                    :: nnn
-      logical,optional           :: check_nan,block_matrix
-      integer,optional           :: c
-
-      if(mat_3_3_qc(mat,detb,det2b,pdetb)) return
-
-      if(present(det2b))then; det2b=0.;detb=0.;pdetb=0; endif
-
-      if(present(block_matrix))then
-       if(block_matrix)then
-         nnn=n/2
-         if(mod(n,2)>0) stop 'error invmat_comp block_matrix, but linear size is odd'
-         if(present(detb))then
-           call invit(1,nnn,det,det2,pdet)
-           call invit(nnn+1,n,ddet,ddet2,ppdet)
-           mat(1:nnn,nnn+1:n)=0.
-           mat(nnn+1:n,1:nnn)=0.
-           pdetb = pdet + ppdet
-           detb  = det  * ddet
-           det2b = det2 * ddet2
-         else
-           call invit(1,nnn)
-           call invit(nnn+1,n)
-           mat(1:nnn,nnn+1:n)=0.
-           mat(nnn+1:n,1:nnn)=0.
-         endif
-         goto 35
-       endif
-      endif
-
-      call invit(1,n,detb,det2b,pdetb)
-35    continue
-
-      return
-
-      contains
-
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-
-   subroutine zgeco_zgedi(i1,i2)
-   implicit none
-   integer :: i1,i2,nnn,i,j
-     nnn=i2-i1+1
-     call geco__(nnn,mat(i1:i2,i1:i2),piv(i1:i2))
-     call gedi__(nnn,mat(i1:i2,i1:i2),piv(i1:i2),deti)
-   end subroutine
-
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-
-    subroutine invit(i1,i2,det,det2,pdet)
-    implicit none
-    integer :: i1,i2
-    real(16),optional          :: det
-    integer,optional           :: pdet
-    complex(16),optional       :: det2
-       if(mat_3_3_qc(mat(i1:i2,i1:i2),det,det2,pdet)) return
-       call zgeco_zgedi(i1,i2)
-       if(present(det)) call get_det_from_zgeco(deti,det,det2,pdet)
-    end subroutine
-
-
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-
-      end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-      subroutine invmat_comp2(n,mat,detb2,detb,pdetb,diagmat)
-      implicit none
-      integer                   :: pdet,n,i,j
-      integer,optional          :: pdetb
-      real(8)                   :: big,det
-      real(8),optional          :: detb
-      complex(8),intent(inout)  :: mat(:,:)
-      complex(8)                :: det2,q
-      complex(8),optional       :: detb2
-      integer(4)                :: INFO,INFO2
-      integer                   :: piv(size(mat,1))
-      logical,optional          :: diagmat
-
-      if(size(mat,1)/=size(mat,2)) stop 'error invmat_comp2 try invert rectangular matrix'
-
-      if(present(diagmat))then
-       if(diagmat)then
-        do i=1,size(mat,1)
-         if(abs(mat(i,i))>1.d-13)then
-          mat(i,i)=1.d0/mat(i,i)
-         else
-          mat(i,i)=1.d14
-         endif
-        enddo
-        return
-       endif
-      endif
-
-      if(mat_3_3_c(mat,detb,detb2,pdetb)) return
-      det=1.d0; det2=1.d0; pdet=0
-      call GETRF__(mat,piv)
-
-      if(present(detb2))then
-       do i=1,n
-        det2 = det2 * mat(i,i)
-       enddo
-       det=abs(det2)
-       if(det<error) then
-        det2=1.
-       else
-        det2=det2/det
-       endif
-       call rescale(det,pdet)
-      endif
-
-      call GETRI__(mat,piv)
-
-      if(present(detb2))then; detb2=det2; detb=det; pdetb=pdet; endif
-
-      return
-      end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-      subroutine invmat_reals(n,mat,det2b,detb,pdetb,check_nan,c,block_matrix,diagmat)
-      implicit none
-      real(4),optional      :: detb
-      integer,optional      :: pdetb
-      complex(4),optional   :: det2b
-      real(4)               :: det,ddet,q
-      complex(4)            :: det2
-      integer               :: pdet,ppdet,nnn
-      real(4)               :: big
-      real(4),intent(inout) :: mat(:,:)
-      real(4)               :: rtemp
-      logical,optional      :: check_nan,diagmat
-      integer,optional      :: c
-      logical,optional      :: block_matrix
-      integer               :: i,j,k,n
-
-      if(size(mat,1)/=size(mat,2)) stop 'error invmat_real rectangular matrix'
-
-      if(present(diagmat))then
-       if(diagmat)then
-        do i=1,size(mat,1)
-         if(abs(mat(i,i))>1.d-15)then
-          mat(i,i)=1.d0/mat(i,i)
-         else
-          mat(i,i)=1.d15
-         endif
-        enddo
-        return
-       endif
-      endif
-
-      if(mat_3_3_rs(mat,detb,det2b,pdetb)) return
-
-      if(present(check_nan)) call erase_divergence(mat)
-      if(size(mat(:,1))/=n.or.size(mat(1,:))/=n) stop 'error invmat_real matrix not square'
- 
-      if(present(block_matrix))then
-       if(block_matrix)then
-        nnn=n/2
-        if(mod(n,2)>0) stop 'error invmat_reals block_matrix, but linear size is odd'
-        mat(1:nnn,nnn+1:n)=0.d0 ; mat(nnn+1:n,1:nnn)=0.d0
-        if(present(detb))then
-         call invit(mat,1,nnn,det,det2,pdet)
-         call invit(mat,nnn+1,n,ddet,det2,ppdet)
-         pdetb = pdet + ppdet
-         detb  = det  * ddet
-         det2b = 1.
-        else
-         call invit(mat,1,nnn)
-         call invit(mat,nnn+1,n)
-        endif
-        goto 35
-       endif
-      endif
-      call invit(mat,1,n,detb,det2b,pdetb)
-35    continue
-      call erase_divergence(mat)
-
-      return
-      
-      
-      contains
-      
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-
-      subroutine invit(mat_in,i1,i2,det,det2,pdet)
-      implicit none
-      integer                   :: i1,i2,n
-      integer                   :: piv(i2-i1+1)
-      real(4),target            :: mat_in(:,:)
-      real(4),pointer           :: mat(:,:)
-      real(4)                   :: stock(i2-i1+1)
-      real(4)                   :: det_
-      integer                   :: pdet_
-      real(4),optional          :: det
-      integer,optional          :: pdet
-      complex(4),optional       :: det2
-  
-      n=i2-i1+1
-      mat=>mat_in(i1:i2,i1:i2) 
-      if(mat_3_3_rs(mat,det,det2,pdet)) return
-
-      if(.not.present(det))then
-       if(n>n_openmp_rout.and.use_openmp_invmat)then
-         call invert_openmp(mat)
-         return
-       endif
-       if(flag_use_invmat_jordan_real)then
-         call invmat_jordan(n,mat)
-         return
-       endif
-      endif
- 
-      det_ = 1.d0 ; pdet_ = 0
-      do i=1,n
-        big = abs(mat(i,i))
-        piv(i) = i
-        do j=i,n
-        if(abs(mat(i,j))>big) then
-          big = abs(mat(i,j))
-          piv(i) = j
-        endif
-        enddo
-        big = mat(i,piv(i))
-        !-------------TEST---------------------------------------!
-        if(abs(big)<rerror) then
-          write(*,*) 'invmat, small term : danger in inverting matrix'
-          write(*,*) 'term is : ', big,mat(i,piv(i))
-          write(*,*) 'i,j     : ', i,piv(i)
-          big=smallest_pivot
-          if(strongstop) stop 'error in invmat real'
-          write(*,*) 'anyway, goes on...'
-        endif
-        !-------------TEST---------------------------------------!
-       det_ = abs(det_*big)
-       call rescale(det_,pdet_)
-        mat(i,piv(i)) = 0.d0
-        rtemp = mat(i,i)
-        do j=1,n
-          stock(j) = mat(j,piv(i))/big
-        enddo
-        if(piv(i)/=i) then
-         do j=1,n
-           mat(j,piv(i)) = mat(j,i)
-         enddo
-        endif
-        mat(i,piv(i)) = rtemp
-        do k=1,n
-          do j=1,n
-            mat(j,k) = mat(j,k) - stock(j)*mat(i,k)
-          enddo
-        enddo
-        do j=1,n
-           mat(j,i) = stock(j)
-        enddo
-        do j=1,n
-          mat(i,j) = -mat(i,j)/big
-        enddo
-        mat(i,i)=1/big
-       enddo
-       do i=n,1,-1
-        do j=1,n
-         stock(j) = mat(i,j)
-         mat(i,j) = mat(piv(i),j)
-         mat(piv(i),j) = stock(j)
-        enddo
-       enddo     
-      if(present(det))then; det=det_; det2=1.d0; pdet=pdet_ ; endif
-      end subroutine
-      
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!         
-      
-      end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-      subroutine invmat_real(n,mat,det2b,detb,pdetb,check_nan,c,block_matrix,diagmat)
-      implicit none
-      real(8),optional      :: detb
-      integer,optional      :: pdetb
-      complex(8),optional   :: det2b
-      real(8)               :: det,ddet,q
-      complex(8)            :: det2
-      integer               :: pdet,ppdet,nnn
-      real(8)               :: big
-      real(8),intent(inout) :: mat(:,:)
-      real(8)               :: rtemp
-      logical,optional      :: check_nan,diagmat
-      integer,optional      :: c
-      logical,optional      :: block_matrix
-      integer               :: i,j,k,n
-
-      if(size(mat,1)/=size(mat,2)) stop 'error invmat_real rectangular matrix'
-
-      if(present(diagmat))then
-       if(diagmat)then
-        do i=1,size(mat,1)
-         if(abs(mat(i,i))>1.d-15)then
-          mat(i,i)=1.d0/mat(i,i)
-         else
-          mat(i,i)=1.d15
-         endif
-        enddo
-        return
-       endif
-      endif
-
-      if(mat_3_3_r(mat,detb,det2b,pdetb)) return
-
-      if(present(check_nan)) call erase_divergence(mat)
-      if(size(mat(:,1))/=n.or.size(mat(1,:))/=n) stop 'error invmat_real matrix not square'
- 
-      if(present(c))then      
-       call randomize_matrix(mat,amp=invmat_error,flag=.true.,kk2=c)
-      else
-       call randomize_matrix(mat,amp=invmat_error)
-      endif
-
-      if(present(block_matrix))then
-       if(block_matrix)then
-        nnn=n/2
-        if(mod(n,2)>0) stop 'error invmat_real block_matrix, but linear size is odd'
-        mat(1:nnn,nnn+1:n)=0.d0 ; mat(nnn+1:n,1:nnn)=0.d0
-        if(present(detb))then
-         call invit(mat,1,nnn,det,det2,pdet)
-         call invit(mat,nnn+1,n,ddet,det2,ppdet)
-         pdetb = pdet + ppdet
-         detb  = det  * ddet 
-         det2b = 1.
-        else
-         call invit(mat,1,nnn)
-         call invit(mat,nnn+1,n)
-        endif
-        goto 35
-       endif
-      endif
-      call invit(mat,1,n,detb,det2b,pdetb)
-35    continue
-
-      call erase_divergence(mat)
-
-      return
-      
-      
-      contains
-      
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-
-    subroutine force_sing_prec(mat,det,det2,pdet)
-     real(8)                   :: mat(:,:)
-     real(4)                   :: mat_(size(mat,1),size(mat,2))
-     real(8),optional          :: det
-     integer,optional          :: pdet
-     complex(8),optional       :: det2
-     real(4)                   :: det_
-     complex(4)                :: det2_
-     integer                   :: pdet_
-     if(present(det))then
-      mat_=mat
-      call invmat_reals(size(mat,1),mat_,det2_,det_,pdet_)
-      mat=mat_
-      pdet=pdet_
-      det2=det2_
-      det=det_
-     else
-      mat_=mat
-      call invmat_reals(size(mat_,1),mat_)
-      mat=mat_
-     endif
-    end subroutine
-
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-      
-      subroutine invit(mat_in,i1,i2,det,det2,pdet)
-      implicit none
-      integer                   :: i1,i2,n
-      integer                   :: piv(i2-i1+1)
-      real(8),target            :: mat_in(:,:)
-      real(8),pointer           :: mat(:,:)
-      real(8)                   :: stock(i2-i1+1)
-      real(8)                   :: det_
-      integer                   :: pdet_
-      real(8),optional          :: det
-      integer,optional          :: pdet
-      complex(8),optional       :: det2
-
-      mat=>mat_in(i1:i2,i1:i2) 
-      n=i2-i1+1
-      if(mat_3_3_r(mat,det,det2,pdet)) return
-
-      if(force_invmat_single_prec)then
-        call force_sing_prec(mat,det,det2,pdet)
-        return
-      endif
-      if(.not.present(det))then
-       if(n>n_openmp_rout.and.use_openmp_invmat)then
-         call invert_openmp(mat)
-         return
-       endif
-       ! ebl: Removing GPU functionality
-       ! if(use_cuda_routines.and.n>n_cuda_rout)then
-       !   call diago_cuda_it_r(n,mat)
-       !   return
-       ! endif
-       if(flag_use_invmat_jordan_real)then
-         call invmat_jordan(n,mat)
-         return
-       endif
-       if(diag_use_LU_instead_of_pivot)then
-         call D_INVMG(size(mat,1),size(mat,2),mat)
-         return
-       endif
-      endif
- 
-      det_ = 1.d0 ; pdet_ = 0
-      do i=1,n
-        big = abs(mat(i,i))
-        piv(i) = i
-        do j=i,n
-        if(abs(mat(i,j))>big) then
-          big = abs(mat(i,j))
-          piv(i) = j
-        endif
-        enddo
-        big = mat(i,piv(i))
-        !-------------TEST---------------------------------------!
-        if(abs(big)<rerror) then
-          write(*,*) 'invmat, small term : danger in inverting matrix'
-          write(*,*) 'term is : ', big,mat(i,piv(i))
-          write(*,*) 'i,j     : ', i,piv(i)
-          big=smallest_pivot
-          if(strongstop) stop 'error in invmat real'
-          write(*,*) 'anyway, goes on...'
-        endif
-        !-------------TEST---------------------------------------!
-        det_ = abs(det_*big)
-        call rescale(det_,pdet_)
-        mat(i,piv(i)) = 0.d0
-        rtemp = mat(i,i)
-
-        do j=1,n
-          stock(j) = mat(j,piv(i))/big
-        enddo
-        if(piv(i)/=i) then
-         do j=1,n
-           mat(j,piv(i)) = mat(j,i)
-         enddo
-        endif
-        mat(i,piv(i)) = rtemp
-        do k=1,n
-          do j=1,n
-            mat(j,k) = mat(j,k) - stock(j)*mat(i,k)
-          enddo
-        enddo
-        do j=1,n
-           mat(j,i) = stock(j)
-        enddo
-        do j=1,n
-          mat(i,j) = -mat(i,j)/big
-        enddo
-        mat(i,i)=1/big
-       enddo
-       do i=n,1,-1
-        do j=1,n
-         stock(j) = mat(i,j)
-         mat(i,j) = mat(piv(i),j)
-         mat(piv(i),j) = stock(j)
-        enddo
-       enddo     
-      if(present(det))then; det=det_; det2=1.d0; pdet=pdet_ ; endif
-      end subroutine
-      
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!         
-      
-      end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-      subroutine invmat_real_quad(n,mat,det2b,detb,pdetb,check_nan,c,block_matrix,diagmat)
-      implicit none
-      real(16),intent(inout):: mat(:,:)
-      real(16),optional     :: detb
-      integer,optional      :: pdetb
-      complex(16),optional  :: det2b
-      real(16)              :: det,ddet,q
-      complex(16)           :: det2
-      integer               :: pdet,ppdet
-      real(16)              :: big
-      real(16)              :: rtemp
-      logical,optional      :: check_nan,block_matrix,diagmat
-      integer,optional      :: c
-      integer               :: i,j,k,n,nnn
-
-      if(size(mat,1)/=size(mat,2)) stop 'error invmat quad rectangular matrix'
-
-      if(present(diagmat))then
-       if(diagmat)then
-        do i=1,size(mat,1)
-         if(abs(mat(i,i))>1.d-25)then
-          mat(i,i)=1.d0/mat(i,i)
-         else
-          mat(i,i)=1.d25
-         endif
-        enddo
-        return
-       endif
-      endif
-
-      if(mat_3_3_q(mat,detb,det2b,pdetb)) return
-
-      if(present(block_matrix))then
-       if(block_matrix)then
-        nnn=n/2
-        if(mod(n,2)>0) stop 'error invmat_real_quad block_matrix, but linear size is odd'
-        mat(1:nnn,nnn+1:n)=0.d0 ; mat(nnn+1:n,1:nnn)=0.d0
-        if(present(detb))then
-         call invit(mat,1,nnn,det,det2,pdet)
-         call invit(mat,nnn+1,n,ddet,det2,ppdet)
-         pdetb = pdet + ppdet
-         detb  = det  * ddet
-         det2b = 1.
-        else
-         call invit(mat,1,nnn)
-         call invit(mat,nnn+1,n)
-        endif
-        goto 35
-       endif
-      endif
-      call invit(mat,1,n,detb,det2b,pdetb)
-35    continue
-
-
-
-   contains
-
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-
-      subroutine invit(mat_in,i1,i2,det,det2,pdet)
-      implicit none
-      integer                    :: i1,i2,n
-      integer                    :: piv(i2-i1+1)
-      real(16),target            :: mat_in(:,:)
-      real(16),pointer           :: mat(:,:)
-      real(16)                   :: stock(i2-i1+1)
-      real(16)                   :: det_
-      integer                    :: pdet_
-      real(16),optional          :: det
-      integer,optional           :: pdet
-      complex(16),optional       :: det2
-
-      mat=>mat_in(i1:i2,i1:i2)
-      n=i2-i1+1
-      if(mat_3_3_q(mat,det,det2,pdet)) return
-
-      if(.not.present(det))then
-       if(diag_use_LU_instead_of_pivot)then
-        call Q_INVMG(size(mat,1),size(mat,2),mat)
-        return
-       endif
-      endif
-
-      det_ = 1.d0; pdet_ = 0
-      do i=1,n
-        big = abs(mat(i,i))
-        piv(i) = i
-        do j=i,n
-        if(abs(mat(i,j))>big) then
-          big = abs(mat(i,j))
-          piv(i) = j
-        endif
-        enddo
-        big = mat(i,piv(i))
-
-        det_ = abs(det_*big)
-        call rescale(det_,pdet_)
-
-        mat(i,piv(i)) = 0.d0
-        rtemp = mat(i,i)
-
-        do j=1,n
-         stock(j) = mat(j,piv(i))/big
-        enddo
-        if(piv(i)/=i) then
-         do j=1,n
-           mat(j,piv(i)) = mat(j,i)
-         enddo
-        endif
-        mat(i,piv(i)) = rtemp
-        do k=1,n
-          do j=1,n
-            mat(j,k) = mat(j,k) - stock(j)*mat(i,k)
-          enddo
-        enddo
-        do j=1,n
-           mat(j,i) = stock(j)
-        enddo
-        do j=1,n
-          mat(i,j) = -mat(i,j)/big
-        enddo
-        mat(i,i)=1/big
-       enddo
-
-       do i=n,1,-1
-        do j=1,n
-         stock(j) = mat(i,j)
-         mat(i,j) = mat(piv(i),j)
-         mat(piv(i),j) = stock(j)
-        enddo
-       enddo
-
-       if(present(det))then; det=det_; det2=1.d0; pdet=pdet_ ; endif
-
-      end subroutine
-
-    !------------------!
-    !------------------!
-    !------------------!
-    !------------------!
-
-      end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-!regular one : no control
-
-    subroutine zgedi_(a,lda,n,ipvt,det,work,job)
-     !subroutines of LINPACK
-      implicit none
-      integer    :: lda,n,ipvt(1),job
-      complex(8) :: a(lda,1),det(2),work(1)
-      complex(8) :: t
-      real(8)     :: ten
-      integer    :: i,j,k,kb,kp1,l,nm1
-      complex(8) :: zdum
-      complex(8) :: zdumr,zdumi
-
-      if (job/10 == 0) go to 70
-         det(1) = (1.0d0,0.0d0)
-         det(2) = (0.0d0,0.0d0)
-         ten = 10.0d0
-         do 50 i = 1, n
-            if (ipvt(i) /= i) det(1) = -det(1)
-            det(1) = a(i,i)*det(1)
-            if (cabs1(det(1)) == 0.0d0) go to 60
-   10       if (cabs1(det(1)) >= 1.0d0) go to 20
-               det(1) = cmplx(ten,0.0d0,kind=8)*det(1)
-               det(2) = det(2) - (1.0d0,0.0d0)
-            go to 10
-   20       continue
-   30       if (cabs1(det(1))<ten) go to 40
-               det(1) = det(1)/cmplx(ten,0.0d0,kind=8)
-               det(2) = det(2) + (1.0d0,0.0d0)
-            go to 30
-   40       continue
-   50    continue
-   60    continue
-   70    continue
-         if (mod(job,10) == 0) go to 150
-         do k = 1, n
-            a(k,k) = (1.0d0,0.0d0)/a(k,k)
-            t = -a(k,k)
-            call zscal(k-1,t,a(1,k),1)
-            kp1 = k + 1
-            if (n .lt. kp1) go to 90
-            do j = kp1, n
-               t = a(k,j)
-               a(k,j) = (0.0d0,0.0d0)
-               call zaxpy(k,t,a(1,k),1,a(1,j),1)
-            enddo 
-   90       continue
-         enddo 
-         nm1 = n - 1
-         if (nm1 .lt. 1) go to 140
-         do 130 kb = 1, nm1
-            k = n - kb
-            kp1 = k + 1
-            do 110 i = kp1, n
-               work(i) = a(i,k)
-               a(i,k) = (0.0d0,0.0d0)
-  110       continue
-            do j = kp1, n
-               t = work(j)
-               call zaxpy(n,t,a(1,j),1,a(1,k),1)
-            enddo 
-            l = ipvt(k)
-            if (l/=k) call zswap(n,a(1,k),1,a(1,l),1)
-  130    continue
-  140    continue
-  150 continue
-
-      return
-      end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-!optimized one : overflow control
-
-      subroutine zgedi(a,lda,n,ipvt,det,work,job)
-      !subroutines of LINPACK
-      implicit none
-      integer    :: lda,n,ipvt(1),job
-      complex(8) :: a(lda,1),det(2),work(1)
-      complex(8) :: t
-      real(8)    :: ten
-      integer    :: i,j,k,kb,kp1,l,nm1
-
-      if (job/10 == 0) go to 70
-         det(1) = (1.0d0,0.0d0)
-         det(2) = (0.0d0,0.0d0)
-         ten = 10.0d0
-         do 50 i = 1, n
-            if (ipvt(i) /= i) det(1) = -det(1)
-            det(1) = a(i,i)*det(1)
-            if (cabs1(det(1)) == 0.0d0) go to 60
-   10       if (cabs1(det(1)) >= 1.0d0) go to 20
-               det(1) = cmplx(ten,0.0d0,kind=8)*det(1)
-               det(2) = det(2) - (1.0d0,0.0d0)
-            go to 10
-   20       continue
-   30       if (cabs1(det(1))<ten) go to 40
-               det(1) = det(1)/cmplx(ten,0.0d0,kind=8)
-               det(2) = det(2) + (1.0d0,0.0d0)
-            go to 30
-   40       continue
-   50    continue
-   60    continue
-   70    continue
-         if (mod(job,10) == 0) go to 150
-         do k = 1, n
-            a(k,k) = (1.0d0,0.0d0)/a(k,k)
-            t = -a(k,k)
-            call zscal(k-1,t,a(1:k-1,k),1)
-            kp1 = k + 1
-            if (n .lt. kp1) go to 90
-            do j = kp1, n
-               t = a(k,j)
-               a(k,j) = (0.0d0,0.0d0)
-               call zaxpyb(k,t,a(:,k),1,a(:,j),1)
-            enddo 
-   90       continue
-         enddo 
-         nm1 = n - 1
-         if (nm1 .lt. 1) go to 140
-         do 130 kb = 1, nm1
-            k = n - kb
-            kp1 = k + 1
-            do 110 i = kp1, n
-               work(i) = a(i,k)
-               a(i,k) = (0.0d0,0.0d0)
-  110       continue
-            do j = kp1, n
-               t = work(j)
-               call zaxpyb(n,t,a(:,j),1,a(:,k),1)
-            enddo 
-            l = ipvt(k)
-            if (l/=k) call swap(n,a(:,k),1,a(:,l),1)
-  130    continue
-  140    continue
-  150 continue
-
-      return
-      end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-!regular one : no control
-
-     subroutine zgeco_(a,lda,n,ipvt,rcond,z)
-      implicit none
-      integer    :: lda,n,ipvt(1)
-      complex(8) :: a(lda,1),z(1)
-      real(8)    :: rcond
-      complex(8) :: zdotc,ek,t,wk,wkm
-      real(8)    :: anorm,s,dzasum,sm,ynorm,ss
-      integer    :: info,j,k,kb,kp1,l
-      complex(8) :: zdum,zdum1,zdum2
-      complex(8) :: zdumr,zdumi
-
-      anorm = 0.0d0
-      do j=1,n
-         anorm=dmax1(anorm,dzasum(n,a(1,j),1))
-      enddo
-      call zgefa(a,lda,n,ipvt,info)
-      ek =CMPLX(1.0d0,0.0d0,kind=8)
-      z  =CMPLX(0.0d0,0.0d0,kind=8)
-
-      do k=1,n
-         if(cabs1(z(k)).ne.0.0d0) ek=csign1(ek,-z(k))
-         if(cabs1(ek-z(k)).le.cabs1(a(k,k))) go to 30
-            ss=cabs1(ek-z(k))
-            if(abs(ss)<epsilonr) ss=epsilonr
-            s = cabs1(a(k,k))/ss
-            call zdscal(n,s,z,1)
-            ek = s*ek
-   30    continue
-         wk  =  ek - z(k)
-         wkm = -ek - z(k)
-         s   =  cabs1(wk)
-         sm  =  cabs1(wkm)
-         if(cabs1(a(k,k))<rerror) go to 40
-            wk = wk/conjg(a(k,k))
-            wkm = wkm/conjg(a(k,k))
-         go to 50
-   40    continue
-            wk  = (1.0d0,0.0d0)
-            wkm = (1.0d0,0.0d0)
-   50    continue
-         kp1 = k + 1
-         if (kp1 > n) go to 90
-            do 60 j = kp1, n
-               sm   = sm   + cabs1(z(j)+wkm*conjg(a(k,j)))
-               z(j) = z(j) + wk*conjg(a(k,j))
-               s    = s    + cabs1(z(j))
-   60       continue
-            if (s>=sm) go to 80
-               t  = wkm - wk
-               wk = wkm
-               do 70 j = kp1, n
-                  z(j) = z(j) + t*conjg(a(k,j))
-   70          continue
-   80       continue
-   90    continue
-         z(k) = wk
-      enddo
-
-      if(abs(dzasum(n,z,1))>rerror) then
-       s = 1.d0/dzasum(n,z,1)
-      else
-       s = 1.d0/rerror
-      endif
-      call zdscal(n,s,z,1)
-      do 120 kb = 1, n
-         k = n + 1 - kb
-         if (k .lt. n) z(k) = z(k) + zdotc(n-k,a(k+1,k),1,z(k+1),1)
-         if (cabs1(z(k)) .le. 1.0d0) go to 110
-            s = 1.0d0/cabs1(z(k))
-            call zdscal(n,s,z,1)
-  110    continue
-         l = ipvt(k)
-         t = z(l)
-         z(l) = z(k)
-         z(k) = t
-  120 continue
-
-      if(abs(dzasum(n,z,1))>rerror) then
-       s = 1.d0/dzasum(n,z,1)
-      else
-       s = 1.d0/rerror
-      endif
-
-      call zdscal(n,s,z,1)
-      ynorm = 1.0d0
-      do 140 k = 1, n
-         l = ipvt(k)
-         t = z(l)
-         z(l) = z(k)
-         z(k) = t
-         if (k .lt. n) call zaxpy(n-k,t,a(k+1,k),1,z(k+1),1)
-         if (cabs1(z(k)) .le. 1.0d0) go to 130
-            s = 1.0d0/cabs1(z(k))
-            call zdscal(n,s,z,1)
-            ynorm = s*ynorm
-  130    continue
-  140 continue
-
-      if(abs(dzasum(n,z,1))>rerror) then
-       s = 1.0d0/dzasum(n,z,1)
-      else
-       s = 1.d0/rerror
-      endif
-
-      call zdscal(n,s,z,1)
-      ynorm = s*ynorm
-      do 160 kb = 1, n
-         k = n + 1 - kb
-         if (cabs1(z(k)) .le. cabs1(a(k,k))) go to 150
-            s = cabs1(a(k,k))/cabs1(z(k))
-            call zdscal(n,s,z,1)
-            ynorm = s*ynorm
-  150    continue
-         if (cabs1(a(k,k)) > rerror) then
-          z(k) = z(k)/a(k,k)
-         else
-          z(k) = (1.0d0,0.0d0)
-         endif
-         t = -z(k)
-         call zaxpy(k-1,t,a(1,k),1,z(1),1)
-  160 continue
-
-      if(abs(dzasum(n,z,1))>rerror) then
-       s = 1.d0/dzasum(n,z,1)
-      else
-       s = 1.d0/rerror
-      endif
-
-      call zdscal(n,s,z,1)
-      ynorm = s*ynorm
-      if(abs(anorm) > rerror) then
-       rcond = ynorm/anorm
-      else
-       rcond = 1.d0/rerror
-      endif
-      
-      return
-      end subroutine
-
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-!optimized one : control on the floating overflow
-
-      subroutine zgeco(a,lda,n,ipvt,rcond,z)
-      implicit none
-      integer    :: lda,n,ipvt(1)
-      complex(8) :: a(lda,1),z(1)
-      real(8)    :: rcond
-      complex(8) :: ek,t,wk,wkm
-      real(8)    :: anorm,ss
-      real(16)   :: s,sm,ynorm,tt
-      real(8)    :: ssum
-      integer    :: info,j,k,kb,kp1,l
-
-      anorm = 0.0d0
-      do j=1,n
-         anorm=max(anorm,zsum(n,a(:,j),1))
-      enddo
-      call zgefa(a,lda,n,ipvt,info)
-      ek =CMPLX(1.0d0,0.0d0,kind=8)
-      z  =CMPLX(0.0d0,0.0d0,kind=8)
-
-      do k=1,n
-         if(cabs1(z(k)).ne.0.0d0) ek=csign1(ek,-z(k))
-         if(cabs1(ek-z(k)).le.cabs1(a(k,k))) go to 30
-            ss=cabs1(ek-z(k))
-            if(abs(ss)<epsilonr) ss=epsilonr
-            s = cabs1(a(k,k))/ss
-            if(abs(s)>MAX_REAL) s=qsign(s)*MAX_REAL
-            z=z*dble(s)
-            ek = s*ek
-   30    continue
-         wk  =  ek - z(k)
-         wkm = -ek - z(k)
-         s   =  cabs1(wk)
-         sm  =  cabs1(wkm)
-         if(cabs1(a(k,k))<rrerror) go to 40
-            tt = wk
-            tt = tt/conjg(a(k,k)) 
-            if(abs(tt)>MAX_REAL) goto 40
-            wk = tt
-            tt = wkm  
-            tt = tt / conjg(a(k,k))
-            if(abs(tt)>MAX_REAL) goto 40
-            wkm = tt
-         go to 50
-   40    continue
-            wk  = (1.0d0,0.0d0)
-            wkm = (1.0d0,0.0d0)
-   50    continue
-         kp1 = k + 1
-         if (kp1 > n) go to 90
-            do 60 j = kp1, n
-               tt   =  cabs1(z(j)+wkm*conjg(a(k,j))) 
-               if(abs(sm)>MAX_REAL.or.abs(tt)>MAX_REAL)then
-                sm=MAX_REAL
-                s=MAX_REAL-1
-                goto 80
-               endif
-               sm   =   sm   + tt
-               z(j) = z(j) + wk*conjg(a(k,j))
-               s    = s    + cabs1(z(j))
-   60       continue
-            if (s>=sm) go to 80
-               t  = wkm - wk
-               wk = wkm
-               do 70 j = kp1, n
-                  z(j) = z(j) + t*conjg(a(k,j))
-   70          continue
-   80       continue
-   90    continue
-         z(k) = wk
-      enddo
-
-      ssum=zsum(n,z,1)
-      if(abs(ssum)>rrerror) then
-       s = 1.d0/ssum
-      else
-       s = 1.d0/rrerror
-      endif
-
-      if(abs(s)>MAX_REAL) s=qsign(s)*MAX_REAL
-      z=z*dble(s)
-
-      do 120 kb = 1, n
-         k = n + 1 - kb
-         if (k .lt. n) z(k) = z(k) + zdot(n-k,a(k+1:n,k),1,z(k+1:n),1)
-         if (cabs1(z(k)) .le. 1.0d0) go to 110
-          if(abs(cabs1(z(k)))>rrerror)then
-            s = 1.0d0/cabs1(z(k))
-          else
-            s = 1.d0/rrerror
-          endif
-          if(abs(s)>MAX_REAL) s=qsign(s)*MAX_REAL
-          z=z*dble(s)
-  110    continue
-         l = ipvt(k)
-         t = z(l)
-         z(l) = z(k)
-         z(k) = t
-  120 continue
-
-      ssum=zsum(n,z,1)
-      if(abs(ssum)>rrerror) then
-       s = 1.d0/ssum
-      else
-       s = 1.d0/rrerror
-      endif
-
-      if(abs(s)>MAX_REAL) s=qsign(s)*MAX_REAL
-      z=z*dble(s)
-
-      ynorm = 1.0d0
-      do 140 k = 1, n
-         l = ipvt(k)
-         t = z(l)
-         z(l) = z(k)
-         z(k) = t
-         if (k .lt. n) call zaxpyb(n-k,t,a(k+1:n,k),1,z(k+1:n),1)
-         if (cabs1(z(k)) .le. 1.0d0) go to 130
-            if(abs(cabs1(z(k)))>rrerror)then
-             s = 1.0d0/cabs1(z(k))
-            else
-             s = 1.d0/rrerror
-            endif
-            if(abs(s)>MAX_REAL) s=qsign(s)*MAX_REAL
-            z=z*dble(s)
-            ynorm = s*ynorm
-  130    continue
-  140 continue
-
-      ssum=zsum(n,z,1)
-      if(abs(ssum)>rrerror) then
-       s = 1.0d0/ssum
-      else
-       s = 1.d0/rrerror
-      endif
-
-      if(abs(s)>MAX_REAL) s=qsign(s)*MAX_REAL
-      z=z*dble(s)
-
-      ynorm = s*ynorm
-      do 160 kb = 1, n
-         k = n + 1 - kb
-         if (cabs1(z(k)) .le. cabs1(a(k,k))) go to 150
-            s = cabs1(a(k,k))/cabs1(z(k))
-            z=z*dble(s)
-            ynorm = s*ynorm
-  150    continue
-         if(abs(a(k,k))>rerror .and. abs(z(k))<MAX_REAL) then
-          z(k) = z(k)/a(k,k)
-         else
-          z(k) = (1.0d0,0.0d0)
-         endif
-         t = -z(k)
-         call zaxpyb(k-1,t,a(1:k-1,k),1,z(1:k-1),1)
-  160 continue
-
-      ssum=zsum(n,z,1)
-      if(abs(ssum)>rrerror) then
-       s = 1.d0/ssum
-      else
-       s = 1.d0/rrerror
-      endif
-
-      if(abs(s)>MAX_REAL) s=qsign(s)*MAX_REAL
-      z=z*dble(s)
-
-      ynorm = s*ynorm
-
-      if(abs(anorm) > rrerror) then
-       tt=ynorm/anorm
-       if(abs(tt)<MAX_REAL)then
-        rcond = tt
-       else
-        rcond = qsign(ynorm)*sign(1.d0,anorm)*MAX_REAL
-       endif
-      else
-       rcond = MAX_REAL
-      endif
-      
-      return
-      end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-      subroutine zgefa(a,lda,n,ipvt,info)
-      implicit none
-      integer    :: lda,n,ipvt(1),info
-      complex(8) :: a(lda,1)
-      complex(8) :: t
-      integer    :: izamax,j,k,kp1,l,nm1
-
-      info = 0
-      nm1 = n - 1
-      if (nm1 < 1) go to 70
-      do 60 k = 1, nm1
-         kp1 = k + 1
-         l = izamax(n-k+1,a(k,k),1) + k - 1
-         ipvt(k) = l
-         if (cabs1(a(l,k)) == 0.0d0) go to 40
-            if (l == k) go to 10
-               t = a(l,k)
-               a(l,k) = a(k,k)
-               a(k,k) = t
-   10       continue
-            t = -(1.0d0,0.0d0)/a(k,k)
-            call zscal(n-k,t,a(k+1,k),1)
-            do 30 j = kp1, n
-               t = a(l,j)
-               if (l == k) go to 20
-                  a(l,j) = a(k,j)
-                  a(k,j) = t
-   20          continue
-               call zaxpyb(n-k,t,a(k+1:n,k),1,a(k+1:n,j),1)
-   30       continue
-         go to 50
-   40    continue
-            info = k
-   50    continue
-   60 continue
-   70 continue
-      ipvt(n) = n
-      if (cabs1(a(n,n)) == 0.0d0) info = n
-      return
-      end subroutine
+!        !---------------------!
+! 
+!       subroutine invmat_comp(n,mat,det2b,detb,pdetb,check_nan,c,block_matrix,diagmat)
+!       implicit none
+!       integer                   :: pdet,ppdet,n,nnn,i,j
+!       real(8)                   :: big,det,ddet,rcond
+!       complex(8),intent(inout)  :: mat(:,:)
+!       real(8),optional          :: detb
+!       integer,optional          :: pdetb
+!       complex(8),optional       :: det2b
+!       complex(8)                :: det2,ddet2,deti(2),q
+!       complex(8)                :: WORK(2*size(mat,1)),WORK2(size(mat,1))
+!       integer(4)                :: INFO,INFO2
+!       integer                   :: piv(size(mat,1))
+!       logical,optional          :: check_nan,block_matrix,diagmat
+!       integer,optional          :: c
+! 
+!      if(present(diagmat))then
+!       if(diagmat)then
+!        do i=1,size(mat,1) 
+!         if(abs(mat(i,i))>1.d-15)then
+!          mat(i,i)=1.d0/mat(i,i)
+!         else
+!          mat(i,i)=1.d15
+!         endif
+!        enddo
+!        return
+!       endif
+!      endif
+! 
+!      if(mat_3_3_c(mat,detb,det2b,pdetb)) return
+! 
+!      if(size(mat,1)/=size(mat,2)) then
+!        write(*,*) 'DIMENSION OF MATRIX : ', shape(mat)
+!        call create_seg_fault
+!        stop 'error invmat_comp try to inverse rectangular matrix'
+!      endif
+!  
+!      if(present(det2b)) det2b=0.; if(present(detb))  detb=0.; if(present(pdetb)) pdetb=0
+!      if(present(check_nan)) call erase_divergence(mat)
+!      call force_real_inv
+! 
+!      if(present(c))then
+!        call randomize_matrix(mat,amp=invmat_error,flag=.true.,kk2=c)
+!      else
+!        call randomize_matrix(mat,amp=invmat_error,flag=.true.)
+!      endif
+! 
+!       if(present(block_matrix))then
+!        if(block_matrix)then
+!          nnn=n/2
+!          if(mod(n,2)>0) stop 'error invmat_comp block_matrix, but linear size is odd'
+!          if(present(detb))then
+!            call invit(1,nnn,det,det2,pdet)
+!            call invit(nnn+1,n,ddet,ddet2,ppdet)
+!            mat(1:nnn,nnn+1:n)=0.
+!            mat(nnn+1:n,1:nnn)=0.
+!            pdetb = pdet + ppdet
+!            detb  = det  * ddet
+!            det2b = det2 * ddet2
+!          else
+!            call invit(1,nnn)
+!            call invit(nnn+1,n)
+!            mat(1:nnn,nnn+1:n)=0.
+!            mat(nnn+1:n,1:nnn)=0.
+!          endif
+!          goto 35
+!        endif
+!       endif
+! 
+!       call invit(1,n,detb,det2b,pdetb)
+! 35    continue
+! 
+!       if(present(check_nan)) call erase_divergence(mat)
+! 
+!       return
+! 
+!       contains
+! 
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+! 
+!    subroutine zgeco_zgedi(i1,i2)
+!    implicit none
+!    integer :: i1,i2,nnn
+!      nnn=i2-i1+1
+!      call geco__(nnn,mat(i1:i2,i1:i2),piv(i1:i2))
+!      call gedi__(nnn,mat(i1:i2,i1:i2),piv(i1:i2),deti)
+!    end subroutine
+! 
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+! 
+!     subroutine invit(i1,i2,det,det2,pdet)
+!     implicit none
+!     integer                   :: i1,i2
+!     real(8),optional          :: det
+!     integer,optional          :: pdet
+!     complex(8),optional       :: det2
+!     integer                   :: nn
+! 
+!        nn = i2-i1+1
+!   
+!        if(mat_3_3_c(mat(i1:i2,i1:i2),det,det2,pdet)) return
+! 
+!        if(force_invmat_single_prec)then
+!         call force_sing_prec(mat(i1:i2,i1:i2),det,det2,pdet)
+!         return 
+!        endif
+! 
+!        if(present(det).or.flag_force_invmat_lapack)then
+!         call zgeco_zgedi(i1,i2)
+!         call get_det_from_zgeco(deti,det,det2,pdet)
+!        else
+!         if(nn>n_openmp_rout.and.use_openmp_invmat)then
+!           call invert_openmp(mat(i1:i2,i1:i2)) 
+!           return
+!         endif
+!         ! ebl: Removing GPU functionality
+!         ! if(use_cuda_routines.and.nn>n_cuda_rout)then
+!         !   call diago_cuda_it_c(nn,mat(i1:i2,i1:i2))
+!         !   return
+!         ! else
+!          if(.not.flag_use_invmat_jordan)then
+!            call invmat_comp2(n,mat(i1:i2,i1:i2))
+!          else
+!            call invmat_jordan(n,mat(i1:i2,i1:i2))
+!          endif
+!         ! endif
+!        endif
+! 
+!     end subroutine
+! 
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+! 
+!     subroutine force_sing_prec(mat,det,det2,pdet)
+!      complex(8)                :: mat(:,:)
+!      complex(4)                :: mat_(size(mat,1),size(mat,2))
+!      real(8),optional          :: det
+!      integer,optional          :: pdet
+!      complex(8),optional       :: det2
+!      real(4)                   :: det_
+!      complex(4)                :: det2_
+!      integer                   :: pdet_
+!      if(present(det))then 
+!       mat_=mat
+!       call invmat_comps(size(mat,1),mat_,det2_,det_,pdet_)
+!       mat=mat_
+!       pdet=pdet_
+!       det2=det2_
+!       det=det_
+!      else
+!       mat_=mat
+!       call invmat_comps(size(mat_,1),mat_)
+!       mat=mat_
+!      endif
+!     end subroutine
+! 
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+! 
+!     subroutine force_real_inv
+!      real(8) :: matr(n,n)
+!      if(testing)then
+!        if(maxval(abs(real(mat)))>1.d-9)then
+!        if(maxval(abs(aimag(mat))/maxval(abs(real(mat))))<1.d-4)then
+!         matr=mat
+!         if(messages3) &
+!      &  write(*,*) 'DANGER: invmat_comp, &
+!      &              diagonalize real matrix, too small complex part'
+!         if(present(det2b)) then
+!         call invmat_real(n,matr,det2b,detb,pdetb)
+!         else
+!          call invmat_real(n,matr)
+!         endif
+!         mat=matr
+!         return
+!        endif
+!        endif
+!       endif
+!     end subroutine
+! 
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+! 
+!       end subroutine
+
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+
+!       subroutine invmat_comps(n,mat,det2b,detb,pdetb,check_nan,c,block_matrix,diagmat)
+!       implicit none
+!       integer                   :: pdet,ppdet,n,nnn,i,j
+!       real(4)                   :: big,det,ddet
+!       complex(4),intent(inout)  :: mat(:,:)
+!       real(4),optional          :: detb
+!       integer,optional          :: pdetb
+!       complex(4),optional       :: det2b
+!       complex(4)                :: det2,ddet2,deti(2),q
+!       integer(4)                :: INFO,INFO2
+!       integer                   :: piv(size(mat,1))
+!       logical,optional          :: check_nan,block_matrix,diagmat
+!       integer,optional          :: c
+! 
+!      if(present(diagmat))then
+!       if(diagmat)then
+!        do i=1,size(mat,1) 
+!         if(abs(mat(i,i))>1.d-15)then
+!          mat(i,i)=1.d0/mat(i,i)
+!         else
+!          mat(i,i)=1.d15
+!         endif
+!        enddo
+!        return
+!       endif
+!      endif
+! 
+!      if(size(mat,1)/=size(mat,2)) then
+!        write(*,*) 'DIMENSION OF MATRIX : ', shape(mat)
+!        call create_seg_fault
+!        stop 'error invmat_comp try to inverse rectangular matrix'
+!      endif
+! 
+!      if(mat_3_3_cs(mat,detb,det2b,pdetb)) return
+!  
+!      if(present(det2b)) det2b=0.; if(present(detb))  detb=0.; if(present(pdetb)) pdetb=0
+! 
+!       if(present(block_matrix))then
+!        if(block_matrix)then
+!          nnn=n/2
+!          if(mod(n,2)>0) stop 'error invmat_comp block_matrix, but linear size is odd'
+!          if(present(detb))then
+!            call invit(1,nnn,det,det2,pdet)
+!            call invit(nnn+1,n,ddet,ddet2,ppdet)
+!            mat(1:nnn,nnn+1:n)=0.
+!            mat(nnn+1:n,1:nnn)=0.
+!            pdetb = pdet + ppdet
+!            detb  = det  * ddet
+!            det2b = det2 * ddet2
+!          else
+!            call invit(1,nnn)
+!            call invit(nnn+1,n)
+!            mat(1:nnn,nnn+1:n)=0.
+!            mat(nnn+1:n,1:nnn)=0.
+!          endif
+!          goto 35
+!        endif
+!       endif
+! 
+!       call invit(1,n,detb,det2b,pdetb)
+! 35    continue
+! 
+!       return
+! 
+!       contains
+! 
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+! 
+!     subroutine zgeco_zgedi(i1,i2)
+!     implicit none
+!     integer :: i1,i2,nnn
+!       nnn=i2-i1+1
+!      call geco__(nnn,mat(i1:i2,i1:i2),piv(i1:i2))
+!      call gedi__(nnn,mat(i1:i2,i1:i2),piv(i1:i2),deti)
+!     end subroutine
+! 
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+! 
+!     subroutine invit(i1,i2,det,det2,pdet)
+!     implicit none
+!     integer :: i1,i2
+!     real(4),optional          :: det
+!     integer,optional          :: pdet
+!     complex(4),optional       :: det2
+!        if(mat_3_3_cs(mat(i1:i2,i1:i2),det,det2,pdet)) return
+!        if(present(det).or.flag_force_invmat_lapack)then
+!         call zgeco_zgedi(i1,i2)
+!         call get_det_from_zgeco(deti,det,det2,pdet)
+!        else
+!         if(n>n_openmp_rout.and.use_openmp_invmat)then
+!           call invert_openmp(mat(i1:i2,i1:i2)) 
+!           return         
+!         endif
+!           call invmat_jordan(n,mat(i1:i2,i1:i2))
+!        endif
+!     end subroutine
+! 
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+! 
+!       end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!       subroutine invmat_comp_quad(n,mat,det2b,detb,pdetb,check_nan,c,block_matrix)
+!       implicit none
+!       real(16),optional          :: detb
+!       integer,optional           :: pdetb
+!       complex(16),optional       :: det2b
+!       integer                    :: ppdet,pdet,n,i,j,piv(n)
+!       real(16)                   :: big,det,ddet
+!       complex(16),intent(inout)  :: mat(n,n)
+!       complex(16)                :: ddet2,det2,deti(2)
+!       complex(16)                :: q
+!       integer                    :: INFO,INFO2
+!       integer                    :: nnn
+!       logical,optional           :: check_nan,block_matrix
+!       integer,optional           :: c
+! 
+!       if(mat_3_3_qc(mat,detb,det2b,pdetb)) return
+! 
+!       if(present(det2b))then; det2b=0.;detb=0.;pdetb=0; endif
+! 
+!       if(present(block_matrix))then
+!        if(block_matrix)then
+!          nnn=n/2
+!          if(mod(n,2)>0) stop 'error invmat_comp block_matrix, but linear size is odd'
+!          if(present(detb))then
+!            call invit(1,nnn,det,det2,pdet)
+!            call invit(nnn+1,n,ddet,ddet2,ppdet)
+!            mat(1:nnn,nnn+1:n)=0.
+!            mat(nnn+1:n,1:nnn)=0.
+!            pdetb = pdet + ppdet
+!            detb  = det  * ddet
+!            det2b = det2 * ddet2
+!          else
+!            call invit(1,nnn)
+!            call invit(nnn+1,n)
+!            mat(1:nnn,nnn+1:n)=0.
+!            mat(nnn+1:n,1:nnn)=0.
+!          endif
+!          goto 35
+!        endif
+!       endif
+! 
+!       call invit(1,n,detb,det2b,pdetb)
+! 35    continue
+! 
+!       return
+! 
+!       contains
+! 
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+! 
+!    subroutine zgeco_zgedi(i1,i2)
+!    implicit none
+!    integer :: i1,i2,nnn,i,j
+!      nnn=i2-i1+1
+!      call geco__(nnn,mat(i1:i2,i1:i2),piv(i1:i2))
+!      call gedi__(nnn,mat(i1:i2,i1:i2),piv(i1:i2),deti)
+!    end subroutine
+! 
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+! 
+!     subroutine invit(i1,i2,det,det2,pdet)
+!     implicit none
+!     integer :: i1,i2
+!     real(16),optional          :: det
+!     integer,optional           :: pdet
+!     complex(16),optional       :: det2
+!        if(mat_3_3_qc(mat(i1:i2,i1:i2),det,det2,pdet)) return
+!        call zgeco_zgedi(i1,i2)
+!        if(present(det)) call get_det_from_zgeco(deti,det,det2,pdet)
+!     end subroutine
+! 
+! 
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+! 
+!       end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!       subroutine invmat_comp2(n,mat,detb2,detb,pdetb,diagmat)
+!       implicit none
+!       integer                   :: pdet,n,i,j
+!       integer,optional          :: pdetb
+!       real(8)                   :: big,det
+!       real(8),optional          :: detb
+!       complex(8),intent(inout)  :: mat(:,:)
+!       complex(8)                :: det2,q
+!       complex(8),optional       :: detb2
+!       integer(4)                :: INFO,INFO2
+!       integer                   :: piv(size(mat,1))
+!       logical,optional          :: diagmat
+! 
+!       if(size(mat,1)/=size(mat,2)) stop 'error invmat_comp2 try invert rectangular matrix'
+! 
+!       if(present(diagmat))then
+!        if(diagmat)then
+!         do i=1,size(mat,1)
+!          if(abs(mat(i,i))>1.d-13)then
+!           mat(i,i)=1.d0/mat(i,i)
+!          else
+!           mat(i,i)=1.d14
+!          endif
+!         enddo
+!         return
+!        endif
+!       endif
+! 
+!       if(mat_3_3_c(mat,detb,detb2,pdetb)) return
+!       det=1.d0; det2=1.d0; pdet=0
+!       call GETRF__(mat,piv)
+! 
+!       if(present(detb2))then
+!        do i=1,n
+!         det2 = det2 * mat(i,i)
+!        enddo
+!        det=abs(det2)
+!        if(det<error) then
+!         det2=1.
+!        else
+!         det2=det2/det
+!        endif
+!        call rescale(det,pdet)
+!       endif
+! 
+!       call GETRI__(mat,piv)
+! 
+!       if(present(detb2))then; detb2=det2; detb=det; pdetb=pdet; endif
+! 
+!       return
+!       end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!       subroutine invmat_reals(n,mat,det2b,detb,pdetb,check_nan,c,block_matrix,diagmat)
+!       implicit none
+!       real(4),optional      :: detb
+!       integer,optional      :: pdetb
+!       complex(4),optional   :: det2b
+!       real(4)               :: det,ddet,q
+!       complex(4)            :: det2
+!       integer               :: pdet,ppdet,nnn
+!       real(4)               :: big
+!       real(4),intent(inout) :: mat(:,:)
+!       real(4)               :: rtemp
+!       logical,optional      :: check_nan,diagmat
+!       integer,optional      :: c
+!       logical,optional      :: block_matrix
+!       integer               :: i,j,k,n
+! 
+!       if(size(mat,1)/=size(mat,2)) stop 'error invmat_real rectangular matrix'
+! 
+!       if(present(diagmat))then
+!        if(diagmat)then
+!         do i=1,size(mat,1)
+!          if(abs(mat(i,i))>1.d-15)then
+!           mat(i,i)=1.d0/mat(i,i)
+!          else
+!           mat(i,i)=1.d15
+!          endif
+!         enddo
+!         return
+!        endif
+!       endif
+! 
+!       if(mat_3_3_rs(mat,detb,det2b,pdetb)) return
+! 
+!       if(present(check_nan)) call erase_divergence(mat)
+!       if(size(mat(:,1))/=n.or.size(mat(1,:))/=n) stop 'error invmat_real matrix not square'
+!  
+!       if(present(block_matrix))then
+!        if(block_matrix)then
+!         nnn=n/2
+!         if(mod(n,2)>0) stop 'error invmat_reals block_matrix, but linear size is odd'
+!         mat(1:nnn,nnn+1:n)=0.d0 ; mat(nnn+1:n,1:nnn)=0.d0
+!         if(present(detb))then
+!          call invit(mat,1,nnn,det,det2,pdet)
+!          call invit(mat,nnn+1,n,ddet,det2,ppdet)
+!          pdetb = pdet + ppdet
+!          detb  = det  * ddet
+!          det2b = 1.
+!         else
+!          call invit(mat,1,nnn)
+!          call invit(mat,nnn+1,n)
+!         endif
+!         goto 35
+!        endif
+!       endif
+!       call invit(mat,1,n,detb,det2b,pdetb)
+! 35    continue
+!       call erase_divergence(mat)
+! 
+!       return
+!       
+!       
+!       contains
+!       
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+! 
+!       subroutine invit(mat_in,i1,i2,det,det2,pdet)
+!       implicit none
+!       integer                   :: i1,i2,n
+!       integer                   :: piv(i2-i1+1)
+!       real(4),target            :: mat_in(:,:)
+!       real(4),pointer           :: mat(:,:)
+!       real(4)                   :: stock(i2-i1+1)
+!       real(4)                   :: det_
+!       integer                   :: pdet_
+!       real(4),optional          :: det
+!       integer,optional          :: pdet
+!       complex(4),optional       :: det2
+!   
+!       n=i2-i1+1
+!       mat=>mat_in(i1:i2,i1:i2) 
+!       if(mat_3_3_rs(mat,det,det2,pdet)) return
+! 
+!       if(.not.present(det))then
+!        if(n>n_openmp_rout.and.use_openmp_invmat)then
+!          call invert_openmp(mat)
+!          return
+!        endif
+!        if(flag_use_invmat_jordan_real)then
+!          call invmat_jordan(n,mat)
+!          return
+!        endif
+!       endif
+!  
+!       det_ = 1.d0 ; pdet_ = 0
+!       do i=1,n
+!         big = abs(mat(i,i))
+!         piv(i) = i
+!         do j=i,n
+!         if(abs(mat(i,j))>big) then
+!           big = abs(mat(i,j))
+!           piv(i) = j
+!         endif
+!         enddo
+!         big = mat(i,piv(i))
+!         !-------------TEST---------------------------------------!
+!         if(abs(big)<rerror) then
+!           write(*,*) 'invmat, small term : danger in inverting matrix'
+!           write(*,*) 'term is : ', big,mat(i,piv(i))
+!           write(*,*) 'i,j     : ', i,piv(i)
+!           big=smallest_pivot
+!           if(strongstop) stop 'error in invmat real'
+!           write(*,*) 'anyway, goes on...'
+!         endif
+!         !-------------TEST---------------------------------------!
+!        det_ = abs(det_*big)
+!        call rescale(det_,pdet_)
+!         mat(i,piv(i)) = 0.d0
+!         rtemp = mat(i,i)
+!         do j=1,n
+!           stock(j) = mat(j,piv(i))/big
+!         enddo
+!         if(piv(i)/=i) then
+!          do j=1,n
+!            mat(j,piv(i)) = mat(j,i)
+!          enddo
+!         endif
+!         mat(i,piv(i)) = rtemp
+!         do k=1,n
+!           do j=1,n
+!             mat(j,k) = mat(j,k) - stock(j)*mat(i,k)
+!           enddo
+!         enddo
+!         do j=1,n
+!            mat(j,i) = stock(j)
+!         enddo
+!         do j=1,n
+!           mat(i,j) = -mat(i,j)/big
+!         enddo
+!         mat(i,i)=1/big
+!        enddo
+!        do i=n,1,-1
+!         do j=1,n
+!          stock(j) = mat(i,j)
+!          mat(i,j) = mat(piv(i),j)
+!          mat(piv(i),j) = stock(j)
+!         enddo
+!        enddo     
+!       if(present(det))then; det=det_; det2=1.d0; pdet=pdet_ ; endif
+!       end subroutine
+!       
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!         
+!       
+!       end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!       subroutine invmat_real(n,mat,det2b,detb,pdetb,check_nan,c,block_matrix,diagmat)
+!       implicit none
+!       real(8),optional      :: detb
+!       integer,optional      :: pdetb
+!       complex(8),optional   :: det2b
+!       real(8)               :: det,ddet,q
+!       complex(8)            :: det2
+!       integer               :: pdet,ppdet,nnn
+!       real(8)               :: big
+!       real(8),intent(inout) :: mat(:,:)
+!       real(8)               :: rtemp
+!       logical,optional      :: check_nan,diagmat
+!       integer,optional      :: c
+!       logical,optional      :: block_matrix
+!       integer               :: i,j,k,n
+! 
+!       if(size(mat,1)/=size(mat,2)) stop 'error invmat_real rectangular matrix'
+! 
+!       if(present(diagmat))then
+!        if(diagmat)then
+!         do i=1,size(mat,1)
+!          if(abs(mat(i,i))>1.d-15)then
+!           mat(i,i)=1.d0/mat(i,i)
+!          else
+!           mat(i,i)=1.d15
+!          endif
+!         enddo
+!         return
+!        endif
+!       endif
+! 
+!       if(mat_3_3_r(mat,detb,det2b,pdetb)) return
+! 
+!       if(present(check_nan)) call erase_divergence(mat)
+!       if(size(mat(:,1))/=n.or.size(mat(1,:))/=n) stop 'error invmat_real matrix not square'
+!  
+!       if(present(c))then      
+!        call randomize_matrix(mat,amp=invmat_error,flag=.true.,kk2=c)
+!       else
+!        call randomize_matrix(mat,amp=invmat_error)
+!       endif
+! 
+!       if(present(block_matrix))then
+!        if(block_matrix)then
+!         nnn=n/2
+!         if(mod(n,2)>0) stop 'error invmat_real block_matrix, but linear size is odd'
+!         mat(1:nnn,nnn+1:n)=0.d0 ; mat(nnn+1:n,1:nnn)=0.d0
+!         if(present(detb))then
+!          call invit(mat,1,nnn,det,det2,pdet)
+!          call invit(mat,nnn+1,n,ddet,det2,ppdet)
+!          pdetb = pdet + ppdet
+!          detb  = det  * ddet 
+!          det2b = 1.
+!         else
+!          call invit(mat,1,nnn)
+!          call invit(mat,nnn+1,n)
+!         endif
+!         goto 35
+!        endif
+!       endif
+!       call invit(mat,1,n,detb,det2b,pdetb)
+! 35    continue
+! 
+!       call erase_divergence(mat)
+! 
+!       return
+!       
+!       
+!       contains
+!       
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+! 
+!     subroutine force_sing_prec(mat,det,det2,pdet)
+!      real(8)                   :: mat(:,:)
+!      real(4)                   :: mat_(size(mat,1),size(mat,2))
+!      real(8),optional          :: det
+!      integer,optional          :: pdet
+!      complex(8),optional       :: det2
+!      real(4)                   :: det_
+!      complex(4)                :: det2_
+!      integer                   :: pdet_
+!      if(present(det))then
+!       mat_=mat
+!       call invmat_reals(size(mat,1),mat_,det2_,det_,pdet_)
+!       mat=mat_
+!       pdet=pdet_
+!       det2=det2_
+!       det=det_
+!      else
+!       mat_=mat
+!       call invmat_reals(size(mat_,1),mat_)
+!       mat=mat_
+!      endif
+!     end subroutine
+! 
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!       
+!       subroutine invit(mat_in,i1,i2,det,det2,pdet)
+!       implicit none
+!       integer                   :: i1,i2,n
+!       integer                   :: piv(i2-i1+1)
+!       real(8),target            :: mat_in(:,:)
+!       real(8),pointer           :: mat(:,:)
+!       real(8)                   :: stock(i2-i1+1)
+!       real(8)                   :: det_
+!       integer                   :: pdet_
+!       real(8),optional          :: det
+!       integer,optional          :: pdet
+!       complex(8),optional       :: det2
+! 
+!       mat=>mat_in(i1:i2,i1:i2) 
+!       n=i2-i1+1
+!       if(mat_3_3_r(mat,det,det2,pdet)) return
+! 
+!       if(force_invmat_single_prec)then
+!         call force_sing_prec(mat,det,det2,pdet)
+!         return
+!       endif
+!       if(.not.present(det))then
+!        if(n>n_openmp_rout.and.use_openmp_invmat)then
+!          call invert_openmp(mat)
+!          return
+!        endif
+!        ! ebl: Removing GPU functionality
+!        ! if(use_cuda_routines.and.n>n_cuda_rout)then
+!        !   call diago_cuda_it_r(n,mat)
+!        !   return
+!        ! endif
+!        if(flag_use_invmat_jordan_real)then
+!          call invmat_jordan(n,mat)
+!          return
+!        endif
+!        if(diag_use_LU_instead_of_pivot)then
+!          call D_INVMG(size(mat,1),size(mat,2),mat)
+!          return
+!        endif
+!       endif
+!  
+!       det_ = 1.d0 ; pdet_ = 0
+!       do i=1,n
+!         big = abs(mat(i,i))
+!         piv(i) = i
+!         do j=i,n
+!         if(abs(mat(i,j))>big) then
+!           big = abs(mat(i,j))
+!           piv(i) = j
+!         endif
+!         enddo
+!         big = mat(i,piv(i))
+!         !-------------TEST---------------------------------------!
+!         if(abs(big)<rerror) then
+!           write(*,*) 'invmat, small term : danger in inverting matrix'
+!           write(*,*) 'term is : ', big,mat(i,piv(i))
+!           write(*,*) 'i,j     : ', i,piv(i)
+!           big=smallest_pivot
+!           if(strongstop) stop 'error in invmat real'
+!           write(*,*) 'anyway, goes on...'
+!         endif
+!         !-------------TEST---------------------------------------!
+!         det_ = abs(det_*big)
+!         call rescale(det_,pdet_)
+!         mat(i,piv(i)) = 0.d0
+!         rtemp = mat(i,i)
+! 
+!         do j=1,n
+!           stock(j) = mat(j,piv(i))/big
+!         enddo
+!         if(piv(i)/=i) then
+!          do j=1,n
+!            mat(j,piv(i)) = mat(j,i)
+!          enddo
+!         endif
+!         mat(i,piv(i)) = rtemp
+!         do k=1,n
+!           do j=1,n
+!             mat(j,k) = mat(j,k) - stock(j)*mat(i,k)
+!           enddo
+!         enddo
+!         do j=1,n
+!            mat(j,i) = stock(j)
+!         enddo
+!         do j=1,n
+!           mat(i,j) = -mat(i,j)/big
+!         enddo
+!         mat(i,i)=1/big
+!        enddo
+!        do i=n,1,-1
+!         do j=1,n
+!          stock(j) = mat(i,j)
+!          mat(i,j) = mat(piv(i),j)
+!          mat(piv(i),j) = stock(j)
+!         enddo
+!        enddo     
+!       if(present(det))then; det=det_; det2=1.d0; pdet=pdet_ ; endif
+!       end subroutine
+!       
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!         
+!       
+!       end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!       subroutine invmat_real_quad(n,mat,det2b,detb,pdetb,check_nan,c,block_matrix,diagmat)
+!       implicit none
+!       real(16),intent(inout):: mat(:,:)
+!       real(16),optional     :: detb
+!       integer,optional      :: pdetb
+!       complex(16),optional  :: det2b
+!       real(16)              :: det,ddet,q
+!       complex(16)           :: det2
+!       integer               :: pdet,ppdet
+!       real(16)              :: big
+!       real(16)              :: rtemp
+!       logical,optional      :: check_nan,block_matrix,diagmat
+!       integer,optional      :: c
+!       integer               :: i,j,k,n,nnn
+! 
+!       if(size(mat,1)/=size(mat,2)) stop 'error invmat quad rectangular matrix'
+! 
+!       if(present(diagmat))then
+!        if(diagmat)then
+!         do i=1,size(mat,1)
+!          if(abs(mat(i,i))>1.d-25)then
+!           mat(i,i)=1.d0/mat(i,i)
+!          else
+!           mat(i,i)=1.d25
+!          endif
+!         enddo
+!         return
+!        endif
+!       endif
+! 
+!       if(mat_3_3_q(mat,detb,det2b,pdetb)) return
+! 
+!       if(present(block_matrix))then
+!        if(block_matrix)then
+!         nnn=n/2
+!         if(mod(n,2)>0) stop 'error invmat_real_quad block_matrix, but linear size is odd'
+!         mat(1:nnn,nnn+1:n)=0.d0 ; mat(nnn+1:n,1:nnn)=0.d0
+!         if(present(detb))then
+!          call invit(mat,1,nnn,det,det2,pdet)
+!          call invit(mat,nnn+1,n,ddet,det2,ppdet)
+!          pdetb = pdet + ppdet
+!          detb  = det  * ddet
+!          det2b = 1.
+!         else
+!          call invit(mat,1,nnn)
+!          call invit(mat,nnn+1,n)
+!         endif
+!         goto 35
+!        endif
+!       endif
+!       call invit(mat,1,n,detb,det2b,pdetb)
+! 35    continue
+! 
+! 
+! 
+!    contains
+! 
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+! 
+!       subroutine invit(mat_in,i1,i2,det,det2,pdet)
+!       implicit none
+!       integer                    :: i1,i2,n
+!       integer                    :: piv(i2-i1+1)
+!       real(16),target            :: mat_in(:,:)
+!       real(16),pointer           :: mat(:,:)
+!       real(16)                   :: stock(i2-i1+1)
+!       real(16)                   :: det_
+!       integer                    :: pdet_
+!       real(16),optional          :: det
+!       integer,optional           :: pdet
+!       complex(16),optional       :: det2
+! 
+!       mat=>mat_in(i1:i2,i1:i2)
+!       n=i2-i1+1
+!       if(mat_3_3_q(mat,det,det2,pdet)) return
+! 
+!       if(.not.present(det))then
+!        if(diag_use_LU_instead_of_pivot)then
+!         call Q_INVMG(size(mat,1),size(mat,2),mat)
+!         return
+!        endif
+!       endif
+! 
+!       det_ = 1.d0; pdet_ = 0
+!       do i=1,n
+!         big = abs(mat(i,i))
+!         piv(i) = i
+!         do j=i,n
+!         if(abs(mat(i,j))>big) then
+!           big = abs(mat(i,j))
+!           piv(i) = j
+!         endif
+!         enddo
+!         big = mat(i,piv(i))
+! 
+!         det_ = abs(det_*big)
+!         call rescale(det_,pdet_)
+! 
+!         mat(i,piv(i)) = 0.d0
+!         rtemp = mat(i,i)
+! 
+!         do j=1,n
+!          stock(j) = mat(j,piv(i))/big
+!         enddo
+!         if(piv(i)/=i) then
+!          do j=1,n
+!            mat(j,piv(i)) = mat(j,i)
+!          enddo
+!         endif
+!         mat(i,piv(i)) = rtemp
+!         do k=1,n
+!           do j=1,n
+!             mat(j,k) = mat(j,k) - stock(j)*mat(i,k)
+!           enddo
+!         enddo
+!         do j=1,n
+!            mat(j,i) = stock(j)
+!         enddo
+!         do j=1,n
+!           mat(i,j) = -mat(i,j)/big
+!         enddo
+!         mat(i,i)=1/big
+!        enddo
+! 
+!        do i=n,1,-1
+!         do j=1,n
+!          stock(j) = mat(i,j)
+!          mat(i,j) = mat(piv(i),j)
+!          mat(piv(i),j) = stock(j)
+!         enddo
+!        enddo
+! 
+!        if(present(det))then; det=det_; det2=1.d0; pdet=pdet_ ; endif
+! 
+!       end subroutine
+! 
+!     !------------------!
+!     !------------------!
+!     !------------------!
+!     !------------------!
+! 
+!       end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! !regular one : no control
+! 
+!     subroutine zgedi_(a,lda,n,ipvt,det,work,job)
+!      !subroutines of LINPACK
+!       implicit none
+!       integer    :: lda,n,ipvt(1),job
+!       complex(8) :: a(lda,1),det(2),work(1)
+!       complex(8) :: t
+!       real(8)     :: ten
+!       integer    :: i,j,k,kb,kp1,l,nm1
+!       complex(8) :: zdum
+!       complex(8) :: zdumr,zdumi
+! 
+!       if (job/10 == 0) go to 70
+!          det(1) = (1.0d0,0.0d0)
+!          det(2) = (0.0d0,0.0d0)
+!          ten = 10.0d0
+!          do 50 i = 1, n
+!             if (ipvt(i) /= i) det(1) = -det(1)
+!             det(1) = a(i,i)*det(1)
+!             if (cabs1(det(1)) == 0.0d0) go to 60
+!    10       if (cabs1(det(1)) >= 1.0d0) go to 20
+!                det(1) = cmplx(ten,0.0d0,kind=8)*det(1)
+!                det(2) = det(2) - (1.0d0,0.0d0)
+!             go to 10
+!    20       continue
+!    30       if (cabs1(det(1))<ten) go to 40
+!                det(1) = det(1)/cmplx(ten,0.0d0,kind=8)
+!                det(2) = det(2) + (1.0d0,0.0d0)
+!             go to 30
+!    40       continue
+!    50    continue
+!    60    continue
+!    70    continue
+!          if (mod(job,10) == 0) go to 150
+!          do k = 1, n
+!             a(k,k) = (1.0d0,0.0d0)/a(k,k)
+!             t = -a(k,k)
+!             call zscal(k-1,t,a(1,k),1)
+!             kp1 = k + 1
+!             if (n .lt. kp1) go to 90
+!             do j = kp1, n
+!                t = a(k,j)
+!                a(k,j) = (0.0d0,0.0d0)
+!                call zaxpy(k,t,a(1,k),1,a(1,j),1)
+!             enddo 
+!    90       continue
+!          enddo 
+!          nm1 = n - 1
+!          if (nm1 .lt. 1) go to 140
+!          do 130 kb = 1, nm1
+!             k = n - kb
+!             kp1 = k + 1
+!             do 110 i = kp1, n
+!                work(i) = a(i,k)
+!                a(i,k) = (0.0d0,0.0d0)
+!   110       continue
+!             do j = kp1, n
+!                t = work(j)
+!                call zaxpy(n,t,a(1,j),1,a(1,k),1)
+!             enddo 
+!             l = ipvt(k)
+!             if (l/=k) call zswap(n,a(1,k),1,a(1,l),1)
+!   130    continue
+!   140    continue
+!   150 continue
+! 
+!       return
+!       end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! !optimized one : overflow control
+! 
+!       subroutine zgedi(a,lda,n,ipvt,det,work,job)
+!       !subroutines of LINPACK
+!       implicit none
+!       integer    :: lda,n,ipvt(1),job
+!       complex(8) :: a(lda,1),det(2),work(1)
+!       complex(8) :: t
+!       real(8)    :: ten
+!       integer    :: i,j,k,kb,kp1,l,nm1
+! 
+!       if (job/10 == 0) go to 70
+!          det(1) = (1.0d0,0.0d0)
+!          det(2) = (0.0d0,0.0d0)
+!          ten = 10.0d0
+!          do 50 i = 1, n
+!             if (ipvt(i) /= i) det(1) = -det(1)
+!             det(1) = a(i,i)*det(1)
+!             if (cabs1(det(1)) == 0.0d0) go to 60
+!    10       if (cabs1(det(1)) >= 1.0d0) go to 20
+!                det(1) = cmplx(ten,0.0d0,kind=8)*det(1)
+!                det(2) = det(2) - (1.0d0,0.0d0)
+!             go to 10
+!    20       continue
+!    30       if (cabs1(det(1))<ten) go to 40
+!                det(1) = det(1)/cmplx(ten,0.0d0,kind=8)
+!                det(2) = det(2) + (1.0d0,0.0d0)
+!             go to 30
+!    40       continue
+!    50    continue
+!    60    continue
+!    70    continue
+!          if (mod(job,10) == 0) go to 150
+!          do k = 1, n
+!             a(k,k) = (1.0d0,0.0d0)/a(k,k)
+!             t = -a(k,k)
+!             call zscal(k-1,t,a(1:k-1,k),1)
+!             kp1 = k + 1
+!             if (n .lt. kp1) go to 90
+!             do j = kp1, n
+!                t = a(k,j)
+!                a(k,j) = (0.0d0,0.0d0)
+!                call zaxpyb(k,t,a(:,k),1,a(:,j),1)
+!             enddo 
+!    90       continue
+!          enddo 
+!          nm1 = n - 1
+!          if (nm1 .lt. 1) go to 140
+!          do 130 kb = 1, nm1
+!             k = n - kb
+!             kp1 = k + 1
+!             do 110 i = kp1, n
+!                work(i) = a(i,k)
+!                a(i,k) = (0.0d0,0.0d0)
+!   110       continue
+!             do j = kp1, n
+!                t = work(j)
+!                call zaxpyb(n,t,a(:,j),1,a(:,k),1)
+!             enddo 
+!             l = ipvt(k)
+!             if (l/=k) call swap(n,a(:,k),1,a(:,l),1)
+!   130    continue
+!   140    continue
+!   150 continue
+! 
+!       return
+!       end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! !regular one : no control
+! 
+!      subroutine zgeco_(a,lda,n,ipvt,rcond,z)
+!       implicit none
+!       integer    :: lda,n,ipvt(1)
+!       complex(8) :: a(lda,1),z(1)
+!       real(8)    :: rcond
+!       complex(8) :: zdotc,ek,t,wk,wkm
+!       real(8)    :: anorm,s,dzasum,sm,ynorm,ss
+!       integer    :: info,j,k,kb,kp1,l
+!       complex(8) :: zdum,zdum1,zdum2
+!       complex(8) :: zdumr,zdumi
+! 
+!       anorm = 0.0d0
+!       do j=1,n
+!          anorm=dmax1(anorm,dzasum(n,a(1,j),1))
+!       enddo
+!       call zgefa(a,lda,n,ipvt,info)
+!       ek =CMPLX(1.0d0,0.0d0,kind=8)
+!       z  =CMPLX(0.0d0,0.0d0,kind=8)
+! 
+!       do k=1,n
+!          if(cabs1(z(k)).ne.0.0d0) ek=csign1(ek,-z(k))
+!          if(cabs1(ek-z(k)).le.cabs1(a(k,k))) go to 30
+!             ss=cabs1(ek-z(k))
+!             if(abs(ss)<epsilonr) ss=epsilonr
+!             s = cabs1(a(k,k))/ss
+!             call zdscal(n,s,z,1)
+!             ek = s*ek
+!    30    continue
+!          wk  =  ek - z(k)
+!          wkm = -ek - z(k)
+!          s   =  cabs1(wk)
+!          sm  =  cabs1(wkm)
+!          if(cabs1(a(k,k))<rerror) go to 40
+!             wk = wk/conjg(a(k,k))
+!             wkm = wkm/conjg(a(k,k))
+!          go to 50
+!    40    continue
+!             wk  = (1.0d0,0.0d0)
+!             wkm = (1.0d0,0.0d0)
+!    50    continue
+!          kp1 = k + 1
+!          if (kp1 > n) go to 90
+!             do 60 j = kp1, n
+!                sm   = sm   + cabs1(z(j)+wkm*conjg(a(k,j)))
+!                z(j) = z(j) + wk*conjg(a(k,j))
+!                s    = s    + cabs1(z(j))
+!    60       continue
+!             if (s>=sm) go to 80
+!                t  = wkm - wk
+!                wk = wkm
+!                do 70 j = kp1, n
+!                   z(j) = z(j) + t*conjg(a(k,j))
+!    70          continue
+!    80       continue
+!    90    continue
+!          z(k) = wk
+!       enddo
+! 
+!       if(abs(dzasum(n,z,1))>rerror) then
+!        s = 1.d0/dzasum(n,z,1)
+!       else
+!        s = 1.d0/rerror
+!       endif
+!       call zdscal(n,s,z,1)
+!       do 120 kb = 1, n
+!          k = n + 1 - kb
+!          if (k .lt. n) z(k) = z(k) + zdotc(n-k,a(k+1,k),1,z(k+1),1)
+!          if (cabs1(z(k)) .le. 1.0d0) go to 110
+!             s = 1.0d0/cabs1(z(k))
+!             call zdscal(n,s,z,1)
+!   110    continue
+!          l = ipvt(k)
+!          t = z(l)
+!          z(l) = z(k)
+!          z(k) = t
+!   120 continue
+! 
+!       if(abs(dzasum(n,z,1))>rerror) then
+!        s = 1.d0/dzasum(n,z,1)
+!       else
+!        s = 1.d0/rerror
+!       endif
+! 
+!       call zdscal(n,s,z,1)
+!       ynorm = 1.0d0
+!       do 140 k = 1, n
+!          l = ipvt(k)
+!          t = z(l)
+!          z(l) = z(k)
+!          z(k) = t
+!          if (k .lt. n) call zaxpy(n-k,t,a(k+1,k),1,z(k+1),1)
+!          if (cabs1(z(k)) .le. 1.0d0) go to 130
+!             s = 1.0d0/cabs1(z(k))
+!             call zdscal(n,s,z,1)
+!             ynorm = s*ynorm
+!   130    continue
+!   140 continue
+! 
+!       if(abs(dzasum(n,z,1))>rerror) then
+!        s = 1.0d0/dzasum(n,z,1)
+!       else
+!        s = 1.d0/rerror
+!       endif
+! 
+!       call zdscal(n,s,z,1)
+!       ynorm = s*ynorm
+!       do 160 kb = 1, n
+!          k = n + 1 - kb
+!          if (cabs1(z(k)) .le. cabs1(a(k,k))) go to 150
+!             s = cabs1(a(k,k))/cabs1(z(k))
+!             call zdscal(n,s,z,1)
+!             ynorm = s*ynorm
+!   150    continue
+!          if (cabs1(a(k,k)) > rerror) then
+!           z(k) = z(k)/a(k,k)
+!          else
+!           z(k) = (1.0d0,0.0d0)
+!          endif
+!          t = -z(k)
+!          call zaxpy(k-1,t,a(1,k),1,z(1),1)
+!   160 continue
+! 
+!       if(abs(dzasum(n,z,1))>rerror) then
+!        s = 1.d0/dzasum(n,z,1)
+!       else
+!        s = 1.d0/rerror
+!       endif
+! 
+!       call zdscal(n,s,z,1)
+!       ynorm = s*ynorm
+!       if(abs(anorm) > rerror) then
+!        rcond = ynorm/anorm
+!       else
+!        rcond = 1.d0/rerror
+!       endif
+!       
+!       return
+!       end subroutine
+! 
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! !optimized one : control on the floating overflow
+! 
+!       subroutine zgeco(a,lda,n,ipvt,rcond,z)
+!       implicit none
+!       integer    :: lda,n,ipvt(1)
+!       complex(8) :: a(lda,1),z(1)
+!       real(8)    :: rcond
+!       complex(8) :: ek,t,wk,wkm
+!       real(8)    :: anorm,ss
+!       real(16)   :: s,sm,ynorm,tt
+!       real(8)    :: ssum
+!       integer    :: info,j,k,kb,kp1,l
+! 
+!       anorm = 0.0d0
+!       do j=1,n
+!          anorm=max(anorm,zsum(n,a(:,j),1))
+!       enddo
+!       call zgefa(a,lda,n,ipvt,info)
+!       ek =CMPLX(1.0d0,0.0d0,kind=8)
+!       z  =CMPLX(0.0d0,0.0d0,kind=8)
+! 
+!       do k=1,n
+!          if(cabs1(z(k)).ne.0.0d0) ek=csign1(ek,-z(k))
+!          if(cabs1(ek-z(k)).le.cabs1(a(k,k))) go to 30
+!             ss=cabs1(ek-z(k))
+!             if(abs(ss)<epsilonr) ss=epsilonr
+!             s = cabs1(a(k,k))/ss
+!             if(abs(s)>MAX_REAL) s=qsign(s)*MAX_REAL
+!             z=z*dble(s)
+!             ek = s*ek
+!    30    continue
+!          wk  =  ek - z(k)
+!          wkm = -ek - z(k)
+!          s   =  cabs1(wk)
+!          sm  =  cabs1(wkm)
+!          if(cabs1(a(k,k))<rrerror) go to 40
+!             tt = wk
+!             tt = tt/conjg(a(k,k)) 
+!             if(abs(tt)>MAX_REAL) goto 40
+!             wk = tt
+!             tt = wkm  
+!             tt = tt / conjg(a(k,k))
+!             if(abs(tt)>MAX_REAL) goto 40
+!             wkm = tt
+!          go to 50
+!    40    continue
+!             wk  = (1.0d0,0.0d0)
+!             wkm = (1.0d0,0.0d0)
+!    50    continue
+!          kp1 = k + 1
+!          if (kp1 > n) go to 90
+!             do 60 j = kp1, n
+!                tt   =  cabs1(z(j)+wkm*conjg(a(k,j))) 
+!                if(abs(sm)>MAX_REAL.or.abs(tt)>MAX_REAL)then
+!                 sm=MAX_REAL
+!                 s=MAX_REAL-1
+!                 goto 80
+!                endif
+!                sm   =   sm   + tt
+!                z(j) = z(j) + wk*conjg(a(k,j))
+!                s    = s    + cabs1(z(j))
+!    60       continue
+!             if (s>=sm) go to 80
+!                t  = wkm - wk
+!                wk = wkm
+!                do 70 j = kp1, n
+!                   z(j) = z(j) + t*conjg(a(k,j))
+!    70          continue
+!    80       continue
+!    90    continue
+!          z(k) = wk
+!       enddo
+! 
+!       ssum=zsum(n,z,1)
+!       if(abs(ssum)>rrerror) then
+!        s = 1.d0/ssum
+!       else
+!        s = 1.d0/rrerror
+!       endif
+! 
+!       if(abs(s)>MAX_REAL) s=qsign(s)*MAX_REAL
+!       z=z*dble(s)
+! 
+!       do 120 kb = 1, n
+!          k = n + 1 - kb
+!          if (k .lt. n) z(k) = z(k) + zdot(n-k,a(k+1:n,k),1,z(k+1:n),1)
+!          if (cabs1(z(k)) .le. 1.0d0) go to 110
+!           if(abs(cabs1(z(k)))>rrerror)then
+!             s = 1.0d0/cabs1(z(k))
+!           else
+!             s = 1.d0/rrerror
+!           endif
+!           if(abs(s)>MAX_REAL) s=qsign(s)*MAX_REAL
+!           z=z*dble(s)
+!   110    continue
+!          l = ipvt(k)
+!          t = z(l)
+!          z(l) = z(k)
+!          z(k) = t
+!   120 continue
+! 
+!       ssum=zsum(n,z,1)
+!       if(abs(ssum)>rrerror) then
+!        s = 1.d0/ssum
+!       else
+!        s = 1.d0/rrerror
+!       endif
+! 
+!       if(abs(s)>MAX_REAL) s=qsign(s)*MAX_REAL
+!       z=z*dble(s)
+! 
+!       ynorm = 1.0d0
+!       do 140 k = 1, n
+!          l = ipvt(k)
+!          t = z(l)
+!          z(l) = z(k)
+!          z(k) = t
+!          if (k .lt. n) call zaxpyb(n-k,t,a(k+1:n,k),1,z(k+1:n),1)
+!          if (cabs1(z(k)) .le. 1.0d0) go to 130
+!             if(abs(cabs1(z(k)))>rrerror)then
+!              s = 1.0d0/cabs1(z(k))
+!             else
+!              s = 1.d0/rrerror
+!             endif
+!             if(abs(s)>MAX_REAL) s=qsign(s)*MAX_REAL
+!             z=z*dble(s)
+!             ynorm = s*ynorm
+!   130    continue
+!   140 continue
+! 
+!       ssum=zsum(n,z,1)
+!       if(abs(ssum)>rrerror) then
+!        s = 1.0d0/ssum
+!       else
+!        s = 1.d0/rrerror
+!       endif
+! 
+!       if(abs(s)>MAX_REAL) s=qsign(s)*MAX_REAL
+!       z=z*dble(s)
+! 
+!       ynorm = s*ynorm
+!       do 160 kb = 1, n
+!          k = n + 1 - kb
+!          if (cabs1(z(k)) .le. cabs1(a(k,k))) go to 150
+!             s = cabs1(a(k,k))/cabs1(z(k))
+!             z=z*dble(s)
+!             ynorm = s*ynorm
+!   150    continue
+!          if(abs(a(k,k))>rerror .and. abs(z(k))<MAX_REAL) then
+!           z(k) = z(k)/a(k,k)
+!          else
+!           z(k) = (1.0d0,0.0d0)
+!          endif
+!          t = -z(k)
+!          call zaxpyb(k-1,t,a(1:k-1,k),1,z(1:k-1),1)
+!   160 continue
+! 
+!       ssum=zsum(n,z,1)
+!       if(abs(ssum)>rrerror) then
+!        s = 1.d0/ssum
+!       else
+!        s = 1.d0/rrerror
+!       endif
+! 
+!       if(abs(s)>MAX_REAL) s=qsign(s)*MAX_REAL
+!       z=z*dble(s)
+! 
+!       ynorm = s*ynorm
+! 
+!       if(abs(anorm) > rrerror) then
+!        tt=ynorm/anorm
+!        if(abs(tt)<MAX_REAL)then
+!         rcond = tt
+!        else
+!         rcond = qsign(ynorm)*sign(1.d0,anorm)*MAX_REAL
+!        endif
+!       else
+!        rcond = MAX_REAL
+!       endif
+!       
+!       return
+!       end subroutine
+
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+!**************************************************************************
+! 
+!       subroutine zgefa(a,lda,n,ipvt,info)
+!       implicit none
+!       integer    :: lda,n,ipvt(1),info
+!       complex(8) :: a(lda,1)
+!       complex(8) :: t
+!       integer    :: izamax,j,k,kp1,l,nm1
+! 
+!       info = 0
+!       nm1 = n - 1
+!       if (nm1 < 1) go to 70
+!       do 60 k = 1, nm1
+!          kp1 = k + 1
+!          l = izamax(n-k+1,a(k,k),1) + k - 1
+!          ipvt(k) = l
+!          if (cabs1(a(l,k)) == 0.0d0) go to 40
+!             if (l == k) go to 10
+!                t = a(l,k)
+!                a(l,k) = a(k,k)
+!                a(k,k) = t
+!    10       continue
+!             t = -(1.0d0,0.0d0)/a(k,k)
+!             call zscal(n-k,t,a(k+1,k),1)
+!             do 30 j = kp1, n
+!                t = a(l,j)
+!                if (l == k) go to 20
+!                   a(l,j) = a(k,j)
+!                   a(k,j) = t
+!    20          continue
+!                call zaxpyb(n-k,t,a(k+1:n,k),1,a(k+1:n,j),1)
+!    30       continue
+!          go to 50
+!    40    continue
+!             info = k
+!    50    continue
+!    60 continue
+!    70 continue
+!       ipvt(n) = n
+!       if (cabs1(a(n,n)) == 0.0d0) info = n
+!       return
+!       end subroutine
 
 !**************************************************************************
 !**************************************************************************
@@ -8016,319 +8094,263 @@ end subroutine
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-      subroutine q_zgedi(a,lda,n,ipvt,det,work,job)
-     !subroutines of LINPACK
-      implicit none
-      integer     :: lda,n,ipvt(n),job
-      complex(16) :: a(lda,n),det(2),work(n)
-      complex(16) :: t
-      integer     :: i,j,k,kb,kp1,l,nm1
-
-         if (job/10 == 0) go to 70
-         det(1) = CMPLX(1.0,0.0,16)
-         det(2) = CMPLX(0.0,0.0,16)
-           
-         do 50 i = 1, n
-            if (ipvt(i) /= i) det(1) = -det(1)
-            det(1) = a(i,i)*det(1)
-            if (abs(det(1)) == 0.0d0) go to 60
-   10       if (abs(det(1)) >= 1.0d0) go to 20
-               det(1) = cmplx(10.0,0.0d0,kind=16)*det(1)
-               det(2) = det(2) - cmplx(1.0,0.0,16)
-            go to 10
-   20       continue
-   30       if (abs(dble(det(1)))<10.d0) go to 40
-               det(1) = det(1)  /cmplx(10.0,0.0,16)
-               det(2) = det(2) + cmplx(1.0d0,0.0d0,16)
-            go to 30
-   40       continue
-   50    continue
-   60    continue
-   70    continue
-
-         if (mod(job,10) == 0) go to 150
-
-         do k = 1, n
-            a(k,k) = cmplx(1.0,0.0,16)/a(k,k)
-            t = -a(k,k)
-            call q_zscal(k-1,t,a(1:k-1,k),1)
-            kp1 = k + 1
-            if (n .lt. kp1) go to 90
-            do j = kp1, n
-               t = a(k,j)
-               a(k,j) = cmplx(0.0,0.0,16)
-               call zaxpy__(k,t,a(1:k,k),1,a(1:k,j),1)
-            enddo 
-   90       continue
-         enddo 
-         nm1 = n - 1
-         if (nm1 .lt. 1) go to 140
-         do 130 kb = 1, nm1
-            k = n - kb
-            kp1 = k + 1
-            do 110 i = kp1, n
-               work(i) = a(i,k)
-               a(i,k) = cmplx(0.0,0.0,16)
-  110       continue
-            do j = kp1, n
-               t = work(j)
-               call zaxpy__(n,t,a(:,j),1,a(:,k),1)
-            enddo 
-            l = ipvt(k)
-            if (l/=k) call swap(n,a(:,k),1,a(:,l),1)
-  130    continue
-  140    continue
-  150 continue
-
-      return
-      end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-      subroutine q_zgeco(a,lda,n,ipvt,rcond,z)
-      implicit none
-      integer     :: lda,n,ipvt(n)
-      complex(16) :: a(lda,n),z(n)
-      real(16)    :: rcond
-      complex(16) :: ek,t,wk,wkm
-      real(16)    :: anorm,s,sm,ynorm,rrerror
-      integer     :: info,j,k,kb,kp1,l
-
-      rrerror = 1.d-24
-      anorm = 0.0d0
-
-      do j=1,n
-         anorm=max(anorm,q_zsum(n,a(:,j),1))
-      enddo
-      call q_zgefa(a,lda,n,ipvt,info)
-      ek =CMPLX(1.0d0,0.0d0,16)
-      z  =CMPLX(0.0d0,0.0d0,16)
-
-      do k=1,n
-         if(abs(z(k)).ne.0.0d0) ek=csign1(ek,-z(k))
-         if(abs(ek-z(k)).le.abs(a(k,k))) go to 30
-            s = abs(a(k,k))/abs(ek-z(k))
-            z=z*s
-            ek = cmplx(s,0.0d0,kind=16)*ek
-   30    continue
-         wk  =  ek - z(k)
-         wkm = -ek - z(k)
-         s   =  abs(wk)
-         sm  =  abs(wkm)
-         if(abs(a(k,k))<rrerror) go to 40
-            wk = wk/conjg(a(k,k))
-            wkm = wkm/conjg(a(k,k))
-         go to 50
-   40    continue
-            wk  = cmplx(1.0d0,0.0d0,16)
-            wkm = cmplx(1.0d0,0.0d0,16)
-   50    continue
-         kp1 = k + 1
-         if (kp1 > n) go to 90
-            do 60 j = kp1, n
-               sm   = sm   + abs(z(j)+wkm*conjg(a(k,j)))
-               z(j) = z(j) + wk*conjg(a(k,j))
-               s    = s    + abs(z(j))
-   60       continue
-            if (s>=sm) go to 80
-               t  = wkm - wk
-               wk = wkm
-               do 70 j = kp1, n
-                  z(j) = z(j) + t*conjg(a(k,j))
-   70          continue
-   80       continue
-   90    continue
-         z(k) = wk
-      enddo
-
-      s = 1.d0/q_zsum(n,z,1)
-      z=z*s
-      do 120 kb = 1, n
-         k = n + 1 - kb
-         if (k .lt. n) z(k) = z(k) + zdot(n-k,a(k+1:n,k),1,z(k+1:n),1)
-         if (abs(z(k)) .le. 1.0d0) go to 110
-            s = 1.0d0/abs(z(k))
-            z=z*s
-  110    continue
-         l = ipvt(k)
-         t = z(l)
-         z(l) = z(k)
-         z(k) = t
-  120 continue
-
-      s = 1.d0/q_zsum(n,z,1)
-
-      z=z*s
-      ynorm = 1.0d0
-      do 140 k = 1, n
-         l = ipvt(k)
-         t = z(l)
-         z(l) = z(k)
-         z(k) = t
-         if (k .lt. n) call zaxpy__(n-k,t,a(k+1:n,k),1,z(k+1:n),1)
-         if (abs(z(k)) .le. 1.0d0) go to 130
-            s = 1.0d0/abs(z(k))
-            z=z*s
-            ynorm = s*ynorm
-  130    continue
-  140 continue
-
-      s = 1.d0/q_zsum(n,z,1)
-
-      z=z*s
-      ynorm = s*ynorm
-      do 160 kb = 1, n
-         k = n + 1 - kb
-         if (abs(z(k)) .le. abs(a(k,k))) go to 150
-            s = abs(a(k,k))/abs(z(k))
-            z=z*s
-            ynorm = s*ynorm
-  150    continue
-         if (abs(a(k,k)) > rrerror) then
-          z(k) = z(k)/a(k,k)
-         else
-          z(k) = CMPLX(1.0d0,0.0d0,16)
-         endif
-         t = -z(k)
-         call zaxpy__(k-1,t,a(1:k-1,k),1,z(1:k-1),1)
-  160 continue
-
-      s = 1.d0/q_zsum(n,z,1)
-
-      z=z*s
-      ynorm = s*ynorm
-      if(abs(anorm) > rrerror) then
-       rcond = ynorm/anorm
-      else
-       rcond = 1.d0/rrerror
-      endif
-      
-      return
-      end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-      subroutine q_zgefa(a,lda,n,ipvt,info)
-      implicit none
-      integer     :: lda,n,ipvt(n),info
-      complex(16) :: a(lda,n)
-      complex(16) :: t
-      integer     :: j,k,kp1,l,nm1
-
-      info = 0
-      nm1 = n - 1
-      if (nm1 < 1) go to 70
-      do 60 k = 1, nm1
-         kp1 = k + 1
-         l = q_zamax(n-k+1,a(k,k),1) + k - 1
-         ipvt(k) = l
-         if (abs(a(l,k)) == 0.0d0) go to 40
-            if (l == k) go to 10
-               t = a(l,k)
-               a(l,k) = a(k,k)
-               a(k,k) = t
-   10       continue
-            t = -CMPLX(1.0d0,0.0d0,16)/a(k,k)
-            call q_zscal(n-k,t,a(k+1,k),1)
-            do 30 j = kp1, n
-               t = a(l,j)
-               if (l == k) go to 20
-                  a(l,j) = a(k,j)
-                  a(k,j) = t
-   20          continue
-               call zaxpy__(n-k,t,a(k+1:n,k),1,a(k+1:n,j),1)
-   30       continue
-         go to 50
-   40    continue
-            info = k
-   50    continue
-   60 continue
-   70 continue
-      ipvt(n) = n
-      if (abs(a(n,n)) == 0.0d0) info = n
-      return
-      end subroutine
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-SUBROUTINE inverses_(nn,a)
-  IMPLICIT NONE
-  REAL(4), DIMENSION(:,:), INTENT(INOUT) :: a
-  INTEGER, DIMENSION(SIZE(a,1))          :: ipiv,indxr,indxc
-  INTEGER                                :: nn
-  LOGICAL, DIMENSION(SIZE(a,1))          :: lpiv
-  REAL(4)                                :: pivinv
-  REAL(4), DIMENSION(SIZE(a,1))          :: dumc
-  INTEGER, TARGET                        :: irc(2)
-  INTEGER                                :: i,l,n
-  INTEGER, POINTER                       :: irow,icol
-  n=SIZE(a,1)
-  irow => irc(1)
-  icol => irc(2)
-  ipiv=0
-  DO i=1,n
-     lpiv = (ipiv == 0)
-     irc=MAXLOC(ABS(a),outerand(lpiv,lpiv))
-     ipiv(icol)=ipiv(icol)+1
-     IF (ipiv(icol) > 1) STOP 'gaussj:singular matrix (1)'
-     IF (irow /= icol) CALL swap(a(irow,:),a(icol,:))
-     indxr(i)=irow !We are now ready to divide the pivot row by the pivot element,
-                   !located at irow and icol.
-     indxc(i)=icol
-     IF (a(icol,icol) == zero) STOP 'gaussj:singular matrix (2)'
-     pivinv=one/a(icol,icol)
-     a(icol,icol)=CMPLX(one,zero)
-     a(icol,:)=a(icol,:)*pivinv
-     dumc=a(:,icol)
-     a(:,icol)     = CMPLX(zero,zero)
-     a(icol,icol)  = pivinv
-     a(1:icol-1,:) = a(1:icol-1,:) - outerprod(dumc(1:icol-1),a(icol,:))
-     a(icol+1:,:)  = a(icol+1:,:)  - outerprod(dumc(icol+1:),a(icol,:))
-  END DO
-  DO l=n,1,-1
-     CALL swap(a(:,indxr(l)),a(:,indxc(l)))
-  END DO
-CONTAINS
- FUNCTION outerand(a,b)
-   IMPLICIT NONE
-   LOGICAL, DIMENSION(:), INTENT(IN)   :: a,b
-   LOGICAL, DIMENSION(SIZE(a),SIZE(b)) :: outerand
-   outerand = SPREAD(a,dim=2,ncopies=SIZE(b)).AND.SPREAD(b,dim=1,ncopies=SIZE(a))
- END FUNCTION
-
-end subroutine
+! 
+!       subroutine q_zgedi(a,lda,n,ipvt,det,work,job)
+!      !subroutines of LINPACK
+!       implicit none
+!       integer     :: lda,n,ipvt(n),job
+!       complex(16) :: a(lda,n),det(2),work(n)
+!       complex(16) :: t
+!       integer     :: i,j,k,kb,kp1,l,nm1
+! 
+!          if (job/10 == 0) go to 70
+!          det(1) = CMPLX(1.0,0.0,16)
+!          det(2) = CMPLX(0.0,0.0,16)
+!            
+!          do 50 i = 1, n
+!             if (ipvt(i) /= i) det(1) = -det(1)
+!             det(1) = a(i,i)*det(1)
+!             if (abs(det(1)) == 0.0d0) go to 60
+!    10       if (abs(det(1)) >= 1.0d0) go to 20
+!                det(1) = cmplx(10.0,0.0d0,kind=16)*det(1)
+!                det(2) = det(2) - cmplx(1.0,0.0,16)
+!             go to 10
+!    20       continue
+!    30       if (abs(dble(det(1)))<10.d0) go to 40
+!                det(1) = det(1)  /cmplx(10.0,0.0,16)
+!                det(2) = det(2) + cmplx(1.0d0,0.0d0,16)
+!             go to 30
+!    40       continue
+!    50    continue
+!    60    continue
+!    70    continue
+! 
+!          if (mod(job,10) == 0) go to 150
+! 
+!          do k = 1, n
+!             a(k,k) = cmplx(1.0,0.0,16)/a(k,k)
+!             t = -a(k,k)
+!             call q_zscal(k-1,t,a(1:k-1,k),1)
+!             kp1 = k + 1
+!             if (n .lt. kp1) go to 90
+!             do j = kp1, n
+!                t = a(k,j)
+!                a(k,j) = cmplx(0.0,0.0,16)
+!                call zaxpy__(k,t,a(1:k,k),1,a(1:k,j),1)
+!             enddo 
+!    90       continue
+!          enddo 
+!          nm1 = n - 1
+!          if (nm1 .lt. 1) go to 140
+!          do 130 kb = 1, nm1
+!             k = n - kb
+!             kp1 = k + 1
+!             do 110 i = kp1, n
+!                work(i) = a(i,k)
+!                a(i,k) = cmplx(0.0,0.0,16)
+!   110       continue
+!             do j = kp1, n
+!                t = work(j)
+!                call zaxpy__(n,t,a(:,j),1,a(:,k),1)
+!             enddo 
+!             l = ipvt(k)
+!             if (l/=k) call swap(n,a(:,k),1,a(:,l),1)
+!   130    continue
+!   140    continue
+!   150 continue
+! 
+!       return
+!       end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!       subroutine q_zgeco(a,lda,n,ipvt,rcond,z)
+!       implicit none
+!       integer     :: lda,n,ipvt(n)
+!       complex(16) :: a(lda,n),z(n)
+!       real(16)    :: rcond
+!       complex(16) :: ek,t,wk,wkm
+!       real(16)    :: anorm,s,sm,ynorm,rrerror
+!       integer     :: info,j,k,kb,kp1,l
+! 
+!       rrerror = 1.d-24
+!       anorm = 0.0d0
+! 
+!       do j=1,n
+!          anorm=max(anorm,q_zsum(n,a(:,j),1))
+!       enddo
+!       call q_zgefa(a,lda,n,ipvt,info)
+!       ek =CMPLX(1.0d0,0.0d0,16)
+!       z  =CMPLX(0.0d0,0.0d0,16)
+! 
+!       do k=1,n
+!          if(abs(z(k)).ne.0.0d0) ek=csign1(ek,-z(k))
+!          if(abs(ek-z(k)).le.abs(a(k,k))) go to 30
+!             s = abs(a(k,k))/abs(ek-z(k))
+!             z=z*s
+!             ek = cmplx(s,0.0d0,kind=16)*ek
+!    30    continue
+!          wk  =  ek - z(k)
+!          wkm = -ek - z(k)
+!          s   =  abs(wk)
+!          sm  =  abs(wkm)
+!          if(abs(a(k,k))<rrerror) go to 40
+!             wk = wk/conjg(a(k,k))
+!             wkm = wkm/conjg(a(k,k))
+!          go to 50
+!    40    continue
+!             wk  = cmplx(1.0d0,0.0d0,16)
+!             wkm = cmplx(1.0d0,0.0d0,16)
+!    50    continue
+!          kp1 = k + 1
+!          if (kp1 > n) go to 90
+!             do 60 j = kp1, n
+!                sm   = sm   + abs(z(j)+wkm*conjg(a(k,j)))
+!                z(j) = z(j) + wk*conjg(a(k,j))
+!                s    = s    + abs(z(j))
+!    60       continue
+!             if (s>=sm) go to 80
+!                t  = wkm - wk
+!                wk = wkm
+!                do 70 j = kp1, n
+!                   z(j) = z(j) + t*conjg(a(k,j))
+!    70          continue
+!    80       continue
+!    90    continue
+!          z(k) = wk
+!       enddo
+! 
+!       s = 1.d0/q_zsum(n,z,1)
+!       z=z*s
+!       do 120 kb = 1, n
+!          k = n + 1 - kb
+!          if (k .lt. n) z(k) = z(k) + zdot(n-k,a(k+1:n,k),1,z(k+1:n),1)
+!          if (abs(z(k)) .le. 1.0d0) go to 110
+!             s = 1.0d0/abs(z(k))
+!             z=z*s
+!   110    continue
+!          l = ipvt(k)
+!          t = z(l)
+!          z(l) = z(k)
+!          z(k) = t
+!   120 continue
+! 
+!       s = 1.d0/q_zsum(n,z,1)
+! 
+!       z=z*s
+!       ynorm = 1.0d0
+!       do 140 k = 1, n
+!          l = ipvt(k)
+!          t = z(l)
+!          z(l) = z(k)
+!          z(k) = t
+!          if (k .lt. n) call zaxpy__(n-k,t,a(k+1:n,k),1,z(k+1:n),1)
+!          if (abs(z(k)) .le. 1.0d0) go to 130
+!             s = 1.0d0/abs(z(k))
+!             z=z*s
+!             ynorm = s*ynorm
+!   130    continue
+!   140 continue
+! 
+!       s = 1.d0/q_zsum(n,z,1)
+! 
+!       z=z*s
+!       ynorm = s*ynorm
+!       do 160 kb = 1, n
+!          k = n + 1 - kb
+!          if (abs(z(k)) .le. abs(a(k,k))) go to 150
+!             s = abs(a(k,k))/abs(z(k))
+!             z=z*s
+!             ynorm = s*ynorm
+!   150    continue
+!          if (abs(a(k,k)) > rrerror) then
+!           z(k) = z(k)/a(k,k)
+!          else
+!           z(k) = CMPLX(1.0d0,0.0d0,16)
+!          endif
+!          t = -z(k)
+!          call zaxpy__(k-1,t,a(1:k-1,k),1,z(1:k-1),1)
+!   160 continue
+! 
+!       s = 1.d0/q_zsum(n,z,1)
+! 
+!       z=z*s
+!       ynorm = s*ynorm
+!       if(abs(anorm) > rrerror) then
+!        rcond = ynorm/anorm
+!       else
+!        rcond = 1.d0/rrerror
+!       endif
+!       
+!       return
+!       end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+!       subroutine q_zgefa(a,lda,n,ipvt,info)
+!       implicit none
+!       integer     :: lda,n,ipvt(n),info
+!       complex(16) :: a(lda,n)
+!       complex(16) :: t
+!       integer     :: j,k,kp1,l,nm1
+! 
+!       info = 0
+!       nm1 = n - 1
+!       if (nm1 < 1) go to 70
+!       do 60 k = 1, nm1
+!          kp1 = k + 1
+!          l = q_zamax(n-k+1,a(k,k),1) + k - 1
+!          ipvt(k) = l
+!          if (abs(a(l,k)) == 0.0d0) go to 40
+!             if (l == k) go to 10
+!                t = a(l,k)
+!                a(l,k) = a(k,k)
+!                a(k,k) = t
+!    10       continue
+!             t = -CMPLX(1.0d0,0.0d0,16)/a(k,k)
+!             call q_zscal(n-k,t,a(k+1,k),1)
+!             do 30 j = kp1, n
+!                t = a(l,j)
+!                if (l == k) go to 20
+!                   a(l,j) = a(k,j)
+!                   a(k,j) = t
+!    20          continue
+!                call zaxpy__(n-k,t,a(k+1:n,k),1,a(k+1:n,j),1)
+!    30       continue
+!          go to 50
+!    40    continue
+!             info = k
+!    50    continue
+!    60 continue
+!    70 continue
+!       ipvt(n) = n
+!       if (abs(a(n,n)) == 0.0d0) info = n
+!       return
+!       end subroutine
 
 !**************************************************************************
 !**************************************************************************
@@ -8338,251 +8360,307 @@ end subroutine
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-SUBROUTINE inverses__(nn,a) 
-  IMPLICIT NONE 
-  COMPLEX(4), DIMENSION(:,:), INTENT(INOUT) :: a
-  INTEGER, DIMENSION(SIZE(a,1))             :: ipiv,indxr,indxc 
-  INTEGER                                   :: nn
-  LOGICAL, DIMENSION(SIZE(a,1))             :: lpiv 
-  COMPLEX(4)                                :: pivinv 
-  COMPLEX(4), DIMENSION(SIZE(a,1))          :: dumc 
-  INTEGER, TARGET                           :: irc(2) 
-  INTEGER                                   :: i,l,n
-  INTEGER, POINTER                          :: irow,icol 
-  n=SIZE(a,1)
-  irow => irc(1) 
-  icol => irc(2) 
-  ipiv=0 
-  DO i=1,n 
-     lpiv = (ipiv == 0) 
-     irc=MAXLOC(ABS(a),outerand(lpiv,lpiv))
-     ipiv(icol)=ipiv(icol)+1 
-     IF (ipiv(icol) > 1) STOP 'gaussj:singular matrix (1)'
-     IF (irow /= icol) CALL swap(a(irow,:),a(icol,:)) 
-     indxr(i)=irow !We are now ready to divide the pivot row by the pivot element, 
-                   !located at irow and icol.
-     indxc(i)=icol 
-     IF (a(icol,icol) == zero) STOP 'gaussj:singular matrix (2)'
-     pivinv=one/a(icol,icol) 
-     a(icol,icol)=CMPLX(one,zero)
-     a(icol,:)=a(icol,:)*pivinv 
-     dumc=a(:,icol)
-     a(:,icol)     = CMPLX(zero,zero)
-     a(icol,icol)  = pivinv 
-     a(1:icol-1,:) = a(1:icol-1,:) - outerprod(dumc(1:icol-1),a(icol,:)) 
-     a(icol+1:,:)  = a(icol+1:,:)  - outerprod(dumc(icol+1:),a(icol,:)) 
-  END DO
-  DO l=n,1,-1 
-     CALL swap(a(:,indxr(l)),a(:,indxc(l))) 
-  END DO
-
-CONTAINS
-
- FUNCTION outerand(a,b) 
-   IMPLICIT NONE
-   LOGICAL, DIMENSION(:), INTENT(IN)   :: a,b 
-   LOGICAL, DIMENSION(SIZE(a),SIZE(b)) :: outerand 
-   outerand = SPREAD(a,dim=2,ncopies=SIZE(b)).AND.SPREAD(b,dim=1,ncopies=SIZE(a)) 
- END FUNCTION
-
-END SUBROUTINE
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-SUBROUTINE inverse_(nn,a) 
-  IMPLICIT NONE 
-  COMPLEX(8), DIMENSION(:,:), INTENT(INOUT) :: a
- 
-  !--------------------------------------------------------------------------! 
-  ! Linear equation solution by Gauss-Jordan elimination                     !
-  ! a is an N x N input coefficient matrix. On output, a is replaced by its  !
-  ! matrix inverse.                                                          !
-  !--------------------------------------------------------------------------!
-  
-  INTEGER, DIMENSION(SIZE(a,1))      :: ipiv,indxr,indxc 
-
-  !These arrays are used for bookkeeping on the pivoting. 
-
-  INTEGER                            :: nn
-  LOGICAL, DIMENSION(SIZE(a,1))      :: lpiv 
-  COMPLEX(8)                         :: pivinv 
-  COMPLEX(8), DIMENSION(SIZE(a,1))   :: dumc 
-  INTEGER, TARGET                    :: irc(2) 
-  INTEGER                            :: i,l,n
-  INTEGER, POINTER                   :: irow,icol 
-
-  n=SIZE(a,1)
-
-  irow => irc(1) 
-  icol => irc(2) 
-
-  ipiv=0 
-  
-  DO i=1,n 
-     !Main loop over columns to be reduced. 
-     lpiv = (ipiv == 0) 
-     !Begin search for a pivot element. 
-     irc=MAXLOC(ABS(a),outerand(lpiv,lpiv))
-     ipiv(icol)=ipiv(icol)+1 
-     IF (ipiv(icol) > 1) STOP 'gaussj:singular matrix (1)'
-     
-     !We now have the pivot element, so we interchange
-     !rows, if needed, to put the pivot element on the diagonal. The columns
-     !are not physically interchanged, only relabeled:
-     !indxc(i),the column of the ith pivot element, is the ith column that is
-     !reduced, while indxr(i) is the row in which that pivot element was
-     !originally located. If indxr(i) = indxc(i) there is an implied column
-     !interchange. With this form of bookkeeping, the inverse matrix will be
-     !scrambled by
-     !columns. 
-
-     IF (irow /= icol) CALL swap(a(irow,:),a(icol,:)) 
-
-     indxr(i)=irow !We are now ready to divide the pivot row by the pivot element, 
-                   !located at irow and icol.
-     indxc(i)=icol 
-     
-     IF (a(icol,icol) == zero) STOP 'gaussj:singular matrix (2)'
-     pivinv=one/a(icol,icol) 
-     a(icol,icol)=CMPLX(one,zero)
-     a(icol,:)=a(icol,:)*pivinv 
-     dumc=a(:,icol)
-
-     !Next, we reduce the rows, except for the pivot one, of course. 
-     a(:,icol)     = CMPLX(zero,zero)
-     a(icol,icol)  = pivinv 
-     a(1:icol-1,:) = a(1:icol-1,:) - outerprod(dumc(1:icol-1),a(icol,:)) 
-     a(icol+1:,:)  = a(icol+1:,:)  - outerprod(dumc(icol+1:),a(icol,:)) 
-  END DO
-
-  !It only remains to unscramble the solution in view of the column
-  !interchanges. 
-  !We do this by interchanging pairs of columns in the reverse order that the
-  !permutation 
-  !was built up. 
-
-  DO l=n,1,-1 
-     CALL swap(a(:,indxr(l)),a(:,indxc(l))) 
-  END DO
-
-CONTAINS
-
- FUNCTION outerand(a,b) 
-   IMPLICIT NONE
-   LOGICAL, DIMENSION(:), INTENT(IN)   :: a,b 
-   LOGICAL, DIMENSION(SIZE(a),SIZE(b)) :: outerand 
-   outerand = SPREAD(a,dim=2,ncopies=SIZE(b)).AND.SPREAD(b,dim=1,ncopies=SIZE(a)) 
- END FUNCTION
-
-END SUBROUTINE
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-SUBROUTINE inverse__(nn,a) 
-  IMPLICIT NONE 
-  REAL(8), DIMENSION(:,:), INTENT(INOUT) :: a
-  INTEGER, DIMENSION(SIZE(a,1))          :: ipiv,indxr,indxc 
-  INTEGER                                :: nn
-  LOGICAL, DIMENSION(SIZE(a,1))          :: lpiv 
-  REAL(8)                                :: pivinv 
-  REAL(8), DIMENSION(SIZE(a,1))          :: dumc 
-  INTEGER, TARGET                        :: irc(2) 
-  INTEGER                                :: i,l,n
-  INTEGER, POINTER                       :: irow,icol 
-
-  n=SIZE(a,1)
-
-  irow => irc(1) 
-  icol => irc(2) 
-
-  ipiv=0 
-  
-  DO i=1,n 
-     !Main loop over columns to be reduced. 
-     lpiv = (ipiv == 0) 
-     !Begin search for a pivot element. 
-     irc=MAXLOC(ABS(a),outerand(lpiv,lpiv))
-     ipiv(icol)=ipiv(icol)+1 
-     IF (ipiv(icol) > 1) STOP 'gaussj:singular matrix (1)'
-     
-     !We now have the pivot element, so we interchange
-     !rows, if needed, to put the pivot element on the diagonal. The columns
-     !are not physically interchanged, only relabeled:
-     !indxc(i),the column of the ith pivot element, is the ith column that is
-     !reduced, while indxr(i) is the row in which that pivot element was
-     !originally located. If indxr(i) = indxc(i) there is an implied column
-     !interchange. With this form of bookkeeping, the inverse matrix will be
-     !scrambled by
-     !columns. 
-
-     IF (irow /= icol) CALL swap(a(irow,:),a(icol,:)) 
-
-     indxr(i)=irow !We are now ready to divide the pivot row by the pivot element, 
-                   !located at irow and icol.
-     indxc(i)=icol 
-     
-     IF (a(icol,icol) == zero) STOP 'gaussj:singular matrix (2)'
-     pivinv=one/a(icol,icol) 
-     a(icol,icol)=CMPLX(one,zero)
-     a(icol,:)=a(icol,:)*pivinv 
-     dumc=a(:,icol)
-
-     !Next, we reduce the rows, except for the pivot one, of course. 
-     a(:,icol)     = CMPLX(zero,zero)
-     a(icol,icol)  = pivinv 
-     a(1:icol-1,:) = a(1:icol-1,:) - outerprod(dumc(1:icol-1),a(icol,:)) 
-     a(icol+1:,:)  = a(icol+1:,:)  - outerprod(dumc(icol+1:),a(icol,:)) 
-  END DO
-
-  !It only remains to unscramble the solution in view of the column
-  !interchanges. 
-  !We do this by interchanging pairs of columns in the reverse order that the
-  !permutation 
-  !was built up. 
-  DO l=n,1,-1 
-     CALL swap(a(:,indxr(l)),a(:,indxc(l))) 
-  END DO
-
-CONTAINS
-
- FUNCTION outerand(a,b) 
-   IMPLICIT NONE
-   LOGICAL, DIMENSION(:), INTENT(IN)   :: a,b 
-   LOGICAL, DIMENSION(SIZE(a),SIZE(b)) :: outerand 
-   outerand = SPREAD(a,dim=2,ncopies=SIZE(b)).AND.SPREAD(b,dim=1,ncopies=SIZE(a)) 
- END FUNCTION
-
-END SUBROUTINE
+! 
+! SUBROUTINE inverses_(nn,a)
+!   IMPLICIT NONE
+!   REAL(4), DIMENSION(:,:), INTENT(INOUT) :: a
+!   INTEGER, DIMENSION(SIZE(a,1))          :: ipiv,indxr,indxc
+!   INTEGER                                :: nn
+!   LOGICAL, DIMENSION(SIZE(a,1))          :: lpiv
+!   REAL(4)                                :: pivinv
+!   REAL(4), DIMENSION(SIZE(a,1))          :: dumc
+!   INTEGER, TARGET                        :: irc(2)
+!   INTEGER                                :: i,l,n
+!   INTEGER, POINTER                       :: irow,icol
+!   n=SIZE(a,1)
+!   irow => irc(1)
+!   icol => irc(2)
+!   ipiv=0
+!   DO i=1,n
+!      lpiv = (ipiv == 0)
+!      irc=MAXLOC(ABS(a),outerand(lpiv,lpiv))
+!      ipiv(icol)=ipiv(icol)+1
+!      IF (ipiv(icol) > 1) STOP 'gaussj:singular matrix (1)'
+!      IF (irow /= icol) CALL swap(a(irow,:),a(icol,:))
+!      indxr(i)=irow !We are now ready to divide the pivot row by the pivot element,
+!                    !located at irow and icol.
+!      indxc(i)=icol
+!      IF (a(icol,icol) == zero) STOP 'gaussj:singular matrix (2)'
+!      pivinv=one/a(icol,icol)
+!      a(icol,icol)=CMPLX(one,zero)
+!      a(icol,:)=a(icol,:)*pivinv
+!      dumc=a(:,icol)
+!      a(:,icol)     = CMPLX(zero,zero)
+!      a(icol,icol)  = pivinv
+!      a(1:icol-1,:) = a(1:icol-1,:) - outerprod(dumc(1:icol-1),a(icol,:))
+!      a(icol+1:,:)  = a(icol+1:,:)  - outerprod(dumc(icol+1:),a(icol,:))
+!   END DO
+!   DO l=n,1,-1
+!      CALL swap(a(:,indxr(l)),a(:,indxc(l)))
+!   END DO
+! CONTAINS
+!  FUNCTION outerand(a,b)
+!    IMPLICIT NONE
+!    LOGICAL, DIMENSION(:), INTENT(IN)   :: a,b
+!    LOGICAL, DIMENSION(SIZE(a),SIZE(b)) :: outerand
+!    outerand = SPREAD(a,dim=2,ncopies=SIZE(b)).AND.SPREAD(b,dim=1,ncopies=SIZE(a))
+!  END FUNCTION
+! 
+! end subroutine
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! SUBROUTINE inverses__(nn,a) 
+!   IMPLICIT NONE 
+!   COMPLEX(4), DIMENSION(:,:), INTENT(INOUT) :: a
+!   INTEGER, DIMENSION(SIZE(a,1))             :: ipiv,indxr,indxc 
+!   INTEGER                                   :: nn
+!   LOGICAL, DIMENSION(SIZE(a,1))             :: lpiv 
+!   COMPLEX(4)                                :: pivinv 
+!   COMPLEX(4), DIMENSION(SIZE(a,1))          :: dumc 
+!   INTEGER, TARGET                           :: irc(2) 
+!   INTEGER                                   :: i,l,n
+!   INTEGER, POINTER                          :: irow,icol 
+!   n=SIZE(a,1)
+!   irow => irc(1) 
+!   icol => irc(2) 
+!   ipiv=0 
+!   DO i=1,n 
+!      lpiv = (ipiv == 0) 
+!      irc=MAXLOC(ABS(a),outerand(lpiv,lpiv))
+!      ipiv(icol)=ipiv(icol)+1 
+!      IF (ipiv(icol) > 1) STOP 'gaussj:singular matrix (1)'
+!      IF (irow /= icol) CALL swap(a(irow,:),a(icol,:)) 
+!      indxr(i)=irow !We are now ready to divide the pivot row by the pivot element, 
+!                    !located at irow and icol.
+!      indxc(i)=icol 
+!      IF (a(icol,icol) == zero) STOP 'gaussj:singular matrix (2)'
+!      pivinv=one/a(icol,icol) 
+!      a(icol,icol)=CMPLX(one,zero)
+!      a(icol,:)=a(icol,:)*pivinv 
+!      dumc=a(:,icol)
+!      a(:,icol)     = CMPLX(zero,zero)
+!      a(icol,icol)  = pivinv 
+!      a(1:icol-1,:) = a(1:icol-1,:) - outerprod(dumc(1:icol-1),a(icol,:)) 
+!      a(icol+1:,:)  = a(icol+1:,:)  - outerprod(dumc(icol+1:),a(icol,:)) 
+!   END DO
+!   DO l=n,1,-1 
+!      CALL swap(a(:,indxr(l)),a(:,indxc(l))) 
+!   END DO
+! 
+! CONTAINS
+! 
+!  FUNCTION outerand(a,b) 
+!    IMPLICIT NONE
+!    LOGICAL, DIMENSION(:), INTENT(IN)   :: a,b 
+!    LOGICAL, DIMENSION(SIZE(a),SIZE(b)) :: outerand 
+!    outerand = SPREAD(a,dim=2,ncopies=SIZE(b)).AND.SPREAD(b,dim=1,ncopies=SIZE(a)) 
+!  END FUNCTION
+! 
+! END SUBROUTINE
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! SUBROUTINE inverse_(nn,a) 
+!   IMPLICIT NONE 
+!   COMPLEX(8), DIMENSION(:,:), INTENT(INOUT) :: a
+!  
+!   !--------------------------------------------------------------------------! 
+!   ! Linear equation solution by Gauss-Jordan elimination                     !
+!   ! a is an N x N input coefficient matrix. On output, a is replaced by its  !
+!   ! matrix inverse.                                                          !
+!   !--------------------------------------------------------------------------!
+!   
+!   INTEGER, DIMENSION(SIZE(a,1))      :: ipiv,indxr,indxc 
+! 
+!   !These arrays are used for bookkeeping on the pivoting. 
+! 
+!   INTEGER                            :: nn
+!   LOGICAL, DIMENSION(SIZE(a,1))      :: lpiv 
+!   COMPLEX(8)                         :: pivinv 
+!   COMPLEX(8), DIMENSION(SIZE(a,1))   :: dumc 
+!   INTEGER, TARGET                    :: irc(2) 
+!   INTEGER                            :: i,l,n
+!   INTEGER, POINTER                   :: irow,icol 
+! 
+!   n=SIZE(a,1)
+! 
+!   irow => irc(1) 
+!   icol => irc(2) 
+! 
+!   ipiv=0 
+!   
+!   DO i=1,n 
+!      !Main loop over columns to be reduced. 
+!      lpiv = (ipiv == 0) 
+!      !Begin search for a pivot element. 
+!      irc=MAXLOC(ABS(a),outerand(lpiv,lpiv))
+!      ipiv(icol)=ipiv(icol)+1 
+!      IF (ipiv(icol) > 1) STOP 'gaussj:singular matrix (1)'
+!      
+!      !We now have the pivot element, so we interchange
+!      !rows, if needed, to put the pivot element on the diagonal. The columns
+!      !are not physically interchanged, only relabeled:
+!      !indxc(i),the column of the ith pivot element, is the ith column that is
+!      !reduced, while indxr(i) is the row in which that pivot element was
+!      !originally located. If indxr(i) = indxc(i) there is an implied column
+!      !interchange. With this form of bookkeeping, the inverse matrix will be
+!      !scrambled by
+!      !columns. 
+! 
+!      IF (irow /= icol) CALL swap(a(irow,:),a(icol,:)) 
+! 
+!      indxr(i)=irow !We are now ready to divide the pivot row by the pivot element, 
+!                    !located at irow and icol.
+!      indxc(i)=icol 
+!      
+!      IF (a(icol,icol) == zero) STOP 'gaussj:singular matrix (2)'
+!      pivinv=one/a(icol,icol) 
+!      a(icol,icol)=CMPLX(one,zero)
+!      a(icol,:)=a(icol,:)*pivinv 
+!      dumc=a(:,icol)
+! 
+!      !Next, we reduce the rows, except for the pivot one, of course. 
+!      a(:,icol)     = CMPLX(zero,zero)
+!      a(icol,icol)  = pivinv 
+!      a(1:icol-1,:) = a(1:icol-1,:) - outerprod(dumc(1:icol-1),a(icol,:)) 
+!      a(icol+1:,:)  = a(icol+1:,:)  - outerprod(dumc(icol+1:),a(icol,:)) 
+!   END DO
+! 
+!   !It only remains to unscramble the solution in view of the column
+!   !interchanges. 
+!   !We do this by interchanging pairs of columns in the reverse order that the
+!   !permutation 
+!   !was built up. 
+! 
+!   DO l=n,1,-1 
+!      CALL swap(a(:,indxr(l)),a(:,indxc(l))) 
+!   END DO
+! 
+! CONTAINS
+! 
+!  FUNCTION outerand(a,b) 
+!    IMPLICIT NONE
+!    LOGICAL, DIMENSION(:), INTENT(IN)   :: a,b 
+!    LOGICAL, DIMENSION(SIZE(a),SIZE(b)) :: outerand 
+!    outerand = SPREAD(a,dim=2,ncopies=SIZE(b)).AND.SPREAD(b,dim=1,ncopies=SIZE(a)) 
+!  END FUNCTION
+! 
+! END SUBROUTINE
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! SUBROUTINE inverse__(nn,a) 
+!   IMPLICIT NONE 
+!   REAL(8), DIMENSION(:,:), INTENT(INOUT) :: a
+!   INTEGER, DIMENSION(SIZE(a,1))          :: ipiv,indxr,indxc 
+!   INTEGER                                :: nn
+!   LOGICAL, DIMENSION(SIZE(a,1))          :: lpiv 
+!   REAL(8)                                :: pivinv 
+!   REAL(8), DIMENSION(SIZE(a,1))          :: dumc 
+!   INTEGER, TARGET                        :: irc(2) 
+!   INTEGER                                :: i,l,n
+!   INTEGER, POINTER                       :: irow,icol 
+! 
+!   n=SIZE(a,1)
+! 
+!   irow => irc(1) 
+!   icol => irc(2) 
+! 
+!   ipiv=0 
+!   
+!   DO i=1,n 
+!      !Main loop over columns to be reduced. 
+!      lpiv = (ipiv == 0) 
+!      !Begin search for a pivot element. 
+!      irc=MAXLOC(ABS(a),outerand(lpiv,lpiv))
+!      ipiv(icol)=ipiv(icol)+1 
+!      IF (ipiv(icol) > 1) STOP 'gaussj:singular matrix (1)'
+!      
+!      !We now have the pivot element, so we interchange
+!      !rows, if needed, to put the pivot element on the diagonal. The columns
+!      !are not physically interchanged, only relabeled:
+!      !indxc(i),the column of the ith pivot element, is the ith column that is
+!      !reduced, while indxr(i) is the row in which that pivot element was
+!      !originally located. If indxr(i) = indxc(i) there is an implied column
+!      !interchange. With this form of bookkeeping, the inverse matrix will be
+!      !scrambled by
+!      !columns. 
+! 
+!      IF (irow /= icol) CALL swap(a(irow,:),a(icol,:)) 
+! 
+!      indxr(i)=irow !We are now ready to divide the pivot row by the pivot element, 
+!                    !located at irow and icol.
+!      indxc(i)=icol 
+!      
+!      IF (a(icol,icol) == zero) STOP 'gaussj:singular matrix (2)'
+!      pivinv=one/a(icol,icol) 
+!      a(icol,icol)=CMPLX(one,zero)
+!      a(icol,:)=a(icol,:)*pivinv 
+!      dumc=a(:,icol)
+! 
+!      !Next, we reduce the rows, except for the pivot one, of course. 
+!      a(:,icol)     = CMPLX(zero,zero)
+!      a(icol,icol)  = pivinv 
+!      a(1:icol-1,:) = a(1:icol-1,:) - outerprod(dumc(1:icol-1),a(icol,:)) 
+!      a(icol+1:,:)  = a(icol+1:,:)  - outerprod(dumc(icol+1:),a(icol,:)) 
+!   END DO
+! 
+!   !It only remains to unscramble the solution in view of the column
+!   !interchanges. 
+!   !We do this by interchanging pairs of columns in the reverse order that the
+!   !permutation 
+!   !was built up. 
+!   DO l=n,1,-1 
+!      CALL swap(a(:,indxr(l)),a(:,indxc(l))) 
+!   END DO
+! 
+! CONTAINS
+! 
+!  FUNCTION outerand(a,b) 
+!    IMPLICIT NONE
+!    LOGICAL, DIMENSION(:), INTENT(IN)   :: a,b 
+!    LOGICAL, DIMENSION(SIZE(a),SIZE(b)) :: outerand 
+!    outerand = SPREAD(a,dim=2,ncopies=SIZE(b)).AND.SPREAD(b,dim=1,ncopies=SIZE(a)) 
+!  END FUNCTION
+! 
+! END SUBROUTINE
 
 !**************************************************************************
 !**************************************************************************
@@ -9393,366 +9471,366 @@ END SUBROUTINE
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-
-  logical function mat_3_3_rs(mat,detb,det2b,pdetb)
-  implicit none
-     integer               :: i,j,k,n
-     real(4),optional      :: detb
-     integer,optional      :: pdetb
-     complex(4),optional   :: det2b
-     real(4)               :: q
-     real(4),intent(inout) :: mat(:,:)
-
-     n=size(mat,1)
-     mat_3_3_rs=n<4
-     if(n>=4) return
-
-     SELECT CASE(n)
-       
-       CASE(3)
-
-        mat=matrixinverse(mat,q)
-        if(present(detb))then
-         det2b=1.; pdetb=0; detb=q
-        endif
-
-       CASE(1)
-
-        q=mat(1,1)
-        if(abs(q)<epsilonr) q=epsilonr
-        mat=1.d0/q
-        if(present(detb))then
-         det2b=1.; pdetb=0; detb=q
-        endif
-
-       CASE(2)
-
-        q=mat(1,1)*mat(2,2)-mat(1,2)*mat(2,1)
-        if(abs(q)<epsilonr) q=epsilonr
-        call swap(mat(1,1),mat(2,2))
-        mat(1,2)=-mat(1,2)
-        mat(2,1)=-mat(2,1)
-        mat=mat/q
-        if(present(detb))then
-         det2b=1.; pdetb=0; detb=q
-        endif
-
-    END SELECT
-
-  end function
-
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-
-  logical function mat_3_3_r(mat,detb,det2b,pdetb)
-  implicit none
-     integer               :: i,j,k,n
-     real(8),optional      :: detb
-     integer,optional      :: pdetb
-     complex(8),optional   :: det2b
-     real(8)               :: q
-     real(8),intent(inout) :: mat(:,:)
-
-     n=size(mat,1)
-     mat_3_3_r=n<4
-     if(n>=4) return
-
-     SELECT CASE(n)
-       
-       CASE(3)
-
-        mat=matrixinverse(mat,q)
-        if(present(detb))then
-         det2b=1.; pdetb=0; detb=q
-        endif
-
-       CASE(1)
-
-        q=mat(1,1)
-        if(abs(q)<epsilonr) q=epsilonr
-        mat=1.d0/q
-        if(present(detb))then
-         det2b=1.; pdetb=0; detb=q
-        endif
-
-       CASE(2)
-
-        q=mat(1,1)*mat(2,2)-mat(1,2)*mat(2,1)
-        if(abs(q)<epsilonr) q=epsilonr
-        call swap(mat(1,1),mat(2,2))
-        mat(1,2)=-mat(1,2)
-        mat(2,1)=-mat(2,1)
-        mat=mat/q
-        if(present(detb))then
-         det2b=1.; pdetb=0; detb=q
-        endif
-
-    END SELECT
-
-  end function
-
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-
-  logical function mat_3_3_cs(mat,detb,detb2,pdetb)
-  implicit none
-    integer                   :: n,i,j
-    integer,optional          :: pdetb
-    real(4),optional          :: detb
-    complex(4),intent(inout)  :: mat(:,:)
-    complex(4),optional       :: detb2
-    complex(4)                :: q
-
-     n=size(mat,1)
-     mat_3_3_cs=n<4
-     if(n>=4) return
-
-      SELECT CASE(n) 
-
-       CASE(3)
-
-        mat=matrixinverse(mat,q)
-        if(present(detb2))then
-         detb2=q; pdetb=0; detb=1.
-        endif
-
-       CASE(1)
-
-        q=mat(1,1)
-        if(abs(q)<epsilonr) q=epsilonr
-        mat=1.d0/q
-        if(present(detb2))then
-         detb2=q; pdetb=0; detb=1.
-        endif
-
-       CASE(2)
-
-        q=mat(1,1)*mat(2,2)-mat(1,2)*mat(2,1)
-        if(abs(q)<epsilonr) q=epsilonr
-        call swap(mat(1,1),mat(2,2))
-        mat(1,2)=-mat(1,2)
-        mat(2,1)=-mat(2,1)
-        mat=mat/q
-        if(present(detb2))then
-         detb2=q; pdetb=0; detb=1.
-        endif
-
-       END SELECT
-
-  end function
-
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-
-  logical function mat_3_3_c(mat,detb,detb2,pdetb)
-  implicit none
-    integer                   :: n,i,j
-    integer,optional          :: pdetb
-    real(8),optional          :: detb
-    complex(8),intent(inout)  :: mat(:,:)
-    complex(8),optional       :: detb2
-    complex(8)                :: q
-
-     n=size(mat,1)
-     mat_3_3_c=n<4
-     if(n>=4) return
-
-      SELECT CASE(n) 
-
-       CASE(3)
-
-        mat=matrixinverse(mat,q)
-        if(present(detb2))then
-         detb2=q; pdetb=0; detb=1.
-        endif
-
-       CASE(1)
-
-        q=mat(1,1)
-        if(abs(q)<epsilonr) q=epsilonr
-        mat=1.d0/q
-        if(present(detb2))then
-         detb2=q; pdetb=0; detb=1.
-        endif
-
-       CASE(2)
-
-        q=mat(1,1)*mat(2,2)-mat(1,2)*mat(2,1)
-        if(abs(q)<epsilonr) q=epsilonr
-        call swap(mat(1,1),mat(2,2))
-        mat(1,2)=-mat(1,2)
-        mat(2,1)=-mat(2,1)
-        mat=mat/q
-        if(present(detb2))then
-         detb2=q; pdetb=0; detb=1.
-        endif
-
-       END SELECT
-
-  end function
-
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-
-  logical function mat_3_3_q(mat,detb,det2b,pdetb)
-  implicit none
-    integer                :: i,j,k,n
-    real(16),optional      :: detb
-    integer,optional       :: pdetb
-    complex(16),optional   :: det2b
-    real(16)               :: q
-    real(16),intent(inout) :: mat(:,:)
-
-     n=size(mat,1)
-     mat_3_3_q=n<4
-     if(n>=4) return
-
-    SELECT CASE(n)
-
-      CASE(3)
-
-        mat=matrixinverse(mat,q)
-        if(present(detb))then
-         det2b=1.; pdetb=0; detb=q
-        endif
-
-      CASE(1)
-
-        q=mat(1,1)
-        if(abs(q)<epsilonr) q=epsilonr
-        mat=1.d0/q
-        if(present(detb))then
-         det2b=1.; pdetb=0; detb=q
-        endif
-
-       CASE(2)
-
-        q=mat(1,1)*mat(2,2)-mat(1,2)*mat(2,1)
-        if(abs(q)<epsilonr) q=epsilonr
-        call swap(mat(1,1),mat(2,2))
-        mat(1,2)=-mat(1,2)
-        mat(2,1)=-mat(2,1)
-        mat=mat/q
-        if(present(detb))then
-         det2b=1.; pdetb=0; detb=q
-        endif
-
-      END SELECT
-
-  end function
-
-
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-!**************************************************************************
-
-
-  logical function mat_3_3_qc(mat,detb,det2b,pdetb)
-  implicit none
-  real(16),optional          :: detb
-  integer,optional           :: pdetb
-  complex(16),optional       :: det2b
-  integer                    :: n,i,j
-  complex(16),intent(inout)  :: mat(:,:)
-  complex(16)                :: q
-
-    n=size(mat,1)
-    mat_3_3_qc=n<4
-    if(n>=4) return
-
-     SELECT CASE(n)
-
-       CASE(3)
-
-        mat=matrixinverse(mat,q)
-        if(present(det2b))then
-         det2b=q; pdetb=0; detb=1.
-        endif
-
-       CASE(1)
-
-        q=mat(1,1)
-        if(abs(q)<epsilonr) q=epsilonr
-        mat=1.d0/q
-        if(present(det2b))then
-         det2b=q; pdetb=0; detb=1.
-        endif
-
-       CASE(2)
-
-        q=mat(1,1)*mat(2,2)-mat(1,2)*mat(2,1)
-        if(abs(q)<epsilonr) q=epsilonr
-        call swap(mat(1,1),mat(2,2))
-        mat(1,2)=-mat(1,2)
-        mat(2,1)=-mat(2,1)
-        mat=mat/q
-        if(present(det2b))then
-         det2b=q; pdetb=0; detb=1.
-        endif
-
-      END SELECT
-
-  end function 
+! 
+! 
+!   logical function mat_3_3_rs(mat,detb,det2b,pdetb)
+!   implicit none
+!      integer               :: i,j,k,n
+!      real(4),optional      :: detb
+!      integer,optional      :: pdetb
+!      complex(4),optional   :: det2b
+!      real(4)               :: q
+!      real(4),intent(inout) :: mat(:,:)
+! 
+!      n=size(mat,1)
+!      mat_3_3_rs=n<4
+!      if(n>=4) return
+! 
+!      SELECT CASE(n)
+!        
+!        CASE(3)
+! 
+!         mat=matrixinverse(mat,q)
+!         if(present(detb))then
+!          det2b=1.; pdetb=0; detb=q
+!         endif
+! 
+!        CASE(1)
+! 
+!         q=mat(1,1)
+!         if(abs(q)<epsilonr) q=epsilonr
+!         mat=1.d0/q
+!         if(present(detb))then
+!          det2b=1.; pdetb=0; detb=q
+!         endif
+! 
+!        CASE(2)
+! 
+!         q=mat(1,1)*mat(2,2)-mat(1,2)*mat(2,1)
+!         if(abs(q)<epsilonr) q=epsilonr
+!         call swap(mat(1,1),mat(2,2))
+!         mat(1,2)=-mat(1,2)
+!         mat(2,1)=-mat(2,1)
+!         mat=mat/q
+!         if(present(detb))then
+!          det2b=1.; pdetb=0; detb=q
+!         endif
+! 
+!     END SELECT
+! 
+!   end function
+! 
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! 
+!   logical function mat_3_3_r(mat,detb,det2b,pdetb)
+!   implicit none
+!      integer               :: i,j,k,n
+!      real(8),optional      :: detb
+!      integer,optional      :: pdetb
+!      complex(8),optional   :: det2b
+!      real(8)               :: q
+!      real(8),intent(inout) :: mat(:,:)
+! 
+!      n=size(mat,1)
+!      mat_3_3_r=n<4
+!      if(n>=4) return
+! 
+!      SELECT CASE(n)
+!        
+!        CASE(3)
+! 
+!         mat=matrixinverse(mat,q)
+!         if(present(detb))then
+!          det2b=1.; pdetb=0; detb=q
+!         endif
+! 
+!        CASE(1)
+! 
+!         q=mat(1,1)
+!         if(abs(q)<epsilonr) q=epsilonr
+!         mat=1.d0/q
+!         if(present(detb))then
+!          det2b=1.; pdetb=0; detb=q
+!         endif
+! 
+!        CASE(2)
+! 
+!         q=mat(1,1)*mat(2,2)-mat(1,2)*mat(2,1)
+!         if(abs(q)<epsilonr) q=epsilonr
+!         call swap(mat(1,1),mat(2,2))
+!         mat(1,2)=-mat(1,2)
+!         mat(2,1)=-mat(2,1)
+!         mat=mat/q
+!         if(present(detb))then
+!          det2b=1.; pdetb=0; detb=q
+!         endif
+! 
+!     END SELECT
+! 
+!   end function
+! 
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! 
+!   logical function mat_3_3_cs(mat,detb,detb2,pdetb)
+!   implicit none
+!     integer                   :: n,i,j
+!     integer,optional          :: pdetb
+!     real(4),optional          :: detb
+!     complex(4),intent(inout)  :: mat(:,:)
+!     complex(4),optional       :: detb2
+!     complex(4)                :: q
+! 
+!      n=size(mat,1)
+!      mat_3_3_cs=n<4
+!      if(n>=4) return
+! 
+!       SELECT CASE(n) 
+! 
+!        CASE(3)
+! 
+!         mat=matrixinverse(mat,q)
+!         if(present(detb2))then
+!          detb2=q; pdetb=0; detb=1.
+!         endif
+! 
+!        CASE(1)
+! 
+!         q=mat(1,1)
+!         if(abs(q)<epsilonr) q=epsilonr
+!         mat=1.d0/q
+!         if(present(detb2))then
+!          detb2=q; pdetb=0; detb=1.
+!         endif
+! 
+!        CASE(2)
+! 
+!         q=mat(1,1)*mat(2,2)-mat(1,2)*mat(2,1)
+!         if(abs(q)<epsilonr) q=epsilonr
+!         call swap(mat(1,1),mat(2,2))
+!         mat(1,2)=-mat(1,2)
+!         mat(2,1)=-mat(2,1)
+!         mat=mat/q
+!         if(present(detb2))then
+!          detb2=q; pdetb=0; detb=1.
+!         endif
+! 
+!        END SELECT
+! 
+!   end function
+! 
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! 
+!   logical function mat_3_3_c(mat,detb,detb2,pdetb)
+!   implicit none
+!     integer                   :: n,i,j
+!     integer,optional          :: pdetb
+!     real(8),optional          :: detb
+!     complex(8),intent(inout)  :: mat(:,:)
+!     complex(8),optional       :: detb2
+!     complex(8)                :: q
+! 
+!      n=size(mat,1)
+!      mat_3_3_c=n<4
+!      if(n>=4) return
+! 
+!       SELECT CASE(n) 
+! 
+!        CASE(3)
+! 
+!         mat=matrixinverse(mat,q)
+!         if(present(detb2))then
+!          detb2=q; pdetb=0; detb=1.
+!         endif
+! 
+!        CASE(1)
+! 
+!         q=mat(1,1)
+!         if(abs(q)<epsilonr) q=epsilonr
+!         mat=1.d0/q
+!         if(present(detb2))then
+!          detb2=q; pdetb=0; detb=1.
+!         endif
+! 
+!        CASE(2)
+! 
+!         q=mat(1,1)*mat(2,2)-mat(1,2)*mat(2,1)
+!         if(abs(q)<epsilonr) q=epsilonr
+!         call swap(mat(1,1),mat(2,2))
+!         mat(1,2)=-mat(1,2)
+!         mat(2,1)=-mat(2,1)
+!         mat=mat/q
+!         if(present(detb2))then
+!          detb2=q; pdetb=0; detb=1.
+!         endif
+! 
+!        END SELECT
+! 
+!   end function
+! 
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! 
+!   logical function mat_3_3_q(mat,detb,det2b,pdetb)
+!   implicit none
+!     integer                :: i,j,k,n
+!     real(16),optional      :: detb
+!     integer,optional       :: pdetb
+!     complex(16),optional   :: det2b
+!     real(16)               :: q
+!     real(16),intent(inout) :: mat(:,:)
+! 
+!      n=size(mat,1)
+!      mat_3_3_q=n<4
+!      if(n>=4) return
+! 
+!     SELECT CASE(n)
+! 
+!       CASE(3)
+! 
+!         mat=matrixinverse(mat,q)
+!         if(present(detb))then
+!          det2b=1.; pdetb=0; detb=q
+!         endif
+! 
+!       CASE(1)
+! 
+!         q=mat(1,1)
+!         if(abs(q)<epsilonr) q=epsilonr
+!         mat=1.d0/q
+!         if(present(detb))then
+!          det2b=1.; pdetb=0; detb=q
+!         endif
+! 
+!        CASE(2)
+! 
+!         q=mat(1,1)*mat(2,2)-mat(1,2)*mat(2,1)
+!         if(abs(q)<epsilonr) q=epsilonr
+!         call swap(mat(1,1),mat(2,2))
+!         mat(1,2)=-mat(1,2)
+!         mat(2,1)=-mat(2,1)
+!         mat=mat/q
+!         if(present(detb))then
+!          det2b=1.; pdetb=0; detb=q
+!         endif
+! 
+!       END SELECT
+! 
+!   end function
+! 
+! 
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! !**************************************************************************
+! 
+! 
+!   logical function mat_3_3_qc(mat,detb,det2b,pdetb)
+!   implicit none
+!   real(16),optional          :: detb
+!   integer,optional           :: pdetb
+!   complex(16),optional       :: det2b
+!   integer                    :: n,i,j
+!   complex(16),intent(inout)  :: mat(:,:)
+!   complex(16)                :: q
+! 
+!     n=size(mat,1)
+!     mat_3_3_qc=n<4
+!     if(n>=4) return
+! 
+!      SELECT CASE(n)
+! 
+!        CASE(3)
+! 
+!         mat=matrixinverse(mat,q)
+!         if(present(det2b))then
+!          det2b=q; pdetb=0; detb=1.
+!         endif
+! 
+!        CASE(1)
+! 
+!         q=mat(1,1)
+!         if(abs(q)<epsilonr) q=epsilonr
+!         mat=1.d0/q
+!         if(present(det2b))then
+!          det2b=q; pdetb=0; detb=1.
+!         endif
+! 
+!        CASE(2)
+! 
+!         q=mat(1,1)*mat(2,2)-mat(1,2)*mat(2,1)
+!         if(abs(q)<epsilonr) q=epsilonr
+!         call swap(mat(1,1),mat(2,2))
+!         mat(1,2)=-mat(1,2)
+!         mat(2,1)=-mat(2,1)
+!         mat=mat/q
+!         if(present(det2b))then
+!          det2b=q; pdetb=0; detb=1.
+!         endif
+! 
+!       END SELECT
+! 
+!   end function 
 
 !**************************************************************************
 !**************************************************************************

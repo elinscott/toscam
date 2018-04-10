@@ -208,9 +208,9 @@
                      write(log_unit, *) 'nup ndn     : ', uup, ddn
                      write(log_unit, *) 'WINDOW IS   : ', dE, dE + dEmax
                      write(log_unit, *) 'SECTOR IS   : ', isector
-                     write(log_unit, *) 'N eigen : ', &
+                     write(log_unit, *) 'N eigen     : ', &
                           GS%es(isector)%lowest%neigen
-                     write(log_unit, *) 'Energies : ', &
+                     write(log_unit, *) 'Energies    : ', &
                           GS%es(isector)%lowest%eigen(:)%val
                      CALL filter_eigen(GS%es(isector)%lowest, [dE, dE + dEmax])
                      write(log_unit, *) '--------------------------------'

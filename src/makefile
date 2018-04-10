@@ -24,9 +24,8 @@ prep = -fpp -cxxlib
 
 LIBUTILS   = -L$(ROOTDIR)/lib/utils/obj -lutils
 LIBSPLINES = -L$(ROOTDIR)/lib/splines/obj -lsplines
-LIBSLATEC  = -L$(ROOTDIR)/lib/slatec/static -lslatec
 
-LIBS       = $(MKL) $(LIBUTILS) $(LIBSPLINES) $(LIBSLATEC)
+LIBS       = $(MKL) $(LIBUTILS) $(LIBSPLINES)
 
 #
 # Include

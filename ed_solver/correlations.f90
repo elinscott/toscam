@@ -197,8 +197,7 @@ contains
            0, MASK_AVERAGE)
 
       DO iw = 1, S%Nw
-         CALL invmat(size(Gm1, 1), Gm1(:, :, iw), block_matrix = &
-              .not.AIM%BATH%SUPER .or. block)
+         CALL invmat(size(Gm1, 1), Gm1(:, :, iw))
       ENDDO
 
       DO iw = 1, S%Nw

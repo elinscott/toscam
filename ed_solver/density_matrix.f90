@@ -220,6 +220,7 @@ contains
       use common_def,         only: c2s, dump_message, i2c
       use matrix,             only: diagonalize, write_array
       use readable_vec_class, only: cket_from_state
+      use sorting,            only: qsort_array, qsort_adj_array
 
       implicit none
 
@@ -232,13 +233,17 @@ contains
       REAL(DBL), INTENT(IN)    :: dmat(:,:)
       REAL(DBL)                :: VECP(SIZE(dmat, 1), SIZE(dmat, 1))
 #endif
-      REAL(DBL)             :: VALP(SIZE(dmat, 1)), absvec(SIZE(dmat, 1)), &
-                               states(SIZE(dmat, 1))
+      REAL(DBL)             :: VALP(SIZE(dmat, 1)), absvec(SIZE(dmat, 1))
+      INTEGER               :: states(size(dmat, 1))
       REAL(DBL)             :: ENTROPY, TRACE
       INTEGER               :: ivp, nvp, icomp
       CHARACTER(LEN = 1000) :: cvec, prefix
       INTEGER               :: npairs, ncomp, ncompi
       character(100)        :: intwri
+
+#ifdef DEBUG
+      write(*,*) "DEBUG: entering density_matrix_analyze_density_matrix"
+#endif
 
       ! NUMBER OF EIGENVALUES TO DISPLAY, NUMBER OF EIGENVECTOR COMPONENTS TO
       ! DISPLAY
@@ -259,13 +264,20 @@ contains
       DO ivp = nvp, nvp-(npairs-1), -1 ! loop over the npairs largest
       ! eigenvalues
          absvec = ABS(VECP(:, ivp))
-         states = DBLE((/(icomp, icomp = 1, nvp)/))
-         CALL dsort(absvec, states, nvp, -2) ! sort components of eigenvector
-         ! in decreasing order and sort state accordingly
+         states = (/(icomp, icomp = 1, nvp)/)
+
+         ! Sort components of eigenvector in decreasing order
+
+         ! First sort absvec in ascending order
+         call qsort_array(absvec, states) 
+
+         ! Flip to decreasing order
+         absvec = absvec(nvp:1:-1)
+         states = states(nvp:1:-1)
 
          ncompi = ncomp
          do icomp = ncomp, 1, -1
-            if(abs(VECP(INT(states(icomp)), ivp)) > 1.d-10)then
+            if(abs(VECP(states(icomp), ivp)) > 1.d-10)then
                ncompi = icomp
                exit
             endif
@@ -274,22 +286,22 @@ contains
          write(log_unit,*) '======================================================='
 #ifdef _complex
          intwri = '(' // c2s(i2c(ncompi)) // '(2f9.6, a))'
-         write(log_unit, *) 'non zerp elements in state vector  : ', ncompi
-         write(log_unit, *) (VECP(INT(states(icomp)), ivp), " " // &
-              cket_from_state(INT(states(icomp))-1, IMPiorb, NAMBU) // " ", &
+         write(log_unit, *) 'non zero elements in state vector  : ', ncompi
+         write(log_unit, *) (VECP(states(icomp), ivp), " " // &
+              cket_from_state(states(icomp)-1, IMPiorb, NAMBU) // " ", &
               icomp = 1, ncompi)
-         WRITE(cvec, ADJUSTL(TRIM(intwri))) (real(VECP(INT(states(icomp)), &
-              ivp)), aimag(VECP(INT(states(icomp)), ivp)), " " // &
-              cket_from_state(INT(states(icomp))-1, IMPiorb, NAMBU) // " ", &
+         WRITE(cvec, ADJUSTL(TRIM(intwri))) (real(VECP(states(icomp), &
+              ivp)), aimag(VECP(states(icomp), ivp)), " " // &
+              cket_from_state(states(icomp)-1, IMPiorb, NAMBU) // " ", &
               icomp = 1, ncompi)
 #else
          intwri = '(' // c2s(i2c(ncompi)) // '(f9.6, a))'
          write(log_unit, *) 'non zero elements in state vector  : ', ncompi
-         write(log_unit, *) (VECP(INT(states(icomp)), ivp), " " // &
-              cket_from_state(INT(states(icomp))-1, IMPiorb, NAMBU) // " ", &
+         write(log_unit, *) (VECP(states(icomp), ivp), " " // &
+              cket_from_state(states(icomp)-1, IMPiorb, NAMBU) // " ", &
               icomp = 1, ncompi)
-         WRITE(cvec, ADJUSTL(TRIM(intwri))) (VECP(INT(states(icomp)), ivp), " &
-              &" // cket_from_state(INT(states(icomp))-1, IMPiorb, NAMBU) // " &
+         WRITE(cvec, ADJUSTL(TRIM(intwri))) (VECP(states(icomp), ivp), " &
+              &" // cket_from_state(states(icomp)-1, IMPiorb, NAMBU) // " &
               &", icomp = 1, ncompi)
 #endif
          write(log_unit, *) &
@@ -318,6 +330,10 @@ contains
       WRITE(log_unit, '(a, f9.6)') "# CHECK TRACE          = ", TRACE
       WRITE(log_unit, '(a, f9.6)') "# ENTANGLEMENT ENTROPY = ", ENTROPY
       CALL flush(log_unit)
+
+#ifdef DEBUG
+      write(*,*) "DEBUG: leaving density_matrix_analyze_density_matrix"
+#endif
 
    end subroutine
 
