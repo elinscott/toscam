@@ -29,7 +29,8 @@ module splines
 !   END INTERFACE
  !---------------------------------------------------!
   INTERFACE spline_inter_extrapolate
-      MODULE PROCEDURE spline_inter_extrapolate__,spline_inter_extrapolate_,spline_inter_extrapolate_array__,spline_inter_extrapolate_array_
+      MODULE PROCEDURE spline_inter_extrapolate__, spline_inter_extrapolate_, &
+          spline_inter_extrapolate_array__,spline_inter_extrapolate_array_
   END INTERFACE
  !---------------------------------------------------!
 !   INTERFACE derivate_spline
@@ -49,7 +50,8 @@ module splines
 !   END INTERFACE
  !---------------------------------------------------!
   INTERFACE resampleit
-      MODULE PROCEDURE resampleit_b,resampleit__b,resampleit___b,resampleit_matrix,resampleit_matrix_,resampleit_xonly_r,resampleit_xonly_c
+      MODULE PROCEDURE resampleit_b, resampleit__b, resampleit___b, &
+            resampleit_matrix, resampleit_matrix_, resampleit_xonly_r, resampleit_xonly_c
   END INTERFACE
  !---------------------------------------------------!
 ! 

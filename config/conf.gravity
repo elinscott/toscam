@@ -1,0 +1,9 @@
+# Configuration file for gravity at KCL
+F90       = mpif90
+FFLAGS    = -fopenmp -O0
+MKL       = -L$(HOME)/MYLIBRARY/LIBLAPACK -L$(HOME)/MYLIBRARY/LIBBLAS/ -llapack -lblas -L/opt/gcc4.6.3/lib64/ -lgomp
+CCOMPL    = mpicc
+CFLAGS    = -O1
+C++       = mpicxx
+CXXFLAGS  = -O1
+RANLIB    = ranlib

@@ -20,17 +20,18 @@ endif
 VPATH=$(ROOTDIR)/ed_solver:$(ROOTDIR)/ed_solver/obj
 
 #
-# Module redirection
+# Compiler-dependent flags
 #
 
 ifeq ($(F90),$(filter $(F90),ifort mpifort))
    REDIRECT = -module $(ROOTDIR)/ed_solver/obj
+   prep = -fpp -D__complex
 endif
 ifeq ($(F90),$(filter $(F90),gfortran, mpif90))
    REDIRECT = -J$(ROOTDIR)/ed_solver/obj
+   prep = -cpp -D__complex
 endif
 
-prep = -fpp -D__complex
 
 ROUTINES = aim2_class.f90 \
            aim_class.f90 \

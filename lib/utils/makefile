@@ -15,19 +15,20 @@ endif
 
 VPATH=$(ROOTDIR)/lib/utils/obj:$(ROOTDIR)/lib/utils
 
-prep     = -fpp
 
 LIBS     = 
 
 #
-# Module redirection
+# Compiler-dependent flags
 #
 
 ifeq ($(F90),$(filter $(F90),ifort mpifort))
    REDIRECT = -module $(ROOTDIR)/lib/utils/obj
+   prep     = -fpp
 endif
-ifeq ($(F90),$(filter $(F90),gfortran, mpif90))
+ifeq ($(F90),$(filter $(F90),gfortran mpif90))
    REDIRECT = -J$(ROOTDIR)/lib/utils/obj
+   prep     = -cpp
 endif
 
 #
@@ -66,15 +67,15 @@ ROUTINES= common_def.f90 \
           tools_fit.f90 \
           tridiag_class.f90
 ROUTINESC=IEEE.c
-ROUTINESCXX=memory_address_functions.cc
+ROUTINESCXX=memory_address_functions.cpp
 
 MODULE_SOURCES= $(filter %.f90,$(ROUTINES))
 MODULE_SOURCES_C= $(filter %.c,$(ROUTINESC))
-MODULE_SOURCES_CXX= $(filter %.cc,$(ROUTINESCXX))
+MODULE_SOURCES_CXX= $(filter %.cpp,$(ROUTINESCXX))
 
 MODULES_F  = $(MODULE_SOURCES:.f90=.mod)
 MODULES_C  = $(MODULE_SOURCES_C:.c=.o)
-MODULES_CC = $(MODULE_SOURCES_CXX:.cc=.o) 
+MODULES_CC = $(MODULE_SOURCES_CXX:.cpp=.o) 
 
 MODULES = $(MODULES_F) $(MODULES_C) $(MODULES_CC)
 
@@ -106,8 +107,8 @@ clean:
 %.o: %.c
 	$(CCOMPL) -c $(CFLAGS) $< -o $(ROOTDIR)/lib/utils/obj/$(@:.c=.o)
 
-%.o: %.cc
-	$(C++) -c $(CXXFLAGS) $< -o $(ROOTDIR)/lib/utils/obj/$(@:.cc=.o)
+%.o: %.cpp
+	$(C++) -c $(CXXFLAGS) $< -o $(ROOTDIR)/lib/utils/obj/$(@:.cpp=.o)
 
 #
 # Dependencies
@@ -187,4 +188,4 @@ tools_fit.mod: tools_fit.f90
 
 IEEE.o: IEEE.c 
 
-memory_address_functions.o: memory_address_functions.cc
+memory_address_functions.o: memory_address_functions.cpp

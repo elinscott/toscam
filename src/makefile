@@ -13,8 +13,6 @@ else
    include $(ROOTDIR)/config/conf.default
 endif
 
-prep = -fpp -cxxlib
-
 .SUFFIXES:
 .SUFFIXES: .mod .f90 .o .a
 
@@ -39,14 +37,16 @@ INCSCRIPTS  = -I$(ROOTDIR)/src/obj
 INC         = $(INCSOLVER) $(INCUTILS) $(INCSCRIPTS)
 
 #
-# Module redirection
+# Compiler-dependent flags
 #
 
 ifeq ($(F90),$(filter $(F90),ifort mpifort))
    REDIRECT = -module $(ROOTDIR)/src/obj
+   prep = -fpp -cxxlib
 endif
-ifeq ($(F90),$(filter $(F90),gfortran, mpif90))
+ifeq ($(F90),$(filter $(F90),gfortran mpif90))
    REDIRECT = -J$(ROOTDIR)/src/obj
+   prep = -cpp -lstdc++ -ffree-line-length-2000
 endif
 
 #

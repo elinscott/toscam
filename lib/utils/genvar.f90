@@ -60,8 +60,10 @@ real(8),parameter                        :: MAX_EXP_R =  81.d0
 real(8),parameter                        :: MIN_EXP_R = -81.d0
 real(8),parameter                        :: error=epsilon(1.d0)*100.d0
 real(8),parameter                        :: epsilonr=epsilon(1.d0),epsilonq=1.d-30
-real(8),parameter                        :: euler_r= 2.7182818284590452353602874713526624977572470936999595749669676277240766303535d0
-real(16),parameter                       :: euler_q= 2.7182818284590452353602874713526624977572470936999595749669676277240766303535_16
+real(8),parameter                        :: euler_r= 2.71828182845904523536028747135266249&
+                                                &77572470936999595749669676277240766303535d0
+real(16),parameter                       :: euler_q= 2.71828182845904523536028747135266249&
+                                                &77572470936999595749669676277240766303535_16
 parameter(master=0)
 real(8)                                  :: ran_tab(0:10000)
 integer                                  :: iseed=41845213
