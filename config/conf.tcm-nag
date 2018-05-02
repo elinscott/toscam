@@ -1,0 +1,9 @@
+# Config file for TCM PC
+F90       = mpnagfor
+FFLAGS    = -O1 -openmp -wmismatch=mpi_isend,mpi_recv,mpi_irecv,mpi_bcast,mpi_reduce,mpi_allreduce,mpi_alltoall,mpi_allgather,mpi_allgatherv,mpi_scatterv,mpi_gatherv
+MKL       = -lamcl
+CCOMPL    = mpicc
+CFLAGS    = -O1
+C++       = mpicpc
+CXXFLAGS  = -O1
+RANLIB    = ranlib

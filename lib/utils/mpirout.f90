@@ -1075,7 +1075,7 @@ end subroutine
 
 subroutine mpibcast_(a,step)
 implicit none
-integer                                :: i1,i2,step,j
+integer                                :: i,i1,i2,step,j
 real(8),dimension(:)                   :: a
  if(no_mpi.or.size2==1) return
  i1=1

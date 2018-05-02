@@ -27,10 +27,17 @@ ifeq ($(F90),$(filter $(F90),ifort mpifort))
    REDIRECT = -module $(ROOTDIR)/ed_solver/obj
    prep = -fpp -D__complex
 endif
-ifeq ($(F90),$(filter $(F90),gfortran, mpif90))
+ifeq ($(F90),$(filter $(F90),gfortran mpif90))
    REDIRECT = -J$(ROOTDIR)/ed_solver/obj
    prep = -cpp -D__complex
 endif
+ifeq ($(F90),$(filter $(F90),nagfor mpnagfor))
+   REDIRECT = -mdir $(ROOTDIR)/ed_solver/obj
+endif
+ifneq ($(F90), $(filter $(F90), ifort mpifort gfortran mpif90 nagfor mpnagfor))
+   $(error Fortran compiler not supported. Advanced users may want to modify the make files appropriately.)
+endif
+    
 
 
 ROUTINES = aim2_class.f90 \

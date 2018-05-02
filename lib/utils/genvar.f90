@@ -1,12 +1,11 @@
 module genvar
 
- use mpi
- use openmpmod
+  use mpi !! External dependency
+  use openmpmod
 
  implicit none
 
 !include 'mpif.h'  --> FOR BG/L
-
 
 !******************************************************************
 !variables d utilite generale 
@@ -66,7 +65,7 @@ real(8),parameter                        :: euler_r= 2.7182818284590452353602874
                                                 &77572470936999595749669676277240766303535d0
 real(16),parameter                       :: euler_q= 2.71828182845904523536028747135266249&
                                                 &77572470936999595749669676277240766303535_16
-parameter(master=0)
+integer,parameter                        :: master=0
 real(8)                                  :: ran_tab(0:10000)
 integer                                  :: iseed=41845213
 logical                                  :: testing=.false.

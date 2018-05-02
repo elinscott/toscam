@@ -41,6 +41,7 @@ parallelism, in which case OpenMP will need to be enabled for your compiler
      compiler, eg: 
         -qopenmp for ifort
         -fopenmp for gfortran
+        -openmp for nagfor
   c) MKL must point to the BLAS and LAPACK libraries
   d) CCOMPL is the C compiler to use
   e) CFLAGS are the C flags to use
