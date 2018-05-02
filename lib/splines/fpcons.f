@@ -221,7 +221,7 @@ c  determine the number of knots nplus we are going to add.
         go to 150
  140    npl1 = nplus*2
         rn = nplus
-        if(fpold-fp.gt.acc) npl1 = rn*fpms/(fpold-fp)
+        if(fpold-fp.gt.acc) npl1 = int(rn*fpms/(fpold-fp))
         nplus = min0(nplus*2,max0(npl1,nplus/2,1))
  150    fpold = fp
 c  compute the sum of squared residuals for each knot interval

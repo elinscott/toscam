@@ -955,7 +955,6 @@ end subroutine
 
 subroutine mpibcastbcomp_2d(a,iii)
 implicit none
-integer                                :: i1,i2,step,j,i
 complex(8),dimension(:,:)              :: a
 integer,optional                       :: iii
 integer                                :: jjj
@@ -972,7 +971,6 @@ end subroutine
 
 subroutine mpibcastb_2d(a,iii)
 implicit none
-integer                                :: i1,i2,step,j,i
 real(8),dimension(:,:)                 :: a
 integer,optional                       :: iii
 integer                                :: jjj
@@ -990,7 +988,6 @@ end subroutine
 
 subroutine mpibcastbcomp_(a,iii)
 implicit none
-integer                                :: i1,i2,step,j,i
 complex(8),dimension(:)                :: a
 integer,optional                       :: iii
 integer                                :: jjj
@@ -1007,7 +1004,6 @@ end subroutine
 
 subroutine mpibcastb_(a,iii)
 implicit none
-integer                                :: i1,i2,step,j,i
 real(8),dimension(:)                   :: a
 integer,optional                       :: iii
 integer                                :: jjj
@@ -1024,7 +1020,6 @@ end subroutine
 
 subroutine mpibcastb__(a,iii)
 implicit none
-integer                                :: i1,i2,step,j,i
 real(8)                                :: a
 integer,optional                       :: iii
 integer                                :: jjj
@@ -1056,7 +1051,7 @@ end subroutine
 
 subroutine mpibcastb____(a,iii)
 implicit none
-integer                                :: i1,i2,step,j,i
+integer                                :: step
 integer,dimension(:)                   :: a
 integer,optional                       :: iii
 integer                                :: jjj
@@ -1080,7 +1075,7 @@ end subroutine
 
 subroutine mpibcast_(a,step)
 implicit none
-integer                                :: i1,i2,step,j,i
+integer                                :: i1,i2,step,j
 real(8),dimension(:)                   :: a
  if(no_mpi.or.size2==1) return
  i1=1
@@ -1173,7 +1168,6 @@ end subroutine
 
 subroutine mpigather_on_masternode_c(a,source)
 implicit none
-integer                  :: i
 complex(8),dimension(:)  :: a,source
  if(size2==1.or.no_mpi)then
    a=source
@@ -1819,7 +1813,6 @@ end subroutine
 subroutine adim0(vec,vecm)
 implicit none
 complex(8) :: vec,vecm
-integer    :: i,j,k
  if(size2==1.or.no_mpi) then
   vecm=vec
   return
@@ -1842,7 +1835,6 @@ end subroutine
 subroutine adim0r(vec,vecm)
 implicit none
 real(8)    :: vec,vecm
-integer    :: i,j,k
 if(size2==1.or.no_mpi) then
  vecm=vec
  return
@@ -1865,7 +1857,6 @@ end subroutine
 subroutine adim0_(vec)
 implicit none
 complex(8) :: vec,vecm
-integer    :: i,j,k
 if(size2==1.or.no_mpi) then
  return
 endif
@@ -1887,7 +1878,6 @@ end subroutine
 subroutine adim0r_(vec)
 implicit none
 real(8)    :: vec,vecm
-integer    :: i,j,k
 if(size2==1.or.no_mpi) then
  return
 endif
@@ -1909,7 +1899,6 @@ end subroutine
 subroutine adim0i_(vec)
 implicit none
 integer    :: vec,vecm
-integer    :: i,j,k
 if(size2==1.or.no_mpi) then
  return
 endif
@@ -1931,7 +1920,7 @@ end subroutine
 subroutine adim1(vec,vecm2)
 implicit none
 complex(8) :: vec(:),vecm(size(vec)),vecm2(size(vec))
-integer    :: i,j,k,sizev
+integer    :: sizev
 if(size2==1.or.no_mpi) then
  vecm2=vec
  return
@@ -1950,7 +1939,7 @@ end subroutine
 subroutine adim2(mat,matm)
 implicit none
 complex(8) :: mat(:,:),matm(size(mat,1),size(mat,2))
-integer    :: i,j,k,s1,s2
+integer    :: s1,s2
 if(size2==1.or.no_mpi) then
  matm=mat
  return
@@ -1969,7 +1958,7 @@ end subroutine
 subroutine adim3(mat,matm)
 implicit none
 complex(8) :: mat(:,:,:),matm(size(mat(:,1,1)),size(mat(1,:,1)),size(mat(1,1,:)))
-integer    :: i,j,k,s1,s2,s3
+integer    :: s1,s2,s3
 if(size2==1.or.no_mpi)then
  matm=mat
  return
@@ -1988,7 +1977,7 @@ end subroutine
 subroutine adim1s(vec)
 implicit none
 complex(8) :: vec(:),vecm(size(vec))
-integer    :: i,j,k,sizev
+integer    :: sizev
 if(size2==1.or.no_mpi)then
  return
 endif
@@ -2006,7 +1995,7 @@ end subroutine
 subroutine adim2s(mat)
 implicit none
 complex(8) :: mat(:,:),matm(size(mat(:,1)),size(mat(1,:)))
-integer    :: i,j,k,s1,s2
+integer    :: s1,s2
 if(size2==1.or.no_mpi)then
  return
 endif
@@ -2024,7 +2013,7 @@ end subroutine
 subroutine adim3s(mat)
 implicit none
 complex(8) :: mat(:,:,:),matm(size(mat(:,1,1)),size(mat(1,:,1)),size(mat(1,1,:)))
-integer    :: i,j,k,s1,s2,s3
+integer    :: s1,s2,s3
 if(size2==1.or.no_mpi)then
  return
 endif
@@ -2042,7 +2031,7 @@ end subroutine
 subroutine adim4s(mat)
 implicit none
 complex(8) :: mat(:,:,:,:),matm(size(mat(:,1,1,1)),size(mat(1,:,1,1)),size(mat(1,1,:,1)),size(mat(1,1,1,:)))
-integer    :: i,j,k,s(4),p
+integer    :: s(4),p
 if(size2==1.or.no_mpi)then
  return
 endif
@@ -2063,7 +2052,7 @@ subroutine adim5r(mat)
 implicit none
 real(8) :: mat(:,:,:,:,:), &
      & matm(size(mat(:,1,1,1,1)),size(mat(1,:,1,1,1)),size(mat(1,1,:,1,1)),size(mat(1,1,1,:,1)),size(mat(1,1,1,1,:)))
-integer    :: i,j,k,s(5),p
+integer    :: s(5),p
 if(size2==1.or.no_mpi)then
  return
 endif
@@ -2084,7 +2073,7 @@ subroutine adim5s(mat)
 implicit none
 complex(8) :: mat(:,:,:,:,:), &
      & matm(size(mat(:,1,1,1,1)),size(mat(1,:,1,1,1)),size(mat(1,1,:,1,1)),size(mat(1,1,1,:,1)),size(mat(1,1,1,1,:)))
-integer    :: i,j,k,s(5),p
+integer    :: s(5),p
 if(size2==1.or.no_mpi)then
  return
 endif
@@ -2107,7 +2096,7 @@ end subroutine
 subroutine ardim0(vec,vecm2)
 implicit none
 real(8)  :: vec,vecm,vecm2
-integer  :: i,j,k,sizev
+integer  :: sizev
  if(size2==1.or.no_mpi)then
    vecm2=vec
    return
@@ -2129,7 +2118,7 @@ end subroutine
 subroutine ardim1(vec,vecm2)
 implicit none
 real(8)  :: vec(:),vecm(size(vec)),vecm2(size(vec))
-integer  :: i,j,k,sizev
+integer  :: sizev
  if(size2==1.or.no_mpi)then
    vecm2=vec
    return
@@ -2148,7 +2137,7 @@ end subroutine
 subroutine ardim2(mat,matm)
 implicit none
 real(8) :: mat(:,:),matm(size(mat(:,1)),size(mat(1,:)))
-integer :: i,j,k,s1,s2
+integer :: s1,s2
 if(size2==1.or.no_mpi)then
  matm=mat
  return
@@ -2167,7 +2156,7 @@ end subroutine
 subroutine ardim3(mat,matm)
 implicit none
 real(8)  :: mat(:,:,:),matm(size(mat(:,1,1)),size(mat(1,:,1)),size(mat(1,1,:)))
-integer  :: i,j,k,s1,s2,s3
+integer  :: s1,s2,s3
  if(size2==1.or.no_mpi)then
    matm=mat
    return
@@ -2185,7 +2174,7 @@ end subroutine
 subroutine ardim1s(vec)
 implicit none
 real(8)  :: vec(:),vecm(size(vec))
-integer :: i,j,k,sizev
+integer :: sizev
 if(size2==1.or.no_mpi)then
  return
 endif
@@ -2203,7 +2192,7 @@ end subroutine
 subroutine ardim2s(mat)
 implicit none
 real(8)  :: mat(:,:),matm(size(mat(:,1)),size(mat(1,:)))
-integer :: i,j,k,s1,s2
+integer :: s1,s2
  if(size2==1.or.no_mpi)then
   return
  endif
@@ -2221,7 +2210,7 @@ end subroutine
 subroutine ardim3s(mat)
 implicit none
 real(8)  :: mat(:,:,:),matm(size(mat(:,1,1)),size(mat(1,:,1)),size(mat(1,1,:)))
-integer :: i,j,k,s1,s2,s3
+integer :: s1,s2,s3
  if(size2==1.or.no_mpi)then
   return
  endif
@@ -2240,7 +2229,7 @@ end subroutine
 subroutine ardim4s(mat)
 implicit none
 real(8)  :: mat(:,:,:,:),matm(size(mat(:,1,1,1)),size(mat(1,:,1,1)),size(mat(1,1,:,1)),size(mat(1,1,1,:)))
-integer  :: i,j,k,s(4),p
+integer  :: s(4),p
   if(size2==1.or.no_mpi)then
     return
   endif

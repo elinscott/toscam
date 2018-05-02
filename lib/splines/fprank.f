@@ -172,7 +172,7 @@ c  solve the system (aa) (f1) = ff
           store = store-stor1*stor2
  210    continue
         stor1 = aa(i,1)
-        ff(i) = store/stor1
+        ff(i) = real(store/stor1)
         i = i-1
  220  continue
 c  solve the system  (aa)' (f2) = f1
@@ -189,7 +189,7 @@ c  solve the system  (aa)' (f2) = f1
           store = store-stor1*stor2
  240    continue
         stor1 = aa(j,1)
-        ff(j) = store/stor1
+        ff(j) = real(store/stor1)
  250  continue
 c  premultiply f2 by the transpoze of a.
  260  k = 0
@@ -207,7 +207,7 @@ c  premultiply f2 by the transpoze of a.
           store = store+stor1*stor2
           kk = kk-1
  270    continue
-        c(i) = store
+        c(i) = real(store)
  280  continue
 c  add to the sum of squared residuals the contribution of putting
 c  to zero the small diagonal elements of matrix (a).
@@ -229,7 +229,7 @@ c  to zero the small diagonal elements of matrix (a).
         stor1 = stor1*stor2
         stor3 = stor3+stor1*(stor1-store-store)
  310  continue
-      fac = stor3
+      fac = real(stor3)
       sq = sq+fac
       return
       end

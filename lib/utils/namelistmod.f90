@@ -101,7 +101,7 @@ end subroutine
 
 subroutine look_for_namelist_in_file(nm,filename,nosync)
 TYPE(namelist_set) :: nm
-integer            :: i,j,k,num,len,status,jjj
+integer            :: i,jjj
 character(200)     :: value
 character(* )      :: filename
 logical,optional   :: nosync
@@ -141,7 +141,7 @@ end subroutine
 
 subroutine look_for_command_line_argument(nm,nosync)
 TYPE(namelist_set) :: nm
-integer            :: i,j,k,num,len,status
+integer            :: i,num,len,status
 character(200)     :: value
 integer,parameter  :: nchar=200
 logical,optional   :: nosync
@@ -241,7 +241,7 @@ end subroutine
 
 subroutine update_data_in_namelist(nm,label)
  TYPE(namelist_set) :: nm
- integer            :: i,j,ii,length,ierror
+ integer            :: i,j,length,ierror
  character(* )      :: label
  logical            :: lll
  integer            :: iii,jjj,jjj0
@@ -342,7 +342,7 @@ subroutine update_data_in_namelist(nm,label)
       call put_address(nm%members(j)%address,vecc(1:iii))
       nm%members(j)%vc(1:iii)=vecc(1:iii)
     elseif(nm%members(j)%type==8)then
-      jjj=i; jjj0=0; iii=1;ivec=0.
+      jjj=i; jjj0=0; iii=1;ivec=0
       do
        jjj=jjj+1
        if(label(jjj:jjj)=='['.or.label(jjj:jjj)==','.or.label(jjj:jjj)==']') then
@@ -402,7 +402,7 @@ end subroutine
 
 subroutine display_menu(nm)
  TYPE(namelist_set) :: nm
- integer            :: j,ii,kk
+ integer            :: ii,kk
  if(rank/=0) return
  do ii=1,nm%cc
   write(*,*) '==============================='
@@ -455,7 +455,7 @@ end subroutine
 
 subroutine display_menu_short(nm)
  TYPE(namelist_set) :: nm
- integer            :: j,ii,kk,unit_
+ integer            :: ii,kk,unit_
  integer,save       :: count=0
  character(22)      :: filename
 

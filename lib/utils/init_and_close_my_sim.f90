@@ -25,8 +25,7 @@ contains
 !**************************************************************************
 
   SUBROUTINE init_common
-    CHARACTER(LEN=100) :: fmt_ciwprint
-    INTEGER            :: length_ciwprint,intg,clock_rate
+    INTEGER            :: intg,clock_rate
     write(*,*) 'start to init common quantities'
     ! INITIALIZE CONSTANTS !
     pi2       =  two * pi
@@ -73,7 +72,7 @@ contains
   !-------------------!
 
   SUBROUTINE initialize_MPI
-    INTEGER :: jproc,provided
+    INTEGER :: jproc
     write(*,*) 'start to init MPI'
     if(.not.no_mpi)then
      call MPI_INIT(ierr)

@@ -349,7 +349,7 @@ c  ..user specified function
       real rad
 c  ..local scalars..
       real tol,pi,dist,r,one
-      integer i,ib1,ib3,ki,kn,kwest,la,lbu,lcc,lcs,lro,j
+      integer i,ib1,ib3,ki,kn,kwest,la,lbu,lcc,lcs,lro,j,
      * lbv,lco,lf,lff,lfp,lh,lq,lsu,lsv,lwest,maxit,ncest,ncc,nuu,
      * nvv,nreg,nrint,nu4,nv4,iopt1,iopt2,iopt3,ipar,nvmin
 c  ..function references..

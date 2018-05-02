@@ -241,14 +241,14 @@ c  find nplx, the number of knots we should add in the x-direction.
         if(nx.eq.nminx) go to 180
         npl1 = nplusx*2
         rn = nplusx
-        if(reducx.gt.acc) npl1 = rn*fpms/reducx
+        if(reducx.gt.acc) npl1 = int(rn*fpms/reducx)
         nplx = min0(nplusx*2,max0(npl1,nplusx/2,1))
 c  find nply, the number of knots we should add in the y-direction.
  180    nply = 1
         if(ny.eq.nminy) go to 190
         npl1 = nplusy*2
         rn = nplusy
-        if(reducy.gt.acc) npl1 = rn*fpms/reducy
+        if(reducy.gt.acc) npl1 = int(rn*fpms/reducy)
         nply = min0(nplusy*2,max0(npl1,nplusy/2,1))
  190    if(nplx-nply) 210,200,230
  200    if(lastdi.lt.0) go to 230

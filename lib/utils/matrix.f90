@@ -93,13 +93,13 @@ end interface
 !     MODULE PROCEDURE inverse_,inverse__,inverses_,inverses__
 ! END INTERFACE
 !--------------------------------------------------------------------------------!
-INTERFACE ludcmp
-    MODULE PROCEDURE ludcmpd,ludcmpq
-END INTERFACE
+! INTERFACE ludcmp
+!     MODULE PROCEDURE ludcmpd,ludcmpq
+! END INTERFACE
 !--------------------------------------------------------------------------------!
-INTERFACE lubksb
-    MODULE PROCEDURE lubksbd,lubksbq
-END INTERFACE
+! INTERFACE lubksb
+!     MODULE PROCEDURE lubksbd,lubksbq
+! END INTERFACE
 !--------------------------------------------------------------------------------!
 ! INTERFACE MATMUL_keep_diag
 !     MODULE PROCEDURE MATMUL_keep_diag_,MATMUL_keep_diag__
@@ -113,9 +113,9 @@ END INTERFACE
 !   MODULE PROCEDURE symmetrize_mat_c,symmetrize_mat_r
 ! END INTERFACE
 !--------------------------------------------------------------------------------!
-INTERFACE rescale
- MODULE PROCEDURE rescale_r,rescale_c,rescale_r2,rescale_c2,rescale_r3,rescale_c3
-END INTERFACE
+! INTERFACE rescale
+!  MODULE PROCEDURE rescale_r,rescale_c,rescale_r2,rescale_c2,rescale_r3,rescale_c3
+! END INTERFACE
 !--------------------------------------------------------------------------------!
 INTERFACE eigenvector_matrix
  MODULE PROCEDURE      eigenvector_matrix_cc,eigenvector_matrix_c,eigenvector_matrix_r,    &
@@ -434,7 +434,7 @@ contains
  implicit none
  real(8)    :: mat(:)
  integer    :: MASK_AVERAGE_(:),MASK_AVERAGE(size(mat,1))
- integer    :: i,k,l,m,tot,i_
+ integer    :: i,l,m,tot,i_
  real(8)    :: temp
 
   MASK_AVERAGE=MASK_AVERAGE_
@@ -501,7 +501,7 @@ contains
  complex(8)        :: mat(:,:)
  integer,intent(in):: MASK_AVERAGE_(:,:)
  integer           :: MASK_AVERAGE(size(mat,1),size(mat,2))
- integer           :: i,j,k,l,m,tot,i_,j_
+ integer           :: i,j,l,m,tot,i_,j_
  complex(8)        :: temp
  logical,optional  :: offdiag_also
  logical           :: only_diag
@@ -2216,8 +2216,8 @@ contains
 
 function MATMULr(AA,BB)
 implicit none
-real(8) :: AA(:,:),BB(:,:),MATMULr(size(AA,1),size(BB,2)),dd
-integer :: i,j,k,kk,ii
+real(8) :: AA(:,:),BB(:,:),MATMULr(size(AA,1),size(BB,2))
+integer :: i,j,k,ii
  i=size(AA,1); j=size(AA,2); k=size(BB,2)
  ii=max(max(i,j),k)
  ! ebl: Removing GPU functionality
@@ -2232,8 +2232,8 @@ end function
 
 function MATMULc(AA,BB)
 implicit none
-complex(8) :: AA(:,:),BB(:,:),MATMULc(size(AA,1),size(BB,2)),dd
-integer    :: i,j,k,kk,ii
+complex(8) :: AA(:,:),BB(:,:),MATMULc(size(AA,1),size(BB,2))
+integer    :: i,j,k,ii
  i=size(AA,1); j=size(AA,2); k=size(BB,2)
  ii=max(max(i,j),k)
  ! ebl: Removing GPU functionality
@@ -2563,7 +2563,7 @@ end function
  implicit none
  real(8) :: mat(:,:)
  real(8) :: offdiagr(size(mat(:,1)),size(mat(1,:)))
- integer :: k,i
+ integer :: i
   offdiagr=mat
   do i=1,size(mat(1,:))
    offdiagr(i,i)=0.
@@ -2576,7 +2576,7 @@ end function
  implicit none
  complex(8) :: mat(:,:)
  complex(8) :: offdiagc(size(mat(:,1)),size(mat(1,:)))
- integer    :: k,i
+ integer    :: i
   offdiagc=mat
   do i=1,size(mat(1,:))
    offdiagc(i,i)=0.
@@ -3143,31 +3143,31 @@ end function
 ! Notes           : A -> A^(-1)=AI
 !                   Provient de Numerical Recipes, p.40.
 ! Dependances     : LUDCMP,LUBKSB (externes)
-
-     SUBROUTINE D_INVMG(NP,NM,A)
-     IMPLICIT NONE
-     real(8)                                     :: D          ! Var. locale
-     INTEGER                                     :: I,J        ! var. locale
-     INTEGER,INTENT(IN)                          :: NP,NM
-     INTEGER,DIMENSION (NP)                      :: INDX       ! Var. locale
-     real(8),DIMENSION (NP,NP)                   :: Y          ! Var. locale
-     real(8),DIMENSION (NP,NP),INTENT(INOUT)     :: A
-
-     DO I=1,NM
-        DO J=1,NM
-           Y(I,J)=0.D0
-        END DO
-        Y(I,I)=1.D0
-     END DO
-     CALL LUDCMP(A,NM,NP,INDX,D)
-     DO J=1,NM
-        CALL LUBKSBd(A,NM,NP,INDX,Y(1,J))
-     END DO
-     A=Y
-
-     END SUBROUTINE
-
-
+! 
+!      SUBROUTINE D_INVMG(NP,NM,A)
+!      IMPLICIT NONE
+!      real(8)                                     :: D          ! Var. locale
+!      INTEGER                                     :: I,J        ! var. locale
+!      INTEGER,INTENT(IN)                          :: NP,NM
+!      INTEGER,DIMENSION (NP)                      :: INDX       ! Var. locale
+!      real(8),DIMENSION (NP,NP)                   :: Y          ! Var. locale
+!      real(8),DIMENSION (NP,NP),INTENT(INOUT)     :: A
+! 
+!      DO I=1,NM
+!         DO J=1,NM
+!            Y(I,J)=0.D0
+!         END DO
+!         Y(I,I)=1.D0
+!      END DO
+!      CALL LUDCMP(A,NM,NP,INDX,D)
+!      DO J=1,NM
+!         CALL LUBKSBd(A,NM,NP,INDX,Y(1,J))
+!      END DO
+!      A=Y
+! 
+!      END SUBROUTINE
+! 
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
@@ -3186,70 +3186,70 @@ end function
 ! Nom            : LUDCMP 
 ! Fonction       : Decomposition gaussienne A = LU
 ! Notes          : Provient entierement de Numerical Recipes
-
-   SUBROUTINE LUDCMPd(A,N,NP,INDX,D)
-   IMPLICIT real(8) (A-H,O-Z)
-   PARAMETER (TINY=1.0D-20)
-   DIMENSION A(NP,NP),INDX(N),VV(N)
-
-          D=1.D0
-          DO 12 I=1,N
-           AAMAX=0.D0
-           DO 11 J=1,N
-              IF(ABS(A(I,J)).GT.AAMAX) AAMAX=ABS(A(I,J))
-11         CONTINUE
-           IF(AAMAX.EQ.0.) AAMX=1.d-22
-           VV(I)=1.D0/AAMAX
-12           CONTINUE
-            DO 19 J=1,N
-           IF(J.GT.1) THEN
-              DO 14 I=1,J-1
-                 SUM=A(I,J)
-                 IF(I.GT.1) THEN
-                    DO 13 K=1,I-1
-                       SUM=SUM-A(I,K)*A(K,J)
-13                  CONTINUE
-                    A(I,J)=SUM
-                 ENDIF
-14            CONTINUE
-           ENDIF
-           AAMAX=0.D0
-           DO 16 I=J,N
-              SUM=A(I,J)
-              IF(J.GT.1) THEN
-                 DO 15 K=1,J-1
-                    SUM=SUM-A(I,K)*A(K,J)
-15               CONTINUE
-                 A(I,J)=SUM
-              ENDIF
-              DUM=VV(I)*ABS(SUM)
-              IF(DUM.GE.AAMAX) THEN
-                 IMAX=I
-                 AAMAX=DUM
-              ENDIF
-16         CONTINUE
-           IF(J.NE.IMAX) THEN
-              DO 17 K=1,N
-                 DUM=A(IMAX,K)
-                 A(IMAX,K)=A(J,K)
-                 A(J,K)=DUM
-17            CONTINUE
-              D=-D
-              VV(IMAX)=VV(J)
-           ENDIF
-           INDX(J)=IMAX
-           IF(J.NE.N) THEN
-             IF(A(J,J).EQ.0.) A(J,J)=TINY
-             DUM=1./A(J,J)
-             DO 18 I=J+1,N
-                A(I,J)=A(I,J)*DUM
-18           CONTINUE
-           ENDIF
-19          CONTINUE
-            IF(A(N,N).EQ.0.) A(N,N)=TINY
-            RETURN
-            END subroutine
-
+! 
+!    SUBROUTINE LUDCMPd(A,N,NP,INDX,D)
+!    IMPLICIT real(8) (A-H,O-Z)
+!    PARAMETER (TINY=1.0D-20)
+!    DIMENSION A(NP,NP),INDX(N),VV(N)
+! 
+!           D=1.D0
+!           DO 12 I=1,N
+!            AAMAX=0.D0
+!            DO 11 J=1,N
+!               IF(ABS(A(I,J)).GT.AAMAX) AAMAX=ABS(A(I,J))
+! 11         CONTINUE
+!            IF(AAMAX.EQ.0.) AAMX=1.d-22
+!            VV(I)=1.D0/AAMAX
+! 12           CONTINUE
+!             DO 19 J=1,N
+!            IF(J.GT.1) THEN
+!               DO 14 I=1,J-1
+!                  SUM=A(I,J)
+!                  IF(I.GT.1) THEN
+!                     DO 13 K=1,I-1
+!                        SUM=SUM-A(I,K)*A(K,J)
+! 13                  CONTINUE
+!                     A(I,J)=SUM
+!                  ENDIF
+! 14            CONTINUE
+!            ENDIF
+!            AAMAX=0.D0
+!            DO 16 I=J,N
+!               SUM=A(I,J)
+!               IF(J.GT.1) THEN
+!                  DO 15 K=1,J-1
+!                     SUM=SUM-A(I,K)*A(K,J)
+! 15               CONTINUE
+!                  A(I,J)=SUM
+!               ENDIF
+!               DUM=VV(I)*ABS(SUM)
+!               IF(DUM.GE.AAMAX) THEN
+!                  IMAX=I
+!                  AAMAX=DUM
+!               ENDIF
+! 16         CONTINUE
+!            IF(J.NE.IMAX) THEN
+!               DO 17 K=1,N
+!                  DUM=A(IMAX,K)
+!                  A(IMAX,K)=A(J,K)
+!                  A(J,K)=DUM
+! 17            CONTINUE
+!               D=-D
+!               VV(IMAX)=VV(J)
+!            ENDIF
+!            INDX(J)=IMAX
+!            IF(J.NE.N) THEN
+!              IF(A(J,J).EQ.0.) A(J,J)=TINY
+!              DUM=1./A(J,J)
+!              DO 18 I=J+1,N
+!                 A(I,J)=A(I,J)*DUM
+! 18           CONTINUE
+!            ENDIF
+! 19          CONTINUE
+!             IF(A(N,N).EQ.0.) A(N,N)=TINY
+!             RETURN
+!             END subroutine
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
@@ -3269,70 +3269,70 @@ end function
 ! Nom            : LUDCMP 
 ! Fonction       : Decomposition gaussienne A = LU
 ! Notes          : Provient entierement de Numerical Recipes
-
-   SUBROUTINE LUDCMPq(A,N,NP,INDX,D)
-   IMPLICIT real(16) (A-H,O-Z)
-   PARAMETER (TINY=1.0D-34)
-   DIMENSION A(NP,NP),INDX(N),VV(N)
- 
-          D=1.D0
-          DO 12 I=1,N
-           AAMAX=0.D0
-           DO 11 J=1,N
-              IF(ABS(A(I,J)).GT.AAMAX) AAMAX=ABS(A(I,J))
-11         CONTINUE
-           IF(AAMAX.EQ.0.) AAMX=1.d-22
-           VV(I)=1.D0/AAMAX
-12           CONTINUE
-            DO 19 J=1,N
-           IF(J.GT.1) THEN
-              DO 14 I=1,J-1
-                 SUM=A(I,J)
-                 IF(I.GT.1) THEN
-                    DO 13 K=1,I-1
-                       SUM=SUM-A(I,K)*A(K,J)
-13                  CONTINUE
-                    A(I,J)=SUM
-                 ENDIF
-14            CONTINUE
-           ENDIF
-           AAMAX=0.D0
-           DO 16 I=J,N
-              SUM=A(I,J)
-              IF(J.GT.1) THEN
-                 DO 15 K=1,J-1
-                    SUM=SUM-A(I,K)*A(K,J)
-15               CONTINUE
-                 A(I,J)=SUM
-              ENDIF
-              DUM=VV(I)*ABS(SUM)
-              IF(DUM.GE.AAMAX) THEN
-                 IMAX=I
-                 AAMAX=DUM
-              ENDIF
-16         CONTINUE
-           IF(J.NE.IMAX) THEN
-              DO 17 K=1,N
-                 DUM=A(IMAX,K)
-                 A(IMAX,K)=A(J,K)
-                 A(J,K)=DUM
-17            CONTINUE
-              D=-D
-              VV(IMAX)=VV(J)
-           ENDIF
-           INDX(J)=IMAX
-           IF(J.NE.N) THEN
-             IF(A(J,J).EQ.0.) A(J,J)=TINY
-             DUM=1./A(J,J)
-             DO 18 I=J+1,N
-                A(I,J)=A(I,J)*DUM
-18           CONTINUE
-           ENDIF
-19          CONTINUE
-            IF(A(N,N).EQ.0.) A(N,N)=TINY
-            RETURN
-            END subroutine
-
+! 
+!    SUBROUTINE LUDCMPq(A,N,NP,INDX,D)
+!    IMPLICIT real(16) (A-H,O-Z)
+!    PARAMETER (TINY=1.0D-34)
+!    DIMENSION A(NP,NP),INDX(N),VV(N)
+!  
+!           D=1.D0
+!           DO 12 I=1,N
+!            AAMAX=0.D0
+!            DO 11 J=1,N
+!               IF(ABS(A(I,J)).GT.AAMAX) AAMAX=ABS(A(I,J))
+! 11         CONTINUE
+!            IF(AAMAX.EQ.0.) AAMX=1.d-22
+!            VV(I)=1.D0/AAMAX
+! 12           CONTINUE
+!             DO 19 J=1,N
+!            IF(J.GT.1) THEN
+!               DO 14 I=1,J-1
+!                  SUM=A(I,J)
+!                  IF(I.GT.1) THEN
+!                     DO 13 K=1,I-1
+!                        SUM=SUM-A(I,K)*A(K,J)
+! 13                  CONTINUE
+!                     A(I,J)=SUM
+!                  ENDIF
+! 14            CONTINUE
+!            ENDIF
+!            AAMAX=0.D0
+!            DO 16 I=J,N
+!               SUM=A(I,J)
+!               IF(J.GT.1) THEN
+!                  DO 15 K=1,J-1
+!                     SUM=SUM-A(I,K)*A(K,J)
+! 15               CONTINUE
+!                  A(I,J)=SUM
+!               ENDIF
+!               DUM=VV(I)*ABS(SUM)
+!               IF(DUM.GE.AAMAX) THEN
+!                  IMAX=I
+!                  AAMAX=DUM
+!               ENDIF
+! 16         CONTINUE
+!            IF(J.NE.IMAX) THEN
+!               DO 17 K=1,N
+!                  DUM=A(IMAX,K)
+!                  A(IMAX,K)=A(J,K)
+!                  A(J,K)=DUM
+! 17            CONTINUE
+!               D=-D
+!               VV(IMAX)=VV(J)
+!            ENDIF
+!            INDX(J)=IMAX
+!            IF(J.NE.N) THEN
+!              IF(A(J,J).EQ.0.) A(J,J)=TINY
+!              DUM=1./A(J,J)
+!              DO 18 I=J+1,N
+!                 A(I,J)=A(I,J)*DUM
+! 18           CONTINUE
+!            ENDIF
+! 19          CONTINUE
+!             IF(A(N,N).EQ.0.) A(N,N)=TINY
+!             RETURN
+!             END subroutine
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
@@ -3352,36 +3352,36 @@ end function
 ! Nom            : LUBKSB  
 ! Fonction       : Backsubstitution (pour l'inversion)
 ! Notes          : Provient de Numerical Recipes
-
-      SUBROUTINE LUBKSBd(A,N,NP,INDX,B)
-      INTEGER N,NP,INDX(N)
-      real(8) A(NP,NP),B(N)
-      INTEGER I,II,J,LL
-      real(8) SUM
-      II=0
-      DO I=1,N
-         LL=INDX(I)
-         SUM=B(LL)
-         B(LL)=B(I)
-         IF(II.NE.0) THEN
-            DO J=II,I-1
-               SUM=SUM-A(I,J)*B(J)
-            END DO
-         ELSE IF(SUM.NE.0) THEN
-            II=I
-         END IF
-         B(I)=SUM
-      END DO
-      DO I=N,1,-1
-         SUM=B(I)
-         DO J=I+1,N
-            SUM=SUM-A(I,J)*B(J)
-         END DO
-         B(I)=SUM/A(I,I)
-      END DO
-      RETURN
-      END subroutine
-
+! 
+!       SUBROUTINE LUBKSBd(A,N,NP,INDX,B)
+!       INTEGER N,NP,INDX(N)
+!       real(8) A(NP,NP),B(N)
+!       INTEGER I,II,J,LL
+!       real(8) SUM
+!       II=0
+!       DO I=1,N
+!          LL=INDX(I)
+!          SUM=B(LL)
+!          B(LL)=B(I)
+!          IF(II.NE.0) THEN
+!             DO J=II,I-1
+!                SUM=SUM-A(I,J)*B(J)
+!             END DO
+!          ELSE IF(SUM.NE.0) THEN
+!             II=I
+!          END IF
+!          B(I)=SUM
+!       END DO
+!       DO I=N,1,-1
+!          SUM=B(I)
+!          DO J=I+1,N
+!             SUM=SUM-A(I,J)*B(J)
+!          END DO
+!          B(I)=SUM/A(I,I)
+!       END DO
+!       RETURN
+!       END subroutine
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
@@ -3401,35 +3401,35 @@ end function
 ! Nom            : LUBKSB  
 ! Fonction       : Backsubstitution (pour l'inversion)
 ! Notes          : Provient de Numerical Recipes
-
-      SUBROUTINE LUBKSBq(A,N,NP,INDX,B)
-      INTEGER N,NP,INDX(N)
-      real(16) A(NP,NP),B(N)
-      INTEGER I,II,J,LL
-      real(16) SUM
-      II=0
-      DO I=1,N
-         LL=INDX(I)
-         SUM=B(LL)
-         B(LL)=B(I)
-         IF(II.NE.0) THEN
-            DO J=II,I-1
-               SUM=SUM-A(I,J)*B(J)
-            END DO
-         ELSE IF(SUM.NE.0) THEN
-            II=I
-         END IF
-         B(I)=SUM
-      END DO
-      DO I=N,1,-1
-         SUM=B(I)
-         DO J=I+1,N
-            SUM=SUM-A(I,J)*B(J)
-         END DO
-         B(I)=SUM/A(I,I)
-      END DO
-      RETURN
-      END subroutine
+! 
+!       SUBROUTINE LUBKSBq(A,N,NP,INDX,B)
+!       INTEGER N,NP,INDX(N)
+!       real(16) A(NP,NP),B(N)
+!       INTEGER I,II,J,LL
+!       real(16) SUM
+!       II=0
+!       DO I=1,N
+!          LL=INDX(I)
+!          SUM=B(LL)
+!          B(LL)=B(I)
+!          IF(II.NE.0) THEN
+!             DO J=II,I-1
+!                SUM=SUM-A(I,J)*B(J)
+!             END DO
+!          ELSE IF(SUM.NE.0) THEN
+!             II=I
+!          END IF
+!          B(I)=SUM
+!       END DO
+!       DO I=N,1,-1
+!          SUM=B(I)
+!          DO J=I+1,N
+!             SUM=SUM-A(I,J)*B(J)
+!          END DO
+!          B(I)=SUM/A(I,I)
+!       END DO
+!       RETURN
+!       END subroutine
 
 !**************************************************************************
 !**************************************************************************
@@ -4307,7 +4307,7 @@ end function
 
 function MATMUL_x_c(aa,bb,ind,n,IdL,IdR,byblock,a_by_block)
 implicit none
-integer                :: ii,i,j,k,l,s1,s2,smiddle
+integer                :: ii,i,j,k,s1,s2,smiddle
 complex(8),intent(in)  :: aa(:,:),bb(:,:)
 complex(8)             :: MATMUL_x_c(size(aa(:,1)),size(bb(1,:)))
 integer,optional       :: n,ind(:)
@@ -4417,7 +4417,7 @@ end function
 
 function MATMUL_x_r(aa,bb,ind,n,IdL,IdR,byblock,a_by_block)
 implicit none
-integer             :: ii,i,j,k,l,s1,s2,smiddle
+integer             :: ii,i,j,k,s1,s2,smiddle
 real(8),intent(in)  :: aa(:,:),bb(:,:)
 real(8)             :: MATMUL_x_r(size(aa(:,1)),size(bb(1,:)))
 integer,optional    :: n,ind(:)
@@ -4859,13 +4859,13 @@ end function
 
 subroutine eigenvector_matrix_c(lsize,mat,vaps,eigenvec)
 implicit none
-integer     :: lsize,i
+integer     :: lsize
 real(8)     :: RWORK(3*lsize)
 complex(8)  :: WORK(3*lsize)
 complex(8)  :: mat(lsize,lsize)
 complex(8)  :: eigenvec(lsize,lsize)
-complex(8)  :: rrr
-integer     :: INFO,order(lsize)
+integer     :: INFO
+! integer     :: order(lsize)
 real(8)     :: vaps(lsize)
 
    if(testing)then
@@ -4905,7 +4905,7 @@ real(8)     :: vaps(lsize)
  subroutine go_for_single_prec
  complex(4) :: mat_(lsize,lsize),eigenvec_(lsize,lsize)
  real(4)    :: vaps_(lsize)
-  mat_=mat
+  mat_=cmplx(mat, kind=4)
   call eigenvector_matrix(lsize,mat_,vaps_,eigenvec_)
   eigenvec=eigenvec_
   vaps=vaps_
@@ -4923,7 +4923,6 @@ integer                   :: lsize
 complex(8)                :: diagdenstemp(lsize),diagdens(lsize),mat(lsize,lsize),mat_temp(lsize,lsize)
 integer                   :: i
 integer                   :: uu(1),uuu(lsize),uuu_not_placed(lsize),j,k
-real(8)                   :: dist(lsize)
 
  uuu=0
  uuu_not_placed=0
@@ -4966,7 +4965,6 @@ integer                   :: lsize
 real(8)                   :: diagdenstemp(lsize),diagdens(lsize),mat(lsize,lsize),mat_temp(lsize,lsize)
 integer                   :: i
 integer                   :: uu(1),uuu(lsize),uuu_not_placed(lsize),j,k
-real(8)                   :: dist(lsize)
 
  uuu=0
  uuu_not_placed=0
@@ -5005,13 +5003,12 @@ end subroutine
 
 subroutine eigenvector_matrix_c_(lsize,mat,vaps,eigenvec,symmetric)
 implicit none
-integer                   :: lsize,i
+integer                   :: lsize
 real(8)                   :: RWORK(3*lsize)
 complex(8)                :: WORK(3*lsize)
 complex(8)                :: mat(lsize,lsize)
 complex(8)                :: mat_temp(lsize,lsize)
 complex(8)                :: eigenvec(lsize,lsize),temp(lsize,1)
-complex(8)                :: rrr
 integer                   :: INFO,n
 complex(8)                :: vaps(lsize)
 logical,optional          :: symmetric
@@ -5043,13 +5040,13 @@ end subroutine
 
 subroutine eigenvector_matrix_cc(lsize,mat,vaps,eigenvec)
 implicit none
-integer                   :: lsize,i
+integer                   :: lsize
 real(4)                   :: RWORK(3*lsize),W(lsize)
 complex(4)                :: WORK(3*lsize)
 complex(4)                :: mat(lsize,lsize)
 complex(4)                :: eigenvec(lsize,lsize)
-complex(4)                :: rrr
-integer                   :: INFO,order(lsize)
+integer                   :: INFO
+! integer     :: order(lsize)
 real(4)                   :: vaps(lsize)
 
    if(testing)then
@@ -5083,12 +5080,11 @@ end subroutine
 
 subroutine eigenvector_matrix_cc_(lsize,mat,vaps,eigenvec)
 implicit none
-integer                   :: lsize,i
+integer                   :: lsize
 real(4)                   :: RWORK(3*lsize)
 complex(4)                :: WORK(3*lsize)
 complex(4)                :: mat_temp(lsize,lsize),mat(lsize,lsize),temp(lsize,1)
 complex(4)                :: eigenvec(lsize,lsize)
-complex(4)                :: rrr
 integer                   :: INFO
 complex(4)                :: vaps(lsize)
    mat_temp=mat
@@ -5099,13 +5095,13 @@ end subroutine
 
 subroutine eigenvector_matrix_r(lsize,mat,vaps,eigenvec)
 implicit none
-integer                   :: lsize,i
-real(8)                   :: WORK(3*lsize),RWORK(3*lsize)
+integer                   :: lsize
+real(8)                   :: WORK(3*lsize)
 real(8)                   :: mat(lsize,lsize)
 real(8)                   :: eigenvec(lsize,lsize)
-real(8)                   :: rrr
-integer                   :: INFO,order(lsize)
-real(8)                   :: vaps(lsize),temp(1,lsize)
+integer                   :: INFO
+! integer                   :: order(lsize)
+real(8)                   :: vaps(lsize)
 
    if(lsize<1) stop 'error eigenvector_matrix, 0 dim'
 
@@ -5146,7 +5142,7 @@ real(8)                   :: vaps(lsize),temp(1,lsize)
  subroutine go_for_single_prec
  real(4)    :: mat_(lsize,lsize),eigenvec_(lsize,lsize)
  real(4)    :: vaps_(lsize)
-  mat_=mat
+  mat_=real(mat, kind=4)
   call eigenvector_matrix(lsize,mat_,vaps_,eigenvec_)
   eigenvec=eigenvec_
   vaps=vaps_
@@ -5161,11 +5157,10 @@ end subroutine
 
 subroutine eigenvector_matrix_rc(lsize,mat,vaps,eigenvec)
 implicit none
-integer                   :: lsize,i
+integer                   :: lsize
 real(8)                   :: WORK(3*lsize),RWORK(3*lsize)
 real(8)                   :: mat(lsize,lsize)
 real(8)                   :: eigenvec(lsize,lsize)
-real(8)                   :: rrr
 integer                   :: INFO
 complex(8)                :: vaps(lsize)
 real(8)                   :: temp(1,lsize),vl(lsize),vr(lsize)
@@ -5180,12 +5175,12 @@ end subroutine
 
 subroutine eigenvector_matrix_rr(lsize,mat,vaps,eigenvec)
 implicit none
-integer                   :: lsize,i
-real(4)                   :: WORK(3*lsize),RWORK(3*lsize)
+integer                   :: lsize
+real(4)                   :: WORK(3*lsize)
 real(4)                   :: mat(lsize,lsize)
 real(4)                   :: eigenvec(lsize,lsize)
-real(4)                   :: rrr
-integer                   :: INFO,order(lsize)
+integer                   :: INFO
+! integer                   :: order(lsize)
 real(4)                   :: vaps(lsize)
 
    if(lsize<1) stop 'error eigenvector_matrix, 0 dim'
@@ -5219,17 +5214,16 @@ end subroutine
 
 subroutine eigenvector_matrix_rrc(lsize,mat,vaps,eigenvec)
 implicit none
-integer                   :: lsize,i
+integer                   :: lsize
 real(4)                   :: WORK(3*lsize),RWORK(3*lsize)
 real(4)                   :: mat(lsize,lsize)
 real(4)                   :: eigenvec(lsize,lsize)
-real(4)                   :: rrr
 integer                   :: INFO
 complex(4)                :: vaps(lsize)
 real(4)                   :: temp(lsize,1),vl(lsize),vr(lsize)
    if(.not.same_array(mat,eigenvec))eigenvec=mat
    call SGEEV('N','V', lsize, mat, lsize, vl, vr, temp, 1, eigenvec, lsize, WORK, 3*lsize, RWORK, INFO )
-   vaps=vl+imi*vr
+   vaps=cmplx(vl+imi*vr, kind=4)
 end subroutine
 
   !--------------------------------------------------!
@@ -5751,176 +5745,176 @@ end subroutine
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-      subroutine rescale_c(detphi,detphi2,dpdet)
-      implicit none
-       integer,intent(inout)    :: dpdet
-       real(8),intent(inout)     :: detphi
-       complex(8),intent(inout) :: detphi2
-       real(8)                   :: rdet
-
-        rdet=abs(detphi2)
-        if(rdet>1.d-8)then
-         detphi2=detphi2/rdet
-         detphi=detphi*rdet
-        else
-         detphi2=1.
-         detphi=detphi*rdet 
-        endif         
-        
-        if(detphi==0.) goto 112
-  97    continue
-        if (abs(detphi)<=1.d0) goto 102
-        detphi = detphi/16.d0
-        dpdet = dpdet + 4
-        goto 97
-  102   continue
-        if (abs(detphi)>=(1.d0/16.d0)) goto 112
-        detphi = detphi * 16.d0
-        dpdet = dpdet - 4
-        goto 102
-  112   continue
-      end subroutine
-
+! 
+!       subroutine rescale_c(detphi,detphi2,dpdet)
+!       implicit none
+!        integer,intent(inout)    :: dpdet
+!        real(8),intent(inout)     :: detphi
+!        complex(8),intent(inout) :: detphi2
+!        real(8)                   :: rdet
+! 
+!         rdet=abs(detphi2)
+!         if(rdet>1.d-8)then
+!          detphi2=detphi2/rdet
+!          detphi=detphi*rdet
+!         else
+!          detphi2=1.
+!          detphi=detphi*rdet 
+!         endif         
+!         
+!         if(detphi==0.) goto 112
+!   97    continue
+!         if (abs(detphi)<=1.d0) goto 102
+!         detphi = detphi/16.d0
+!         dpdet = dpdet + 4
+!         goto 97
+!   102   continue
+!         if (abs(detphi)>=(1.d0/16.d0)) goto 112
+!         detphi = detphi * 16.d0
+!         dpdet = dpdet - 4
+!         goto 102
+!   112   continue
+!       end subroutine
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-      subroutine rescale_c3(detphi,detphi2,dpdet)
-      implicit none
-       integer,intent(inout)     :: dpdet
-       real(4),intent(inout)     :: detphi
-       complex(4),intent(inout)  :: detphi2
-       real(4)                   :: rdet
-        rdet=abs(detphi2)
-        if(rdet>1.d-8)then
-         detphi2=detphi2/rdet
-         detphi=detphi*rdet
-        else
-         detphi2=1.
-         detphi=detphi*rdet
-        endif
-        if(detphi==0.) goto 112
-  97    continue
-        if (abs(detphi)<=1.d0) goto 102
-        detphi = detphi/16.d0
-        dpdet = dpdet + 4
-        goto 97
-  102   continue
-        if (abs(detphi)>=(1.d0/16.d0)) goto 112
-        detphi = detphi * 16.d0
-        dpdet = dpdet - 4
-        goto 102
-  112   continue
-      end subroutine
-
+! 
+!       subroutine rescale_c3(detphi,detphi2,dpdet)
+!       implicit none
+!        integer,intent(inout)     :: dpdet
+!        real(4),intent(inout)     :: detphi
+!        complex(4),intent(inout)  :: detphi2
+!        real(4)                   :: rdet
+!         rdet=abs(detphi2)
+!         if(rdet>1.d-8)then
+!          detphi2=detphi2/rdet
+!          detphi=detphi*rdet
+!         else
+!          detphi2=1.
+!          detphi=detphi*rdet
+!         endif
+!         if(detphi==0.) goto 112
+!   97    continue
+!         if (abs(detphi)<=1.0) goto 102
+!         detphi = detphi/16.0
+!         dpdet = dpdet + 4
+!         goto 97
+!   102   continue
+!         if (abs(detphi)>=(1.0/16.0)) goto 112
+!         detphi = detphi * 16.0
+!         dpdet = dpdet - 4
+!         goto 102
+!   112   continue
+!       end subroutine
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-      subroutine rescale_r3(detphi,dpdet)
-      implicit none
-      integer,intent(inout) :: dpdet
-      real(4),intent(inout)  :: detphi
-        if(detphi==0.) goto 112
-  97    continue
-        if (abs(detphi)<=1.d0) goto 102
-        detphi = detphi/16.d0
-        dpdet = dpdet + 4
-        goto 97
-  102   continue
-        if (abs(detphi)>=(1.d0/16.d0)) goto 112
-        detphi = detphi * 16.d0
-        dpdet = dpdet - 4
-        goto 102
-  112   continue
-      end subroutine
-
+! 
+!       subroutine rescale_r3(detphi,dpdet)
+!       implicit none
+!       integer,intent(inout) :: dpdet
+!       real(4),intent(inout)  :: detphi
+!         if(detphi==0.) goto 112
+!   97    continue
+!         if (abs(detphi)<=1.0) goto 102
+!         detphi = detphi/16.0
+!         dpdet = dpdet + 4
+!         goto 97
+!   102   continue
+!         if (abs(detphi)>=(1.0/16.0)) goto 112
+!         detphi = detphi * 16.0
+!         dpdet = dpdet - 4
+!         goto 102
+!   112   continue
+!       end subroutine
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-      subroutine rescale_r(detphi,dpdet)
-      implicit none
-      integer,intent(inout) :: dpdet
-      real(8),intent(inout)  :: detphi
-        if(detphi==0.) goto 112
-  97    continue
-        if (abs(detphi)<=1.d0) goto 102
-        detphi = detphi/16.d0
-        dpdet = dpdet + 4
-        goto 97
-  102   continue
-        if (abs(detphi)>=(1.d0/16.d0)) goto 112
-        detphi = detphi * 16.d0
-        dpdet = dpdet - 4
-        goto 102
-  112   continue
-      end subroutine
-
+! 
+!       subroutine rescale_r(detphi,dpdet)
+!       implicit none
+!       integer,intent(inout) :: dpdet
+!       real(8),intent(inout)  :: detphi
+!         if(detphi==0.) goto 112
+!   97    continue
+!         if (abs(detphi)<=1.d0) goto 102
+!         detphi = detphi/16.d0
+!         dpdet = dpdet + 4
+!         goto 97
+!   102   continue
+!         if (abs(detphi)>=(1.d0/16.d0)) goto 112
+!         detphi = detphi * 16.d0
+!         dpdet = dpdet - 4
+!         goto 102
+!   112   continue
+!       end subroutine
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-      subroutine rescale_c2(detphi,detphi2,dpdet)
-      implicit none
-       integer,intent(inout)    :: dpdet
-       real(16),intent(inout)   :: detphi
-       complex(16),intent(inout):: detphi2
-       real(16)                 :: rdet
-
-        rdet=abs(detphi2)
-        if(rdet>1.d-22)then
-         detphi2=detphi2/rdet
-         detphi=detphi*rdet
-        else
-         detphi2=1.d0
-         detphi=detphi*rdet
-        endif
-
-        if(abs(detphi)<1.d-24) goto 112
-  97    continue
-        if (abs(detphi)<=1.d0) goto 102
-        detphi = detphi/16.d0
-        dpdet = dpdet + 4
-        goto 97
-  102   continue
-        if (abs(detphi)>=(1.d0/16.d0)) goto 112
-        detphi = detphi * 16.d0
-        dpdet = dpdet - 4
-        goto 102
-  112   continue
-
-      end subroutine
-
+! 
+!       subroutine rescale_c2(detphi,detphi2,dpdet)
+!       implicit none
+!        integer,intent(inout)    :: dpdet
+!        real(16),intent(inout)   :: detphi
+!        complex(16),intent(inout):: detphi2
+!        real(16)                 :: rdet
+! 
+!         rdet=abs(detphi2)
+!         if(rdet>1.d-22)then
+!          detphi2=detphi2/rdet
+!          detphi=detphi*rdet
+!         else
+!          detphi2=1.d0
+!          detphi=detphi*rdet
+!         endif
+! 
+!         if(abs(detphi)<1.d-24) goto 112
+!   97    continue
+!         if (abs(detphi)<=1.d0) goto 102
+!         detphi = detphi/16.d0
+!         dpdet = dpdet + 4
+!         goto 97
+!   102   continue
+!         if (abs(detphi)>=(1.d0/16.d0)) goto 112
+!         detphi = detphi * 16.d0
+!         dpdet = dpdet - 4
+!         goto 102
+!   112   continue
+! 
+!       end subroutine
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-      subroutine rescale_r2(detphi,dpdet)
-      implicit none
-      integer,intent(inout) :: dpdet
-      real(16),intent(inout):: detphi
-        if(abs(detphi)<1.d-22) goto 112
-  97    continue
-        if (abs(detphi)<=1.d0) goto 102
-        detphi = detphi/16.d0
-        dpdet = dpdet + 4
-        goto 97
-  102   continue
-        if (abs(detphi)>=(1.d0/16.d0)) goto 112
-        detphi = detphi * 16.d0
-        dpdet = dpdet - 4
-        goto 102
-  112   continue
-      end subroutine
-
+! 
+!       subroutine rescale_r2(detphi,dpdet)
+!       implicit none
+!       integer,intent(inout) :: dpdet
+!       real(16),intent(inout):: detphi
+!         if(abs(detphi)<1.d-22) goto 112
+!   97    continue
+!         if (abs(detphi)<=1.d0) goto 102
+!         detphi = detphi/16.d0
+!         dpdet = dpdet + 4
+!         goto 97
+!   102   continue
+!         if (abs(detphi)>=(1.d0/16.d0)) goto 112
+!         detphi = detphi * 16.d0
+!         dpdet = dpdet - 4
+!         goto 102
+!   112   continue
+!       end subroutine
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
@@ -7636,7 +7630,7 @@ end subroutine
 
 subroutine QR_decomp(L,R,matin,Qmat,Rmat)
 implicit none
-integer               :: L,R,INFO,i,j,k
+integer               :: L,R,INFO,i,j
 complex(8),intent(in) :: matin(L,R)
 complex(8),intent(out):: Qmat(L,R),Rmat(R,R)
 complex(8)            :: mat2(L,R),TAU(R)
@@ -7672,31 +7666,31 @@ end subroutine
 ! Notes           : A -> A^(-1)=AI
 !                   Provient de Numerical Recipes, p.40.
 ! Dependances     : LUDCMP,LUBKSB (externes)
-
-     SUBROUTINE Q_INVMG(NP,NM,A)
-     IMPLICIT NONE
-     REAL(16)                                   :: D     
-     INTEGER                                    :: I,J    
-     INTEGER,INTENT(IN)                         :: NP,NM
-     INTEGER,DIMENSION (NP)                     :: INDX  
-     REAL(16),DIMENSION (NP,NP)                 :: Y   
-     REAL(16),DIMENSION (NP,NP),INTENT(INOUT)   :: A
-
-     DO I=1,NM
-        DO J=1,NM
-           Y(I,J)=0.D0
-        END DO
-        Y(I,I)=1.D0
-     END DO
-     CALL Q_LUDCMP(A,NM,NP,INDX,D)
-     DO J=1,NM
-        CALL Q_LUBKSB(A,NM,NP,INDX,Y(1,J))
-     END DO
-     A=Y
-
-     END SUBROUTINE
-
-
+! 
+!      SUBROUTINE Q_INVMG(NP,NM,A)
+!      IMPLICIT NONE
+!      REAL(16)                                   :: D     
+!      INTEGER                                    :: I,J    
+!      INTEGER,INTENT(IN)                         :: NP,NM
+!      INTEGER,DIMENSION (NP)                     :: INDX  
+!      REAL(16),DIMENSION (NP,NP)                 :: Y   
+!      REAL(16),DIMENSION (NP,NP),INTENT(INOUT)   :: A
+! 
+!      DO I=1,NM
+!         DO J=1,NM
+!            Y(I,J)=0.D0
+!         END DO
+!         Y(I,I)=1.D0
+!      END DO
+!      CALL Q_LUDCMP(A,NM,NP,INDX,D)
+!      DO J=1,NM
+!         CALL Q_LUBKSB(A,NM,NP,INDX,Y(1,J))
+!      END DO
+!      A=Y
+! 
+!      END SUBROUTINE
+! 
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
@@ -7709,70 +7703,70 @@ end subroutine
 ! Nom            : LUDCMP 
 ! Fonction       : Decomposition gaussienne A = LU
 ! Notes          : Provient entierement de Numerical Recipes
-
-   SUBROUTINE Q_LUDCMP(A,N,NP,INDX,D)
-   IMPLICIT REAL(16) (A-H,O-Z)
-   PARAMETER (TINY=1.0D-20)
-   DIMENSION A(NP,NP),INDX(N),VV(N)
- 
-          D=1.D0
-          DO 12 I=1,N
-           AAMAX=0.D0
-           DO 11 J=1,N
-              IF(ABS(A(I,J)).GT.AAMAX) AAMAX=ABS(A(I,J))
-11         CONTINUE
-           IF(AAMAX.EQ.0.) AAMX=1.d-22
-           VV(I)=1.D0/AAMAX
-12           CONTINUE
-            DO 19 J=1,N
-           IF(J.GT.1) THEN
-              DO 14 I=1,J-1
-                 SUM=A(I,J)
-                 IF(I.GT.1) THEN
-                    DO 13 K=1,I-1
-                       SUM=SUM-A(I,K)*A(K,J)
-13                  CONTINUE
-                    A(I,J)=SUM
-                 ENDIF
-14            CONTINUE
-           ENDIF
-           AAMAX=0.D0
-           DO 16 I=J,N
-              SUM=A(I,J)
-              IF(J.GT.1) THEN
-                 DO 15 K=1,J-1
-                    SUM=SUM-A(I,K)*A(K,J)
-15               CONTINUE
-                 A(I,J)=SUM
-              ENDIF
-              DUM=VV(I)*ABS(SUM)
-              IF(DUM.GE.AAMAX) THEN
-                 IMAX=I
-                 AAMAX=DUM
-              ENDIF
-16         CONTINUE
-           IF(J.NE.IMAX) THEN
-              DO 17 K=1,N
-                 DUM=A(IMAX,K)
-                 A(IMAX,K)=A(J,K)
-                 A(J,K)=DUM
-17            CONTINUE
-              D=-D
-              VV(IMAX)=VV(J)
-           ENDIF
-           INDX(J)=IMAX
-           IF(J.NE.N) THEN
-             IF(A(J,J).EQ.0.) A(J,J)=TINY
-             DUM=1./A(J,J)
-             DO 18 I=J+1,N
-                A(I,J)=A(I,J)*DUM
-18           CONTINUE
-           ENDIF
-19          CONTINUE
-            IF(A(N,N).EQ.0.) A(N,N)=TINY
-
-            RETURN
-            END subroutine
+! 
+!    SUBROUTINE Q_LUDCMP(A,N,NP,INDX,D)
+!    IMPLICIT REAL(16) (A-H,O-Z)
+!    PARAMETER (TINY=1.0D-20)
+!    DIMENSION A(NP,NP),INDX(N),VV(N)
+!  
+!           D=1.D0
+!           DO 12 I=1,N
+!            AAMAX=0.D0
+!            DO 11 J=1,N
+!               IF(ABS(A(I,J)).GT.AAMAX) AAMAX=ABS(A(I,J))
+! 11         CONTINUE
+!            IF(AAMAX.EQ.0.) AAMX=1.d-22
+!            VV(I)=1.D0/AAMAX
+! 12           CONTINUE
+!             DO 19 J=1,N
+!            IF(J.GT.1) THEN
+!               DO 14 I=1,J-1
+!                  SUM=A(I,J)
+!                  IF(I.GT.1) THEN
+!                     DO 13 K=1,I-1
+!                        SUM=SUM-A(I,K)*A(K,J)
+! 13                  CONTINUE
+!                     A(I,J)=SUM
+!                  ENDIF
+! 14            CONTINUE
+!            ENDIF
+!            AAMAX=0.D0
+!            DO 16 I=J,N
+!               SUM=A(I,J)
+!               IF(J.GT.1) THEN
+!                  DO 15 K=1,J-1
+!                     SUM=SUM-A(I,K)*A(K,J)
+! 15               CONTINUE
+!                  A(I,J)=SUM
+!               ENDIF
+!               DUM=VV(I)*ABS(SUM)
+!               IF(DUM.GE.AAMAX) THEN
+!                  IMAX=I
+!                  AAMAX=DUM
+!               ENDIF
+! 16         CONTINUE
+!            IF(J.NE.IMAX) THEN
+!               DO 17 K=1,N
+!                  DUM=A(IMAX,K)
+!                  A(IMAX,K)=A(J,K)
+!                  A(J,K)=DUM
+! 17            CONTINUE
+!               D=-D
+!               VV(IMAX)=VV(J)
+!            ENDIF
+!            INDX(J)=IMAX
+!            IF(J.NE.N) THEN
+!              IF(A(J,J).EQ.0.) A(J,J)=TINY
+!              DUM=1./A(J,J)
+!              DO 18 I=J+1,N
+!                 A(I,J)=A(I,J)*DUM
+! 18           CONTINUE
+!            ENDIF
+! 19          CONTINUE
+!             IF(A(N,N).EQ.0.) A(N,N)=TINY
+! 
+!             RETURN
+!             END subroutine
 
 !**************************************************************************
 !**************************************************************************
@@ -7793,35 +7787,35 @@ end subroutine
 ! Nom            : LUBKSB  
 ! Fonction       : Backsubstitution (pour l'inversion)
 ! Notes          : Provient de Numerical Recipes
-
-      SUBROUTINE Q_LUBKSB(A,N,NP,INDX,B)
-      INTEGER N,NP,INDX(N)
-      REAL(16) A(NP,NP),B(N)
-      INTEGER I,II,J,LL
-      REAL(16) SUM
-      II=0
-      DO I=1,N
-         LL=INDX(I)
-         SUM=B(LL)
-         B(LL)=B(I)
-         IF(II.NE.0) THEN
-            DO J=II,I-1
-               SUM=SUM-A(I,J)*B(J)
-            END DO
-         ELSE IF(SUM.NE.0) THEN
-            II=I
-         END IF
-         B(I)=SUM
-      END DO
-      DO I=N,1,-1
-         SUM=B(I)
-         DO J=I+1,N
-            SUM=SUM-A(I,J)*B(J)
-         END DO
-         B(I)=SUM/A(I,I)
-      END DO
-      RETURN
-      END subroutine
+! 
+!       SUBROUTINE Q_LUBKSB(A,N,NP,INDX,B)
+!       INTEGER N,NP,INDX(N)
+!       REAL(16) A(NP,NP),B(N)
+!       INTEGER I,II,J,LL
+!       REAL(16) SUM
+!       II=0
+!       DO I=1,N
+!          LL=INDX(I)
+!          SUM=B(LL)
+!          B(LL)=B(I)
+!          IF(II.NE.0) THEN
+!             DO J=II,I-1
+!                SUM=SUM-A(I,J)*B(J)
+!             END DO
+!          ELSE IF(SUM.NE.0) THEN
+!             II=I
+!          END IF
+!          B(I)=SUM
+!       END DO
+!       DO I=N,1,-1
+!          SUM=B(I)
+!          DO J=I+1,N
+!             SUM=SUM-A(I,J)*B(J)
+!          END DO
+!          B(I)=SUM/A(I,I)
+!       END DO
+!       RETURN
+!       END subroutine
 
 !**************************************************************************
 !**************************************************************************
@@ -8893,9 +8887,9 @@ end subroutine
     INTEGER :: i,N_
     N_ = SIZE(Id,1)
     IF(PRESENT(N)) N_ = N
-    Id = zero
+    Id = 0.0_DBL
     DO i=1,N_
-      Id(i,i) = one
+      Id(i,i) = 1.0_DBL
     ENDDO
   END SUBROUTINE 
 

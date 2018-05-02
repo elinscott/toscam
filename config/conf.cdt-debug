@@ -1,0 +1,9 @@
+# Configuration file for Cambridge CDT laptop
+F90       = mpif90
+FFLAGS    = -fopenmp -O0 -g -DDEBUG -fbacktrace -fcheck=all -Wall -Wextra
+MKL       = -lblas -llapack -lgomp
+CCOMPL    = mpicc
+CFLAGS    = -O0
+C++       = mpic++
+CXXFLAGS  = -O0
+RANLIB    = ranlib

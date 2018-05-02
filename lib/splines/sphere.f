@@ -314,7 +314,7 @@ c  ..array arguments..
       integer iwrk(kwrk)
 c  ..local scalars..
       real tol,pi,pi2,one
-      integer i,ib1,ib3,ki,kn,kwest,la,lbt,lcc,lcs,lro,j
+      integer i,ib1,ib3,ki,kn,kwest,la,lbt,lcc,lcs,lro,j,
      * lbp,lco,lf,lff,lfp,lh,lq,lst,lsp,lwest,maxit,ncest,ncc,ntt,
      * npp,nreg,nrint,ncof,nt4,np4
 c  ..function references..

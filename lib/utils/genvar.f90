@@ -3,6 +3,8 @@ module genvar
  use mpi
  use openmpmod
 
+ implicit none
+
 !include 'mpif.h'  --> FOR BG/L
 
 
@@ -80,9 +82,9 @@ CHARACTER(LEN=2),DIMENSION(2),PARAMETER :: ccspin = (/"up","do"/)
 
 CHARACTER(LEN=9), PARAMETER             :: BOSONIC    = 'BOSONIC  '
 CHARACTER(LEN=9), PARAMETER             :: FERMIONIC  = 'FERMIONIC'
-CHARACTER(LEN=9), PARAMETER             :: MATSUBARA  = 'MATSUBARA '
-CHARACTER(LEN=9), PARAMETER             :: RETARDED   = 'RETARDED  '
-CHARACTER(LEN=9), PARAMETER             :: ADVANCED   = 'ADVANCED  '
+CHARACTER(LEN=9), PARAMETER             :: MATSUBARA  = 'MATSUBARA'
+CHARACTER(LEN=9), PARAMETER             :: RETARDED   = 'RETARDED '
+CHARACTER(LEN=9), PARAMETER             :: ADVANCED   = 'ADVANCED '
 
 !******************************************************************
 

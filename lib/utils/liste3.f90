@@ -96,15 +96,15 @@
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
-  subroutine sweep_list
-   if(verbose) write(*,*) 'there are ... elements in list : ', cur%itot
-   do while(cur%istart==1)
-        if(verbose) write(*,*) cur%a
-        cur => cur%prev
-   enddo
-  end subroutine
-
+! 
+!   subroutine sweep_list
+!    if(verbose) write(*,*) 'there are ... elements in list : ', cur%itot
+!    do while(cur%istart==1)
+!         if(verbose) write(*,*) cur%a
+!         cur => cur%prev
+!    enddo
+!   end subroutine
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
@@ -179,41 +179,41 @@
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
-
- subroutine test_list3
- integer :: i
- real(8) :: final_vec(20)
-
- call initialize_list
-
- do i=1,10
-  write(*,*) 'add an element'
-  call add_to_list(dble(i),i+rank*10)
- enddo
-
- call mpi_reduce_list(final_vec)
- write(*,*) 'final vec : ', final_vec 
- write(*,*) ' kill list ... '
- write(*,*) 'done'
-
- call initialize_list
-
- do i=1,10
-  write(*,*) 'add an element'
-  call add_to_list(dble(i),i+rank*10)
- enddo
-
- call mpi_reduce_list(final_vec)
- write(*,*) 'final vec : ', final_vec
- 
-call MPI_FINALIZE(ierr)
- stop
-
-
-
- end subroutine
-
-
+! 
+!  subroutine test_list3
+!  integer :: i
+!  real(8) :: final_vec(20)
+! 
+!  call initialize_list
+! 
+!  do i=1,10
+!   write(*,*) 'add an element'
+!   call add_to_list(dble(i),i+rank*10)
+!  enddo
+! 
+!  call mpi_reduce_list(final_vec)
+!  write(*,*) 'final vec : ', final_vec 
+!  write(*,*) ' kill list ... '
+!  write(*,*) 'done'
+! 
+!  call initialize_list
+! 
+!  do i=1,10
+!   write(*,*) 'add an element'
+!   call add_to_list(dble(i),i+rank*10)
+!  enddo
+! 
+!  call mpi_reduce_list(final_vec)
+!  write(*,*) 'final vec : ', final_vec
+!  
+! call MPI_FINALIZE(ierr)
+!  stop
+! 
+! 
+! 
+!  end subroutine
+! 
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************

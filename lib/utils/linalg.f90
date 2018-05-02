@@ -214,15 +214,15 @@ END INTERFACE
 ! END INTERFACE
  !---------------------------------------------------!
 interface
- logical function disnan(x)
-  real(8) :: x
- end function
+!  logical function disnan(x)
+!   real(8) :: x
+!  end function
  logical function disinf(x)
   real(8) :: x
  end function
- logical function isnan(x)
-  real(4) :: x
- end function
+!  logical function isnan(x)
+!   real(4) :: x
+!  end function
  logical function isinf(x)
   real(4) :: x
  end function
@@ -579,7 +579,7 @@ end subroutine
    dd=10._16*dd
   enddo
   pp =  ANINT ( dd*rr ) / dd
-  floor_r = pp
+  floor_r = real(pp, kind=8)
  end function
 
    !-----------------------------!
@@ -587,7 +587,6 @@ end subroutine
  pure complex(8) function floor_c(rr,i)
  implicit none
  integer,intent(in)    :: i
- integer               :: ii
  complex(8),intent(in) :: rr
   floor_c= floor_r(real(rr),i) + imi * floor_r(aimag(rr),i)
  end function
@@ -738,7 +737,7 @@ end subroutine
    20 do 30 i = 1,n
         tt=zy(i)+za*zx(i)
         if(abs(tt)<MAX_REAL)then
-         zy(i)=tt
+         zy(i)=cmplx(tt, kind=8)
         else
          zy(i)=MAX_REAL
         endif
@@ -802,7 +801,7 @@ end subroutine
    10 CONTINUE 
 
       if(abs(tt)<MAX_REAL)then
-       ZDOT_ = tt
+       ZDOT_ = cmplx(tt, kind=8)
       else
        ZDOT_ = MAX_REAL
       endif
@@ -813,7 +812,7 @@ end subroutine
    30 CONTINUE
 
       if(abs(tt)<MAX_REAL)then
-      ZDOT_ = tt
+      ZDOT_ = cmplx(tt, kind=8)
       else
       ZDOT_ = MAX_REAL
       endif
@@ -827,7 +826,7 @@ end subroutine
       implicit none
       INTEGER          :: N
       COMPLEX(8)       :: ZX(*)
-      INTEGER          :: I,IX,J
+      INTEGER          :: I,J
       REAL(8),SAVE     :: t
       real(16)         :: tt
 
@@ -840,7 +839,7 @@ end subroutine
            tt = tt + ABS(real(ZX(I),kind=8)) + ABS(aimag(ZX(I)))
        enddo 
        if(abs(tt)<MAX_REAL)then
-        ZSUM__=tt
+        ZSUM__=real(tt, kind=8)
        else
         ZSUM__= MAX_REAL
        endif
@@ -854,7 +853,7 @@ end subroutine
       COMPLEX(16)    :: ZX(*)
       REAL(16)       :: ZSUM_
       REAL(16),SAVE  :: t
-      INTEGER I,IX
+      INTEGER I
        if(J>0) then
         ZSUM_=t 
         return
@@ -1370,7 +1369,7 @@ end function
  subroutine reverse_array____(vec)
  implicit none
  real(8) :: vec(:)
- integer :: i,j,mid,k    
+ integer :: i,mid,k    
  k=size(vec)
  if(mod(k,2)==0)then
   mid=k/2          
@@ -1386,7 +1385,7 @@ end function
  subroutine reverse_array_(vec)
  implicit none
  complex(8) :: vec(:)
- integer    :: i,j,mid,k
+ integer    :: i,mid,k
  k=size(vec)
  if(mod(k,2)==0)then
   mid=k/2
@@ -1402,7 +1401,7 @@ end function
  subroutine reverse_array__(vec)
  implicit none
  real(4)    :: vec(:)
- integer    :: i,j,mid,k
+ integer    :: i, mid, k
  k=size(vec)
  if(mod(k,2)==0)then
   mid=k/2
@@ -1418,7 +1417,7 @@ end function
  subroutine reverse_array___(vec)
  implicit none
  integer(4) :: vec(:)
- integer    :: i,j,mid,k
+ integer    :: i, mid, k
  k=size(vec)
  if(mod(k,2)==0)then
   mid=k/2
@@ -2595,14 +2594,14 @@ end function
 ! 
 logical function ISNANR(x)
  real(8) :: x
- ISNANR=disnan(x)
+ ISNANR=isnan(x)
 end function
 
 logical function ISNANC(x)
  complex(8) :: x
- ISNANC=disnan(REAL(x))
+ ISNANC=isnan(REAL(x))
  if(ISNANC) return
- ISNANC=disnan(aimag(x))
+ ISNANC=isnan(aimag(x))
 end function
  
 logical function ISINFR(x)
@@ -2966,29 +2965,25 @@ end subroutine
 subroutine rerase_divergence_scal(vec)
 implicit none
 real(8)::vec
-integer ::i
-if(disnan(vec).or.disinf(vec)) vec=0
+if(isnan(vec).or.disinf(vec)) vec=0
 end subroutine
 
 subroutine rrerase_divergence_scal(vec)
 implicit none
 real::vec
-integer ::i
-if(disnan(dble(vec)).or.disinf(dble(vec))) vec=0
+if(isnan(dble(vec)).or.disinf(dble(vec))) vec=0
 end subroutine
 
 subroutine ierase_divergence_scal(vec)
 implicit none
 integer::vec
-integer ::i
-if(disnan(dble(vec)).or.disinf(dble(vec))) vec=0
+if(isnan(dble(vec)).or.disinf(dble(vec))) vec=0
 end subroutine
 
 subroutine cerase_divergence_scal(vec)
 implicit none
 complex(8)::vec
-integer ::i
-if(disnan(real(vec)).or.disnan(aimag(vec)).or.disinf(real(vec)).or.disinf(aimag(vec))) vec=0
+if(isnan(real(vec)).or.isnan(aimag(vec)).or.disinf(real(vec)).or.disinf(aimag(vec))) vec=0
 end subroutine
 
 subroutine rerase_divergence_vec(vec)
@@ -2996,7 +2991,7 @@ implicit none
 real(8)::vec(:)
 integer ::i
 do i=1,size(vec)
- if(disnan(vec(i)).or.disinf(vec(i))) vec(i)=0
+ if(isnan(vec(i)).or.disinf(vec(i))) vec(i)=0
 enddo
 end subroutine
 
@@ -3005,7 +3000,7 @@ implicit none
 real::vec(:)
 integer ::i
 do i=1,size(vec)
- if(disnan(dble(vec(i))).or.disinf(dble(vec(i)))) vec(i)=0
+ if(isnan(dble(vec(i))).or.disinf(dble(vec(i)))) vec(i)=0
 enddo
 end subroutine
 
@@ -3015,7 +3010,7 @@ real(8)::mat(:,:)
 integer ::i,j
 do i=1,size(mat(:,1))
  do j=1,size(mat(1,:))
-  if(disnan(mat(i,j)).or.disinf(mat(i,j))) mat(i,j)=0
+  if(isnan(mat(i,j)).or.disinf(mat(i,j))) mat(i,j)=0
  enddo
 enddo
 end subroutine
@@ -3026,7 +3021,7 @@ real::mat(:,:)
 integer ::i,j
 do i=1,size(mat(:,1))
  do j=1,size(mat(1,:))
-  if(disnan(dble(mat(i,j))).or.disinf(dble(mat(i,j)))) mat(i,j)=0
+  if(isnan(dble(mat(i,j))).or.disinf(dble(mat(i,j)))) mat(i,j)=0
  enddo
 enddo
 end subroutine
@@ -3036,7 +3031,7 @@ implicit none
 integer::vec(:)
 integer ::i
 do i=1,size(vec)
- if(disnan(dble(vec(i))).or.disinf(dble(vec(i)))) vec(i)=0
+ if(isnan(dble(vec(i))).or.disinf(dble(vec(i)))) vec(i)=0
 enddo
 end subroutine
 
@@ -3046,7 +3041,7 @@ integer::mat(:,:)
 integer ::i,j
 do i=1,size(mat(:,1))
  do j=1,size(mat(1,:))
-  if(disnan(dble(mat(i,j))).or.disinf(dble(mat(i,j)))) mat(i,j)=0
+  if(isnan(dble(mat(i,j))).or.disinf(dble(mat(i,j)))) mat(i,j)=0
  enddo
 enddo
 end subroutine
@@ -3056,7 +3051,7 @@ implicit none
 complex(8)::vec(:)
 integer ::i
 do i=1,size(vec)
- if(disnan(real(vec(i))).or.disnan(aimag(vec(i))).or.disinf(real(vec(i))).or.disinf(aimag(vec(i)))) vec(i)=0.
+ if(isnan(real(vec(i))).or.isnan(aimag(vec(i))).or.disinf(real(vec(i))).or.disinf(aimag(vec(i)))) vec(i)=0.
 enddo
 end subroutine
 
@@ -3066,7 +3061,7 @@ complex(8)::mat(:,:)
 integer ::i,j
 do i=1,size(mat(:,1))
  do j=1,size(mat(1,:))
-  if(disnan(real(mat(i,j))).or.disnan(aimag(mat(i,j))).or.disinf(real(mat(i,j))).or.disinf(aimag(mat(i,j)))) mat(i,j)=0.
+  if(isnan(real(mat(i,j))).or.isnan(aimag(mat(i,j))).or.disinf(real(mat(i,j))).or.disinf(aimag(mat(i,j)))) mat(i,j)=0.
  enddo
 enddo
 end subroutine
@@ -3074,12 +3069,12 @@ end subroutine
 subroutine rerase_divergence_mat_(mat)
 implicit none
 real(8) :: mat(:,:,:)
-integer :: i1,i2,i3,i4,i5,i6,s(3)
+integer :: i1,i2,i3,s(3)
 s=shape(mat)
 do i1=1,s(1)
  do i2=1,s(2)
   do i3=1,s(3)
-   if(disnan(mat(i1,i2,i3)).or.disinf(mat(i1,i2,i3))) mat(i1,i2,i3)=0.
+   if(isnan(mat(i1,i2,i3)).or.disinf(mat(i1,i2,i3))) mat(i1,i2,i3)=0.
   enddo
  enddo
 enddo
@@ -3089,13 +3084,13 @@ end subroutine
 subroutine rerase_divergence_mat__(mat)
 implicit none
 real(8) :: mat(:,:,:,:)
-integer :: i1,i2,i3,i4,i5,i6,s(4)
+integer :: i1,i2,i3,i4,s(4)
 s=shape(mat)
 do i1=1,s(1)
  do i2=1,s(2)
   do i3=1,s(3)
    do i4=1,s(4)
-   if(disnan(mat(i1,i2,i3,i4)).or.disinf(mat(i1,i2,i3,i4))) mat(i1,i2,i3,i4)=0.
+   if(isnan(mat(i1,i2,i3,i4)).or.disinf(mat(i1,i2,i3,i4))) mat(i1,i2,i3,i4)=0.
    enddo
   enddo
  enddo
@@ -3106,14 +3101,14 @@ end subroutine
 subroutine rerase_divergence_mat___(mat)
 implicit none
 real(8) :: mat(:,:,:,:,:)
-integer :: i1,i2,i3,i4,i5,i6,s(5)
+integer :: i1,i2,i3,i4,i5,s(5)
 s=shape(mat)
 do i1=1,s(1)
  do i2=1,s(2)
   do i3=1,s(3)
    do i4=1,s(4)
     do i5=1,s(5)
-     if(disnan(mat(i1,i2,i3,i4,i5)).or.disinf(mat(i1,i2,i3,i4,i5))) mat(i1,i2,i3,i4,i5)=0.
+     if(isnan(mat(i1,i2,i3,i4,i5)).or.disinf(mat(i1,i2,i3,i4,i5))) mat(i1,i2,i3,i4,i5)=0.
     enddo
    enddo
   enddo
@@ -3133,7 +3128,7 @@ do i1=1,s(1)
    do i4=1,s(4)
     do i5=1,s(5)
      do i6=1,s(6)
-      if(disnan(mat(i1,i2,i3,i4,i5,i6)).or.disinf(mat(i1,i2,i3,i4,i5,i6))) mat(i1,i2,i3,i4,i5,i6)=0.
+      if(isnan(mat(i1,i2,i3,i4,i5,i6)).or.disinf(mat(i1,i2,i3,i4,i5,i6))) mat(i1,i2,i3,i4,i5,i6)=0.
      enddo
     enddo
    enddo
@@ -3146,7 +3141,7 @@ end subroutine
 subroutine cerase_divergence_mat_(mat)
 implicit none
 complex(8) :: mat(:,:,:)
-integer :: i1,i2,i3,i4,i5,i6,s(3)
+integer :: i1,i2,i3,s(3)
 s=shape(mat)
 do i1=1,s(1)
  do i2=1,s(2)
@@ -3161,7 +3156,7 @@ end subroutine
 subroutine cerase_divergence_mat__(mat)
 implicit none
 complex(8) :: mat(:,:,:,:)
-integer :: i1,i2,i3,i4,i5,i6,s(4)
+integer :: i1,i2,i3,i4,s(4)
 s=shape(mat)
 do i1=1,s(1)
  do i2=1,s(2)
@@ -3178,7 +3173,7 @@ end subroutine
 subroutine cerase_divergence_mat___(mat)
 implicit none
 complex(8) :: mat(:,:,:,:,:)
-integer :: i1,i2,i3,i4,i5,i6,s(5)
+integer :: i1,i2,i3,i4,i5,s(5)
 s=shape(mat)
 do i1=1,s(1)
  do i2=1,s(2)
@@ -3194,27 +3189,27 @@ enddo
 return
 end subroutine
 
-subroutine cerase_divergence_mat____(mat)
-implicit none
-complex(8) :: mat(:,:,:,:,:,:)
-integer :: i1,i2,i3,i4,i5,i6,s(6)
-s=shape(mat)
-do i1=1,s(1)
- do i2=1,s(2)
-  do i3=1,s(3)
-   do i4=1,s(4)
-    do i5=1,s(5)
-     do i6=1,s(6)
-      if(ISNAN_TEST(mat(i1,i2,i3,i4,i5,i6)).or.ISINF_TEST(mat(i1,i2,i3,i4,i5,i6))) mat(i1,i2,i3,i4,i5,i6)=0.
-     enddo
-    enddo
-   enddo
-  enddo
- enddo
-enddo
-return
-end subroutine
-
+! subroutine cerase_divergence_mat____(mat)
+! implicit none
+! complex(8) :: mat(:,:,:,:,:,:)
+! integer :: i1,i2,i3,i4,i5,i6,s(6)
+! s=shape(mat)
+! do i1=1,s(1)
+!  do i2=1,s(2)
+!   do i3=1,s(3)
+!    do i4=1,s(4)
+!     do i5=1,s(5)
+!      do i6=1,s(6)
+!       if(ISNAN_TEST(mat(i1,i2,i3,i4,i5,i6)).or.ISINF_TEST(mat(i1,i2,i3,i4,i5,i6))) mat(i1,i2,i3,i4,i5,i6)=0.
+!      enddo
+!     enddo
+!    enddo
+!   enddo
+!  enddo
+! enddo
+! return
+! end subroutine
+! 
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
@@ -3234,7 +3229,7 @@ end subroutine
  pure real(8) function aimag_r(zdum)
  implicit none
   complex(8),intent(in) :: zdum
-  aimag_r=(0.0d0,-1.0d0)*zdum
+  aimag_r=real((0.0d0,-1.0d0)*zdum, kind=8)
  end function
 
  pure real(8) function cabs1_r(zdum)
@@ -3246,13 +3241,13 @@ end subroutine
    cabs1_r=MAX_REAL
    return
   endif
-  cabs1_r = tt
+  cabs1_r = real(tt, kind=8)
  end function
 
  pure real(8) function csign1_r(zdum1,zdum2)
  implicit none
   complex(8),intent(in) :: zdum1,zdum2
-  csign1_r = cabs1(zdum1)*(zdum2/cabs1(zdum2))
+  csign1_r = real(cabs1(zdum1)*(zdum2/cabs1(zdum2)), kind=8)
  end function
 
  pure real(8) function DEXPc_r(rr)
@@ -3306,7 +3301,7 @@ end subroutine
  pure real(16) function csign1_q(zdum1,zdum2)
  implicit none
   complex(16),intent(in) :: zdum1,zdum2
-  csign1_q = cabs1_q(zdum1)*(zdum2/cabs1_q(zdum2))
+  csign1_q = real(cabs1_q(zdum1)*(zdum2/cabs1_q(zdum2)), kind=16)
  end function
 
  pure real(16) function DEXPc_q(rr)
@@ -3625,7 +3620,7 @@ end function
 ! 
 function k_to_ij(N,k)
 implicit none
-integer :: k_to_ij(2),N,m,i,j,k
+integer :: k_to_ij(2),N,k
 k_to_ij(2)=mod(k,N)
 if(k_to_ij(2)==0)k_to_ij(2)=N
 k_to_ij(1)=(k-k_to_ij(2))/N+1
@@ -3980,7 +3975,7 @@ real(4),dimension(3,3)            :: matrixinverse_rs
     q=-j(3,1)*j(2,2)*j(1,3)+j(2,1)*j(3,2)*j(1,3)+j(3,1)*j(1,2)*j(2,3) &
     & -j(1,1)*j(3,2)*j(2,3)-j(2,1)*j(1,2)*j(3,3)+j(1,1)*j(2,2)*j(3,3)
 
-    if(abs(q)<1.d-8) q=1.d-8
+    if(abs(q)<1.d-8) q=real(1.d-8, kind=4)
 
     matrixinverse_rs(1,1)=(-j(3,2)*j(2,3)+j(2,2)*j(3,3))/q
     matrixinverse_rs(2,1)=(j(3,1)*j(2,3)-j(2,1)*j(3,3))/q
@@ -4032,7 +4027,7 @@ complex(4),dimension(3,3)            :: matrixinverse_cs
     q=-j(3,1)*j(2,2)*j(1,3)+j(2,1)*j(3,2)*j(1,3)+j(3,1)*j(1,2)*j(2,3) &
     & -j(1,1)*j(3,2)*j(2,3)-j(2,1)*j(1,2)*j(3,3)+j(1,1)*j(2,2)*j(3,3)
 
-    if(abs(q)<epsilonr) q=epsilonr
+    if(abs(q)<epsilonr) q=cmplx(epsilonr, kind=4)
 
     matrixinverse_cs(1,1)=(-j(3,2)*j(2,3)+j(2,2)*j(3,3))/q
     matrixinverse_cs(2,1)=(j(3,1)*j(2,3)-j(2,1)*j(3,3))/q

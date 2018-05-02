@@ -22017,67 +22017,67 @@ contains
    ! 
    !   return
    ! end
-   subroutine r8vec_bracket ( n, x, xval, left, right )
-   
-   !****************************************************************************
-   !
-   !! R8VEC_BRACKET searches a sorted array for successive brackets of a value.
-   !
-   !  Discussion:
-   !
-   !    If the values in the vector are thought of as defining intervals
-   !    on the real line, then this routine searches for the interval
-   !    nearest to or containing the given value.
-   !
-   !  Modified:
-   !
-   !    06 April 1999
-   !
-   !  Author:
-   !
-   !    John Burkardt
-   !
-   !  Parameters:
-   !
-   !    Input, integer ( kind = 4 ) N, length of input array.
-   !
-   !    Input, real ( kind = 8 ) X(N), an array that has been sorted into
-   !    ascending order.
-   !
-   !    Input, real ( kind = 8 ) XVAL, a value to be bracketed.
-   !
-   !    Output, integer ( kind = 4 ) LEFT, RIGHT, the results of the search.
-   !    Either:
-   !      XVAL < X(1), when LEFT = 1, RIGHT = 2;
-   !      X(N) < XVAL, when LEFT = N-1, RIGHT = N;
-   !    or
-   !      X(LEFT) <= XVAL <= X(RIGHT).
-   !
-     implicit none
-   
-     integer ( kind = 4 ) n
-   
-     integer ( kind = 4 ) i
-     integer ( kind = 4 ) left
-     integer ( kind = 4 ) right
-     real    ( kind = 8 ) x(n)
-     real    ( kind = 8 ) xval
-   
-     do i = 2, n - 1
-   
-       if ( xval < x(i) ) then
-         left = i - 1
-         right = i
-         return
-       end if
-   
-      end do
-   
-     left = n - 1
-     right = n
-   
-     return
-   end
+   ! subroutine r8vec_bracket ( n, x, xval, left, right )
+   ! 
+   ! !****************************************************************************
+   ! !
+   ! !! R8VEC_BRACKET searches a sorted array for successive brackets of a value.
+   ! !
+   ! !  Discussion:
+   ! !
+   ! !    If the values in the vector are thought of as defining intervals
+   ! !    on the real line, then this routine searches for the interval
+   ! !    nearest to or containing the given value.
+   ! !
+   ! !  Modified:
+   ! !
+   ! !    06 April 1999
+   ! !
+   ! !  Author:
+   ! !
+   ! !    John Burkardt
+   ! !
+   ! !  Parameters:
+   ! !
+   ! !    Input, integer ( kind = 4 ) N, length of input array.
+   ! !
+   ! !    Input, real ( kind = 8 ) X(N), an array that has been sorted into
+   ! !    ascending order.
+   ! !
+   ! !    Input, real ( kind = 8 ) XVAL, a value to be bracketed.
+   ! !
+   ! !    Output, integer ( kind = 4 ) LEFT, RIGHT, the results of the search.
+   ! !    Either:
+   ! !      XVAL < X(1), when LEFT = 1, RIGHT = 2;
+   ! !      X(N) < XVAL, when LEFT = N-1, RIGHT = N;
+   ! !    or
+   ! !      X(LEFT) <= XVAL <= X(RIGHT).
+   ! !
+   !   implicit none
+   ! 
+   !   integer ( kind = 4 ) n
+   ! 
+   !   integer ( kind = 4 ) i
+   !   integer ( kind = 4 ) left
+   !   integer ( kind = 4 ) right
+   !   real    ( kind = 8 ) x(n)
+   !   real    ( kind = 8 ) xval
+   ! 
+   !   do i = 2, n - 1
+   ! 
+   !     if ( xval < x(i) ) then
+   !       left = i - 1
+   !       right = i
+   !       return
+   !     end if
+   ! 
+   !    end do
+   ! 
+   !   left = n - 1
+   !   right = n
+   ! 
+   !   return
+   ! end
    ! function r8vec_cross_2d ( v1, v2 )
    ! 
    ! !****************************************************************************

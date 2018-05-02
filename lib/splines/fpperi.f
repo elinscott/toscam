@@ -335,7 +335,7 @@ c  storage capacity limitation.
 c  determine the number of knots nplus we are going to add.
         npl1 = nplus*2
         rn = nplus
-        if(fpold-fp.gt.acc) npl1 = rn*fpms/(fpold-fp)
+        if(fpold-fp.gt.acc) npl1 = int(rn*fpms/(fpold-fp))
         nplus = min0(nplus*2,max0(npl1,nplus/2,1))
         fpold = fp
 c  compute the sum(wi*(yi-s(xi))**2) for each knot interval

@@ -89,7 +89,7 @@ MODULE common_def
 
    subroutine put_addressdvec(j,d1)
     real(8)    :: d1(:)
-    integer    :: i,ii
+    integer    :: ii
     integer(8) :: j,iii
     iii=j
     do ii=1,size(d1)
@@ -100,7 +100,7 @@ MODULE common_def
 
    subroutine put_addresscvec(j,d1)
     complex(8) :: d1(:)
-    integer    :: i,ii
+    integer    :: ii
     integer(8) :: j,iii
     iii=j
     do ii=1,size(d1)
@@ -111,7 +111,7 @@ MODULE common_def
 
    subroutine put_addressivec(j,d1)
     integer(4)    :: d1(:)
-    integer       :: i,ii
+    integer       :: ii
     integer(8)    :: iii,j
     iii=j
     do ii=1,size(d1)
@@ -368,7 +368,6 @@ MODULE common_def
     INTEGER, INTENT(IN) :: unit_
     INTEGER, INTENT(IN), OPTIONAL :: NLINES
     INTEGER :: nlines_,i
-    CHARACTER(LEN=100)  :: fmtnlines
     nlines_ = 1
     IF(PRESENT(NLINES)) nlines_ = NLINES
     do i=1,nlines_
@@ -468,7 +467,6 @@ MODULE common_def
     CHARACTER(LEN=*),OPTIONAL      :: action_
     LOGICAL                        :: opened_
     INTEGER                        :: iostat_
-    REAL(8)                        :: force_error
     LOGICAL,OPTIONAL               :: get_unit
 
     write(*,*) 'open_safe routine, filename :', filename_
@@ -527,7 +525,6 @@ MODULE common_def
     !$$$$$$$$$$$$$$$$$$$$$$
     INTEGER, INTENT(IN) :: unit_
     LOGICAL             :: opened_
-    INTEGER             :: iostat_
     CHARACTER(LEN=100)  :: filename_
     INQUIRE(UNIT=unit_,NAME=filename_,OPENED=opened_)
     IF(.NOT.opened_)THEN
@@ -567,7 +564,7 @@ MODULE common_def
     !$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     INTEGER,          INTENT(IN)           :: clock_ref
     CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: TEXT
-    INTEGER                                :: clock,TEXT_length
+    INTEGER                                :: clock
     CHARACTER(LEN=100)                     :: fmt_TEXT
     REAL(DBL)                              :: elapsed_time
     integer,optional                       :: unit_

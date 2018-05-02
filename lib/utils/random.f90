@@ -431,7 +431,6 @@ contains
 ! end function
 ! 
 subroutine randomize_mat_c(mat)
-integer    :: n
 complex(8) :: mat(:,:)
 integer    :: i,j
 do i=1,size(mat,1)
@@ -442,7 +441,6 @@ enddo
 end subroutine
 
 subroutine randomize_mat_r(mat)
-integer    :: n
 real(8)    :: mat(:,:)
 integer    :: i,j
 do i=1,size(mat,1)
@@ -629,7 +627,7 @@ end function
 
 subroutine init_rantab(iseed_)
 implicit none
-integer          :: i,j,k,l,m
+integer          :: i
 integer,optional :: iseed_
 integer          :: iseed
 
@@ -799,7 +797,7 @@ end subroutine
   ! see Press et al., Numerical Recipes, Sec. 7.2.                        !
   !-----------------------------------------------------------------------!
 
-       real(8) :: R, X, Y, PGRAND
+       real(8) :: R, X, Y
  10    X = 2.d0*drand1() - 1.d0
        Y = 2.d0*drand1() - 1.d0
        R = X**2 + Y**2
@@ -950,7 +948,7 @@ end subroutine
 ! 
 subroutine randomize_matrix_c(A,amp,flag,kk2)
 implicit none
-integer          :: i,j,k,l,m,siz1,siz2
+integer          :: i,j,siz1
 complex(8)       :: A(:,:),ctemp
 real(8)          :: maxA
 real(8),optional :: amp
@@ -990,7 +988,7 @@ end subroutine
 
 subroutine randomize_matrix_r(A,amp,flag,kk2)
 implicit none
-integer          :: i,j,k,l,m,siz1,siz2
+integer          :: i,j,siz1
 real(8)           :: A(:,:),rtemp,maxA
 real(8),optional  :: amp
 logical,optional :: flag

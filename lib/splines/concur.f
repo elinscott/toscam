@@ -283,7 +283,7 @@ c  ..array arguments..
       real cp(np)
       integer iwrk(nest)
 c  ..local scalars..
-      real tol,dist
+      real tol
       integer i,ib1,ie1,ja,jb,jfp,jg,jq,jz,j,k1,k2,lwest,maxit,nmin,
      * ncc,kk,mmin,nmax,mxx
 c ..function references

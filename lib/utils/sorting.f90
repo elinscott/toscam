@@ -729,7 +729,7 @@ implicit none
 integer     :: n1
 real(8)     :: array(n1),dist,temp,good
 real(8)     :: array2(n1),array2b(n1)
-integer     :: lbin,i,j,k,l,m,n,siz,count
+integer     :: lbin,i,siz,count
 real(8)     :: mean(n1)
 integer     :: howmany(n1)
 
@@ -869,7 +869,7 @@ implicit none
    integer, dimension(:)            :: array
    integer, dimension(size(array))  :: backup
    integer, dimension(size(array))  :: order
-   integer                          :: i,j
+   integer                          :: j
    backup=array
    do j=1,size(array)
      array(j)=backup(order(j))
@@ -883,7 +883,7 @@ implicit none
    complex(4), dimension(:,:)                          :: array
    complex(4), dimension(size(array,1),size(array,2))  :: backup
    integer, dimension(size(array,2))                   :: order
-   integer                                             :: i,j
+   integer                                             :: j
    backup=array
    do j=1,size(array,2)
      array(:,j)=backup(:,order(j))
@@ -897,7 +897,7 @@ implicit none
    real(4), dimension(:,:)                          :: array
    real(4), dimension(size(array,1),size(array,2))  :: backup
    integer, dimension(size(array,2))                :: order
-   integer                                          :: i,j
+   integer                                          :: j
    backup=array
    do j=1,size(array,2)
      array(:,j)=backup(:,order(j))
@@ -911,7 +911,7 @@ implicit none
    complex(8), dimension(:,:)                          :: array
    complex(8), dimension(size(array,1),size(array,2))  :: backup
    integer, dimension(size(array,2))                :: order
-   integer                                          :: i,j
+   integer                                          :: j
    backup=array
    do j=1,size(array,2)
      array(:,j)=backup(:,order(j))
@@ -925,7 +925,7 @@ implicit none
    real(8), dimension(:,:)                          :: array
    real(8), dimension(size(array,1),size(array,2))  :: backup
    integer, dimension(size(array,2))                :: order
-   integer                                          :: i,j
+   integer                                          :: j
    backup=array
    do j=1,size(array,2)
      array(:,j)=backup(:,order(j))
@@ -940,7 +940,7 @@ implicit none
    real(8), dimension(:)            :: array
    real(8), dimension(size(array))  :: backup
    integer, dimension(size(array)) :: order
-   integer                         :: i,j
+   integer                         :: j
    backup=array
    do j=1,size(array)
      array(j)=backup(order(j))
@@ -954,7 +954,7 @@ implicit none
    real, dimension(:)            :: array
    real, dimension(size(array))  :: backup
    integer, dimension(size(array)) :: order
-   integer                         :: i,j
+   integer                         :: j
    backup=array
    do j=1,size(array)
      array(j)=backup(order(j))
@@ -968,7 +968,7 @@ implicit none
    complex(8), dimension(:)            :: array
    complex(8), dimension(size(array))  :: backup
    integer, dimension(size(array))     :: order
-   integer                             :: i,j
+   integer                             :: j
    backup=array
    do j=1,size(array)
      array(j)=backup(order(j))
@@ -982,7 +982,7 @@ implicit none
    complex, dimension(:)            :: array
    complex, dimension(size(array))  :: backup
    integer, dimension(size(array))  :: order
-   integer                          :: i,j
+   integer                          :: j
    backup=array
    do j=1,size(array)
      array(j)=backup(order(j))
@@ -1176,7 +1176,7 @@ integer function qsort_rand( lower, upper )
 implicit none
     integer                       :: lower, upper
     real(4)                       :: r
-    r=drand1()
+    r=real(drand1(), kind=4)
     qsort_rand =  lower + nint(r * (upper-lower))
 end function qsort_rand
 

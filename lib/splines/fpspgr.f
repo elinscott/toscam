@@ -309,14 +309,14 @@ c  find nplu, the number of knots we should add in the u-direction.
         if(nu.eq.8) go to 180
         npl1 = nplusu*2
         rn = nplusu
-        if(reducu.gt.acc) npl1 = rn*fpms/reducu
+        if(reducu.gt.acc) npl1 = int(rn*fpms/reducu)
         nplu = min0(nplusu*2,max0(npl1,nplusu/2,1))
 c  find nplv, the number of knots we should add in the v-direction.
  180    nplv = 3
         if(nv.eq.8) go to 190
         npl1 = nplusv*2
         rn = nplusv
-        if(reducv.gt.acc) npl1 = rn*fpms/reducv
+        if(reducv.gt.acc) npl1 = int(rn*fpms/reducv)
         nplv = min0(nplusv*2,max0(npl1,nplusv/2,1))
 c  test whether we are going to add knots in the u- or v-direction.
  190    if(nplu-nplv) 210,200,230
