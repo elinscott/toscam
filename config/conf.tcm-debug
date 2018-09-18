@@ -7,3 +7,4 @@ CFLAGS    = -O0
 C++       = mpicpc
 CXXFLAGS  = -O0
 RANLIB    = ranlib
+COMPILER  = intel

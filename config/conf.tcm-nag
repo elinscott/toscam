@@ -7,3 +7,4 @@ CFLAGS    = -O1
 C++       = mpicpc
 CXXFLAGS  = -O1
 RANLIB    = ranlib
+COMPILER  = nag

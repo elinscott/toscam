@@ -16,35 +16,31 @@ default: help
 toscam: src_obj lib ed_solver
 	@echo Compiling toscam scripts
 	@( cd bin ; \
-	$(MAKE) -f $(ROOTDIR)/src/makefile ARCH=$(ARCH) ROOTDIR=$(ROOTDIR))
+	$(MAKE) -f $(ROOTDIR)/src/scripts/makefile ARCH=$(ARCH) ROOTDIR=$(ROOTDIR))
 	@echo Compilation complete
 
 ed_solver: solver_obj
 	@echo Compiling exact diagonalisation solver
-	@( cd ed_solver/obj ; \
-	$(MAKE) -f $(ROOTDIR)/ed_solver/makefile ARCH=$(ARCH) ROOTDIR=$(ROOTDIR))
+	@( cd src/ed_solver/obj ; \
+	$(MAKE) -f $(ROOTDIR)/src/ed_solver/makefile ARCH=$(ARCH) ROOTDIR=$(ROOTDIR))
 
 lib: lib_obj
 	@echo Compiling libraries
-	@( cd lib/splines/obj ; \
-	$(MAKE) -f $(ROOTDIR)/lib/splines/makefile ARCH=$(ARCH) ROOTDIR=$(ROOTDIR))
-	@( cd lib/utils/obj ; \
-	$(MAKE) -f $(ROOTDIR)/lib/utils/makefile ARCH=$(ARCH) ROOTDIR=$(ROOTDIR))
+	@( cd src/splines/obj ; \
+	$(MAKE) -f $(ROOTDIR)/src/splines/makefile ARCH=$(ARCH) ROOTDIR=$(ROOTDIR))
+	@( cd src/utils/obj ; \
+	$(MAKE) -f $(ROOTDIR)/src/utils/makefile ARCH=$(ARCH) ROOTDIR=$(ROOTDIR))
 
 clean:
 	@$(RM) -fr bin/*
-	@( cd src ; \
+	@( cd src/scripts ; \
 	$(MAKE) -f makefile clean)
-	@( cd ed_solver ; \
+	@( cd src/ed_solver ; \
 	$(MAKE) -f makefile clean)
-
-cleanlib:
-	@( cd lib/splines ; \
+	@( cd src/splines ; \
 	$(MAKE) -f makefile clean)
-	@( cd lib/utils ; \
+	@( cd src/utils ; \
 	$(MAKE) -f makefile clean)
-
-cleanall: clean cleanlib
 
 help:
 	@echo
@@ -65,7 +61,7 @@ help:
 	@echo 'To make libraries associated with TOSCAM:'
 	@echo '> make lib'
 	@echo 'To remove all compiled files:'
-	@echo '> make cleanall'
+	@echo '> make clean'
 	@echo
 
 src_obj:
@@ -74,15 +70,15 @@ src_obj:
 	fi )
 
 solver_obj:
-	@( if [ ! -d ed_solver/obj ] ; \
-		then mkdir ed_solver/obj ; \
+	@( if [ ! -d src/ed_solver/obj ] ; \
+		then mkdir src/ed_solver/obj ; \
 	fi )
 
 lib_obj:
-	@( if [ ! -d lib/utils/obj ] ; \
-		then mkdir lib/utils/obj ; \
+	@( if [ ! -d src/utils/obj ] ; \
+		then mkdir src/utils/obj ; \
 	fi )
-	@( if [ ! -d lib/splines/obj ] ; \
-		then mkdir lib/splines/obj ; \
+	@( if [ ! -d src/splines/obj ] ; \
+		then mkdir src/splines/obj ; \
 	fi )
 

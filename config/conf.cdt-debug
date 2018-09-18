@@ -7,3 +7,4 @@ CFLAGS    = -O0
 C++       = mpic++
 CXXFLAGS  = -O0
 RANLIB    = ranlib
+COMPILER  = gnu
