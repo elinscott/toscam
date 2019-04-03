@@ -81,7 +81,12 @@ mv $2 atom$1/
 cd atom$1
 echo "calling ONE ITER DMFT in directory " `pwd`
 echo "command line is : onetep_dmft_one_iter.out " $2 $3 
-onetep_dmft_one_iter.out $2 $3 
+onetep_dmft_one_iter.out $2 $3
+if [[ $? -ne 0 ]]; then
+   echo "ERROR: onetep_dmft_one_iter.out returned a non-zero exit code"
+   echo "Exiting onetep_dmft_one_iter_script_pm.out"
+   exit 1
+fi
 
 echo "OBTAINED SIGMA FILES : " `ls sigma_output*_* 2> /dev/null`
 
@@ -102,11 +107,3 @@ mv real_sigma_output*_* ${mydirnow}/   > /dev/null 2>&1
 mv _actqmc.cix_ actqmc.cix$1           > /dev/null 2>&1 
 
 cd ${mydirnow}
-
-
-
-
-
-
-
-

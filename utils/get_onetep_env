@@ -1,2 +1,3 @@
 #!/bin/bash
-echo ${DMFT_ONETEP} > dir_onetep
+onetep_dmft_path=$(which onetep_dmft.out)
+echo ${onetep_dmft_path%bin*} > dir_onetep

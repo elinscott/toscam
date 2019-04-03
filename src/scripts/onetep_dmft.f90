@@ -436,10 +436,15 @@ contains
  !-----------------!
 
  subroutine onetep_normal_mode
+
+ use common_def, only: utils_system_call
+
  implicit none
+
  integer         :: jj,k,nprocess
  character(2000) :: myhost,prefix,args,output,mach_arg,mach_file
  character(3)    :: lochost
+ integer         :: ierr
 
 
      call system("rm ./onetep_confirmation*  > /dev/null 2>&1 ")
@@ -540,7 +545,7 @@ contains
 
          write(*,*) ' command line for proc [x], total : ', i , nproc_onetep 
          write(*,*) TRIM(ADJUSTL(command_line))
-         call system(trim(adjustl(command_line)))
+         call utils_system_call(command_line, abort = .true.)
 
         enddo
           do 
@@ -579,7 +584,7 @@ contains
                                            & outputin=output,hide_errors=.false.,localhost='F')
  
           write(*,*) 'running onetep in mpi-2 mode : ', TRIM(ADJUSTL(command_line))
-          call system(trim(adjustl(command_line)))
+          call utils_system_call(command_line, abort = .true.)
           write(*,*) 'onetep part done'
         endif
         !------------------------------------------------!
@@ -593,7 +598,7 @@ contains
 
        write(*,*) 'command line : '
        write(*,*) TRIM(ADJUSTL(command_line))
-       call system(command_line)
+       call utils_system_call(command_line, abort=.true.)
 
      endif
 
@@ -605,9 +610,13 @@ contains
  !-----------------!
 
  subroutine onetepdmft
+
+ use common_def, only: utils_system_call
+
  implicit none
  integer         :: nprocess
  character(2000) :: prefix,args,output,mach_arg,mach_file
+ integer         :: ierr
 
     if(nproc>1)then
        call system("ls machines_dmft || fill_machine_file machines_dmft "//TRIM(ADJUSTL(toString(nproc))) )
@@ -626,7 +635,8 @@ contains
 
      write(*,*) 'command line : '
      write(*,*) TRIM(ADJUSTL(command_line))
-     call system(command_line)
+
+     call utils_system_call(command_line, abort=.true.)
 
  end subroutine
 

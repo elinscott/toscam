@@ -583,16 +583,16 @@ contains
  !====================!
 
  subroutine plug_back_double_counting_and_fermi_e_in_self_real(keepboth)
+
+ use common_def, only: utils_assert, utils_abort
+
  implicit none
  complex(8)       ::  mat(channels,channels),sigout(2,ed_real_frequ,channels,channels)
  integer          ::  k,kk_,tt,j_
  logical          ::  test_
  logical,optional ::  keepboth
 
-    if(solver/=4)then
-      write(*,*) 'ERROR plug back DC for real self energy only for ed solver'
-      stop
-    endif
+    call utils_assert(solver == 4, 'Plugging back DC for real self energy is only valid for ed solver')
 
     if(paramagnetic/=1)then
       j_=2
@@ -609,17 +609,11 @@ contains
     if(kk_==2.and.test_) write(*,*) 'FILE _sigma_output_full_real_2 exists'
     if(kk_==1.and.test_) open(unit=10004,file='_sigma_output_full_real_1',form='unformatted')
     if(kk_==2.and.test_) open(unit=10004,file='_sigma_output_full_real_2',form='unformatted')
-    if(.not.test_)then
-      write(*,*) 'ERROR file _sigma_output_full_real_(1,2) is missing'
-      stop
-    endif 
+    call utils_assert(test_, 'file _sigma_output_full_real_(1,2) is missing')
     !----------------------------------------------------------------------------------!
     do i=1,ed_real_frequ
         read(10004) mat
-        if(size(sigout,2)<i)then
-          write(*,*) 'ERROR, dumping back double counting to Sigma, size array'
-          stop
-        endif
+        call utils_assert(size(sigout,2) >= i, 'Mismatched arrays when dumping back double counting to Sigma')
         sigout(kk_,i,:,:)=mat
         if(force_self_infty_real.and.i==ed_real_frequ-1) sigout(kk_,i,:,:) = real(sigout(kk_,i,:,:))
     enddo
@@ -645,8 +639,7 @@ contains
         enddo
        enddo
      else
-       write(*,*) 'ERROR onetep+dmft module, using F with rotation ortho'
-       stop
+       call utils_abort('Using F with rotation ortho is invalid')
      endif
     endif
 
@@ -721,6 +714,9 @@ contains
  !====================!
 
  subroutine plug_back_double_counting_and_fermi_e_in_self(keepboth)
+
+ use common_def, only: utils_assert, utils_abort
+
  implicit none
  real(8)          ::  temp(1+2*channels)
  complex(8)       ::  mat(channels,channels),sigout(2,n_frequ,channels,channels)
@@ -766,8 +762,7 @@ contains
       read(10002,*)
     elseif(solver==2.or.solver==3.or.solver==4.or.solver==5)then
     else
-      write(*,*) 'ERROR Solver not yet implemented'
-     stop
+      call utils_abort("Solver not yet implemented")
     endif
 
     write(*,*) 'writing down new SELF ENERGY Sigma, mixing is : ', mixing
@@ -810,10 +805,7 @@ contains
          enddo
         endif
 
-        if(size(sigout,2)<i)then
-          write(*,*) 'ERROR, dumping back double counting to Sigma, size array'
-          stop
-        endif
+        call utils_assert(size(sigout,2)>=i, 'Array size mismatch when dmping back double counting to Sigma')
 
         sigout(kk_,i,:,:)=mat
 
@@ -845,8 +837,7 @@ contains
         enddo
        enddo
      else
-       write(*,*) 'ERROR  onetep+dmft module, using f electron and ortho rotation'
-       stop
+       call utils_abort("Using f electron and ortho rotation")
      endif
     endif
 
@@ -919,6 +910,9 @@ contains
  !====================!
 
  subroutine dmft_run
+
+ use common_def, only: utils_assert, utils_abort
+
  implicit none
  complex(8)   ::  mat_tmp0(2*LL+1,2*LL+1),mat_tmp20(2*(2*LL+1),2*(2*LL+1))
  complex(8)   ::   mat_tmp(2*LL+1,2*LL+1), mat_tmp2(2*(2*LL+1),2*(2*LL+1))
@@ -961,9 +955,9 @@ contains
     allocate(T2C(2*LL+1,channels),T2Cp(channels,2*LL+1))
     nheaders=3+2*LL+1
     if(cubic==1)then
-      call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/INPUTS/Trans_cubicL"//TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
+      call system("cp "//TRIM(ADJUSTL(dir_onetep))//"utils/INPUTS/Trans_cubicL"//TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
     else
-      call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/INPUTS/Trans_sphericalL"//TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
+      call system("cp "//TRIM(ADJUSTL(dir_onetep))//"utils/INPUTS/Trans_sphericalL"//TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
     endif
 
     inquire(file='Trans.loc.pm.dat',exist=check)
@@ -1003,8 +997,7 @@ contains
       write(*,*) 'channel i, norm of state : ', sum(abs(mat_tmp(i,:))**2)
     enddo
     if(maxval( abs( matmul(rot_trans_pm,transpose(rot_trans_pm))-Id(size(rot_trans_pm,1)) ) )>1.d-5  )then
-      write(*,*) 'rotation matrix not orthogonal'
-      stop
+      call utils_abort('Rotation matrix not orthogonal')
     endif
 
     if(rotate_int_after_earlier_transfo) mat_tmp=matmul(transpose(rot_trans_pm),mat_tmp)
@@ -1045,9 +1038,9 @@ contains
   
     nheaders=3+2*(2*LL+1)
     if(cubic==1)then
-      call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/INPUTS/Trans_cubic_spinorbL"//TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
+      call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorbL"//TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
     else
-      call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/INPUTS/Trans_spherical_spinorbL"//TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
+      call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_spherical_spinorbL"//TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
     endif
     inquire(file='Trans.loc.spin.dat',exist=check)
 
@@ -1138,7 +1131,7 @@ contains
   if(solver==1.or.solver==2.or.solver==3)then
     write(*,*) 'ERROR L=1,2,3 only were implemented for CTQMC/NCA/OCA, please update the code, critical'
     write(*,*) 'Note that projections were not yet implemented for these solvers'
-    stop
+    call utils_abort('Projectors not yet implemented')
   endif
  endif
 
@@ -1174,8 +1167,7 @@ if((solver==1.or.solver==2.or.solver==3).and..not.read_cix_file)then
     stringdat=trim(adjustl(atom_d_command))//' Eimp=['
   elseif(LL==3)then
     if(solver/=1)then
-      write(*,*) 'ERROR , L = 3 not implemented for other solver than CTQMC'
-      stop
+      call utils_abort('L = 3 not implemented for other solver than CTQMC')
     endif
     stringdat='atomh -Eimp ['
   endif
@@ -1255,14 +1247,13 @@ endif
    call system("mv LOCAL_DOS* FULL_DOS* "//TRIM(ADJUSTL(filename))//"  > /dev/null 2>&1 ")
 
    if(solver==1)then
-     call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/INPUTS/PARAMS.ctqmc ./PARAMS")
+     call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/PARAMS.ctqmc ./PARAMS")
    elseif(solver==4.or.solver==5)then
      write(*,*) 'DO NOT COPY ED PARAM, GENERATE THEM ON THE FLY'
    elseif(solver==2.or.solver==3)then
-     call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/INPUTS/PARAMS.oca ./PARAMS")
+     call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/PARAMS.oca ./PARAMS")
    else
-     write(*,*) 'ERROR case not implemented'
-     stop
+     call utils_abort('solver not implemented')
    endif
 
     call system(" echo 'sweep_exact='"//trim(adjustl(toString(1000)))//"     > hf.in ")
@@ -1301,7 +1292,7 @@ endif
        call system("echo paramagnetic=.false. >> hf.in")
     endif
 
-   call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/INPUTS/ed.* .")
+   call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/ed.* .")
 
    if(average_green_ed)then
      call system("echo 1 > ed.average ")
@@ -1366,10 +1357,7 @@ endif
    call system("echo FLAG_GUP_IS_GDN=.true. >> ed.in")
  endif
  if(fit_nw==0)then
-  if(n_frequ<4)then
-   write(*,*) 'ERROR : not enough matsubara frequencies'
-   stop
-  endif
+  call utils_assert(n_frequ>=4, 'Not enough matsubara frequencies')
   call system("echo fit_nw="//TRIM(ADJUSTL(toString(n_frequ-nspec_frequ)))//" >> ed.in")
  else
   call system("echo fit_nw="//TRIM(ADJUSTL(toString(fit_nw)))//" >> ed.in")
@@ -1382,7 +1370,7 @@ endif
 
  call system("mv hf.in "//TRIM(ADJUSTL(filename)))
  call system("mv ed.* "//TRIM(ADJUSTL(filename)))
- call system("ls ./Sigma.000 || cp "//TRIM(ADJUSTL(dir_onetep))//"/INPUTS/Sigma.000 .")
+ call system("ls ./Sigma.000 || cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Sigma.000 .")
  call system("mv Sigma.000 Trans.dat Uc.dat.* gen_atom.log info_atom_d.dat "//TRIM(ADJUSTL(filename)))
 
 !-----------------------------------------------------------------!
@@ -1503,8 +1491,7 @@ elseif(solver==2.or.solver==3)then
  write(10001,*) 'cix=out.cix'
  write(10001,*) 'nc=[4, 5, 6, 7]         #Impurity occupancies'
 else
- write(*,*) 'ERROR not implemented yet'
- stop
+ call utils_abort('ERROR not implemented yet')
 endif
  close(10001)
  write(*,*)     '############# END PARAMS #################'
@@ -1530,8 +1517,7 @@ elseif(solver==4)then
 elseif(solver==5)then
  call system("run_iter_hf "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))))
 else
- write(*,*) 'ERROR solver not defined'
- stop
+ call utils_abort('Solver not defined')
 endif
 
   write(*,*) 'done ... now formatting data, paramagnetic = ', paramagnetic
@@ -1686,6 +1672,9 @@ endif
  !====================!
 
  subroutine get_hybridizations(kk_)
+
+ use common_def, only: utils_abort
+
  implicit none
  logical       :: check
  integer       :: kk_,kkk
@@ -2056,8 +2045,7 @@ endif
  endif
 
  if(abs(spin_orbit)>1.d-5.and.(solver==4.or.solver==5))then
-   write(*,*) 'spin orbit not implemented in ED solver or in HF'
-   stop
+   call utils_abort('spin orbit not implemented in ED solver or in HF')
  endif
 
  write(*,*) '---------------------------------------------------------'
@@ -2081,7 +2069,7 @@ endif
     write(*,*) 'ERROR DIAGONAL HYBRIDIZATION NOT MATCHING DIAG_ARRAY'
     write(*,*) 'diag green matrix (Re) : ' , diag(real(green_(kk_,i,:,:),kind=8))
     write(*,*) 'diag array        (Re) : ' ,      real(green_diag(kk_,i,:))
-    stop
+    call utils_abort('Diagonal hybridization does not match diagonal array')
   endif
  enddo
 
@@ -2236,6 +2224,9 @@ endif
  !====================!
 
  subroutine init_run
+
+ use common_def, only: utils_assert, utils_abort
+
  type(string) :: cc_
  integer      :: kk_,kkk
 
@@ -2250,10 +2241,7 @@ endif
  if(num==2)then
   paramagnetic=1
   write(*,*) '###### RUNNING PARAMAGNETIC CASE ######'
-  if(abs(spin_orbit)>1.d-3)then
-   write(*,*) 'SPIN ORBIT COUPLING CANNOT BE DONE WITH PARAMAGNETIC CASE'
-   stop
-  endif
+  call utils_assert(abs(spin_orbit)<1.d-3, 'Spin orbit coupling cannot be done with paramagnetic case')
  elseif(num==3)then
   write(*,*) '###### RUNNING NON-PARAMAGNETIC CASE ######'
   paramagnetic=2
@@ -2261,7 +2249,7 @@ endif
   write(*,*) 'wrong number of arguments'
   write(*,*) 'NUM : ', num
   write(*,*) 'ARGUMENTS : ', value(1:num)
-  stop
+  call utils_abort('Incorrect number of arguments')
  endif
 
  do i=1,num
@@ -2270,15 +2258,9 @@ endif
  write(*,*) 'first  argument is the filenames of the green functions : ',value(1:num-1)
  write(*,*) 'second argument is the dmft iteration number            : ',value(num)
  if(paramagnetic==1)then
- if(num/=2)then
-  write(*,*) 'only expecting 2 arguments for now, so try again...'
-  stop
- endif
+ call utils_assert(num==2, 'Expecting 2 arguments for paramagnetic case')
  else
- if(num/=3)then
-  write(*,*) 'only expecting 3 arguments for now, so try again...'
-  stop
- endif
+ call utils_assert(num==3, 'Expecting 3 arguments for non-paramagnetic case')
  endif
 
  write(*,*) 'SOLVER CHOICE REAL : ', real_solver
@@ -2334,8 +2316,7 @@ endif
  elseif(kkk==2)then
   call system(" get_rid_other_sigmas.out "//TRIM(ADJUSTL(filename_sigma(1)))//"  "//TRIM(ADJUSTL(filename_sigma(2))))
  else
-  write(*,*) 'case does not exit [get rid of sigmas]'
-  stop
+  call utils_abort('Error when getting rid of sigmas; this case should not arise')
  endif
  endif
  write(*,*) '==========================================='
@@ -2377,17 +2358,22 @@ endif
  !====================!
 
  subroutine collect_greens(kk_)
+
+ use common_def, only: utils_unit, utils_assert, utils_abort
+
  implicit none
  real(8)                :: ttemp
  integer                :: klm,ien,pub_dmft_points,uuu(1),kk_
  integer                :: i_,iii,jjj
  complex(8),allocatable :: Qmat(:,:),Rmat(:,:) 
  logical                :: check
+ integer                :: funit
 
-   open(unit=10001,file=trim(adjustl(value(kk_))),form='unformatted')
+   funit = utils_unit()
+   open(unit=funit,file=trim(adjustl(value(kk_))),form='unformatted')
    j=0
    do
-     read(10001,end=96) ien,pub_dmft_points,ttemp,channels,channelsb,atom,atomb
+     read(funit,end=96) ien,pub_dmft_points,ttemp,channels,channelsb,atom,atomb
      if(.not.allocated(green_temp)) then
         allocate( green_temp(channels,channels),                     &
                &  mmat(channels,channels),                           &
@@ -2399,12 +2385,12 @@ endif
                &  double_counting(2,channels) )
                   double_counting=0.d0
      endif
-     read(10001,end=96) occupation_matrixup,occupation_matrixdn
-     read(10001,end=96) mmu(kk_),frequ,green_temp
+     read(funit,end=96) occupation_matrixup,occupation_matrixdn
+     read(funit,end=96) mmu(kk_),frequ,green_temp
      j=j+1
    enddo
    96 continue
-   rewind(10001)
+   rewind(funit)
    n_frequ=j
    write(*,*) '---------------> N_FREQU = ', n_frequ
    if(.not.allocated(green_)) then
@@ -2429,15 +2415,12 @@ endif
 
   j=0
   do
-   read(10001,end=66) ien,pub_dmft_points,ttemp,channels,channelsb,atom,atomb
-   if(channelsb/=channels)then
-    write(*,*) 'ERROR ONETEP+DMFT not yet coded for channels/=channelsb, error'
-    stop
-   endif
+   read(funit,end=66) ien,pub_dmft_points,ttemp,channels,channelsb,atom,atomb
+   call utils_assert(channelsb==channels, 'channels/=channelsb not yet implemented')
    if((channels/=3.and.channels/=5.and.channels/=7).and.(solver==1.or.solver==2.or.solver==3))then
     write(*,*) 'CHANNELS =  ' ,channels
     write(*,*) 'ERROR not implemented for solver = ', solver
-    stop
+    call utils_abort('Mismatch between channels and solver')
    endif
    bbeta=1.d0/abs(ttemp)
    if(ttemp<0.)then
@@ -2456,11 +2439,11 @@ endif
 
    if(allocated(green_temp).and.size(green_temp,1)/=channels) then
      write(*,*) 'ERROR something wrong in dmft_one_iteration'
-     stop
+     call utils_abort('Mismatched array sizes')
    endif
 
-   read(10001,end=66) occupation_matrixup,occupation_matrixdn
-   read(10001,end=66) mmu(kk_),frequ,green_temp
+   read(funit,end=66) occupation_matrixup,occupation_matrixdn
+   read(funit,end=66) mmu(kk_),frequ,green_temp
 
    if(flag_symmetrize_green)then
     occupation_matrixup=(occupation_matrixup+transpose(occupation_matrixup))/2.d0
@@ -2549,8 +2532,7 @@ endif
      call invmat(channels, mmat)
      mmat=-mmat ! this is now the projected hamiltonian  
   else
-     write(*,*) 'rotation scheme not implemented'
-     stop
+     call utils_abort('Rotation scheme not implemented')
   endif
 
   if(channels>1) then
@@ -2642,40 +2624,34 @@ endif
   mmat=matmul(matmul(transpose(rotation(:,:,kk_)),green_(kk_,uuu(1),:,:)),rotation(:,:,kk_))
   call write_array(mmat,'green of frequ for min offdiagonal elements after the rotation', short=.true., unit=6)
 
-  close(10001)
+  close(funit)
 
   if(kk_==1)then
    inquire(file='atom_number_of_orbitals',exist=check)
    if(check)then
-    open(unit=212121,file='atom_number_of_orbitals')
-    read(212121,*) LL
-    close(212121)
+    funit = utils_unit()
+    open(unit=funit,file='atom_number_of_orbitals')
+    read(funit,*) LL
+    close(funit)
     LL=(LL-1)/2
     if(LL/=(channels-1)/2)then
       write(*,*) 'A PROJECTION WAS USED, TRUE ANGULAR MOMENTUM IS : ', LL
       write(*,*) 'AND [X] ORBITALS WERE KEPT                      : ', channels
-      if(solver/=4)then
-        write(*,*) 'SORRY, PROJECTIONS WERE ONLY IMPLEMENTED IN ED'
-        write(*,*) 'THEY ARE NOT YET IMPLEMENTED IN THE OTHER SOLVERS'
-        stop
-      endif
+      call utils_assert(solver==4, 'Projections not implemented for solvers other than ED')
     endif
    else
-     write(*,*) 'ERROR, you should have atom_number_of_orbitals file in atomX'
-     stop
+     call utils_abort('./atom?/atom_number_of_orbitals file is missing')
    endif
    endif
 
    if(kk_==1)then
     allocate(list_orb(2*LL+1))
     inquire(file='mask_projections',exist=check)
-    if(.not.check)then
-      write(*,*) 'ERROR you should have file mask_projection in atomX dir'
-      stop
-    endif
-    open(unit=5555,file='mask_projections')
-    read(5555,*) (list_orb(i),i=1,2*LL+1)
-    close(5555)
+    call utils_assert(check, './atom?/mask_projection file is missing')
+    funit = utils_unit()
+    open(unit=funit,file='mask_projections')
+    read(funit,*) (list_orb(i),i=1,2*LL+1)
+    close(funit)
    endif
 
  return
@@ -2755,6 +2731,9 @@ endif
  !====================!
 
  subroutine extract_Eimp_from_tail_of_hybridization(frequ,delta,my_eimp,a,b,left)
+
+ use common_def, only: utils_abort
+
  implicit none
  complex(8)       :: delta(:),frequ(:)
  integer          :: ii,i,j,k,nn,i1,i2,i3,countit
@@ -2804,8 +2783,7 @@ endif
    if(abs(w1)<1.d-7.or.abs(w2)<1.d-7)then
      write(*,*) 'w(i) and w(j), for i,j = :',i1,i2
      write(*,*) 'have some trouble, total number of frequency is : ', n_frequ
-     write(*,*) 'ERROR : critical, w1 or w2 zero, this should not happen, matsubara frequencies'
-     stop
+     call utils_abort('w1 or w2 is zero, this should not happen for matsubara frequencies')
    endif
    if(abs(d1i)<1.d-5.or.abs(d2i)<1.d-5)then
     if(maxval(abs(aimag(delta)))<1.d-5)then
@@ -3101,38 +3079,44 @@ endif
  !====================!
 
  subroutine copy_sigma_position_nlong_to_position_nw_minus_1(filenamesig)
+
+ use common_def, only: utils_unit, utils_abort
+
  implicit none
  character*(*)  ::  filenamesig
  real(8)        ::  temp(nmatsu_long,2*channels+1)
+ integer        :: funit
 
-   open(unit=2178,file=trim(adjustl(filenamesig)))
+   funit = utils_unit()
+   open(unit=funit,file=trim(adjustl(filenamesig)))
    if(solver==1) then
    !header in self energy of CTQMC solver
-      read(2178,*)
+      read(funit,*)
    endif
    do i=1,nmatsu_long
-      read(2178,*,end=88) (temp(i,k),k=1,1+2*channels)
+      read(funit,*,end=88) (temp(i,k),k=1,1+2*channels)
    enddo
    if(.false.)then
     88 write(*,*) 'ERROR : end of sigma file, it should have been larger due to nmatsu_long extension of bath'
-    stop
+    call utils_abort('sigma file ended prematurely')
    endif
-   close(2178)
+   close(funit)
 
+   funit = utils_unit()
    call system(" rm "//trim(adjustl(filenamesig)))
-   open(unit=2178,file=trim(adjustl(filenamesig)))
-   write(2178,*)
+   open(unit=funit,file=trim(adjustl(filenamesig)))
+   write(funit,*)
    do i=1,n_frequ
      if(i/=n_frequ-1.and.i/=n_frequ-5)then
-       write(2178,*) (temp(i,k),k=1,1+2*channels)
+       write(funit,*) (temp(i,k),k=1,1+2*channels)
      else
-       write(2178,*) (temp(nmatsu_long,k),k=1,1+2*channels)
+       write(funit,*) (temp(nmatsu_long,k),k=1,1+2*channels)
        write(*,*) 'CORRECTION IMPROVED BY MATSU_LONG : '
        write(*,'(a,200f10.3)') 'sigma at long   : ',  temp(nmatsu_long,2:)
        write(*,'(a,200f10.3)') 'sigma at nfrequ : ',  temp(i,2:)
      endif
    enddo
-   close(2178)
+   close(funit)
 
  end subroutine
 
@@ -3253,6 +3237,9 @@ endif
  !====================!
 
  subroutine rotate_sigma_green_to_f(matup,matdn)
+
+ use common_def, only: utils_abort
+
  implicit none
  complex(8) :: matup(:,:),matdn(:,:),mat(size(matup,1)+size(matdn,1),size(matup,2)+size(matdn,2))
  complex(8) :: rotmat(size(matup,1)+size(matdn,1),size(matup,2)+size(matdn,2))
@@ -3269,7 +3256,7 @@ endif
    if(maxval(abs( rotmat - transpose(conjg(rotmat)) ) ) > 1.d-4)then
      write(*,*) 'TRANSFORM FROM F ORBITALS TO j-j basis not unitary'
      write(*,*) 'U U^dagger - 1 = ', maxval(abs( rotmat - transpose(conjg(rotmat)) ) )
-     stop
+     call utils_abort('Transform from f orbitals to j-j basis not unitary')
    endif
  end subroutine
 
@@ -3281,6 +3268,9 @@ endif
  !====================!
 
  subroutine rotate_sigma_green_to_f_back(matup,matdn)
+
+ use common_def, only: utils_abort
+
  implicit none
  complex(8) :: matup(:,:),matdn(:,:),mat(size(matup,1)+size(matdn,1),size(matup,2)+size(matdn,2))
  complex(8) :: rotmat(size(matup,1)+size(matdn,1),size(matup,2)+size(matdn,2))
@@ -3297,7 +3287,7 @@ endif
    if(maxval(abs( rotmat - transpose(conjg(rotmat)) ) ) > 1.d-4)then
      write(*,*) 'TRANSFORM FROM F ORBITALS TO j-j basis not unitary'
      write(*,*) 'U U^dagger - 1 = ', maxval(abs( rotmat - transpose(conjg(rotmat)) ) )
-     stop
+     call utils_abort('Transform from f orbitals to j-j basis not unitary')
    endif
  end subroutine
 
@@ -3309,6 +3299,9 @@ endif
  !====================!
 
  subroutine rotations_and_interactions_and_double_counting
+
+ use common_def, only: utils_assert, utils_abort
+
  implicit none
  integer    :: j_,i,j,k,kk_,iii,jjj
  real(8)    :: zav,dummy(channels,channels)
@@ -3352,12 +3345,9 @@ endif
     if(LL/=3)then
       write(*,*) 'ERROR, flag flag_use_jj_basis_for_f only for F orbitals (L=3)'
       write(*,*) 'here L=',LL
-      stop
+      call utils_abort("flag_use_jj_basis_for_f is only valid for f-shell orbitals")
     endif
-    if(paramagnetic==1)then
-      write(*,*) 'ERROR, spin orbit non valid for paramagnetic case'
-      stop
-    endif
+    call utils_assert(paramagnetic /= 1, 'Spin orbit is not valid for paramagnetic case')
     do i=1,n_frequ
      call rotate_sigma_green_to_f(sigma_mat(1,i,:,:),sigma_mat(2,i,:,:))
      call rotate_sigma_green_to_f(   green_(1,i,:,:),   green_(2,i,:,:))
@@ -3378,7 +3368,7 @@ endif
     if(.not.double_counting_zero_self.and.maxval(abs(double_counting(kk_,:)))<1.d-5.and.abs(UU)>1.d-5) then
         write(*,*) ' ERROR double counting is undefined : '
         write(*,*) ' UU,double counting                 : ' , UU, double_counting(kk_,:)
-        stop
+        call utils_abort('Double counting is undefined')
     endif
     if(maxval(abs(sigma_mat(kk_,n_frequ,:,:)))>1.d-5)then
         do k=1,channels
@@ -3440,7 +3430,7 @@ endif
           write(*,*) 'SORRY RENORMALIZATION NOT YET CODED FOR L=3'
           write(*,*) 'the problem is the atomic solver which needs to be modified'
           write(*,*) 'in particular for L=1,2 atom_d.py was modified to accept home made Uc.dat file'
-          stop
+          call utils_abort('Renormalization not yet implemented for L = 3')
        endif
        UU     = UU0     / zav / zav !--> this goes to CTQMC,NCA,OCA
        Jhund  = Jhund0  / zav / zav !--> this goes to CTQMC,NCA,OCA
@@ -3466,9 +3456,7 @@ endif
     enddo
    enddo
   else
-    write(*,*) 'ERROR, onetep+dmft, rotation back to orthogonal basis'
-    write(*,*) 'not implemented yet for f materials, critical'
-    stop
+    call utils_abort('Rotation back to orthogonal basis is not yet implemented for f-shell orbitals')
   endif
  endif
 
@@ -3570,6 +3558,9 @@ endif
  !====================!
 
  subroutine define_double_counting
+
+ use common_def, only: utils_abort
+
  implicit none
  integer                :: klm
  integer                :: i_,ii1,ii2
@@ -3598,9 +3589,7 @@ endif
       endif
       inquire(file='mask_j_matrix',exist=test)
       if(checkujmat.and..not.test)then
-        write(*,*) 'ERROR mask_u_matrix present but not mask_j_matrix'
-        write(*,*) 'please provide both files'
-        stop
+        call utils_abort('mask_u_matrix present but not mask_j_matrix. Please provide both files.')
       endif
       if(checkujmat)then
        open(unit=19881,file='mask_j_matrix')
@@ -3700,6 +3689,9 @@ endif
  !====================!
 
    function matmul_ex(A_trans,rot_dmft,extend) 
+
+   use common_def, only: utils_assert
+
    real(8)    :: A_trans(:,:),rot_dmft(:,:)
    logical    :: extend,check
    real(8)    :: matmul_ex(size(A_trans,1),size(A_trans,2))
@@ -3709,12 +3701,7 @@ endif
    i1=size(A_trans,1) ;i2=size(A_trans,2)
    j1=size(rot_dmft,1);j2=size(rot_dmft,2)
    if(.not.extend)then
-    if(i1/=j1.or.i2/=j2)then
-      write(*,*) 'ERROR, critical, onetep+dmft matmul_ex, size of arrays do not match'
-      write(*,*) 'size Trans.dat   : ', i1,i2
-      write(*,*) 'size in rot_dmft : ', j1,j2
-      stop
-    endif
+    call utils_assert(i1==j1.and.i2==j2, 'Array size mismatch in matmul_ex')
     matmul_ex=matmul(A_trans,rot_dmft)
     return
    endif
@@ -3749,6 +3736,9 @@ endif
  !====================!
 
  subroutine change_phase_T2C(T2Cp)
+
+ use common_def, only: utils_assert
+
  implicit none
  real(8)    :: ctg,Qp,Rm,Rp,Qm,xb,xa,phi
  integer    :: i,m
@@ -3772,10 +3762,7 @@ endif
   !   Rp[m,i] = Real( T2C[m,i] + (-1)**m * T2C[-m,i] )
   !   Qm[m,i] = Imag(-T2C[m,i] + (-1)**m * T2C[-m,i] )
 
-  if(size(T2C,1)/=2*LL+1.or.size(T2C,2)/=channels)then
-    write(*,*) 'ERROR size do not match, phase T2C routine'
-    stop
-  endif
+  call utils_assert((size(T2C,1)==2*LL+1.and.size(T2C,2)==channels), "Array shape mismatch in phase T2C routine")
 
   do i=1,channels
         ctg=0.
@@ -3910,6 +3897,9 @@ endif
  !====================!
 
   subroutine generate_UC_dat_files(U,Jh)
+
+  use common_def, only: utils_assert
+
   implicit none
   real(8) :: U,Jh
   integer :: i,j,k,checkit
@@ -3920,11 +3910,7 @@ endif
             read(30112,*) checkit 
             close(30112)
             call system("rm check_script")
-            if(checkit==0)then
-              write(*,*) 'ERROR, your CTQMC code, in particular atom_d.py script was not updated for onetep'
-              write(*,*) 'critical'
-              stop
-            endif
+            call utils_assert(checkit/=0, 'Your CTQMC code (in particular the atom_d.py script) was not updated for onetep')
             open(unit=30112,file='Uc.dat.onetep')
             write(30112,*) U 
             close(30112)

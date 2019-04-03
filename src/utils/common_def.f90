@@ -19,6 +19,10 @@ MODULE common_def
   public :: stats_func
   public :: system_call
   public :: timer_fortran
+  public :: utils_abort
+  public :: utils_assert
+  public :: utils_system_call
+  public :: utils_unit
 
   ! INTERFACE readfmt
   !  MODULE PROCEDURE readfmt_,readfmt__,readfmt___
@@ -44,6 +48,90 @@ MODULE common_def
 !**************************************************************************
 !**************************************************************************
 !**************************************************************************
+
+   integer function utils_unit()
+      ! Finds a free unit to use for file i/o
+      ! Written by Edward Linscott April 2019 based on ONETEP's corresponding function
+
+      implicit none
+
+      integer :: trial_unit
+      integer :: ierr
+      logical :: directory_exists
+      logical :: is_open
+
+      do trial_unit=10,99
+         inquire(unit=trial_unit, exist=directory_exists, opened=is_open, iostat=ierr)
+         call utils_assert(ierr == 0, "Error in utils_unit: inquring about unit failed")
+         if (directory_exists .and. (.not. is_open)) then
+            utils_unit = trial_unit
+            return
+         end if
+      end do
+
+      call utils_abort("Error in utils_unit: no I/O units available")
+      
+   end function utils_unit
+
+   subroutine utils_abort(error_message, filename)
+      ! Aborts, and prints error to file
+      ! Written by Edward Linscott April 2019 based on ONETEP's corresponding function
+
+      implicit none
+
+      character(len=*), intent(in)           :: error_message
+      character(len=*), intent(in), optional :: filename
+
+      integer                    :: funit
+
+      if (present(filename)) then
+         funit = utils_unit()
+         open(funit, file=trim(filename))
+         write(funit, '(a)') 'TOSCAM terminated abnormally due to the following error'
+         write(funit, '(a)') trim(error_message)
+         close(funit)
+      else
+         write(*, '(a)') 'TOSCAM terminated abnormally due to the following error'
+         write(*, '(a)') trim(error_message)
+      end if
+
+      error stop
+      
+   end subroutine utils_abort
+
+   subroutine utils_assert(assertion, error_message)
+      ! If assertion is false, aborts
+      ! Written by Edward Linscott April 2019
+
+      implicit none
+
+      logical, intent(in)          :: assertion
+      character(len=*), intent(in) :: error_message
+
+      if (.not. assertion) call utils_abort(error_message)
+   
+   end subroutine utils_assert
+
+   subroutine utils_system_call(command, abort)
+      ! Executes a system call "command"
+      ! If abort is set to true, the program will crash if a non-zero
+      ! exit flag is returned by the command
+
+      implicit none
+
+      character(len=*), intent(in)  :: command
+      logical, intent(in), optional :: abort
+
+      integer :: ierr
+
+      call execute_command_line(trim(command), exitstat=ierr)
+      
+      if (present(abort)) then
+         if (abort) call utils_assert(ierr == 0, adjustl(trim(command)) &
+             // " returned a non-zero exit code")
+      end if
+
+   end subroutine utils_system_call
 
  subroutine create_seg_fault
  implicit none
