@@ -50,6 +50,7 @@ ifeq ($(F90),$(filter $(F90),gfortran mpif90))
 endif
 ifeq ($(F90),$(filter $(F90),nagfor mpnagfor))
    REDIRECT = -mdir $(ROOTDIR)/src/obj
+   prep = -fpp -lstdc++
 endif
 ifneq ($(F90), $(filter $(F90), ifort mpifort gfortran mpif90 nagfor mpnagfor))
    $(error Fortran compiler not supported. Advanced users may want to modify the make files appropriately.)

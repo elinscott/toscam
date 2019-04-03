@@ -31,7 +31,7 @@ for i in `seq 1 $ngpu`
  update_case_file 'hubbard_proj_mixing ' 1.0
  update_case_file 'dmft_split '  F  
  update_case_file 'dmft_splitk ' F   
- update_case_file 'dmft_local_scratch ' F 
+ update_case_file 'dmft_local_scratch ' T
  update_case_file 'dmft_dos_min ' -10
  update_case_file 'dmft_dos_max '  10
 
@@ -50,7 +50,7 @@ for i in `seq 1 $ngpu`
 
  for i in `ls real_sigma_output* 2> /dev/null 2>&1` ; do  j=`echo $i | sed 's/real_//g'` ; mv $i $j ; done;
 
- onetep.dmft just_onetep=.true. split_onetep=.true. nproc_onetep=$ngpu compute_dos=.true. dmft_splitkdmftall=.false.  
+ onetep_dmft.out just_onetep=.true. split_onetep=.false. nproc_onetep=$ngpu compute_dos=.true. dmft_splitkdmftall=.false.  
 
  for i in `ls sigma_output* 2> /dev/null 2>&1` ; do  j=`echo $i | sed 's/real_//g'` ; mv $i $j ; done;
 
