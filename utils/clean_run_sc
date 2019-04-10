@@ -56,3 +56,33 @@ rm summing_up_contribN* > /dev/null 2>&1
 rm sum_matrixDensKernelc* > /dev/null 2>&1
 rm invert_matc* > /dev/null 2>&1
 
+# New files as of ONETEP v5.0
+rm -r atom1 &> /dev/null
+rm -r dir_onetep_iter? &> /dev/null
+rm case_onetep &> /dev/null
+rm chem.potential.nmu.iter? &> /dev/null
+rm compound_tot_orb &> /dev/null
+rm edc_output* &> /dev/null
+rm edc_total &> /dev/null
+rm list_of_greens &> /dev/null
+rm mask_loc_rot_atom_pm_? &> /dev/null
+rm mask_loc_rot_atom_spin_? &> /dev/null
+rm onetep_dimer_splitting? &> /dev/null
+rm onetep_dmft_part_? &> /dev/null
+rm onetep_dmft_part_solver_?_atom_? &> /dev/null
+rm onetep_projecting_back? &> /dev/null
+rm sigma_output?_?_? &> /dev/null
+rm *.bib &> /dev/null
+rm *.eigen &> /dev/null
+rm *.greenf_summary &> /dev/null
+rm *.ham? &> /dev/null
+rm *.hub_overlap &> /dev/null
+rm *.hub_overlap_t &> /dev/null
+rm *.inv_overlap &> /dev/null
+rm *.occupancy? &> /dev/null
+rm *.overlap &> /dev/null
+rm *.tot_energy &> /dev/null
+rm *.updated_diis_kernel &> /dev/null
+rm *.updated_diis_kernel_in &> /dev/null
+rm *.updated_diis_kernel_out &> /dev/null
+rm *.updated_diis_kernel_res &> /dev/null

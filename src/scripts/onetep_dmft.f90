@@ -593,11 +593,12 @@ contains
 
      else
 
-       command_line=TRIM(ADJUSTL(exec_onetep))//" "//TRIM(ADJUSTL(CASE_ONETEP))//" > onetep_output_iter"//TRIM(ADJUSTL(toString(iter_dmft)))
-       if(hide_errors) then; command_line=trim(adjustl(command_line))//" 2> /dev/null "; else; command_line=trim(adjustl(command_line))//" 2>&1 "; endif
+       command_line=trim(adjustl(exec_onetep))//" "//trim(adjustl(case_onetep)) // &
+         " > " // trim(adjustl(case_onetep)) // "_" // trim(adjustl(toString(iter_dmft) // ".onetep 2> " &
+         // trim(adjustl(case_onetep)) // "_" // trim(adjustl(toString(iter_dmft) // ".error_message"
 
        write(*,*) 'command line : '
-       write(*,*) TRIM(ADJUSTL(command_line))
+       write(*,*) trim(adjustl(command_line))
        call utils_system_call(command_line, abort=.true.)
 
      endif
