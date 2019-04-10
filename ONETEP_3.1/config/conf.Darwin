@@ -1,5 +1,0 @@
-F90        =  mpif90  
-FFLAGS     = -fpp -DMPI -DFFTW3 -heap-arrays -ip -O1 -openmp -parallel      
-LIBS       = -L/opt/intel/composerxe/mkl/lib/ -lmkl_blas95 -lmkl_lapack95 -lmkl_intel -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -I/opt/intel/composerxe/mkl/include  -lpthread -L/opt/local/mpich2/lib/ -lmpichf90 -lfmpich -lmpich -lmpichcxx -I/opt/local/mpich2/include/   
-OPTFLAGS   = -fpp -DMPI -DFFTW3 -heap-arrays -ip -O1 -openmp -parallel    
-DEBUGFLAGS = -traceback -fpe0 -g -O0 -heap-arrays -inline-debug-info -debug all -check all -zero -ftz -ftrapuv       

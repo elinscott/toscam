@@ -1,6 +1,0 @@
-F90        =  mpif90  
-FFLAGS     = -fpp -DFFTW3 -DMPI -openmp -parallel -L/opt/local/mpich2/lib/ -lmpichf90 -lfmpich -lmpich -lmpichcxx -I/opt/local/mpich2/include/ -I./obj/Darwin/ -I. -I../obj/Darwin -O2 -L/home/cweber/MYLIBRARY/LIB_GPU_NUMERICS -lgpu   
-LIBS       =  -L/opt/acml/ifort64/lib -lacml -no-prec-sqrt -no-prec-div -fp-model fast=2 -L/opt/mkl_10/lib/em64t/ -lmkl_lapack  -lmkl_intel_thread -lmkl_core -liomp5 -L$(HOME)/local/mpich2/lib/ -lmpichf90 -lfmpich -lmpich -lmpichcxx -I$(HOME)/local/mpich2/include/ -L/home/cweber/MYLIBRARY/LIB_FFTW_3.2_ICC_64/lib -I$(HOME)/local/mkl/include -lfftw3 -L/home/cweber/MYLIBRARY/LIB_GPU_NUMERICS -lgpu   
-OPTFLAGS   = -fpp -DFFTW3 -DMPI -O2 -openmp -parallel -axW -no-prec-sqrt -no-prec-div -fp-model fast=2 -ip -DGPU_SPEEDUP -L/home/cweber/MYLIBRARY/LIB_GPU_NUMERICS -lgpu -L/opt/cuda_3.0/lib64 -L/opt/cuda_sdk_3.0/lib -lcudart -lcufft -lcublas -lcutil -I/home/cweber/MYLIBRARY/LIB_GPU_NUMERICS/MODFILES -L/home/cweber/MYLIBRARY/LIB_GPU_NUMERICS -lgpu    
-#GPU LINKING :    
-DEBUGFLAGS =   

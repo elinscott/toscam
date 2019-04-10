@@ -1,9 +1,0 @@
-F90 = mpif90
-FFLAGS = -DFFTW3 -DMPI
-
-OPTFLAGS = -O3 -opt-mem-bandwidth2
-DEBUGFLAGS = -g -C
-
-MPILIBS= -pthread -L/usr/lib64/openmpi/lib/ -lmpi_f90 -lmpi_f77 -lmpi -lopen-rte -lopen-pal -ldl -Wl,--export-dynamic -lnsl -lutil -lm -ldl
-
-LIBS = $(MPILIBS) -L$(MKLPATH) -lfftw3 -lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lpthread

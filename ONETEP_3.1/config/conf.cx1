@@ -1,8 +1,0 @@
-F90 = mpiifort
-FFLAGS = -DFFTW3 -DSCALAPACK -DMPI -vec-report0 -I$(MPI_HOME)/include
-MATHLIBS = -L$(MKL_HOME)/lib/64 -lmkl -lfftw3xf_intel -lguide
-SCALAPACKLIBS = -lmkl_scalapack_lp64 -lmkl_blacs_intelmpi_lp64
-LIBS=$(SCALAPACKLIBS) $(MATHLIBS) $(MPILIBS)
-
-OPTFLAGS = -O2
-DEBUGFLAGS = -g -C -stand f90 -DDEBUG_ARRAYS

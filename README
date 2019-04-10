@@ -32,13 +32,9 @@
 
  doc/       Documentation
 
- ed_solver/ Source code for the exact diagonalization solver
+ src/       Source code (fortran)
 
- lib/       Libraries
-
- src/       Source code for TOSCAM executables
-
- utils/     Basic bash script utilities
+ utils/     Bash script utilities
 
 -------------------------------------------------------------
 
