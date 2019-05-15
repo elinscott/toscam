@@ -32,9 +32,9 @@
 
  doc/       Documentation
 
- src/       Source code (fortran)
+ src/       Fortran source code
 
- utils/     Bash script utilities
+ utils/     Bash scripts
 
 -------------------------------------------------------------
 

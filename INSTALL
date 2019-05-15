@@ -49,9 +49,9 @@ parallelism, in which case OpenMP will need to be enabled for your compiler
   g) CXXFLAGS are the C++ flags to use
   h) RANLIB is the local installation of ranlib
 
-4) Running make with no target in the ONETEP directory lists the available 
+4) Running make with no target in the base directory lists the available 
    options. The normal target is 'toscam' but there are also options for 
    step-by-step compilation of the libraries and solver.
 
 TOSCAM Developers
-Last updated: 5 April 2018
+Last updated: 10 April 2019

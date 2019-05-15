@@ -4,7 +4,6 @@ module splines
   use genvar
   use random
   use geometry
-  use tools_fit
   use mpirout
   use derivative_noise
   use splines2, only: spline_overhauser_val

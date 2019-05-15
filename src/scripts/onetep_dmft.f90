@@ -594,8 +594,8 @@ contains
      else
 
        command_line=trim(adjustl(exec_onetep))//" "//trim(adjustl(case_onetep)) // &
-         " > " // trim(adjustl(case_onetep)) // "_" // trim(adjustl(toString(iter_dmft) // ".onetep 2> " &
-         // trim(adjustl(case_onetep)) // "_" // trim(adjustl(toString(iter_dmft) // ".error_message"
+         " > " // trim(adjustl(case_onetep)) // "_" // &
+         trim(adjustl(toString(iter_dmft))) // ".onetep"
 
        write(*,*) 'command line : '
        write(*,*) trim(adjustl(command_line))
@@ -634,8 +634,7 @@ contains
        command_line=" onetep_split_serial.out iter_dmft="//TRIM(ADJUSTL(toString(iter_dmft)))//" > onetep_dmft_part_"//TRIM(ADJUSTL(toString(iter_dmft)))
      endif
 
-     write(*,*) 'command line : '
-     write(*,*) TRIM(ADJUSTL(command_line))
+     write(*,*) 'command line: ' // trim(adjustl(command_line))
 
      call utils_system_call(command_line, abort=.true.)
 

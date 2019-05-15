@@ -80,7 +80,7 @@ cp sigma_output*_* atom$1/                                 > /dev/null 2>&1
 mv $2 atom$1/
 cd atom$1
 echo "calling ONE ITER DMFT in directory " `pwd`
-echo "command line is : onetep_dmft_one_iter.out " $2 $3 
+echo "command line: onetep_dmft_one_iter.out " $2 $3 
 onetep_dmft_one_iter.out $2 $3
 if [[ $? -ne 0 ]]; then
    echo "ERROR: onetep_dmft_one_iter.out returned a non-zero exit code"

@@ -271,6 +271,9 @@
       !-------------!
 
  subroutine one_atom_one_dmft_iter(i,jj)
+
+ use common_def, only: utils_system_call
+
  implicit none
  integer        :: i,jj
  character(400) :: command_line
@@ -280,7 +283,7 @@
     command_line="onetep_dmft_one_iter_script_pm.out "//TRIM(ADJUSTL(toString(jj)))//" "//TRIM(ADJUSTL(list_of_greens(i,1)))//" "//TRIM(ADJUSTL(toString(iter_dmft)))
     command_line=trim(adjustl(command_line))//" "//trim(adjustl(input_temp_dir))//" > onetep_dmft_part_solver_"//TRIM(ADJUSTL(toString(iter_dmft)))//"_atom_"//TRIM(ADJUSTL(toString(jj)))
     write(*,*) 'calling command line : ', TRIM(ADJUSTL(command_line))
-    call system(command_line)
+    call utils_system_call(command_line, abort=.true.)
   else
     write(*,*) 'no paramagnetic constraint'
     write(*,*) 'green func files : ', TRIM(ADJUSTL(list_of_greens(i,1))), TRIM(ADJUSTL(list_of_greens(i,2)))
@@ -288,7 +291,7 @@
                 &//" "//TRIM(ADJUSTL(toString(iter_dmft)))
     command_line=trim(adjustl(command_line))//" "//trim(adjustl(input_temp_dir))//" > onetep_dmft_part_solver_"//TRIM(ADJUSTL(toString(iter_dmft)))//"_atom_"//TRIM(ADJUSTL(toString(jj)))
     write(*,*) 'calling command line : ', TRIM(ADJUSTL(command_line))
-    call system(command_line)
+    call utils_system_call(command_line, abort=.true.)
   endif
 
   if(flag_donot_keep_all_files)then

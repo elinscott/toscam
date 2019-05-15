@@ -262,8 +262,10 @@ contains
 
       ! FILTER OUT ALL EIGENSTATES OUTSIDE window IN ALL EIGENSECTORS OF list
 
+      use common_def,  only: utils_assert
       use eigen_class, only: filter_eigen
       use genvar,      only: log_unit, messages4
+      use stringmanip, only: toString
 
       implicit none
 
@@ -291,8 +293,9 @@ contains
             if(messages4) write(log_unit, *) 'done, now remains .. sectors : &
                  &', nn-1
             nn = nn-1
-            if(nn /= list%nsector) stop 'error in filter sector, nn different &
-                 &from list nsector'
+            call utils_assert(nn == list%nsector, 'Error in &
+                 &filter_eigensector: nn = ' // toString(nn) // ' is not equal to &
+                 &list%nsector = ' // toString(list%nsector))
          else
             isector = isector + 1
          endif

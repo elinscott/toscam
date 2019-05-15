@@ -71,7 +71,6 @@ ROUTINES= common_def.f90 \
           string4.f90 \
           string5.f90 \
           tools_algebra.f90 \
-          tools_fit.f90 \
           tridiag_class.f90
 ROUTINESC=IEEE.c
 ROUTINESCXX=memory_address_functions.cpp
@@ -174,8 +173,7 @@ sorting.mod: sorting.f90 linalg.mod random.mod
 specialfunction.mod: specialfunction.f90 genvar.mod linalg.mod
  
 splines.mod: splines.f90 derivative_noise.mod genvar.mod geometry.mod \
-             mpirout.mod random.mod smooth_data.mod sorting.mod splines2.mod \
-             tools_fit.mod
+             mpirout.mod random.mod smooth_data.mod sorting.mod splines2.mod
 
 splines2.mod: splines2.f90
 
@@ -191,8 +189,6 @@ string5.mod: string5.f90 stringmanip.mod
  
 tools_algebra.mod: tools_algebra.f90 genvar.mod
  
-tools_fit.mod: tools_fit.f90 
-
 IEEE.o: IEEE.c 
 
 memory_address_functions.o: memory_address_functions.cpp

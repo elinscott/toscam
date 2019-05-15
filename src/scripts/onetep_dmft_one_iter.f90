@@ -911,7 +911,7 @@ contains
 
  subroutine dmft_run
 
- use common_def, only: utils_assert, utils_abort
+ use common_def, only: utils_assert, utils_abort, utils_system_call
 
  implicit none
  complex(8)   ::  mat_tmp0(2*LL+1,2*LL+1),mat_tmp20(2*(2*LL+1),2*(2*LL+1))
@@ -1507,15 +1507,15 @@ endif
  call system("mv PARAMS* "//TRIM(ADJUSTL(filename)))
  if(.not.ctqmc_erase_status) call system("cp status* "//TRIM(ADJUSTL(filename)))
     if(solver==1)then
- call system("run_iter_ctqmc "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver)))) 
+ call utils_system_call("run_iter_ctqmc "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))), abort=.true.) 
 elseif(solver==2)then
- call system("run_iter_nca "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))))
+ call utils_system_call("run_iter_nca "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))), abort=.true.)
 elseif(solver==3)then
- call system("run_iter_oca "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))))
+ call utils_system_call("run_iter_oca "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))), abort=.true.)
 elseif(solver==4)then
- call system("run_iter_ed "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))))
+ call utils_system_call("run_iter_ed "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))), abort=.true.)
 elseif(solver==5)then
- call system("run_iter_hf "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))))
+ call utils_system_call("run_iter_hf "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))), abort=.true.)
 else
  call utils_abort('Solver not defined')
 endif

@@ -41,6 +41,12 @@ then
 fi
 fi
 
+if [[ $? -ne 0 ]]; then
+   echo "ERROR: ed_solver_serial.out returned a non-zero exit code"
+   echo "Exiting run_iter_ed"
+   exit 1
+fi
+
 echo "   " >>  sigma_output
 cp  status* ../                     2> /dev/null
 cp  sigma_output ../                2> /dev/null 
@@ -54,5 +60,3 @@ cp  ed.fmos ../                     2> /dev/null
 cd ..
 echo "ED SOLVER DONE, now in directory : " `pwd`
 echo "SIGMA FILES : " `ls sigma_output* 2> /dev/null`
-
-
