@@ -1,13 +1,12 @@
 #!/bin/bash
-killall -9 onetep.dmft.sc                            > /dev/null 2>&1
-killall -9 onetep.dmft                               > /dev/null 2>&1 
+killall -9 onetep_dmft_sc.out                        > /dev/null 2>&1
+killall -9 onetep_dmft.out                           > /dev/null 2>&1 
 killall -9 ed_solver.out                             > /dev/null 2>&1 
 killall -9 run_iter_ed                               > /dev/null 2>&1 
 killall -9 ed.biggie.cpu                             > /dev/null 2>&1 
 killall -9 ed.biggie.cpu.serial                      > /dev/null 2>&1 
 killall -9 ctqmc                                     > /dev/null 2>&1 
 killall -9 onetep.tcm                                > /dev/null 2>&1 
-killall -9 onetep.tcm.serial                         > /dev/null 2>&1 
 killall -9 dmft_all_iterations.onetep.out            > /dev/null 2>&1 
 killall -9 onetep_dmft_one_iter.out                  > /dev/null 2>&1 
 killall -9 onetep_split_serial.out                   > /dev/null 2>&1 
