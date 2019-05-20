@@ -135,21 +135,21 @@ contains
  call system("get_onetep_env")
  open(unit=10001,file='dir_onetep')
  read(10001,'(a)') dir_onetep
- write(*,*) 'my path to ONETEP+DMFT executables is : ',TRIM(ADJUSTL(dir_onetep))
+ write(*,*) 'My TOSCAM base directory is ',TRIM(ADJUSTL(dir_onetep))
  close(10001)
  call system("rm dir_onetep > /dev/null 2>&1")
 
  call system("get_mpi_env")
  open(unit=10001,file='dir_onetep_mpi')
  read(10001,'(a)') dir_onetep_mpi
- write(*,*) 'my mpi executable is : ',TRIM(ADJUSTL(dir_onetep_mpi))
+ write(*,*) 'My MPI executable is ',TRIM(ADJUSTL(dir_onetep_mpi))
  close(10001)
  call system("rm dir_onetep_mpi > /dev/null 2>&1")
 
  call system("get_onetep_exec")
  open(unit=10001,file='exec_onetep')
  read(10001,'(a)') exec_onetep
- write(*,*) 'my ONETEP executable is : ',TRIM(ADJUSTL(exec_onetep))
+ write(*,*) 'My ONETEP executable is ',TRIM(ADJUSTL(exec_onetep))
  close(10001)
  call system("rm exec_onetep > /dev/null 2>&1")
  end subroutine
@@ -239,7 +239,6 @@ contains
  endif
 
    call my_dmft_exe
-   write(*,*) 'my dmft executables are in : ', TRIM(ADJUSTL(dir_onetep))
 
    if(.not.just_onetep) call system(TRIM(ADJUSTL(dir_onetep))//"/disable_write ") 
 

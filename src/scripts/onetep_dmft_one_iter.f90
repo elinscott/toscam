@@ -955,9 +955,9 @@ contains
     allocate(T2C(2*LL+1,channels),T2Cp(channels,2*LL+1))
     nheaders=3+2*LL+1
     if(cubic==1)then
-      call system("cp "//TRIM(ADJUSTL(dir_onetep))//"utils/INPUTS/Trans_cubicL"//TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
+      call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubicL"//TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
     else
-      call system("cp "//TRIM(ADJUSTL(dir_onetep))//"utils/INPUTS/Trans_sphericalL"//TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
+      call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_sphericalL"//TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
     endif
 
     inquire(file='Trans.loc.pm.dat',exist=check)
@@ -2233,7 +2233,7 @@ endif
   call system("get_onetep_env")
   open(unit=10001,file='dir_onetep')
   read(10001,'(a)') dir_onetep
-  write(*,*) 'my path to ONETEP+DMFT executables is : ',TRIM(ADJUSTL(dir_onetep))
+  write(*,*) 'My TOSCAM base directory is ',TRIM(ADJUSTL(dir_onetep))
   close(10001,status='delete')
 ! call system("rm dir_onetep")
 

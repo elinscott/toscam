@@ -84,7 +84,7 @@ contains
      write(*,*)  'YOU WILL NEED TO DEFINE IN YOUR BASHRC FILE THE FOLLOWING ENV VARIABLES : '
      write(*,*)  ' '
      write(*,*)  'ONETEP                  : the path to your onetep executble (example : /bin/onetep.linux)'
-     write(*,*)  'DMFT_ONETEP             : the path to the TOSCAM directory (example : ~/MYLIBS/TOSCAM/)' 
+     write(*,*)  'TOSCAM                  : the path to the TOSCAM directory (example : ~/MYLIBS/TOSCAM/)' 
      write(*,*)  'DMFT_ONETEP_SCRATCH_DIR : (optional) a path to a scratch directory (example : /tmp/cedric/ )' 
      write(*,*)  'DMFT_ONETEP_MPI_EXEC    : your MPI prefix (example mpirun )' 
      write(*,*)  'DMFT_ONETEP_BG          : set it to 1 if you are using BlueGene/IBM, 0 otherwise'
@@ -176,7 +176,7 @@ contains
  open(unit=10001,file='dir_onetep')
  read(10001,'(a)') dir_onetep
  write(*,*) '----------------------------------------------------------'
- write(*,*) 'my path to ONETEP+DMFT executables is : ',TRIM(ADJUSTL(dir_onetep))
+ write(*,*) 'My TOSCAM base directory is ',TRIM(ADJUSTL(dir_onetep))
  write(*,*) '----------------------------------------------------------'
  close(10001)
  call system("rm dir_onetep > /dev/null 2>&1")
@@ -185,7 +185,7 @@ contains
  open(unit=10001,file='dir_onetep_mpi')
  read(10001,'(a)') dir_onetep_mpi
  write(*,*) '----------------------------------------------------------'
- write(*,*) 'my mpi executable is : ',TRIM(ADJUSTL(dir_onetep_mpi))
+ write(*,*) 'My MPI executable is ',TRIM(ADJUSTL(dir_onetep_mpi))
  write(*,*) '----------------------------------------------------------'
  close(10001)
  call system("rm dir_onetep_mpi > /dev/null 2>&1")
@@ -194,7 +194,7 @@ contains
  open(unit=10001,file='exec_onetep')
  read(10001,'(a)') exec_onetep
  write(*,*) '----------------------------------------------------------'
- write(*,*) 'my ONETEP executable is : ',TRIM(ADJUSTL(exec_onetep))
+ write(*,*) 'My ONETEP executable is ',TRIM(ADJUSTL(exec_onetep))
  write(*,*) '----------------------------------------------------------'
  close(10001)
  call system("rm exec_onetep > /dev/null 2>&1")
@@ -323,9 +323,6 @@ contains
   endif
 
   call my_dmft_exe
-  write(*,*) '----------------------------------------------------------'
-  write(*,*) 'my dmft executables are in : ', TRIM(ADJUSTL(dir_onetep))
-  write(*,*) '----------------------------------------------------------'
 
   if(monitor_gpu_temperature) call system("monitor_temp.out &")
 

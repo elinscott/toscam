@@ -1,2 +1,2 @@
 #!/bin/bash
-echo ${DMFT_ONETEP} > dir_onetep$1
+echo ${TOSCAM} > dir_onetep$1
