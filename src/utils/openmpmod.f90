@@ -192,7 +192,7 @@ contains
 
    subroutine init_openmp
    implicit none
-
+     
      !$OMP PARALLEL PRIVATE(NTHREADS, TID)
         TID      = OMP_GET_THREAD_NUM()
         PROCS    = OMP_GET_NUM_PROCS()

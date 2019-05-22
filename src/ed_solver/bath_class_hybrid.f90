@@ -86,7 +86,6 @@ contains
       LOGICAL, OPTIONAL         :: cpt_build_matrix
       REAL(8), OPTIONAL         :: Vweight
 
-
       Nb = BATH%Nb
       Ntot = Nb + ncpt_approx_tot
       Nc = BATH%Nc

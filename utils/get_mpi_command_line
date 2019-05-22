@@ -54,7 +54,7 @@ fi
    then
      mpicmd=" $1 $2 "
    else
-     mpicmd="mpirun"
+     mpicmd="mpirun -genv OMP_NUM_THREADS=$5"
       if [ $DMFT_ONETEP_MPICH2 != ${mpich2} ];
       then
        if [ $6 != ${nomachine} ];

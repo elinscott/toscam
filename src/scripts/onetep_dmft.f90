@@ -341,9 +341,8 @@ type(string)               :: cc_
     endif
 
     if(.not.just_onetep)then
-     write(*,*) 'RUNNING DMFT ITERATION [x] : ', iter_dmft, niter_dmft
-   ! call system(" rm store_* " )   !  TESTING  
-     write(*,*) 'running iteration DMFT : ', iter_dmft, niter_dmft
+       write(*,'(a)') 'DMFT ITERATION ' // trim(adjustl(toString(iter_dmft))) &
+            // ' of ' // toString(niter_dmft)
     endif
 
      write(*,*) 'running onetep for case : ',trim(adjustl(CASE_ONETEP))
@@ -436,173 +435,173 @@ contains
 
  subroutine onetep_normal_mode
 
- use common_def, only: utils_system_call
+   use common_def, only: utils_system_call
 
- implicit none
+   implicit none
 
- integer         :: jj,k,nprocess
- character(2000) :: myhost,prefix,args,output,mach_arg,mach_file
- character(3)    :: lochost
- integer         :: ierr
+   integer         :: jj,k,nprocess
+   character(2000) :: myhost,prefix,args,output,mach_arg,mach_file
+   character(3)    :: lochost
+   integer         :: ierr
 
-
-     call system("rm ./onetep_confirmation*  > /dev/null 2>&1 ")
-     call system("rm ./green_output*         > /dev/null 2>&1 ")
-
-     if(nproc_onetep>1.or.compute_dos.or.dmft_splitkdmftall)then
-
+   call system("rm ./onetep_confirmation*  > /dev/null 2>&1 ")
+   call system("rm ./green_output*         > /dev/null 2>&1 ")
+   
+   if(nproc_onetep>1.or.compute_dos.or.dmft_splitkdmftall)then
+   
       call fill_onetep_machine_files_rout
-
+   
       call check_machines_onetep_file
-
+   
       if(.not.split_onetep)then
-        if(.not.nomachinefile) then ; mach_arg=' -machinefile ' ; else ; mach_arg='     ' ; endif ;
-        command_line=build_mpi_command_line(prefix=" ",np=nproc_onetep,p=1,omp=nproc_onetep_openmp_,mach=mach_onetep,&
-                                          & mach_arg=mach_arg,args=CASE_ONETEP,exe=exec_onetep,&
-                                          & outputin="onetep_output_iter"//TRIM(ADJUSTL(toString(iter_dmft))),hide_errors=hide_errors,localhost="F")
-        write(*,*) 'command line : '
-        write(*,*) TRIM(ADJUSTL(command_line))
-        call system(trim(adjustl(command_line)))
+         if(.not.nomachinefile) then ; mach_arg=' -machinefile ' ; else ; mach_arg='     ' ; endif ;
+         command_line=build_mpi_command_line(prefix=" ",np=nproc_onetep,p=1,omp=nproc_onetep_openmp_,mach=mach_onetep,&
+                                        & mach_arg=mach_arg,args=CASE_ONETEP,exe=exec_onetep,&
+                                        & outputin=trim(adjustl(case_onetep))//"_"//TRIM(ADJUSTL(toString(iter_dmft)))//".onetep", hide_errors=hide_errors,localhost="F")
+         call utils_system_call(trim(adjustl(command_line)), abort=.true., &
+               report=.true.)
       else
+   
+         !------------------------------------------------!
+         !------------------------------------------------!
+         if(mpi_onetep_type==1)then
+            call system("rm ./onetep_confirmation* > /dev/null 2>&1 ")
+   
+            open(unit=123,file=trim(adjustl(mach_onetep)))
+            if(dmft_splitkdmftall)then
+               do i=1,nproc_onetep
+                  open(unit=691,file='splitk'//TRIM(ADJUSTL(tostring(i))))
+                  do j=1,dmft_splitk_batch
+                     read(123,'(a)',end=665) myhost
+                     write(*,*) 'HOST IN MACHINES_ONETEP FILE / BATCH : ', trim(adjustl(myhost)),i
+                     write(691,*) trim(adjustl(myhost))
+                  enddo 
+               close(691)
+            enddo
+         endif
 
-        !------------------------------------------------!
-        !------------------------------------------------!
-        if(mpi_onetep_type==1)then
-        call system("rm ./onetep_confirmation* > /dev/null 2>&1 ")
-
-        open(unit=123,file=trim(adjustl(mach_onetep)))
-        if(dmft_splitkdmftall)then
-         do i=1,nproc_onetep
-          open(unit=691,file='splitk'//TRIM(ADJUSTL(tostring(i))))
-          do j=1,dmft_splitk_batch
-            read(123,'(a)',end=665) myhost
-            write(*,*) 'HOST IN MACHINES_ONETEP FILE / BATCH : ', trim(adjustl(myhost)),i
-            write(691,*) trim(adjustl(myhost))
-          enddo 
-          close(691)
-         enddo
-        endif
-        if(.false.)then
-          665 continue
-          write(*,*) 'ERROR not enough entries in '//trim(adjustl(mach_onetep))
-          write(*,*) 'expecting in total with [x] cpus : ', dmft_splitk_batch*nproc_onetep
-          stop
-        endif
-        close(123)
-
-        open(unit=123,file=trim(adjustl(mach_onetep)))
-
-        do i=1,nproc_onetep
-         read(123,*,end=65) myhost 
-         write(*,*) 'HOST IN MACHINES_ONETEP FILE : ', trim(adjustl(myhost))
          if(.false.)then
-           65 continue
-           write(*,*) 'ERROR file machines containing hosts does not exist or does not contain all nodes, error'
-           write(*,*) 'nproc for onetep       : ', nproc_onetep
-           write(*,*) 'batch of splik nodes   : ', dmft_splitk_batch
-           write(*,*) 'using splik nodes ?    : ', dmft_splitkdmftall
-           write(*,*) 'using openmp      ?    : ', nproc_onetep_openmp_>1
-           write(*,*) 'nodes in file machines : '
-           call system(" cat "//trim(adjustl(mach_onetep)))
-           stop
+            665 continue
+            write(*,*) 'ERROR not enough entries in '//trim(adjustl(mach_onetep))
+            write(*,*) 'expecting in total with [x] cpus : ', dmft_splitk_batch*nproc_onetep
+            stop
          endif
+         close(123)
+   
+         open(unit=123,file=trim(adjustl(mach_onetep)))
+   
+         do i=1,nproc_onetep
+            read(123,*,end=65) myhost 
+            write(*,*) 'HOST IN MACHINES_ONETEP FILE : ', trim(adjustl(myhost))
+            if(.false.)then
+               65 continue
+               write(*,*) 'ERROR file machines containing hosts does not exist or does not contain all nodes, error'
+               write(*,*) 'nproc for onetep       : ', nproc_onetep
+               write(*,*) 'batch of splik nodes   : ', dmft_splitk_batch
+               write(*,*) 'using splik nodes ?    : ', dmft_splitkdmftall
+               write(*,*) 'using openmp      ?    : ', nproc_onetep_openmp_>1
+               write(*,*) 'nodes in file machines : '
+               call system(" cat "//trim(adjustl(mach_onetep)))
+               stop
+            endif
+   
+            write(*,*) ' SENDING A JOB ON HOST : ', myhost
+            write(*,*) ' ASYNC CALLS TO ONETEP : ', i
+   
+            if(all_local_host) then
+               prefix=" export OMP_NUM_THREADS="//trim(adjustl(tostring(nproc_onetep_openmp_)))//" ; "
+               if(numa) prefix=trim(adjustl(prefix))//"  numactl  --localalloc  "
+            else
+               prefix=" "
+            endif
+            if(.not.dmft_splitkdmftall)then
+               mach_arg=" -host "
+               mach_file=TRIM(ADJUSTL(myhost)) 
+               nprocess=1
+            else
+               if(.not.nomachinefile) then ; mach_arg=' -machinefile ' ; else ; mach_arg='     ' ; endif ;
+               mach_file="splitk"//TRIM(ADJUSTL(tostring(i)))
+               nprocess=dmft_splitk_batch
+            endif
+            
+            args=trim(adjustl(CASE_ONETEP))//" "//TRIM(ADJUSTL(toString(i)))//" "//TRIM(ADJUSTL(toString(nproc_onetep)))
+            if(compute_dos)then
+               args=trim(adjustl(args))//" "//TRIM(ADJUSTL(toString(ed_real_frequ_last)))//" 1 "//&
+                      & TRIM(ADJUSTL(toString(ed_frequ_min)))//"  "//TRIM(ADJUSTL(toString(ed_frequ_max)))//"  "
+            endif
+            output=" onetep_output_iter"//TRIM(ADJUSTL(toString(iter_dmft)))//"_rank__"//TRIM(ADJUSTL(toString(i)))
+            if(all_local_host)then
+               lochost='T'
+            else
+               lochost='F'
+            endif
+   
+            command_line=build_mpi_command_line(prefix=prefix,np=nprocess,p=1,omp=nproc_onetep_openmp_,mach=mach_file,&
+                                             & mach_arg=mach_arg,args=args,exe=exec_onetep,&
+                                             & outputin=output,hide_errors=hide_errors,localhost=lochost,ampersand=.true.)
+   
+            write(*,*) ' command line for proc [x], total : ', i , nproc_onetep 
+            write(*,*) TRIM(ADJUSTL(command_line))
+            call utils_system_call(command_line, abort = .true.)
+   
+         enddo
 
-         write(*,*) ' SENDING A JOB ON HOST : ', myhost
-         write(*,*) ' ASYNC CALLS TO ONETEP : ', i
-
-         if(all_local_host) then
-                   prefix=" export OMP_NUM_THREADS="//trim(adjustl(tostring(nproc_onetep_openmp_)))//" ; "
-          if(numa) prefix=trim(adjustl(prefix))//"  numactl  --localalloc  "
-         else
-            prefix=" "
-         endif
-         if(.not.dmft_splitkdmftall)then
-           mach_arg=" -host "
-           mach_file=TRIM(ADJUSTL(myhost)) 
-           nprocess=1
-         else
-           if(.not.nomachinefile) then ; mach_arg=' -machinefile ' ; else ; mach_arg='     ' ; endif ;
-           mach_file="splitk"//TRIM(ADJUSTL(tostring(i)))
-           nprocess=dmft_splitk_batch
-         endif
-           args=trim(adjustl(CASE_ONETEP))//" "//TRIM(ADJUSTL(toString(i)))//" "//TRIM(ADJUSTL(toString(nproc_onetep)))
-         if(compute_dos)then
-           args=trim(adjustl(args))//" "//TRIM(ADJUSTL(toString(ed_real_frequ_last)))//" 1 "//&
-                   & TRIM(ADJUSTL(toString(ed_frequ_min)))//"  "//TRIM(ADJUSTL(toString(ed_frequ_max)))//"  "
-         endif
-         output=" onetep_output_iter"//TRIM(ADJUSTL(toString(iter_dmft)))//"_rank__"//TRIM(ADJUSTL(toString(i)))
-
-         if(all_local_host)then
-          lochost='T'
-         else
-          lochost='F'
-         endif
-
-         command_line=build_mpi_command_line(prefix=prefix,np=nprocess,p=1,omp=nproc_onetep_openmp_,mach=mach_file,&
-                                          & mach_arg=mach_arg,args=args,exe=exec_onetep,&
-                                          & outputin=output,hide_errors=hide_errors,localhost=lochost,ampersand=.true.)
-
-         write(*,*) ' command line for proc [x], total : ', i , nproc_onetep 
-         write(*,*) TRIM(ADJUSTL(command_line))
-         call utils_system_call(command_line, abort = .true.)
-
-        enddo
-          do 
+         do 
             call system("sleep 3")
             call system("ls -l onetep_confirmation_* 2>&1 | grep -v 'No such' | wc -l > onetep_confirmation ")
             open(unit=10,file='onetep_confirmation')
             jj=0
             do k=1,1 
-             read(10,*,end=67) jj
+               read(10,*,end=67) jj
             enddo
             67 continue   
             close(10)
             write(*,*) 'N PROCESS ARE DONE = ',jj      
             if(jj==nproc_onetep) then
-              write(*,*) 'ALL JOBS ARE DONE'
-              exit
+               write(*,*) 'ALL JOBS ARE DONE'
+               exit
             endif
-          enddo
-        close(123)
-        !------------------------------------------------!
-        !------------------------------------------------!
-        else
-          open(unit=55,file='temp_onetep_part',form='unformatted')
-          write(55) nproc_onetep, iter_dmft, exec_onetep, &
-                 & CASE_ONETEP, compute_dos, ed_frequ_min, ed_frequ_max, ed_real_frequ_last
-          close(55)
-
-          prefix=" "
-          if(.not.nomachinefile) then ; mach_arg=' -machinefile ' ; else ; mach_arg='     ' ; endif ;
-          mach_file=mach_onetep
-          nprocess=nproc_onetep
-          args="  "
-          output=" dmft_all_iterations_output "
-          command_line=build_mpi_command_line(prefix=prefix,np=nprocess,p=1,omp=nproc_onetep_openmp_,mach=mach_file,&
-                                           & mach_arg=mach_arg,args=args,exe="dmft_all_iterations.onetep.out",&
-                                           & outputin=output,hide_errors=.false.,localhost='F')
- 
-          write(*,*) 'running onetep in mpi-2 mode : ', TRIM(ADJUSTL(command_line))
-          call utils_system_call(command_line, abort = .true.)
-          write(*,*) 'onetep part done'
-        endif
-        !------------------------------------------------!
-        !------------------------------------------------!
+         enddo
+         close(123)
+         !------------------------------------------------!
+         !------------------------------------------------!
+         else
+            open(unit=55,file='temp_onetep_part',form='unformatted')
+            write(55) nproc_onetep, iter_dmft, exec_onetep, &
+                   & CASE_ONETEP, compute_dos, ed_frequ_min, ed_frequ_max, ed_real_frequ_last
+            close(55)
+   
+            prefix=" "
+            if(.not.nomachinefile) then ; mach_arg=' -machinefile ' ; else ; mach_arg='     ' ; endif ;
+            mach_file=mach_onetep
+            nprocess=nproc_onetep
+            args="  "
+            output=" dmft_all_iterations_output "
+            command_line=build_mpi_command_line(prefix=prefix,np=nprocess,p=1,omp=nproc_onetep_openmp_,mach=mach_file,&
+                                             & mach_arg=mach_arg,args=args,exe="dmft_all_iterations.onetep.out",&
+                                             & outputin=output,hide_errors=.false.,localhost='F')
+   
+            write(*,*) 'running onetep in mpi-2 mode : ', TRIM(ADJUSTL(command_line))
+            call utils_system_call(command_line, abort = .true.)
+            write(*,*) 'onetep part done'
+         endif
+         !------------------------------------------------!
+         !------------------------------------------------!
       endif
-
-     else
-
-       command_line=trim(adjustl(exec_onetep))//" "//trim(adjustl(case_onetep)) // &
-         " > " // trim(adjustl(case_onetep)) // "_" // &
-         trim(adjustl(toString(iter_dmft))) // ".onetep"
-
-       write(*,*) 'command line : '
-       write(*,*) trim(adjustl(command_line))
-       call utils_system_call(command_line, abort=.true.)
-
-     endif
-
-     call system(" dmft_collect_script.out 2>&1 ")
+   
+   else
+   
+      command_line=trim(adjustl(exec_onetep))//" "//trim(adjustl(case_onetep)) // &
+            " > " // trim(adjustl(case_onetep)) // "_" // &
+            trim(adjustl(toString(iter_dmft))) // ".onetep"
+   
+      write(*,*) 'command line : '
+      write(*,*) trim(adjustl(command_line))
+      call utils_system_call(command_line, abort=.true.)
+   
+   endif
+   
+   call system(" dmft_collect_script.out 2>&1 ")
 
  end subroutine
 

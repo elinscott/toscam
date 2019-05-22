@@ -9,8 +9,8 @@ MODULE eigen_sector_class
    private
 
    type eigensector_type
-   type(sector_type)    :: sector
-   type(eigenlist_type) :: lowest
+      type(sector_type)    :: sector
+      type(eigenlist_type) :: lowest
    end type
 
    interface new_eigensector
@@ -19,8 +19,8 @@ MODULE eigen_sector_class
    end interface
 
    type eigensectorlist_type
-   integer                         :: nsector = 0
-   type(eigensector_type), pointer :: es(:) => null()
+      integer                         :: nsector = 0
+      type(eigensector_type), pointer :: es(:) => null()
    end type
 
    interface new_rcvec_from_file
@@ -294,8 +294,9 @@ contains
                  &', nn-1
             nn = nn-1
             call utils_assert(nn == list%nsector, 'Error in &
-                 &filter_eigensector: nn = ' // toString(nn) // ' is not equal to &
-                 &list%nsector = ' // toString(list%nsector))
+                 &filter_eigensector: nn = ' // trim(adjustl(toString(nn))) &
+                 // ' is not equal to list%nsector = ' &
+                 // trim(adjustl(toString(list%nsector))))
          else
             isector = isector + 1
          endif

@@ -14,6 +14,9 @@ ARCH = `$(ROOTDIR)/bin/arch`
 default: help
 
 toscam: src_obj lib ed_solver
+	@( if [ ! -d bin ] ; \
+		then mkdir bin ; \
+	fi )
 	@echo Compiling toscam scripts
 	@( cd bin ; \
 	$(MAKE) -f $(ROOTDIR)/src/scripts/makefile ARCH=$(ARCH) ROOTDIR=$(ROOTDIR))

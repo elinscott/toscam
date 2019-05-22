@@ -112,23 +112,45 @@ MODULE common_def
    
    end subroutine utils_assert
 
-   subroutine utils_system_call(command, abort)
+   subroutine utils_system_call(command, abort, report)
       ! Executes a system call "command"
       ! If abort is set to true, the program will crash if a non-zero
       ! exit flag is returned by the command
+      ! If report is set to true (or if in DEBUG mode), write out the command
+      ! being called
 
       implicit none
 
       character(len=*), intent(in)  :: command
       logical, intent(in), optional :: abort
+      logical, intent(in), optional :: report
+
+      logical :: report_loc
 
       integer :: ierr
+      character(8) :: ierr_str
+
+      report_loc = .false.
+      if (present(report)) report_loc = report
+
+#ifdef DEBUG
+      ! Always write out if in DEBUG mode
+      report_loc = .true.
+#endif
+
+      if (report_loc) then
+         write(*, '(a,a)') 'Performing system call ', trim(adjustl(command))
+      end if
 
       call execute_command_line(trim(command), exitstat=ierr)
-      
+
       if (present(abort)) then
-         if (abort) call utils_assert(ierr == 0, adjustl(trim(command)) &
-             // " returned a non-zero exit code")
+         if (abort) then
+            write(ierr_str, '(i8)') ierr
+            call utils_assert(ierr == 0, trim(adjustl(command)) &
+                  // " returned a non-zero exit code (" &
+                  // trim(adjustl(ierr_str)) // ")" )
+         end if
       end if
 
    end subroutine utils_system_call

@@ -21,24 +21,24 @@ echo `pwd`
 
 if [ $3 == 1 ]
 then
-ed_solver_serial.out EDfile=ed.in BATHfile=ed.hybrid CORRELfile=ed.correl OLDGSFILE=GS.raw
+   ed_solver_serial.out EDfile=ed.in BATHfile=ed.hybrid CORRELfile=ed.correl OLDGSFILE=GS.raw &> run_iter_ed.out
 else
-ls machines_ed || fill_machine_file machines_ed $3
-
-j=`cat machines_ed | sort | uniq | wc -l`
-if [ $j == 1 ]
-then
-  jj=`cat machines_ed | sort | uniq`
-  echo "only local node : " $jj
-  mpicommand=`get_mpi_command_line ed_solver_serial.out "EDfile=ed.in BATHfile=ed.hybrid CORRELfile=ed.correl OLDGSFILE=GS.raw" $3 1 $2 $jj " -host " " " F`
-  echo "your command is : " ${mpicommand}
-  ${mpicommand}
- else
-  echo "multiple nodes : " $j
-  mpicommand=`get_mpi_command_line ed_solver_serial.out "EDfile=ed.in BATHfile=ed.hybrid CORRELfile=ed.correl OLDGSFILE=GS.raw" $3 1 $2 machines_ed " -machinefile " " " F`
-  echo "your command is : " ${mpicommand}
-  ${mpicommand}
-fi
+   ls machines_ed || fill_machine_file machines_ed $3
+   
+   j=`cat machines_ed | sort | uniq | wc -l`
+   if [ $j == 1 ]
+   then
+     jj=`cat machines_ed | sort | uniq`
+     echo "only local node : " $jj
+     mpicommand=`get_mpi_command_line ed_solver_serial.out "EDfile=ed.in BATHfile=ed.hybrid CORRELfile=ed.correl OLDGSFILE=GS.raw" $3 1 $2 $jj " -host " " " F`
+     echo "your command is : " ${mpicommand}
+     ${mpicommand}
+    else
+     echo "multiple nodes : " $j
+     mpicommand=`get_mpi_command_line ed_solver_serial.out "EDfile=ed.in BATHfile=ed.hybrid CORRELfile=ed.correl OLDGSFILE=GS.raw" $3 1 $2 machines_ed " -machinefile " " " F`
+     echo "your command is : " ${mpicommand}
+     ${mpicommand}
+   fi
 fi
 
 if [[ $? -ne 0 ]]; then
