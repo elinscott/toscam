@@ -18,15 +18,15 @@ contains
       ! COMPUTE THE REDUCED DENSITY MATRIX OF THE IMPURITY
 
       use eigen_sector_class, only: eigensector_type, eigensectorlist_type, &
-           gsenergy, partition
-      use genvar,             only: dbl, iproc, no_mpi, nproc, size2
-      use linalg,             only: conj, dexpc
-      use common_def,         only: dump_message, reset_timer, timer_fortran
-      use sector_class,       only: is_in_sector, rank_func
-      use aim_class,          only: aim_type, impbath2aimstate
-      use mpirout,            only: split
-      use rcmatrix_class,     only: rcmatrix_type
-      use eigen_class,        only: eigen_type
+         gsenergy, partition
+      use genvar, only: dbl, iproc, no_mpi, nproc, size2
+      use linalg, only: conj, dexpc
+      use common_def, only: dump_message, reset_timer, timer_fortran
+      use sector_class, only: is_in_sector, rank_func
+      use aim_class, only: aim_type, impbath2aimstate
+      use mpirout, only: split
+      use rcmatrix_class, only: rcmatrix_type
+      use eigen_class, only: eigen_type
 
       implicit none
 
@@ -54,20 +54,20 @@ contains
       TYPE(eigensector_type), POINTER :: es => NULL()
       TYPE(eigen_type), POINTER       :: eigen => NULL()
 
-      CALL dump_message(TEXT = "# START COMPUTING THE REDUCED DENSITY &
+      CALL dump_message(TEXT="# START COMPUTING THE REDUCED DENSITY &
            &MATRIX... ")
       CALL reset_timer(start_compute)
 
-      nIMPstates  = AIM%impurity%nstates
-      Nc          = AIM%impurity%Nc
-      nBATHstates = AIM%bath    %nstates
-      Nb          = AIM%bath    %Nb
+      nIMPstates = AIM%impurity%nstates
+      Nc = AIM%impurity%Nc
+      nBATHstates = AIM%bath%nstates
+      Nb = AIM%bath%Nb
 
       CALL split(nIMPstates, IMPstatemin, IMPstatemax, IMPchunk)
 
-      Zpart       = partition(beta, GS)
-      E0          = GSenergy(GS)
-      dmat%rc     = 0.0_DBL
+      Zpart = partition(beta, GS)
+      E0 = GSenergy(GS)
+      dmat%rc = 0.0_DBL
 
       DO isector = 1, GS%nsector
 
@@ -81,15 +81,15 @@ contains
 
             eigen => es%lowest%eigen(ieigen)
 
-            boltz   = DEXPc(-beta*(eigen%val-E0)) ! Boltzman factor
+            boltz = DEXPc(-beta*(eigen%val - E0)) ! Boltzman factor
 
             !----------------------------------------------!
             ! LOOP OVER MATRIX ELEMENTS WE WANT TO COMPUTE !
             !----------------------------------------------!
 
-            !$OMP PARALLEL PRIVATE(IMPrank1, IMPrank2, BATHrank, AIMstate1, &
-            !$OMP      AIMrank1, AIMstate2, AIMrank2, coeff1, coeff2)
-            !$OMP DO
+!$OMP             PARALLEL PRIVATE(IMPrank1, IMPrank2, BATHrank, AIMstate1, &
+!$OMP                  AIMrank1, AIMstate2, AIMrank2, coeff1, coeff2)
+!$OMP             DO
             DO IMPrank1 = IMPstatemin(iproc), IMPstatemax(iproc)
                DO IMPrank2 = 1, IMPrank1
 
@@ -98,24 +98,24 @@ contains
                   !---------------------------------------!
 
                   DO BATHrank = 1, nBATHstates
-                     CALL IMPBATH2AIMstate(AIMstate1, IMPrank1-1, BATHrank-1, &
-                          Nc, Nb)
-                     IF(is_in_sector(AIMstate1, es%sector))THEN
+                     CALL IMPBATH2AIMstate(AIMstate1, IMPrank1 - 1, BATHrank - 1, &
+                                           Nc, Nb)
+                     IF (is_in_sector(AIMstate1, es%sector)) THEN
                         AIMrank1 = rank_func(AIMstate1, es%sector)
-                        coeff1   = eigen%vec%rc(AIMrank1)
+                        coeff1 = eigen%vec%rc(AIMrank1)
                         IF (coeff1 /= 0.0_DBL) THEN
-                           CALL IMPBATH2AIMstate(AIMstate2, IMPrank2-1, &
-                                BATHrank-1, Nc, Nb)
-                           IF(is_in_sector(AIMstate2, es%sector))THEN
+                           CALL IMPBATH2AIMstate(AIMstate2, IMPrank2 - 1, &
+                                                 BATHrank - 1, Nc, Nb)
+                           IF (is_in_sector(AIMstate2, es%sector)) THEN
                               AIMrank2 = rank_func(AIMstate2, es%sector)
-                              coeff2   = eigen%vec%rc(AIMrank2)
+                              coeff2 = eigen%vec%rc(AIMrank2)
                               IF (coeff2 /= 0.0_DBL) THEN
                                  dmat%rc(IMPrank1, IMPrank2) = &
-                                      dmat%rc(IMPrank1, IMPrank2) + coeff1 * &
-                                      conj(coeff2) * boltz
-                                 IF(IMPrank1 /= IMPrank2) dmat%rc(IMPrank2, &
-                                      IMPrank1) = dmat%rc(IMPrank2, IMPrank1) &
-                                      + conj(coeff1) * coeff2 * boltz
+                                    dmat%rc(IMPrank1, IMPrank2) + coeff1* &
+                                    conj(coeff2)*boltz
+                                 IF (IMPrank1 /= IMPrank2) dmat%rc(IMPrank2, &
+                                                                   IMPrank1) = dmat%rc(IMPrank2, IMPrank1) &
+                                             + conj(coeff1)*coeff2*boltz
                               ENDIF
                            ENDIF
                         ENDIF
@@ -124,22 +124,20 @@ contains
 
                ENDDO
             ENDDO ! loop over impurity states
-            !$OMP END DO
-            !$OMP END PARALLEL
+!$OMP             END DO
+!$OMP             END PARALLEL
          ENDDO ! loop over eigenstates
 
       ENDDO ! loop over eigensectors
 
+      write (*, *) '............ end main loops density matrix ............'
 
-      write(*, *) '............ end main loops density matrix ............'
-
-      if(size2 > 1 .and. .not.no_mpi) call mpi_collect_
-
+      if (size2 > 1 .and. .not. no_mpi) call mpi_collect_
 
       ! RENORMALIZE USING PARTITION FUNCTION
       ! 1 if T = 0, 1 also at T > 0 if we had all the eigenstates
 
-      dmat%rc = dmat%rc / Zpart
+      dmat%rc = dmat%rc/Zpart
 
       CALL timer_fortran(start_compute, "# ... TOOK ")
 
@@ -152,58 +150,58 @@ contains
 
          implicit none
 
-         write(*, *) 'start collecting MPI chunks'
+         write (*, *) 'start collecting MPI chunks'
 
-         ALLOCATE(rankmin(nproc), rankmax(nproc), rankchunk(nproc))
-         rankmin   = IMPstatemin * ( IMPstatemin - 1 ) / 2 + 1
-         rankmax   = IMPstatemax * ( IMPstatemax + 1 ) / 2
+         ALLOCATE (rankmin(nproc), rankmax(nproc), rankchunk(nproc))
+         rankmin = IMPstatemin*(IMPstatemin - 1)/2 + 1
+         rankmax = IMPstatemax*(IMPstatemax + 1)/2
          rankchunk = rankmax - rankmin + 1
 
-         ALLOCATE(dmat_vec(rankchunk(iproc)), dmat_vec_tot(rankmax(nproc)))
+         ALLOCATE (dmat_vec(rankchunk(iproc)), dmat_vec_tot(rankmax(nproc)))
 
          DO IMPrank1 = IMPstatemin(iproc), IMPstatemax(iproc)
-            thisrank = IMPrank1*(IMPrank1-1)/2
+            thisrank = IMPrank1*(IMPrank1 - 1)/2
             DO IMPrank2 = 1, IMPrank1
                dmat_vec_tot(thisrank + IMPrank2) = dmat%rc(IMPrank1, IMPrank2)
-               dmat_vec (thisrank + IMPrank2-rankmin(iproc) + 1) = &
-                    dmat%rc(IMPrank1, IMPrank2)
+               dmat_vec(thisrank + IMPrank2 - rankmin(iproc) + 1) = &
+                  dmat%rc(IMPrank1, IMPrank2)
             ENDDO
          ENDDO
 
-         write(*, *) 'COLLECTING DATA IN DENSITY MATRIX'
+         write (*, *) 'COLLECTING DATA IN DENSITY MATRIX'
 
-         if(size2 > 1 .and. .not.no_mpi)then
+         if (size2 > 1 .and. .not. no_mpi) then
 #ifdef _complex
-            CALL MPI_ALLGATHERV( dmat_vec, rankchunk(iproc), MPI_DOUBLE_COMPLEX, &
-                 dmat_vec_tot, rankchunk, rankmin-1, MPI_DOUBLE_COMPLEX, &
-                 MPI_COMM_WORLD, ierr)
+            CALL MPI_ALLGATHERV(dmat_vec, rankchunk(iproc), MPI_DOUBLE_COMPLEX, &
+                                dmat_vec_tot, rankchunk, rankmin - 1, MPI_DOUBLE_COMPLEX, &
+                                MPI_COMM_WORLD, ierr)
 #else
-            CALL MPI_ALLGATHERV( dmat_vec, rankchunk(iproc), &
-                 MPI_DOUBLE_PRECISION, dmat_vec_tot, rankchunk, rankmin-1, &
-                 MPI_DOUBLE_PRECISION, MPI_COMM_WORLD, ierr)
+            CALL MPI_ALLGATHERV(dmat_vec, rankchunk(iproc), &
+                                MPI_DOUBLE_PRECISION, dmat_vec_tot, rankchunk, rankmin - 1, &
+                                MPI_DOUBLE_PRECISION, MPI_COMM_WORLD, ierr)
 #endif
          endif
 
-         IF(ierr /= 0 .and. size2 > 1 .and. .not.no_mpi) CALL &
-              MPI_ABORT(MPI_COMM_WORLD, 1, ierr)
+         IF (ierr /= 0 .and. size2 > 1 .and. .not. no_mpi) CALL &
+            MPI_ABORT(MPI_COMM_WORLD, 1, ierr)
 
          DO IMPrank1 = 1, nIMPstates
-            IF(IMPrank1 < IMPstatemin(iproc) .OR. IMPrank1 > &
-                 IMPstatemax(iproc))THEN
-               thisrank = IMPrank1*(IMPrank1-1)/2
-               dmat%rc(IMPrank1, IMPrank1)   = dmat_vec_tot(thisrank + IMPrank1)
-               DO IMPrank2 = 1, IMPrank1-1
+            IF (IMPrank1 < IMPstatemin(iproc) .OR. IMPrank1 > &
+                IMPstatemax(iproc)) THEN
+               thisrank = IMPrank1*(IMPrank1 - 1)/2
+               dmat%rc(IMPrank1, IMPrank1) = dmat_vec_tot(thisrank + IMPrank1)
+               DO IMPrank2 = 1, IMPrank1 - 1
                   dmat%rc(IMPrank1, IMPrank2) = dmat_vec_tot(thisrank + IMPrank2)
                   dmat%rc(IMPrank2, IMPrank1) = conj(dmat%rc(IMPrank1, IMPrank2))
                ENDDO
             ENDIF
          ENDDO
 
-         if(allocated(dmat_vec)    ) deallocate(dmat_vec)
-         if(allocated(dmat_vec_tot)) deallocate(dmat_vec_tot)
-         if(allocated(rankmin))      deallocate(rankmin)
-         if(allocated(rankmax))      deallocate(rankmax)
-         if(allocated(rankchunk))    deallocate(rankchunk)
+         if (allocated(dmat_vec)) deallocate (dmat_vec)
+         if (allocated(dmat_vec_tot)) deallocate (dmat_vec_tot)
+         if (allocated(rankmin)) deallocate (rankmin)
+         if (allocated(rankmax)) deallocate (rankmax)
+         if (allocated(rankchunk)) deallocate (rankchunk)
 
       end subroutine
 
@@ -216,33 +214,33 @@ contains
       ! S = - SUM_i ( lambda_i * log(lambda_i) )
       ! WHERE lambda_i ARE THE EIGENVALUES OF THE DENSITY MATRIX
 
-      use genvar,             only: dbl, log_unit
-      use common_def,         only: c2s, dump_message, i2c
-      use matrix,             only: diagonalize, write_array
+      use genvar, only: dbl, log_unit
+      use common_def, only: c2s, dump_message, i2c
+      use matrix, only: diagonalize, write_array
       use readable_vec_class, only: cket_from_state
-      use sorting,            only: qsort_array, qsort_adj_array
+      use sorting, only: qsort_array, qsort_adj_array
 
       implicit none
 
-      INTEGER, INTENT(IN)      :: IMPiorb(:,:)
+      INTEGER, INTENT(IN)      :: IMPiorb(:, :)
       LOGICAL, INTENT(IN)      :: NAMBU
 #ifdef _complex
-      COMPLEX(DBL), INTENT(IN) :: dmat(:,:)
+      COMPLEX(DBL), INTENT(IN) :: dmat(:, :)
       COMPLEX(DBL)             :: VECP(SIZE(dmat, 1), SIZE(dmat, 1))
 #else
-      REAL(DBL), INTENT(IN)    :: dmat(:,:)
+      REAL(DBL), INTENT(IN)    :: dmat(:, :)
       REAL(DBL)                :: VECP(SIZE(dmat, 1), SIZE(dmat, 1))
 #endif
       REAL(DBL)             :: VALP(SIZE(dmat, 1)), absvec(SIZE(dmat, 1))
       INTEGER               :: states(size(dmat, 1))
       REAL(DBL)             :: ENTROPY, TRACE
       INTEGER               :: ivp, nvp, icomp
-      CHARACTER(LEN = 1000) :: cvec, prefix
+      CHARACTER(LEN=1000) :: cvec, prefix
       INTEGER               :: npairs, ncomp, ncompi
       character(100)        :: intwri
 
 #ifdef DEBUG
-      write(*,*) "DEBUG: entering density_matrix_analyze_density_matrix"
+      write (*, *) "DEBUG: entering density_matrix_analyze_density_matrix"
 #endif
 
       ! NUMBER OF EIGENVALUES TO DISPLAY, NUMBER OF EIGENVECTOR COMPONENTS TO
@@ -251,25 +249,25 @@ contains
       ncomp = min(size(dmat, 1), 16)
       npairs = ncomp
 
-      if(size(dmat, 1) <= 16) call write_array(dmat, " DENSITY MATRIX ", unit &
-           = log_unit, short = .true.)
+      if (size(dmat, 1) <= 16) call write_array(dmat, " DENSITY MATRIX ", unit &
+                                                =log_unit, short=.true.)
 
-      write(*, *) 'analyse density matrix'
+      write (*, *) 'analyse density matrix'
 
       nvp = SIZE(dmat, 1)
-      CALL diagonalize(dmat, VALP, VECP, EIGENVAL_ONLY = .false.)
-      CALL dump_message(TEXT = "# " // c2s(i2c(npairs)) // " LARGEST &
+      CALL diagonalize(dmat, VALP, VECP, EIGENVAL_ONLY=.false.)
+      CALL dump_message(TEXT="# "//c2s(i2c(npairs))//" LARGEST &
            &EIGENVALUES OF THE DENSITY MATRIX:")
 
-      DO ivp = nvp, nvp-(npairs-1), -1 ! loop over the npairs largest
-      ! eigenvalues
+      DO ivp = nvp, nvp - (npairs - 1), -1 ! loop over the npairs largest
+         ! eigenvalues
          absvec = ABS(VECP(:, ivp))
-         states = (/(icomp, icomp = 1, nvp)/)
+         states = (/(icomp, icomp=1, nvp)/)
 
          ! Sort components of eigenvector in decreasing order
 
          ! First sort absvec in ascending order
-         call qsort_array(absvec, states) 
+         call qsort_array(absvec, states)
 
          ! Flip to decreasing order
          absvec = absvec(nvp:1:-1)
@@ -277,62 +275,62 @@ contains
 
          ncompi = ncomp
          do icomp = ncomp, 1, -1
-            if(abs(VECP(states(icomp), ivp)) > 1.d-10)then
+            if (abs(VECP(states(icomp), ivp)) > 1.d-10) then
                ncompi = icomp
                exit
             endif
          enddo
 
-         write(log_unit,*) '======================================================='
+         write (log_unit, *) '======================================================='
 #ifdef _complex
-         intwri = '(' // c2s(i2c(ncompi)) // '(2f9.6, a))'
-         write(log_unit, *) 'non zero elements in state vector  : ', ncompi
-         write(log_unit, *) (VECP(states(icomp), ivp), " " // &
-              cket_from_state(states(icomp)-1, IMPiorb, NAMBU) // " ", &
-              icomp = 1, ncompi)
-         WRITE(cvec, ADJUSTL(TRIM(intwri))) (real(VECP(states(icomp), &
-              ivp)), aimag(VECP(states(icomp), ivp)), " " // &
-              cket_from_state(states(icomp)-1, IMPiorb, NAMBU) // " ", &
-              icomp = 1, ncompi)
+         intwri = '('//c2s(i2c(ncompi))//'(2f9.6, a))'
+         write (log_unit, *) 'non zero elements in state vector  : ', ncompi
+         write (log_unit, *) (VECP(states(icomp), ivp), " "// &
+                              cket_from_state(states(icomp) - 1, IMPiorb, NAMBU)//" ", &
+                              icomp=1, ncompi)
+         WRITE (cvec, ADJUSTL(TRIM(intwri))) (real(VECP(states(icomp), &
+                                                        ivp)), aimag(VECP(states(icomp), ivp)), " "// &
+                                              cket_from_state(states(icomp) - 1, IMPiorb, NAMBU)//" ", &
+                                              icomp=1, ncompi)
 #else
-         intwri = '(' // c2s(i2c(ncompi)) // '(f9.6, a))'
-         write(log_unit, *) 'non zero elements in state vector  : ', ncompi
-         write(log_unit, *) (VECP(states(icomp), ivp), " " // &
-              cket_from_state(states(icomp)-1, IMPiorb, NAMBU) // " ", &
-              icomp = 1, ncompi)
-         WRITE(cvec, ADJUSTL(TRIM(intwri))) (VECP(states(icomp), ivp), " &
-              &" // cket_from_state(states(icomp)-1, IMPiorb, NAMBU) // " &
-              &", icomp = 1, ncompi)
+         intwri = '('//c2s(i2c(ncompi))//'(f9.6, a))'
+         write (log_unit, *) 'non zero elements in state vector  : ', ncompi
+         write (log_unit, *) (VECP(states(icomp), ivp), " "// &
+                              cket_from_state(states(icomp) - 1, IMPiorb, NAMBU)//" ", &
+                              icomp=1, ncompi)
+         WRITE (cvec, ADJUSTL(TRIM(intwri))) (VECP(states(icomp), ivp), " &
+              &"//cket_from_state(states(icomp) - 1, IMPiorb, NAMBU)//" &
+              &", icomp=1, ncompi)
 #endif
-         write(log_unit, *) &
-              '-------------------------------------------------------'
-         prefix = "# " // c2s(i2c(nvp-ivp + 1)) // "   "
-         WRITE(log_unit, '(a' // c2s(i2c(LEN_TRIM(prefix))) // ', f9.6, a)') &
-              TRIM(prefix), VALP(ivp), " - > " // TRIM(cvec)
-         write(log_unit,*) '======================================================='
+         write (log_unit, *) &
+            '-------------------------------------------------------'
+         prefix = "# "//c2s(i2c(nvp - ivp + 1))//"   "
+         WRITE (log_unit, '(a'//c2s(i2c(LEN_TRIM(prefix)))//', f9.6, a)') &
+            TRIM(prefix), VALP(ivp), " - > "//TRIM(cvec)
+         write (log_unit, *) '======================================================='
 
       ENDDO
 
-      write(*, *) '.... start entropy ....'
+      write (*, *) '.... start entropy ....'
 
-      write(log_unit, *) '-----------------------------------------'
-      write(log_unit, *) 'EIGENVALUES ARE : '
-      write(log_unit, '(1000f6.3)') VALP
-      write(log_unit, *) '-----------------------------------------'
+      write (log_unit, *) '-----------------------------------------'
+      write (log_unit, *) 'EIGENVALUES ARE : '
+      write (log_unit, '(1000f6.3)') VALP
+      write (log_unit, *) '-----------------------------------------'
 
       ENTROPY = 0.0_DBL
       TRACE = 0.0_DBL
       DO ivp = nvp, 1, -1
-         IF(VALP(ivp) > 1.d-16) ENTROPY = ENTROPY - VALP(ivp) * LOG(VALP(ivp))
+         IF (VALP(ivp) > 1.d-16) ENTROPY = ENTROPY - VALP(ivp)*LOG(VALP(ivp))
          TRACE = TRACE + VALP(ivp)
       ENDDO
-      write(*, *) '.... done ....'
-      WRITE(log_unit, '(a, f9.6)') "# CHECK TRACE          = ", TRACE
-      WRITE(log_unit, '(a, f9.6)') "# ENTANGLEMENT ENTROPY = ", ENTROPY
+      write (*, *) '.... done ....'
+      WRITE (log_unit, '(a, f9.6)') "# CHECK TRACE          = ", TRACE
+      WRITE (log_unit, '(a, f9.6)') "# ENTANGLEMENT ENTROPY = ", ENTROPY
       CALL flush(log_unit)
 
 #ifdef DEBUG
-      write(*,*) "DEBUG: leaving density_matrix_analyze_density_matrix"
+      write (*, *) "DEBUG: leaving density_matrix_analyze_density_matrix"
 #endif
 
    end subroutine

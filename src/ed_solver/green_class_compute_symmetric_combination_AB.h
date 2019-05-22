@@ -1,12 +1,12 @@
 
    SUBROUTINE reshuffle_vecAB(greenAB, greenBA, greenAA, greenBB, &
-        reshuffle_dyn, BA)
+                              reshuffle_dyn, BA)
 
-      use common_def,          only: find_rank
-      use correl_class,        only: correl_type
-      use genvar,              only: DBL, log_unit
-      use green_class,         only: green_type
-      use mask_class,          only: mask_type
+      use common_def, only: find_rank
+      use correl_class, only: correl_type
+      use genvar, only: DBL, log_unit
+      use green_class, only: green_type
+      use mask_class, only: mask_type
       use masked_matrix_class, only: masked_matrix_type
 
       TYPE(green_type), INTENT(INOUT)  :: greenAB
@@ -14,7 +14,7 @@
       TYPE(green_type), INTENT(IN)     :: greenAA
       TYPE(green_type), INTENT(IN)     :: greenBB
       INTEGER                          :: nnn, ijj, jii
-      LOGICAL,          INTENT(IN)     :: reshuffle_dyn, BA
+      LOGICAL, INTENT(IN)     :: reshuffle_dyn, BA
       COMPLEX(DBL)                     :: swapstat
       TYPE(masked_matrix_type)         :: statAA(2, 2), statAB(2, 2), &
                                           statBB(2, 2), statBA(2, 2)
@@ -30,10 +30,10 @@
       COMPLEX(DBL), POINTER            :: vecstat_ji => NULL(), tvecstat_ji => &
                                           NULL(), tvecstat_ij => NULL()
 #else
-      REAL(DBL),    POINTER            :: vecstat_ii => NULL(), vecstat_jj => &
-                                          NULL(), vecstat_ij => NULL()
-      REAL(DBL),    POINTER            :: vecstat_ji => NULL(), tvecstat_ji => &
-                                          NULL(), tvecstat_ij => NULL()
+      REAL(DBL), POINTER            :: vecstat_ii => NULL(), vecstat_jj => &
+                                       NULL(), vecstat_ij => NULL()
+      REAL(DBL), POINTER            :: vecstat_ji => NULL(), tvecstat_ji => &
+                                       NULL(), tvecstat_ij => NULL()
 #endif
       COMPLEX(DBL)                     :: swap_stat, swapvec(greenAB%Nw), &
                                           tswapvec(greenAB%Nw)
@@ -44,9 +44,8 @@
       INTEGER                          :: iorb, jorb, ij, ii, jj, ji, tij, &
                                           tji, ipm, jpm, iw, miw
 
-
       !-------------------------------------------------------------------------!
-      ! We calculated : < 0| (A^+ - B) (A - B^+ ) |0 > instead of <0|A^B|0> 
+      ! We calculated : < 0| (A^+ - B) (A - B^+ ) |0 > instead of <0|A^B|0>
       !           and   < 0| (A^+ - A) (A - A^+ ) |0 > !
       !-------------------------------------------------------------------------!
 
@@ -60,52 +59,52 @@
       DO ipm = 1, 2
          DO iorb = 1, greenAB%N
             DO jorb = 1, greenAB%N
-               IF(MASKAB(ipm, 3-ipm)%mat(iorb, jorb))THEN
+               IF (MASKAB(ipm, 3 - ipm)%mat(iorb, jorb)) THEN
                   ! THIS INCLUDES THE DIAGONAL CASE !
-                  ij = find_rank(MASKAB(ipm, 3-ipm)%imat(iorb, jorb), &
-                       MASKAB(ipm, 3-ipm)%ivec)
-                  ii = find_rank(MASKAA(ipm, 3-ipm)%imat(iorb, iorb), &
-                       MASKAA(ipm, 3-ipm)%ivec)
-                  jj = find_rank(MASKBB(ipm, 3-ipm)%imat(jorb, jorb), &
-                       MASKBB(ipm, 3-ipm)%ivec)
+                  ij = find_rank(MASKAB(ipm, 3 - ipm)%imat(iorb, jorb), &
+                                 MASKAB(ipm, 3 - ipm)%ivec)
+                  ii = find_rank(MASKAA(ipm, 3 - ipm)%imat(iorb, iorb), &
+                                 MASKAA(ipm, 3 - ipm)%ivec)
+                  jj = find_rank(MASKBB(ipm, 3 - ipm)%imat(jorb, jorb), &
+                                 MASKBB(ipm, 3 - ipm)%ivec)
                   ! EQUAL-TIME
-                  vecstat_ij => greenAB%correlstat(ipm, 3-ipm)%rc%vec(ij)
-                  vecstat_ii => greenAA%correlstat(ipm, 3-ipm)%rc%vec(ii)
-                  vecstat_jj => greenBB%correlstat(ipm, 3-ipm)%rc%vec(jj)
-                  vecstat_ij =  0.5_DBL * ( vecstat_ij - vecstat_ii - vecstat_jj )
+                  vecstat_ij => greenAB%correlstat(ipm, 3 - ipm)%rc%vec(ij)
+                  vecstat_ii => greenAA%correlstat(ipm, 3 - ipm)%rc%vec(ii)
+                  vecstat_jj => greenBB%correlstat(ipm, 3 - ipm)%rc%vec(jj)
+                  vecstat_ij = 0.5_DBL*(vecstat_ij - vecstat_ii - vecstat_jj)
                   ! DYNAMIC
-                  IF(reshuffle_dyn .AND. greenAB%compute(ipm, 3-ipm))THEN
-                     vec_ij => greenAB%correl(ipm, 3-ipm)%vec(ij, :)
-                     vec_ii => greenAA%correl(ipm, 3-ipm)%vec(ii, :)
-                     vec_jj => greenBB%correl(ipm, 3-ipm)%vec(jj, :)
-                     vec_ij =  0.5_DBL * ( vec_ij - vec_ii - vec_jj )
+                  IF (reshuffle_dyn .AND. greenAB%compute(ipm, 3 - ipm)) THEN
+                     vec_ij => greenAB%correl(ipm, 3 - ipm)%vec(ij, :)
+                     vec_ii => greenAA%correl(ipm, 3 - ipm)%vec(ii, :)
+                     vec_jj => greenBB%correl(ipm, 3 - ipm)%vec(jj, :)
+                     vec_ij = 0.5_DBL*(vec_ij - vec_ii - vec_jj)
                   ENDIF
                ENDIF
             ENDDO
          ENDDO
 
-         IF(BA)THEN ! THIS INCLUDES THE DIAGONAL CASE !
+         IF (BA) THEN ! THIS INCLUDES THE DIAGONAL CASE !
             DO iorb = 1, greenBA%N
                DO jorb = 1, greenBA%N
-                  IF(MASKBA(ipm, 3-ipm)%mat(iorb, jorb))THEN
-                     ij = find_rank(MASKBA(ipm, 3-ipm)%imat(iorb, jorb), &
-                          MASKBA(ipm, 3-ipm)%ivec)
-                     ii = find_rank(MASKBB(ipm, 3-ipm)%imat(iorb, iorb), &
-                          MASKBB(ipm, 3-ipm)%ivec)
-                     jj = find_rank(MASKAA(ipm, 3-ipm)%imat(jorb, jorb), &
-                          MASKAA(ipm, 3-ipm)%ivec)
+                  IF (MASKBA(ipm, 3 - ipm)%mat(iorb, jorb)) THEN
+                     ij = find_rank(MASKBA(ipm, 3 - ipm)%imat(iorb, jorb), &
+                                    MASKBA(ipm, 3 - ipm)%ivec)
+                     ii = find_rank(MASKBB(ipm, 3 - ipm)%imat(iorb, iorb), &
+                                    MASKBB(ipm, 3 - ipm)%ivec)
+                     jj = find_rank(MASKAA(ipm, 3 - ipm)%imat(jorb, jorb), &
+                                    MASKAA(ipm, 3 - ipm)%ivec)
                      ! EQUAL-TIME
-                     vecstat_ij => greenBA%correlstat(ipm, 3-ipm)%rc%vec(ij)
-                     vecstat_ii => greenBB%correlstat(ipm, 3-ipm)%rc%vec(ii)
-                     vecstat_jj => greenAA%correlstat(ipm, 3-ipm)%rc%vec(jj)
-                     vecstat_ij = 0.5_DBL * ( vecstat_ij - vecstat_ii - &
-                          vecstat_jj )
+                     vecstat_ij => greenBA%correlstat(ipm, 3 - ipm)%rc%vec(ij)
+                     vecstat_ii => greenBB%correlstat(ipm, 3 - ipm)%rc%vec(ii)
+                     vecstat_jj => greenAA%correlstat(ipm, 3 - ipm)%rc%vec(jj)
+                     vecstat_ij = 0.5_DBL*(vecstat_ij - vecstat_ii - &
+                                           vecstat_jj)
                      ! DYNAMIC
-                     IF(reshuffle_dyn .AND. greenBA%compute(ipm, 3-ipm))THEN
-                        vec_ij => greenBA%correl(ipm, 3-ipm)%vec(ij, :)
-                        vec_ii => greenBB%correl(ipm, 3-ipm)%vec(ii, :)
-                        vec_jj => greenAA%correl(ipm, 3-ipm)%vec(jj, :)
-                        vec_ij =  0.5_DBL * ( vec_ij - vec_ii - vec_jj )
+                     IF (reshuffle_dyn .AND. greenBA%compute(ipm, 3 - ipm)) THEN
+                        vec_ij => greenBA%correl(ipm, 3 - ipm)%vec(ij, :)
+                        vec_ii => greenBB%correl(ipm, 3 - ipm)%vec(ii, :)
+                        vec_jj => greenAA%correl(ipm, 3 - ipm)%vec(jj, :)
+                        vec_ij = 0.5_DBL*(vec_ij - vec_ii - vec_jj)
                      ENDIF
                   ENDIF
                ENDDO
@@ -117,8 +116,8 @@
 
       ! THEN DISENTANGLE G(i, j) AND G(j, i) IN THE COMPLEX CASE !
 
-      IF(.NOT.BA) then
-         write(*, *) "ERROR IN reshuffle GAB : < BA > AND < AB > ARE &
+      IF (.NOT. BA) then
+         write (*, *) "ERROR IN reshuffle GAB : < BA > AND < AB > ARE &
               &INDEPENDANT IF H IS COMPLEX"
          STOP
       ENDIF
@@ -139,47 +138,47 @@
          DO iorb = 1, greenAB%N
             DO jorb = 1, greenAB%N
 
-               IF(ff(iorb, jorb, diag = .true.) .and. MASKAB(ipm, &
-                    3-ipm)%mat(iorb, jorb))THEN
+               IF (ff(iorb, jorb, diag=.true.) .and. MASKAB(ipm, &
+                                                            3 - ipm)%mat(iorb, jorb)) THEN
 
-                  ij = find_rank(MASKAB(ipm, 3-ipm)%imat(iorb, jorb), &
-                       MASKAB(ipm, 3-ipm)%ivec)
-                  ji = find_rank(MASKBA(ipm, 3-ipm)%imat(jorb, iorb), &
-                       MASKBA(ipm, 3-ipm)%ivec)
+                  ij = find_rank(MASKAB(ipm, 3 - ipm)%imat(iorb, jorb), &
+                                 MASKAB(ipm, 3 - ipm)%ivec)
+                  ji = find_rank(MASKBA(ipm, 3 - ipm)%imat(jorb, iorb), &
+                                 MASKBA(ipm, 3 - ipm)%ivec)
 
-                  vecstat_ij => greenAB%correlstat(ipm, 3-ipm)%rc%vec(ij)
-                  vecstat_ji => greenBA%correlstat(ipm, 3-ipm)%rc%vec(ji)
+                  vecstat_ij => greenAB%correlstat(ipm, 3 - ipm)%rc%vec(ij)
+                  vecstat_ji => greenBA%correlstat(ipm, 3 - ipm)%rc%vec(ji)
 
-                  swap_stat  = vecstat_ij + imi   * vecstat_ji
-                  vecstat_ij = vecstat_ij - imi   * vecstat_ji
+                  swap_stat = vecstat_ij + imi*vecstat_ji
+                  vecstat_ij = vecstat_ij - imi*vecstat_ji
                   vecstat_ji = swap_stat
 
-                  IF(reshuffle_dyn .AND. greenAB%compute(ipm, 3-ipm))THEN
-                     vec_ij   => greenAB%correl(ipm, 3-ipm)%vec(ij, :)
-                     vec_ji   => greenBA%correl(ipm, 3-ipm)%vec(ji, :)
-                     swapvec  = vec_ij + imi * vec_ji
-                     vec_ij   = vec_ij -imi * vec_ji
-                     vec_ji   = swapvec
+                  IF (reshuffle_dyn .AND. greenAB%compute(ipm, 3 - ipm)) THEN
+                     vec_ij => greenAB%correl(ipm, 3 - ipm)%vec(ij, :)
+                     vec_ji => greenBA%correl(ipm, 3 - ipm)%vec(ji, :)
+                     swapvec = vec_ij + imi*vec_ji
+                     vec_ij = vec_ij - imi*vec_ji
+                     vec_ji = swapvec
                   ENDIF
 
-                  ij = find_rank(MASKBA(ipm, 3-ipm)%imat(iorb, jorb), &
-                       MASKBA(ipm, 3-ipm)%ivec)
-                  ji = find_rank(MASKAB(ipm, 3-ipm)%imat(jorb, iorb), &
-                       MASKAB(ipm, 3-ipm)%ivec)
+                  ij = find_rank(MASKBA(ipm, 3 - ipm)%imat(iorb, jorb), &
+                                 MASKBA(ipm, 3 - ipm)%ivec)
+                  ji = find_rank(MASKAB(ipm, 3 - ipm)%imat(jorb, iorb), &
+                                 MASKAB(ipm, 3 - ipm)%ivec)
 
                   ! EQUAL TIME
-                  vecstat_ij => greenBA%correlstat(ipm, 3-ipm)%rc%vec(ij)
-                  vecstat_ji => greenAB%correlstat(ipm, 3-ipm)%rc%vec(ji)
-                  swap_stat  =  vecstat_ij + imi * vecstat_ji
-                  vecstat_ij =  vecstat_ij -imi * vecstat_ji
-                  vecstat_ji =  swap_stat
+                  vecstat_ij => greenBA%correlstat(ipm, 3 - ipm)%rc%vec(ij)
+                  vecstat_ji => greenAB%correlstat(ipm, 3 - ipm)%rc%vec(ji)
+                  swap_stat = vecstat_ij + imi*vecstat_ji
+                  vecstat_ij = vecstat_ij - imi*vecstat_ji
+                  vecstat_ji = swap_stat
 
-                  IF(reshuffle_dyn .AND. greenAB%compute(ipm, 3-ipm))THEN
-                     vec_ij   => greenBA%correl(ipm, 3-ipm)%vec(ij, :)
-                     vec_ji   => greenAB%correl(ipm, 3-ipm)%vec(ji, :)
-                     swapvec  =  vec_ij + imi * vec_ji
-                     vec_ij   =  vec_ij -imi * vec_ji
-                     vec_ji   =  swapvec
+                  IF (reshuffle_dyn .AND. greenAB%compute(ipm, 3 - ipm)) THEN
+                     vec_ij => greenBA%correl(ipm, 3 - ipm)%vec(ij, :)
+                     vec_ji => greenAB%correl(ipm, 3 - ipm)%vec(ji, :)
+                     swapvec = vec_ij + imi*vec_ji
+                     vec_ij = vec_ij - imi*vec_ji
+                     vec_ji = swapvec
                   ENDIF
 
                ENDIF
@@ -190,7 +189,6 @@
 
 #endif
 
-
       !========================================================================!
       !================================= ANOMALOUS ============================!
       !========================================================================!
@@ -199,36 +197,35 @@
          DO iorb = 1, greenAB%N
             DO jorb = 1, greenAB%N
 
-
-               IF(MASKAB(ipm, ipm)%mat(iorb, jorb))THEN
+               IF (MASKAB(ipm, ipm)%mat(iorb, jorb)) THEN
 
                   !----------------------------------------------------!
-                  ! RESHUFFLE ALSO DIAGONAL PART                       !                    
+                  ! RESHUFFLE ALSO DIAGONAL PART                       !
                   ! G[Ai,Bj] <- ( G[Ai,Bj] - G[Ai,ai] - G[bj,Bj] ) / 2 !
                   ! G[ai,bj] <- ( G[ai,bj] - G[ai,Ai] - G[Bj,bj] ) / 2 !
                   !----------------------------------------------------!
 
-                  ij = find_rank(MASKAB( ipm, ipm)%imat(iorb, jorb), MASKAB( &
-                       ipm, ipm)%ivec)
-                  ii = find_rank(MASKAA( ipm, 3-ipm)%imat(iorb, iorb), MASKAA( &
-                       ipm, 3-ipm)%ivec)
-                  jj = find_rank(MASKBB(3-ipm, ipm)%imat(jorb, jorb), &
-                       MASKBB(3-ipm, ipm)%ivec)
+                  ij = find_rank(MASKAB(ipm, ipm)%imat(iorb, jorb), MASKAB( &
+                                 ipm, ipm)%ivec)
+                  ii = find_rank(MASKAA(ipm, 3 - ipm)%imat(iorb, iorb), MASKAA( &
+                                 ipm, 3 - ipm)%ivec)
+                  jj = find_rank(MASKBB(3 - ipm, ipm)%imat(jorb, jorb), &
+                                 MASKBB(3 - ipm, ipm)%ivec)
 
                   ! EQUAL TIME
-                  vecstat_ij => greenAB%correlstat(  ipm,  ipm)%rc%vec(ij)
-                  vecstat_ii => greenAA%correlstat(  ipm, 3-ipm)%rc%vec(ii)
-                  vecstat_jj => greenBB%correlstat(3-ipm,  ipm)%rc%vec(jj)
+                  vecstat_ij => greenAB%correlstat(ipm, ipm)%rc%vec(ij)
+                  vecstat_ii => greenAA%correlstat(ipm, 3 - ipm)%rc%vec(ii)
+                  vecstat_jj => greenBB%correlstat(3 - ipm, ipm)%rc%vec(jj)
                   vecstat_ij = 0.5_DBL*vecstat_ij - 0.5_DBL*coef1*vecstat_ii - &
-                       0.5_DBL*coef2*vecstat_jj
+                               0.5_DBL*coef2*vecstat_jj
 
                   ! DYNAMIC
-                  IF(reshuffle_dyn .AND. greenAB%compute(ipm, ipm))THEN
-                     vec_ij => greenAB%correl(  ipm,  ipm)%vec(ij, :)
-                     vec_ii => greenAA%correl(  ipm, 3-ipm)%vec(ii, :)
-                     vec_jj => greenBB%correl(3-ipm,  ipm)%vec(jj, :)
+                  IF (reshuffle_dyn .AND. greenAB%compute(ipm, ipm)) THEN
+                     vec_ij => greenAB%correl(ipm, ipm)%vec(ij, :)
+                     vec_ii => greenAA%correl(ipm, 3 - ipm)%vec(ii, :)
+                     vec_jj => greenBB%correl(3 - ipm, ipm)%vec(jj, :)
                      vec_ij = 0.5_DBL*vec_ij - 0.5_DBL*coef1*vec_ii - &
-                          0.5_DBL*coef2*vec_jj
+                              0.5_DBL*coef2*vec_jj
                   ENDIF
                ENDIF
             ENDDO
@@ -238,38 +235,38 @@
 #ifdef _complex
 
       DO ipm = 1, 2
-         IF(BA)THEN
+         IF (BA) THEN
 
             DO iorb = 1, greenBA%N
                DO jorb = 1, greenBA%N
-                  IF(MASKBA(ipm, ipm)%mat(iorb, jorb))THEN
+                  IF (MASKBA(ipm, ipm)%mat(iorb, jorb)) THEN
 
                      !-----------------------------------------------------!
                      ! G[Bi,Aj] <- ( G[Bi,Aj] - G[Bi,bi] - G[aj,Aj] ) / 2  !
                      ! G[bi,aj] <- ( G[bi,aj] - G[bi,Bi] - G[Aj,aj] ) / 2  !
                      !-----------------------------------------------------!
 
-                     ij = find_rank(MASKBA( ipm, ipm)%imat(iorb, jorb), &
-                          MASKBA( ipm, ipm)%ivec)
-                     ii = find_rank(MASKBB( ipm, 3-ipm)%imat(iorb, iorb), &
-                          MASKBB( ipm, 3-ipm)%ivec)
-                     jj = find_rank(MASKAA(3-ipm, ipm)%imat(jorb, jorb), &
-                          MASKAA(3-ipm, ipm)%ivec)
+                     ij = find_rank(MASKBA(ipm, ipm)%imat(iorb, jorb), &
+                                    MASKBA(ipm, ipm)%ivec)
+                     ii = find_rank(MASKBB(ipm, 3 - ipm)%imat(iorb, iorb), &
+                                    MASKBB(ipm, 3 - ipm)%ivec)
+                     jj = find_rank(MASKAA(3 - ipm, ipm)%imat(jorb, jorb), &
+                                    MASKAA(3 - ipm, ipm)%ivec)
 
                      ! EQUAL TIME
-                     vecstat_ij => greenBA%correlstat(  ipm,  ipm)%rc%vec(ij)
-                     vecstat_ii => greenBB%correlstat(  ipm, 3-ipm)%rc%vec(ii)
-                     vecstat_jj => greenAA%correlstat(3-ipm,  ipm)%rc%vec(jj)
+                     vecstat_ij => greenBA%correlstat(ipm, ipm)%rc%vec(ij)
+                     vecstat_ii => greenBB%correlstat(ipm, 3 - ipm)%rc%vec(ii)
+                     vecstat_jj => greenAA%correlstat(3 - ipm, ipm)%rc%vec(jj)
                      vecstat_ij = 0.5_DBL*vecstat_ij - 0.5_DBL*coef1*vecstat_ii - &
-                          0.5_DBL*coef2*vecstat_jj
+                                  0.5_DBL*coef2*vecstat_jj
 
                      ! DYNAMIC
-                     IF(reshuffle_dyn .AND. greenBA%compute(ipm, ipm))THEN
-                        vec_ij => greenBA%correl(  ipm,  ipm)%vec(ij, :)
-                        vec_ii => greenBB%correl(  ipm, 3-ipm)%vec(ii, :)
-                        vec_jj => greenAA%correl(3-ipm,  ipm)%vec(jj, :)
+                     IF (reshuffle_dyn .AND. greenBA%compute(ipm, ipm)) THEN
+                        vec_ij => greenBA%correl(ipm, ipm)%vec(ij, :)
+                        vec_ii => greenBB%correl(ipm, 3 - ipm)%vec(ii, :)
+                        vec_jj => greenAA%correl(3 - ipm, ipm)%vec(jj, :)
                         vec_ij = 0.5_DBL*vec_ij - 0.5_DBL*coef1*vec_ii - &
-                             0.5_DBL*coef2*vec_jj
+                                 0.5_DBL*coef2*vec_jj
                      ENDIF
                   ENDIF
                ENDDO
@@ -294,51 +291,51 @@
       DO ipm = 1, 2
          DO iorb = 1, greenAB%N
             DO jorb = 1, greenAB%N
-               IF(ff(iorb, jorb, diag = .true.) .and. MASKAB(ipm, &
-                    ipm)%mat(iorb, jorb))THEN
+               IF (ff(iorb, jorb, diag=.true.) .and. MASKAB(ipm, &
+                                                            ipm)%mat(iorb, jorb)) THEN
 
                   ! THAT INCLUDES THE DIAGONAL CASE !
 
-                  write(log_unit, *) 'ipm iorb, jorb : ', ipm, iorb, jorb, &
-                       greenAB%compute(ipm, ipm), greenBA%compute(ipm, ipm)
+                  write (log_unit, *) 'ipm iorb, jorb : ', ipm, iorb, jorb, &
+                     greenAB%compute(ipm, ipm), greenBA%compute(ipm, ipm)
 
-                  ij = find_rank(MASKAB( ipm, ipm)%imat(iorb, jorb), MASKAB( &
-                       ipm, ipm)%ivec)
-                  ji = find_rank(MASKAB( ipm, ipm)%imat(jorb, iorb), MASKAB( &
-                       ipm, ipm)%ivec)
-                  tij = find_rank(MASKBA(3-ipm, 3-ipm)%imat(iorb, jorb), &
-                       MASKBA(3-ipm, 3-ipm)%ivec)
-                  tji = find_rank(MASKBA(3-ipm, 3-ipm)%imat(jorb, iorb), &
-                       MASKBA(3-ipm, 3-ipm)%ivec)
+                  ij = find_rank(MASKAB(ipm, ipm)%imat(iorb, jorb), MASKAB( &
+                                 ipm, ipm)%ivec)
+                  ji = find_rank(MASKAB(ipm, ipm)%imat(jorb, iorb), MASKAB( &
+                                 ipm, ipm)%ivec)
+                  tij = find_rank(MASKBA(3 - ipm, 3 - ipm)%imat(iorb, jorb), &
+                                  MASKBA(3 - ipm, 3 - ipm)%ivec)
+                  tji = find_rank(MASKBA(3 - ipm, 3 - ipm)%imat(jorb, iorb), &
+                                  MASKBA(3 - ipm, 3 - ipm)%ivec)
 
-                  tvecstat_ji  =>              statBA(3-ipm, 3-ipm)%rc%vec(tji)
-                  vecstat_ij => greenAB%correlstat( ipm, ipm)%rc%vec(ij)
+                  tvecstat_ji => statBA(3 - ipm, 3 - ipm)%rc%vec(tji)
+                  vecstat_ij => greenAB%correlstat(ipm, ipm)%rc%vec(ij)
                   ! -> AB_11_ij
-                  vecstat_ij  =    vecstat_ij - imi * tvecstat_ji
+                  vecstat_ij = vecstat_ij - imi*tvecstat_ji
 
-                  IF(reshuffle_dyn .AND. greenAB%compute(ipm, ipm))THEN
+                  IF (reshuffle_dyn .AND. greenAB%compute(ipm, ipm)) THEN
                      !-------------------------------------------!
                      ! F[Ai, Bj] - imi * TF[Bj, Ai] = G[Ai, Bj]  !
                      !-------------------------------------------!
-                     tvec_ji  =>          correlBA(3-ipm, 3-ipm)%vec(tji, :)
-                     vec_ij => greenAB%correl( ipm, ipm)%vec( ij, :) ! -> AB_11_ij
-                     vec_ij  =       vec_ij - imi * tvec_ji
+                     tvec_ji => correlBA(3 - ipm, 3 - ipm)%vec(tji, :)
+                     vec_ij => greenAB%correl(ipm, ipm)%vec(ij, :) ! -> AB_11_ij
+                     vec_ij = vec_ij - imi*tvec_ji
                   ENDIF
 
-                  if(iorb /= jorb)then
-                     tvecstat_ji => greenAB%correlstat( ipm, ipm)%rc%vec(ji)
+                  if (iorb /= jorb) then
+                     tvecstat_ji => greenAB%correlstat(ipm, ipm)%rc%vec(ji)
                      ! -> AB_11_ji
-                     vecstat_ij  =>      statBA(3-ipm, 3-ipm)%rc%vec(tij)
-                     tvecstat_ji =   vecstat_ij + imi *  tvecstat_ji
+                     vecstat_ij => statBA(3 - ipm, 3 - ipm)%rc%vec(tij)
+                     tvecstat_ji = vecstat_ij + imi*tvecstat_ji
 
-                     IF(reshuffle_dyn .AND. greenAB%compute(ipm, ipm))THEN
+                     IF (reshuffle_dyn .AND. greenAB%compute(ipm, ipm)) THEN
                         !-------------------------------------------!
                         ! TF[Bi, Aj] + imi *  F[Aj, Bi] = G[Aj, Bi] !
                         !-------------------------------------------!
-                        tvec_ji => greenAB%correl(ipm, ipm)%vec( ji, :)
+                        tvec_ji => greenAB%correl(ipm, ipm)%vec(ji, :)
                         ! -> AB_11_ji
-                        vec_ij =>     correlBA(3-ipm, 3-ipm)%vec(tij, :)
-                        tvec_ji =       vec_ij + imi *  tvec_ji
+                        vec_ij => correlBA(3 - ipm, 3 - ipm)%vec(tij, :)
+                        tvec_ji = vec_ij + imi*tvec_ji
                      endif
                   endif
 
@@ -351,52 +348,52 @@
 
          DO iorb = 1, greenBA%N
             DO jorb = 1, greenBA%N
-               IF(ff(iorb, jorb, diag = .true.) .and. MASKBA(ipm, &
-                    ipm)%mat(iorb, jorb))THEN
+               IF (ff(iorb, jorb, diag=.true.) .and. MASKBA(ipm, &
+                                                            ipm)%mat(iorb, jorb)) THEN
 
                   ! THAT INCLUDES THE DIAGONAL CASE !
 
-                  write(log_unit, *) 'ipm iorb, jorb : ', ipm, iorb, jorb, &
-                       greenAB%compute(ipm, ipm), greenBA%compute(ipm, ipm)
+                  write (log_unit, *) 'ipm iorb, jorb : ', ipm, iorb, jorb, &
+                     greenAB%compute(ipm, ipm), greenBA%compute(ipm, ipm)
 
-                  ij = find_rank(MASKBA( ipm, ipm)%imat(iorb, jorb), MASKBA( &
-                       ipm, ipm)%ivec)
-                  ji = find_rank(MASKBA( ipm, ipm)%imat(jorb, iorb), MASKBA( &
-                       ipm, ipm)%ivec)
+                  ij = find_rank(MASKBA(ipm, ipm)%imat(iorb, jorb), MASKBA( &
+                                 ipm, ipm)%ivec)
+                  ji = find_rank(MASKBA(ipm, ipm)%imat(jorb, iorb), MASKBA( &
+                                 ipm, ipm)%ivec)
 
-                  tij = find_rank(MASKAB(3-ipm, 3-ipm)%imat(iorb, jorb), &
-                       MASKAB(3-ipm, 3-ipm)%ivec)
-                  tji = find_rank(MASKAB(3-ipm, 3-ipm)%imat(jorb, iorb), &
-                       MASKAB(3-ipm, 3-ipm)%ivec)
+                  tij = find_rank(MASKAB(3 - ipm, 3 - ipm)%imat(iorb, jorb), &
+                                  MASKAB(3 - ipm, 3 - ipm)%ivec)
+                  tji = find_rank(MASKAB(3 - ipm, 3 - ipm)%imat(jorb, iorb), &
+                                  MASKAB(3 - ipm, 3 - ipm)%ivec)
 
-                  if(iorb /= jorb)then
-                     tvecstat_ji  =>      statAB(3-ipm, 3-ipm)%rc%vec(tji)
-                     vecstat_ij => greenBA%correlstat( ipm, ipm)%rc%vec(ij)
+                  if (iorb /= jorb) then
+                     tvecstat_ji => statAB(3 - ipm, 3 - ipm)%rc%vec(tji)
+                     vecstat_ij => greenBA%correlstat(ipm, ipm)%rc%vec(ij)
                      ! -> BA _11_ij
-                     vecstat_ij  =   vecstat_ij -imi * tvecstat_ji
-                     IF(reshuffle_dyn .AND. greenBA%compute(ipm, ipm))THEN
+                     vecstat_ij = vecstat_ij - imi*tvecstat_ji
+                     IF (reshuffle_dyn .AND. greenBA%compute(ipm, ipm)) THEN
                         !-----------------------------------------------!
                         ! F[Bi, Aj] - imi * TF[Aj, Bi] =   G[Bi, Aj]    !
                         !-----------------------------------------------!
-                        tvec_ji  =>       correlAB(3-ipm, 3-ipm)%vec(tji, :)
-                        vec_ij => greenBA%correl( ipm, ipm)%vec(ij, :)
+                        tvec_ji => correlAB(3 - ipm, 3 - ipm)%vec(tji, :)
+                        vec_ij => greenBA%correl(ipm, ipm)%vec(ij, :)
                         ! -> BA _11_ij
-                        vec_ij  =  vec_ij -imi * tvec_ji
+                        vec_ij = vec_ij - imi*tvec_ji
                      endif
                   endif
 
-                  tvecstat_ji => greenBA%correlstat( ipm, ipm)%rc%vec( ji)
+                  tvecstat_ji => greenBA%correlstat(ipm, ipm)%rc%vec(ji)
                   ! -> BA_11_ji
-                  vecstat_ij =>     statAB(3-ipm, 3-ipm)%rc%vec(tij)
-                  tvecstat_ji =   vecstat_ij + imi *  tvecstat_ji
-                  IF(reshuffle_dyn .AND. greenBA%compute(ipm, ipm))THEN
+                  vecstat_ij => statAB(3 - ipm, 3 - ipm)%rc%vec(tij)
+                  tvecstat_ji = vecstat_ij + imi*tvecstat_ji
+                  IF (reshuffle_dyn .AND. greenBA%compute(ipm, ipm)) THEN
                      !-----------------------------------------------!
                      ! TF[Ai, Bj] + imi *  F[Bj, Ai] =   G[Bj, Ai]   !
                      !-----------------------------------------------!
-                     tvec_ji => greenBA%correl( ipm, ipm)%vec(ji, :) 
+                     tvec_ji => greenBA%correl(ipm, ipm)%vec(ji, :)
                      ! -> BA_11_ji
-                     vec_ij  =>   correlAB(3-ipm, 3-ipm)%vec(tij, :)
-                     tvec_ji  =       vec_ij + imi *  tvec_ji
+                     vec_ij => correlAB(3 - ipm, 3 - ipm)%vec(tij, :)
+                     tvec_ji = vec_ij + imi*tvec_ji
                   endif
                ENDIF
             ENDDO
@@ -405,12 +402,12 @@
 
 #endif
 
-   !===========================================================================!
-   !================================== THE END  ===============================!
-   !===========================================================================!
+      !===========================================================================!
+      !================================== THE END  ===============================!
+      !===========================================================================!
 
 #ifndef _complex
-      IF(reshuffle_dyn) call fill_the_blanks()
+      IF (reshuffle_dyn) call fill_the_blanks()
 #endif
       call cleanup()
 

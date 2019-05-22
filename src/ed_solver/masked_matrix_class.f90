@@ -2,28 +2,26 @@ MODULE masked_matrix_class
 
    use globalvar_ed_solver
    use masked_matrix_class_mod, only: masked_real_matrix_type, &
-                                      masked_cplx_matrix_type
+      masked_cplx_matrix_type
 
    IMPLICIT NONE
 
    private
 
    !$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-   !$$ GENERIC (CPLX OR REAL) MASKED MATRIX CLASS $$
+   !$$GENERIC(CPLX OR REAL) MASKED MATRIX CLASS$$
    !$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
 
    INTERFACE new_masked_matrix
       MODULE PROCEDURE new_masked_matrix_from_scratch
       MODULE PROCEDURE new_masked_matrix_from_old
    END INTERFACE
 
-
    TYPE masked_matrix_type
 #ifdef _complex
-   TYPE(masked_cplx_matrix_type) :: rc
+      TYPE(masked_cplx_matrix_type) :: rc
 #else
-   TYPE(masked_real_matrix_type) :: rc
+      TYPE(masked_real_matrix_type) :: rc
 #endif
    END TYPE
 
@@ -48,29 +46,29 @@ contains
    subroutine new_masked_matrix_from_scratch(MM, title, n1, n2, IMASK, IS_HERM)
 
       use masked_matrix_class_mod, only: new_masked_cplx_matrix_from_scratch, &
-           new_masked_real_matrix_from_scratch
+         new_masked_real_matrix_from_scratch
 
       implicit none
 
       TYPE(masked_matrix_type), INTENT(INOUT) :: MM
-      CHARACTER(LEN = *), INTENT(IN)          :: title
+      CHARACTER(LEN=*), INTENT(IN)          :: title
       INTEGER, INTENT(IN)                     :: n1, n2
       LOGICAL, OPTIONAL, INTENT(IN)           :: IS_HERM
       INTEGER, OPTIONAL, INTENT(IN)           :: IMASK(n1, n2)
 
 #ifdef _complex
-      CALL new_masked_cplx_matrix_from_scratch(MM%rc, title, n1, n2, IMASK = &
-           IMASK, IS_HERM = IS_HERM)
+      CALL new_masked_cplx_matrix_from_scratch(MM%rc, title, n1, n2, IMASK= &
+                                               IMASK, IS_HERM=IS_HERM)
 #else
-      CALL new_masked_real_matrix_from_scratch(MM%rc, title, n1, n2, IMASK = &
-           IMASK, IS_HERM = IS_HERM)
+      CALL new_masked_real_matrix_from_scratch(MM%rc, title, n1, n2, IMASK= &
+                                               IMASK, IS_HERM=IS_HERM)
 #endif
    end subroutine
 
    subroutine new_masked_matrix_from_old(MMOUT, MMIN)
 
       use masked_matrix_class_mod, only: new_masked_cplx_matrix_from_old, &
-           new_masked_real_matrix_from_old
+         new_masked_real_matrix_from_old
 
       implicit none
 
@@ -160,8 +158,8 @@ contains
       LOGICAL, OPTIONAL, INTENT(IN)        :: SHORT
       INTEGER, OPTIONAL, INTENT(IN)        :: UNIT
 
-      CALL write_masked_matrix_(MM%rc, SHOW_MASK = SHOW_MASK, UNIT = UNIT, &
-           SHORT = SHORT)
+      CALL write_masked_matrix_(MM%rc, SHOW_MASK=SHOW_MASK, UNIT=UNIT, &
+                                SHORT=SHORT)
    end subroutine
 
    subroutine masked_matrix2vec(MM)
@@ -185,8 +183,8 @@ contains
       TYPE(masked_matrix_type), INTENT(IN), OPTIONAL :: MMEXT
 
       !CALL vec2masked_matrix_(MM%rc, MMEXT = MMEXT%rc)
-      if(present(MMEXT))then
-         CALL vec2masked_matrix_(MM%rc, MMEXT = MMEXT%rc)
+      if (present(MMEXT)) then
+         CALL vec2masked_matrix_(MM%rc, MMEXT=MMEXT%rc)
       else
          CALL vec2masked_matrix_(MM%rc)
       endif
@@ -199,9 +197,9 @@ contains
       implicit none
 
       TYPE(masked_matrix_type), INTENT(INOUT) :: MM
-      INTEGER, OPTIONAL, INTENT(IN)           :: IMASK(:,:)
+      INTEGER, OPTIONAL, INTENT(IN)           :: IMASK(:, :)
 
-      CALL build_mask_(MM%rc, IMASK = IMASK)
+      CALL build_mask_(MM%rc, IMASK=IMASK)
    end subroutine
 
    subroutine test_masked_matrix_hermitic(MM)
@@ -237,7 +235,7 @@ contains
 
       TYPE(masked_matrix_type), INTENT(INOUT) :: diag
       TYPE(masked_matrix_type), INTENT(IN)    :: MM
-      LOGICAL, INTENT(IN)                     :: FILTER(:,:)
+      LOGICAL, INTENT(IN)                     :: FILTER(:, :)
 
       CALL filter_masked_matrix_(diag%rc, MM%rc, FILTER)
    end subroutine
@@ -274,7 +272,7 @@ contains
 
       TYPE(masked_matrix_type), INTENT(INOUT) :: MMOUT
       TYPE(masked_matrix_type), INTENT(IN)    :: MMIN
-      CHARACTER(LEN = *), INTENT(IN)          :: STAT
+      CHARACTER(LEN=*), INTENT(IN)          :: STAT
 
       CALL transform_masked_matrix_(MMOUT%rc, MMIN%rc, STAT)
    end subroutine

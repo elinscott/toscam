@@ -2,7 +2,7 @@ MODULE sector_class
 
    use fermion_hilbert_class, only: fermion_sector_type
    use fermion_sector2_class, only: fermion_sector2_type
-   use genvar,                only: log_unit
+   use genvar, only: log_unit
 
    IMPLICIT NONE
 
@@ -13,12 +13,12 @@ MODULE sector_class
    !----------------------!
 
    TYPE sector_type
-      TYPE(fermion_sector_type),  POINTER :: sz => NULL() ! plain Sz fermionic sector
+      TYPE(fermion_sector_type), POINTER :: sz => NULL() ! plain Sz fermionic sector
       TYPE(fermion_sector2_type), POINTER :: updo => NULL() ! (nup, ndo) as a direct product of 2 plain fermionic sectors
    END TYPE
 
    INTERFACE to_sector
-      MODULE PROCEDURE   sz_to_sector
+      MODULE PROCEDURE sz_to_sector
       MODULE PROCEDURE updo_to_sector
    END INTERFACE
 
@@ -78,11 +78,11 @@ contains
       TYPE(sector_type), INTENT(INOUT) :: SECOUT
       TYPE(sector_type), INTENT(IN)    :: SECIN
 
-      IF     (ASSOCIATED(SECIN%updo))THEN
-         ALLOCATE(SECOUT%updo)
+      IF (ASSOCIATED(SECIN%updo)) THEN
+         ALLOCATE (SECOUT%updo)
          CALL new_fermion_sector2(SECOUT%updo, SECIN%updo)
-      ELSE IF(ASSOCIATED(SECIN%sz))  THEN
-         ALLOCATE(SECOUT%sz)
+      ELSE IF (ASSOCIATED(SECIN%sz)) THEN
+         ALLOCATE (SECOUT%sz)
          CALL new_fermion_sector(SECOUT%sz, SECIN%sz)
       ENDIF
    end subroutine
@@ -97,11 +97,11 @@ contains
       TYPE(sector_type), INTENT(INOUT) :: SECOUT
       TYPE(sector_type), INTENT(IN)    :: SECIN
 
-      IF     (ASSOCIATED(SECIN%updo))THEN
-         ALLOCATE(SECOUT%updo)
+      IF (ASSOCIATED(SECIN%updo)) THEN
+         ALLOCATE (SECOUT%updo)
          CALL copy_fermion_sector2(SECOUT%updo, SECIN%updo)
-      ELSE IF(ASSOCIATED(SECIN%sz))  THEN
-         ALLOCATE(SECOUT%sz)
+      ELSE IF (ASSOCIATED(SECIN%sz)) THEN
+         ALLOCATE (SECOUT%sz)
          CALL copy_fermion_sector(SECOUT%sz, SECIN%sz)
       ENDIF
    end subroutine
@@ -115,12 +115,12 @@ contains
 
       TYPE(sector_type), INTENT(INOUT) :: SEC
 
-      IF     (ASSOCIATED(SEC%updo))THEN
+      IF (ASSOCIATED(SEC%updo)) THEN
          CALL delete_fermion_sector2(SEC%updo)
-         NULLIFY(SEC%updo)
-      ELSE IF(ASSOCIATED(SEC%sz))  THEN
-         CALL delete_fermion_sector( SEC%sz)
-         NULLIFY(SEC%sz)
+         NULLIFY (SEC%updo)
+      ELSE IF (ASSOCIATED(SEC%sz)) THEN
+         CALL delete_fermion_sector(SEC%sz)
+         NULLIFY (SEC%sz)
       ENDIF
    end subroutine
 
@@ -135,10 +135,10 @@ contains
       TYPE(sector_type), INTENT(IN) :: SEC
       LOGICAL :: is_in_sector
 
-      IF     (ASSOCIATED(SEC%updo))THEN
+      IF (ASSOCIATED(SEC%updo)) THEN
          is_in_sector = is_in_fermion_sector2(state, SEC%updo)
-      ELSE IF(ASSOCIATED(SEC%sz))  THEN
-         is_in_sector = is_in_fermion_sector (state, SEC%sz)
+      ELSE IF (ASSOCIATED(SEC%sz)) THEN
+         is_in_sector = is_in_fermion_sector(state, SEC%sz)
       ENDIF
    end function
 
@@ -151,20 +151,20 @@ contains
 
       equal_sector = .false.
       IF (ASSOCIATED(SEC1%updo)) THEN ! fermion_sector2 defined by (nup, ndo,
-      ! Ns)
-         IF(.NOT.ASSOCIATED(SEC2%updo)) STOP "ERROR IN equal_sector: &
+         ! Ns)
+         IF (.NOT. ASSOCIATED(SEC2%updo)) STOP "ERROR IN equal_sector: &
               &INCONSISTENT INPUT SECTORS!"
-         IF( SEC1%updo%up%npart == SEC2%updo%up%npart .AND. &
-              SEC1%updo%down%npart == SEC2%updo%down%npart.AND. &
-              SEC1%updo%up%norbs == SEC2%updo%up%norbs .AND. &
-              SEC1%updo%down%norbs == SEC2%updo%down%norbs) equal_sector = &
-              .true.
+         IF (SEC1%updo%up%npart == SEC2%updo%up%npart .AND. &
+             SEC1%updo%down%npart == SEC2%updo%down%npart .AND. &
+             SEC1%updo%up%norbs == SEC2%updo%up%norbs .AND. &
+             SEC1%updo%down%norbs == SEC2%updo%down%norbs) equal_sector = &
+            .true.
       ELSE IF (ASSOCIATED(SEC1%sz)) THEN ! fermion_sector defined by (npart,
-      ! norbs)
-         IF(.NOT.ASSOCIATED(SEC2%sz)) STOP "ERROR IN equal_sector: &
+         ! norbs)
+         IF (.NOT. ASSOCIATED(SEC2%sz)) STOP "ERROR IN equal_sector: &
               &INCONSISTENT INPUT SECTORS!"
-         IF( SEC1%sz%npart == SEC2%sz%npart .AND. SEC1%sz%norbs == &
-              SEC2%sz%norbs) equal_sector = .false.
+         IF (SEC1%sz%npart == SEC2%sz%npart .AND. SEC1%sz%norbs == &
+             SEC2%sz%norbs) equal_sector = .false.
       ENDIF
    end function
 
@@ -178,11 +178,11 @@ contains
       TYPE(sector_type), INTENT(IN) :: SEC
       INTEGER, INTENT(IN)           :: UNIT
 
-      IF     (ASSOCIATED(SEC%updo))THEN
-         WRITE(UNIT, *) 'updo'
+      IF (ASSOCIATED(SEC%updo)) THEN
+         WRITE (UNIT, *) 'updo'
          CALL write_raw_fermion_sector2(SEC%updo, UNIT)
-      ELSE IF(ASSOCIATED(SEC%sz))  THEN
-         WRITE(UNIT, *) 'sz'
+      ELSE IF (ASSOCIATED(SEC%sz)) THEN
+         WRITE (UNIT, *) 'sz'
          CALL write_raw_fermion_sector(SEC%sz, UNIT)
       ENDIF
    end subroutine
@@ -190,28 +190,28 @@ contains
    subroutine read_raw_sector(SEC, UNIT, SZNAMBU)
 
       use fermion_hilbert_class, only: fermion_sector_type, &
-           read_raw_fermion_sector
+         read_raw_fermion_sector
       use fermion_sector2_class, only: fermion_sector2_type, &
-           read_raw_fermion_sector2
+         read_raw_fermion_sector2
 
       implicit none
 
       TYPE(sector_type), INTENT(INOUT) :: SEC
       INTEGER, INTENT(IN)              :: UNIT
       LOGICAL, OPTIONAL, INTENT(IN)    :: SZNAMBU
-      CHARACTER(LEN = 100)       :: sectype
+      CHARACTER(LEN=100)       :: sectype
       TYPE(fermion_sector2_type) :: updo
       TYPE(fermion_sector_type)  :: sz
 
       CALL delete_sector(SEC)
       ! READS AN EMPTY SECTOR
-      READ(UNIT, *) sectype
-      IF(INDEX(sectype, 'updo') /= 0)THEN
-         CALL read_raw_fermion_sector2(updo, UNIT, NAMBU = SZNAMBU)
+      READ (UNIT, *) sectype
+      IF (INDEX(sectype, 'updo') /= 0) THEN
+         CALL read_raw_fermion_sector2(updo, UNIT, NAMBU=SZNAMBU)
          SEC = updo_to_sector(updo)
-      ELSE IF(INDEX(sectype, 'sz') /= 0)THEN
-         CALL read_raw_fermion_sector(sz, UNIT, SZ = SZNAMBU)
-         SEC =   sz_to_sector(sz)
+      ELSE IF (INDEX(sectype, 'sz') /= 0) THEN
+         CALL read_raw_fermion_sector(sz, UNIT, SZ=SZNAMBU)
+         SEC = sz_to_sector(sz)
       ENDIF
    end subroutine
 
@@ -222,10 +222,10 @@ contains
       TYPE(sector_type), INTENT(IN) :: SEC
       INTEGER :: dimen_func
 
-      IF     (ASSOCIATED(SEC%updo))THEN
+      IF (ASSOCIATED(SEC%updo)) THEN
          dimen_func = SEC%updo%dimen
-      ELSE IF(ASSOCIATED(SEC%sz))  THEN
-         dimen_func =   SEC%sz%dimen
+      ELSE IF (ASSOCIATED(SEC%sz)) THEN
+         dimen_func = SEC%sz%dimen
       ENDIF
    end function
 
@@ -234,11 +234,11 @@ contains
       implicit none
 
       TYPE(sector_type), INTENT(IN) :: SEC
-      CHARACTER(LEN = 100) :: title_sector
+      CHARACTER(LEN=100) :: title_sector
 
-      IF     (ASSOCIATED(SEC%updo))THEN
+      IF (ASSOCIATED(SEC%updo)) THEN
          title_sector = TRIM(SEC%updo%title)
-      ELSE IF(ASSOCIATED(SEC%sz))  THEN
+      ELSE IF (ASSOCIATED(SEC%sz)) THEN
          title_sector = TRIM(SEC%sz%title)
       ENDIF
    end function
@@ -253,9 +253,9 @@ contains
       INTEGER, INTENT(IN)           :: rank
       INTEGER :: state_func
 
-      IF     (ASSOCIATED(SEC%updo))THEN
+      IF (ASSOCIATED(SEC%updo)) THEN
          state_func = state2(rank, SEC%updo)
-      ELSE IF(ASSOCIATED(SEC%sz))  THEN
+      ELSE IF (ASSOCIATED(SEC%sz)) THEN
          state_func = SEC%sz%state(rank)
       ENDIF
    end function
@@ -270,9 +270,9 @@ contains
       INTEGER, INTENT(IN)           :: state
       INTEGER :: rank_func
 
-      IF     (ASSOCIATED(SEC%updo))THEN
+      IF (ASSOCIATED(SEC%updo)) THEN
          rank_func = rank2(state, SEC%updo)
-      ELSE IF(ASSOCIATED(SEC%sz))  THEN
+      ELSE IF (ASSOCIATED(SEC%sz)) THEN
          rank_func = SEC%sz%rank(state)
       ENDIF
    end function
@@ -284,10 +284,10 @@ contains
       TYPE(sector_type), INTENT(IN) :: SEC
       INTEGER :: norbs__
 
-      IF     (ASSOCIATED(SEC%updo))THEN
+      IF (ASSOCIATED(SEC%updo)) THEN
          norbs__ = SEC%updo%norbs
-      ELSE IF(ASSOCIATED(SEC%sz))  THEN
-         norbs__ =   SEC%sz%norbs
+      ELSE IF (ASSOCIATED(SEC%sz)) THEN
+         norbs__ = SEC%sz%norbs
       ENDIF
    end function
 
@@ -299,17 +299,17 @@ contains
       INTEGER, OPTIONAL, INTENT(IN) :: SPIN
       INTEGER :: npart_func
 
-      IF     (ASSOCIATED(SEC%updo))THEN
-         IF(PRESENT(SPIN))THEN
-            IF(SPIN == 1) npart_func = SEC%updo%up%npart
-            IF(SPIN == 2) npart_func = SEC%updo%down%npart
+      IF (ASSOCIATED(SEC%updo)) THEN
+         IF (PRESENT(SPIN)) THEN
+            IF (SPIN == 1) npart_func = SEC%updo%up%npart
+            IF (SPIN == 2) npart_func = SEC%updo%down%npart
          ELSE
             npart_func = SEC%updo%npart
          ENDIF
-      ELSE IF(ASSOCIATED(SEC%sz))  THEN
-         IF(PRESENT(SPIN)) STOP "ERROR IN npart: SPIN CAN'T BE SPECIFIED IN Sz &
+      ELSE IF (ASSOCIATED(SEC%sz)) THEN
+         IF (PRESENT(SPIN)) STOP "ERROR IN npart: SPIN CAN'T BE SPECIFIED IN Sz &
               &SECTOR!"
-         npart_func =   SEC%sz%npart
+         npart_func = SEC%sz%npart
       ENDIF
    end function
 
@@ -322,10 +322,10 @@ contains
       TYPE(sector_type), INTENT(IN) :: SEC
       INTEGER :: istatemin__
 
-      IF     (ASSOCIATED(SEC%updo))THEN
+      IF (ASSOCIATED(SEC%updo)) THEN
          istatemin__ = SEC%updo%istatemin(iproc)
-      ELSE IF(ASSOCIATED(SEC%sz))  THEN
-         istatemin__ =   SEC%sz%istatemin(iproc)
+      ELSE IF (ASSOCIATED(SEC%sz)) THEN
+         istatemin__ = SEC%sz%istatemin(iproc)
       ENDIF
    end function
 
@@ -338,10 +338,10 @@ contains
       TYPE(sector_type), INTENT(IN) :: SEC
       INTEGER :: istatemax__
 
-      IF     (ASSOCIATED(SEC%updo))THEN
+      IF (ASSOCIATED(SEC%updo)) THEN
          istatemax__ = SEC%updo%istatemax(iproc)
-      ELSE IF(ASSOCIATED(SEC%sz))  THEN
-         istatemax__ =   SEC%sz%istatemax(iproc)
+      ELSE IF (ASSOCIATED(SEC%sz)) THEN
+         istatemax__ = SEC%sz%istatemax(iproc)
       ENDIF
    end function
 
@@ -354,10 +354,10 @@ contains
       TYPE(sector_type), INTENT(IN) :: SEC
       INTEGER :: chunk_func
 
-      IF     (ASSOCIATED(SEC%updo))THEN
+      IF (ASSOCIATED(SEC%updo)) THEN
          chunk_func = SEC%updo%chunk(iproc)
-      ELSE IF(ASSOCIATED(SEC%sz))  THEN
-         chunk_func =   SEC%sz%chunk(iproc)
+      ELSE IF (ASSOCIATED(SEC%sz)) THEN
+         chunk_func = SEC%sz%chunk(iproc)
       ENDIF
    end function
 

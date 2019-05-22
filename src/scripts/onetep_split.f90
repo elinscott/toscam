@@ -15,45 +15,45 @@ include 'dmft_one_iteration_split_module.h'
 !==============================================================!
 
 program dmftonetepsplit
-use dmft_split_variables
-implicit none
-integer                    :: i,j,k,ww
-character(200)             :: files,filename_sigma_source,filename_sigma
-character(200),allocatable :: list_of_greens(:,:)
-logical                    :: check,flag_onetep_producing_only_up_spin
-type(string)               :: cc_
-integer,allocatable        :: list_uniform(:,:)
+   use dmft_split_variables
+   implicit none
+   integer                    :: i, j, k, ww
+   character(200)             :: files, filename_sigma_source, filename_sigma
+   character(200), allocatable :: list_of_greens(:, :)
+   logical                    :: check, flag_onetep_producing_only_up_spin
+   type(string)               :: cc_
+   integer, allocatable        :: list_uniform(:, :)
 
    !-------------------------------!
-     call init_my_input_variables
-     call initialize_my_simulation_
+   call init_my_input_variables
+   call initialize_my_simulation_
    !-------------------------------!
 
-     write(*,*) 'RUNNING THE DMFT CALCULATIONS WITH [x] cpus : ', size2
-     if(uniform_sigma.and.size2>1)then
-        write(*,*) 'USING MPI WITH UNIFORM_SIGMA FLAG IS A WASTE OF RESSOURCE'
-        write(*,*) 'MPI PARALLELIZATION IS ONLY EFFICIENT WHEN SIGMA IS NON-UNIFORM'
-        write(*,*) 'PLEASE CHANGE INPUTS ACCORDINGLY'
-        stop
-     endif
+   write (*, *) 'RUNNING THE DMFT CALCULATIONS WITH [x] cpus : ', size2
+   if (uniform_sigma .and. size2 > 1) then
+      write (*, *) 'USING MPI WITH UNIFORM_SIGMA FLAG IS A WASTE OF RESSOURCE'
+      write (*, *) 'MPI PARALLELIZATION IS ONLY EFFICIENT WHEN SIGMA IS NON-UNIFORM'
+      write (*, *) 'PLEASE CHANGE INPUTS ACCORDINGLY'
+      stop
+   endif
 
-     call build_list_of_files
+   call build_list_of_files
 
-     call mpibarrier
+   call mpibarrier
 
-     call loop_over_atoms
+   call loop_over_atoms
 
-     call copy_files
+   call copy_files
 
-     call mpibarrier
+   call mpibarrier
 
    !-------------------------------!
-     if(reboot_mpi) call finalize_my_simulation
+   if (reboot_mpi) call finalize_my_simulation
    !-------------------------------!
 
 contains
 
-include 'dmft_one_iteration_split.h'
+   include 'dmft_one_iteration_split.h'
 
 end program
 

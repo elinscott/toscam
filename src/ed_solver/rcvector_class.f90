@@ -1,6 +1,6 @@
 MODULE rcvector_class
 
-   use genvar,              only: DBL
+   use genvar, only: DBL
 
    implicit none
 
@@ -15,7 +15,7 @@ MODULE rcvector_class
 #ifdef _complex
       COMPLEX(DBL), POINTER :: rc(:) => NULL()
 #else
-      REAL(DBL),    POINTER :: rc(:) => NULL()
+      REAL(DBL), POINTER :: rc(:) => NULL()
 #endif
    END TYPE
 
@@ -41,7 +41,7 @@ contains
 
    subroutine create_fix_initial_vector(initvec, n)
 
-      use random,              only: dran_tab
+      use random, only: dran_tab
 
       implicit none
 
@@ -72,8 +72,8 @@ contains
 
       CALL delete_rcvector(VEC)
       VEC%n = N
-      IF(N > 0)THEN
-         ALLOCATE(VEC%rc(N))
+      IF (N > 0) THEN
+         ALLOCATE (VEC%rc(N))
       ENDIF
       VEC%rc = 0.0_DBL
 
@@ -87,7 +87,7 @@ contains
       TYPE(rcvector_type), INTENT(IN)    :: VECIN
 
       CALL delete_rcvector(VECOUT)
-      IF(VECIN%n == 0) STOP "ERROR IN new_rcvector_from_old: INPUT ISNT &
+      IF (VECIN%n == 0) STOP "ERROR IN new_rcvector_from_old: INPUT ISNT &
            &ASSOCIATED!"
       CALL new_rcvector_from_scratch(VECOUT, VECIN%n)
       CALL copy_rcvector(VECOUT, VECIN)
@@ -102,12 +102,12 @@ contains
       TYPE(rcvector_type), INTENT(INOUT) :: VECOUT
       TYPE(rcvector_type), INTENT(IN)    :: VECIN
 
-      IF(SIZE(VECOUT%rc) /= SIZE(VECIN%rc)) then
-         write(*, *) "ERROR IN copy_vec: INCONSISTENT DIMENSIONS!"
+      IF (SIZE(VECOUT%rc) /= SIZE(VECIN%rc)) then
+         write (*, *) "ERROR IN copy_vec: INCONSISTENT DIMENSIONS!"
          call create_seg_fault
          STOP "ERROR IN copy_vec: INCONSISTENT DIMENSIONS!"
       endif
-      VECOUT%n  = VECIN%n
+      VECOUT%n = VECIN%n
       VECOUT%rc = VECIN%rc
    end subroutine
 
@@ -117,7 +117,7 @@ contains
 
       type(rcvector_type), intent(inout) :: VECIN
 
-      IF(ASSOCIATED(VECIN%rc)) DEALLOCATE(VECIN%rc, STAT = istati)
+      IF (ASSOCIATED(VECIN%rc)) DEALLOCATE (VECIN%rc, STAT=istati)
    end subroutine
 
    function conj_rcvector(vec) RESULT(cvec)
@@ -131,22 +131,22 @@ contains
 #ifdef _complex
       cvec%rc = CONJG(vec%rc)
 #else
-      cvec%rc =       vec%rc
+      cvec%rc = vec%rc
 #endif
    end function
 
    function norm_rcvector(vec)
 
       use globalvar_ed_solver, only: USE_TRANSPOSE_TRICK_MPI
-      use mpirout,             only: mpi_dot_product
+      use mpirout, only: mpi_dot_product
 
       implicit none
 
       TYPE(rcvector_type), INTENT(IN) :: vec
       REAL(DBL) :: norm_rcvector
 
-      norm_rcvector = SQRT(ABS(MPI_DOT_PRODUCT(vec%rc, vec%rc, split = &
-           USE_TRANSPOSE_TRICK_MPI)))
+      norm_rcvector = SQRT(ABS(MPI_DOT_PRODUCT(vec%rc, vec%rc, split= &
+                                               USE_TRANSPOSE_TRICK_MPI)))
    end function
 
    function new_rcvector_archive(n, nvec) RESULT(archive)
@@ -158,7 +158,7 @@ contains
       INTEGER                     :: ivec
 
       archive%nvec = nvec
-      ALLOCATE(archive%vec(nvec))
+      ALLOCATE (archive%vec(nvec))
       DO ivec = 1, nvec
          CALL new_rcvector_from_scratch(archive%vec(ivec), n)
       ENDDO
@@ -171,11 +171,11 @@ contains
       type(rcvector_archive_type), intent(inout) :: archive
       integer :: ivec
 
-      IF(ASSOCIATED(archive%vec))THEN
+      IF (ASSOCIATED(archive%vec)) THEN
          DO ivec = 1, archive%nvec
             CALL delete_rcvector(archive%vec(ivec))
          ENDDO
-         DEALLOCATE(archive%vec, STAT = istati)
+         DEALLOCATE (archive%vec, STAT=istati)
       ENDIF
    end subroutine
 
@@ -187,16 +187,16 @@ contains
 
       TYPE(rcvector_type), INTENT(IN)          :: vec
       INTEGER, INTENT(IN), OPTIONAL            :: UNIT
-      CHARACTER(LEN = *), INTENT(IN), OPTIONAL :: FILEOUT
+      CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: FILEOUT
       INTEGER :: unit_
 
       unit_ = 82548
-      IF(PRESENT(UNIT)) unit_ = UNIT
-      IF(PRESENT(FILEOUT)) CALL open_safe(unit_, FILEOUT, 'UNKNOWN', 'WRITE')
-      WRITE(unit_, *) vec%n
-      WRITE(unit_, *) vec%rc
+      IF (PRESENT(UNIT)) unit_ = UNIT
+      IF (PRESENT(FILEOUT)) CALL open_safe(unit_, FILEOUT, 'UNKNOWN', 'WRITE')
+      WRITE (unit_, *) vec%n
+      WRITE (unit_, *) vec%rc
       CALL flush(unit_)
-      IF(PRESENT(FILEOUT))  CALL close_safe(unit_)
+      IF (PRESENT(FILEOUT)) CALL close_safe(unit_)
    end subroutine
 
    subroutine read_raw_rcvector(vec, UNIT)
@@ -208,9 +208,9 @@ contains
       INTEGER :: n
 
       CALL delete_rcvector(vec)
-      READ(UNIT, *) n
+      READ (UNIT, *) n
       CALL new_rcvector(vec, n)
-      READ(UNIT, *) vec%rc
+      READ (UNIT, *) vec%rc
    end subroutine
 
 end module

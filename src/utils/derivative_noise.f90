@@ -1,13 +1,13 @@
 module derivative_noise
 
- use matrix
- use fourier_transform_mod
+   use matrix
+   use fourier_transform_mod
 
- PRIVATE
- PUBLIC :: get_derivative_noise,fourier_filter_noise_
+   PRIVATE
+   PUBLIC :: get_derivative_noise, fourier_filter_noise_
 
 ! contains
-! 
+!
 ! !*****************************************************!
 ! !*****************************************************!
 ! !*****************************************************!
@@ -20,7 +20,7 @@ module derivative_noise
 ! !*****************************************************!
 ! !*****************************************************!
 ! !*****************************************************!
-! 
+!
 !    subroutine fourier_filter_noise_(npoint,tab,vois)
 !       implicit none
 !       integer  :: vois,npoint
@@ -28,7 +28,7 @@ module derivative_noise
 !        call smooft(tab,npoint,vois)
 !       return
 !    end subroutine
-! 
+!
 ! !*****************************************************!
 ! !*****************************************************!
 ! !*****************************************************!
@@ -40,11 +40,11 @@ module derivative_noise
 ! !*****************************************************!
 ! !*****************************************************!
 ! !*****************************************************!
-! 
+!
 ! subroutine get_derivative_noise(npoint,xx,tab,nphas,popo,vois,dxdt)
 ! !*****************************************************************************
 ! !*   Smooting time series and computing successive time derivatives
-! !*   npoint    : nombre de points 
+! !*   npoint    : nombre de points
 ! !*   nphas     : dimension of the reconstructed phase space
 ! !*   vois      : Smoothing window
 ! !*   h         : time step of the time series
@@ -53,15 +53,15 @@ module derivative_noise
 ! !*   h=0.050   : time step of sampling
 ! !*   vois=10   : smoothing parameter
 ! !*****************************************************************************
-! 
+!
 !       implicit none
 !       integer  :: i,k,nwin,nphas,popo,nmax,npoint,m,j,vois
 !       REAL(8)  :: h,xim(nphas+popo+1),t0,dxdt(nphas+1,npoint),y,t,tab(npoint),xx(npoint)
-! 
+!
 !       h=xx(2)-xx(1)
 !       nwin=nphas+popo; t0=0.0
 !       call smooft(tab,npoint,vois)
-! 
+!
 !       do i=1,npoint-nwin
 !         xim(1:nwin)=tab(i:i+nwin)
 !         call deriv(popo,xim,t0,h,nwin,dxdt(:,i),nphas+1)
@@ -69,7 +69,7 @@ module derivative_noise
 !       enddo
 !       return
 !       end subroutine
-! 
+!
 ! !*****************************************************!
 ! !*****************************************************!
 ! !*****************************************************!
@@ -80,7 +80,7 @@ module derivative_noise
 ! !*****************************************************!
 ! !*****************************************************!
 ! !*****************************************************!
-! 
+!
 !       subroutine deriv(nmax,x,t0,dt,n,dxdt,imax)
 ! !*****************************************************************************
 ! !*   calcul de derivees avec extrapolation polynomiale
@@ -90,7 +90,7 @@ module derivative_noise
 !       integer :: n,nmax,nmil,i,j,k,fac,imax
 !       REAL(8) :: x(n),t0,dt,dxdt(imax)
 !       REAL(8) :: t(n),coeff(n),tderiv(0:n)
-! 
+!
 !       nmil=(n+1)/2
 !       t(1)=t0
 !       do i=2,n
@@ -114,7 +114,7 @@ module derivative_noise
 !       enddo
 !       return
 !       end subroutine
-! 
+!
 ! !*****************************************************!
 ! !*****************************************************!
 ! !*****************************************************!
@@ -124,7 +124,7 @@ module derivative_noise
 ! !*****************************************************!
 ! !*****************************************************!
 ! !*****************************************************!
-! 
+!
 !       subroutine interpoly(nmax,x,t,n,coeff)
 ! !*****************************************************************************
 ! !*    interpolation polynomiale
@@ -132,7 +132,7 @@ module derivative_noise
 !      implicit none
 !      integer n,nmax,i,j
 !      REAL(8) x(n),t(n),coeff(n),smat(n,n),w(n),v(n,n),wmax,wmin,mat(n,n)
-! 
+!
 !       do i=1,n
 !          mat(i,1)=1.d00
 !          do j=2,n
@@ -155,7 +155,7 @@ module derivative_noise
 !       call svbksb(mat,w,v,n,n,n,n,x,coeff)
 !       return
 !       end subroutine
-! 
+!
 ! !*****************************************************!
 ! !*****************************************************!
 ! !*****************************************************!
@@ -164,12 +164,12 @@ module derivative_noise
 ! !*****************************************************!
 ! !*****************************************************!
 ! !*****************************************************!
-! 
+!
 !       subroutine smooft(y,n,pts)
 !       REAL(8) :: y1,yn,y(n),const
 !       integer :: pts
 !       integer :: n,j,mmax
-! 
+!
 !       mmax=n
 !       const=(dble(pts)/dble(mmax))**2
 !       y1=y(1); yn=y(n)
@@ -205,7 +205,7 @@ module derivative_noise
 !       enddo
 !       return
 !       end subroutine
-! 
+!
 ! !*****************************************************!
 ! !*****************************************************!
 ! !*****************************************************!

@@ -6,7 +6,7 @@ module string4
 
    public :: chrctp
    public :: s_to_i4
-   
+
 contains
 
    !    * A_TO_I4 returns the index of an alphabetic character.
@@ -319,10 +319,9 @@ contains
    !    * WORD_NEXT_READ "reads" words from a string, one at a time.
    !    * WORD_NEXT2 returns the first word in a string.
    !    * WORD_SWAP swaps two words in a given string.
-   
-   
+
    ! function a_to_i4 ( ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! A_TO_I4 returns the index of an alphabetic character.
@@ -338,7 +337,7 @@ contains
    ! !
    ! !    'A'   1
    ! !    'B'   2
-   ! !    ...   
+   ! !    ...
    ! !    'Z'  26
    ! !    'a'  27
    ! !    'b'  28
@@ -363,12 +362,12 @@ contains
    ! !    between 27 and 52 if it is lower case, and 0 otherwise.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) a_to_i4
    !   integer ( kind = 4 ), parameter :: cap_shift = 64
    !   character ch
    !   integer ( kind = 4 ), parameter :: low_shift = 96
-   ! 
+   !
    !   if ( lle ( 'A', ch ) .and. lle ( ch, 'Z' ) ) then
    !     a_to_i4 = iachar ( ch ) - cap_shift
    !   else if ( lle ( 'a', ch ) .and. lle ( ch, 'z' ) ) then
@@ -376,11 +375,11 @@ contains
    !   else
    !     a_to_i4 = 0
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine b4_ieee_to_r4 ( word, r )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! B4_IEEE_TO_R4 converts a 4 byte IEEE word into an R4.
@@ -448,7 +447,7 @@ contains
    ! !    Output, real ( kind = 4 ) R, the value of the real number.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) e
    !   integer ( kind = 4 ) f
    !   integer ( kind = 4 ) i
@@ -460,10 +459,10 @@ contains
    ! !
    !   s = 0
    !   call mvbits ( word, 31, 1, s, 0 )
-   ! 
+   !
    !   e = 0
    !   call mvbits ( word, 23, 8, e, 0 )
-   ! 
+   !
    !   f = 0
    !   call mvbits ( word, 0, 23, f, 0 )
    ! !
@@ -472,18 +471,18 @@ contains
    !   if ( e == 255 ) then
    !     r = 0.0E+00
    !   else if ( 0 < e ) then
-   !     r = ( -1.0E+00 )**s * 2.0E+00**(e-127-23) * real ( 8388608 + f, kind = 4 ) 
+   !     r = ( -1.0E+00 )**s * 2.0E+00**(e-127-23) * real ( 8388608 + f, kind = 4 )
    !   else if ( e == 0 ) then
    !     r = ( -1.0E+00 )**s * 2.0E+00**(-126) * real ( f, kind = 4 )
    !     do i = 1, 23
    !       r = r / 2.0E+00
    !     end do
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine b4_ieee_to_sef ( word, s, e, f )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! B4_IEEE_TO_SEF converts an IEEE real word to S * 2**E * F format.
@@ -509,68 +508,68 @@ contains
    ! !    Output, integer ( kind = 4 ) F, the mantissa.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) e
    !   integer ( kind = 4 ) e2
    !   integer ( kind = 4 ) f
    !   integer ( kind = 4 ), parameter :: i4_two = 2
    !   integer ( kind = 4 ) s
    !   integer ( kind = 4 ) word
-   ! 
+   !
    !   s = 0
    !   call mvbits ( word, 31, 1, s, 0 )
-   ! 
+   !
    !   e2 = 0
    !   call mvbits ( word, 23, 8, e2, 0 )
-   ! 
+   !
    !   if ( e2 == 255 ) then
-   ! 
+   !
    !     e = 128
-   ! 
+   !
    !     call mvbits ( word, 0, 23, f, 0 )
-   ! 
+   !
    !     if ( f == 0 ) then
    !       f = 0
    !     else
    !       f = 2**23 - 1
    !     end if
-   ! 
-   !   else if ( 0 < e2 ) then 
-   ! 
+   !
+   !   else if ( 0 < e2 ) then
+   !
    !     e = e2 - 127 - 23
    !     f = 2**23
    !     call mvbits ( word, 0, 23, f, 0 )
-   ! 
+   !
    !     do while ( mod ( f, i4_two ) == 0 )
    !       f = f / 2
    !       e = e + 1
    !     end do
-   ! 
+   !
    !   else if ( e2 == 0 ) then
-   ! 
+   !
    !     e = e2 - 127 - 23
    !     f = 0
    !     call mvbits ( word, 0, 23, f, 0 )
-   ! 
+   !
    !     if ( f == 0 ) then
-   ! 
+   !
    !       e = 0
-   ! 
+   !
    !     else
-   ! 
+   !
    !       do while ( 0 < f .and. mod ( f, i4_two ) == 0 )
    !         f = f / 2
    !         e = e + 1
    !       end do
-   ! 
+   !
    !     end if
-   ! 
+   !
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine base_to_i4 ( s, base, i )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! BASE_TO_I4 returns the value of an integer represented in some base.
@@ -580,7 +579,7 @@ contains
    ! !    BASE = 1 is allowed, in which case we allow the digits '1' and '0',
    ! !    and we simply count the '1' digits for the result.
    ! !
-   ! !    Negative bases between -16 and -2 are allowed.  
+   ! !    Negative bases between -16 and -2 are allowed.
    ! !
    ! !    The base -1 is allowed, and essentially does a parity check on
    ! !    a string of 1's.
@@ -614,13 +613,13 @@ contains
    ! !    are representations of integers between 0 and |BASE-1|.  In the
    ! !    special case of base 1 or base -1, we allow both 0 and 1 as digits.
    ! !
-   ! !    Input, integer ( kind = 4 ) BASE, the base in which the representation is given.  
+   ! !    Input, integer ( kind = 4 ) BASE, the base in which the representation is given.
    ! !    Normally, 2 <= BASE <= 16.  However, there are two exceptions.
    ! !
    ! !    Output, integer ( kind = 4 ) I, the integer.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) base
    !   character c
    !   integer ( kind = 4 ) i
@@ -630,10 +629,10 @@ contains
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
    !   integer ( kind = 4 ) state
-   ! 
+   !
    !   i = 0
    !   s_length = len_trim ( s )
-   !  
+   !
    !   if ( base == 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'BASE_TO_I4 - Serious error!'
@@ -641,7 +640,7 @@ contains
    !     i = -1
    !     return
    !   end if
-   ! 
+   !
    !   if ( 16 < abs ( base ) ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'BASE_TO_I4 - Serious error!'
@@ -649,19 +648,19 @@ contains
    !     i = -1
    !     return
    !   end if
-   !  
+   !
    !   state = 0
-   !   isgn = 1 
+   !   isgn = 1
    !   ichr = 1
-   ! 
+   !
    !   do while ( ichr <= s_length )
-   ! 
+   !
    !     c = s(ichr:ichr)
    ! !
    ! !  Blank.
    ! !
    !     if ( c == ' ' ) then
-   !  
+   !
    !       if ( state == 2 ) then
    !         exit
    !       end if
@@ -669,52 +668,52 @@ contains
    ! !  Sign, + or -.
    ! !
    !     else if ( c == '-' ) then
-   !  
+   !
    !       if ( state /= 0 ) then
    !         exit
    !       end if
-   ! 
+   !
    !       state = 1
    !       isgn = -1
-   !  
+   !
    !     else if ( c == '+' ) then
-   !  
+   !
    !       if ( state /= 0 ) then
    !         exit
    !       end if
-   ! 
+   !
    !       state = 1
-   ! 
+   !
    !     else
    ! !
    ! !  Digit?
    ! !
    !       call ch_to_digit_hex ( c, idig )
-   !  
+   !
    !       if ( abs ( base ) == 1 .and. ( idig == 0 .or. idig == 1 ) ) then
-   ! 
+   !
    !         i = base * i + idig
    !         state = 2
-   !       
+   !
    !       else if ( 0 <= idig .and. idig < abs ( base ) ) then
-   ! 
+   !
    !         i = base * i + idig
    !         state = 2
-   ! 
+   !
    !       else
-   ! 
+   !
    !         write ( *, '(a)' ) ' '
    !         write ( *, '(a)' ) 'BASE_TO_I4 - Serious error!'
    !         write ( *, '(a)' ) '  Illegal digit = "' // c // '"'
    !         write ( *, '(a)' ) '  Conversion halted prematurely!'
    !         return
-   ! 
+   !
    !       end if
-   ! 
+   !
    !     end if
-   ! 
+   !
    !     ichr = ichr + 1
-   ! 
+   !
    !   end do
    ! !
    ! !  Once we're done reading information, we expect to be in state 2.
@@ -729,11 +728,11 @@ contains
    ! !  Account for the sign.
    ! !
    !   i = isgn * i
-   !  
+   !
    !   return
    ! end
    ! subroutine binary_to_i4 ( s, i )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! BINARY_TO_I4 converts a binary representation into an integer value.
@@ -742,8 +741,8 @@ contains
    ! !
    ! !        S        I
    ! !
-   ! !      '101'      5  
-   ! !    '-1000'     -8 
+   ! !      '101'      5
+   ! !    '-1000'     -8
    ! !        '1'      1
    ! !
    ! !  Modified:
@@ -761,7 +760,7 @@ contains
    ! !    Output, integer ( kind = 4 ) I, the integer whose representation was input.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) ichr
@@ -769,22 +768,22 @@ contains
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
    !   integer ( kind = 4 ) state
-   ! 
+   !
    !   s_length = len_trim ( s )
-   !  
+   !
    !   i = 0
    !   ichr = 1
    !   state = 0
    !   isgn = 1
-   !  
+   !
    !   do while ( ichr <= s_length )
-   ! 
+   !
    !     c = s(ichr:ichr)
    ! !
    ! !  Blank.
    ! !
    !     if ( c == ' ' ) then
-   !  
+   !
    !       if ( state == 2 ) then
    !         state = 3
    !       end if
@@ -792,16 +791,16 @@ contains
    ! !  Sign, + or -.
    ! !
    !     else if ( c == '-' ) then
-   ! 
+   !
    !       if ( state == 0 ) then
    !         state = 1
    !         isgn = -1
    !       else
    !         state = -1
    !       end if
-   ! 
+   !
    !     else if ( c == '+' ) then
-   ! 
+   !
    !       if ( state == 0 ) then
    !         state = 1
    !       else
@@ -811,51 +810,51 @@ contains
    ! !  Digit, 0 or 1.
    ! !
    !     else if ( c == '1' ) then
-   ! 
+   !
    !       i = 2 * i
    !       i = i + 1
    !       state = 2
-   ! 
+   !
    !     else if ( c == '0' ) then
-   !  
+   !
    !       i = 2 * i
    !       state = 2
    ! !
    ! !  Illegal or unknown sign.
    ! !
    !     else
-   ! 
+   !
    !       write ( *, '(a)' ) ' '
    !       write ( *, '(a)' ) 'BINARY_TO_I4 - Serious error!'
    !       write ( *, '(a)' ) '  Illegal digit = "' // c // '"'
    !       write ( *, '(a)' ) '  Conversion halted prematurely!'
    !       return
-   ! 
+   !
    !     end if
-   ! 
+   !
    !     if ( state == -1 ) then
    !       write ( *, '(a)' ) ' '
    !       write ( *, '(a)' ) 'BINARY_TO_I4 - Serious error!'
    !       write ( *, '(a)' ) '  Unable to decipher input!'
    !       return
    !     end if
-   ! 
+   !
    !     if ( 3 <= state ) then
    !       exit
    !     end if
-   ! 
+   !
    !     ichr = ichr + 1
-   ! 
+   !
    !   end do
    ! !
    ! !  Apply the sign.
    ! !
    !   i = isgn * i
-   ! 
+   !
    !   return
    ! end
    ! subroutine binary_to_r4 ( s, r )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! BINARY_TO_R4 converts a binary representation into an R4.
@@ -888,7 +887,7 @@ contains
    ! !    Output, real ( kind = 4 ) R, the real number.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   integer ( kind = 4 ) ichr
    !   integer ( kind = 4 ) intval
@@ -898,24 +897,24 @@ contains
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
    !   integer ( kind = 4 ) state
-   ! 
+   !
    !   s_length = len_trim ( s )
-   !  
+   !
    !   intval = 0
    !   ichr = 1
    !   state = 0
    !   isgn = 1
    !   r = 0.0E+00
    !   power = 0
-   !  
+   !
    !   do while ( ichr <= s_length )
-   ! 
+   !
    !     c = s(ichr:ichr)
    ! !
    ! !  Blank.
    ! !
    !     if ( c == ' ' ) then
-   !  
+   !
    !       if ( state == 4 ) then
    !         state = 5
    !       end if
@@ -923,16 +922,16 @@ contains
    ! !  Sign, + or -.
    ! !
    !     else if ( c == '-' ) then
-   ! 
+   !
    !       if ( state == 0 ) then
    !         state = 1
    !         isgn = -1
    !       else
    !         state = -1
    !       end if
-   ! 
+   !
    !     else if ( c == '+' ) then
-   !  
+   !
    !       if ( state == 0 ) then
    !         state = 1
    !       else
@@ -942,29 +941,29 @@ contains
    ! !  Digit, 0 or 1.
    ! !
    !     else if ( c == '1' ) then
-   ! 
+   !
    !       intval = 2 * intval + 1
-   ! 
+   !
    !       if ( state == 0 .or. state == 1 ) then
    !         state = 2
    !       else if ( state == 3 ) then
    !         state = 4
    !       end if
-   ! 
+   !
    !       if ( state == 4 ) then
    !         power = power + 1
    !       end if
-   ! 
+   !
    !     else if ( c == '0' ) then
-   ! 
+   !
    !       intval = 2 * intval
-   ! 
+   !
    !       if ( state == 0 .or. state == 1 ) then
    !         state = 2
    !       else if ( state == 3 ) then
    !         state = 4
    !       end if
-   ! 
+   !
    !       if ( state == 4 ) then
    !         power = power + 1
    !       end if
@@ -972,7 +971,7 @@ contains
    ! !  Decimal point.
    ! !
    !     else if ( c == '.' ) then
-   ! 
+   !
    !       if ( state <= 2 ) then
    !         state = 3
    !       else
@@ -982,38 +981,38 @@ contains
    ! !  Illegal or unknown sign.
    ! !
    !     else
-   ! 
+   !
    !       write ( *, '(a)' ) ' '
    !       write ( *, '(a)' ) 'BINARY_TO_R4 - Serious error!'
    !       write ( *, '(a)' ) '  Illegal character = "' // c // '"'
    !       write ( *, '(a)' ) '  Conversion halted prematurely!'
    !       stop
-   ! 
+   !
    !     end if
-   ! 
+   !
    !     if ( state == -1 ) then
    !       write ( *, '(a)' ) ' '
    !       write ( *, '(a)' ) 'BINARY_TO_R4 - Serious error!'
    !       write ( *, '(a)' ) '  Unable to decipher input!'
    !       stop
    !     end if
-   !  
+   !
    !     if ( 5 <= state ) then
    !       exit
    !     end if
-   ! 
+   !
    !     ichr = ichr + 1
-   ! 
+   !
    !   end do
    ! !
    ! !  Apply the sign and the scale factor.
    ! !
    !   r = real ( isgn * intval, kind = 4 ) / 2.0E+00**power
-   !  
+   !
    !   return
    ! end
    ! subroutine binary_to_r8 ( s, r )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! BINARY_TO_R8 converts a binary representation into an R8.
@@ -1046,7 +1045,7 @@ contains
    ! !    Output, real ( kind = 8 ) R, the real number.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   integer ( kind = 4 ) ichr
    !   integer ( kind = 4 ) intval
@@ -1056,24 +1055,24 @@ contains
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
    !   integer ( kind = 4 ) state
-   ! 
+   !
    !   s_length = len_trim ( s )
-   !  
+   !
    !   intval = 0
    !   ichr = 1
    !   state = 0
    !   isgn = 1
    !   r = 0.0D+00
    !   power = 0
-   !  
+   !
    !   do while ( ichr <= s_length )
-   ! 
+   !
    !     c = s(ichr:ichr)
    ! !
    ! !  Blank.
    ! !
    !     if ( c == ' ' ) then
-   !  
+   !
    !       if ( state == 4 ) then
    !         state = 5
    !       end if
@@ -1081,16 +1080,16 @@ contains
    ! !  Sign, + or -.
    ! !
    !     else if ( c == '-' ) then
-   ! 
+   !
    !       if ( state == 0 ) then
    !         state = 1
    !         isgn = -1
    !       else
    !         state = -1
    !       end if
-   ! 
+   !
    !     else if ( c == '+' ) then
-   !  
+   !
    !       if ( state == 0 ) then
    !         state = 1
    !       else
@@ -1100,29 +1099,29 @@ contains
    ! !  Digit, 0 or 1.
    ! !
    !     else if ( c == '1' ) then
-   ! 
+   !
    !       intval = 2 * intval + 1
-   ! 
+   !
    !       if ( state == 0 .or. state == 1 ) then
    !         state = 2
    !       else if ( state == 3 ) then
    !         state = 4
    !       end if
-   ! 
+   !
    !       if ( state == 4 ) then
    !         power = power + 1
    !       end if
-   ! 
+   !
    !     else if ( c == '0' ) then
-   ! 
+   !
    !       intval = 2 * intval
-   ! 
+   !
    !       if ( state == 0 .or. state == 1 ) then
    !         state = 2
    !       else if ( state == 3 ) then
    !         state = 4
    !       end if
-   ! 
+   !
    !       if ( state == 4 ) then
    !         power = power + 1
    !       end if
@@ -1130,7 +1129,7 @@ contains
    ! !  Decimal point.
    ! !
    !     else if ( c == '.' ) then
-   ! 
+   !
    !       if ( state <= 2 ) then
    !         state = 3
    !       else
@@ -1140,38 +1139,38 @@ contains
    ! !  Illegal or unknown sign.
    ! !
    !     else
-   ! 
+   !
    !       write ( *, '(a)' ) ' '
    !       write ( *, '(a)' ) 'BINARY_TO_R8 - Serious error!'
    !       write ( *, '(a)' ) '  Illegal character = "' // c // '"'
    !       write ( *, '(a)' ) '  Conversion halted prematurely!'
    !       stop
-   ! 
+   !
    !     end if
-   ! 
+   !
    !     if ( state == -1 ) then
    !       write ( *, '(a)' ) ' '
    !       write ( *, '(a)' ) 'BINARY_TO_R8 - Serious error!'
    !       write ( *, '(a)' ) '  Unable to decipher input!'
    !       stop
    !     end if
-   !  
+   !
    !     if ( 5 <= state ) then
    !       exit
    !     end if
-   ! 
+   !
    !     ichr = ichr + 1
-   ! 
+   !
    !   end do
    ! !
    ! !  Apply the sign and the scale factor.
    ! !
    !   r = real ( isgn * intval, kind = 8 ) / 2.0D+00**power
-   !  
+   !
    !   return
    ! end
    ! subroutine ch_count_chvec_add ( n, chvec, count )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_COUNT_CHVEC_ADD adds a character vector to a character count.
@@ -1198,23 +1197,23 @@ contains
    ! !    Input/output, integer ( kind = 4 ) COUNT(0:255), the character counts.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   integer ( kind = 4 ) count(0:255)
    !   character chvec(n)
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) j
-   ! 
+   !
    !   do i = 1, n
    !     j = iachar ( chvec(i) )
    !     count(j) = count(j) + 1
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine ch_count_file_add ( file_name, count )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_COUNT_FILE_ADD adds characters in a file to a character count.
@@ -1238,7 +1237,7 @@ contains
    ! !    Output, integer ( kind = 4 ) COUNT(0:255), the character counts.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) count(0:255)
    !   character ( len = * ) file_name
    !   integer ( kind = 4 ) ios
@@ -1248,9 +1247,9 @@ contains
    ! !  Open the file.
    ! !
    !   call get_unit ( iunit )
-   ! 
+   !
    !   open ( unit = iunit, file = file_name, status = 'old', iostat = ios )
-   ! 
+   !
    !   if ( ios /= 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'CH_COUNT_FILE_ADD - Fatal error!'
@@ -1258,25 +1257,25 @@ contains
    !     write ( *, '(a)' ) '    ' // trim ( file_name )
    !     return
    !   end if
-   ! 
+   !
    !   do
-   ! 
+   !
    !     read ( iunit, '(a)', iostat = ios ) line
-   ! 
+   !
    !     if ( ios /= 0 ) then
    !       exit
    !     end if
-   ! 
+   !
    !     call ch_count_s_add ( trim ( line ), count )
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   close ( unit = iunit )
-   ! 
+   !
    !   return
    ! end
    ! subroutine ch_count_histogram_print ( count, title )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_COUNT_HISTOGRAM_PRINT prints a histogram of a set of character counts.
@@ -1301,7 +1300,7 @@ contains
    ! !    Input, character ( len = * ) TITLE, a title to be printed.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   character ( len = 4 ) ch4(0:255)
    !   integer ( kind = 4 ) count(0:255)
@@ -1313,51 +1312,51 @@ contains
    !   character ( len = 4 ) s(0:255)
    !   character ( len = * ) title
    !   integer ( kind = 4 ) total
-   ! 
+   !
    !   total = sum ( count )
-   ! 
+   !
    !   do i = 0, 255
    !     c = achar ( i )
    !     call ch_to_sym ( c, ch4(i) )
    !   end do
-   ! 
+   !
    !   do i = 0, 255
-   ! 
+   !
    !     if ( total == 0 ) then
    !       percent = 0
    !     else
    !       percent = nint ( real ( 100 * count(i), kind = 4 ) &
    !         / real ( total, kind = 4 ) )
    !     end if
-   ! 
+   !
    !     if ( percent == 0 ) then
    !       s(i) = '   .'
    !     else
    !       write ( s(i), '(i4)' ) percent
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   if ( 0 < len_trim ( title ) ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) trim ( title )
    !   end if
-   ! 
+   !
    !   write ( *, '(a)' ) ' '
    !   write ( *, '(a)' ) '  Character Histogram (Percentages).'
    !   write ( *, '(a)' ) ' '
-   ! 
+   !
    !   do row = 1, 16
    !     ilo = ( row - 1 ) * 16
    !     ihi =   row       * 16 - 1
    !     write ( *, '(2x,i3,a4,i3,3x,16a4)' ) ilo, ' to ', ihi, ch4(ilo:ihi)
    !     write ( *, '(12x,16a4)' ) s(ilo:ihi)
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine ch_count_init ( count )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_COUNT_INIT initializes a character count.
@@ -1375,15 +1374,15 @@ contains
    ! !    Output, integer ( kind = 4 ) COUNT(0:255), the character counts.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) count(0:255)
-   ! 
+   !
    !   count(0:255) = 0
-   ! 
+   !
    !   return
    ! end
    ! subroutine ch_count_print ( count, title )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_COUNT_PRINT prints a set of character counts.
@@ -1408,7 +1407,7 @@ contains
    ! !    Input, character ( len = * ) TITLE, a title to be printed.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   character ( len = 4 ) ch4(0:255)
    !   integer ( kind = 4 ) count(0:255)
@@ -1416,19 +1415,19 @@ contains
    !   real ( kind = 4 ) percent
    !   character ( len = * ) title
    !   integer ( kind = 4 ) total
-   ! 
+   !
    !   total = sum ( count )
-   ! 
+   !
    !   do i = 0, 255
    !     c = achar ( i )
    !     call ch_to_sym ( c, ch4(i) )
    !   end do
-   ! 
+   !
    !   if ( 0 < len_trim ( title ) ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) trim ( title )
    !   end if
-   ! 
+   !
    !   write ( *, '(a)' ) ' '
    !   write ( *, '(a)' ) '  Char  Count  Percentages.'
    !   write ( *, '(a)' ) ' '
@@ -1442,11 +1441,11 @@ contains
    !       write ( *, '(2x,a4,2x,i8,2x,f6.3)' ) ch4(i), count(i), percent
    !     end if
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine ch_count_s_add ( s, count )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_COUNT_S_ADD adds a character string to a character histogram.
@@ -1471,21 +1470,21 @@ contains
    ! !    Input/output, integer ( kind = 4 ) COUNT(0:255), the character counts.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) count(0:255)
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) j
    !   character ( len = * ) s
-   ! 
+   !
    !   do i = 1, len ( s )
    !     j = iachar ( s(i:i) )
    !     count(j) = count(j) + 1
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine ch_extract ( s, ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_EXTRACT extracts the next nonblank character from a string.
@@ -1500,40 +1499,40 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input/output, character ( len = * ) S, the string.  On output, the 
-   ! !    first nonblank character has been removed, and the string 
+   ! !    Input/output, character ( len = * ) S, the string.  On output, the
+   ! !    first nonblank character has been removed, and the string
    ! !    has been shifted left.
    ! !
    ! !    Output, character CH, the leading character of the string.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) get
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_len
-   ! 
+   !
    !   s_len = len_trim ( s )
    !   ch = ' '
-   ! 
+   !
    !   get = 1
-   ! 
+   !
    !   do while ( get <= s_len )
-   ! 
+   !
    !     if ( s(get:get) /= ' ' ) then
    !       ch = s(get:get)
    !       call s_shift_left ( s, get )
    !       exit
    !     end if
-   ! 
+   !
    !     get = get + 1
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! function ch_index ( s, ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_INDEX is the first occurrence of a character in a string.
@@ -1552,33 +1551,33 @@ contains
    ! !
    ! !    Input, character CH, the character to be searched for.
    ! !
-   ! !    Output, integer ( kind = 4 ) CH_INDEX, the location of the first 
+   ! !    Output, integer ( kind = 4 ) CH_INDEX, the location of the first
    ! !    occurrence of the character in the string, or -1 if it does not occur.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) ch_index
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   ch_index = -1
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do i = 1, s_length
-   ! 
+   !
    !     if ( s(i:i) == ch ) then
    !       ch_index = i
    !       return
    !     end if
-   ! 
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! function ch_index_last ( s, ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_INDEX_LAST is the last occurrence of a character in a string.
@@ -1597,33 +1596,33 @@ contains
    ! !
    ! !    Input, character CH, the character to be searched for.
    ! !
-   ! !    Output, integer ( kind = 4 ) CH_INDEX_LAST, the location of the last occurrence of 
+   ! !    Output, integer ( kind = 4 ) CH_INDEX_LAST, the location of the last occurrence of
    ! !    the character in the string, or -1 if it does not occur.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) ch_index_last
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   ch_index_last = -1
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do i = s_length, 1, -1
-   ! 
+   !
    !     if ( s(i:i) == ch ) then
    !       ch_index_last = i
    !       return
    !     end if
-   ! 
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! function ch_indexi ( s, ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_INDEXI: (case insensitive) first occurrence of a character in a string.
@@ -1642,35 +1641,35 @@ contains
    ! !
    ! !    Input, character CH, the character to be searched for.
    ! !
-   ! !    Output, integer ( kind = 4 ) CH_INDEXI, the location of the first 
-   ! !    occurrence of the character (upper or lowercase), or -1 if it does 
+   ! !    Output, integer ( kind = 4 ) CH_INDEXI, the location of the first
+   ! !    occurrence of the character (upper or lowercase), or -1 if it does
    ! !    not occur.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   logical ch_eqi
    !   integer ( kind = 4 ) ch_indexi
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   ch_indexi = -1
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do i = 1, s_length
-   ! 
+   !
    !     if ( ch_eqi ( s(i:i), ch ) ) then
    !       ch_indexi = i
    !       return
    !     end if
-   ! 
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! function ch_is_alpha ( ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_IS_ALPHA is TRUE if CH is an alphabetic character.
@@ -1690,21 +1689,21 @@ contains
    ! !    Output, logical CH_IS_ALPHA is TRUE if CH is an alphabetic character.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   logical ch_is_alpha
-   ! 
+   !
    !   if ( ( lle ( 'a', ch ) .and. lle ( ch, 'z' ) ) .or. &
    !        ( lle ( 'A', ch ) .and. lle ( ch, 'Z' ) ) ) then
    !     ch_is_alpha = .true.
    !   else
    !     ch_is_alpha = .false.
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! function ch_is_alphanumeric ( ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_IS_ALPHANUMERIC is TRUE if CH is alphanumeric.
@@ -1733,29 +1732,29 @@ contains
    ! !    alphabetic or numeric.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   logical ch_is_alphanumeric
    !   integer ( kind = 4 ) i
-   ! 
+   !
    !   i = iachar ( ch )
-   !  
+   !
    !   if ( ( 65 <= i .and. i <= 90 ) .or. &
    !        ( 97 <= i .and. i <= 122 ) .or. &
    !        ( 48 <= i .and. i <= 57 ) ) then
-   ! 
+   !
    !     ch_is_alphanumeric = .true.
-   ! 
+   !
    !   else
-   ! 
+   !
    !     ch_is_alphanumeric = .false.
-   ! 
+   !
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! function ch_is_control ( ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_IS_CONTROL is TRUE if a character is a control character.
@@ -1783,20 +1782,20 @@ contains
    ! !    character, and FALSE otherwise.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   logical ch_is_control
-   ! 
+   !
    !   if ( iachar ( ch ) <= 31 .or. 127 <= iachar ( ch ) ) then
    !     ch_is_control = .true.
    !   else
    !     ch_is_control = .false.
    !   end if
-   !  
+   !
    !   return
    ! end
    ! function ch_is_digit ( ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_IS_DIGIT is TRUE if a character is a decimal digit.
@@ -1816,20 +1815,20 @@ contains
    ! !    Output, logical CH_IS_DIGIT, is TRUE if the character is a digit.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   logical ch_is_digit
-   ! 
+   !
    !   if ( lle ( '0', ch ) .and. lle ( ch, '9' ) ) then
    !     ch_is_digit = .true.
    !   else
    !     ch_is_digit = .false.
    !   end if
-   !  
+   !
    !   return
    ! end
    ! function ch_is_format_code ( ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_IS_FORMAT_CODE is TRUE if a character is a FORTRAN format code.
@@ -1866,17 +1865,17 @@ contains
    ! !
    ! !    Input, character CH, the character to be analyzed.
    ! !
-   ! !    Output, logical CH_IS_FORMAT_CODE, is TRUE if the character is a 
+   ! !    Output, logical CH_IS_FORMAT_CODE, is TRUE if the character is a
    ! !    FORTRAN format code.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   logical ch_eqi
    !   logical ch_is_format_code
-   ! 
+   !
    !   ch_is_format_code = .true.
-   ! 
+   !
    !        if ( ch_eqi ( ch, 'A' ) ) then
    !     return
    !   else if ( ch_eqi ( ch, 'B' ) ) then
@@ -1900,13 +1899,13 @@ contains
    !   else if ( ch == '*' ) then
    !     return
    !   end if
-   ! 
+   !
    !   ch_is_format_code = .false.
-   ! 
+   !
    !   return
    ! end
    ! function ch_is_lower ( ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_IS_LOWER is TRUE if a character is a lower case letter.
@@ -1923,24 +1922,24 @@ contains
    ! !
    ! !    Input, character CH, the character to be analyzed.
    ! !
-   ! !    Output, logical CH_IS_LOWER, is TRUE if the character is a lower 
+   ! !    Output, logical CH_IS_LOWER, is TRUE if the character is a lower
    ! !    case letter.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   logical ch_is_lower
-   ! 
+   !
    !   if ( lle ( 'a', ch ) .and. lle ( ch, 'z' ) ) then
    !     ch_is_lower = .true.
    !   else
    !     ch_is_lower = .false.
    !   end if
-   !  
+   !
    !   return
    ! end
    ! function ch_is_printable ( ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_IS_PRINTABLE is TRUE if C is printable.
@@ -1965,23 +1964,23 @@ contains
    ! !    Output, logical CH_IS_PRINTABLE is TRUE if C is a printable character.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   logical ch_is_printable
    !   integer ( kind = 4 ) i
-   ! 
+   !
    !   i = iachar ( ch )
-   ! 
+   !
    !   if ( 32 <= i .and. i <= 126 ) then
    !     ch_is_printable = .true.
    !   else
    !     ch_is_printable = .false.
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! function ch_is_space ( ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_IS_SPACE is TRUE if a character is a whitespace character.
@@ -2010,10 +2009,10 @@ contains
    ! !    character.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   logical ch_is_space
-   ! 
+   !
    !   if ( ch == ' ' ) then
    !     ch_is_space = .true.
    !   else if ( ch == achar ( 12 ) ) then
@@ -2029,11 +2028,11 @@ contains
    !   else
    !     ch_is_space = .false.
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! function ch_is_upper ( ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_IS_UPPER is TRUE if CH is an upper case letter.
@@ -2053,27 +2052,27 @@ contains
    ! !    Output, logical CH_IS_UPPER, is TRUE if CH is an upper case letter.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   logical ch_is_upper
-   ! 
+   !
    !   if ( lle ( 'A', ch ) .and. lle ( ch, 'Z' ) ) then
    !     ch_is_upper = .true.
    !   else
    !     ch_is_upper = .false.
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine ch_low ( ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_LOW lowercases a single character.
    ! !
    ! !  Discussion:
    ! !
-   ! !    Instead of CHAR and ICHAR, we now use the ACHAR and IACHAR functions, 
+   ! !    Instead of CHAR and ICHAR, we now use the ACHAR and IACHAR functions,
    ! !    which guarantee the ASCII collating sequence.
    ! !
    ! !  Modified:
@@ -2089,20 +2088,20 @@ contains
    ! !    Input/output, character CH, the character to be lowercased.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) i
-   ! 
+   !
    !   i = iachar ( ch )
-   ! 
+   !
    !   if ( 65 <= i .and. i <= 90 ) then
    !     ch = achar ( i + 32 )
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine ch_next ( s, ch, done )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_NEXT reads the next character from a string, ignoring blanks and commas.
@@ -2140,39 +2139,39 @@ contains
    ! !    was read, or TRUE if no more characters could be read.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   logical done
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ), save :: next = 1
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   if ( done ) then
    !     next = 1
    !     done = .false.
    !   end if
-   ! 
+   !
    !   s_length = len_trim ( s )
-   !  
+   !
    !   do i = next, s_length
-   ! 
+   !
    !     if ( s(i:i) /= ' ' .and. s(i:i) /= ',' ) then
    !       ch = s(i:i)
    !       next = i + 1
    !       return
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   done = .true.
    !   next = 1
    !   ch = ' '
-   ! 
+   !
    !   return
    ! end
    ! function ch_not_control ( ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_NOT_CONTROL = CH is NOT a control character.
@@ -2198,20 +2197,20 @@ contains
    ! !    and FALSE otherwise.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   logical ch_not_control
-   ! 
+   !
    !   if ( iachar ( ch ) <= 31 .or. 128 <= iachar ( ch ) ) then
    !     ch_not_control = .true.
    !   else
    !     ch_not_control = .false.
    !   end if
-   !  
+   !
    !   return
    ! end
    ! function ch_roman_to_i4 ( ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_ROMAN_TO_I4 returns the integer value of a single Roman digit.
@@ -2228,15 +2227,15 @@ contains
    ! !
    ! !    Input, character CH, a Roman digit.
    ! !
-   ! !    Output, integer ( kind = 4 ) CH_ROMAN_TO_I4, the value of the Roman 
+   ! !    Output, integer ( kind = 4 ) CH_ROMAN_TO_I4, the value of the Roman
    ! !    numeral.  If the Roman numeral was not recognized, 0 is returned.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) ch_roman_to_i4
    !   integer ( kind = 4 ) i
-   ! 
+   !
    !   if ( ch == 'M' .or. ch == 'm' ) then
    !     i = 1000
    !   else if ( ch == 'D' .or. ch == 'd' ) then
@@ -2255,13 +2254,13 @@ contains
    !   else
    !     i = 0
    !   end if
-   ! 
+   !
    !   ch_roman_to_i4 = i
-   ! 
+   !
    !   return
    ! end
    ! function ch_scrabble ( tile )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_SCRABBLE returns the character on a given Scrabble tile.
@@ -2286,7 +2285,7 @@ contains
    ! !    Output, character CH_SCRABBLE, the character on the given tile.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch_scrabble
    !   character, dimension ( 1 : 100 ) :: scrabble = (/ &
    !     'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'B', &
@@ -2300,17 +2299,17 @@ contains
    !     'T', 'T', 'T', 'T', 'T', 'T', 'U', 'U', 'U', 'U', &
    !     'V', 'V', 'W', 'W', 'X', 'X', 'Y', 'Z', ' ', ' ' /)
    !   integer ( kind = 4 ) tile
-   ! 
+   !
    !   if ( 1 <= tile .and. tile <= 100 ) then
    !     ch_scrabble = scrabble(tile)
    !   else
    !     ch_scrabble = '\?'
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! function ch_scrabble_frequency ( ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_SCRABBLE_FREQUENCY returns the Scrabble frequency of a character.
@@ -2327,11 +2326,11 @@ contains
    ! !
    ! !    Input, character CH, the character.
    ! !
-   ! !    Output, integer ( kind = 4 ) CH_SCRABBLE_FREQUENCY, the frequency of 
+   ! !    Output, integer ( kind = 4 ) CH_SCRABBLE_FREQUENCY, the frequency of
    ! !    the character.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) ch_scrabble_frequency
    !   integer ( kind = 4 ) ch_to_scrabble
@@ -2347,17 +2346,17 @@ contains
    ! !  Convert character to a Scrabble character index.
    ! !
    !   ic = ch_to_scrabble ( ch )
-   ! 
+   !
    !   if ( 1 <= ic .and. ic <= 27 ) then
    !     ch_scrabble_frequency = frequency(ic)
    !   else
    !     ch_scrabble_frequency = 0
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! function ch_scrabble_points ( ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_SCRABBLE_POINTS returns the Scrabble point value of a character.
@@ -2374,11 +2373,11 @@ contains
    ! !
    ! !    Input, character CH, the character.
    ! !
-   ! !    Output, integer ( kind = 4 ) CH_SCRABBLE_POINTS, the point value of 
+   ! !    Output, integer ( kind = 4 ) CH_SCRABBLE_POINTS, the point value of
    ! !    the character.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) ch_scrabble_points
    !   integer ( kind = 4 ) ch_to_scrabble
@@ -2394,17 +2393,17 @@ contains
    ! !  Convert character to a Scrabble character index.
    ! !
    !   ic = ch_to_scrabble ( ch )
-   ! 
+   !
    !   if ( 1 <= ic .and. ic <= 27 ) then
    !     ch_scrabble_points = points(ic)
    !   else
    !     ch_scrabble_points = 0
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! function ch_scrabble_select ( seed )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_SCRABBLE_SELECT selects a character with the Scrabble probability.
@@ -2423,14 +2422,14 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input/output, integer ( kind = 4 ) SEED, a seed for the random 
+   ! !    Input/output, integer ( kind = 4 ) SEED, a seed for the random
    ! !    number generator.
    ! !
    ! !    Output, character CH_SCRABBLE_SELECT, the character on a randomly
    ! !    chosen Scrabble tile.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch_scrabble
    !   character ch_scrabble_select
    !   integer ( kind = 4 ) i4_uniform
@@ -2444,11 +2443,11 @@ contains
    ! !  Retrieve the character on that tile.
    ! !
    !   ch_scrabble_select = ch_scrabble ( tile )
-   ! 
+   !
    !   return
    ! end
    ! subroutine ch_swap ( ch1, ch2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_SWAP swaps two characters.
@@ -2467,19 +2466,19 @@ contains
    ! !    have been interchanged.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch1
    !   character ch2
    !   character ch3
-   ! 
+   !
    !   ch3 = ch1
    !   ch1 = ch2
    !   ch2 = ch3
-   ! 
+   !
    !   return
    ! end
    ! subroutine ch_to_amino_name ( ch, amino_name )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_TO_AMINO_NAME converts a character to an amino acid name.
@@ -2504,13 +2503,13 @@ contains
    ! !    Lower and upper case letters are treated the same.
    ! !
    ! !    Output, character ( len = * ) AMINO_NAME, the full name of the
-   ! !    corresponding amino acid.  The longest name is 27 characters.  
+   ! !    corresponding amino acid.  The longest name is 27 characters.
    ! !    If the input code is not recognized, then AMINO_NAME will be set to '???'.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ), parameter :: n = 23
-   ! 
+   !
    !   character ( len = * ) amino_name
    !   character ( len = 27 ), dimension ( n ) :: amino_table = (/ &
    !     'Alanine                    ', &
@@ -2543,20 +2542,20 @@ contains
    !     'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', &
    !     'X', 'Y', 'Z' /)
    !   integer ( kind = 4 ) i
-   ! 
+   !
    !   do i = 1, n
    !     if ( ch_eqi ( ch, ch_table(i) ) ) then
    !       amino_name = amino_table(i)
    !       return
    !     end if
    !   end do
-   ! 
+   !
    !   amino_name = '\?\?\?'
-   ! 
+   !
    !   return
    ! end
    ! subroutine ch_to_braille ( ch, ncol, braille )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_TO_BRAILLE converts an ASCII character to a Braille character string.
@@ -2581,13 +2580,13 @@ contains
    ! !    Output, integer ( kind = 4 ) NCOL, the number of columns used to represent
    ! !    the character.
    ! !
-   ! !    Output, character ( len = 6 ) BRAILLE(3), contains, in rows 1 
+   ! !    Output, character ( len = 6 ) BRAILLE(3), contains, in rows 1
    ! !    through 3 and character columns 1 through NCOL, either a '*' or a ' '.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ), parameter :: num_symbol = 37
-   ! 
+   !
    !   character ( len = 6 ) braille(3)
    !   character ch
    !   logical ch_is_digit
@@ -2615,9 +2614,9 @@ contains
    !     '** ***',  '*  ***',  '*** **',  '  *   ',  '  * * ', &
    !     '  **  ',  '  ** *',  '  *** ',  '  ****',  '  * **', &
    !     '    * ',  '    **' /)
-   ! 
+   !
    !   ncol = 0
-   ! 
+   !
    !   braille(1)(1:6) = ' '
    !   braille(2)(1:6) = ' '
    !   braille(3)(1:6) = ' '
@@ -2625,13 +2624,13 @@ contains
    ! !  A space is treated specially.
    ! !
    !   if ( ch == ' ' ) then
-   ! 
+   !
    !     braille(1)(1:2) = '  '
    !     braille(2)(1:2) = '  '
    !     braille(3)(1:2) = '  '
    !     ncol = 2
    !     return
-   ! 
+   !
    !   end if
    ! !
    ! !  Get the ASCII numeric code of the character.
@@ -2641,35 +2640,35 @@ contains
    ! !  Get the index of the Braille equivalent.
    ! !
    !   ibraille = ic_to_ibraille ( iascii )
-   ! 
+   !
    !   if ( 0 <= ibraille ) then
    ! !
    ! !  Upper case characters are preceded by a special mark.
    ! !
    !     if ( ch_is_upper ( ch ) ) then
-   ! 
+   !
    !       braille(1)(1:3) = '   '
    !       braille(2)(1:3) = '   '
    !       braille(3)(1:3) = ' * '
-   ! 
+   !
    !       ncol = 3
    ! !
    ! !  Digits are preceded by a special mark.
    ! !
    !     else if ( ch_is_digit ( ch ) ) then
-   ! 
+   !
    !       braille(1)(1:3) = ' * '
    !       braille(2)(1:3) = ' * '
    !       braille(3)(1:3) = '** '
-   ! 
+   !
    !       ncol = 3
-   ! 
+   !
    !     end if
-   ! 
+   !
    !     braille(1)(ncol+1:ncol+2) = symbol(ibraille)(1:2)
    !     braille(2)(ncol+1:ncol+2) = symbol(ibraille)(3:4)
    !     braille(3)(ncol+1:ncol+2) = symbol(ibraille)(5:6)
-   ! 
+   !
    !     ncol = ncol + 2
    ! !
    ! !  Add a trailing "half space".
@@ -2677,15 +2676,15 @@ contains
    !     braille(1)(ncol+1:ncol+1) = ' '
    !     braille(2)(ncol+1:ncol+1) = ' '
    !     braille(3)(ncol+1:ncol+1) = ' '
-   !  
+   !
    !     ncol = ncol + 1
-   ! 
+   !
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine ch_to_ch3_amino ( ch, ch3 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_TO_CH3_AMINO converts a 1 character to a 3 character code for amino acids.
@@ -2706,16 +2705,16 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input, character CH, the one letter code for an amino acid.  
+   ! !    Input, character CH, the one letter code for an amino acid.
    ! !    Lower and upper case letters are treated the same.
    ! !
-   ! !    Output, character ( len = 3 ) CH3, the three letter code for the 
+   ! !    Output, character ( len = 3 ) CH3, the three letter code for the
    ! !    amino acid.  If the input code is not recognized, then CH3 will be '???'.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ), parameter :: n = 23
-   ! 
+   !
    !   character ch
    !   logical ch_eqi
    !   character, parameter, dimension ( n ) :: ch_table = (/ &
@@ -2728,79 +2727,79 @@ contains
    !     'Leu', 'Met', 'Asn', 'Pro', 'Gln', 'Arg', 'Ser', 'Thr', 'Val', 'Trp', &
    !     'X  ', 'Tyr', 'Glx' /)
    !   integer ( kind = 4 ) i
-   ! 
+   !
    !   do i = 1, n
    !     if ( ch_eqi ( ch, ch_table(i) ) ) then
    !       ch3 = ch3_table(i)
    !       return
    !     end if
    !   end do
-   ! 
+   !
    !   ch3 = '\?\?\?'
-   ! 
+   !
    !   return
    ! end
-   subroutine ch_to_digit ( ch, digit )
-   
-   !*****************************************************************************80
-   !
-   !! CH_TO_DIGIT returns the integer value of a base 10 digit.
-   !
-   !  Discussion:
-   !
-   !    Instead of ICHAR, we now use the IACHAR function, which
-   !    guarantees the ASCII collating sequence.
-   !
-   !  Example:
-   !
-   !     CH  DIGIT
-   !    ---  -----
-   !    '0'    0
-   !    '1'    1
-   !    ...  ...
-   !    '9'    9
-   !    ' '    0
-   !    'X'   -1
-   !
-   !  Modified:
-   !
-   !    04 August 1999
-   !
-   !  Author:
-   !
-   !    John Burkardt
-   !
-   !  Parameters:
-   !
-   !    Input, character CH, the decimal digit, '0' through '9' or blank
-   !    are legal. 
-   !
-   !    Output, integer ( kind = 4 ) DIGIT, the corresponding integer value.  
-   !    If CH was 'illegal', then DIGIT is -1.
-   !
-     implicit none
-   
-     character ch
-     integer ( kind = 4 ) digit
-   
-     if ( lle ( '0', ch ) .and. lle ( ch, '9' ) ) then
-    
-       digit = iachar ( ch ) - 48
-    
-     else if ( ch == ' ' ) then
-    
-       digit = 0
-    
-     else
-   
-       digit = -1
-   
-     end if
-    
-     return
+   subroutine ch_to_digit(ch, digit)
+
+      !*****************************************************************************80
+      !
+      !! CH_TO_DIGIT returns the integer value of a base 10 digit.
+      !
+      !  Discussion:
+      !
+      !    Instead of ICHAR, we now use the IACHAR function, which
+      !    guarantees the ASCII collating sequence.
+      !
+      !  Example:
+      !
+      !     CH  DIGIT
+      !    ---  -----
+      !    '0'    0
+      !    '1'    1
+      !    ...  ...
+      !    '9'    9
+      !    ' '    0
+      !    'X'   -1
+      !
+      !  Modified:
+      !
+      !    04 August 1999
+      !
+      !  Author:
+      !
+      !    John Burkardt
+      !
+      !  Parameters:
+      !
+      !    Input, character CH, the decimal digit, '0' through '9' or blank
+      !    are legal.
+      !
+      !    Output, integer ( kind = 4 ) DIGIT, the corresponding integer value.
+      !    If CH was 'illegal', then DIGIT is -1.
+      !
+      implicit none
+
+      character ch
+      integer(kind=4) digit
+
+      if (lle('0', ch) .and. lle(ch, '9')) then
+
+         digit = iachar(ch) - 48
+
+      else if (ch == ' ') then
+
+         digit = 0
+
+      else
+
+         digit = -1
+
+      end if
+
+      return
    end
    ! subroutine ch_to_digit_bin ( ch, digit )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_TO_DIGIT_BIN returns the integer value of a binary digit.
@@ -2833,44 +2832,44 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input, character CH, the binary digit. 
+   ! !    Input, character CH, the binary digit.
    ! !
-   ! !    Output, integer ( kind = 4 ) DIGIT, the corresponding integer value.  
+   ! !    Output, integer ( kind = 4 ) DIGIT, the corresponding integer value.
    ! !    If CH was 'illegal', then DIGIT is -1.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) digit
-   ! 
+   !
    !   if ( ch == '0' .or. &
    !        ch == 'F' .or. &
    !        ch == 'f' .or. &
    !        ch == '-' .or. &
    !        ch == 'N' .or. &
    !        ch == 'n' ) then
-   !  
+   !
    !     digit = 0
-   !  
+   !
    !   else if ( ch == '1' .or. &
    !             ch == 'T' .or. &
    !             ch == 't' .or. &
    !             ch == '+' .or. &
    !             ch == 'Y' .or. &
    !             ch == 'y' ) then
-   ! 
+   !
    !     digit = 1
-   !  
+   !
    !   else
-   ! 
+   !
    !     digit = -1
-   ! 
+   !
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine ch_to_digit_hex ( ch, i )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_TO_DIGIT_HEX returns the integer value of a hexadecimal digit.
@@ -2894,42 +2893,42 @@ contains
    ! !    through '9', or 'A' through 'F', or also 'a' through 'f'
    ! !    are allowed.
    ! !
-   ! !    Output, integer ( kind = 4 ) I, the corresponding integer, or -1 if 
+   ! !    Output, integer ( kind = 4 ) I, the corresponding integer, or -1 if
    ! !    CH was illegal.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) i
-   ! 
+   !
    !   i = iachar ( ch )
-   ! 
+   !
    !   if ( lle ( '0', ch ) .and. lle ( ch, '9' ) ) then
-   !  
+   !
    !     i = i - 48
-   !  
+   !
    !   else if ( 65 <= i .and. i <= 70 ) then
-   !  
+   !
    !     i = i - 55
-   !  
+   !
    !   else if ( 97 <= i .and. i <= 102 ) then
-   !  
+   !
    !     i = i - 87
-   !  
+   !
    !   else if ( ch == ' ' ) then
-   !  
+   !
    !     i = 0
-   !  
+   !
    !   else
-   !     
+   !
    !     i = -1
-   ! 
+   !
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine ch_to_digit_oct ( ch, i )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_TO_DIGIT_OCT returns the integer value of an octal digit.
@@ -2955,30 +2954,30 @@ contains
    ! !    -1 if CH was illegal.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) i
-   ! 
+   !
    !   i = iachar ( ch )
-   ! 
+   !
    !   if ( lle ( '0', ch ) .and. lle ( ch, '7' ) ) then
-   !  
+   !
    !     i = i - 48
-   !  
+   !
    !   else if ( ch == ' ' ) then
-   !  
+   !
    !     i = 0
-   !  
+   !
    !   else
-   !     
+   !
    !     i = -1
-   ! 
+   !
    !   end if
-   !  
+   !
    !   return
    ! end
    ! function ch_to_ebcdic ( ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_TO_EBCDIC converts a character to EBCDIC.
@@ -3004,24 +3003,24 @@ contains
    ! !    blank character if no correspondence holds.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   character ch_to_ebcdic
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) ic_to_iebcdic
-   ! 
+   !
    !   i = ic_to_iebcdic ( iachar ( ch ) )
-   !  
+   !
    !   if ( i /= -1 ) then
    !     ch_to_ebcdic = achar ( i )
    !   else
    !     ch_to_ebcdic = ' '
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine ch_to_military ( ch, military )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_TO_MILITARY converts an ASCII character to a Military code word.
@@ -3051,7 +3050,7 @@ contains
    ! !    If CH is not an alphabetic letter, then MILITARY is simply set equal to CH.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) a_to_i4
    !   character ch
    !   character ( len = 8 ), parameter, dimension ( 26 ) :: code = (/ &
@@ -3063,7 +3062,7 @@ contains
    !     'zulu    ' /)
    !   integer ( kind = 4 ) i
    !   character ( len = * ) military
-   ! 
+   !
    !   if ( 'A' <= ch .and. ch <= 'Z' ) then
    !     i = a_to_i4 ( ch )
    !     military = code(i)
@@ -3074,11 +3073,11 @@ contains
    !   else
    !     military = ch
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine ch_to_morse ( ch, morse )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_TO_MORSE converts an ASCII character to a Morse character string.
@@ -3103,9 +3102,9 @@ contains
    ! !    Output, character ( len = 6 ) MORSE, the Morse character string.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ), parameter :: num_symbol = 45
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) iascii
    !   integer ( kind = 4 ) ic_to_imorse
@@ -3121,20 +3120,20 @@ contains
    !     '....- ', '..... ', '-.... ', '--... ', '---.. ', &
    !     '----. ', '----- ', '.-.-.-', '--..--', '---...', &
    !     '..--..', '.----.', '-....-', '-..-. ', '.-..-.' /)
-   ! 
+   !
    !   iascii = iachar ( ch )
    !   imorse = ic_to_imorse ( iascii )
-   ! 
+   !
    !   if ( imorse == -1 ) then
    !     morse = ' '
    !   else
    !     morse = msymbol ( imorse )
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! function ch_to_rot13 ( ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_TO_ROT13 converts a character to its ROT13 equivalent.
@@ -3174,11 +3173,11 @@ contains
    ! !    Output, character CH_TO_ROT13, the ROT13 equivalent of the character.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   character ch_to_rot13
    !   integer ( kind = 4 ) itemp
-   ! 
+   !
    !   itemp = iachar ( ch )
    ! !
    ! !  [0:4] -> [5:9]
@@ -3211,13 +3210,13 @@ contains
    !   else if ( 110 <= itemp .and. itemp <= 122 ) then
    !     itemp = itemp - 13
    !   end if
-   !  
+   !
    !   ch_to_rot13 = achar ( itemp )
-   !  
+   !
    !   return
    ! end
    ! function ch_to_scrabble ( ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_TO_SCRABBLE returns the Scrabble index of a character.
@@ -3243,32 +3242,32 @@ contains
    ! !    the character.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) a_to_i4
    !   character ch
    !   character ch_copy
    !   integer ( kind = 4 ) ch_to_scrabble
    !   integer ( kind = 4 ) ic
-   ! 
+   !
    !   if ( ch == ' ' ) then
    !     ch_to_scrabble = 27
    !     return
    !   end if
-   ! 
+   !
    !   ch_copy = ch
    !   call ch_cap ( ch_copy )
    !   ic = a_to_i4 ( ch_copy )
-   ! 
+   !
    !   if ( 1 <= ic .and. ic <= 26 ) then
    !     ch_to_scrabble = ic
    !   else
    !     ch_to_scrabble = -1
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine ch_to_soundex ( ch, soundex )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_TO_SOUNDEX converts an ASCII character to a Soundex character.
@@ -3280,7 +3279,7 @@ contains
    ! !
    ! !    The soundex code is used to replace words by a code of up to four
    ! !    digits.  Similar sounding words will often have identical soundex
-   ! !    codes.  
+   ! !    codes.
    ! !
    ! !    Soundex  Letters
    ! !    -------  ---------------
@@ -3308,26 +3307,26 @@ contains
    ! !    '0', '1', '2', '3', '4', '5', '6', or ' '.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) iascii
    !   integer ( kind = 4 ) ic_to_isoundex
    !   integer ( kind = 4 ) isoundex
    !   character soundex
-   ! 
+   !
    !   iascii = iachar ( ch )
    !   isoundex = ic_to_isoundex ( iascii )
-   ! 
+   !
    !   if ( isoundex == -1 ) then
    !     soundex = ' '
    !   else
    !     soundex = achar ( isoundex )
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine ch_to_sym ( ch, sym )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_TO_SYM returns a printable symbol for any ASCII character.
@@ -3352,21 +3351,21 @@ contains
    ! !    Output, character ( len = 4 ) SYM, is the printable symbol for CHR.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ), parameter :: i4_128 = 128
    !   integer ( kind = 4 ) put
    !   character ( len = 4 ) sym
-   ! 
+   !
    !   i = iachar ( ch )
-   !  
+   !
    !   sym = ' '
-   !  
+   !
    !   put = 0
    ! !
    ! !  Characters 128-255 are symbolized with a ! prefix.
-   ! !  Then shift them down by 128.  
+   ! !  Then shift them down by 128.
    ! !  Now all values of I are between 0 and 127.
    ! !
    !   if ( 128 <= i ) then
@@ -3398,18 +3397,18 @@ contains
    !     put = put + 1
    !     sym(put:put+2) = 'DEL'
    !   end if
-   !  
+   !
    !   return
    ! end
    ! function ch_uniform ( clo, chi, seed )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH_UNIFORM returns a random character in a given range.
    ! !
    ! !  Discussion:
    ! !
-   ! !    Instead of CHAR and ICHAR, we now use the ACHAR and IACHAR functions, 
+   ! !    Instead of CHAR and ICHAR, we now use the ACHAR and IACHAR functions,
    ! !    which guarantees the ASCII collating sequence.
    ! !
    ! !  Modified:
@@ -3424,13 +3423,13 @@ contains
    ! !
    ! !    Input, character CLO, CHI, the minimum and maximum acceptable characters.
    ! !
-   ! !    Input/output, integer ( kind = 4 ) SEED, a seed for the random 
+   ! !    Input/output, integer ( kind = 4 ) SEED, a seed for the random
    ! !    number generator.
    ! !
    ! !    Output, character CH_UNIFORM, the randomly chosen character.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch_uniform
    !   character chi
    !   character clo
@@ -3439,21 +3438,21 @@ contains
    !   integer ( kind = 4 ) ihi
    !   integer ( kind = 4 ) ilo
    !   integer ( kind = 4 ) seed
-   ! 
+   !
    !   ilo = iachar ( clo )
    !   ihi = iachar ( chi )
-   ! 
+   !
    !   i = ilo + int ( r4_uniform_01 ( seed ) * real ( ihi + 1 - ilo, kind = 4 ) )
-   ! 
+   !
    !   i = max ( i, ilo )
    !   i = min ( i, ihi )
-   ! 
+   !
    !   ch_uniform = achar ( i )
-   ! 
+   !
    !   return
    ! end
    ! subroutine ch3_to_ch_amino ( ch3, ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH3_TO_CH_AMINO converts a 3 character to a 1 character code for amino acids.
@@ -3474,16 +3473,16 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input, character ( len = 3 ) CH3, presumably the 3 letter code for an 
+   ! !    Input, character ( len = 3 ) CH3, presumably the 3 letter code for an
    ! !    amino acid.  Lower and upper case letters are treated the same.
    ! !
    ! !    Output, character CH, the one letter code for the amino acid.
    ! !    If the input code is not recognized, then CH will be '?'.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ), parameter :: n = 23
-   ! 
+   !
    !   character ch
    !   character, parameter, dimension ( n ) :: ch_table = (/ &
    !     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', &
@@ -3496,20 +3495,20 @@ contains
    !     'X  ', 'Tyr', 'Glx' /)
    !   integer ( kind = 4 ) i
    !   logical s_eqi
-   ! 
+   !
    !   do i = 1, n
    !     if ( s_eqi ( ch3, ch3_table(i) ) ) then
    !       ch = ch_table(i)
    !       return
    !     end if
    !   end do
-   ! 
+   !
    !   ch = '\?'
-   ! 
+   !
    !   return
    ! end
    ! subroutine ch4_to_i4 ( ch4, i4 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH4_TO_I4 converts a four character string to an integer.
@@ -3536,7 +3535,7 @@ contains
    ! !    Output, integer ( kind = 4 ) I4, a corresponding integer value.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c1
    !   character c2
    !   character c3
@@ -3547,23 +3546,23 @@ contains
    !   integer ( kind = 4 ) j2
    !   integer ( kind = 4 ) j3
    !   integer ( kind = 4 ) j4
-   ! 
+   !
    !   read ( ch4, '(4a1)' ) c1, c2, c3, c4
-   ! 
+   !
    !   j1 = iachar ( c1 )
    !   j2 = iachar ( c2 )
    !   j3 = iachar ( c3 )
    !   j4 = iachar ( c4 )
-   ! 
+   !
    !   call mvbits ( j1, 0, 8, i4,  0 )
    !   call mvbits ( j2, 0, 8, i4,  8 )
    !   call mvbits ( j3, 0, 8, i4, 16 )
-   !   call mvbits ( j4, 0, 8, i4, 24 )  
-   ! 
+   !   call mvbits ( j4, 0, 8, i4, 24 )
+   !
    !   return
    ! end
    ! subroutine ch4_to_r4 ( ch4, r4 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH4_TO_R4 converts a 4 character string to an R4.
@@ -3590,7 +3589,7 @@ contains
    ! !    Output, real ( kind = 4 ) R4, a corresponding real value.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c1
    !   character c2
    !   character c3
@@ -3599,27 +3598,27 @@ contains
    !   integer ( kind = 4 ) i4
    !   integer ( kind = 4 ) j
    !   real    ( kind = 4 ) r4
-   ! 
+   !
    !   read ( ch4, '(4a1)' ) c1, c2, c3, c4
-   ! 
+   !
    !   j = iachar ( c1 )
    !   call mvbits ( j, 0, 8, i4,  0 )
-   ! 
+   !
    !   j = iachar ( c2 )
    !   call mvbits ( j, 0, 8, i4,  8 )
-   ! 
+   !
    !   j = iachar ( c3 )
    !   call mvbits ( j, 0, 8, i4, 16 )
-   ! 
+   !
    !   j = iachar ( c4 )
-   !   call mvbits ( j, 0, 8, i4, 24 )  
-   ! 
+   !   call mvbits ( j, 0, 8, i4, 24 )
+   !
    !   r4 = transfer ( i4, r4 )
-   ! 
+   !
    !   return
    ! end
    ! subroutine ch4vec_to_i4vec ( n, s, i4vec )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CH4VEC_TO_I4VEC converts an string of characters into an array of integers.
@@ -3639,7 +3638,7 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input, integer ( kind = 4 ) N, the number of sets of 4 characters 
+   ! !    Input, integer ( kind = 4 ) N, the number of sets of 4 characters
    ! !    in the string.
    ! !
    ! !    Input, character ( len = 4*N ) S, the string of characters.
@@ -3648,23 +3647,23 @@ contains
    ! !    Output, integer ( kind = 4 ) I4VEC(N), the integers encoded in the string.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) i4vec(n)
    !   integer ( kind = 4 ) j
    !   character ( len = 4*n ) s
-   ! 
+   !
    !   do i = 1, n
    !     j = 4 * ( i - 1 ) + 1
    !     call ch4_to_i4 ( s(j:j+3), i4vec(i) )
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine chr4_to_8 ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CHR4_TO_8 replaces pairs of hexadecimal digits by a character.
@@ -3689,7 +3688,7 @@ contains
    ! !    Output, character ( len = * ) S2, the output string.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) i1
    !   integer ( kind = 4 ), parameter :: i4_two = 2
@@ -3705,11 +3704,11 @@ contains
    ! !
    !   nchar2 = 0
    !   s1_length = len ( s1 )
-   ! 
+   !
    !   if ( mod ( s1_length, i4_two ) == 1 ) then
    !     s1_length = s1_length - 1
    !   end if
-   !  
+   !
    !   if ( s1_length <= 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'CHR4_TO_8 - Serious error!'
@@ -3720,9 +3719,9 @@ contains
    ! !  Make sure we have enough room.
    ! !
    !   nroom = len ( s2 )
-   !  
+   !
    !   if ( 2 * nroom < s1_length ) then
-   ! 
+   !
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'CHR4_TO_8 - Warning!'
    !     write ( *, '(a)' ) '  Not enough room in the output string.'
@@ -3730,13 +3729,13 @@ contains
    !     write ( *, '(a,i8)' ) '  Positions needed =    ', s1_length / 2
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) '  The program will drop excess characters.'
-   ! 
+   !
    !     s1_length = 2 * nroom
-   ! 
+   !
    !   end if
-   !  
+   !
    !   do i = 1, s1_length, 2
-   ! 
+   !
    !     call ch_to_digit_hex ( s1(i:i), j1 )
    !     call ch_to_digit_hex ( s1(i+1:i+1), k1 )
    ! !
@@ -3748,16 +3747,16 @@ contains
    !     else
    !       i1 = 0
    !     end if
-   !  
+   !
    !     nchar2 = nchar2 + 1
    !     s2(nchar2:nchar2) = achar ( i1 )
-   !  
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine chr8_to_4 ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CHR8_TO_4 replaces characters by a pair of hexadecimal digits.
@@ -3785,7 +3784,7 @@ contains
    ! !    Output, character ( len = * ) S2, the output string.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) i1
@@ -3800,7 +3799,7 @@ contains
    ! !  Set S1_LENGTH to the number of characters to be copied.
    ! !
    !   s1_length = len ( s1 )
-   ! 
+   !
    !   if ( s1_length <= 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'CHR8_TO_4 - Serious error!'
@@ -3811,7 +3810,7 @@ contains
    ! !  Make sure we have enough room.
    ! !
    !   nroom = len ( s2 )
-   !  
+   !
    !   if ( nroom < 2 * s1_length ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'CHR8_TO_4 - Warning!'
@@ -3821,36 +3820,36 @@ contains
    !     write ( *, '(a,i8)' ) '  Positions needed:    ', 2 * s1_length
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) '  We will do a partial conversion.'
-   ! 
+   !
    !     s1_length = nroom / 2
-   ! 
+   !
    !   end if
-   !  
+   !
    !   j = 0
-   ! 
+   !
    !   do i = 1, s1_length
-   ! 
+   !
    !     c = s1(i:i)
-   !  
+   !
    !     i1 = iachar ( c )
    ! !
    ! !  Compute J1 and K1 so that I1 = J1*16+K1.
    ! !
    !     j1 = i1 / 16
    !     k1 = i1 - 16 * j1
-   !  
+   !
    !     j = j + 1
    !     call digit_hex_to_ch ( j1, s2(j:j) )
-   ! 
+   !
    !     j = j + 1
    !     call digit_hex_to_ch ( k1, s2(j:j) )
-   ! 
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine chra_to_s ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CHRA_TO_S replaces control characters by printable symbols.
@@ -3896,7 +3895,7 @@ contains
    ! !    control character has been replaced by a symbol.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical ch_is_control
    !   integer ( kind = 4 ) get
    !   integer ( kind = 4 ) put
@@ -3905,35 +3904,35 @@ contains
    !   integer ( kind = 4 ) s1_length
    !   character ( len = * ) s2
    !   character ( len = 4 ) sym
-   ! 
+   !
    !   s1_length = len_trim ( s1 )
    !   s2 = ' '
-   !  
+   !
    !   put = 1
-   ! 
+   !
    !   do get = 1, s1_length
-   !  
+   !
    !     if ( ch_is_control ( s1(get:get) ) ) then
-   !  
+   !
    !       call ch_to_sym ( s1(get:get), sym )
    !       lsym = len_trim ( sym )
-   !  
+   !
    !       s2(put:put+lsym-1) = sym(1:lsym)
    !       put = put + lsym
-   !  
+   !
    !     else
-   !  
+   !
    !       s2(put:put) = s1(get:get)
    !       put = put + 1
-   !  
+   !
    !     end if
-   !  
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine chrasc ( iascii, nascii, string )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CHRASC converts a vector of ASCII codes into character strings.
@@ -3973,7 +3972,7 @@ contains
    ! !    255, it is handled as though it were 0.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) iascii(*)
    !   integer ( kind = 4 ) ihi
@@ -3983,36 +3982,36 @@ contains
    !   integer ( kind = 4 ) nascii
    !   integer ( kind = 4 ) nchar
    !   character ( len = * ) string(*)
-   ! 
+   !
    !   nchar = len ( string(1) )
-   !  
+   !
    !   ix = 0
    !   ihi = ( (nascii-1) / nchar ) + 1
-   !  
+   !
    !   do i = 1, ihi
    !     do j = 1, nchar
-   !  
+   !
    !       ix = ix + 1
-   !  
+   !
    !       if ( nascii <= ix ) then
    !         return
    !       end if
-   !  
+   !
    !       itemp = iascii ( ix )
-   !  
+   !
    !       if ( itemp < 0 .or. 255 < itemp ) then
    !         itemp = 0
    !       end if
-   !  
+   !
    !       string(i)(j:j) = achar ( itemp )
-   !  
+   !
    !     end do
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine chrass ( s, lhs, rhs )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CHRASS "understands" an assignment statement of the form LHS = RHS.
@@ -4098,7 +4097,7 @@ contains
    ! !      calling CHRCTC to read complex data.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) first
    !   integer ( kind = 4 ) iequal
    !   character ( len = * ) lhs
@@ -4115,7 +4114,7 @@ contains
    ! !  Find the last nonblank.
    ! !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   if ( s_length <= 0 ) then
    !     return
    !   end if
@@ -4135,7 +4134,7 @@ contains
    ! !  Otherwise, copy LHS = S(1:IEQUAL-1), RHS = S(IEQUAL+1:).
    ! !
    !   lhs = s(1:iequal-1)
-   ! 
+   !
    !   if ( iequal + 1 <= s_length ) then
    !     rhs = s(iequal+1:)
    !   end if
@@ -4144,11 +4143,11 @@ contains
    ! !
    !   lhs = adjustl ( lhs )
    !   rhs = adjustl ( rhs )
-   !  
+   !
    !   return
    ! end
    ! subroutine chrctf ( s, itop, ibot, ierror, length )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CHRCTF reads an integer or rational fraction from a string.
@@ -4223,7 +4222,7 @@ contains
    ! !    the string to form the number.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical ch_eqi
    !   character c
    !   integer ( kind = 4 ) ibot
@@ -4238,9 +4237,9 @@ contains
    !   integer ( kind = 4 ) ndig
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
-   !  
+   !
    !   ierror = 0
    !   length = -1
    !   isgn = 1
@@ -4250,18 +4249,18 @@ contains
    !   jtop = 0
    !   ihave = 1
    !   iterm = 0
-   ! 
+   !
    !   do while ( length < s_length )
-   ! 
+   !
    !     length = length + 1
    !     c = s(length+1:length+1)
    ! !
    ! !  Blank.
    ! !
    !     if ( c == ' ' ) then
-   !  
+   !
    !       if ( ihave == 2 ) then
-   !  
+   !
    !       else if ( ihave == 6 .or. ihave == 7 ) then
    !         iterm = 1
    !       else if ( 1 < ihave ) then
@@ -4271,7 +4270,7 @@ contains
    ! !  Comma.
    ! !
    !     else if ( c == ',' .or. c == ';' ) then
-   !  
+   !
    !       if ( ihave /= 1 ) then
    !         iterm = 1
    !         ihave = 12
@@ -4281,7 +4280,7 @@ contains
    ! !  Minus sign.
    ! !
    !     else if ( c == '-' ) then
-   !  
+   !
    !       if ( ihave == 1 ) then
    !         ihave = 2
    !         isgn = -1
@@ -4295,7 +4294,7 @@ contains
    ! !  Plus sign.
    ! !
    !     else if ( c == '+' ) then
-   !  
+   !
    !       if ( ihave == 1 ) then
    !         ihave = 2
    !       else if ( ihave == 6 ) then
@@ -4307,7 +4306,7 @@ contains
    ! !  Decimal point.
    ! !
    !     else if ( c == '.' ) then
-   !  
+   !
    !       if ( ihave < 4 ) then
    !         ihave = 4
    !       else
@@ -4317,7 +4316,7 @@ contains
    ! !  Exponent marker.
    ! !
    !     else if ( ch_eqi ( c, 'E' ) .or. ch_eqi ( c, 'D' ) ) then
-   !  
+   !
    !       if ( ihave < 6 ) then
    !         ihave = 6
    !       else
@@ -4327,7 +4326,7 @@ contains
    ! !  Digit.
    ! !
    !     else if ( lle ( '0', c ) .and. lle ( c, '9' ) .and. ihave < 11 ) then
-   !  
+   !
    !       if ( ihave <= 2 ) then
    !         ihave = 3
    !       else if ( ihave == 4 ) then
@@ -4335,9 +4334,9 @@ contains
    !       else if ( ihave == 6 .or. ihave == 7 ) then
    !         ihave = 8
    !       end if
-   !  
+   !
    !       call ch_to_digit ( c, ndig )
-   !  
+   !
    !       if ( ihave == 3 ) then
    !         itop = 10 * itop + ndig
    !       else if ( ihave == 5 ) then
@@ -4352,13 +4351,13 @@ contains
    !     else
    !       iterm = 1
    !     end if
-   ! 
+   !
    !     if ( iterm == 1 ) then
    !       exit
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   if ( iterm /= 1 .and. length+1 == s_length ) then
    !     length = s_length
    !   end if
@@ -4369,7 +4368,7 @@ contains
    !     ierror = ihave
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'CHRCTF - Serious error!'
-   !     write ( *, '(a)' ) '  Illegal input:' // trim ( s ) 
+   !     write ( *, '(a)' ) '  Illegal input:' // trim ( s )
    !     return
    !   end if
    ! !
@@ -4380,13 +4379,13 @@ contains
    !   else
    !     ibot = ibot * 10**jtop
    !   end if
-   !  
+   !
    !   itop = isgn * itop
-   !  
+   !
    !   return
    ! end
    ! subroutine chrctg ( s, itop, ibot, ierror, length )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CHRCTG reads an integer, decimal fraction or a ratio from a string.
@@ -4471,7 +4470,7 @@ contains
    ! !    Output, integer ( kind = 4 ) LENGTH, the number of characters read.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) i4_gcd
    !   integer ( kind = 4 ) ibot
@@ -4484,13 +4483,13 @@ contains
    !   integer ( kind = 4 ) length2
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   itop = 0
    !   ibot = 1
    !   length = 0
-   !  
+   !
    !   call chrctf ( s, itop, ibot, ierror, length )
-   ! 
+   !
    !   if ( ierror /= 0) then
    !     return
    !   end if
@@ -4499,41 +4498,41 @@ contains
    ! !  If the next nonblank character is "/", then read another number.
    ! !
    !   s_length = len_trim ( s )
-   !  
+   !
    !   do i = length + 1, s_length - 1
-   !  
+   !
    !     if ( s(i:i) == '/' ) then
-   !  
+   !
    !       call chrctf ( s(i+1:), itopb, ibotb, ierror, length2 )
-   ! 
+   !
    !       if ( ierror /= 0 ) then
    !         return
    !       end if
-   !  
+   !
    !       itop = itop * ibotb
    !       ibot = ibot * itopb
-   !  
+   !
    !       itemp = i4_gcd ( itop, ibot )
-   !  
+   !
    !       itop = itop / itemp
    !       ibot = ibot / itemp
-   !  
+   !
    !       length = i + length2
-   !  
+   !
    !       return
-   !  
+   !
    !     else if ( s(i:i) /= ' ' ) then
-   !  
+   !
    !       return
-   !  
+   !
    !     end if
-   !  
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine chrcti2 ( s, intval, ierror, length )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CHRCTI2 finds and reads an integer from a string.
@@ -4572,21 +4571,21 @@ contains
    ! !  Parameters:
    ! !
    ! !    Input, character ( len = * ) S, the string to be read.
-   ! !    Reading will begin at position 1 and terminate at the end of the 
-   ! !    string, or when no more characters can be read to form a legal integer. 
+   ! !    Reading will begin at position 1 and terminate at the end of the
+   ! !    string, or when no more characters can be read to form a legal integer.
    ! !    Blanks, commas, or other nonnumeric data will, in particular,
    ! !    cause the conversion to halt.
    ! !
-   ! !    Output, integer ( kind = 4 ) INTVAL, the integer read from the string, 
+   ! !    Output, integer ( kind = 4 ) INTVAL, the integer read from the string,
    ! !    or 0 if there was an error.
    ! !
-   ! !    Output, integer ( kind = 4 ) IERROR, 0 an integer was found, 
+   ! !    Output, integer ( kind = 4 ) IERROR, 0 an integer was found,
    ! !    1 if no integer found.
    ! !
    ! !    Output, integer ( kind = 4 ) LENGTH, the number of characters read.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) idig
@@ -4598,7 +4597,7 @@ contains
    !   integer ( kind = 4 ) length
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
    !   ierror = 0
    !   i = 0
@@ -4610,21 +4609,21 @@ contains
    ! !  Examine the next character.
    ! !
    !   do while ( iterm /= 1 )
-   !  
+   !
    !     i = i + 1
-   ! 
+   !
    !     if ( s_length < i ) then
-   ! 
+   !
    !       iterm = 1
-   ! 
+   !
    !     else
-   ! 
+   !
    !       c = s(i:i)
    ! !
    ! !  Minus sign.
    ! !
    !       if ( c == '-' ) then
-   !  
+   !
    !         if ( ihave == 0 ) then
    !           ihave = 1
    !           isgn = -1
@@ -4635,7 +4634,7 @@ contains
    ! !  Plus sign.
    ! !
    !       else if ( c == '+' ) then
-   !   
+   !
    !         if ( ihave == 0 ) then
    !           ihave = 1
    !         else
@@ -4645,29 +4644,29 @@ contains
    ! !  Digit.
    ! !
    !       else if ( lle ( '0', c ) .and. lle ( c, '9' ) ) then
-   !  
+   !
    !         ihave = 2
-   ! 
+   !
    !         call ch_to_digit ( c, idig )
-   ! 
+   !
    !         intval = 10 * intval + idig
    ! !
    ! !  Blank or TAB.
    ! !
-   !       else 
-   ! 
+   !       else
+   !
    !         if ( ihave == 2 ) then
    !           iterm = 1
    !         else
    !           ihave = 0
    !         end if
-   ! 
+   !
    !       end if
-   ! 
+   !
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   if ( ihave == 2 ) then
    !     length = i - 1
    !     intval = isgn * intval
@@ -4676,206 +4675,206 @@ contains
    !     length = 0
    !     intval = 0
    !   end if
-   !  
+   !
    !   return
    ! end
-   subroutine chrctp ( s, cval, ierror, length )
-   
-   !*****************************************************************************80
-   !
-   !! CHRCTP reads a parenthesized complex number from a string.
-   !
-   !  Discussion:
-   !
-   !    The routine will read as many characters as possible until it reaches
-   !    the end of the string, or encounters a character which cannot be
-   !    part of the number.
-   !
-   !    Legal input is:
-   !
-   !       1 blanks,
-   !
-   !       2 left parenthesis, REQUIRED
-   !
-   !       3 blanks
-   !       4 '+' or '-' sign,
-   !       5 blanks
-   !       6 integer part,
-   !       7 decimal point,
-   !       8 fraction part,
-   !       9 'E' or 'e' or 'D' or 'd', exponent marker,
-   !      10 exponent sign,
-   !      11 exponent integer part,
-   !      12 exponent decimal point,
-   !      13 exponent fraction part,
-   !      14 blanks,
-   !
-   !      15 comma, REQUIRED
-   !
-   !      16 blanks
-   !      17 '+' or '-' sign,
-   !      18 blanks
-   !      19 integer part,
-   !      20 decimal point,
-   !      21 fraction part,
-   !      22 'E' or 'e' or 'D' or 'd', exponent marker,
-   !      23 exponent sign,
-   !      24 exponent integer part,
-   !      25 exponent decimal point,
-   !      26 exponent fraction part,
-   !      27 blanks,
-   !
-   !      28 right parenthesis, REQUIRED
-   !
-   !  Example:
-   !
-   !    S                   CVAL      IERROR     LENGTH
-   !
-   !    '(1, 1)'              1 + 1 i   0           5
-   !    '( 20 , 99 )'        20+99i     0          11
-   !    '(-1.2E+2, +30E-2)'  -120+0.3i  0          17
-   !
-   !  Modified:
-   !
-   !    14 April 1999
-   !
-   !  Author:
-   !
-   !    John Burkardt
-   !
-   !  Parameters:
-   !
-   !    Input, character ( len = * ) S, the string containing the
-   !    data to be read.  Reading will begin at position 1 and
-   !    terminate at the end of the string, or when no more
-   !    characters can be read to form a legal real.  Blanks,
-   !    commas, or other nonnumeric data will, in particular,
-   !    cause the conversion to halt.
-   !
-   !    Output, complex ( kind = 4 ) CVAL, the value read from the string.
-   !
-   !    Output, integer ( kind = 4 ) IERROR, error flag.
-   !    0, no errors occurred.
-   !    1, the string was empty.
-   !    2, Did not find left parenthesis.
-   !    3, Could not read A correctly.
-   !    4, Did not find the comma.
-   !    5, Could not read B correctly.
-   !    6, Did not find right parenthesis.
-   !
-   !    Output, integer ( kind = 4 ) LENGTH, the number of characters read.
-   !
-     implicit none
-   
-     real    ( kind = 4 ) aval
-     real    ( kind = 4 ) bval
-     character c
-     complex ( kind = 8 ) cval
-     integer ( kind = 4 ) ichr
-     integer ( kind = 4 ) ierror
-     integer ( kind = 4 ) length
-     character ( len = * ) s
-   !
-   !  Initialize the return arguments.
-   !
-     ierror = 0
-     aval = 0
-     bval = 0
-     cval = cmplx ( aval, bval, kind = 4 )
-     length = 0
-   !
-   !  Get the length of the line, and if it's zero, return.
-   !
-     if ( len_trim ( s ) <= 0 ) then
-       ierror = 1
-       return
-     end if
-   !
-   !  Is the next character a left parenthesis, like it must be?
-   !
-     call nexchr ( s, ichr, c )
-    
-     if ( c /= '(' ) then
-       ierror = 2
-       return
-     end if
-    
-     length = ichr
-   !
-   !  Is the next character a comma?  Then a = 0.
-   !
-     call nexchr ( s(length+1:), ichr, c )
-    
-     if ( c == ',' ) then
-       aval = 0
-       length = length + ichr
-   !
-   !  Read the A value.
-   !
-     else
-    
-       call s_to_r4 ( s(length+1:), aval, ierror, ichr )
-    
-       if ( ierror /= 0 ) then
-         ierror = 3
-         length = 0
+   subroutine chrctp(s, cval, ierror, length)
+
+      !*****************************************************************************80
+      !
+      !! CHRCTP reads a parenthesized complex number from a string.
+      !
+      !  Discussion:
+      !
+      !    The routine will read as many characters as possible until it reaches
+      !    the end of the string, or encounters a character which cannot be
+      !    part of the number.
+      !
+      !    Legal input is:
+      !
+      !       1 blanks,
+      !
+      !       2 left parenthesis, REQUIRED
+      !
+      !       3 blanks
+      !       4 '+' or '-' sign,
+      !       5 blanks
+      !       6 integer part,
+      !       7 decimal point,
+      !       8 fraction part,
+      !       9 'E' or 'e' or 'D' or 'd', exponent marker,
+      !      10 exponent sign,
+      !      11 exponent integer part,
+      !      12 exponent decimal point,
+      !      13 exponent fraction part,
+      !      14 blanks,
+      !
+      !      15 comma, REQUIRED
+      !
+      !      16 blanks
+      !      17 '+' or '-' sign,
+      !      18 blanks
+      !      19 integer part,
+      !      20 decimal point,
+      !      21 fraction part,
+      !      22 'E' or 'e' or 'D' or 'd', exponent marker,
+      !      23 exponent sign,
+      !      24 exponent integer part,
+      !      25 exponent decimal point,
+      !      26 exponent fraction part,
+      !      27 blanks,
+      !
+      !      28 right parenthesis, REQUIRED
+      !
+      !  Example:
+      !
+      !    S                   CVAL      IERROR     LENGTH
+      !
+      !    '(1, 1)'              1 + 1 i   0           5
+      !    '( 20 , 99 )'        20+99i     0          11
+      !    '(-1.2E+2, +30E-2)'  -120+0.3i  0          17
+      !
+      !  Modified:
+      !
+      !    14 April 1999
+      !
+      !  Author:
+      !
+      !    John Burkardt
+      !
+      !  Parameters:
+      !
+      !    Input, character ( len = * ) S, the string containing the
+      !    data to be read.  Reading will begin at position 1 and
+      !    terminate at the end of the string, or when no more
+      !    characters can be read to form a legal real.  Blanks,
+      !    commas, or other nonnumeric data will, in particular,
+      !    cause the conversion to halt.
+      !
+      !    Output, complex ( kind = 4 ) CVAL, the value read from the string.
+      !
+      !    Output, integer ( kind = 4 ) IERROR, error flag.
+      !    0, no errors occurred.
+      !    1, the string was empty.
+      !    2, Did not find left parenthesis.
+      !    3, Could not read A correctly.
+      !    4, Did not find the comma.
+      !    5, Could not read B correctly.
+      !    6, Did not find right parenthesis.
+      !
+      !    Output, integer ( kind = 4 ) LENGTH, the number of characters read.
+      !
+      implicit none
+
+      real(kind=4) aval
+      real(kind=4) bval
+      character c
+      complex(kind=8) cval
+      integer(kind=4) ichr
+      integer(kind=4) ierror
+      integer(kind=4) length
+      character(len=*) s
+      !
+      !  Initialize the return arguments.
+      !
+      ierror = 0
+      aval = 0
+      bval = 0
+      cval = cmplx(aval, bval, kind=4)
+      length = 0
+      !
+      !  Get the length of the line, and if it's zero, return.
+      !
+      if (len_trim(s) <= 0) then
+         ierror = 1
          return
-       end if
-    
-       length = length + ichr
-   !
-   !  Expect to read the comma
-   !
-       if ( s(length:length) /= ',' ) then
-         ierror = 4
-         length = 0
+      end if
+      !
+      !  Is the next character a left parenthesis, like it must be?
+      !
+      call nexchr(s, ichr, c)
+
+      if (c /= '(') then
+         ierror = 2
          return
-       end if
-    
-     end if
-   !
-   !  Is the next character a left parenthesis?  Then b = 0.
-   !
-     call nexchr ( s(length+1:), ichr, c )
-    
-     if ( c == ')' ) then
-       bval = 0
-       length = length + ichr
-   !
-   !  Read the B value.
-   !
-     else
-    
-       call s_to_r4 ( s(length+1:), bval, ierror, ichr )
-    
-       if ( ierror /= 0 ) then
-         ierror = 5
-         length = 0
-         return
-       end if
-    
-       length = length + ichr
-   !
-   !  Expect to read the right parenthesis.
-   !
-       call nexchr ( s(length+1:), ichr, c )
-    
-       if ( c /= ')' ) then
-         ierror = 6
-         length = 0
-         return
-       end if
-    
-     end if
-    
-     length = length + ichr
-    
-     cval = cmplx ( aval, bval, kind = 4 )
-    
-     return
+      end if
+
+      length = ichr
+      !
+      !  Is the next character a comma?  Then a = 0.
+      !
+      call nexchr(s(length + 1:), ichr, c)
+
+      if (c == ',') then
+         aval = 0
+         length = length + ichr
+         !
+         !  Read the A value.
+         !
+      else
+
+         call s_to_r4(s(length + 1:), aval, ierror, ichr)
+
+         if (ierror /= 0) then
+            ierror = 3
+            length = 0
+            return
+         end if
+
+         length = length + ichr
+         !
+         !  Expect to read the comma
+         !
+         if (s(length:length) /= ',') then
+            ierror = 4
+            length = 0
+            return
+         end if
+
+      end if
+      !
+      !  Is the next character a left parenthesis?  Then b = 0.
+      !
+      call nexchr(s(length + 1:), ichr, c)
+
+      if (c == ')') then
+         bval = 0
+         length = length + ichr
+         !
+         !  Read the B value.
+         !
+      else
+
+         call s_to_r4(s(length + 1:), bval, ierror, ichr)
+
+         if (ierror /= 0) then
+            ierror = 5
+            length = 0
+            return
+         end if
+
+         length = length + ichr
+         !
+         !  Expect to read the right parenthesis.
+         !
+         call nexchr(s(length + 1:), ichr, c)
+
+         if (c /= ')') then
+            ierror = 6
+            length = 0
+            return
+         end if
+
+      end if
+
+      length = length + ichr
+
+      cval = cmplx(aval, bval, kind=4)
+
+      return
    end
    ! subroutine chrs_to_a ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CHRS_TO_A replaces all control symbols by control characters.
@@ -4896,7 +4895,7 @@ contains
    ! !    control symbol has been replaced by a control character.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   integer ( kind = 4 ) ihi
    !   integer ( kind = 4 ) ilo
@@ -4905,37 +4904,37 @@ contains
    !   character ( len = * ) s1
    !   integer ( kind = 4 ) s1_length
    !   character ( len = * ) s2
-   ! 
+   !
    !   s1_length = len_trim ( s1 )
    !   nchar2 = len ( s2 )
-   !  
-   !   ihi = 0 
+   !
+   !   ihi = 0
    !   put = 0
-   !  
+   !
    !   do
-   !  
+   !
    !     if ( s1_length <= ihi ) then
    !       return
    !     end if
-   !  
+   !
    !     ilo = ihi + 1
-   !  
+   !
    !     call sym_to_ch ( s1(ilo:), c, ihi )
-   !  
+   !
    !     put = put + 1
-   !  
+   !
    !     if ( nchar2 < put ) then
    !       exit
    !     end if
-   ! 
+   !
    !     s2(put:put) = c
-   ! 
+   !
    !   end do
-   ! 
-   !   return 
+   !
+   !   return
    ! end
    ! subroutine chvec_permute ( n, a, p )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CHVEC_PERMUTE permutes a character vector in place.
@@ -4982,9 +4981,9 @@ contains
    ! !    fail catastrophically.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   character a(n)
    !   character a_temp
    !   integer ( kind = 4 ) ierror
@@ -4992,9 +4991,9 @@ contains
    !   integer ( kind = 4 ) put
    !   integer ( kind = 4 ) istart
    !   integer ( kind = 4 ) p(n)
-   ! 
+   !
    !   call perm_check ( n, p, ierror )
-   ! 
+   !
    !   if ( ierror /= 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'CHVEC_PERMUTE - Fatal error!'
@@ -5007,58 +5006,58 @@ contains
    ! !  Search for the next element of the permutation that has not been used.
    ! !
    !   do istart = 1, n
-   ! 
+   !
    !     if ( p(istart) < 0 ) then
-   ! 
+   !
    !       cycle
-   ! 
+   !
    !     else if ( p(istart) == istart ) then
-   ! 
+   !
    !       p(istart) = -p(istart)
    !       cycle
-   ! 
+   !
    !     else
-   ! 
+   !
    !       a_temp = a(istart)
    !       get = istart
    ! !
    ! !  Copy the new value into the vacated entry.
    ! !
    !       do
-   ! 
+   !
    !         put = get
    !         get = p(get)
-   ! 
+   !
    !         p(put) = -p(put)
-   ! 
+   !
    !         if ( get < 1 .or. n < get ) then
    !           write ( *, '(a)' ) ' '
    !           write ( *, '(a)' ) 'CHVEC_PERMUTE - Fatal error!'
    !           write ( *, '(a)' ) '  "get" character is out of bounds.'
    !           stop
    !         end if
-   ! 
+   !
    !         if ( get == istart ) then
    !           a(put) = a_temp
    !           exit
    !         end if
-   ! 
+   !
    !         a(put) = a(get)
-   ! 
+   !
    !       end do
-   ! 
+   !
    !     end if
-   ! 
+   !
    !   end do
    ! !
    ! !  Restore the signs of the entries.
    ! !
    !   p(1:n) = -p(1:n)
-   ! 
+   !
    !   return
    ! end
    ! subroutine chvec_print ( n, a, title )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CHVEC_PRINT prints a character vector.
@@ -5081,9 +5080,9 @@ contains
    ! !    TITLE may be blank.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   character a(n)
    !   logical ch_is_printable
    !   integer ( kind = 4 ) i
@@ -5092,12 +5091,12 @@ contains
    !   integer ( kind = 4 ) j
    !   character ( len = 80 ) string
    !   character ( len = * ) title
-   ! 
+   !
    !   if ( title /= ' ' ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) trim ( title )
    !   end if
-   ! 
+   !
    !   write ( *, '(a)' ) ' '
    !   do ilo = 1, n, 80
    !     ihi = min ( ilo + 79, n )
@@ -5108,15 +5107,15 @@ contains
    !         string(j:j) = a(i)
    !       end if
    !     end do
-   !     
+   !
    !     write ( *, '(a)' ) trim ( string )
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine chvec_reverse ( n, x )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CHVEC_REVERSE reverses the elements of a character vector.
@@ -5146,23 +5145,23 @@ contains
    ! !    Input/output, character X(N), the array to be reversed.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   character cval
    !   integer ( kind = 4 ) i
    !   character x(n)
-   ! 
+   !
    !   do i = 1, n/2
    !     cval = x(i)
    !     x(i) = x(n+1-i)
    !     x(n+1-i) = cval
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine chvec_to_s ( n, chvec, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CHVEC_TO_S converts a character vector to a string.
@@ -5184,21 +5183,21 @@ contains
    ! !    Output, character ( len = * ) S, a string of characters.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   character chvec(n)
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
-   ! 
+   !
    !   do i = 1, min ( n, len ( s ) )
    !     s(i:i) = chvec(i)
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine chvec2_print ( m, a, n, b, title )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! CHVEC2_PRINT prints two vectors of characters.
@@ -5224,43 +5223,43 @@ contains
    ! !    Input, character ( len = * ), a title.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) m
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   character a(m)
    !   character ai
    !   character b(n)
    !   character bi
    !   integer ( kind = 4 ) i
    !   character ( len = * ) title
-   ! 
+   !
    !   write ( *, '(a)' ) ' '
    !   write ( *, '(a)' ) trim ( title )
    !   write ( *, '(a)' ) ' '
-   ! 
+   !
    !   do i = 1, max ( m, n )
-   ! 
+   !
    !     if ( i <= m ) then
    !       ai = a(i)
    !     else
    !       ai = ' '
    !     end if
-   ! 
+   !
    !     if ( i <= n ) then
    !       bi = b(i)
    !     else
    !       bi = ' '
    !     end if
-   ! 
+   !
    !     write ( *, '(i3,2x,a1,2x,a1)' ) i, ai, bi
-   ! 
-   !   end do 
-   ! 
+   !
+   !   end do
+   !
    !   return
    ! end
    ! subroutine comma ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! COMMA moves commas left through blanks in a string.
@@ -5287,41 +5286,41 @@ contains
    ! !    commas are to be shifted left through blanks.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) iblank
    !   integer ( kind = 4 ) icomma
    !   character ( len = * ) s
-   ! 
+   !
    !   icomma = len_trim ( s )
-   ! 
+   !
    !   do while ( 1 < icomma )
-   ! 
+   !
    !     if ( s(icomma:icomma) == ',' ) then
-   ! 
+   !
    !       iblank = icomma
-   ! 
+   !
    !       do while ( 1 < iblank )
    !         if ( s(iblank-1:iblank-1) /= ' ' ) then
    !           exit
    !         end if
    !         iblank = iblank - 1
    !       end do
-   ! 
+   !
    !       if ( icomma /= iblank ) then
    !         s(icomma:icomma) = ' '
    !         s(iblank:iblank) = ','
    !       end if
-   ! 
+   !
    !     end if
-   ! 
+   !
    !     icomma = icomma - 1
-   ! 
+   !
    !   end do
-   !   
+   !
    !   return
    ! end
    ! subroutine dec_to_s_left ( ival, jval, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! DEC_TO_S_LEFT returns a left-justified representation of IVAL * 10**JVAL.
@@ -5349,15 +5348,15 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input, integer ( kind = 4 ) IVAL, JVAL, integers which represent 
+   ! !    Input, integer ( kind = 4 ) IVAL, JVAL, integers which represent
    ! !    the decimal.
    ! !
    ! !    Output, character ( len = * ) S, the representation of the value.
-   ! !    The string is 'Inf' or '0.0' if the value was too large 
+   ! !    The string is 'Inf' or '0.0' if the value was too large
    ! !    or small to represent with a fixed point format.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = 22 ) chrrep
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) get1
@@ -5370,14 +5369,14 @@ contains
    !   integer ( kind = 4 ) nleft
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s = ' '
-   ! 
+   !
    !   if ( ival == 0 ) then
    !     s = '0'
    !     return
    !   end if
-   ! 
+   !
    !   s_length = len ( s )
    ! !
    ! !  Store a representation of IVAL in CHRREP.
@@ -5414,15 +5413,15 @@ contains
    ! !  If JVAL is nonnegative, insert trailing zeros.
    ! !
    !   if ( 0 <= jval ) then
-   ! 
+   !
    !     s(1:ndigit) = chrrep(1:ndigit)
-   ! 
+   !
    !     do i = ndigit+1, ndigit+jval
    !       s(i:i) = '0'
    !     end do
-   ! 
+   !
    !   else if ( jval < 0 ) then
-   ! 
+   !
    !     put2 = 0
    !     get2 = 0
    ! !
@@ -5463,7 +5462,7 @@ contains
    !       put2 = put1
    !       s(put1:put2) = '0'
    !     end do
-   ! 
+   !
    !     nleft = min ( -jval, ndigit )
    !     nleft = min ( nleft, s_length - put2 )
    !     put1 = put2 + 1
@@ -5471,13 +5470,13 @@ contains
    !     get1 = get2 + 1
    !     get2 = get1 + nleft - 1
    !     s(put1:put2) = chrrep(get1:get2)
-   ! 
+   !
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine dec_to_s_right ( ival, jval, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! DEC_TO_S_RIGHT returns a right justified representation of IVAL * 10**JVAL.
@@ -5499,18 +5498,18 @@ contains
    ! !    containing the representation of the decimal fraction.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ival
    !   integer ( kind = 4 ) jval
    !   character ( len = * ) s
-   ! 
+   !
    !   call dec_to_s_left ( ival, jval, s )
    !   call s_adjustr ( s )
-   !  
+   !
    !   return
    ! end
    ! subroutine digit_bin_to_ch ( i, ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! DIGIT_BIN_TO_CH returns the character representation of a binary digit.
@@ -5530,10 +5529,10 @@ contains
    ! !    Output, character CH, the character representation of the integer.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) i
-   ! 
+   !
    !   if ( i == 0 ) then
    !     ch = '0'
    !   else if ( i == 1 ) then
@@ -5541,11 +5540,11 @@ contains
    !   else
    !     ch = '*'
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine digit_hex_to_ch ( i, ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! DIGIT_HEX_TO_CH returns the character representation of a hexadecimal digit.
@@ -5570,10 +5569,10 @@ contains
    ! !    Output, character CH, the hexadecimal representation of the integer.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) i
-   ! 
+   !
    !   if ( 0 <= i .and. i <= 9 ) then
    !     ch = achar ( i + 48 )
    !   else if ( 10 <= i .and. i <= 15 ) then
@@ -5581,14 +5580,14 @@ contains
    !   else
    !     ch = '*'
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine digit_inc ( ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
-   ! !! DIGIT_INC increments a decimal digit.  
+   ! !! DIGIT_INC increments a decimal digit.
    ! !
    ! !  Example:
    ! !
@@ -5614,28 +5613,28 @@ contains
    ! !    Input/output, character CH, a digit to be incremented.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) digit
-   ! 
+   !
    !   call ch_to_digit ( ch, digit )
-   ! 
+   !
    !   if ( digit == -1 ) then
    !     return
    !   end if
-   ! 
+   !
    !   digit = digit + 1
-   ! 
+   !
    !   if ( digit == 10 ) then
    !     digit = 0
    !   end if
-   ! 
+   !
    !   call digit_to_ch ( digit, ch )
-   ! 
+   !
    !   return
    ! end
    ! subroutine digit_oct_to_ch ( i, ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! DIGIT_OCT_TO_CH returns the character representation of an octal digit.
@@ -5661,17 +5660,17 @@ contains
    ! !
    !   character ch
    !   integer ( kind = 4 ) i
-   ! 
+   !
    !   if ( 0 <= i .and. i <= 7 ) then
    !     ch = achar ( i + 48 )
-   !   else 
+   !   else
    !     ch = '*'
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine digit_to_ch ( digit, ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! DIGIT_TO_CH returns the character representation of a decimal digit.
@@ -5683,7 +5682,7 @@ contains
    ! !
    ! !  Example:
    ! !
-   ! !    DIGIT   CH 
+   ! !    DIGIT   CH
    ! !    -----  ---
    ! !      0    '0'
    ! !      1    '1'
@@ -5706,24 +5705,24 @@ contains
    ! !    Output, character CH, the corresponding character.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) digit
-   ! 
+   !
    !   if ( 0 <= digit .and. digit <= 9 ) then
-   ! 
+   !
    !     ch = achar ( digit + 48 )
-   ! 
+   !
    !   else
-   ! 
+   !
    !     ch = '*'
-   ! 
+   !
    !   end if
-   !  
+   !
    !   return
    ! end
    ! function ebcdic_to_ch ( e )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! EBCDIC_TO_CH converts an EBCDIC character to ASCII.
@@ -5749,24 +5748,24 @@ contains
    ! !    character, or a blank character if no correspondence holds.
    ! !
    !   implicit none
-   ! 
+   !
    !   character e
    !   character ebcdic_to_ch
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) iebcdic_to_ic
-   ! 
+   !
    !   i = iebcdic_to_ic ( iachar ( e ) )
-   !  
+   !
    !   if ( i /= -1 ) then
    !     ebcdic_to_ch = achar ( i )
    !   else
    !     ebcdic_to_ch = ' '
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine ebcdic_to_s ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! EBCDIC_TO_S converts a string of EBCDIC characters to ASCII.
@@ -5781,27 +5780,27 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input/output, character ( len = * ) S.  
-   ! !    On input, the EBCDIC string.  
+   ! !    Input/output, character ( len = * ) S.
+   ! !    On input, the EBCDIC string.
    ! !    On output, the ASCII string.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ebcdic_to_ch
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len ( s )
-   ! 
+   !
    !   do i = 1, s_length
    !     s(i:i) = ebcdic_to_ch ( s(i:i) )
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine fillch ( s1, field, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! FILLCH writes a string into a subfield of a string.
@@ -5823,37 +5822,37 @@ contains
    ! !    On output, the substring has been overwritten.
    ! !
    ! !    Input, character ( len = * ) FIELD, a substring to be searched for in
-   ! !    S, which denotes the spot where the value should be placed.  
+   ! !    S, which denotes the spot where the value should be placed.
    ! !    Trailing blanks are ignored.
    ! !
-   ! !    Input, character ( len = * ) S2, the character string to be written 
+   ! !    Input, character ( len = * ) S2, the character string to be written
    ! !    into the subfield.  Trailing blanks are ignored.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = * ) field
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) lenc
    !   integer ( kind = 4 ) s_indexi
    !   character ( len = * ) s1
    !   character ( len = * ) s2
-   ! 
+   !
    !   i = s_indexi ( s1, field )
-   ! 
+   !
    !   if ( i /= 0 ) then
-   ! 
+   !
    !     lenc = len_trim ( field )
    !     call s_chop ( s1, i, i+lenc-1 )
-   ! 
+   !
    !     lenc = len_trim ( s2 )
    !     call s_s_insert ( s1, i, s2(1:lenc) )
-   ! 
+   !
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine fillin ( s, field, ival )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! FILLIN writes an integer into a subfield of a string.
@@ -5875,14 +5874,14 @@ contains
    ! !    On output, the substring has been overwritten by the value of IVAL.
    ! !
    ! !    Input, character ( len = * ) FIELD, a substring to be searched for in
-   ! !    S, which denotes the spot where the value should be placed.  
+   ! !    S, which denotes the spot where the value should be placed.
    ! !    Trailing blanks are ignored.
    ! !
-   ! !    Input, integer ( kind = 4 ) IVAL, the value to be written 
+   ! !    Input, integer ( kind = 4 ) IVAL, the value to be written
    ! !    into the subfield.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = * ) field
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) ival
@@ -5890,25 +5889,25 @@ contains
    !   integer ( kind = 4 ) s_indexi
    !   character ( len = * ) s
    !   character ( len = 14 ) sval
-   ! 
+   !
    !   i = s_indexi ( s, field )
-   ! 
+   !
    !   if ( i /= 0 ) then
-   ! 
+   !
    !     lenc = len_trim ( field )
    !     call s_chop ( s, i, i+lenc-1 )
-   ! 
+   !
    !     call i4_to_s_left ( ival, sval )
-   ! 
+   !
    !     lenc = len_trim ( sval )
    !     call s_s_insert ( s, i, sval(1:lenc) )
-   ! 
+   !
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine fillrl ( s, field, r )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! FILLRL writes a real into a subfield of a string.
@@ -5929,13 +5928,13 @@ contains
    ! !    On output, the substring has been overwritten by the value.
    ! !
    ! !    Input, character ( len = * ) FIELD, a substring to be searched for in
-   ! !    S, which denotes the spot where the value should be placed.  
+   ! !    S, which denotes the spot where the value should be placed.
    ! !    Trailing blanks are ignored.
    ! !
    ! !    Input, real  ( kind = 4 ) R, the value to be written into the subfield.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = * ) field
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) lenc
@@ -5943,27 +5942,27 @@ contains
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_indexi
    !   character ( len = 10 ) sval
-   ! 
+   !
    !   i = s_indexi ( s, field )
-   ! 
+   !
    !   if ( i /= 0 ) then
-   ! 
+   !
    !     lenc = len_trim ( field )
-   ! 
+   !
    !     call s_chop ( s, i, i+lenc-1 )
-   ! 
+   !
    !     call r4_to_s_right ( r, sval )
    !     call s_blank_delete ( sval )
    !     lenc = len_trim ( sval )
-   ! 
+   !
    !     call s_s_insert ( s, i, sval(1:lenc) )
-   ! 
+   !
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine flt_to_s ( mant, iexp, ndig, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! FLT_TO_S returns a representation of MANT * 10**IEXP.
@@ -5998,7 +5997,7 @@ contains
    ! !    Output, character ( len = * ) S, the representation of the quantity.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) iexp
    !   integer ( kind = 4 ) jexp
    !   integer ( kind = 4 ) mant
@@ -6037,23 +6036,23 @@ contains
    ! !  Write the exponent.
    ! !
    !   jexp = 0
-   ! 
-   !   do while ( 10**jexp <= abs ( mant ) ) 
+   !
+   !   do while ( 10**jexp <= abs ( mant ) )
    !     jexp = jexp + 1
    !   end do
-   !  
+   !
    !   jexp = jexp + iexp - 1
-   !  
+   !
    !   call i4_to_s_zero ( jexp, s(ndig+4:ndig+6) )
    ! !
    ! !  Remove all blanks, effectively shifting the string left too.
    ! !
    !   call s_blank_delete ( s )
-   !  
+   !
    !   return
    ! end
    ! subroutine forcom ( s, fortran, comment )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! FORCOM splits a FORTRAN line into "fortran" and "comment".
@@ -6063,7 +6062,7 @@ contains
    ! !    The "comment" portion is everything following the first occurrence
    ! !    of an exclamation mark (and includes the exclamation mark).
    ! !
-   ! !    The "fortran" portion is everything before the first exclamation 
+   ! !    The "fortran" portion is everything before the first exclamation
    ! !    mark.
    ! !
    ! !    Either or both the data and comment portions may be blank.
@@ -6091,18 +6090,18 @@ contains
    ! !    Output, character ( len = * ) FORTRAN, the initial portion of the string,
    ! !    containing a FORTRAN statement.
    ! !
-   ! !    Output, character COMMENT, the final portion of the string, 
+   ! !    Output, character COMMENT, the final portion of the string,
    ! !    containing a comment.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = * ) comment
    !   character ( len = * ) fortran
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
-   ! 
+   !
    !   i = index ( s, '!' )
-   ! 
+   !
    !   if ( i == 0 ) then
    !     fortran = s
    !     comment = ' '
@@ -6113,11 +6112,11 @@ contains
    !     fortran = s ( 1:i-1)
    !     comment = s ( i: )
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine hex_to_i4 ( s, intval )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! HEX_TO_I4 converts a hexadecimal string to its integer value.
@@ -6137,7 +6136,7 @@ contains
    ! !    Output, integer ( kind = 4 ) INTVAL, the corresponding integer value.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) first
    !   integer ( kind = 4 ) idig
    !   integer ( kind = 4 ) intval
@@ -6145,43 +6144,43 @@ contains
    !   integer ( kind = 4 ) j
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
    ! !
    ! !  Determine if there is a plus or minus sign.
    ! !
    !   isgn = 1
-   ! 
+   !
    !   first = s_length + 1
-   ! 
+   !
    !   do j = 1, s_length
-   ! 
+   !
    !     if ( s(j:j) == '-' ) then
    !       isgn = -1
    !     else if ( s(j:j) == '+' ) then
-   !       isgn = + 1 
+   !       isgn = + 1
    !     else if ( s(j:j) /= ' ' ) then
    !       first = j
    !       exit
    !     end if
-   ! 
+   !
    !   end do
    ! !
    ! !  Read the numeric portion of the string.
    ! !
    !   intval = 0
-   ! 
+   !
    !   do j = first, s_length
    !     call ch_to_digit_hex ( s(j:j), idig )
    !     intval = intval * 16 + idig
    !   end do
-   !  
+   !
    !   intval = isgn * intval
-   !  
+   !
    !   return
    ! end
    ! subroutine hex_to_s ( hex, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! HEX_TO_S converts a hexadecimal string into characters.
@@ -6193,11 +6192,11 @@ contains
    ! !
    ! !  Example:
    ! !
-   ! !    Input: 
+   ! !    Input:
    ! !
-   ! !      '414243' 
+   ! !      '414243'
    ! !
-   ! !    Output: 
+   ! !    Output:
    ! !
    ! !      'ABC'.
    ! !
@@ -6216,7 +6215,7 @@ contains
    ! !    Output, character ( len = * ) S, the corresponding character string.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = * ) hex
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) intval
@@ -6225,23 +6224,23 @@ contains
    !   integer ( kind = 4 ) nhex
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len ( s )
    !   nhex = len_trim ( hex )
    !   ndo = min ( nhex / 2, s_length )
-   !  
+   !
    !   s = ' '
-   !  
+   !
    !   do i = 1, ndo
    !     j = 2 * i - 1
    !     call hex_to_i4 ( hex(j:j+1), intval )
    !     s(i:i) = achar ( intval )
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine i2_byte_swap ( iword, bytes )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I2_BYTE_SWAP swaps bytes in an 8-byte word.
@@ -6286,38 +6285,38 @@ contains
    ! !    Input/output, integer ( kind = 4 ) IWORD, the word whose bits are to
    ! !    be swapped.
    ! !
-   ! !    Input, integer ( kind = 4 ) BYTES(8), indicates which byte in the input 
+   ! !    Input, integer ( kind = 4 ) BYTES(8), indicates which byte in the input
    ! !    word should overwrite each byte of the output word.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ), parameter :: bytes_num = 8
-   ! 
+   !
    !   integer ( kind = 4 ) bytes(bytes_num)
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) iword
    !   integer ( kind = 4 ) jword
-   ! 
+   !
    !   jword = iword
-   ! 
+   !
    !   do i = 1, bytes_num
-   ! 
+   !
    !     if ( bytes(i) < 1 .or. bytes_num < bytes(i) ) then
    !       cycle
    !     end if
-   ! 
+   !
    !     if ( bytes(i) == i ) then
    !       cycle
    !     end if
-   ! 
+   !
    !     call mvbits ( jword, (bytes(i)-1)*8, 8, iword, 0 )
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine i4_byte_swap ( iword, bytes )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_BYTE_SWAP swaps bytes in a 4-byte word.
@@ -6359,16 +6358,16 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input/output, integer ( kind = 4 ) IWORD, the word whose bits are to 
+   ! !    Input/output, integer ( kind = 4 ) IWORD, the word whose bits are to
    ! !    be swapped.
    ! !
-   ! !    Input, integer ( kind = 4 ) BYTES(4), indicates which byte in the 
+   ! !    Input, integer ( kind = 4 ) BYTES(4), indicates which byte in the
    ! !    input word should overwrite each byte of the output word.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ), parameter :: NUM_BYTES = 4
-   ! 
+   !
    !   integer ( kind = 4 ), parameter :: bit_length = 8
    !   integer ( kind = 4 ) bytes(NUM_BYTES)
    !   integer ( kind = 4 ) from_pos
@@ -6376,29 +6375,29 @@ contains
    !   integer ( kind = 4 ) iword
    !   integer ( kind = 4 ) jword
    !   integer ( kind = 4 ) to_pos
-   ! 
+   !
    !   jword = iword
-   ! 
+   !
    !   do i = 1, NUM_BYTES
-   ! 
+   !
    !     if ( bytes(i) < 1 .or. NUM_BYTES < bytes(i) ) then
    !       cycle
    !     end if
-   ! 
+   !
    !     if ( bytes(i) == i ) then
    !       cycle
    !     end if
-   ! 
+   !
    !     from_pos = 8 * ( bytes(i) - 1 )
    !     to_pos = 8 * ( i - 1 )
    !     call mvbits ( jword, from_pos, bit_length, iword, to_pos )
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine i4_extract ( s, i, ierror )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_EXTRACT "extracts" an I4 from the beginning of a string.
@@ -6414,7 +6413,7 @@ contains
    ! !  Parameters:
    ! !
    ! !    Input/output, character ( len = * ) S; on input, a string from
-   ! !    whose beginning an integer is to be extracted.  On output, 
+   ! !    whose beginning an integer is to be extracted.  On output,
    ! !    the integer, if found, has been removed.
    ! !
    ! !    Output, integer ( kind = 4 ) I.  If IERROR is 0, then I contains the
@@ -6426,27 +6425,27 @@ contains
    ! !    string.  I is 0 and S is unchanged.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) ierror
    !   integer ( kind = 4 ) length
    !   character ( len = * ) s
-   ! 
+   !
    !   i = 0
-   !  
+   !
    !   call s_to_i4 ( s, i, ierror, length )
-   !  
+   !
    !   if ( ierror /= 0 .or. length == 0 ) then
    !     ierror = 1
    !     i = 0
    !   else
    !     call s_shift_left ( s, length )
    !   end if
-   !  
+   !
    !   return
    ! end
    ! function i4_gcd ( i, j )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_GCD finds the greatest common divisor of I and J.
@@ -6473,21 +6472,21 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input, integer ( kind = 4 ) I, J, two numbers whose greatest common 
+   ! !    Input, integer ( kind = 4 ) I, J, two numbers whose greatest common
    ! !    divisor is desired.
    ! !
-   ! !    Output, integer ( kind = 4 ) I4_GCD, the greatest common divisor of 
+   ! !    Output, integer ( kind = 4 ) I4_GCD, the greatest common divisor of
    ! !    I and J.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) i4_gcd
    !   integer ( kind = 4 ) ip
    !   integer ( kind = 4 ) iq
    !   integer ( kind = 4 ) ir
    !   integer ( kind = 4 ) j
-   ! 
+   !
    !   i4_gcd = 1
    ! !
    ! !  Return immediately if either I or J is zero.
@@ -6509,26 +6508,26 @@ contains
    ! !  Carry out the Euclidean algorithm.
    ! !
    !   do
-   ! 
+   !
    !     ir = mod ( ip, iq )
-   ! 
+   !
    !     if ( ir == 0 ) then
    !       exit
    !     end if
-   ! 
+   !
    !     ip = iq
    !     iq = ir
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   i4_gcd = iq
-   ! 
+   !
    !   return
    ! end
-   ! 
-   ! 
+   !
+   !
    ! subroutine i4_input ( string, value, ierror )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_INPUT prints a prompt string and reads an I4 from the user.
@@ -6552,17 +6551,17 @@ contains
    ! !
    ! !    Output, integer ( kind = 4 ) VALUE, the value input by the user.
    ! !
-   ! !    Output, integer ( kind = 4 ) IERROR, an error flag, which is zero 
+   ! !    Output, integer ( kind = 4 ) IERROR, an error flag, which is zero
    ! !    if no error occurred.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ierror
    !   integer ( kind = 4 ) last
    !   character ( len = 80 ) line
    !   character ( len = * ) string
    !   integer ( kind = 4 ) value
-   ! 
+   !
    !   ierror = 0
    !   value = huge ( value )
    ! !
@@ -6570,11 +6569,11 @@ contains
    ! !
    !   write ( *, '(a)' ) ' '
    !   write ( *, '(a)' ) trim ( string )
-   ! 
+   !
    !   do
-   ! 
+   !
    !     read ( *, '(a)', iostat = ierror ) line
-   ! 
+   !
    !     if ( ierror /= 0 ) then
    !       return
    !     end if
@@ -6584,7 +6583,7 @@ contains
    !     if ( line(1:1) == '#' ) then
    !       cycle
    !     end if
-   ! 
+   !
    !     if ( len_trim ( line ) == 0 ) then
    !       cycle
    !     end if
@@ -6592,20 +6591,20 @@ contains
    ! !  Extract integer information from the string.
    ! !
    !     call s_to_i4 ( line, value, ierror, last )
-   ! 
+   !
    !     if ( ierror /= 0 ) then
    !       value = huge ( value )
    !       return
    !     end if
-   ! 
+   !
    !     exit
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! function i4_length ( i4 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_LENGTH computes the number of characters needed to print an I4.
@@ -6636,11 +6635,11 @@ contains
    ! !    to print the integer.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i4
    !   integer ( kind = 4 ) i4_copy
    !   integer ( kind = 4 ) i4_length
-   ! 
+   !
    !   if ( i4 < 0 ) then
    !     i4_length = 1
    !   else if ( i4 == 0 ) then
@@ -6649,21 +6648,21 @@ contains
    !   else if ( 0 < i4 ) then
    !     i4_length = 0
    !   end if
-   !  
+   !
    !   i4_copy = abs ( i4 )
-   ! 
+   !
    !   do while ( i4_copy /= 0 )
-   ! 
+   !
    !     i4_length = i4_length + 1
-   ! 
+   !
    !     i4_copy = i4_copy / 10
-   !  
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine i4_next ( s, ival, done )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_NEXT "reads" I4's from a string, one at a time.
@@ -6678,10 +6677,10 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input, character ( len = * ) S, a string, presumably containing 
+   ! !    Input, character ( len = * ) S, a string, presumably containing
    ! !    integer ( kind = 4 )s.  These may be separated by spaces or commas.
    ! !
-   ! !    Output, integer ( kind = 4 ) IVAL.  If DONE is FALSE, then IVAL contains 
+   ! !    Output, integer ( kind = 4 ) IVAL.  If DONE is FALSE, then IVAL contains
    ! !    the "next" integer read.  If DONE is TRUE, then IVAL is zero.
    ! !
    ! !    Input/output, logical DONE.
@@ -6690,28 +6689,28 @@ contains
    ! !    was read, or TRUE if no more integers could be read.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical done
    !   integer ( kind = 4 ) ierror
    !   integer ( kind = 4 ) ival
    !   integer ( kind = 4 ) length
    !   integer ( kind = 4 ), save :: next = 1
    !   character ( len = * ) s
-   ! 
+   !
    !   ival = 0
-   !  
+   !
    !   if ( done ) then
    !     next = 1
    !     done = .false.
    !   end if
-   !  
+   !
    !   if ( len ( s ) < next ) then
    !     done = .true.
    !     return
    !   end if
-   !  
+   !
    !   call s_to_i4 ( s(next:), ival, ierror, length )
-   !  
+   !
    !   if ( ierror /= 0 .or. length == 0 ) then
    !     done = .true.
    !     next = 1
@@ -6719,18 +6718,18 @@ contains
    !     done = .false.
    !     next = next + length
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine i4_next_read ( s, intval, ierror )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_NEXT_READ finds and reads the next I4 in a string.
    ! !
    ! !  Discussion:
    ! !
-   ! !    This routine can be used to extract, one at a time, the integers in 
+   ! !    This routine can be used to extract, one at a time, the integers in
    ! !    a string.
    ! !
    ! !  Example:
@@ -6777,37 +6776,37 @@ contains
    ! !    integer ( kind = 4 ) was found, or 1 if no more integers were found.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ierror
    !   integer ( kind = 4 ) intval
    !   integer ( kind = 4 ), save :: istart = 1
    !   integer ( kind = 4 ) length
    !   character ( len = * ) s
-   ! 
+   !
    !   if ( ierror == -1 ) then
    !     istart = 1
    !   end if
-   ! 
+   !
    !   ierror = 0
    !   intval = 0
-   ! 
+   !
    !   if ( len_trim ( s ) < istart ) then
    !     ierror = 1
    !     return
    !   end if
-   ! 
+   !
    !   call chrcti2 ( s(istart:), intval, ierror, length )
-   ! 
+   !
    !   if ( ierror == 0 .and. 0 < length ) then
    !     istart = istart + length
    !   else
    !     ierror = 1
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine i4_range_input ( string, value1, value2, ierror )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_RANGE_INPUT reads a pair of I4's from the user, representing a range.
@@ -6834,11 +6833,11 @@ contains
    ! !    Output, integer ( kind = 4 ) VALUE1, VALUE2, the values entered by
    ! !    the user.
    ! !
-   ! !    Output, integer ( kind = 4 ) IERROR, an error flag, which is zero 
+   ! !    Output, integer ( kind = 4 ) IERROR, an error flag, which is zero
    ! !    if no error occurred.
    ! !
    !   implicit none
-   ! 
+   !
    !   character, parameter :: comma = ','
    !   integer ( kind = 4 ) ierror
    !   integer ( kind = 4 ) last
@@ -6848,7 +6847,7 @@ contains
    !   character ( len = * ) string
    !   integer ( kind = 4 ) value1
    !   integer ( kind = 4 ) value2
-   ! 
+   !
    !   ierror = 0
    !   value1 = huge ( value1 )
    !   value2 = huge ( value2 )
@@ -6857,11 +6856,11 @@ contains
    ! !
    !   write ( *, '(a)' ) ' '
    !   write ( *, '(a)' ) trim ( string )
-   ! 
+   !
    !   do
-   ! 
+   !
    !     read ( *, '(a)', iostat = ierror ) line
-   ! 
+   !
    !     if ( ierror /= 0 ) then
    !       return
    !     end if
@@ -6871,7 +6870,7 @@ contains
    !     if ( line(1:1) == '#' ) then
    !       cycle
    !     end if
-   ! 
+   !
    !     if ( len_trim ( line ) == 0 ) then
    !       cycle
    !     end if
@@ -6883,27 +6882,27 @@ contains
    ! !  Extract integer information from the string.
    ! !
    !     call s_to_i4 ( line, value1, ierror, last )
-   ! 
+   !
    !     if ( ierror /= 0 ) then
    !       value1 = huge ( value1 )
    !       return
    !     end if
-   ! 
+   !
    !     call s_to_i4 ( line(last+1:), value2, ierror, last2 )
-   ! 
+   !
    !     if ( ierror /= 0 ) then
    !       value2 = huge ( value2 )
    !       return
    !     end if
-   ! 
+   !
    !     exit
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! function i4_to_a ( i )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_A returns the I-th alphabetic character.
@@ -6946,12 +6945,12 @@ contains
    ! !    Output, character I4_TO_A, the requested alphabetic letter.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ), parameter :: cap_shift = 64
    !   integer ( kind = 4 ) i
    !   character i4_to_a
    !   integer ( kind = 4 ), parameter :: low_shift = 96
-   ! 
+   !
    !   if ( i <= 0 ) then
    !     i4_to_a = ' '
    !   else if ( 1 <= i .and. i <= 26 ) then
@@ -6961,11 +6960,11 @@ contains
    !   else if ( 53 <= i ) then
    !     i4_to_a = ' '
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine i4_to_amino_code ( i, ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_AMINO_CODE converts an integer to an amino code.
@@ -6992,26 +6991,26 @@ contains
    ! !    Output, character CH, the one letter code for an amino acid.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ), parameter :: n = 23
-   ! 
+   !
    !   character ch
    !   character, dimension ( n ) :: ch_table = (/ &
    !     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', &
    !     'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', &
    !     'X', 'Y', 'Z' /)
    !   integer ( kind = 4 ) i
-   ! 
+   !
    !   if ( 1 <= i .and. i <= 23 ) then
    !     ch = ch_table(i)
    !   else
    !     ch = '\?'
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine i4_to_base ( i4, base, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_BASE represents an integer in any base up to 16.
@@ -7028,10 +7027,10 @@ contains
    ! !
    ! !         5    -1   '101010101'
    ! !         5     1       '11111'
-   ! !         5     2         '101' 
+   ! !         5     2         '101'
    ! !         5     3          '12'
-   ! !         5     4          '11' 
-   ! !        -5     5         '-10' 
+   ! !         5     4          '11'
+   ! !        -5     5         '-10'
    ! !         5     6           '5'
    ! !
    ! !  Modified:
@@ -7044,16 +7043,16 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input, integer ( kind = 4 ) I4, the integer whose representation 
+   ! !    Input, integer ( kind = 4 ) I4, the integer whose representation
    ! !    is desired.
    ! !
-   ! !    Input, integer ( kind = 4 ) BASE, the base in which the representation is 
+   ! !    Input, integer ( kind = 4 ) BASE, the base in which the representation is
    ! !    given.  BASE must be greater than 0 and no greater than 16.
    ! !
    ! !    Output, character ( len = * ) S, the string.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) base
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) i4
@@ -7062,7 +7061,7 @@ contains
    !   integer ( kind = 4 ) jdig
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s = ' '
    !   s_length = len ( s )
    ! !
@@ -7074,14 +7073,14 @@ contains
    !     write ( *, '(a)' ) '  The input base is less than -1!'
    !     return
    !   end if
-   ! 
+   !
    !   if ( base == 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'I4_TO_BASE - Serious error!'
    !     write ( *, '(a)' ) '  The input base is zero.'
    !     return
    !   end if
-   ! 
+   !
    !   if ( 16 < base ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'I4_TO_BASE - Serious error!'
@@ -7096,16 +7095,16 @@ contains
    !     return
    !   else if ( base == -1 ) then
    !     call i4_to_nunary ( i4, s )
-   !     return 
+   !     return
    !   end if
    ! !
    ! !  Do repeated mod's
    ! !
    !   jdig = 0
    !   icopy = abs ( i4 )
-   ! 
+   !
    !   do
-   ! 
+   !
    !     if ( ( 0 <= i4 .and. s_length <= jdig ) .or. &
    !          ( i4 < 0 .and. s_length - 1 <= jdig ) ) then
    !       write ( *, '(a)' ) ' '
@@ -7115,18 +7114,18 @@ contains
    !       end do
    !       return
    !     end if
-   ! 
+   !
    !     jdig = jdig + 1
-   ! 
+   !
    !     idig = mod ( icopy, base )
    !     icopy = ( icopy - idig ) / base
-   ! 
+   !
    !     call digit_hex_to_ch ( idig, s(s_length+1-jdig:s_length+1-jdig) )
-   ! 
+   !
    !     if ( icopy == 0 ) then
    !       exit
    !     end if
-   ! 
+   !
    !   end do
    ! !
    ! !  Take care of the minus sign.
@@ -7135,11 +7134,11 @@ contains
    !     jdig = jdig + 1
    !     s(s_length+1-jdig:s_length+1-jdig) = '-'
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine i4_to_binary ( i, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_BINARY produces the binary representation of an I4.
@@ -7173,43 +7172,43 @@ contains
    ! !    Output, character ( len = * ) S, the binary representation.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) i_copy
    !   integer ( kind = 4 ), parameter :: i4_two = 2
    !   integer ( kind = 4 ) j
    !   character ( len = * ) s
-   ! 
+   !
    !   i_copy = abs ( i )
    !   s = ' '
    !   j = len ( s )
-   ! 
+   !
    !   do while ( 0 < j )
-   !  
+   !
    !     if ( mod ( i_copy, i4_two ) == 1 ) then
    !       s(j:j) = '1'
    !     else
    !       s(j:j) = '0'
    !     end if
-   ! 
+   !
    !     i_copy = i_copy / 2
-   !  
+   !
    !     if ( i_copy == 0 ) then
    !       exit
    !     end if
-   !  
+   !
    !     j = j - 1
-   !  
+   !
    !   end do
-   ! 
+   !
    !   if ( i_copy /= 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'I4_TO_BINARY - Serious error!'
    !     write ( *, '(a)' ) '  Not enough room in the string to represent the value.'
-   !   end if 
-   ! 
+   !   end if
+   !
    !   if ( i < 0 ) then
-   !  
+   !
    !     if ( 1 < j ) then
    !       j = j - 1
    !       s(j:j) = '-'
@@ -7218,13 +7217,13 @@ contains
    !       write ( *, '(a)' ) 'I4_TO_BINARY - Serious error!'
    !       write ( *, '(a)' ) '  No room to prefix minus sign!'
    !     end if
-   !  
+   !
    !   end if
-   !  
+   !
    !   return
    ! end
    ! function i4_to_binhex ( i )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_BINHEX returns the I-th character in the BINHEX encoding.
@@ -7255,22 +7254,22 @@ contains
    ! !    Output, character I4_TO_BINHEX, the requested character.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   character i4_to_binhex
    !   character ( len = 64 ), parameter :: string = &
    !     '!"#$%&''()*+,-012345689@ABCDEFGHIJKLMNPQRSTVWXYZ[`abcdefhijklmnpqr'
-   ! 
+   !
    !   if ( 1 <= i .and. i <= 64 ) then
    !     i4_to_binhex = string(i:i)
    !   else
    !     i4_to_binhex = ' '
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine i4_to_ch4 ( i4, ch4 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_CH4 converts an I4 to a 4 character string.
@@ -7302,25 +7301,25 @@ contains
    ! !    Output, character ( len = 4 ) CH4, a corresponding character value.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = 4 ) ch4
    !   integer ( kind = 4 ) i4
    !   integer ( kind = 4 ) j1
    !   integer ( kind = 4 ) j2
    !   integer ( kind = 4 ) j3
    !   integer ( kind = 4 ) j4
-   ! 
+   !
    !   j1 = ibits ( i4,  0, 8 )
    !   j2 = ibits ( i4,  8, 8 )
    !   j3 = ibits ( i4, 16, 8 )
    !   j4 = ibits ( i4, 24, 8 )
-   ! 
+   !
    !   ch4 = achar ( j1 ) // achar ( j2 ) // achar ( j3 ) // achar ( j4 )
-   ! 
+   !
    !   return
    ! end
    ! subroutine i4_to_hex ( i4, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_HEX produces the hexadecimal representation of an I4.
@@ -7356,7 +7355,7 @@ contains
    ! !    Output, character ( len = * ) S, the hexadecimal representation.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i4
    !   integer ( kind = 4 ), parameter :: i4_16 = 16
    !   integer ( kind = 4 ) i1
@@ -7365,17 +7364,17 @@ contains
    !   integer ( kind = 4 ) isgn
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len ( s )
-   !  
+   !
    !   intcpy = i4
    !   isgn = 1
-   !  
+   !
    !   if ( intcpy < 0 ) then
    !     isgn = -1
    !     intcpy = -intcpy
    !   end if
-   ! 
+   !
    !   s = ' '
    ! !
    ! !  Point to the position just after the end of the string.
@@ -7385,25 +7384,25 @@ contains
    ! !  Moving left, fill in the next digit of the string.
    ! !
    !   do
-   ! 
+   !
    !     ichr = ichr - 1
-   !  
+   !
    !     if ( ichr <= 0 ) then
    !       write ( *, '(a)' ) ' '
    !       write ( *, '(a)' ) 'I4_TO_HEX - Serious error!'
    !       write ( *, '(a)' ) '  Ran out of room in the string!'
    !       return
    !     end if
-   !  
+   !
    !     i1 = mod ( intcpy, i4_16 )
    !     intcpy = intcpy / 16
-   ! 
+   !
    !     call digit_hex_to_ch ( i1, s(ichr:ichr) )
-   !  
+   !
    !     if ( intcpy == 0 ) then
-   !  
+   !
    !       if ( isgn == -1 ) then
-   !  
+   !
    !         if ( 1 < ichr ) then
    !           ichr = ichr - 1
    !           s(ichr:ichr) = '-'
@@ -7412,19 +7411,19 @@ contains
    !           write ( *, '(a)' ) 'I4_TO_HEX - Serious error!'
    !           write ( *, '(a)' ) '  No room to prefix minus sign!'
    !         end if
-   !  
+   !
    !       end if
-   ! 
+   !
    !       return
-   !  
+   !
    !     end if
-   ! 
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine i4_to_month_abb ( m, month_abb )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_MONTH_ABB returns the 3 character abbreviation of a given month.
@@ -7445,28 +7444,28 @@ contains
    ! !    Output, character ( len = 3 ) MONTH_ABB, the month abbreviation
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = 3 ), parameter, dimension(12) :: abb = (/ &
    !     'Jan', 'Feb', 'Mar', 'Apr', &
    !     'May', 'Jun', 'Jul', 'Aug', &
    !     'Sep', 'Oct', 'Nov', 'Dec' /)
    !   integer ( kind = 4 ) m
    !   character ( len = 3 ) month_abb
-   ! 
+   !
    !   if ( m < 1 .or. 12 < m ) then
-   ! 
+   !
    !     month_abb = '\?\?\?'
-   ! 
+   !
    !   else
-   ! 
+   !
    !     month_abb = abb(m)
-   ! 
+   !
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine i4_to_month_name ( m, month_name )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_MONTH_NAME returns the name of a given month.
@@ -7484,14 +7483,14 @@ contains
    ! !    Input, integer ( kind = 4 ) M, the index of the month, which should
    ! !    be between 1 and 12.
    ! !
-   ! !    Output, character ( len = * ) MONTH_NAME, a string containing as much 
+   ! !    Output, character ( len = * ) MONTH_NAME, a string containing as much
    ! !    of the month's name as will fit.  To get the typical 3-letter abbreviations
    ! !    for the months, simply declare
    ! !      character ( len = 3 ) MONTH_NAME
    ! !    or pass in MONTH_NAME(1:3).
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) m
    !   character ( len = * ) month_name
@@ -7499,23 +7498,23 @@ contains
    !     'January  ', 'February ', 'March    ', 'April    ', &
    !     'May      ', 'June     ', 'July     ', 'August   ', &
    !     'September', 'October  ', 'November ', 'December ' /)
-   ! 
+   !
    !   if ( m < 1 .or. 12 < m ) then
-   ! 
+   !
    !     do i = 1, len ( month_name )
    !       month_name(i:i) = '\?'
    !     end do
-   ! 
+   !
    !   else
-   ! 
+   !
    !     month_name = name(m)
-   ! 
+   !
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine i4_to_nunary ( intval, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_NUNARY produces the "base -1" representation of an I4.
@@ -7539,38 +7538,38 @@ contains
    ! !    Output, character ( len = * ) S, the negative unary representation.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) intval
    !   character ( len = * ) s
-   ! 
+   !
    !   s = ' '
-   ! 
+   !
    !   if ( intval < 0 ) then
-   ! 
+   !
    !     do i = 1, abs ( intval )
    !       s(2*i-1:2*i) = '10'
    !     end do
-   ! 
+   !
    !   else if ( intval == 0 ) then
-   ! 
+   !
    !       s = '0'
-   ! 
+   !
    !   else if ( 0 < intval ) then
-   ! 
+   !
    !     s(1:1) = '1'
    !     do i = 2, intval
    !       s(2*i-2:2*i-1) = '01'
    !     end do
-   ! 
+   !
    !   end if
-   ! 
+   !
    !   s = adjustr ( s )
-   ! 
+   !
    !   return
    ! end
    ! subroutine i4_to_oct ( i4, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_OCT produces the octal representation of an integer.
@@ -7606,7 +7605,7 @@ contains
    ! !    Output, character ( len = * ) S, the octal representation.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i4
    !   integer ( kind = 4 ) i1
    !   integer ( kind = 4 ), parameter :: i4_8 = 8
@@ -7615,17 +7614,17 @@ contains
    !   integer ( kind = 4 ) isgn
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len ( s )
-   !  
+   !
    !   intcpy = i4
    !   isgn = 1
-   !  
+   !
    !   if ( intcpy < 0 ) then
    !     isgn = -1
    !     intcpy = -intcpy
    !   end if
-   ! 
+   !
    !   s = ' '
    ! !
    ! !  Point to the position just after the end of the string.
@@ -7635,25 +7634,25 @@ contains
    ! !  Moving left, fill in the next digit of the string.
    ! !
    !   do
-   ! 
+   !
    !     ichr = ichr - 1
-   !  
+   !
    !     if ( ichr <= 0 ) then
    !       write ( *, '(a)' ) ' '
    !       write ( *, '(a)' ) 'I4_TO_OCT - Serious error!'
    !       write ( *, '(a)' ) '  Ran out of room in the string!'
    !       return
    !     end if
-   !  
+   !
    !     i1 = mod ( intcpy, i4_8 )
    !     intcpy = intcpy / 8
-   ! 
+   !
    !     call digit_oct_to_ch ( i1, s(ichr:ichr) )
-   !  
+   !
    !     if ( intcpy == 0 ) then
-   !  
+   !
    !       if ( isgn == -1 ) then
-   !  
+   !
    !         if ( 1 < ichr ) then
    !           ichr = ichr - 1
    !           s(ichr:ichr) = '-'
@@ -7662,19 +7661,19 @@ contains
    !           write ( *, '(a)' ) 'I4_TO_OCT - Serious error!'
    !           write ( *, '(a)' ) '  No room to prefix minus sign!'
    !         end if
-   !  
+   !
    !       end if
-   !  
+   !
    !       return
-   !  
+   !
    !     end if
-   !  
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine i4_to_s_left ( intval, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_S_LEFT converts an I4 to a left-justified string.
@@ -7713,7 +7712,7 @@ contains
    ! !    the string will be filled with stars.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ), parameter :: i4_10 = 10
@@ -7724,12 +7723,12 @@ contains
    !   integer ( kind = 4 ) ipos
    !   integer ( kind = 4 ) ival
    !   character ( len = * ) s
-   ! 
+   !
    !   s = ' '
-   ! 
+   !
    !   ilo = 1
    !   ihi = len ( s )
-   ! 
+   !
    !   if ( ihi <= 0 ) then
    !     return
    !   end if
@@ -7741,16 +7740,16 @@ contains
    ! !  Handle the negative sign.
    ! !
    !   if ( ival < 0 ) then
-   ! 
+   !
    !     if ( ihi <= 1 ) then
    !       s(1:1) = '*'
    !       return
    !     end if
-   ! 
+   !
    !     ival = -ival
    !     s(1:1) = '-'
    !     ilo = 2
-   ! 
+   !
    !   end if
    ! !
    ! !  The absolute value of the integer goes into S(ILO:IHI).
@@ -7760,37 +7759,37 @@ contains
    ! !  Find the last digit of IVAL, strip it off, and stick it into the string.
    ! !
    !   do
-   ! 
+   !
    !     idig = mod ( ival, i4_10 )
    !     ival = ival / 10
-   ! 
+   !
    !     if ( ipos < ilo ) then
    !       do i = 1, ihi
    !         s(i:i) = '*'
    !       end do
    !       return
    !     end if
-   ! 
+   !
    !     call digit_to_ch ( idig, c )
-   ! 
+   !
    !     s(ipos:ipos) = c
    !     ipos = ipos - 1
-   ! 
+   !
    !     if ( ival == 0 ) then
    !       exit
    !     end if
-   ! 
+   !
    !   end do
    ! !
    ! !  Shift the string to the left.
    ! !
    !   s(ilo:ilo+ihi-ipos-1) = s(ipos+1:ihi)
    !   s(ilo+ihi-ipos:ihi) = ' '
-   !  
+   !
    !   return
    ! end
    ! subroutine i4_to_s_right ( intval, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_S_RIGHT converts an I4 to a right justified string.
@@ -7829,7 +7828,7 @@ contains
    ! !    the string will be filled with stars.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ), parameter :: i4_ten = 10
@@ -7840,12 +7839,12 @@ contains
    !   integer ( kind = 4 ) ipos
    !   integer ( kind = 4 ) ival
    !   character ( len = * ) s
-   ! 
+   !
    !   s = ' '
-   ! 
+   !
    !   ilo = 1
    !   ihi = len ( s )
-   ! 
+   !
    !   if ( ihi <= 0 ) then
    !     return
    !   end if
@@ -7857,16 +7856,16 @@ contains
    ! !  Handle the negative sign.
    ! !
    !   if ( ival < 0 ) then
-   ! 
+   !
    !     if ( ihi <= 1 ) then
    !       s(1:1) = '*'
    !       return
    !     end if
-   ! 
+   !
    !     ival = -ival
    !     s(1:1) = '-'
    !     ilo = 2
-   ! 
+   !
    !   end if
    ! !
    ! !  The absolute value of the integer goes into S(ILO:IHI).
@@ -7876,25 +7875,25 @@ contains
    ! !  Find the last digit of IVAL, strip it off, and stick it into the string.
    ! !
    !   do
-   ! 
+   !
    !     idig = mod ( ival, i4_ten )
    !     ival = ival / 10
-   ! 
+   !
    !     if ( ipos < ilo ) then
    !       do i = 1, ihi
    !         s(i:i) = '*'
    !       end do
    !       return
    !     end if
-   ! 
+   !
    !     call digit_to_ch ( idig, c )
    !     s(ipos:ipos) = c
    !     ipos = ipos - 1
-   ! 
+   !
    !     if ( ival == 0 ) then
    !       exit
    !     end if
-   ! 
+   !
    !   end do
    ! !
    ! !  Shift the minus sign, if any.
@@ -7905,11 +7904,11 @@ contains
    !       s(ipos:ipos) = '-'
    !     end if
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine i4_to_s_right_comma ( i4, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_S_RIGHT_COMMA converts an I4 to a right justified string with commas.
@@ -7947,11 +7946,11 @@ contains
    ! !
    ! !    Output, character ( len = * ) S, the representation of the integer.
    ! !    The integer will be right-justified.  Commas will be used to separate
-   ! !    sets of three digits.  If there is not enough space, the string will 
+   ! !    sets of three digits.  If there is not enough space, the string will
    ! !    be filled with stars.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   integer ( kind = 4 ) digit
    !   integer ( kind = 4 ) digit_num
@@ -7964,12 +7963,12 @@ contains
    !   integer ( kind = 4 ) pos
    !   character ( len = * ) s
    !   integer ( kind = 4 ) value
-   ! 
+   !
    !   s = ' '
-   ! 
+   !
    !   lo = 1
    !   hi = len ( s )
-   ! 
+   !
    !   if ( hi <= 0 ) then
    !     return
    !   end if
@@ -7981,16 +7980,16 @@ contains
    ! !  Handle the negative sign.
    ! !
    !   if ( value < 0 ) then
-   ! 
+   !
    !     if ( hi <= 1 ) then
    !       s(1:1) = '*'
    !       return
    !     end if
-   ! 
+   !
    !     value = -value
    !     s(1:1) = '-'
    !     lo = 2
-   ! 
+   !
    !   end if
    ! !
    ! !  The absolute value of the integer goes into S(LO:HI).
@@ -8000,13 +7999,13 @@ contains
    ! !  Find the last digit of VALUE, strip it off, and stick it into the string.
    ! !
    !   digit_num = 0
-   ! 
+   !
    !   do
-   ! 
+   !
    !     digit = mod ( value, i4_10 )
    !     value = value / 10
    !     digit_num = digit_num + 1
-   ! 
+   !
    !     if ( pos < lo ) then
    !       do i = 1, hi
    !         s(i:i) = '*'
@@ -8017,26 +8016,26 @@ contains
    ! !  Insert a comma?
    ! !
    !     if ( 1 < digit_num .and. mod ( digit_num, i4_3 ) == 1 ) then
-   ! 
+   !
    !       if ( pos < lo ) then
    !         do i = 1, hi
    !           s(i:i) = '*'
    !         end do
    !         return
    !       end if
-   ! 
+   !
    !       s(pos:pos) = ','
    !       pos = pos - 1
    !     end if
-   ! 
+   !
    !     call digit_to_ch ( digit, c )
    !     s(pos:pos) = c
    !     pos = pos - 1
-   ! 
+   !
    !     if ( value == 0 ) then
    !       exit
    !     end if
-   ! 
+   !
    !   end do
    ! !
    ! !  Shift the minus sign, if any.
@@ -8047,11 +8046,11 @@ contains
    !       s(pos:pos) = '-'
    !     end if
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine i4_to_s_roman ( intval, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_S_ROMAN converts an I4 to a string of Roman numerals.
@@ -8065,7 +8064,7 @@ contains
    ! !    10,000 and so on.
    ! !
    ! !    In the subtractive representation of 4 by 'IV', 9 by 'IX' and so on,
-   ! !    'I' can only subtract from 'V' or 'X', 
+   ! !    'I' can only subtract from 'V' or 'X',
    ! !    'X' can only subtract from 'L' or 'C',
    ! !    'C' can only subtract from 'D' or 'M'.
    ! !    Under these rules, 1999 cannot be written IMM!
@@ -8107,7 +8106,7 @@ contains
    ! !  Parameters:
    ! !
    ! !    Input, integer ( kind = 4 ) INTVAL, an integer to be converted.  If the
-   ! !    integer has absolute value greater than 4999, the string '?' will be 
+   ! !    integer has absolute value greater than 4999, the string '?' will be
    ! !    returned.  If the integer is 0, then the string '0' will be returned.  If
    ! !    the integer is negative, then a minus sign will precede it, even
    ! !    though this has nothing to do with Roman numerals.
@@ -8116,31 +8115,31 @@ contains
    ! !    as a Roman numeral.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) icopy
    !   integer ( kind = 4 ) intval
    !   character ( len = * ) s
-   ! 
+   !
    !   s = ' '
    !   icopy = intval
-   ! 
+   !
    !   if ( 4999 < abs ( icopy ) ) then
    !     s = '\?'
    !     return
    !   end if
-   ! 
+   !
    !   if ( icopy == 0 ) then
    !     s = '0'
    !     return
    !   end if
-   ! 
+   !
    !   if ( icopy <= 0 ) then
    !     s = '-'
    !     icopy = -icopy
    !   end if
-   ! 
-   !   do while ( 0 < icopy ) 
-   ! 
+   !
+   !   do while ( 0 < icopy )
+   !
    !     if ( 1000 <= icopy ) then
    !       call s_cat ( s, 'M', s )
    !       icopy = icopy - 1000
@@ -8181,13 +8180,13 @@ contains
    !       call s_cat ( s, 'I', s )
    !       icopy = icopy - 1
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine i4_to_s_zero ( intval, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_S_ZERO converts an I4 to a string, with zero padding.
@@ -8222,11 +8221,11 @@ contains
    ! !    Input, integer ( kind = 4 ) INTVAL, an integer to be converted.
    ! !
    ! !    Output, character ( len = * ) S, the representation of the integer.
-   ! !    The integer will be right justified, and zero padded.  
+   ! !    The integer will be right justified, and zero padded.
    ! !    If there is not enough space, the string will be filled with stars.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ), parameter :: i4_10 = 10
@@ -8237,12 +8236,12 @@ contains
    !   integer ( kind = 4 ) ipos
    !   integer ( kind = 4 ) ival
    !   character ( len = * ) s
-   ! 
+   !
    !   s = ' '
-   ! 
+   !
    !   ilo = 1
    !   ihi = len ( s )
-   ! 
+   !
    !   if ( ihi <= 0 ) then
    !     return
    !   end if
@@ -8254,40 +8253,40 @@ contains
    ! !  Handle the negative sign.
    ! !
    !   if ( ival < 0 ) then
-   ! 
+   !
    !     if ( ihi <= 1 ) then
    !       s(1:1) = '*'
    !       return
    !     end if
-   ! 
+   !
    !     ival = -ival
    !     s(1:1) = '-'
    !     ilo = 2
-   ! 
+   !
    !   end if
    ! !
    ! !  Working from right to left, strip off the digits of the integer
    ! !  and place them into S(ILO:IHI).
    ! !
    !   ipos = ihi
-   ! 
+   !
    !   do while ( ival /= 0 .or. ipos == ihi )
-   ! 
+   !
    !     idig = mod ( ival, i4_10 )
    !     ival = ival / 10
-   ! 
+   !
    !     if ( ipos < ilo ) then
    !       do i = 1, ihi
    !         s(i:i) = '*'
    !       end do
    !       return
    !     end if
-   ! 
+   !
    !     call digit_to_ch ( idig, c )
-   ! 
+   !
    !     s(ipos:ipos) = c
    !     ipos = ipos - 1
-   ! 
+   !
    !   end do
    ! !
    ! !  Fill the empties with zeroes.
@@ -8295,11 +8294,11 @@ contains
    !   do i = ilo, ipos
    !     s(i:i) = '0'
    !   end do
-   !  
+   !
    !   return
    ! end
    ! function i4_to_s32 ( i4 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_S32 converts an I4 to an S32.
@@ -8326,28 +8325,28 @@ contains
    ! !    corresponds to the integer.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) i4
    !   integer ( kind = 4 ) i4_copy
    !   character ( len = 32 ) i4_to_s32
    !   integer ( kind = 4 ), parameter :: i4_two = 2
    !   character ( len = 32 ) s32
-   ! 
+   !
    !   i4_copy = abs ( i4 )
    ! !
    ! !  Binary digits:
    ! !
    !   do i = 32, 2, -1
-   ! 
+   !
    !     if ( mod ( i4_copy, i4_two ) == 1 ) then
    !       s32(i:i) = '1'
    !     else
    !       s32(i:i) = '0'
    !     end if
-   ! 
+   !
    !     i4_copy = i4_copy / 2
-   ! 
+   !
    !   end do
    ! !
    ! !  Sign bit
@@ -8365,13 +8364,13 @@ contains
    !       end if
    !     end do
    !   end if
-   ! 
+   !
    !   i4_to_s32 = s32
-   !   
+   !
    !   return
    ! end
    ! subroutine i4_to_unary ( i4, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_UNARY produces the "base 1" representation of an I4.
@@ -8391,51 +8390,51 @@ contains
    ! !    Output, character ( len = * ) S, the unary representation.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) i4
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len ( s )
    !   s = ' '
-   ! 
+   !
    !   if ( i4 < 0 ) then
-   ! 
+   !
    !     if ( s_length < i4 + 1 ) then
    !       s = '\?'
    !       return
    !     end if
-   ! 
+   !
    !     s(1:1) = '-'
-   ! 
+   !
    !     do i = 2, abs ( i4 ) + 1
    !       s(i:i) = '1'
    !     end do
-   ! 
+   !
    !   else if ( i4 == 0 ) then
-   ! 
+   !
    !     s = '0'
-   ! 
+   !
    !   else if ( 0 < i4 ) then
-   ! 
+   !
    !     if ( s_length < i4 ) then
    !       s = '\?'
    !       return
    !     end if
-   ! 
+   !
    !     do i = 1, i4
    !       s(i:i) = '1'
    !     end do
-   ! 
-   !   end if 
-   ! 
+   !
+   !   end if
+   !
    !   s = adjustr ( s )
-   ! 
+   !
    !   return
    ! end
    ! function i4_to_uudecode ( i )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_UUDECODE returns the I-th character in the UUDECODE encoding.
@@ -8466,22 +8465,22 @@ contains
    ! !    Output, character I4_TO_UUDECODE, the requested character.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   character i4_to_uudecode
    !   character ( len = 64 ), parameter :: string = &
    !     '`!"#$%&''()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'
-   ! 
+   !
    !   if ( 1 <= i .and. i <= 64 ) then
    !     i4_to_uudecode = string(i:i)
    !   else
    !     i4_to_uudecode = ' '
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! function i4_to_xxdecode ( i )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4_TO_XXDECODE returns the I-th character in the XXDECODE encoding.
@@ -8512,22 +8511,22 @@ contains
    ! !    Output, character I4_TO_XXDECODE, the requested character.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   character i4_to_xxdecode
    !   character ( len = 64 ), parameter :: string = &
    !     '+-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
-   ! 
+   !
    !   if ( 1 <= i .and. i <= 64 ) then
    !     i4_to_xxdecode = string(i:i)
    !   else
    !     i4_to_xxdecode = ' '
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine i4vec_to_ch4vec ( n, i4vec, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! I4VEC_TO_CH4VEC converts an I4VEC into a string.
@@ -8537,7 +8536,7 @@ contains
    ! !    This routine can be useful when trying to read character data from an
    ! !    unformatted direct access file, for instance.
    ! !
-   ! !  Modified:  
+   ! !  Modified:
    ! !
    ! !    27 November 2000
    ! !
@@ -8551,39 +8550,39 @@ contains
    ! !
    ! !    Input, integer ( kind = 4 ) I4VEC(N), the integers.
    ! !
-   ! !    Output, character ( len = * ) S, a string of 4 * N characters 
+   ! !    Output, character ( len = * ) S, a string of 4 * N characters
    ! !    representing the integer information.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) i4vec(n)
    !   integer ( kind = 4 ) j
    !   integer ( kind = 4 ) len_s
    !   character ( len = * ) s
-   ! 
+   !
    !   len_s = len ( s )
-   ! 
+   !
    !   if ( len_s < 4 * n ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'I4VEC_TO_CH4VEC - Fatal error!'
    !     write ( *, '(a)' ) '  String S is too small for the data.'
    !     stop
    !   end if
-   ! 
+   !
    !   s(1:4*n) = ' '
-   ! 
+   !
    !   do i = 1, n
    !     j = 4 * ( i - 1 ) + 1
    !     call i4_to_ch4 ( i4vec(i), s(j:j+3) )
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! function ic_to_ibraille ( ic )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! IC_TO_IBRAILLE converts an ASCII integer code to a Braille code.
@@ -8600,11 +8599,11 @@ contains
    ! !
    ! !    Input, integer ( kind = 4 ) IC, the integer code for the ASCII character.
    ! !
-   ! !    Output, integer ( kind = 4 ) IC_TO_IBRAILLE, the integer code for 
+   ! !    Output, integer ( kind = 4 ) IC_TO_IBRAILLE, the integer code for
    ! !    the Braille character, or -1 if no corresponding code is available.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ic
    !   integer ( kind = 4 ) ic_to_ibraille
    !   integer ( kind = 4 ), parameter, dimension ( 0:255 ) :: junk = (/ &
@@ -8624,17 +8623,17 @@ contains
    !     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, &
    !     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, &
    !     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 /)
-   ! 
+   !
    !   if ( 0 <= ic .and. ic <= 255 ) then
    !     ic_to_ibraille = junk(ic)
    !   else
    !     ic_to_ibraille = -1
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! function ic_to_iebcdic ( ic )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! IC_TO_IEBCDIC converts an ASCII character code to an EBCDIC code.
@@ -8651,11 +8650,11 @@ contains
    ! !
    ! !    Input, integer ( kind = 4 ) IC, the integer code for the ASCII character.
    ! !
-   ! !    Output, integer ( kind = 4 ) IC_TO_IEBCDIC, the integer code for the 
+   ! !    Output, integer ( kind = 4 ) IC_TO_IEBCDIC, the integer code for the
    ! !    EBCDIC character, or -1 if no corresponding EBCDIC code is available.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ic
    !   integer ( kind = 4 ) ic_to_iebcdic
    !   integer ( kind = 4 ), parameter, dimension ( 0:255 ) :: junk = (/ &
@@ -8673,19 +8672,19 @@ contains
    !     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, &
    !     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, &
    !     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, &
-   !     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, & 
+   !     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, &
    !     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 /)
-   ! 
+   !
    !   if ( 0 <= ic .and. ic <= 255 ) then
    !     ic_to_iebcdic = junk(ic)
    !   else
    !     ic_to_iebcdic = -1
    !   end if
-   !  
+   !
    !   return
    ! end
    ! function ic_to_imorse ( ic )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! IC_TO_IMORSE converts an ASCII integer code to a Morse integer code.
@@ -8702,11 +8701,11 @@ contains
    ! !
    ! !    Input, integer ( kind = 4 ) IC, the integer code for the ASCII character.
    ! !
-   ! !    Output, integer ( kind = 4 ) IC_TO_IMORSE, the integer code for the 
+   ! !    Output, integer ( kind = 4 ) IC_TO_IMORSE, the integer code for the
    ! !    Morse character, or -1 if no corresponding Morse code is available.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ic
    !   integer ( kind = 4 ) ic_to_imorse
    !   integer ( kind = 4 ), parameter, dimension ( 0:255 ) :: junk = (/ &
@@ -8724,19 +8723,19 @@ contains
    !     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, &
    !     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, &
    !     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, &
-   !     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, & 
+   !     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, &
    !     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 /)
-   ! 
+   !
    !   if ( 0 <= ic .and. ic <= 255 ) then
    !     ic_to_imorse = junk(ic)
    !   else
    !     ic_to_imorse = -1
    !   end if
-   !  
+   !
    !   return
    ! end
    ! function ic_to_isoundex ( ic )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! IC_TO_ISOUNDEX converts an ASCII integer code to a Soundex integer code.
@@ -8753,11 +8752,11 @@ contains
    ! !
    ! !    Input, integer ( kind = 4 ) IC, the integer code for the ASCII character.
    ! !
-   ! !    Output, integer ( kind = 4 ) IC_TO_ISOUNDEX, the integer code for the 
+   ! !    Output, integer ( kind = 4 ) IC_TO_ISOUNDEX, the integer code for the
    ! !    Soundex character, or -1 if no corresponding Soundex code is available.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ic
    !   integer ( kind = 4 ) ic_to_isoundex
    !   integer ( kind = 4 ), parameter, dimension ( 0:255 ) :: junk = (/ &
@@ -8777,17 +8776,17 @@ contains
    !     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, &
    !     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, &
    !     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 /)
-   ! 
+   !
    !   if ( 0 <= ic .and. ic <= 255 ) then
    !     ic_to_isoundex = junk(ic)
    !   else
    !     ic_to_isoundex = -1
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! function iebcdic_to_ic ( iebcdic )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! IEBCDIC_TO_IC converts an EBCDIC character code to ASCII.
@@ -8815,14 +8814,14 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input, integer ( kind = 4 ) IEBCDIC, the integer code for the EBCDIC 
+   ! !    Input, integer ( kind = 4 ) IEBCDIC, the integer code for the EBCDIC
    ! !    character.
    ! !
-   ! !    Output, integer ( kind = 4 ) IEBCDIC_TO_IC, the integer code for the 
+   ! !    Output, integer ( kind = 4 ) IEBCDIC_TO_IC, the integer code for the
    ! !    ASCII character, or -1 if no corresponding ASCII code is available.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) iebcdic
    !   integer ( kind = 4 ) iebcdic_to_ic
    !   integer ( kind = 4 ), parameter, dimension ( 0:255 ) :: junk = (/ &
@@ -8842,17 +8841,17 @@ contains
    !     -1, 74, 75, 76, 77, 78, 79, 80, 81, 82, -1, -1, -1, -1, -1, -1, &
    !     -1, -1, 83, 84, 85, 86, 87, 88, 89, 90, -1, -1, -1, -1, -1, -1, &
    !     48, 49, 50, 51, 52, 53, 54, 55, 56, 57, -1, -1, -1, -1, -1, -1 /)
-   ! 
+   !
    !   if ( 0 <= iebcdic .and. iebcdic <= 255 ) then
    !     iebcdic_to_ic = junk(iebcdic)
    !   else
    !     iebcdic_to_ic = -1
    !   end if
-   !  
+   !
    !   return
    ! end
    ! function istrcmp ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! ISTRCMP compares two strings, returning +1, 0, or -1.
@@ -8875,24 +8874,24 @@ contains
    ! !    +1 if S2 < S1.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) istrcmp
    !   integer ( kind = 4 ) nchar1
    !   integer ( kind = 4 ) nchar2
    !   integer ( kind = 4 ) s_length
    !   character ( len = * ) s1
    !   character ( len = * ) s2
-   ! 
+   !
    !   nchar1 = len ( s1 )
    !   nchar2 = len ( s2 )
    !   s_length = min ( nchar1, nchar2 )
-   ! 
+   !
    !   if ( llt ( s1(1:s_length), s2(1:s_length) ) ) then
    !     istrcmp = -1
    !   else if ( llt ( s2(1:s_length), s1(1:s_length) ) ) then
    !     istrcmp = 1
    !   else if ( s1(1:s_length) == s2(1:s_length) ) then
-   !  
+   !
    !     if ( nchar1 == nchar2 ) then
    !       istrcmp = 0
    !     else if ( nchar1 < nchar2 ) then
@@ -8900,13 +8899,13 @@ contains
    !     else
    !       istrcmp = 1
    !     end if
-   !  
+   !
    !   end if
-   !  
+   !
    !   return
    ! end
    ! function istrncmp ( s1, s2, nchar )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! ISTRNCMP compares the start of two strings, returning +1, 0, or -1.
@@ -8936,7 +8935,7 @@ contains
    ! !    -1 if S1(1:NCHAR) is lexically less than S2(1:NCHAR).
    ! !
    !   implicit none
-   ! 
+   !
    !   character c1
    !   character c2
    !   integer ( kind = 4 ) i
@@ -8952,24 +8951,24 @@ contains
    ! !  strings.
    ! !
    !   istrncmp = 0
-   !  
+   !
    !   nchar1 = len ( s1 )
    !   nchar2 = len ( s2 )
-   !  
+   !
    !   do i = 1, nchar
-   !  
+   !
    !     if ( i <= nchar1 ) then
    !       c1 = s1(i:i)
    !     else
    !       c1 = ' '
    !     end if
-   !  
+   !
    !     if ( i <= nchar2 ) then
    !       c2 = s2(i:i)
    !     else
    !       c2 = ' '
    !     end if
-   !  
+   !
    !     if ( llt ( c1, c2 ) ) then
    !       istrncmp = -1
    !       return
@@ -8977,13 +8976,13 @@ contains
    !       istrncmp = 1
    !       return
    !     end if
-   !  
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! function len_nonnull ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! LEN_NONNULL returns the length of a string up to the last non-null character.
@@ -9000,32 +8999,32 @@ contains
    ! !
    ! !    Input, character ( len = * ) S, the string to measure.
    ! !
-   ! !    Output, integer ( kind = 4 ) LEN_NONNULL, the length of the string, 
+   ! !    Output, integer ( kind = 4 ) LEN_NONNULL, the length of the string,
    ! !    up to the last non-null character.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) len_nonnull
    !   integer ( kind = 4 ) len_s
    !   character, parameter :: NULL = achar ( 0 )
    !   character ( len = * ) s
-   ! 
+   !
    !   len_s = len ( s )
-   !  
+   !
    !   do i = len_s, 1, -1
    !     if ( s(i:i) /= NULL ) then
    !       len_nonnull = i
    !       return
    !     end if
    !   end do
-   ! 
+   !
    !   len_nonnull = 0
-   ! 
+   !
    !   return
    ! end
    ! function malphnum2 ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! MALPHNUM2 is TRUE if a string contains only alphanumerics and underscores.
@@ -9054,20 +9053,20 @@ contains
    ! !    alphabetic characters, numerals, and underscores.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) itemp
    !   logical malphnum2
    !   character ( len = * ) s
-   ! 
+   !
    !   malphnum2 = .false.
-   !  
+   !
    !   do i = 1, len ( s )
-   ! 
+   !
    !     if ( s(i:i) /= '_' ) then
-   ! 
+   !
    !       itemp = iachar ( s(i:i) )
-   !  
+   !
    !       if ( .not. ( 65 <= itemp .and. itemp <= 90 ) ) then
    !         if ( .not. ( 97 <= itemp .and. itemp <= 122 ) ) then
    !           if ( .not. ( 48 <= itemp .and. itemp <= 57 ) ) then
@@ -9076,15 +9075,15 @@ contains
    !         end if
    !       end if
    !     end if
-   !  
+   !
    !   end do
-   !  
+   !
    !   malphnum2 = .true.
-   ! 
+   !
    !   return
    ! end
    ! subroutine military_to_ch ( military, ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! MILITARY_TO_CH converts a Military code word to an ASCII character.
@@ -9117,7 +9116,7 @@ contains
    ! !    a recognized military code word, then CH is set to MILITARY(1:1).
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) a_to_i4
    !   character ch
    !   character ( len = 8 ), dimension ( 26 ) :: code = (/ &
@@ -9130,11 +9129,11 @@ contains
    !   integer ( kind = 4 ) i
    !   character ( len = * ) military
    !   logical s_eqi
-   ! 
+   !
    !   ch = military(1:1)
-   ! 
+   !
    !   i = a_to_i4 ( ch )
-   !   
+   !
    !   if ( 1 <= i .and. i <= 26 ) then
    !     if ( s_eqi ( military, code(i) ) ) then
    !       ch = military(1:1)
@@ -9144,11 +9143,11 @@ contains
    !       ch = military(1:1)
    !     end if
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine month_name_to_i4 ( month_name, month )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! MONTH_NAME_TO_I4 returns the month number of a given month
@@ -9185,18 +9184,18 @@ contains
    ! !    Input, character ( len = * ) MONTH_NAME, a string containing a month
    ! !    name or abbreviation.
    ! !
-   ! !    Output, integer ( kind = 4 ) MONTH, the number of the month, 
+   ! !    Output, integer ( kind = 4 ) MONTH, the number of the month,
    ! !    or -1 if the name could not be recognized.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) month
    !   character ( len = * ) month_name
    !   character ( len = 3 ) string
-   ! 
+   !
    !   string = month_name
    !   call s_cap ( string )
-   ! 
+   !
    !        if ( string(1:2) == 'JA' ) then
    !     month = 1
    !   else if ( string(1:1) == 'F' ) then
@@ -9224,11 +9223,11 @@ contains
    !   else
    !     month = -1
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine namefl ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! NAMEFL replaces "lastname, firstname" by "firstname lastname".
@@ -9274,21 +9273,21 @@ contains
    ! !
    ! !    Any commas in the input string are deleted.
    ! !
-   ! !    This routine cannot handle more than 256 characters in S.  
+   ! !    This routine cannot handle more than 256 characters in S.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = 256 ) s2
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s2 = ' '
    ! !
    ! !  Remove all commas.
    ! !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do i = 1, s_length
    !     if ( s(i:i) == ',') then
    !       s(i:i) = ' '
@@ -9303,11 +9302,11 @@ contains
    ! !  Get length of string.
    ! !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   if ( s_length <= 2 ) then
    !     return
    !   end if
-   ! 
+   !
    !   if ( 256 < s_length ) then
    !     s_length = len_trim ( s(1:256) )
    !   end if
@@ -9315,20 +9314,20 @@ contains
    ! !  Find the first blank in the string.
    ! !
    !   do i = 2, s_length - 1
-   ! 
+   !
    !     if ( s(i:i) == ' ' ) then
    !       s2(1:s_length-i) = s(i+1:s_length)
    !       s2(s_length-i+1:s_length-i+1) = ' '
    !       s2(s_length-i+2:s_length) = s(1:i-1)
    !       s = s2(1:s_length)
    !     end if
-   ! 
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine namelf ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! NAMELF replaces "firstname lastname" by "lastname, firstname".
@@ -9374,12 +9373,12 @@ contains
    ! !    first 256 characters will be considered.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = 256 ) s2
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s2 = ' '
    ! !
    ! !  Remove all commas.
@@ -9398,11 +9397,11 @@ contains
    ! !  Get length of string.
    ! !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   if ( s_length <= 2 ) then
    !     return
    !   end if
-   ! 
+   !
    !   if ( 256 < s_length ) then
    !     s_length = len_trim ( s(1:256) )
    !   end if
@@ -9417,11 +9416,11 @@ contains
    !       s = s2(1:s_length+1)
    !     end if
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine namels ( name, ierror, rhs, value )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! NAMELS reads a NAMELIST line, returning the variable name and value.
@@ -9502,7 +9501,7 @@ contains
    ! !    terminated, then VALUE will simply be set to 0.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) iequal
    !   integer ( kind = 4 ) ierror
    !   integer ( kind = 4 ) ios
@@ -9524,7 +9523,7 @@ contains
    ! !  Read a line
    ! !
    !   read ( *, '(a)', iostat = ios ) line
-   ! 
+   !
    !   if ( ios /= 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'NAMELS - Reached end of input.'
@@ -9567,16 +9566,16 @@ contains
    ! !  Find the name of the variable to be assigned.
    ! !
    !   iequal = index ( name, '=' )
-   !  
+   !
    !   if ( 0 < iequal ) then
    !     rhs = line(iequal+1:)
    !   else
    !     rhs = line
    !   end if
-   !   
+   !
    !   call s_before_ss_copy ( line, '=', name )
    !   call s_blank_delete ( name )
-   ! 
+   !
    !   if ( len_trim ( name ) <= 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'NAMELS - Warning!'
@@ -9593,7 +9592,7 @@ contains
    ! !
    !   pos = index ( line, '=' )
    !   call s_to_r4 ( line(pos+1:), value, ierror, length )
-   ! 
+   !
    !   if ( ierror /= 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'NAMELS - Warning!'
@@ -9604,51 +9603,51 @@ contains
    !     write ( *, '(a)' ) ' '
    !     ierror = 4
    !   end if
-   !  
+   !
    !   return
    ! end
-   subroutine nexchr ( s, i, c )
-   
-   !*****************************************************************************80
-   !
-   !! NEXCHR returns the next nonblank character from a string.
-   !
-   !  Modified:
-   !
-   !    14 April 1999
-   !
-   !  Author:
-   !
-   !    John Burkardt
-   !
-   !  Parameters:
-   !
-   !    Input, character ( len = * ) S, the string to be examined.
-   !
-   !    Output, integer ( kind = 4 ) I.  If I is 0, then there were no
-   !    nonblank characters in the string.  Otherwise I is
-   !    the index of the first nonblank character in the string.
-   !
-   !    Output, character C, the first nonblank character in the string.
-   !
-     implicit none
-   
-     character c
-     integer ( kind = 4 ) i
-     character ( len = * ) s
-   
-     i = s_first_nonblank ( s )
-    
-     if ( 0 < i ) then
-       c = s(i:i)
-     else
-       c = ' '
-     end if
-    
-     return
+   subroutine nexchr(s, i, c)
+
+      !*****************************************************************************80
+      !
+      !! NEXCHR returns the next nonblank character from a string.
+      !
+      !  Modified:
+      !
+      !    14 April 1999
+      !
+      !  Author:
+      !
+      !    John Burkardt
+      !
+      !  Parameters:
+      !
+      !    Input, character ( len = * ) S, the string to be examined.
+      !
+      !    Output, integer ( kind = 4 ) I.  If I is 0, then there were no
+      !    nonblank characters in the string.  Otherwise I is
+      !    the index of the first nonblank character in the string.
+      !
+      !    Output, character C, the first nonblank character in the string.
+      !
+      implicit none
+
+      character c
+      integer(kind=4) i
+      character(len=*) s
+
+      i = s_first_nonblank(s)
+
+      if (0 < i) then
+         c = s(i:i)
+      else
+         c = ' '
+      end if
+
+      return
    end
    ! subroutine nexstr ( s, nsub, isub, sub )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! NEXSTR returns the next nonblank characters from a string.
@@ -9665,48 +9664,48 @@ contains
    ! !
    ! !    Input, character ( len = * ) S, the string to be examined.
    ! !
-   ! !    Input, integer ( kind = 4 ) NSUB, the number of nonblank characters 
+   ! !    Input, integer ( kind = 4 ) NSUB, the number of nonblank characters
    ! !    desired.
    ! !
    ! !    Output, integer ( kind = 4 ) ISUB, the index of the NSUB-th nonblank
-   ! !    character.  However, if ISUB is 0, there were NO nonblank 
+   ! !    character.  However, if ISUB is 0, there were NO nonblank
    ! !    characters.  And if there are less than NSUB nonblank characters
    ! !    ISUB is the location of the last one of them.
    ! !
    ! !    Output, character ( len = NSUB ) SUB, the first NSUB nonblanks.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) nsub
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) isub
    !   integer ( kind = 4 ) jsub
    !   integer ( kind = 4 ) s_first_nonblank
    !   character ( len = * ) s
    !   character ( len = nsub ) sub
-   ! 
+   !
    !   sub = ' '
    !   isub = 0
-   !  
+   !
    !   do i = 1, nsub
-   !  
+   !
    !     jsub = s_first_nonblank ( s(isub+1:) )
-   ! 
+   !
    !     if ( jsub <= 0 ) then
    !       return
    !     end if
-   !  
+   !
    !     isub = isub + jsub
-   !  
+   !
    !     sub(i:i) = s(isub:isub)
-   !  
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine number_inc ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! NUMBER_INC increments the integer represented by a string.
@@ -9739,34 +9738,34 @@ contains
    ! !    Input/output, character ( len = * ) S, a string representing an integer.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical ch_is_digit
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
-   ! 
+   !
    !   do i = len ( s ), 1, -1
-   ! 
+   !
    !     if ( ch_is_digit ( s(i:i) ) ) then
-   ! 
+   !
    !       call digit_inc ( s(i:i) )
-   ! 
+   !
    !       if ( s(i:i) /= '0' ) then
    !         return
    !       end if
-   ! 
+   !
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine oct_to_i4 ( s, intval )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! OCT_TO_I4 converts an octal string to its integer value.
    ! !
-   ! !  Warning: 
+   ! !  Warning:
    ! !
    ! !    If too many digits are strung together, the computation will overflow.
    ! !
@@ -9785,7 +9784,7 @@ contains
    ! !    Output, integer ( kind = 4 ) INTVAL, the corresponding integer value.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) first
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) idig
@@ -9793,16 +9792,16 @@ contains
    !   integer ( kind = 4 ) isgn
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
    ! !
    ! !  Determine if there is a plus or minus sign.
    ! !
    !   isgn = 1
    !   first = s_length
-   ! 
+   !
    !   do i = 1, s_length - 1
-   ! 
+   !
    !     if ( s(i:i) == '-' ) then
    !       isgn = -1
    !     else if ( s(i:i) == '+' ) then
@@ -9811,24 +9810,24 @@ contains
    !       first = i
    !       exit
    !     end if
-   ! 
+   !
    !   end do
    ! !
    ! !  Read the numeric portion of the string.
    ! !
    !   intval = 0
-   ! 
+   !
    !   do i = first, s_length
    !     call ch_to_digit_oct ( s(i:i), idig )
    !     intval = intval * 8 + idig
    !   end do
-   !  
+   !
    !   intval = isgn * intval
-   !  
+   !
    !   return
    ! end
    ! subroutine perm_check ( n, p, ierror )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! PERM_CHECK checks that a vector represents a permutation.
@@ -9858,37 +9857,37 @@ contains
    ! !    missing value is equal to IERROR.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   integer ( kind = 4 ) ierror
    !   integer ( kind = 4 ) ifind
    !   integer ( kind = 4 ) iseek
    !   integer ( kind = 4 ) p(n)
-   ! 
+   !
    !   ierror = 0
-   ! 
+   !
    !   do iseek = 1, n
-   ! 
+   !
    !     ierror = iseek
-   ! 
+   !
    !     do ifind = 1, n
    !       if ( p(ifind) == iseek ) then
    !         ierror = 0
    !         exit
    !       end if
    !     end do
-   ! 
+   !
    !     if ( ierror /= 0 ) then
    !       return
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine perm_inverse3 ( n, perm, perm_inv )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! PERM_INVERSE3 produces the inverse of a given permutation.
@@ -9910,21 +9909,21 @@ contains
    ! !    Output, integer ( kind = 4 ) PERM_INV(N), the inverse permutation.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) perm(n)
    !   integer ( kind = 4 ) perm_inv(n)
-   ! 
+   !
    !   do i = 1, n
    !     perm_inv(perm(i)) = i
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine perm_uniform ( n, seed, p )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! PERM_UNIFORM selects a random permutation of N objects.
@@ -9949,33 +9948,33 @@ contains
    ! !
    ! !    Input, integer ( kind = 4 ) N, the number of objects to be permuted.
    ! !
-   ! !    Input/output, integer ( kind = 4 ) SEED, a seed for the random 
+   ! !    Input/output, integer ( kind = 4 ) SEED, a seed for the random
    ! !    number generator.
    ! !
    ! !    Output, integer ( kind = 4 ) P(N), the permutation.  P(I) is the "new"
    ! !    location of the object originally at I.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) i4_uniform
    !   integer ( kind = 4 ) j
    !   integer ( kind = 4 ) p(n)
    !   integer ( kind = 4 ) seed
-   ! 
+   !
    !   call i4vec_indicator ( n, p )
-   ! 
+   !
    !   do i = 1, n
    !     j = i4_uniform ( i, n, seed )
    !     call i4_swap ( p(i), p(j) )
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine r4_to_b4_ieee ( r, word )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! R4_TO_B4_IEEE converts an R4 to a 4 byte IEEE word.
@@ -10004,9 +10003,9 @@ contains
    ! !    1 10000001 10100000000000000000000 = -1 * 2**(129-127) * 1.101 = -6.5
    ! !
    ! !    0 00000001 00000000000000000000000 = +1 * 2**(  1-127) * 1.0 = 2**(-126)
-   ! !    0 00000000 10000000000000000000000 = +1 * 2**(  0-126) * 0.1 = 2**(-127) 
-   ! !    0 00000000 00000000000000000000001 = +1 * 2**(  0-126) * 
-   ! !                                          0.00000000000000000000001 = 
+   ! !    0 00000000 10000000000000000000000 = +1 * 2**(  0-126) * 0.1 = 2**(-127)
+   ! !    0 00000000 00000000000000000000001 = +1 * 2**(  0-126) *
+   ! !                                          0.00000000000000000000001 =
    ! !                                          2**(-149)  (Smallest positive value)
    ! !
    ! !  Reference:
@@ -10032,14 +10031,14 @@ contains
    ! !    Output, integer ( kind = 4 ) WORD, the IEEE representation of the number.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) e
    !   integer ( kind = 4 ) f
    !   real    ( kind = 4 ) r
    !   real    ( kind = 4 ) r_copy
    !   integer ( kind = 4 ) s
    !   integer ( kind = 4 ) word
-   ! 
+   !
    !   r_copy = r
    ! !
    ! !  Determine S, the sign bit.
@@ -10055,40 +10054,40 @@ contains
    ! !  (FOR NOW, IGNORE UNNORMALIZED NUMBERS)
    ! !
    !   e = 0
-   ! 
+   !
    !   if ( r == 0.0E+00 ) then
-   ! 
+   !
    !   else
-   ! 
+   !
    !     do while ( 2.0E+00 <= r_copy )
    !       e = e + 1
    !       r_copy = r_copy / 2.0E+00
    !     end do
-   ! 
+   !
    !     do while ( r_copy < 1.0E+00 .and. -127 < e )
    !       e = e - 1
    !       r_copy = r_copy * 2.0E+00
    !     end do
-   ! 
+   !
    !     e = e + 127
-   ! 
+   !
    !   end if
    ! !
    ! !  Determine F, the fraction.
    ! !
    !   if ( r == 0.0E+00 ) then
-   ! 
+   !
    !     f = 0
-   ! 
+   !
    !   else if ( 0 < e) then
-   ! 
+   !
    !     r_copy = r_copy - 1.0E+00
    !     f = int ( r_copy * 2.0E+00**23 )
-   ! 
+   !
    !   else if ( e == 0 ) then
-   ! 
+   !
    !     f = int ( r_copy * 2.0E+00**23 )
-   ! 
+   !
    !   end if
    ! !
    ! !  Set the bits corresponding to S, E, F.
@@ -10096,11 +10095,11 @@ contains
    !   call mvbits ( s, 0,  1, word, 31 )
    !   call mvbits ( e, 0,  8, word, 23 )
    !   call mvbits ( f, 0, 23, word,  0 )
-   ! 
+   !
    !   return
    ! end
    ! subroutine r4_to_binary ( r, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! R4_TO_BINARY represents an R4 as a string of binary digits.
@@ -10117,7 +10116,7 @@ contains
    ! !      R           S
    ! !
    ! !    -10.75000    -1010.11
-   ! !      0.4218750  0.011011 
+   ! !      0.4218750  0.011011
    ! !      0.3333333  0.01010101010101010101010
    ! !
    ! !  Modified:
@@ -10135,7 +10134,7 @@ contains
    ! !    Output, character ( len = * ) S, the binary representation.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) iexp
    !   integer ( kind = 4 ) ilo
@@ -10143,23 +10142,23 @@ contains
    !   real ( kind = 4 ) rcopy
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len ( s )
-   ! 
+   !
    !   if ( s_length < 1 ) then
    !     return
    !   end if
-   ! 
+   !
    !   rcopy = r
    !   s = ' '
-   ! 
+   !
    !   if ( rcopy == 0.0E+00 ) then
    !     s = '0'
    !     return
    !   end if
-   ! 
+   !
    !   ilo = 0
-   ! 
+   !
    !   if ( rcopy < 0.0E+00 ) then
    !     ilo = 1
    !     s(ilo:ilo) = '-'
@@ -10169,13 +10168,13 @@ contains
    ! !  Figure out the divisor.
    ! !
    !   iexp = 0
-   ! 
-   !   do while ( 1.0E+00 <= rcopy ) 
+   !
+   !   do while ( 1.0E+00 <= rcopy )
    !     rcopy = rcopy / 2.0E+00
    !     iexp = iexp + 1
    !   end do
-   ! 
-   !   do while ( rcopy < 0.5E+00 ) 
+   !
+   !   do while ( rcopy < 0.5E+00 )
    !     rcopy = rcopy * 2.0E+00
    !     iexp = iexp - 1
    !   end do
@@ -10196,20 +10195,20 @@ contains
    !       ilo = ilo + 1
    !       s(ilo:ilo) = '0'
    !     end do
-   ! 
+   !
    !   end if
    ! !
    ! !  Now repeatedly double RCOPY.
    ! !  Every time you exceed 1, that's a '1' digit.
    ! !
    !   iexp = iexp + 1
-   ! 
+   !
    !   do
-   ! 
+   !
    !     rcopy = 2.0E+00 * rcopy
-   ! 
+   !
    !     iexp = iexp - 1
-   ! 
+   !
    !     if ( iexp == 0 ) then
    !       ilo = ilo + 1
    !       s(ilo:ilo) = '.'
@@ -10217,30 +10216,30 @@ contains
    !         return
    !       end if
    !     end if
-   ! 
+   !
    !     ilo = ilo + 1
-   ! 
+   !
    !     if ( 1.0E+00 <= rcopy ) then
    !       rcopy = rcopy - 1.0E+00
    !       s(ilo:ilo) = '1'
    !     else
    !       s(ilo:ilo) = '0'
    !     end if
-   ! 
+   !
    !     if ( s_length <= ilo ) then
    !       return
    !     end if
-   ! 
+   !
    !     if ( rcopy == 0.0E+00 ) then
    !       exit
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine r4_to_ch4 ( r4, ch4 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! R4_TO_CH4 converts an R4 to a 4 character string.
@@ -10260,7 +10259,7 @@ contains
    ! !    Output, character ( len = 4 ) CH4, a corresponding character value.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = 4 ) ch4
    !   integer ( kind = 4 ) i4
    !   integer ( kind = 4 ) j1
@@ -10268,20 +10267,20 @@ contains
    !   integer ( kind = 4 ) j3
    !   integer ( kind = 4 ) j4
    !   real ( kind = 4 ) r4
-   ! 
+   !
    !   i4 = transfer ( r4, i4 )
-   ! 
+   !
    !   j1 = ibits ( i4,  0, 8 )
    !   j2 = ibits ( i4,  8, 8 )
    !   j3 = ibits ( i4, 16, 8 )
    !   j4 = ibits ( i4, 24, 8 )
-   ! 
+   !
    !   ch4 = achar ( j1 ) // achar ( j2 ) // achar ( j3 ) // achar ( j4 )
-   ! 
+   !
    !   return
    ! end
    ! subroutine r4_to_flt ( r4, isgn, mant, iexp, ndig )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! R4_TO_FLT computes the scientific representation of an R4.
@@ -10321,7 +10320,7 @@ contains
    ! !    Input, integer ( kind = 4 ) NDIG, the number of decimal digits.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ), parameter :: i4_10 = 10
    !   integer ( kind = 4 ) idig
@@ -10331,7 +10330,7 @@ contains
    !   integer ( kind = 4 ) ndig
    !   real    ( kind = 4 ) rmant
    !   real    ( kind = 4 ) r4
-   ! 
+   !
    !   mant = 0
    !   iexp = 0
    !   isgn = 0
@@ -10349,13 +10348,13 @@ contains
    !     isgn = 1
    !     rmant = r4
    !   end if
-   !  
-   !   do while ( 1.0E+00 < rmant ) 
+   !
+   !   do while ( 1.0E+00 < rmant )
    !     rmant = rmant / 10.0E+00
    !     iexp = iexp + 1
    !   end do
-   !  
-   !   do while ( rmant <= 0.1E+00 ) 
+   !
+   !   do while ( rmant <= 0.1E+00 )
    !     rmant = rmant * 10.0E+00
    !     iexp = iexp - 1
    !   end do
@@ -10382,11 +10381,11 @@ contains
    !     mant = mant / 10
    !     iexp = iexp + 1
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine r4_to_s_left ( r4, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! R4_TO_S_LEFT writes an R4 into a left justified character string.
@@ -10404,14 +10403,14 @@ contains
    ! !    Input, real ( kind = 4 ) R4, the real number to be written into the string.
    ! !
    ! !    Output, character ( len = * ) S, the string into which
-   ! !    the real number is to be written.  
+   ! !    the real number is to be written.
    ! !
    !   implicit none
-   ! 
+   !
    !   real    ( kind = 4 ) r4
    !   character ( len = * ) s
    !   character ( len = 14 ) s2
-   ! 
+   !
    !   if ( real ( int ( r4 ), kind = 4 ) == r4 ) then
    !     write ( s2, '(i14)' ) int ( r4 )
    !   else if ( abs ( r4 ) < 999999.5E+00 ) then
@@ -10419,13 +10418,13 @@ contains
    !   else
    !     write ( s2, '(g14.6)' ) r4
    !   end if
-   ! 
+   !
    !   s = adjustl ( s2 )
-   ! 
+   !
    !   return
    ! end
    ! subroutine r4_to_s_right ( r4, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! R4_TO_S_RIGHT writes an R4 into a right justified character string.
@@ -10449,14 +10448,14 @@ contains
    ! !    Input, real ( kind = 4 ) R4, the real number to be written into the string.
    ! !
    ! !    Output, character ( len = * ) S, the string into which
-   ! !    the real number is to be written.  
+   ! !    the real number is to be written.
    ! !
    !   implicit none
-   ! 
+   !
    !   real ( kind = 4 ) r4
    !   character ( len = * ) s
    !   character ( len = 14 ) s2
-   ! 
+   !
    !   if ( real ( int ( r4 ), kind = 4 ) == r4 ) then
    !     write ( s2, '(i14)' ) int ( r4 )
    !   else if ( abs ( r4 ) < 999999.5E+00 ) then
@@ -10464,16 +10463,16 @@ contains
    !   else
    !     write ( s2, '(g14.6)' ) r4
    !   end if
-   ! 
+   !
    !   s = ' '
    !   s(1:14) = s2(1:14)
-   ! 
+   !
    !   call s_adjustr ( s )
-   ! 
+   !
    !   return
    ! end
    ! function r4_to_s32 ( r4 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! R4_TO_S32 encodes an R4 as 32 characters.
@@ -10494,7 +10493,7 @@ contains
    ! !    corresponds to the real number.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = 32 ) chr32
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ), parameter :: i4_two = 2
@@ -10504,7 +10503,7 @@ contains
    !   real ( kind = 4 ) r4
    !   character ( len = 32 ) r4_to_s32
    !   real ( kind = 4 ) rcopy
-   ! 
+   !
    !   rcopy = r4
    ! !
    ! !  Sign bit
@@ -10514,35 +10513,35 @@ contains
    !   else
    !     chr32(1:1) = '0'
    !   end if
-   ! 
+   !
    !   rcopy = abs ( rcopy )
    ! !
    ! !  Exponent: 'excess 128' format, legal values of IEXP are 1 to 255.
    ! !
    !   if ( rcopy == 0.0E+00 ) then
-   ! 
+   !
    !     iexp = 0
-   ! 
+   !
    !   else
-   ! 
+   !
    !     iexp = 128
-   ! 
+   !
    !     if ( rcopy < 1.0E+00 ) then
-   ! 
+   !
    !       do while ( 1 < iexp )
    !         rcopy = 2.0E+00 * rcopy
    !         iexp = iexp - 1
    !       end do
-   ! 
+   !
    !     else if ( 2.0E+00 <= rcopy ) then
-   ! 
+   !
    !       do while ( iexp < 255 )
    !         rcopy = 0.5E+00 * rcopy
    !         iexp = iexp + 1
    !       end do
-   ! 
+   !
    !     end if
-   ! 
+   !
    !   end if
    ! !
    ! !  Write characters 2 through 9 that represent exponent.
@@ -10565,7 +10564,7 @@ contains
    !   if ( rcopy /= 0.0E+00 ) then
    !     rcopy = rcopy - 1.0E+00
    !   end if
-   !  
+   !
    !   do i = 10, 32
    !     rcopy = 2.0E+00 * rcopy
    !     if ( 1.0E+00 <= rcopy ) then
@@ -10575,21 +10574,21 @@ contains
    !       chr32(i:i) = '0'
    !     end if
    !   end do
-   ! 
+   !
    !   r4_to_s32 = chr32
-   !   
+   !
    !   return
    ! end
    ! subroutine r4_to_sef ( r4, s, e, f )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! R4_TO_SEF represents an R4 as R = S * 2**E * F.
    ! !
    ! !  Discussion:
    ! !
-   ! !    Assuming no arithmetic problems, in fact, this equality should be 
-   ! !    exact, that is, S, E and F should exactly express the value 
+   ! !    Assuming no arithmetic problems, in fact, this equality should be
+   ! !    exact, that is, S, E and F should exactly express the value
    ! !    as stored on the computer.
    ! !
    ! !  Modified:
@@ -10613,20 +10612,20 @@ contains
    ! !    Output, integer ( kind = 4 ) F, the mantissa.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) e
    !   integer ( kind = 4 ) f
    !   real ( kind = 4 ) r4
    !   real ( kind = 4 ) r4_copy
    !   integer ( kind = 4 ) s
-   ! 
+   !
    !   if ( r4 == 0.0E+00 ) then
    !     s = 0
    !     e = 0
    !     f = 0
    !     return
    !   end if
-   ! 
+   !
    !   r4_copy = r4
    ! !
    ! !  Set S.
@@ -10641,13 +10640,13 @@ contains
    ! !  Extracting the exponent leaves 0.5 <= R4_COPY < 1.0.
    ! !
    !   e = 0
-   !  
-   !   do while ( r4_copy < 0.5E+00 ) 
+   !
+   !   do while ( r4_copy < 0.5E+00 )
    !     r4_copy = r4_copy * 2.0E+00
    !     e = e - 1
    !   end do
-   ! 
-   !   do while ( 1.0E+00 <= r4_copy ) 
+   !
+   !   do while ( 1.0E+00 <= r4_copy )
    !     r4_copy = r4_copy / 2.0E+00
    !     e = e + 1
    !   end do
@@ -10656,29 +10655,29 @@ contains
    ! !
    !   f = 0
    !   e = e + 1
-   ! 
+   !
    !   do
-   ! 
+   !
    !     f = 2 * f
    !     e = e - 1
-   !  
+   !
    !     if ( 1.0E+00 <= r4_copy ) then
    !       f = f + 1
    !       r4_copy = r4_copy - 1.0E+00
    !     end if
-   !  
+   !
    !     if ( r4_copy == 0.0E+00 ) then
    !       exit
    !     end if
-   ! 
+   !
    !     r4_copy = 2.0E+00 * r4_copy
-   ! 
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine r8_extract ( s, r8, ierror )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! R8_EXTRACT "extracts" an R8 from the beginning of a string.
@@ -10694,7 +10693,7 @@ contains
    ! !  Parameters:
    ! !
    ! !    Input/output, character ( len = * ) S; on input, a string from
-   ! !    whose beginning a real is to be extracted.  On output, 
+   ! !    whose beginning a real is to be extracted.  On output,
    ! !    the real, if found, has been removed.
    ! !
    ! !    Output, real ( kind = 8 ) R8.  If IERROR is 0, then R4 contains the
@@ -10706,27 +10705,27 @@ contains
    ! !    string.  R4 is 0.0 and S is unchanged.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ierror
    !   integer ( kind = 4 ) length
    !   real ( kind = 8 ) r8
    !   character ( len = * ) s
-   ! 
+   !
    !   r8 = 0.0D+00
-   !  
+   !
    !   call s_to_r8 ( s, r8, ierror, length )
-   !  
+   !
    !   if ( ierror /= 0 .or. length == 0 ) then
    !     ierror = 1
    !     r8 = 0.0D+00
    !   else
    !     call s_shift_left ( s, length )
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine r8_input ( string, value, ierror )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! R8_INPUT prints a prompt string and reads an R8 from the user.
@@ -10735,7 +10734,7 @@ contains
    ! !
    ! !    An R8 is a real ( kind = 8 ) value.
    ! !
-   ! !    If the input line starts with a comment character ('#') or is blank, 
+   ! !    If the input line starts with a comment character ('#') or is blank,
    ! !    the routine ignores that line, and tries to read the next one.
    ! !
    ! !  Modified:
@@ -10752,17 +10751,17 @@ contains
    ! !
    ! !    Output, real ( kind = 8 ) VALUE, the value input by the user.
    ! !
-   ! !    Output, integer ( kind = 4 ) IERROR, an error flag, which is zero 
+   ! !    Output, integer ( kind = 4 ) IERROR, an error flag, which is zero
    ! !    if no error occurred.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ierror
    !   integer ( kind = 4 ) length
    !   character ( len = 80 ) line
    !   character ( len = * ) string
    !   real ( kind = 8 ) value
-   ! 
+   !
    !   ierror = 0
    !   value = huge ( value )
    ! !
@@ -10770,11 +10769,11 @@ contains
    ! !
    !   write ( *, '(a)' ) ' '
    !   write ( *, '(a)' ) trim ( string )
-   ! 
+   !
    !   do
-   ! 
+   !
    !     read ( *, '(a)', iostat = ierror ) line
-   ! 
+   !
    !     if ( ierror /= 0 ) then
    !       return
    !     end if
@@ -10784,7 +10783,7 @@ contains
    !     if ( line(1:1) == '#' ) then
    !       cycle
    !     end if
-   ! 
+   !
    !     if ( len_trim ( line ) == 0 ) then
    !       cycle
    !     end if
@@ -10792,20 +10791,20 @@ contains
    ! !  Extract integer information from the string.
    ! !
    !     call s_to_r8 ( line, value, ierror, length )
-   ! 
+   !
    !     if ( ierror /= 0 ) then
    !       value = huge ( value )
    !       return
    !     end if
-   ! 
+   !
    !     exit
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine r8_next ( s, r, done )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! R8_NEXT "reads" R8's from a string, one at a time.
@@ -10837,28 +10836,28 @@ contains
    ! !    value was read, or TRUE if no more reals could be read.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical done
    !   integer ( kind = 4 ) ierror
    !   integer ( kind = 4 ) length
    !   integer ( kind = 4 ), save :: next = 1
    !   real ( kind = 8 ) r
    !   character ( len = * ) s
-   ! 
+   !
    !   r = 0.0D+00
-   !  
+   !
    !   if ( done ) then
    !     next = 1
    !     done = .false.
    !   end if
-   !  
+   !
    !   if ( len ( s ) < next ) then
    !     done = .true.
    !     return
    !   end if
-   !  
+   !
    !   call s_to_r8 ( s(next:), r, ierror, length )
-   !  
+   !
    !   if ( ierror /= 0 ) then
    !     done = .true.
    !     next = 1
@@ -10869,11 +10868,11 @@ contains
    !     done = .false.
    !     next = next + length
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine r8_to_binary ( r, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! R8_TO_BINARY represents an R8 as a string of binary digits.
@@ -10890,7 +10889,7 @@ contains
    ! !      R           S
    ! !
    ! !    -10.75000    -1010.11
-   ! !      0.4218750  0.011011 
+   ! !      0.4218750  0.011011
    ! !      0.3333333  0.01010101010101010101010
    ! !
    ! !  Modified:
@@ -10908,7 +10907,7 @@ contains
    ! !    Output, character ( len = * ) S, the binary representation.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) iexp
    !   integer ( kind = 4 ) ilo
@@ -10916,23 +10915,23 @@ contains
    !   real    ( kind = 8 ) rcopy
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len ( s )
-   ! 
+   !
    !   if ( s_length < 1 ) then
    !     return
    !   end if
-   ! 
+   !
    !   rcopy = r
    !   s = ' '
-   ! 
+   !
    !   if ( rcopy == 0.0D+00 ) then
    !     s = '0'
    !     return
    !   end if
-   ! 
+   !
    !   ilo = 0
-   ! 
+   !
    !   if ( rcopy < 0.0D+00 ) then
    !     ilo = 1
    !     s(ilo:ilo) = '-'
@@ -10942,13 +10941,13 @@ contains
    ! !  Figure out the divisor.
    ! !
    !   iexp = 0
-   ! 
-   !   do while ( 1.0D+00 <= rcopy ) 
+   !
+   !   do while ( 1.0D+00 <= rcopy )
    !     rcopy = rcopy / 2.0D+00
    !     iexp = iexp + 1
    !   end do
-   ! 
-   !   do while ( rcopy < 0.5D+00 ) 
+   !
+   !   do while ( rcopy < 0.5D+00 )
    !     rcopy = rcopy * 2.0D+00
    !     iexp = iexp - 1
    !   end do
@@ -10969,20 +10968,20 @@ contains
    !       ilo = ilo + 1
    !       s(ilo:ilo) = '0'
    !     end do
-   ! 
+   !
    !   end if
    ! !
    ! !  Now repeatedly double RCOPY.
    ! !  Every time you exceed 1, that's a '1' digit.
    ! !
    !   iexp = iexp + 1
-   ! 
+   !
    !   do
-   ! 
+   !
    !     rcopy = 2.0D+00 * rcopy
-   ! 
+   !
    !     iexp = iexp - 1
-   ! 
+   !
    !     if ( iexp == 0 ) then
    !       ilo = ilo + 1
    !       s(ilo:ilo) = '.'
@@ -10990,30 +10989,30 @@ contains
    !         return
    !       end if
    !     end if
-   ! 
+   !
    !     ilo = ilo + 1
-   ! 
+   !
    !     if ( 1.0D+00 <= rcopy ) then
    !       rcopy = rcopy - 1.0D+00
    !       s(ilo:ilo) = '1'
    !     else
    !       s(ilo:ilo) = '0'
    !     end if
-   ! 
+   !
    !     if ( s_length <= ilo ) then
    !       return
    !     end if
-   ! 
+   !
    !     if ( rcopy == 0.0D+00 ) then
    !       exit
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine r8_to_s_left ( d, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! R8_TO_S_LEFT writes an R8 into a left justified string.
@@ -11041,21 +11040,21 @@ contains
    ! !    characters long, it will will be returned as a series of asterisks.
    ! !
    !   implicit none
-   ! 
+   !
    !   real ( kind = 8 ) d
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
    !   character ( len = 14 ) s2
-   ! 
+   !
    !   s_length = len ( s )
-   ! 
+   !
    !   if ( s_length < 14 ) then
-   ! 
+   !
    !     do i = 1, s_length
    !       s(i:i) = '*'
    !     end do
-   ! 
+   !
    !   else if ( d == 0.0D+00 ) then
    !     s(1:14) = '     0.0      '
    !   else
@@ -11066,11 +11065,11 @@ contains
    ! !  Shift the string left.
    ! !
    !   s = adjustl ( s )
-   ! 
+   !
    !   return
    ! end
    ! subroutine r8_to_s_right ( d, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! R8_TO_S_LEFT writes an R8 into a right justified string.
@@ -11098,21 +11097,21 @@ contains
    ! !    characters long, it will will be returned as a series of asterisks.
    ! !
    !   implicit none
-   ! 
+   !
    !   real     ( kind = 8 ) d
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
    !   character ( len = 14 ) s2
-   ! 
+   !
    !   s_length = len ( s )
-   ! 
+   !
    !   if ( s_length < 14 ) then
-   ! 
+   !
    !     do i = 1, s_length
    !       s(i:i) = '*'
    !     end do
-   ! 
+   !
    !   else if ( d == 0.0D+00 ) then
    !     s(1:14) = '     0.0      '
    !   else
@@ -11123,11 +11122,11 @@ contains
    ! !  Shift the string right.
    ! !
    !   call s_adjustr ( s )
-   ! 
+   !
    !   return
    ! end
    ! subroutine r8vec_to_s ( n, x, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! R8VEC_TO_S "writes" an R8VEC into a string.
@@ -11154,19 +11153,19 @@ contains
    ! !    Input, real ( kind = 8 ) X(N), a vector to be written to a string.
    ! !
    ! !    Output, character ( len = * ) S, a string to which the real vector
-   ! !    has been written.  
+   ! !    has been written.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   character ( len = 14 ) s2
    !   real     ( kind = 8 ) x(n)
-   ! 
+   !
    !   do i = 1, n
-   ! 
+   !
    !     if ( x(i) == 0.0D+00 ) then
    !       s2 = '0'
    !     else if ( 1.0D+10 <= abs ( x(i) ) ) then
@@ -11178,19 +11177,19 @@ contains
    !       write ( s2, '(g14.6)' ) x(i)
    !       call s_trim_zeros ( s2 )
    !     end if
-   ! 
+   !
    !     if ( i == 1 ) then
    !       s = adjustl ( s2 )
    !     else
    !       s = trim ( s ) // ', ' // adjustl ( s2 )
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine ranger ( s, maxval, nval, ival )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! RANGER "understands" a range defined by a string like '4:8'.
@@ -11232,16 +11231,16 @@ contains
    ! !    which represents the maximum number of integers that may
    ! !    be read from the string.
    ! !
-   ! !    Output, integer ( kind = 4 ) NVAL, the number of integers read from 
+   ! !    Output, integer ( kind = 4 ) NVAL, the number of integers read from
    ! !    the string.
    ! !
    ! !    Output, integer ( kind = 4 ) IVAL(MAXVAL).  The first NVAL entries of
    ! !    IVAL contain the integers read from the string.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) maxval
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) ierror
    !   integer ( kind = 4 ) ilo
@@ -11253,7 +11252,7 @@ contains
    !   integer ( kind = 4 ) next
    !   integer ( kind = 4 ) nval
    !   character ( len = * ) s
-   ! 
+   !
    !   nval = 0
    ! !
    ! !  Replace all commas by blanks.
@@ -11271,13 +11270,13 @@ contains
    ! !  Set a pointer to the next location to be examined.
    ! !
    !   next = 1
-   !  
+   !
    !   do while ( next <= lens )
    ! !
    ! !  Find the next integer in the string.
    ! !
    !     call s_to_i4 ( s(next:), intval, ierror, length )
-   !  
+   !
    !     if ( ierror /= 0 ) then
    !       return
    !     end if
@@ -11291,7 +11290,7 @@ contains
    !     if ( maxval <= nval ) then
    !       return
    !     end if
-   ! 
+   !
    !     nval = nval + 1
    !     ival(nval) = intval
    ! !
@@ -11319,7 +11318,7 @@ contains
    ! !  Increase the pointer past the colon.
    ! !
    !     next = next + 1
-   !  
+   !
    !     if ( lens < next ) then
    !       return
    !     end if
@@ -11327,7 +11326,7 @@ contains
    ! !  Find the next integer in the string.
    ! !
    !     call s_to_i4 ( s(next:), intval, ierror, length )
-   !  
+   !
    !     if ( ierror /= 0 ) then
    !       return
    !     end if
@@ -11339,30 +11338,30 @@ contains
    ! !  Generate integers between the two values.
    ! !
    !     ilo = ival(nval)
-   !  
+   !
    !     if ( ilo <= intval ) then
    !       inc = + 1
    !     else
    !       inc = -1
    !     end if
-   !  
+   !
    !     do i = ilo+inc, intval, inc
-   !  
+   !
    !       if ( maxval <= nval ) then
    !         return
    !       end if
-   ! 
+   !
    !       nval = nval + 1
    !       ival(nval) = i
-   ! 
+   !
    !     end do
-   !  
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine rat_to_s_left ( ival, jval, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! RAT_TO_S_LEFT returns a left-justified representation of IVAL/JVAL.
@@ -11382,18 +11381,18 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input, integer ( kind = 4 ) IVAL, JVAL, the integers whose ratio 
+   ! !    Input, integer ( kind = 4 ) IVAL, JVAL, the integers whose ratio
    ! !    IVAL/JVAL is to be represented.
    ! !
-   ! !    If IVAL is nonzero and JVAL is 0, the string will be returned as "Inf" 
-   ! !    or "-Inf" (Infinity), and if both IVAL and JVAL are zero, the string 
+   ! !    If IVAL is nonzero and JVAL is 0, the string will be returned as "Inf"
+   ! !    or "-Inf" (Infinity), and if both IVAL and JVAL are zero, the string
    ! !    will be returned as "NaN" (Not-a-Number).
    ! !
    ! !    Output, character ( len = * ) S, a left-justified string
    ! !    containing the representation of IVAL/JVAL.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ival
    !   integer ( kind = 4 ) ival2
    !   integer ( kind = 4 ) jval
@@ -11404,15 +11403,15 @@ contains
    ! !  Take care of simple cases right away.
    ! !
    !   if ( ival == 0 ) then
-   !  
+   !
    !     if ( jval /= 0 ) then
    !       s2 = '0'
    !     else
    !       s2 = 'NaN'
    !     end if
-   !  
+   !
    !   else if ( jval == 0 ) then
-   !  
+   !
    !     if ( 0 < ival ) then
    !       s2 = 'Inf'
    !     else
@@ -11422,26 +11421,26 @@ contains
    ! !  Make copies of IVAL and JVAL.
    ! !
    !   else
-   !  
+   !
    !     ival2 = ival
    !     jval2 = jval
-   !  
+   !
    !     if ( jval2 == 1 ) then
    !       write ( s2, '(i11)' ) ival2
    !     else
    !       write ( s2, '(i11, ''/'', i10)' ) ival2, jval2
    !     end if
-   !  
+   !
    !     call s_blank_delete ( s2 )
-   !  
+   !
    !   end if
-   !  
+   !
    !   s = s2
-   ! 
+   !
    !   return
    ! end
    ! subroutine rat_to_s_right ( ival, jval, s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! RAT_TO_S_RIGHT returns a right-justified representation of IVAL/JVAL.
@@ -11473,18 +11472,18 @@ contains
    ! !    containing the representation of IVAL/JVAL.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ival
    !   integer ( kind = 4 ) jval
    !   character ( len = * ) s
-   ! 
+   !
    !   call rat_to_s_left ( ival, jval, s )
    !   call s_adjustr ( s )
-   !  
+   !
    !   return
    ! end
    ! subroutine s_adjustl ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_ADJUSTL flushes a string left.
@@ -11518,7 +11517,7 @@ contains
    ! !    On output, any initial blank or tab characters have been cut.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) nonb
    !   character ( len = * ) s
@@ -11529,7 +11528,7 @@ contains
    ! !  If nonpositive, return.
    ! !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   if ( s_length <= 0 ) then
    !     return
    !   end if
@@ -11537,16 +11536,16 @@ contains
    ! !  Find NONB, the location of the first nonblank, nontab.
    ! !
    !   nonb = 0
-   ! 
+   !
    !   do i = 1, s_length
-   ! 
+   !
    !     if ( s(i:i) /= ' ' .and. s(i:i) /= TAB ) then
    !       nonb = i
    !       exit
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   if ( nonb == 0 ) then
    !     s = ' '
    !     return
@@ -11563,11 +11562,11 @@ contains
    ! !  Blank out the end of the string.
    ! !
    !   s(s_length+2-nonb:s_length) = ' '
-   !  
+   !
    !   return
    ! end
    ! subroutine s_adjustr ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_ADJUSTR flushes a string right.
@@ -11588,11 +11587,11 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input/output, character ( len = * ) S, on output, trailing blank 
+   ! !    Input/output, character ( len = * ) S, on output, trailing blank
    ! !    characters have been cut, and pasted back onto the front.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) nonb
    !   character ( len = * ) s
@@ -11615,11 +11614,11 @@ contains
    ! !  Blank out the beginning of the string.
    ! !
    !   s(1:s_length-nonb) = ' '
-   !  
+   !
    !   return
    ! end
    ! subroutine s_after_ss_copy ( s1, ss, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_AFTER_SS_COPY copies a string after a given substring.
@@ -11657,7 +11656,7 @@ contains
    ! !    Output, character ( len = * ) S2, the copied portion of S.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) first
    !   integer ( kind = 4 ) last
    !   integer ( kind = 4 ) last_s2
@@ -11698,11 +11697,11 @@ contains
    ! !  Clear out the rest of the copy.
    ! !
    !   s2(s1_length+2-first:last_s2) = ' '
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_alpha_last ( s, iloc )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_ALPHA_LAST returns the location of the last alphabetic character.
@@ -11724,28 +11723,28 @@ contains
    ! !    characters, ILOC is returned as 0.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical ch_is_alpha
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) iloc
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do i = s_length, 1, -1
    !     if ( ch_is_alpha ( s(i:i) ) ) then
    !       iloc = i
    !       return
    !     end if
    !   end do
-   !  
+   !
    !   iloc = 0
-   !  
+   !
    !   return
    ! end
    ! function s_any_alpha ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_ANY_ALPHA is TRUE if a string contains any alphabetic character.
@@ -11775,28 +11774,28 @@ contains
    ! !    is an alphabetic character.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical ch_is_alpha
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   logical s_any_alpha
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_any_alpha = .true.
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do i = 1, s_length
    !     if ( ch_is_alpha ( s(i:i) ) ) then
    !       return
    !     end if
    !   end do
-   ! 
+   !
    !   s_any_alpha = .false.
-   ! 
+   !
    !   return
    ! end
    ! function s_any_control ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_ANY_CONTROL is TRUE if a string contains any control characters.
@@ -11817,28 +11816,28 @@ contains
    ! !    character.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical ch_is_control
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   logical s_any_control
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do i = 1, s_length
    !     if ( ch_is_control ( s(i:i) ) ) then
    !       s_any_control = .true.
    !       return
    !     end if
    !   end do
-   !  
+   !
    !   s_any_control = .false.
-   !  
+   !
    !   return
    ! end
    ! subroutine s_b2u ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_B2U replaces interword blanks by underscores.
@@ -11865,24 +11864,24 @@ contains
    ! !    transformed.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s = adjustl ( s )
    !   s_length = len_trim ( s )
-   !  
+   !
    !   do i = 1, s_length
    !     if ( s(i:i) == ' ' ) then
    !       s(i:i) = '_'
    !     end if
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine s_before_ss_copy ( s, ss, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_BEFORE_SS_COPY copies a string up to a given substring.
@@ -11921,7 +11920,7 @@ contains
    ! !    Output, character ( len = * ) S2, the copied portion of S.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) last
    !   integer ( kind = 4 ) last_s2
    !   character ( len = * ) s
@@ -11947,7 +11946,7 @@ contains
    ! !  Now adjust again in case the copy holder is "short".
    ! !
    !   last_s2 = len ( s2 )
-   ! 
+   !
    !   last = min ( last, last_s2 )
    ! !
    ! !  Copy the beginning of the string.
@@ -11957,11 +11956,11 @@ contains
    ! !
    !   s2(1:last) = s(1:last)
    !   s2(last+1:last_s2) = ' '
-   ! 
+   !
    !   return
    ! end
    ! function s_begin ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_BEGIN is TRUE if one string matches the beginning of the other.
@@ -11997,7 +11996,7 @@ contains
    ! !    the end of the shorter string, ignoring case.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical ch_eqi
    !   integer ( kind = 4 ) i1
    !   integer ( kind = 4 ) i2
@@ -12006,63 +12005,63 @@ contains
    !   integer ( kind = 4 ) s1_length
    !   character ( len = * ) s2
    !   integer ( kind = 4 ) s2_length
-   ! 
+   !
    !   s1_length = len_trim ( s1 )
    !   s2_length = len_trim ( s2 )
    ! !
    ! !  If either string is blank, then both must be blank to match.
-   ! !  Otherwise, a blank string matches anything, which is not 
+   ! !  Otherwise, a blank string matches anything, which is not
    ! !  what most people want.
    ! !
    !   if ( s1_length == 0 .or. s2_length == 0 ) then
-   ! 
+   !
    !     if ( s1_length == 0 .and. s2_length == 0 ) then
    !       s_begin = .true.
    !     else
    !       s_begin = .false.
    !     end if
-   ! 
+   !
    !     return
-   ! 
+   !
    !   end if
-   ! 
+   !
    !   i1 = 0
    !   i2 = 0
    ! !
    ! !  Find the next nonblank in S1.
    ! !
    !   do
-   ! 
+   !
    !     do
-   ! 
+   !
    !       i1 = i1 + 1
-   ! 
+   !
    !       if ( s1_length < i1 ) then
    !         s_begin = .true.
    !         return
    !       end if
-   ! 
+   !
    !       if ( s1(i1:i1) /= ' ' ) then
    !         exit
    !       end if
-   ! 
+   !
    !     end do
    ! !
    ! !  Find the next nonblank in S2.
    ! !
    !     do
-   ! 
+   !
    !       i2 = i2 + 1
-   !   
+   !
    !       if ( s2_length < i2 ) then
    !         s_begin = .true.
    !         return
    !       end if
-   ! 
+   !
    !       if ( s2(i2:i2) /= ' ' ) then
    !         exit
    !       end if
-   ! 
+   !
    !     end do
    ! !
    ! !  If the characters match, get the next pair.
@@ -12070,15 +12069,15 @@ contains
    !     if ( .not. ch_eqi ( s1(i1:i1), s2(i2:i2) ) ) then
    !       exit
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   s_begin = .false.
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_behead_substring ( s, sub )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_BEHEAD_SUBSTRING "beheads" a string, removing a given substring.
@@ -12113,7 +12112,7 @@ contains
    ! !    the beginning of the string.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = * ) s
    !   logical s_eqi
    !   integer ( kind = 4 ) s_length
@@ -12128,7 +12127,7 @@ contains
    ! !
    !   s_length = len_trim ( s )
    !   sub_length = len_trim ( sub )
-   ! 
+   !
    !   if ( s_length < sub_length ) then
    !     return
    !   end if
@@ -12136,20 +12135,20 @@ contains
    ! !  If the string begins with the substring, chop it off.
    ! !
    !   if ( s_eqi ( s(1:sub_length), sub(1:sub_length) ) ) then
-   ! 
+   !
    !     if ( sub_length < s_length ) then
    !       s = s(sub_length+1:s_length)
    !       s = adjustl ( s )
    !     else
    !       s = ' '
    !     end if
-   ! 
+   !
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_blank_delete ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_BLANK_DELETE removes blanks from a string, left justifying the remainder.
@@ -12171,34 +12170,34 @@ contains
    ! !    Input/output, character ( len = * ) S, the string to be transformed.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) get
    !   integer ( kind = 4 ) put
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
    !   character, parameter :: tab = achar ( 9 )
-   ! 
+   !
    !   put = 0
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do get = 1, s_length
-   ! 
+   !
    !     ch = s(get:get)
-   !  
+   !
    !     if ( ch /= ' ' .and. ch /= tab ) then
    !       put = put + 1
    !       s(put:put) = ch
    !     end if
-   !  
+   !
    !   end do
-   !  
+   !
    !   s(put+1:s_length) = ' '
-   !   
+   !
    !   return
    ! end
    ! subroutine s_blanks_delete ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_BLANKS_DELETE replaces consecutive blanks by one blank.
@@ -12226,7 +12225,7 @@ contains
    ! !    Input/output, character ( len = * ) S, the string to be transformed.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) j
    !   character newchr
@@ -12235,35 +12234,35 @@ contains
    !   character ( len = len ( s ) ) s_copy
    !   integer ( kind = 4 ) s_length
    !   character, parameter :: TAB = achar ( 9 )
-   ! 
+   !
    !   s_length = len ( s )
-   ! 
+   !
    !   j = 0
    !   s_copy(1:s_length) = s(1:s_length)
    !   s(1:s_length) = ' '
-   ! 
+   !
    !   newchr = ' '
-   !  
+   !
    !   do i = 1, s_length
-   !  
+   !
    !     oldchr = newchr
    !     newchr = s_copy(i:i)
-   ! 
+   !
    !     if ( newchr == TAB ) then
    !       newchr = ' '
    !     end if
-   !  
+   !
    !     if ( oldchr /= ' ' .or. newchr /= ' ' ) then
    !       j = j + 1
    !       s(j:j) = newchr
    !     end if
-   !  
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine s_blanks_insert ( s, ilo, ihi )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_BLANKS_INSERT inserts blanks into a string, sliding old characters over.
@@ -12284,14 +12283,14 @@ contains
    ! !
    ! !    Input/output, character ( len = * ) S, the string to be transformed.
    ! !
-   ! !    Input, integer ( kind = 4 ) ILO, the location where the first blank 
+   ! !    Input, integer ( kind = 4 ) ILO, the location where the first blank
    ! !    is to be inserted.
    ! !
-   ! !    Input, integer ( kind = 4 ) IHI, the location where the last blank 
+   ! !    Input, integer ( kind = 4 ) IHI, the location where the last blank
    ! !    is to be inserted.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) get
@@ -12303,42 +12302,42 @@ contains
    !   integer ( kind = 4 ) nmove
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len ( s )
-   !  
+   !
    !   if ( ihi < ilo .or. s_length < ilo ) then
    !     return
    !   end if
-   !  
+   !
    !   if ( ihi <= s_length ) then
    !     imax = ihi
    !   else
    !     imax = s_length
    !   end if
-   !  
+   !
    !   if ( 1 <= ilo ) then
    !     imin = ilo
    !   else
    !     imin = 1
    !   end if
-   !  
+   !
    !   nmove = s_length - imax
-   !  
+   !
    !   do i = 1, nmove
    !     put = s_length + 1 - i
    !     get = s_length - imax + imin - i
    !     ch = s(get:get)
    !     s(put:put) = ch
    !   end do
-   !  
+   !
    !   do i = imin, imax
    !     s(i:i) = ' '
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine s_cap ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_CAP replaces any lowercase letters by uppercase ones in a string.
@@ -12356,29 +12355,29 @@ contains
    ! !    Input/output, character ( len = * ) S, the string to be transformed.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do i = 1, s_length
-   !  
+   !
    !     ch = s(i:i)
    !     call ch_cap ( ch )
    !     s(i:i) = ch
-   !  
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine s_cat ( s1, s2, s3 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
-   ! !! S_CAT concatenates two strings to make a third string.  
+   ! !! S_CAT concatenates two strings to make a third string.
    ! !
    ! !  Modified:
    ! !
@@ -12398,11 +12397,11 @@ contains
    ! !    concatenating S1 and S2, ignoring any trailing blanks.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = * ) s1
    !   character ( len = * ) s2
    !   character ( len = * ) s3
-   ! 
+   !
    !   if ( s1 == ' ' .and. s2 == ' ' ) then
    !     s3 = ' '
    !   else if ( s1 == ' ' ) then
@@ -12412,14 +12411,14 @@ contains
    !   else
    !     s3 = trim ( s1 ) // trim ( s2 )
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine s_cat1 ( s1, s2, s3 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
-   ! !! S_CAT1 concatenates two strings, with a single blank separator.  
+   ! !! S_CAT1 concatenates two strings, with a single blank separator.
    ! !
    ! !  Example:
    ! !
@@ -12441,15 +12440,15 @@ contains
    ! !
    ! !    Input, character ( len = * ) S2, the "postfix" string.
    ! !
-   ! !    Output, character ( len = * ) S3, the string made by concatenating 
+   ! !    Output, character ( len = * ) S3, the string made by concatenating
    ! !    S1, a blank, and S2, ignoring any trailing blanks.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = * ) s1
    !   character ( len = * ) s2
    !   character ( len = * ) s3
-   ! 
+   !
    !   if ( s1 == ' ' .and. s2 == ' ' ) then
    !     s3 = ' '
    !   else if ( s1 == ' ' ) then
@@ -12459,11 +12458,11 @@ contains
    !   else
    !     s3 = trim ( s1 ) // ' ' // trim ( s2 )
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine s_center ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_CENTER centers the non-blank portion of a string.
@@ -12482,7 +12481,7 @@ contains
    ! !    centered.  On output, the centered string.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) l1
    !   integer ( kind = 4 ) l2
    !   integer ( kind = 4 ) n1
@@ -12498,28 +12497,28 @@ contains
    ! !
    !   s = adjustl ( s )
    !   n2 = len_trim ( s )
-   ! 
+   !
    !   if ( n2 <= 0 ) then
    !     return
    !   end if
-   ! 
+   !
    !   if ( n2 == n1 .or. n2 == n1 - 1 ) then
    !     return
    !   end if
-   ! 
+   !
    !   n3 = n1 - n2
    !   l1 = n3 / 2
    !   l2 = l1 + n2 + 1
-   ! 
+   !
    !   s(l1+1:l2-1) = s(1:n2)
-   ! 
+   !
    !   s(1:l1) = ' '
    !   s(l2:n1) = ' '
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_center_insert ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_CENTER_INSERT inserts one string into the center of another.
@@ -12540,12 +12539,12 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input, character ( len = * ) S1, a string to be inserted into S2.  
+   ! !    Input, character ( len = * ) S1, a string to be inserted into S2.
    ! !
    ! !    Output, character ( len = * ) S2, the string to receive S1.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ihi
    !   integer ( kind = 4 ) ilo
    !   integer ( kind = 4 ) jhi
@@ -12555,41 +12554,41 @@ contains
    !   integer ( kind = 4 ) s1_length
    !   character ( len = * ) s2
    !   integer ( kind = 4 ) s2_length
-   ! 
+   !
    !   s1_length = len_trim ( s1 )
    !   s2_length = len ( s2 )
-   !  
+   !
    !   if ( s1_length < s2_length ) then
-   ! 
+   !
    !     m = s2_length - s1_length
    !     ilo = 1
    !     ihi = s1_length
    !     jlo = ( m / 2 ) + 1
    !     jhi = jlo + s1_length - 1
-   ! 
+   !
    !   else if ( s2_length < s1_length ) then
-   ! 
+   !
    !     m = s1_length - s2_length
    !     ilo = ( m / 2 ) + 1
    !     ihi = ilo + s2_length - 1
    !     jlo = 1
    !     jhi = s2_length
-   ! 
+   !
    !   else
-   ! 
+   !
    !     ilo = 1
    !     ihi = s1_length
    !     jlo = 1
    !     jhi = s2_length
-   ! 
+   !
    !   end if
-   !  
+   !
    !   s2(jlo:jhi) = s1(ilo:ihi)
-   !  
+   !
    !   return
    ! end
-   ! 
-   ! 
+   !
+   !
    ! function s_ch_blank_f(s,ch)
    !   character ch
    !   character ( len = * ) s
@@ -12597,10 +12596,10 @@ contains
    !   s_ch_blank_f=s
    !   call s_ch_blank(s_ch_blank_f,ch)
    ! end function
-   ! 
-   ! 
+   !
+   !
    ! subroutine s_ch_blank ( s, ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_CH_BLANK replaces each occurrence of a particular character by a blank.
@@ -12620,26 +12619,26 @@ contains
    ! !    Input, character CH, the character to be removed.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do i = 1, s_length
-   ! 
+   !
    !     if ( s(i:i) == ch ) then
    !       s(i:i) = ' '
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_ch_delete ( s, ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_CH_DELETE removes all occurrences of a character from a string.
@@ -12647,7 +12646,7 @@ contains
    ! !  Discussion:
    ! !
    ! !    Each time the given character is found in the string, the characters
-   ! !    to the right of the string are shifted over one position.   
+   ! !    to the right of the string are shifted over one position.
    ! !
    ! !  Modified:
    ! !
@@ -12664,36 +12663,36 @@ contains
    ! !    Input, character CH, the character to be removed.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) get
    !   integer ( kind = 4 ) put
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   put = 1
-   ! 
+   !
    !   do get = 1, s_length
-   ! 
+   !
    !     if ( s(get:get) == ch ) then
-   ! 
+   !
    !     else if ( put == get ) then
    !       put = put + 1
    !     else
    !       s(put:put) = s(get:get)
    !       put = put + 1
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   s(put:s_length) = ' '
-   ! 
+   !
    !   return
    ! end
    ! function s_ch_last ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_CH_LAST returns the last nonblank character in a string.
@@ -12714,36 +12713,36 @@ contains
    ! !    or ' ' if S is all blank.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = * ) s
    !   character s_ch_last
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   if ( 0 < s_length ) then
    !     s_ch_last = s(s_length:s_length)
    !   else
    !     s_ch_last = ' '
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_chop ( s, ilo, ihi )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_CHOP "chops out" a portion of a string, and closes up the hole.
    ! !
    ! !  Example:
    ! !
-   ! !    S = 'Fred is not a jerk!' 
+   ! !    S = 'Fred is not a jerk!'
    ! !
-   ! !    call s_chop ( S, 9, 12 ) 
+   ! !    call s_chop ( S, 9, 12 )
    ! !
    ! !    S = 'Fred is a jerk!    '
    ! !
-   ! !  Modified:  
+   ! !  Modified:
    ! !
    ! !    06 July 1998
    ! !
@@ -12756,33 +12755,33 @@ contains
    ! !    Input/output, character ( len = * ) S, the string to be transformed.
    ! !
    ! !    Input, integer ( kind = 4 ) ILO, IHI, the locations of the first and last
-   ! !    characters to be removed.  
+   ! !    characters to be removed.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ihi
    !   integer ( kind = 4 ) ihi2
    !   integer ( kind = 4 ) ilo
    !   integer ( kind = 4 ) ilo2
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len ( s )
-   ! 
+   !
    !   ilo2 = max ( ilo, 1 )
    !   ihi2 = min ( ihi, s_length )
-   ! 
+   !
    !   if ( ihi2 < ilo2 ) then
    !     return
    !   end if
-   ! 
+   !
    !   s(ilo2:s_length+ilo2-ihi2-1) = s(ihi2+1:s_length)
    !   s(s_length+ilo2-ihi2:s_length) = ' '
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_control_blank ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_CONTROL_BLANK replaces control characters with blanks.
@@ -12804,24 +12803,24 @@ contains
    ! !    Input/output, character ( len = * ) S, the string to be transformed.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical ch_is_control
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do i = 1, s_length
    !     if ( ch_is_control ( s(i:i) ) ) then
    !       s(i:i) = ' '
    !     end if
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine s_control_count ( s, ifound )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_CONTROL_COUNT returns the number of control characters in a string.
@@ -12845,35 +12844,35 @@ contains
    ! !    Output, integer ( kind = 4 ) IFOUND, the number of control characters.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical ch_is_control
    !   integer ( kind = 4 ) ifound
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   ifound = 0
    !   s_length = len_trim ( s )
-   !  
+   !
    !   do i = 1, s_length
-   !  
+   !
    !     if ( ch_is_control ( s(i:i) ) ) then
    !       ifound = ifound + 1
    !     end if
-   !  
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine s_control_delete ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_CONTROL_DELETE removes all control characters from a string.
    ! !
    ! !  Discussion:
    ! !
-   ! !    The string is collapsed to the left, and padded on the right with 
+   ! !    The string is collapsed to the left, and padded on the right with
    ! !    blanks to replace the removed characters.
    ! !
    ! !  Definition:
@@ -12893,33 +12892,33 @@ contains
    ! !    Input/output, character ( len = * ) S, is the string to be transformed.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical ch_is_control
    !   integer ( kind = 4 ) get
    !   integer ( kind = 4 ) put
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   put = 0
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do get = 1, s_length
-   !  
+   !
    !     if ( .not. ch_is_control ( s(get:get) ) ) then
    !       put = put + 1
    !       s(put:put) = s(get:get)
    !     end if
-   !  
+   !
    !   end do
    ! !
    ! !  Pad the end of the string with blanks
    ! !
    !   s(put+1:) = ' '
-   !  
+   !
    !   return
    ! end
    ! subroutine s_copy ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_COPY copies one string into another.
@@ -12944,17 +12943,17 @@ contains
    ! !    Output, character ( len = * ) S2, the copy.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = * ) s1
    !   character ( len = * ) s2
-   ! 
+   !
    !   s2(1:min(len(s1),len(s2))) = s1(1:min(len(s1),len(s2)))
    !   s2(len(s1)+1:len(s2)) = ' '
-   !  
+   !
    !   return
    ! end
    ! subroutine s_detag ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_DETAG removes from a string all substrings marked by angle brackets.
@@ -12987,33 +12986,33 @@ contains
    ! !    Input/output, character ( len = * ) S, the string to be transformed.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i1
    !   integer ( kind = 4 ) i2
    !   integer ( kind = 4 ) i3
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   do
-   ! 
+   !
    !     s_length = len_trim ( s )
-   ! 
+   !
    !     if ( len_trim ( s ) == 0 ) then
    !       exit
    !     end if
-   ! 
+   !
    !     i1 = index ( s, '<' )
-   ! 
+   !
    !     if ( i1 <= 0 .or. s_length <= i1 ) then
    !       exit
    !     end if
-   ! 
+   !
    !     i2 = index ( s(i1+1:), '>' )
-   ! 
+   !
    !     if ( i2 == 0 ) then
    !       exit
    !     end if
-   ! 
+   !
    !     i2 = i2 + i1
    ! !
    ! !  Shift.
@@ -13023,16 +13022,16 @@ contains
    ! !  Pad.
    ! !
    !     s(s_length+i1-i2:) = ' '
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! function s_eqi ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
-   ! !! S_EQI is a case insensitive comparison of two strings for equality.  
+   ! !! S_EQI is a case insensitive comparison of two strings for equality.
    ! !
    ! !  Example:
    ! !
@@ -13053,7 +13052,7 @@ contains
    ! !    Output, logical S_EQI, the result of the comparison.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c1
    !   character c2
    !   integer ( kind = 4 ) i
@@ -13063,44 +13062,44 @@ contains
    !   integer ( kind = 4 ) s1_length
    !   character ( len = * ) s2
    !   integer ( kind = 4 ) s2_length
-   ! 
+   !
    !   s1_length = len ( s1 )
    !   s2_length = len ( s2 )
    !   lenc = min ( s1_length, s2_length )
-   !  
+   !
    !   s_eqi = .false.
-   ! 
+   !
    !   do i = 1, lenc
-   ! 
+   !
    !     c1 = s1(i:i)
    !     c2 = s2(i:i)
    !     call ch_cap ( c1 )
    !     call ch_cap ( c2 )
-   ! 
+   !
    !     if ( c1 /= c2 ) then
    !       return
    !     end if
-   ! 
+   !
    !   end do
-   !  
+   !
    !   do i = lenc + 1, s1_length
    !     if ( s1(i:i) /= ' ' ) then
    !       return
    !     end if
    !   end do
-   !  
+   !
    !   do i = lenc + 1, s2_length
    !     if ( s2(i:i) /= ' ' ) then
    !       return
    !     end if
    !   end do
-   !  
+   !
    !   s_eqi = .true.
-   !  
+   !
    !   return
    ! end
    ! function s_eqidb ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_EQIDB compares two strings, ignoring case and blanks.
@@ -13128,7 +13127,7 @@ contains
    ! !    Output, logical S_EQIDB, the result of the comparison.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c1
    !   character c2
    !   integer ( kind = 4 ) i1
@@ -13152,7 +13151,7 @@ contains
    ! !
    !   i1 = 0
    !   i2 = 0
-   !  
+   !
    !   do
    ! !
    ! !  If we've matched all the nonblank characters in both strings,
@@ -13166,51 +13165,51 @@ contains
    ! !  Get the next nonblank character in the first string.
    ! !
    !     do
-   !  
+   !
    !       i1 = i1 + 1
-   ! 
+   !
    !       if ( s1_length < i1 ) then
    !         return
    !       end if
-   !  
+   !
    !       if ( s1(i1:i1) /= ' ' ) then
    !         exit
    !       end if
-   ! 
+   !
    !     end do
-   !  
+   !
    !     c1 = s1(i1:i1)
    !     call ch_cap ( c1 )
    ! !
    ! !  Get the next nonblank character in the second string.
    ! !
    !     do
-   !  
+   !
    !       i2 = i2 + 1
    !       if ( len2 < i2 ) then
    !         return
    !       end if
-   !  
+   !
    !       c2 = s2(i2:i2)
-   ! 
+   !
    !       if ( c2 /= ' ' ) then
    !         exit
    !       end if
-   ! 
+   !
    !     end do
-   !  
+   !
    !     call ch_cap ( c2 )
-   !  
+   !
    !     if ( c1 /= c2 ) then
    !       exit
    !     end if
-   !  
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_escape_tex ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_ESCAPE_TEX de-escapes TeX escape sequences.
@@ -13234,45 +13233,45 @@ contains
    ! !
    ! !    Input, character ( len = * ) S1, the string to be de-escaped.
    ! !
-   ! !    Output, character ( len = * ) S2, a copy of the string, 
+   ! !    Output, character ( len = * ) S2, a copy of the string,
    ! !    modified to avoid TeX escapes.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   character ( len = * ) s1
    !   integer ( kind = 4 ) s1_length
    !   integer ( kind = 4 ) s1_pos
    !   character ( len = * ) s2
    !   integer ( kind = 4 ) s2_pos
-   ! 
+   !
    !   s1_length = len_trim ( s1 )
-   ! 
+   !
    !   s1_pos = 0
    !   s2_pos = 0
    !   s2 = ' '
-   ! 
+   !
    !   do while ( s1_pos < s1_length )
-   ! 
+   !
    !     s1_pos = s1_pos + 1
    !     ch = s1(s1_pos:s1_pos)
-   ! 
+   !
    !       if (ch=="\".or.ch=="_".or.ch=="^".or.ch=="{".or.ch=="}")then
-   ! 
+   !
    !       s2_pos = s2_pos + 1
    !       s2(s2_pos:s2_pos) = "\"
-   ! 
+   !
    !     end if
-   ! 
+   !
    !     s2_pos = s2_pos + 1
    !     s2(s2_pos:s2_pos) = ch
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_fill ( s, ch )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_FILL overwrites every character of a string by a given character.
@@ -13292,69 +13291,69 @@ contains
    ! !    Input, character CH, the overwriting character.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len ( s )
-   ! 
+   !
    !   do i = 1, s_length
    !     s(i:i) = ch
    !   end do
-   !  
+   !
    !   return
    ! end
-   function s_first_nonblank ( s )
-   
-   !*****************************************************************************80
-   !
-   !! S_FIRST_NONBLANK returns the location of the first nonblank.
-   !
-   !  Discussion:
-   !
-   !    If all characters are blanks, a 0 is returned.
-   !
-   !  Modified:
-   !
-   !    23 November 1999
-   !
-   !  Author:
-   !
-   !    John Burkardt
-   !
-   !  Parameters:
-   !
-   !    Input, character ( len = * ) S, the string to be examined.
-   !
-   !    Output, integer ( kind = 4 ) S_FIRST_NONBLANK, the location of the first
-   !    nonblank character in the string, or 0 if all are blank.
-   !
-     implicit none
-   
-     integer ( kind = 4 ) i
-     character ( len = * ) s
-     integer ( kind = 4 ) s_first_nonblank
-     integer ( kind = 4 ) s_length
-   
-     s_length = len ( s )
-   
-     do i = 1, s_length
-    
-       if ( s(i:i) /= ' ' ) then
-         s_first_nonblank = i
-         return
-       end if
-    
-     end do
-    
-     s_first_nonblank = 0
-    
-     return
+   function s_first_nonblank(s)
+
+      !*****************************************************************************80
+      !
+      !! S_FIRST_NONBLANK returns the location of the first nonblank.
+      !
+      !  Discussion:
+      !
+      !    If all characters are blanks, a 0 is returned.
+      !
+      !  Modified:
+      !
+      !    23 November 1999
+      !
+      !  Author:
+      !
+      !    John Burkardt
+      !
+      !  Parameters:
+      !
+      !    Input, character ( len = * ) S, the string to be examined.
+      !
+      !    Output, integer ( kind = 4 ) S_FIRST_NONBLANK, the location of the first
+      !    nonblank character in the string, or 0 if all are blank.
+      !
+      implicit none
+
+      integer(kind=4) i
+      character(len=*) s
+      integer(kind=4) s_first_nonblank
+      integer(kind=4) s_length
+
+      s_length = len(s)
+
+      do i = 1, s_length
+
+         if (s(i:i) /= ' ') then
+            s_first_nonblank = i
+            return
+         end if
+
+      end do
+
+      s_first_nonblank = 0
+
+      return
    end
    ! function s_gei ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_GEI = ( S1 is lexically greater than or equal to S2 ).
@@ -13378,7 +13377,7 @@ contains
    ! !    Output, logical S_GEI, the result of the comparison.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c1
    !   character c2
    !   integer ( kind = 4 ) i
@@ -13388,18 +13387,18 @@ contains
    !   integer ( kind = 4 ) s1_length
    !   character ( len = * ) s2
    !   integer ( kind = 4 ) s2_length
-   ! 
+   !
    !   s1_length = len_trim ( s1 )
    !   s2_length = len_trim ( s2 )
    !   lenc = min ( s1_length, s2_length )
-   !  
+   !
    !   do i = 1, lenc
-   ! 
+   !
    !     c1 = s1(i:i)
    !     c2 = s2(i:i)
    !     call ch_cap ( c1 )
    !     call ch_cap ( c2 )
-   ! 
+   !
    !     if ( lgt ( c1, c2 ) ) then
    !       s_gei = .true.
    !       return
@@ -13407,19 +13406,19 @@ contains
    !       s_gei = .false.
    !       return
    !     end if
-   ! 
+   !
    !   end do
-   !  
+   !
    !   if ( s1_length < s2_length ) then
    !     s_gei = .false.
    !   else
    !     s_gei = .true.
    !   end if
-   !  
+   !
    !   return
    ! end
    ! function s_gti ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_GTI = S1 is lexically greater than S2.
@@ -13443,7 +13442,7 @@ contains
    ! !    Output, logical S_GTI, the result of the comparison.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c1
    !   character c2
    !   integer ( kind = 4 ) i
@@ -13453,18 +13452,18 @@ contains
    !   integer ( kind = 4 ) s1_length
    !   character ( len = * ) s2
    !   integer ( kind = 4 ) s2_length
-   ! 
+   !
    !   s1_length = len ( s1 )
    !   s2_length = len ( s2 )
    !   lenc = min ( s1_length, s2_length )
-   ! 
+   !
    !   do i = 1, lenc
-   ! 
+   !
    !     c1 = s1(i:i)
    !     c2 = s2(i:i)
    !     call ch_cap ( c1 )
    !     call ch_cap ( c2 )
-   ! 
+   !
    !     if ( lgt ( c1, c2 ) ) then
    !       s_gti = .true.
    !       return
@@ -13472,27 +13471,27 @@ contains
    !       s_gti = .false.
    !       return
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   if ( s1_length <= s2_length ) then
    !     s_gti = .false.
    !   else
    !     s_gti = .true.
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! function s_index ( s, sub )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_INDEX seeks the first occurrence of a substring.
    ! !
    ! !  Discussion:
    ! !
-   ! !    The function returns the location in the string at which the 
-   ! !    substring SUB is first found, or 0 if the substring does not 
+   ! !    The function returns the location in the string at which the
+   ! !    substring SUB is first found, or 0 if the substring does not
    ! !    occur at all.
    ! !
    ! !    The routine is trailing blank insensitive.  This is very
@@ -13527,19 +13526,19 @@ contains
    ! !    Output, integer ( kind = 4 ) S_INDEX.  0 if SUB does not occur in
    ! !    the string.  Otherwise S(S_INDEX:S_INDEX+LENS-1) = SUB,
    ! !    where LENS is the length of SUB, and is the first place
-   ! !    this happens.  
+   ! !    this happens.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_index
    !   integer ( kind = 4 ) s_length
    !   character ( len = * ) sub
    !   integer ( kind = 4 ) sub_length
-   ! 
+   !
    !   s_index = 0
-   !  
+   !
    !   s_length = len_trim ( s )
    !   sub_length = len_trim ( sub )
    ! !
@@ -13548,28 +13547,28 @@ contains
    !   if ( s_length == 0 ) then
    !     s_length = len ( s )
    !   end if
-   !  
+   !
    !   if ( sub_length == 0 ) then
    !     sub_length = len ( sub )
    !   end if
-   !  
+   !
    !   if ( s_length < sub_length ) then
    !     return
    !   end if
-   !  
+   !
    !   do i = 1, s_length + 1 - sub_length
-   !  
+   !
    !     if ( s(i:i+sub_length-1) == sub(1:sub_length) ) then
    !       s_index = i
    !       return
    !     end if
-   !  
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! function s_index_set ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_INDEX_SET searches a string for any of a set of characters.
@@ -13588,11 +13587,11 @@ contains
    ! !
    ! !    Input, character ( len = * ) S2, the characters to search for.
    ! !
-   ! !    Output, integer ( kind = 4 ) S_INDEX_SET, the first location of a 
+   ! !    Output, integer ( kind = 4 ) S_INDEX_SET, the first location of a
    ! !    character from S2 in S1, or 0 if no character from S2 occurs in S1.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) j
    !   integer ( kind = 4 ) k
@@ -13600,36 +13599,36 @@ contains
    !   integer ( kind = 4 ) s1_length
    !   character ( len = * ) s2
    !   integer ( kind = 4 ) s_index_set
-   ! 
+   !
    !   s1_length = len ( s1 )
-   ! 
+   !
    !   j = s1_length + 1
-   ! 
+   !
    !   do i = 1, len ( s2 )
    !     k = index ( s1, s2(i:i) )
    !     if ( k /= 0 ) then
    !       j = min ( j, k )
    !     end if
    !   end do
-   ! 
+   !
    !   if ( j == s1_length + 1 ) then
    !     j = 0
    !   end if
-   ! 
+   !
    !   s_index_set = j
-   ! 
+   !
    !   return
    ! end
    ! function s_indexi ( s, sub )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
-   ! !! S_INDEXI is a case-insensitive INDEX function.  
+   ! !! S_INDEXI is a case-insensitive INDEX function.
    ! !
    ! !  Discussion:
    ! !
-   ! !    The function returns the location in the string at which the 
-   ! !    substring SUB is first found, or 0 if the substring does not 
+   ! !    The function returns the location in the string at which the
+   ! !    substring SUB is first found, or 0 if the substring does not
    ! !    occur at all.
    ! !
    ! !    The routine is also trailing blank insensitive.  This is very
@@ -13669,7 +13668,7 @@ contains
    ! !    unlike the standard FORTRAN INDEX function.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) llen2
    !   character ( len = * ) s
@@ -13677,9 +13676,9 @@ contains
    !   integer ( kind = 4 ) s_indexi
    !   integer ( kind = 4 ) s_length
    !   character ( len = * ) sub
-   ! 
+   !
    !   s_indexi = 0
-   !  
+   !
    !   s_length = len_trim ( s )
    !   llen2 = len_trim ( sub )
    ! !
@@ -13688,28 +13687,28 @@ contains
    !   if ( s_length == 0 ) then
    !     s_length = len ( s )
    !   end if
-   !  
+   !
    !   if ( llen2 == 0 ) then
    !     llen2 = len ( sub )
    !   end if
-   !  
+   !
    !   if ( s_length < llen2 ) then
    !     return
    !   end if
-   !  
+   !
    !   do i = 1, s_length + 1 - llen2
-   !  
+   !
    !     if ( s_eqi ( s(i:i+llen2-1), sub ) ) then
    !       s_indexi = i
    !       return
    !     end if
-   !  
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! function s_index_last ( s, sub )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_INDEX_LAST finds the LAST occurrence of a given substring.
@@ -13753,7 +13752,7 @@ contains
    ! !    this happens.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) j
    !   integer ( kind = 4 ) llen2
@@ -13761,9 +13760,9 @@ contains
    !   integer ( kind = 4 ) s_index_last
    !   integer ( kind = 4 ) s_length
    !   character ( len = * ) sub
-   ! 
+   !
    !   s_index_last = 0
-   ! 
+   !
    !   s_length = len_trim ( s )
    !   llen2 = len_trim ( sub )
    ! !
@@ -13772,30 +13771,30 @@ contains
    !   if ( s_length == 0 ) then
    !     s_length = len ( s )
    !   end if
-   ! 
+   !
    !   if ( llen2 == 0 ) then
    !     llen2 = len ( sub )
    !   end if
-   !  
+   !
    !   if ( s_length < llen2 ) then
    !     return
    !   end if
-   !  
+   !
    !   do j = 1, s_length + 1 - llen2
-   ! 
+   !
    !     i = s_length + 2 - llen2 - j
-   !  
+   !
    !     if ( s(i:i+llen2-1) == sub ) then
    !       s_index_last = i
    !       return
    !     end if
-   !  
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! function s_index_last_c ( s, c )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_INDEX_LAST_C finds the LAST occurrence of a given character.
@@ -13818,34 +13817,34 @@ contains
    ! !    last, or -1 if it does not occur.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
    !   integer ( kind = 4 ) s_index_last_c
-   ! 
+   !
    !   if ( c == ' ' ) then
    !     s_length = len ( s )
    !   else
    !     s_length = len_trim ( s )
    !   end if
-   ! 
+   !
    !   do i = s_length, 1, -1
-   ! 
+   !
    !     if ( s(i:i) == c ) then
    !       s_index_last_c = i
    !       return
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   s_index_last_c = -1
-   !  
+   !
    !   return
    ! end
    ! subroutine s_i_append ( s, i, done )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_I_APPEND appends an integer to a string.
@@ -13877,7 +13876,7 @@ contains
    ! !    to append the integer.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical done
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) lens
@@ -13887,16 +13886,16 @@ contains
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
    !   character ( len = 13 ) w
-   ! 
+   !
    !   done = .false.
-   ! 
+   !
    !   s_length = len ( s )
    !   lents = len_trim ( s )
-   ! 
+   !
    !   call i4_to_s_left ( i, w )
-   ! 
+   !
    !   lenw = len_trim ( w )
-   ! 
+   !
    !   if ( lents == 0 ) then
    !     if ( s_length < lenw ) then
    !       done = .true.
@@ -13908,7 +13907,7 @@ contains
    !       return
    !     end if
    !   end if
-   ! 
+   !
    !   if ( lents == 0 ) then
    !     next = 1
    !   else
@@ -13916,26 +13915,26 @@ contains
    !     s(next:next) = ' '
    !     next = next + 1
    !   end if
-   ! 
+   !
    !   s(next:next+lenw-1) = w(1:lenw)
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_inc_c ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
-   ! !! S_INC_C "increments" the characters in a string.  
+   ! !! S_INC_C "increments" the characters in a string.
    ! !
    ! !  Discussion:
    ! !
    ! !    Instead of ICHAR, we now use the IACHAR function, which
    ! !    guarantees the ASCII collating sequence.
    ! !
-   ! !    The routine tries to produce the next string, in dictionary order, 
-   ! !    following the input value of a string.  Digits, spaces, and other 
-   ! !    nonalphabetic characters are ignored.  Case is respected; in other 
-   ! !    words, the case of every alphabetic character on input will be the 
+   ! !    The routine tries to produce the next string, in dictionary order,
+   ! !    following the input value of a string.  Digits, spaces, and other
+   ! !    nonalphabetic characters are ignored.  Case is respected; in other
+   ! !    words, the case of every alphabetic character on input will be the
    ! !    same on output.
    ! !
    ! !    The following error conditions can occur:
@@ -13944,11 +13943,11 @@ contains
    ! !      incrementing is possible.
    ! !
    ! !      All alphabetic characters are equal to 'Z' or 'z'.  In this
-   ! !      the string is also "wrapped around" so that all alphabetic 
+   ! !      the string is also "wrapped around" so that all alphabetic
    ! !      characters are "A" or "a".
    ! !
-   ! !    If the word "Tax" were input, the successive outputs would be 
-   ! !    "Tay", "Taz", "Tba", "Tbb", ...  If the input word "January 4, 1989" 
+   ! !    If the word "Tax" were input, the successive outputs would be
+   ! !    "Tay", "Taz", "Tba", "Tbb", ...  If the input word "January 4, 1989"
    ! !    were input, the output would be "Januarz 4, 1989".
    ! !
    ! !    This routine could be useful when trying to create a unique file
@@ -13965,23 +13964,23 @@ contains
    ! !  Parameters:
    ! !
    ! !    Input/output, character ( len = * ) S, the string whose
-   ! !    alphabetic successor is desired.  On output, S has been replaced 
-   ! !    by its "successor".  
+   ! !    alphabetic successor is desired.  On output, S has been replaced
+   ! !    by its "successor".
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ihi
    !   integer ( kind = 4 ) ilo
    !   integer ( kind = 4 ) iloc
    !   character ( len = * ) s
-   ! 
+   !
    !   ilo = 1
    !   ihi = len ( s )
    ! !
    ! !  Find the last alphabetic character in the string.
    ! !
    !   do
-   !  
+   !
    !     call s_alpha_last ( s(ilo:ihi), iloc )
    ! !
    ! !  If there is no alphabetic character, we can't help.
@@ -13989,38 +13988,38 @@ contains
    !     if ( iloc == 0 ) then
    !       return
    !     end if
-   !  
+   !
    !     if ( s(iloc:iloc) == achar ( 122 ) ) then
-   ! 
+   !
    !       s(iloc:iloc) = achar ( 97 )
    !       ihi = iloc - 1
-   ! 
+   !
    !       if ( ihi <= 0 ) then
    !         exit
    !       end if
-   ! 
+   !
    !     else if ( s(iloc:iloc) == achar ( 90 ) ) then
-   ! 
+   !
    !       s(iloc:iloc) = achar ( 65 )
    !       ihi = iloc - 1
-   ! 
+   !
    !       if ( ihi <= 0 ) then
    !         return
    !       end if
-   ! 
+   !
    !     else
-   ! 
+   !
    !       s(iloc:iloc) = achar ( iachar ( s(iloc:iloc) ) + 1 )
    !       exit
-   ! 
+   !
    !     end if
-   !  
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_inc_n ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_INC_N increments the digits in a string.
@@ -14064,7 +14063,7 @@ contains
    ! !    On output, the incremented string.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   integer ( kind = 4 ) change
    !   integer ( kind = 4 ) digit
@@ -14072,54 +14071,54 @@ contains
    !   integer ( kind = 4 ) lens
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   if ( s_length <= 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'S_INC_N - Fatal error!'
    !     write ( *, '(a)' ) '  The input string is empty.'
    !     stop
    !   end if
-   ! 
+   !
    !   change = 0
-   ! 
+   !
    !   do i = s_length, 1, -1
-   ! 
+   !
    !     c = s(i:i)
-   ! 
+   !
    !     if ( lge ( c, '0' ) .and. lle ( c, '9' ) ) then
-   ! 
+   !
    !       change = change + 1
-   ! 
+   !
    !       digit = iachar ( c ) - 48
    !       digit = digit + 1
-   ! 
+   !
    !       if ( digit == 10 ) then
    !         digit = 0
    !       end if
-   ! 
+   !
    !       c = achar ( digit + 48 )
-   ! 
+   !
    !       s(i:i) = c
-   ! 
+   !
    !       if ( c /= '0' ) then
    !         return
    !       end if
-   ! 
+   !
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   if ( change == 0 ) then
    !     s = ' '
    !     return
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_input ( string, value, ierror )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_INPUT prints a prompt string and reads a string from the user.
@@ -14147,11 +14146,11 @@ contains
    ! !    if no error occurred.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ierror
    !   character ( len = * ) string
    !   character ( len = * ) value
-   ! 
+   !
    !   ierror = 0
    !   value = ' '
    ! !
@@ -14159,11 +14158,11 @@ contains
    ! !
    !   write ( *, '(a)' ) ' '
    !   write ( *, '(a)' ) trim ( string )
-   ! 
+   !
    !   do
-   ! 
+   !
    !     read ( *, '(a)', iostat = ierror ) value
-   ! 
+   !
    !     if ( ierror /= 0 ) then
    !       value = 'S_INPUT: Input error!'
    !       return
@@ -14174,19 +14173,19 @@ contains
    !     if ( value(1:1) == '#' ) then
    !       cycle
    !     end if
-   ! 
+   !
    !     if ( len_trim ( value ) == 0 ) then
    !       cycle
    !     end if
-   ! 
+   !
    !     exit
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! function s_is_alpha ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_IS_ALPHA returns TRUE if the string contains only alphabetic characters.
@@ -14211,30 +14210,30 @@ contains
    ! !    alphabetic characters.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical ch_is_alpha
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   logical s_is_alpha
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_is_alpha = .false.
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do i = 1, s_length
-   ! 
+   !
    !     if ( .not. ch_is_alpha ( s(i:i) ) ) then
    !       return
    !     end if
-   ! 
+   !
    !   end do
-   !  
+   !
    !   s_is_alpha = .true.
-   ! 
+   !
    !   return
    ! end
    ! function s_is_alphanumeric ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_IS_ALPHANUMERIC = string contains only alphanumeric characters.
@@ -14263,20 +14262,20 @@ contains
    ! !    alphabetic characters and numerals.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) itemp
    !   character ( len = * ) s
    !   logical s_is_alphanumeric
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_is_alphanumeric = .false.
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do i = 1, s_length
-   ! 
+   !
    !     itemp = iachar ( s(i:i) )
-   !  
+   !
    !     if ( .not. ( 65 <= itemp .and. itemp <= 90 ) ) then
    !       if ( .not. ( 97 <= itemp .and. itemp <= 122 ) ) then
    !         if ( .not. ( 48 <= itemp .and. itemp <= 57 ) ) then
@@ -14284,22 +14283,22 @@ contains
    !         end if
    !       end if
    !     end if
-   !  
+   !
    !   end do
-   !  
+   !
    !   s_is_alphanumeric = .true.
-   ! 
+   !
    !   return
    ! end
    ! function s_is_digit ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_IS_DIGIT returns TRUE if a string contains only decimal digits.
    ! !
    ! !  Discussion:
    ! !
-   ! !    This is a strict comparison.  
+   ! !    This is a strict comparison.
    ! !    The check is made from the first character to the last nonblank.
    ! !    Each character in between must be one of '0', '1', ..., '9'.
    ! !
@@ -14318,31 +14317,31 @@ contains
    ! !    Output, logical S_IS_DIGIT, is TRUE if S contains only digits.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) lenc
    !   character ( len = * ) s
    !   logical s_is_digit
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   s_is_digit = .false.
-   ! 
+   !
    !   do i = 1, s_length
    !     c = s(i:i)
    !     if ( llt ( c, '0' ) .or. lgt ( c, '9' ) ) then
    !       return
    !     end if
    !   end do
-   !  
+   !
    !   s_is_digit = .true.
-   ! 
+   !
    !   return
    ! end
    ! function s_is_f77_name ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_IS_F77_NAME = input string represent a legal FORTRAN-77 identifier.
@@ -14360,41 +14359,41 @@ contains
    ! !    Input, character ( len = * ) S, the string to be examined.
    ! !
    ! !    Output, logical S_IS_F77_NAME, is TRUE if the string is a legal FORTRAN-77
-   ! !    identifier.  That is, the string must begin with an alphabetic 
+   ! !    identifier.  That is, the string must begin with an alphabetic
    ! !    character, and all subsequent characters must be alphanumeric.
    ! !    The string may terminate with blanks.  No underscores are allowed.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical ch_is_alpha
    !   integer ( kind = 4 ) lenc
    !   character ( len = * ) s
    !   logical s_is_alphanumeric
    !   logical s_is_f77_name
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_is_f77_name = .false.
-   ! 
+   !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   if ( s_length <= 0 ) then
    !     return
    !   end if
-   ! 
+   !
    !   if ( .not. ch_is_alpha ( s(1:1) ) ) then
    !     return
    !   end if
-   ! 
+   !
    !   if ( .not. s_is_alphanumeric ( s(2:s_length) ) ) then
    !     return
    !   end if
-   ! 
+   !
    !   s_is_f77_name = .true.
-   ! 
+   !
    !   return
    ! end
    ! function s_is_f90_name ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_IS_F90_NAME = input string represent a legal FORTRAN 90 identifier.
@@ -14411,44 +14410,44 @@ contains
    ! !
    ! !    Input, character ( len = * ) S, the string to be examined.
    ! !
-   ! !    Output, logical S_IS_F90_NAME, is TRUE if the string is a legal 
-   ! !    FORTRAN 90 identifier.  That is, the string must begin with an alphabetic 
+   ! !    Output, logical S_IS_F90_NAME, is TRUE if the string is a legal
+   ! !    FORTRAN 90 identifier.  That is, the string must begin with an alphabetic
    ! !    character, and all subsequent characters must be alphanumeric
-   ! !    or underscores.  The string may terminate with blanks.  
+   ! !    or underscores.  The string may terminate with blanks.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical ch_is_alpha
    !   integer ( kind = 4 ) i
    !   logical malphnum2
    !   character ( len = * ) s
    !   logical s_is_f90_name
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_is_f90_name = .false.
-   ! 
+   !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   if ( s_length <= 0 ) then
    !     return
    !   end if
-   ! 
+   !
    !   if ( .not. ch_is_alpha ( s(1:1) ) ) then
    !     return
    !   end if
-   ! 
+   !
    !   do i = 2, s_length
    !     if ( .not. malphnum2 ( s(i:i) ) ) then
    !       return
    !     end if
    !   end do
-   ! 
+   !
    !   s_is_f90_name = .true.
-   ! 
+   !
    !   return
    ! end
    ! function s_is_i ( s, i )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_IS_I is TRUE if a string represents an integer.
@@ -14465,35 +14464,35 @@ contains
    ! !
    ! !    Input, character ( len = * ) S, the string to be checked.
    ! !
-   ! !    Output, integer ( kind = 4 ) I.  If the string represents an integer, 
+   ! !    Output, integer ( kind = 4 ) I.  If the string represents an integer,
    ! !    I is the integer represented.  Otherwise I is 0.
    ! !
    ! !    Output, logical S_IS_I, is TRUE if the string represents an integer.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) ierror
    !   integer ( kind = 4 ) length
    !   character ( len = * ) s
    !   logical s_is_i
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
-   !  
+   !
    !   call s_to_i4 ( s, i, ierror, length )
-   !  
+   !
    !   if ( ierror == 0 .and. s_length <= length ) then
    !     s_is_i = .true.
    !   else
    !     s_is_i = .false.
    !     i = 0
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine s_is_r ( s, r, lval )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_IS_R is TRUE if a string represents a real number.
@@ -14516,29 +14515,29 @@ contains
    ! !    Output, logical LVAL, is TRUE if the string represents a real number.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ierror
    !   integer ( kind = 4 ) length
    !   logical lval
    !   real ( kind = 4 ) r
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
-   !  
+   !
    !   call s_to_r4 ( s, r, ierror, length )
-   !  
+   !
    !   if ( ierror == 0 .and. s_length <= length ) then
    !     lval = .true.
    !   else
    !     lval = .false.
    !     r = 0.0E+00
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine s_left_insert ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_LEFT_INSERT inserts one string flush left into another.
@@ -14560,14 +14559,14 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input, character ( len = * ) S1, a string to be inserted into S2.  Only 
+   ! !    Input, character ( len = * ) S1, a string to be inserted into S2.  Only
    ! !    the portion of S1 up to the last nonblank will be used.
    ! !
    ! !    Output, character ( len = * ) S2, a string which will contain,
    ! !    on output, a left flush copy of S1.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ihi
    !   integer ( kind = 4 ) ilo
    !   integer ( kind = 4 ) jhi
@@ -14576,10 +14575,10 @@ contains
    !   integer ( kind = 4 ) s1_length
    !   character ( len = * ) s2
    !   integer ( kind = 4 ) s2_length
-   ! 
+   !
    !   s1_length = len_trim ( s1 )
    !   s2_length = len ( s2 )
-   !  
+   !
    !   if ( s1_length < s2_length ) then
    !     ilo = 1
    !     ihi = s1_length
@@ -14596,13 +14595,13 @@ contains
    !     jlo = 1
    !     jhi = s2_length
    !   end if
-   !  
+   !
    !   s2(jlo:jhi) = s1(ilo:ihi)
-   !  
+   !
    !   return
    ! end
    ! function s_lei ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_LEI = ( S1 is lexically less than or equal to S2 ).
@@ -14626,7 +14625,7 @@ contains
    ! !    Output, logical S_LEI, the result of the comparison.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c1
    !   character c2
    !   integer ( kind = 4 ) i
@@ -14636,18 +14635,18 @@ contains
    !   character ( len = * ) s1
    !   integer ( kind = 4 ) s1_length
    !   character ( len = * ) s2
-   ! 
+   !
    !   s1_length = len ( s1 )
    !   len2 = len ( s2 )
    !   lenc = min ( s1_length, len2 )
-   !  
+   !
    !   do i = 1, lenc
-   ! 
+   !
    !     c1 = s1(i:i)
    !     c2 = s2(i:i)
    !     call ch_cap ( c1 )
    !     call ch_cap ( c2 )
-   !  
+   !
    !     if ( llt ( c1, c2 ) ) then
    !       s_lei = .true.
    !       return
@@ -14655,19 +14654,19 @@ contains
    !       s_lei = .false.
    !       return
    !     end if
-   !  
+   !
    !   end do
-   !  
+   !
    !   if ( s1_length <= len2 ) then
    !     s_lei = .true.
    !   else
    !     s_lei = .false.
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine s_low ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_LOW replaces all uppercase letters by lowercase ones.
@@ -14686,25 +14685,25 @@ contains
    ! !    transformed.  On output, the string is all lowercase.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
-   !  
+   !
    !   do i = 1, s_length
    !     call ch_low ( s(i:i) )
    !   end do
-   !  
+   !
    !   return
    ! end
    ! function s_lti ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_LTI = ( S1 is lexically less than S2 ).
-   ! ! 
+   ! !
    ! !  Discussion:
    ! !
    ! !    The comparison is done in a case-insensitive way.
@@ -14724,7 +14723,7 @@ contains
    ! !    Output, logical S_LTI, the result of the comparison.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c1
    !   character c2
    !   integer ( kind = 4 ) i
@@ -14734,18 +14733,18 @@ contains
    !   character ( len = * ) s1
    !   integer ( kind = 4 ) s1_length
    !   character ( len = * ) s2
-   ! 
+   !
    !   s1_length = len ( s1 )
    !   len2 = len ( s2 )
    !   lenc = min ( s1_length, len2 )
-   !  
+   !
    !   do i = 1, lenc
-   ! 
+   !
    !     c1 = s1(i:i)
    !     c2 = s2(i:i)
    !     call ch_cap ( c1 )
    !     call ch_cap ( c2 )
-   ! 
+   !
    !     if ( llt ( c1, c2 ) ) then
    !       s_lti = .true.
    !       return
@@ -14753,19 +14752,19 @@ contains
    !       s_lti = .false.
    !       return
    !     end if
-   ! 
+   !
    !   end do
-   !  
+   !
    !   if ( s1_length < len2 ) then
    !     s_lti = .true.
    !   else
    !     s_lti = .false.
    !   end if
-   !  
+   !
    !   return
    ! end
    ! function s_neqi ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_NEQI compares two strings for non-equality, ignoring case.
@@ -14785,7 +14784,7 @@ contains
    ! !    Output, logical S_NEQI, the result of the comparison.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c1
    !   character c2
    !   integer ( kind = 4 ) i
@@ -14795,44 +14794,44 @@ contains
    !   character ( len = * ) s1
    !   integer ( kind = 4 ) s1_length
    !   character ( len = * ) s2
-   ! 
+   !
    !   s1_length = len ( s1 )
    !   len2 = len ( s2 )
    !   lenc = min ( s1_length, len2 )
-   !  
+   !
    !   s_neqi = .true.
-   !  
+   !
    !   do i = 1, lenc
-   ! 
+   !
    !     c1 = s1(i:i)
    !     c2 = s2(i:i)
    !     call ch_cap ( c1 )
    !     call ch_cap ( c2 )
-   ! 
+   !
    !     if ( c1 /= c2 ) then
    !       return
    !     end if
-   ! 
+   !
    !   end do
-   !  
+   !
    !   do i = lenc+1, s1_length
    !     if ( s1(i:i) /= ' ' ) then
    !       return
    !     end if
    !   end do
-   !  
+   !
    !   do i = lenc+1, len2
    !     if ( s2(i:i) /= ' ' ) then
    !       return
    !     end if
    !   end do
-   !  
+   !
    !   s_neqi = .false.
-   !  
+   !
    !   return
    ! end
    ! function s_no_control ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_NO_CONTROL = string contains no control characters.
@@ -14857,28 +14856,28 @@ contains
    ! !    characters, FALSE otherwise.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical ch_is_control
    !   integer ( kind = 4 ) i
    !   logical s_no_control
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_no_control = .false.
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do i = 1, s_length
    !     if ( ch_is_control ( s(i:i) ) ) then
    !       return
    !     end if
    !   end do
-   !  
+   !
    !   s_no_control = .true.
-   !  
+   !
    !   return
    ! end
    ! function s_of_i ( i )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_OF_I converts an integer to a left-justified string.
@@ -14909,7 +14908,7 @@ contains
    ! !    integer ( kind = 4 ).  The integer will be left-justified.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ), parameter :: i4_10 = 10
@@ -14921,9 +14920,9 @@ contains
    !   integer ( kind = 4 ) j
    !   character ( len = 11 ) s
    !   character ( len = 11 ) s_of_i
-   ! 
+   !
    !   s = ' '
-   ! 
+   !
    !   ilo = 1
    !   ihi = 11
    ! !
@@ -14934,16 +14933,16 @@ contains
    ! !  Handle the negative sign.
    ! !
    !   if ( ival < 0 ) then
-   ! 
+   !
    !     if ( ihi <= 1 ) then
    !       s(1:1) = '*'
    !       return
    !     end if
-   ! 
+   !
    !     ival = -ival
    !     s(1:1) = '-'
    !     ilo = 2
-   ! 
+   !
    !   end if
    ! !
    ! !  The absolute value of the integer goes into S(ILO:IHI).
@@ -14953,39 +14952,39 @@ contains
    ! !  Find the last digit, strip it off, and stick it into the string.
    ! !
    !   do
-   ! 
+   !
    !     idig = mod ( ival, i4_10 )
    !     ival = ival / 10
-   ! 
+   !
    !     if ( ipos < ilo ) then
    !       do j = 1, ihi
    !         s(j:j) = '*'
    !       end do
    !       return
    !     end if
-   ! 
+   !
    !     call digit_to_ch ( idig, c )
-   ! 
+   !
    !     s(ipos:ipos) = c
    !     ipos = ipos - 1
-   ! 
+   !
    !     if ( ival == 0 ) then
    !       exit
    !     end if
-   ! 
+   !
    !   end do
    ! !
    ! !  Shift the string to the left.
    ! !
    !   s(ilo:ilo+ihi-ipos-1) = s(ipos+1:ihi)
    !   s(ilo+ihi-ipos:ihi) = ' '
-   ! 
+   !
    !   s_of_i = s
-   ! 
+   !
    !   return
    ! end
    ! function s_only_alphab ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_ONLY_ALPHAB checks if a string is only alphabetic and blanks.
@@ -15013,41 +15012,41 @@ contains
    ! !    alphabetic characters and blanks.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) itemp
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
    !   logical s_only_alphab
-   !   
+   !
    !   s_only_alphab = .false.
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do i = 1, s_length
-   ! 
+   !
    !     c = s(i:i)
-   ! 
+   !
    !     if ( c /= ' ' ) then
-   !  
+   !
    !       itemp = iachar ( c )
-   ! 
+   !
    !       if ( .not. ( 65 <= itemp .and. itemp <= 90 ) ) then
    !         if ( .not. ( 97 <= itemp .and. itemp <= 122 ) ) then
    !           return
    !         end if
    !       end if
-   ! 
+   !
    !     end if
-   !  
+   !
    !   end do
-   !  
+   !
    !   s_only_alphab = .true.
-   ! 
+   !
    !   return
    ! end
    ! function s_only_digitb ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_ONLY_DIGITB returns TRUE if the string contains only digits or blanks.
@@ -15068,34 +15067,34 @@ contains
    ! !    and blanks.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
    !   logical s_only_digitb
-   ! 
+   !
    !   s_only_digitb = .false.
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do i = 1, s_length
-   !  
+   !
    !     c = s(i:i)
-   !  
+   !
    !     if ( c /= ' ' ) then
    !       if ( llt ( c, '0' ) .or. lgt ( c, '9' ) ) then
    !         return
    !       end if
    !     end if
-   !  
+   !
    !   end do
-   !  
+   !
    !   s_only_digitb = .true.
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_overlap ( s1, s2, overlap )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_OVERLAP determines the overlap between two strings.
@@ -15132,7 +15131,7 @@ contains
    ! !    Output, integer ( kind = 4 ) OVERLAP, the length of the overlap.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) len2
    !   integer ( kind = 4 ) len3
@@ -15140,30 +15139,30 @@ contains
    !   character ( len = * ) s1
    !   integer ( kind = 4 ) s1_length
    !   character ( len = * ) s2
-   ! 
+   !
    !   overlap = 0
-   ! 
+   !
    !   s1_length = len_trim ( s1 )
    !   len2 = len_trim ( s2 )
    !   len3 = min ( s1_length, len2 )
-   ! 
+   !
    !   do i = 1, len3
    !     if ( s1(s1_length+1-i:s1_length) == s2(1:i) ) then
    !       overlap = i
    !     end if
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! function s_paren_check ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_PAREN_CHECK checks the parentheses in a string.
    ! !
    ! !  Discussion:
    ! !
-   ! !    Blanks are removed from the string, and then the following checks 
+   ! !    Blanks are removed from the string, and then the following checks
    ! !    are made:
    ! !
    ! !    1) as we read the string left to right, there must never be more
@@ -15187,17 +15186,17 @@ contains
    ! !    Output, logical S_PAREN_CHECK is TRUE if the string passed the checks.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) isum
    !   character ( len = * ) s
    !   character ( len = 256 ) s_copy
    !   integer ( kind = 4 ) s_length
    !   logical s_paren_check
-   ! 
+   !
    !   s_copy = s
    !   call s_blank_delete ( s_copy)
-   ! 
+   !
    !   s_length = len_trim ( s_copy )
    ! !
    ! !  1) Letting '(' = +1 and ')' = -1, check that the running parentheses sum
@@ -15205,22 +15204,22 @@ contains
    ! !
    !   isum = 0
    !   do i = 1, s_length
-   ! 
+   !
    !     if ( s_copy(i:i) == '(' ) then
    !       isum = isum + 1
    !     end if
-   ! 
+   !
    !     if ( s_copy(i:i) == ')' ) then
-   ! 
+   !
    !       isum = isum - 1
-   ! 
+   !
    !       if ( isum < 0 ) then
    !         s_paren_check = .false.
    !         return
    !       end if
-   ! 
+   !
    !     end if
-   ! 
+   !
    !   end do
    ! !
    ! !  2) Check that the final parentheses sum is zero.
@@ -15242,22 +15241,22 @@ contains
    ! !  4) Check that there are no "()" pairs.
    ! !
    !   do i = 2, s_length
-   ! 
+   !
    !     if ( s_copy(i-1:i) == '()' ) then
    !       s_paren_check = .false.
    !       return
    !     end if
-   ! 
+   !
    !   end do
    ! !
    ! !  The checks were passed.
    ! !
    !   s_paren_check = .true.
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_r_append ( s, r, done )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_R_APPEND appends a real number to a string.
@@ -15289,7 +15288,7 @@ contains
    ! !    to append the data.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical done
    !   integer ( kind = 4 ) lens
    !   integer ( kind = 4 ) lents
@@ -15298,16 +15297,16 @@ contains
    !   real ( kind = 4 ) r
    !   character ( len = * ) s
    !   character ( len = 14 ) w
-   ! 
+   !
    !   done = .false.
-   ! 
+   !
    !   lens = len ( s )
    !   lents = len_trim ( s )
-   ! 
+   !
    !   call r4_to_s_left ( r, w )
-   ! 
+   !
    !   lenw = len_trim ( w )
-   ! 
+   !
    !   if ( lents == 0 ) then
    !     if ( lens < lenw ) then
    !       done = .true.
@@ -15319,7 +15318,7 @@ contains
    !       return
    !     end if
    !   end if
-   ! 
+   !
    !   if ( lents == 0 ) then
    !     next = 1
    !   else
@@ -15327,13 +15326,13 @@ contains
    !     s(next:next) = ' '
    !     next = next + 1
    !   end if
-   ! 
+   !
    !   s(next:next+lenw-1) = w(1:lenw)
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_replace_ch ( s, c1, c2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_REPLACE_CH replaces all occurrences of one character by another.
@@ -15354,25 +15353,25 @@ contains
    ! !    replacement character.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c1
    !   character c2
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do i = 1, s_length
    !     if ( s(i:i) == c1 ) then
    !       s(i:i) = c2
    !     end if
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_replace_one ( s1, sub1, sub2, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_REPLACE_ONE replaces the first occurrence of SUB1 with SUB2.
@@ -15391,7 +15390,7 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input, character ( len = * ) S1, the initial string. 
+   ! !    Input, character ( len = * ) S1, the initial string.
    ! !
    ! !    Input, character ( len = * ) SUB1, the string to be replaced.
    ! !
@@ -15400,7 +15399,7 @@ contains
    ! !    Output, character ( len = * ) S2, the final string.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i1
    !   integer ( kind = 4 ) i2
    !   integer ( kind = 4 ) i3
@@ -15410,35 +15409,35 @@ contains
    !   character ( len = 255 ) s3
    !   character ( len = * ) sub1
    !   character ( len = * ) sub2
-   ! 
+   !
    !   s3 = ' '
-   ! 
+   !
    !   i1 = index ( s1, sub1 )
-   !   
+   !
    !   if ( i1 == 0 ) then
-   ! 
+   !
    !     s3 = s1
-   ! 
+   !
    !   else
-   ! 
+   !
    !     s3(1:i1-1) = s1(1:i1-1)
-   ! 
+   !
    !     i2 = len_trim ( sub2 )
    !     s3(i1:i1+i2-1) = sub2(1:i2)
-   !   
+   !
    !     i3 = i1 + len_trim ( sub1 )
    !     i4 = len_trim ( s1 )
-   ! 
+   !
    !     s3(i1+i2:i1+i2+1+i4-i3) = s1(i3:i4)
-   ! 
+   !
    !   end if
-   ! 
+   !
    !   s2 = s3
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_replace_rec ( s, sub1, sub2, irep )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_REPLACE_REC is a recursive replacement of one string by another.
@@ -15481,7 +15480,7 @@ contains
    ! !    have fallen off the end)
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) irep
    !   integer ( kind = 4 ) len1
    !   integer ( kind = 4 ) len2
@@ -15490,78 +15489,78 @@ contains
    !   integer ( kind = 4 ) s_length
    !   character ( len = * ) sub1
    !   character ( len = * ) sub2
-   ! 
+   !
    !   irep = 0
    !   s_length = len ( s )
-   !  
+   !
    !   if ( s_length <= 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'S_REPLACE_REC - Serious error!'
    !     write ( *, '(a)' ) '  Null string not allowed!'
    !     return
    !   end if
-   !  
+   !
    !   len1 = len ( sub1 )
-   !  
+   !
    !   if ( len1 <= 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'S_REPLACE_REC - Serious error!'
    !     write ( *, '(a)' ) '  Null SUB1 not allowed!'
    !     return
    !   end if
-   !  
+   !
    !   len2 = len ( sub2 )
-   !  
+   !
    !   if ( len2 == len1 ) then
-   !  
+   !
    !     if ( sub1 == sub2 ) then
    !       write ( *, '(a)' ) ' '
    !       write ( *, '(a)' ) 'S_REPLACE_REC - Warning!'
    !       write ( *, '(a)' ) '  Replacement = original!'
    !       return
    !     end if
-   !  
+   !
    !     do
-   ! 
+   !
    !       loc = index ( s, sub1 )
-   ! 
+   !
    !       if ( loc == 0 ) then
    !         exit
    !       end if
-   ! 
+   !
    !       irep = irep + 1
    !       s(loc:loc+len1-1) = sub2
-   ! 
+   !
    !     end do
-   !  
+   !
    !   else if ( len2 < len1 ) then
-   !  
+   !
    !     do
-   ! 
+   !
    !       loc = index ( s, sub1 )
-   ! 
+   !
    !       if ( loc == 0 ) then
    !         exit
    !       end if
-   ! 
+   !
    !       irep = irep + 1
    !       s(loc:loc+len2-1) = sub2
    !       call s_chop ( s, loc+len2, loc+len1-1 )
-   ! 
+   !
    !     end do
-   !  
+   !
    !   else
-   !  
+   !
    !     do
-   ! 
+   !
    !       loc = index ( s, sub1 )
-   ! 
+   !
    !       if ( loc == 0 ) then
    !         exit
    !       end if
-   ! 
+   !
    !       irep = irep + 1
-   !  
+   !
    !       if ( s_length < loc + len2 - 1 ) then
    !         irep = -irep
    !         write ( *, '(a)' ) ' '
@@ -15569,18 +15568,18 @@ contains
    !         write ( *, '(a)' ) '  Some replaceable elements remain!'
    !         return
    !       end if
-   !  
+   !
    !       call s_blanks_insert ( s, loc, loc+len2-1-len1 )
    !       s(loc:loc+len2-1) = sub2
-   ! 
+   !
    !     end do
-   !  
+   !
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine s_replace ( s, sub1, sub2, irep )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_REPLACE replaces all occurrences of SUB1 by SUB2 in a string.
@@ -15607,7 +15606,7 @@ contains
    ! !    On output, the revised string.
    ! !
    ! !    Input, character ( len = * ) SUB1, the string which is to be replaced.
-   ! !    Trailing blank characters are ignored.  The routine is case sensitive.  
+   ! !    Trailing blank characters are ignored.  The routine is case sensitive.
    ! !
    ! !    Input, character ( len = * ) SUB2, the replacement string.
    ! !
@@ -15623,7 +15622,7 @@ contains
    ! !    fallen off the end)
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ilo
    !   integer ( kind = 4 ) irep
    !   integer ( kind = 4 ) len1
@@ -15633,97 +15632,97 @@ contains
    !   character ( len = * ) s
    !   character ( len = * ) sub1
    !   character ( len = * ) sub2
-   ! 
+   !
    !   irep = 0
    !   lens = len ( s )
-   !  
+   !
    !   if ( lens <= 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'S_REPLACE - Serious error!'
    !     write ( *, '(a)' ) '  Null string not allowed!'
    !     return
    !   end if
-   !  
+   !
    !   len1 = len_trim ( sub1 )
-   !  
+   !
    !   if ( len1 <= 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'S_REPLACE - Serious error!'
    !     write ( *, '(a)' ) '  Null SUB1 not allowed!'
    !     return
    !   end if
-   !  
+   !
    !   len2 = len_trim ( sub2 )
-   !  
+   !
    !   if ( len2 == len1 ) then
-   !  
+   !
    !     if ( sub1(1:len1) == sub2(1:len2) ) then
    !       write ( *, '(a)' ) ' '
    !       write ( *, '(a)' ) 'S_REPLACE - Warning!'
    !       write ( *, '(a)' ) '  Replacement = original!'
    !       return
    !     end if
-   !  
+   !
    !     ilo = 1
-   ! 
+   !
    !     do
-   ! 
+   !
    !       loc = index ( s(ilo:lens), sub1(1:len1) )
-   ! 
+   !
    !       if ( loc == 0 ) then
    !         exit
    !       end if
-   ! 
+   !
    !       loc = loc + ilo - 1
    !       irep = irep + 1
    !       s(loc:loc+len1-1) = sub2(1:len2)
    !       ilo = loc + len1
-   ! 
+   !
    !       if ( lens < ilo ) then
    !         exit
    !       end if
-   ! 
+   !
    !     end do
-   !  
+   !
    !   else if ( len2 < len1 ) then
-   !  
+   !
    !     ilo = 1
-   ! 
+   !
    !     do
-   ! 
+   !
    !       loc = index ( s(ilo:lens), sub1(1:len1) )
-   ! 
+   !
    !       if ( loc == 0 ) then
    !         exit
    !       end if
-   ! 
+   !
    !       irep = irep + 1
    !       loc = loc + ilo - 1
    !       s(loc:loc+len2-1) = sub2(1:len2)
    !       call s_chop ( s, loc+len2, loc+len1-1 )
    !       ilo = loc + len2
-   ! 
+   !
    !       if ( lens < ilo ) then
    !         exit
    !       end if
-   ! 
+   !
    !     end do
-   !  
+   !
    !   else
-   !  
+   !
    !     ilo = 1
-   ! 
+   !
    !     do
-   ! 
+   !
    !       loc = index ( s(ilo:lens), sub1(1:len1) )
-   ! 
+   !
    !       if ( loc == 0 ) then
    !         exit
    !       end if
-   ! 
+   !
    !       loc = loc + ilo - 1
    !       irep = irep + 1
-   !  
+   !
    !       if ( lens < loc + len2 - 1 ) then
    !         irep = -irep
    !         write ( *, '(a)' ) ' '
@@ -15731,20 +15730,20 @@ contains
    !         write ( *, '(a)' ) '  Some replaceable elements remain!'
    !         exit
    !       end if
-   !  
+   !
    !       call s_blanks_insert ( s, loc, loc+len2-1-len1 )
-   ! 
+   !
    !       s(loc:loc+len2-1) = sub2(1:len2)
    !       ilo = loc + len2
-   ! 
+   !
    !     end do
-   ! 
+   !
    !   end if
-   ! 
-   !   return 
+   !
+   !   return
    ! end
    ! subroutine s_replace_i ( s, sub1, sub2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_REPLACE_I replaces all occurrences of SUB1 by SUB2 in a string.
@@ -15783,7 +15782,7 @@ contains
    ! !    fallen off the end)
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ilo
    !   integer ( kind = 4 ) len1
    !   integer ( kind = 4 ) len2
@@ -15792,27 +15791,27 @@ contains
    !   character ( len = * ) s
    !   character ( len = * ) sub1
    !   character ( len = * ) sub2
-   ! 
+   !
    !   lens = len ( s )
-   !  
+   !
    !   if ( lens <= 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'S_REPLACE_I - Serious error!'
    !     write ( *, '(a)' ) '  Null string not allowed!'
    !     return
    !   end if
-   !  
+   !
    !   len1 = len ( sub1 )
-   !  
+   !
    !   if ( len1 <= 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'S_REPLACE_I - Serious error!'
    !     write ( *, '(a)' ) '  Null SUB1 not allowed!'
    !     return
    !   end if
-   !  
+   !
    !   len2 = len ( sub2 )
-   !  
+   !
    !   ilo = s_indexi ( s, sub1 )
    ! !
    ! !  If the match string has been found, then insert the replacement.
@@ -15821,11 +15820,11 @@ contains
    !     s(ilo+len2:lens+len2-len1) = s(ilo+len1:lens)
    !     s(ilo:ilo+len2-1) = sub2(1:len2)
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine s_reverse ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_REVERSE reverses the characters in a string.
@@ -15851,7 +15850,7 @@ contains
    ! !    Trailing blanks are ignored.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) j
    !   character ( len = * ) s
@@ -15861,24 +15860,24 @@ contains
    ! !  so we have to do some mumbo jumbo.
    ! !
    !   s_length = len_trim ( s )
-   !  
+   !
    !   do i = 1, s_length / 2
    !     j = s_length + 1 - i
    !     call ch_swap ( s(i:i), s(j:j) )
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine s_right_insert ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_RIGHT_INSERT inserts a string flush right into another.
    ! !
    ! !  Discussion:
    ! !
-   ! !    S2 is not blanked out first.  If there is already information in S2, 
-   ! !    some of it may still be around after S1 is written into S2.  Users may 
+   ! !    S2 is not blanked out first.  If there is already information in S2,
+   ! !    some of it may still be around after S1 is written into S2.  Users may
    ! !    want to first assign S2 = ' ' if this is not the effect desired.
    ! !
    ! !  Modified:
@@ -15900,7 +15899,7 @@ contains
    ! !    contain, on output, a right flush copy of S1.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ihi
    !   integer ( kind = 4 ) ilo
    !   integer ( kind = 4 ) jhi
@@ -15909,10 +15908,10 @@ contains
    !   integer ( kind = 4 ) len2
    !   character ( len = * ) s1
    !   character ( len = * ) s2
-   ! 
+   !
    !   len1 = len_trim ( s1 )
    !   len2 = len ( s2 )
-   !  
+   !
    !   if ( len1 < len2 ) then
    !     ilo = 1
    !     ihi = len1
@@ -15929,13 +15928,13 @@ contains
    !     jlo = 1
    !     jhi = len2
    !   end if
-   !  
+   !
    !   s2(jlo:jhi) = s1(ilo:ihi)
-   !  
+   !
    !   return
    ! end
    ! subroutine s_roman_to_i4 ( s, i )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_ROMAN_TO_I4 converts a Roman numeral to an integer.
@@ -15970,7 +15969,7 @@ contains
    ! !    Output, integer ( kind = 4 ) I, the corresponding value.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ch_roman_to_i4
    !   character c1
    !   character c2
@@ -15979,69 +15978,69 @@ contains
    !   integer ( kind = 4 ) i1
    !   integer ( kind = 4 ) i2
    !   character ( len = * ) s
-   ! 
+   !
    !   i = 0
    !   done = .true.
-   ! 
+   !
    !   do
-   ! 
+   !
    !     call ch_next ( s, c2, done )
-   ! 
+   !
    !     if ( done ) then
    !       return
    !     end if
-   ! 
+   !
    !     i2 = ch_roman_to_i4 ( c2 )
-   ! 
+   !
    !     if ( i2 == 0 .and. c2 /= ' ' ) then
    !       return
    !     end if
-   ! 
-   !     do 
-   ! 
+   !
+   !     do
+   !
    !       c1 = c2
    !       i1 = i2
-   ! 
+   !
    !       call ch_next ( s, c2, done )
-   ! 
+   !
    !       if ( done ) then
    !         i = i + i1
    !         return
    !       end if
-   ! 
+   !
    !       i2 = ch_roman_to_i4 ( c2 )
-   ! 
+   !
    !       if ( i2 == 0 .and. c2 /= ' ' ) then
    !         i = i + i1
    !         return
    !       end if
-   ! 
+   !
    !       if ( i1 < i2 ) then
    !         i = i + i2 - i1
    !         c1 = ' '
    !         c2 = ' '
    !         exit
    !       end if
-   ! 
+   !
    !       i = i + i1
-   ! 
+   !
    !     end do
-   ! 
+   !
    !   end do
-   !   
+   !
    !   return
    ! end
    ! subroutine s_s_delete ( s, sub, irep )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_S_DELETE removes all occurrences of a substring from a string.
    ! !
    ! !  Discussion:
    ! !
-   ! !    The remainder is left justified and padded with blanks.  
+   ! !    The remainder is left justified and padded with blanks.
    ! !
-   ! !    The deletion is not recursive.  Removing all occurrences of "ab" from 
+   ! !    The deletion is not recursive.  Removing all occurrences of "ab" from
    ! !    "aaaaabbbbbQ" results in "aaaabbbbQ" rather than "Q".
    ! !
    ! !  Modified:
@@ -16062,7 +16061,7 @@ contains
    ! !    which were found.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ihi
    !   integer ( kind = 4 ) ilo
    !   integer ( kind = 4 ) irep
@@ -16070,33 +16069,33 @@ contains
    !   integer ( kind = 4 ) nsub
    !   character ( len = * ) s
    !   character ( len = * ) sub
-   ! 
+   !
    !   nsub = len_trim ( sub )
-   !  
+   !
    !   irep = 0
    !   ilo = 1
    !   ihi = len_trim ( s )
-   ! 
+   !
    !   do while ( ilo <= ihi )
-   ! 
+   !
    !     loc = index ( s(ilo:ihi), sub )
-   ! 
+   !
    !     if ( loc == 0 ) then
    !       return
    !     end if
-   ! 
+   !
    !     irep = irep + 1
    !     loc = loc + ilo - 1
    !     call s_chop ( s, loc, loc+nsub-1 )
    !     ilo = loc
    !     ihi = ihi - nsub
-   ! 
+   !
    !   end do
-   ! 
-   !   return 
+   !
+   !   return
    ! end
    ! subroutine s_s_delete2 ( s, sub, irep )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_S_DELETE2 recursively removes a substring from a string.
@@ -16123,11 +16122,11 @@ contains
    ! !
    ! !    Input, character ( len = * ) SUB, the substring to be removed.
    ! !
-   ! !    Output, integer ( kind = 4 ) IREP, the number of occurrences of 
+   ! !    Output, integer ( kind = 4 ) IREP, the number of occurrences of
    ! !    the substring.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ihi
    !   integer ( kind = 4 ) irep
    !   integer ( kind = 4 ) loc
@@ -16135,38 +16134,38 @@ contains
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
    !   character ( len = * ) sub
-   ! 
+   !
    !   s_length = len ( s )
    !   nsub = len ( sub )
-   !  
+   !
    !   irep = 0
    !   ihi = s_length
-   ! 
+   !
    !   do while ( 0 < ihi )
-   ! 
+   !
    !     loc = index ( s(1:ihi), sub )
-   ! 
+   !
    !     if ( loc == 0 ) then
    !       return
    !     end if
-   ! 
+   !
    !     irep = irep + 1
    !     call s_chop ( s, loc, loc+nsub-1 )
    !     ihi = ihi - nsub
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_s_insert ( s1, ipos, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_S_INSERT inserts a substring into a string.
    ! !
    ! !  Discussion:
    ! !
-   ! !    Characters in the string are moved to the right to make room, and 
+   ! !    Characters in the string are moved to the right to make room, and
    ! !    hence the trailing characters, if any, are lost.
    ! !
    ! !  Modified:
@@ -16188,27 +16187,27 @@ contains
    ! !    Input, character ( len = * ) S2, the string to be inserted.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ihi
    !   integer ( kind = 4 ) ipos
    !   character ( len = * ) s1
    !   integer ( kind = 4 ) s1_length
    !   character ( len = * ) s2
    !   integer ( kind = 4 ) s2_length
-   ! 
+   !
    !   s1_length = len ( s1 )
    !   s2_length = len_trim ( s2 )
-   !  
+   !
    !   ihi = min ( s1_length, ipos+s2_length-1 )
-   !  
+   !
    !   call s_blanks_insert ( s1, ipos, ihi )
-   !  
+   !
    !   s1(ipos:ihi) = s2
-   !  
+   !
    !   return
    ! end
    ! function s_s_subanagram ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_S_SUBANAGRAM determines if S2 is a "subanagram" of S1.
@@ -16222,7 +16221,7 @@ contains
    ! !    the letters of S1 and permuting them.
    ! !
    ! !    Blanks (trailing or otherwise), punctuation, and capitalization
-   ! !    are all significant, so be sure to input exactly the information 
+   ! !    are all significant, so be sure to input exactly the information
    ! !    you want to check.
    ! !
    ! !  Modified:
@@ -16242,7 +16241,7 @@ contains
    ! !    Output, logical S_S_SUBANAGRAM is TRUE if S2 is a subanagram of S1.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i1
    !   integer ( kind = 4 ) i2
    !   logical s_s_subanagram
@@ -16250,23 +16249,23 @@ contains
    !   integer ( kind = 4 ) s1_length
    !   character ( len = * ) s2
    !   integer ( kind = 4 ) s2_length
-   ! 
+   !
    !   s_s_subanagram = .false.
    ! !
    ! !  Sort both.
    ! !
    !   call s_sort_a ( s1 )
    !   call s_sort_a ( s2 )
-   ! 
+   !
    !   s1_length = len ( s1 )
    !   s2_length = len ( s2 )
-   ! 
+   !
    !   i1 = 0
-   ! 
+   !
    !   do i2 = 1, s2_length
-   ! 
-   !     do 
-   ! 
+   !
+   !     do
+   !
    !       i1 = i1 + 1
    ! !
    ! !  Ran out of S1 before finishing.  No match is possible.
@@ -16277,7 +16276,7 @@ contains
    ! !
    ! !  The current character in S1 is already greater than the character in S2.
    ! !  No match is possible.
-   ! !     
+   ! !
    !       if ( llt ( s2(i2:i2), s1(i1:i1) ) ) then
    !         return
    !       end if
@@ -16290,26 +16289,26 @@ contains
    ! !
    ! !  Didn't find a match, but one might be possible if we increase I1.
    ! !
-   ! 
+   !
    !     end do
-   ! 
+   !
    !   end do
    ! !
    ! !  We matched every character of S2 with something in S1.
    ! !
    !   s_s_subanagram = .true.
-   ! 
-   !   return 
+   !
+   !   return
    ! end
    ! subroutine s_set_delete ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
-   ! !! S_SET_DELETE removes any characters in one string from another string.  
+   ! !! S_SET_DELETE removes any characters in one string from another string.
    ! !
    ! !  Discussion:
    ! !
-   ! !    When an element is removed, the rest of the string is shifted to the 
+   ! !    When an element is removed, the rest of the string is shifted to the
    ! !    left, and padded with blanks on the right.
    ! !
    ! !  Modified:
@@ -16327,23 +16326,23 @@ contains
    ! !    Input, character ( len = * ) S2, the characters to be removed.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) j
    !   integer ( kind = 4 ) nset
    !   character ( len = * ) s1
    !   integer ( kind = 4 ) s1_length
    !   character ( len = * ) s2
-   ! 
+   !
    !   s1_length = len ( s1 )
    !   nset = len ( s2 )
-   ! 
+   !
    !   i = 0
-   ! 
+   !
    !   do while ( i < s1_length )
-   ! 
+   !
    !     i = i + 1
-   !  
+   !
    !     do j = 1, nset
    !       if ( s1(i:i) == s2(j:j) ) then
    !         call s_chop ( s1, i, i )
@@ -16352,20 +16351,20 @@ contains
    !         exit
    !       end if
    !     end do
-   !  
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_shift_circular ( s, ishft )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_SHIFT_CIRCULAR circular shifts the characters in a string to the right.
    ! !
    ! !  Discussion:
    ! !
-   ! !    Thus, a shift of -1 would change "Violin" to "iolinV", and a shift 
+   ! !    Thus, a shift of -1 would change "Violin" to "iolinV", and a shift
    ! !    of 1 would change it to "nVioli".
    ! !
    ! !  Modified:
@@ -16384,7 +16383,7 @@ contains
    ! !    right to shift the characters.
    ! !
    !   implicit none
-   ! 
+   !
    !   character chrin
    !   character chrout
    !   integer ( kind = 4 ) icycle
@@ -16395,9 +16394,9 @@ contains
    !   integer ( kind = 4 ) jshft
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len ( s )
-   !  
+   !
    !   if ( s_length <= 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'S_SHIFT_CIRCULAR - Serious error!'
@@ -16408,15 +16407,15 @@ contains
    ! !  Force the shift to be positive and between 0 and S_LENGTH.
    ! !
    !   jshft = ishft
-   !   
-   !   do while ( jshft < 0 ) 
+   !
+   !   do while ( jshft < 0 )
    !     jshft = jshft + s_length
    !   end do
-   !  
-   !   do while ( s_length < jshft ) 
+   !
+   !   do while ( s_length < jshft )
    !     jshft = jshft - s_length
    !   end do
-   !  
+   !
    !   if ( jshft == 0 ) then
    !     return
    !   end if
@@ -16431,34 +16430,34 @@ contains
    !   icycle = 0
    !   idid = 0
    !   imove = 0
-   ! 
+   !
    !   do while ( idid < s_length )
-   ! 
+   !
    !     if ( imove == icycle ) then
    !       imove = imove + 1
    !       icycle = icycle + 1
    !       chrin = s(imove:imove)
    !     end if
-   !  
+   !
    !     idid = idid + 1
    !     igoto = imove + jshft
-   ! 
+   !
    !     if ( s_length < igoto ) then
    !       igoto = igoto - s_length
    !     end if
-   ! 
+   !
    !     chrout = s(igoto:igoto)
    !     s(igoto:igoto) = chrin
    !     chrin = chrout
-   ! 
+   !
    !     imove = igoto
-   ! 
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine s_shift_left ( s, ishft )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_SHIFT_LEFT shifts the characters in a string to the left and blank pads.
@@ -16484,40 +16483,40 @@ contains
    ! !    left to shift the characters.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) ishft
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len ( s )
-   !  
+   !
    !   if ( 0 < ishft ) then
-   ! 
+   !
    !     do i = 1, s_length - ishft
    !       s(i:i) = s(i+ishft:i+ishft)
    !     end do
-   ! 
+   !
    !     do i = s_length - ishft + 1, s_length
    !       s(i:i) = ' '
    !     end do
-   ! 
+   !
    !   else if ( ishft < 0 ) then
-   ! 
+   !
    !     do i = s_length, - ishft + 1, - 1
    !       s(i:i) = s(i+ishft:i+ishft)
    !     end do
-   ! 
+   !
    !     do i = -ishft, 1, -1
    !       s(i:i) = ' '
    !     end do
-   ! 
+   !
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_shift_right ( s, ishft )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_SHIFT_RIGHT shifts the characters in a string to the right and blank pads.
@@ -16543,46 +16542,46 @@ contains
    ! !    right to shift the characters.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) ishft
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len ( s )
-   !  
+   !
    !   if ( s_length <= 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'S_SHIFT_RIGHT - Serious error!'
    !     write ( *, '(a)' ) '  String has nonpositive length!'
    !     return
    !   end if
-   ! 
+   !
    !   if ( 0 < ishft ) then
-   ! 
+   !
    !     do i = s_length, ishft + 1, - 1
    !       s(i:i) = s(i-ishft:i-ishft)
    !     end do
-   ! 
+   !
    !     do i = ishft, 1, -1
    !       s(i:i) = ' '
    !     end do
-   ! 
+   !
    !   else if ( ishft < 0 ) then
-   ! 
+   !
    !     do i = 1, s_length + ishft
    !       s(i:i) = s(i-ishft:i-ishft)
    !     end do
-   ! 
+   !
    !     do i = s_length + ishft + 1, s_length
    !       s(i:i) = ' '
    !     end do
-   ! 
+   !
    !   end if
-   ! 
+   !
    ! end
    ! function s_skip_set ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_SKIP_SET finds the first entry of a string that is NOT in a set.
@@ -16601,34 +16600,34 @@ contains
    ! !
    ! !    Input, character ( len = * ) S2, the characters to skip.
    ! !
-   ! !    Output, integer ( kind = 4 ) S_SKIP_SET, the location of the first 
+   ! !    Output, integer ( kind = 4 ) S_SKIP_SET, the location of the first
    ! !    character in S1 that is not in S2, or 0 if no such index was found.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) s_skip_set
    !   character ( len = * ) s1
    !   integer ( kind = 4 ) s1_length
    !   character ( len = * ) s2
-   ! 
+   !
    !   s1_length = len_trim ( s1 )
-   ! 
+   !
    !   do i = 1, s1_length
-   !  
+   !
    !     if ( index ( s2, s1(i:i) ) == 0 ) then
    !       s_skip_set = i
    !       return
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   s_skip_set = 0
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_sort_a ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_SORT_A sorts a string into ascending order.
@@ -16652,38 +16651,38 @@ contains
    ! !    Input/output, character ( len = * ) S, the string to be sorted.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) j
    !   integer ( kind = 4 ) k
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len ( s )
-   ! 
+   !
    !   do i = 1, s_length - 1
-   ! 
+   !
    !     c = s(i:i)
    !     j = i
-   ! 
+   !
    !     do k = i + 1, s_length
    !       if ( iachar ( s(k:k) ) < iachar ( s(j:j) ) ) then
    !         j = k
    !       end if
    !     end do
-   ! 
+   !
    !     if ( i /= j ) then
    !       s(i:i) = s(j:j)
    !       s(j:j) = c
    !     end if
-   !     
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine s_split ( s, sub, s1, s2, s3 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_SPLIT divides a string into three parts, given the middle.
@@ -16731,7 +16730,7 @@ contains
    ! !    If there was no match, then S3 is blank.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) lenm
    !   character ( len = * ) s
@@ -16741,15 +16740,15 @@ contains
    !   character ( len = * ) s2
    !   character ( len = * ) s3
    !   character ( len = * ) sub
-   ! 
+   !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   lenm = len_trim ( sub )
-   ! 
+   !
    !   if ( lenm == 0 ) then
    !     lenm = 1
    !   end if
-   ! 
+   !
    !   i = s_indexi ( s, sub )
    ! !
    ! !  The substring did not occur.
@@ -16786,11 +16785,11 @@ contains
    !   s1 = adjustl ( s1 )
    !   s2 = adjustl ( s2 )
    !   s3 = adjustl ( s3 )
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_swap ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_SWAP swaps two strings.
@@ -16809,19 +16808,19 @@ contains
    ! !    and S2 have been interchanged.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = * ) s1
    !   character ( len = * ) s2
    !   character ( len = 256 ) s3
-   ! 
+   !
    !   s3 = s1
    !   s1 = s2
    !   s2 = s3
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_tab_blank ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TAB_BLANK replaces each TAB character by one space.
@@ -16839,26 +16838,26 @@ contains
    ! !    Input/output, character ( len = * ) S, the string to be transformed.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
    !   character, parameter :: tab = achar ( 9 )
-   ! 
+   !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do i = 1, s_length
-   !  
+   !
    !     if ( s(i:i) == tab ) then
    !       s(i:i) = ' '
    !     end if
-   !  
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine s_tab_blanks ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TAB_BLANKS replaces TAB characters by 6 spaces.
@@ -16873,12 +16872,12 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input/output, character ( len = * ) S, the string to be modified.  On 
-   ! !    output, some significant characters at the end of S may have 
+   ! !    Input/output, character ( len = * ) S, the string to be modified.  On
+   ! !    output, some significant characters at the end of S may have
    ! !    been lost.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) get
    !   integer ( kind = 4 ) put
@@ -16912,40 +16911,40 @@ contains
    ! !  As soon as we've processed the first TAB, we're done.
    ! !
    !   put = lenc + 5 * ntab
-   ! 
+   !
    !   do get = lenc, 1, - 1
-   ! 
+   !
    !     if ( s(get:get) /= tab ) then
-   ! 
+   !
    !       if ( put <= lens ) then
    !         s(put:put) = s(get:get)
    !       end if
-   ! 
+   !
    !       put = put - 1
-   ! 
+   !
    !     else
-   ! 
+   !
    !       do i = put, put - 5, -1
    !         if ( i <= lens ) then
    !           s(i:i) = ' '
    !         end if
    !       end do
-   ! 
+   !
    !       put = put - 6
    !       ntab = ntab - 1
-   ! 
+   !
    !       if ( ntab == 0 ) then
    !         return
    !       end if
-   ! 
+   !
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_to_c4 ( s, cval, ierror, length )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TO_C4 reads a complex number from a string.
@@ -17030,7 +17029,7 @@ contains
    ! !    characters such as a trailing comma or blanks.
    ! !
    !   implicit none
-   ! 
+   !
    !   real ( kind = 4 ) aval
    !   real ( kind = 4 ) bval
    !   logical ch_eqi
@@ -17058,7 +17057,7 @@ contains
    !     ierror = 1
    !     return
    !   end if
-   ! 
+   !
    !   call nexchr ( s, ichr, c )
    ! !
    ! !  If the next character is "I", then this number is 0+I.
@@ -17074,13 +17073,13 @@ contains
    ! !  OK, the next string has to be a number!
    ! !
    !   call s_to_r4 ( s, aval, ierror, ichr )
-   !  
+   !
    !   if ( ierror /= 0 ) then
    !     ierror = 2
    !     length = 0
    !     return
    !   end if
-   !  
+   !
    !   length = length + ichr
    ! !
    ! !  See if this is a pure real number, because:
@@ -17103,7 +17102,7 @@ contains
    ! !  aimaginary number!
    ! !
    !   call nexchr ( s(length+1:), ichr, c )
-   !  
+   !
    !   if ( ch_eqi ( c, 'I' ) ) then
    !     bval = aval
    !     aval = 0.0E+00
@@ -17116,18 +17115,18 @@ contains
    ! !  "I", then this is a pure aimaginary number!
    ! !
    !   if ( c == '*' ) then
-   ! 
+   !
    !     call nexchr ( s(length+ichr+1:), ichr2, c2 )
-   ! 
+   !
    !     if ( ch_eqi ( c2, 'I' ) ) then
    !       bval = aval
    !       aval = 0.0E+00
    !       length = length + ichr + ichr2
    !     end if
-   ! 
+   !
    !     cval = cmplx ( aval, bval, kind = 4 )
    !     return
-   ! 
+   !
    !   end if
    ! !
    ! !  OK, now we've got A.  We have to be careful because the next
@@ -17137,9 +17136,9 @@ contains
    ! !
    !   call nexchr ( s(length+1:), ichr, c )
    !   call nexchr ( s(length+1+ichr:), ichr2, c2 )
-   !  
+   !
    !   if ( ch_eqi ( c2, 'I' ) ) then
-   ! 
+   !
    !     if ( c == '+' ) then
    !       bval = 1
    !       length = length + ichr + ichr2
@@ -17151,25 +17150,25 @@ contains
    !       cval = cmplx ( aval, bval, kind = 4 )
    !       return
    !     end if
-   ! 
+   !
    !   end if
    ! !
    ! !  Read the next real number.
    ! !
    !   call s_to_r4 ( s(length+1:), bval, ierror, ichr )
-   !  
+   !
    !   if ( ierror /= 0 ) then
    !     ierror = 3
    !     length = 0
    !     return
    !   end if
-   !  
+   !
    !   length = length + ichr
    ! !
    ! !  If the next character is a "*", that's OK, advance past it.
    ! !
    !   call nexchr ( s(length+1:), ichr, c )
-   !  
+   !
    !   if ( c == '*' ) then
    !     length = length + ichr
    !   end if
@@ -17177,7 +17176,7 @@ contains
    ! !  Now we really do want the next character to be "I".
    ! !
    !   call nexchr ( s(length+1:), ichr, c )
-   !  
+   !
    !   if ( s_neqi ( c, 'I' ) ) then
    !     ierror = 4
    !     length = 0
@@ -17187,11 +17186,11 @@ contains
    ! !  Form the complex number.
    ! !
    !   cval = cmplx ( aval, bval, kind = 4 )
-   !  
+   !
    !   return
    ! end
    ! subroutine s_to_chvec ( s, n, chvec )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TO_CHVEC converts a string to a character vector.
@@ -17218,12 +17217,12 @@ contains
    ! !    Output, character CHVEC(N), the characters extracted from S.
    ! !
    !   implicit none
-   ! 
+   !
    !   character chvec(*)
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) n
    !   character ( len = * ) s
-   ! 
+   !
    !   if ( n <= - 1 ) then
    !     n = len ( s )
    !   else if ( n == 0 ) then
@@ -17231,15 +17230,15 @@ contains
    !   else
    !     n = min ( n, len ( s ) )
    !   end if
-   ! 
+   !
    !   do i = 1, n
    !     chvec(i) = s(i:i)
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine s_to_date ( s1, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TO_DATE converts the F90 date string to a more usual format.
@@ -17270,13 +17269,13 @@ contains
    ! !    forseeable future.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) m
    !   character ( len = 8 ) month
    !   character ( len = * ) s1
    !   character ( len = * ) s2
-   ! 
+   !
    !   if ( s1(7:7) == '0' ) then
    !     s2(1:1) = s1(8:8)
    !     i = 1
@@ -17284,26 +17283,26 @@ contains
    !     s2(1:2) = s1(7:8)
    !     i = 2
    !   end if
-   ! 
+   !
    !   i = i + 1
    !   s2(i:i) = ' '
-   ! 
+   !
    !   read ( s1(5:6), '(i2)' ) m
    !   call i4_to_month_name ( m, month )
-   ! 
+   !
    !   s2(i+1:) = month
    !   i = i + len_trim ( month )
-   ! 
+   !
    !   i = i + 1
    !   s2(i:i) = ' '
-   ! 
+   !
    !   s2(i+1:i+4) = s1(1:4)
    !   i = i + 4
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_to_dec ( s, itop, ibot, length )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TO_DEC reads a number from a string, returning a decimal result.
@@ -17372,7 +17371,7 @@ contains
    ! !    Output, integer ( kind = 4 ) LENGTH, the number of characters used.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical ch_is_digit
    !   character c
    !   integer ( kind = 4 ) digit
@@ -17387,15 +17386,15 @@ contains
    !   integer ( kind = 4 ) mantissa_sign
    !   character ( len = * ) s
    !   logical s_eqi
-   ! 
+   !
    !   itop = 0
    !   ibot = 0
-   ! 
+   !
    !   if ( len ( s ) <= 0 ) then
    !     length = 0
    !     return
    !   end if
-   ! 
+   !
    !   length = -1
    !   exponent_sign = 0
    !   mantissa_sign = 1
@@ -17406,18 +17405,18 @@ contains
    ! !  Consider the next character in the string.
    ! !
    !   do
-   ! 
+   !
    !     length = length + 1
    !     c = s(length+1:length+1)
    ! !
    ! !  Blank.
    ! !
    !     if ( c == ' ' ) then
-   ! 
+   !
    !       if ( ihave == 1 ) then
-   ! 
+   !
    !       else if ( ihave == 2 ) then
-   ! 
+   !
    !       else
    !         iterm = 1
    !       end if
@@ -17425,7 +17424,7 @@ contains
    ! !  Comma or semicolon.
    ! !
    !     else if ( c == ',' .or. c == ';' ) then
-   ! 
+   !
    !       if ( ihave /= 1 ) then
    !         iterm = 1
    !         ihave = 9
@@ -17435,7 +17434,7 @@ contains
    ! !  Minus sign.
    ! !
    !     else if ( c == '-' ) then
-   ! 
+   !
    !       if ( ihave == 1 ) then
    !         ihave = 2
    !         mantissa_sign = -1
@@ -17449,7 +17448,7 @@ contains
    ! !  Plus sign.
    ! !
    !     else if ( c == '+' ) then
-   ! 
+   !
    !       if ( ihave == 1 ) then
    !         ihave = 2
    !         mantissa_sign = +1
@@ -17463,7 +17462,7 @@ contains
    ! !  Decimal point.
    ! !
    !     else if ( c == '.' ) then
-   ! 
+   !
    !       if ( ihave < 4 ) then
    !         ihave = 4
    !       else
@@ -17473,7 +17472,7 @@ contains
    ! !  Exponent marker.
    ! !
    !     else if ( s_eqi ( c, 'E' ) .or. s_eqi ( c, 'D' ) ) then
-   ! 
+   !
    !       if ( ihave < 6 ) then
    !         ihave = 6
    !       else
@@ -17483,7 +17482,7 @@ contains
    ! !  Digit.
    ! !
    !     else if ( ch_is_digit ( c ) ) then
-   ! 
+   !
    !       if ( ihave <= 3 ) then
    !         ihave = 3
    !         call ch_to_digit ( c, digit )
@@ -17509,16 +17508,16 @@ contains
    !     else
    !       iterm = 1
    !     end if
-   ! 
+   !
    !     if ( iterm == 1 ) then
    !       exit
    !     end if
-   ! 
+   !
    !     if ( len ( s ) <= length + 1 ) then
    !       length = len ( s )
    !       exit
    !     end if
-   ! 
+   !
    !   end do
    ! !
    ! !  Number seems to have terminated.
@@ -17537,27 +17536,27 @@ contains
    ! !  Normalize.
    ! !
    !   if ( 0 < itop ) then
-   ! 
-   !     do while ( mod ( itop, i4_10 ) == 0 ) 
+   !
+   !     do while ( mod ( itop, i4_10 ) == 0 )
    !       itop = itop / 10
    !       ibot = ibot + 1
    !     end do
-   ! 
+   !
    !   end if
    ! !
    ! !  Consolidate the number in the form ITOP * 10**IBOT.
    ! !
    !   ibot = ibot + exponent_sign * exponent
    !   itop = mantissa_sign * itop
-   ! 
+   !
    !   if ( itop == 0 ) then
    !    ibot = 0
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_to_ebcdic ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TO_EBCDIC converts a character string from ASCII to EBCDIC.
@@ -17576,22 +17575,22 @@ contains
    ! !    string, on output, the EBCDIC string.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch_to_ebcdic
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len ( s )
-   ! 
+   !
    !   do i = 1, s_length
    !     s(i:i) = ch_to_ebcdic ( s(i:i) )
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine s_to_format ( s, r, code, w, m )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TO_FORMAT reads a FORTRAN format from a string.
@@ -17656,7 +17655,7 @@ contains
    ! !    Output, integer ( kind = 4 ) M, the mantissa width.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   logical ch_is_digit
    !   logical ch_is_format_code
@@ -17673,26 +17672,26 @@ contains
    !   integer ( kind = 4 ) s_length
    !   integer ( kind = 4 ) state
    !   integer ( kind = 4 ) w
-   ! 
+   !
    !   state = 0
    !   paren_sum = 0
    !   pos = 0
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   r = 0
    !   w = 0
    !   code = '\?'
    !   m = 0
-   ! 
+   !
    !   do while ( pos < s_length )
-   ! 
+   !
    !     pos = pos + 1
    !     c = s(pos:pos)
    ! !
    ! !  BLANK character:
    ! !
    !     if ( c == ' ' ) then
-   ! 
+   !
    !       if ( state == 4 ) then
    !         state = 5
    !       else if ( state == 6 ) then
@@ -17706,7 +17705,7 @@ contains
    ! !  LEFT PAREN
    ! !
    !     else if ( c == '(' ) then
-   ! 
+   !
    !       if ( state < 2 ) then
    !         paren_sum = paren_sum + LEFT
    !       else
@@ -17723,7 +17722,7 @@ contains
    ! !  DIGIT (R, F, or W)
    ! !
    !     else if ( ch_is_digit ( c ) ) then
-   ! 
+   !
    !       if ( state <= 3 ) then
    !         state = 4
    !         call ch_to_digit ( c, r )
@@ -17767,7 +17766,7 @@ contains
    ! !  DECIMAL POINT
    ! !
    !     else if ( c == '.' ) then
-   ! 
+   !
    !       if ( state == 8 ) then
    !         state = 9
    !       else
@@ -17784,9 +17783,9 @@ contains
    ! !  RIGHT PAREN
    ! !
    !     else if ( c == ')' ) then
-   ! 
+   !
    !       paren_sum = paren_sum + RIGHT
-   ! 
+   !
    !       if ( paren_sum /= 0 ) then
    !         if ( debug ) then
    !           write ( *, '(a)' ) ' '
@@ -17797,7 +17796,7 @@ contains
    !         state = -1
    !         exit
    !       end if
-   ! 
+   !
    !       if ( state == 6 .and. code == '*' ) then
    !         state = 12
    !       else if ( 6 <= state ) then
@@ -17816,7 +17815,7 @@ contains
    ! !  Code
    ! !
    !     else if ( ch_is_format_code ( c ) ) then
-   ! 
+   !
    !       if ( state < 6 ) then
    !         state = 6
    !         code = c
@@ -17834,7 +17833,7 @@ contains
    ! !  Unexpected character
    ! !
    !     else
-   ! 
+   !
    !       if ( debug ) then
    !         write ( *, '(a)' ) ' '
    !         write ( *, '(a)' ) 'S_TO_FORMAT - Fatal error!'
@@ -17843,33 +17842,33 @@ contains
    !       end if
    !       state = -1
    !       exit
-   ! 
+   !
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   if ( paren_sum /= 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'S_TO_FORMAT - Fatal error!'
    !     write ( *, '(a)' ) '  Parentheses mismatch.'
    !     stop
    !   end if
-   ! 
+   !
    !   if ( state < 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'S_TO_FORMAT - Fatal error!'
    !     write ( *, '(a)' ) '  Parsing error.'
    !     stop
    !   end if
-   ! 
+   !
    !   if ( r == 0 ) then
    !     r = 1
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_to_hex ( s, hex )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TO_HEX replaces a character string by a hexadecimal representation.
@@ -17896,7 +17895,7 @@ contains
    ! !    Output, character ( len = * ) HEX, the string of hex values.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = * ) hex
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) intval
@@ -17905,154 +17904,154 @@ contains
    !   integer ( kind = 4 ) nhex
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
    !   nhex = len ( hex )
-   !  
+   !
    !   ndo = min ( nhex / 2, s_length )
    !   hex = ' '
-   !  
+   !
    !   do i = 1, ndo
-   ! 
+   !
    !     j = 2 * i - 1
    !     intval = iachar ( s(i:i) )
-   ! 
+   !
    !     call i4_to_hex ( intval, hex(j:j+1) )
-   ! 
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
-   subroutine s_to_i4 ( s, value, ierror, length )
-   
-   !*****************************************************************************80
-   !
-   !! S_TO_I4 reads an integer value from a string.
-   !
-   !  Discussion:
-   !
-   !    Instead of ICHAR, we now use the IACHAR function, which
-   !    guarantees the ASCII collating sequence.
-   !
-   !  Modified:
-   !
-   !    13 January 2006
-   !
-   !  Author:
-   !
-   !    John Burkardt
-   !
-   !  Parameters:
-   !
-   !    Input, character ( len = * ) S, a string to be examined.
-   !
-   !    Output, integer ( kind = 4 ) VALUE, the integer value read from the string.
-   !    If the string is blank, then VALUE will be returned 0.
-   !
-   !    Output, integer ( kind = 4 ) IERROR, an error flag.
-   !    0, no error.
-   !    1, an error occurred.
-   !
-   !    Output, integer ( kind = 4 ) LENGTH, the number of characters 
-   !    of S used to make the integer.
-   !
-     implicit none
-   
-     character c
-     integer ( kind = 4 ) i
-     integer ( kind = 4 ) ierror
-     integer ( kind = 4 ) isgn
-     integer ( kind = 4 ) length
-     character ( len = * ) s
-     integer ( kind = 4 ) state
-     integer ( kind = 4 ) value
-   
-     value = 0
-     ierror = 0
-     length = 0
-   
-     state = 0
-     isgn = 1
-   
-     do i = 1, len_trim ( s )
-   
-       c = s(i:i)
-   !
-   !  STATE = 0, haven't read anything.
-   !
-       if ( state == 0 ) then
-   
-         if ( c == ' ' ) then
-   
-         else if ( c == '-' ) then
-           state = 1
-           isgn = -1
-         else if ( c == '+' ) then
-           state = 1
-           isgn = +1
-         else if ( lle ( '0', c ) .and. lle ( c, '9' ) ) then
-           state = 2
-           value = iachar ( c ) - iachar ( '0' )
-         else
-           ierror = 1
-           return
+   subroutine s_to_i4(s, value, ierror, length)
+
+      !*****************************************************************************80
+      !
+      !! S_TO_I4 reads an integer value from a string.
+      !
+      !  Discussion:
+      !
+      !    Instead of ICHAR, we now use the IACHAR function, which
+      !    guarantees the ASCII collating sequence.
+      !
+      !  Modified:
+      !
+      !    13 January 2006
+      !
+      !  Author:
+      !
+      !    John Burkardt
+      !
+      !  Parameters:
+      !
+      !    Input, character ( len = * ) S, a string to be examined.
+      !
+      !    Output, integer ( kind = 4 ) VALUE, the integer value read from the string.
+      !    If the string is blank, then VALUE will be returned 0.
+      !
+      !    Output, integer ( kind = 4 ) IERROR, an error flag.
+      !    0, no error.
+      !    1, an error occurred.
+      !
+      !    Output, integer ( kind = 4 ) LENGTH, the number of characters
+      !    of S used to make the integer.
+      !
+      implicit none
+
+      character c
+      integer(kind=4) i
+      integer(kind=4) ierror
+      integer(kind=4) isgn
+      integer(kind=4) length
+      character(len=*) s
+      integer(kind=4) state
+      integer(kind=4) value
+
+      value = 0
+      ierror = 0
+      length = 0
+
+      state = 0
+      isgn = 1
+
+      do i = 1, len_trim(s)
+
+         c = s(i:i)
+         !
+         !  STATE = 0, haven't read anything.
+         !
+         if (state == 0) then
+
+            if (c == ' ') then
+
+            else if (c == '-') then
+               state = 1
+               isgn = -1
+            else if (c == '+') then
+               state = 1
+               isgn = +1
+            else if (lle('0', c) .and. lle(c, '9')) then
+               state = 2
+               value = iachar(c) - iachar('0')
+            else
+               ierror = 1
+               return
+            end if
+            !
+            !  STATE = 1, have read the sign, expecting digits or spaces.
+            !
+         else if (state == 1) then
+
+            if (c == ' ') then
+
+            else if (lle('0', c) .and. lle(c, '9')) then
+               state = 2
+               value = iachar(c) - iachar('0')
+            else
+               ierror = 1
+               return
+            end if
+            !
+            !  STATE = 2, have read at least one digit, expecting more.
+            !
+         else if (state == 2) then
+
+            if (lle('0', c) .and. lle(c, '9')) then
+
+               value = 10*value + iachar(c) - iachar('0')
+
+            else
+
+               value = isgn*value
+               ierror = 0
+               length = i - 1
+               return
+
+            end if
+
          end if
-   !
-   !  STATE = 1, have read the sign, expecting digits or spaces.
-   !
-       else if ( state == 1 ) then
-   
-         if ( c == ' ' ) then
-   
-         else if ( lle ( '0', c ) .and. lle ( c, '9' ) ) then
-           state = 2
-           value = iachar ( c ) - iachar ( '0' )
-         else
-           ierror = 1
-           return
-         end if
-   !
-   !  STATE = 2, have read at least one digit, expecting more.
-   !
-       else if ( state == 2 ) then
-   
-         if ( lle ( '0', c ) .and. lle ( c, '9' ) ) then
-   
-           value = 10 * value + iachar ( c ) - iachar ( '0' )
-   
-         else
-   
-           value = isgn * value
-           ierror = 0
-           length = i - 1
-           return
-   
-         end if
-   
-       end if
-   
-     end do
-   !
-   !  If we read all the characters in the string, see if we're OK.
-   !
-     if ( state == 2 ) then
-   
-       value = isgn * value
-       ierror = 0
-       length = len_trim ( s )
-   
-     else
-   
-       value = 0
-       ierror = 1
-       length = 0
-   
-     end if
-   
-     return
+
+      end do
+      !
+      !  If we read all the characters in the string, see if we're OK.
+      !
+      if (state == 2) then
+
+         value = isgn*value
+         ierror = 0
+         length = len_trim(s)
+
+      else
+
+         value = 0
+         ierror = 1
+         length = 0
+
+      end if
+
+      return
    end
    ! subroutine s_to_i4vec ( s, n, i4vec, ierror )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TO_I4VEC reads an integer vector from a string.
@@ -18067,7 +18066,7 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input, character ( len = * ) S, the string to be read. 
+   ! !    Input, character ( len = * ) S, the string to be read.
    ! !
    ! !    Input, integer ( kind = 4 ) N, the number of values expected.
    ! !
@@ -18078,39 +18077,39 @@ contains
    ! !    -K, could not read data for entries -K through N.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) ierror
    !   integer ( kind = 4 ) ilo
    !   integer ( kind = 4 ) i4vec(n)
    !   integer ( kind = 4 ) length
    !   character ( len = * ) s
-   ! 
+   !
    !   i = 0
    !   ierror = 0
    !   ilo = 1
-   ! 
+   !
    !   do while ( i < n )
-   ! 
+   !
    !     i = i + 1
-   ! 
+   !
    !     call s_to_i4 ( s(ilo:), i4vec(i), ierror, length )
-   ! 
+   !
    !     if ( ierror /= 0 ) then
    !       ierror = -i
    !       exit
    !     end if
-   ! 
+   !
    !     ilo = ilo + length
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_to_l ( s, logval, ierror, length )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TO_L reads a logical value from a string.
@@ -18201,7 +18200,7 @@ contains
    ! !    the string to form the logical value.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) first
    !   integer ( kind = 4 ) ierror
    !   integer ( kind = 4 ) j
@@ -18233,7 +18232,7 @@ contains
    ! !  Find the first nonblank character in the string.
    ! !
    !   first = s_first_nonblank ( s )
-   !  
+   !
    !   if ( first <= 0 ) then
    !     ierror = 1
    !     return
@@ -18243,302 +18242,302 @@ contains
    ! !  size.
    ! !
    !   lens = len_trim ( s )
-   ! 
+   !
    !   do j = 8, 1, -1
-   !  
+   !
    !     last = first + len_trim ( pat(j) ) - 1
-   !  
+   !
    !     if ( last <= lens ) then
-   ! 
+   !
    !       if ( s_eqi ( pat(j), s(first:last) ) ) then
    !         logval = val(j)
    !         length = last
    !         return
    !       end if
-   ! 
+   !
    !     end if
-   !  
+   !
    !   end do
    ! !
    ! !  The input string did not contain a logical value.
    ! !
    !   ierror = 2
-   ! 
+   !
    !   return
    ! end
-   subroutine s_to_r4 ( s, r, ierror, length )
-   
-   !*****************************************************************************80
-   !
-   !! S_TO_R4 reads an R4 value from a string.
-   !
-   !  Discussion:
-   !
-   !    An "R4" value is simply a real number to be stored as a
-   !    variable of type "real ( kind = 4 )".
-   !
-   !    This routine will read as many characters as possible until it reaches
-   !    the end of the string, or encounters a character which cannot be
-   !    part of the real number.
-   !
-   !    Legal input is:
-   !
-   !       1 blanks,
-   !       2 '+' or '-' sign,
-   !       2.5 spaces
-   !       3 integer part,
-   !       4 decimal point,
-   !       5 fraction part,
-   !       6 'E' or 'e' or 'D' or 'd', exponent marker,
-   !       7 exponent sign,
-   !       8 exponent integer part,
-   !       9 exponent decimal point,
-   !      10 exponent fraction part,
-   !      11 blanks,
-   !      12 final comma or semicolon.
-   !
-   !    with most quantities optional.
-   !
-   !  Example:
-   !
-   !    S                 R
-   !
-   !    '1'               1.0
-   !    '     1   '       1.0
-   !    '1A'              1.0
-   !    '12,34,56'        12.0
-   !    '  34 7'          34.0
-   !    '-1E2ABCD'        -100.0
-   !    '-1X2ABCD'        -1.0
-   !    ' 2E-1'           0.2
-   !    '23.45'           23.45
-   !    '-4.2E+2'         -420.0
-   !    '17d2'            1700.0
-   !    '-14e-2'         -0.14
-   !    'e2'              100.0
-   !    '-12.73e-9.23'   -12.73 * 10.0**(-9.23)
-   !
-   !  Modified:
-   !
-   !    12 February 2001
-   !
-   !  Author:
-   !
-   !    John Burkardt
-   !
-   !  Parameters:
-   !
-   !    Input, character ( len = * ) S, the string containing the
-   !    data to be read.  Reading will begin at position 1 and
-   !    terminate at the end of the string, or when no more
-   !    characters can be read to form a legal real.  Blanks,
-   !    commas, or other nonnumeric data will, in particular,
-   !    cause the conversion to halt.
-   !
-   !    Output, real ( kind = 4 ) R, the real value that was read from the string.
-   !
-   !    Output, integer ( kind = 4 ) IERROR, error flag.
-   !    0, no errors occurred.
-   !    1, 2, 6 or 7, the input number was garbled.  The
-   !    value of IERROR is the last type of input successfully
-   !    read.  For instance, 1 means initial blanks, 2 means
-   !    a plus or minus sign, and so on.
-   !
-   !    Output, integer ( kind = 4 ) LENGTH, the number of characters read from
-   !    the string to form the number, including any terminating
-   !    characters such as a trailing comma or blanks.
-   !
-     implicit none
-   
-     character c
-     ! logical ch_eqi
-     integer ( kind = 4 ) ierror
-     integer ( kind = 4 ) ihave
-     integer ( kind = 4 ) isgn
-     integer ( kind = 4 ) iterm
-     integer ( kind = 4 ) jbot
-     integer ( kind = 4 ) jsgn
-     integer ( kind = 4 ) jtop
-     integer ( kind = 4 ) length
-     integer ( kind = 4 ) ndig
-     real ( kind = 4 ) r
-     real ( kind = 4 ) rbot
-     real ( kind = 4 ) rexp
-     real ( kind = 4 ) rtop
-     character ( len = * ) s
-     integer ( kind = 4 ) s_length
-     character, parameter :: TAB = achar ( 9 )
-   
-     s_length = len_trim ( s )
-     ierror = 0
-     r = 0.0E+00
-     length = -1
-     isgn = 1
-     rtop = 0.0E+00
-     rbot = 1.0E+00
-     jsgn = 1
-     jtop = 0
-     jbot = 1
-     ihave = 1
-     iterm = 0
-    
-     do
-   
-       length = length + 1
-       c = s(length+1:length+1)
-   !
-   !  Blank or TAB character.
-   !
-       if ( c == ' ' .or. c == TAB ) then
-   
-         if ( ihave == 2 ) then
-    
-         else if ( ihave == 6 .or. ihave == 7 ) then
-           iterm = 1
-         else if ( 1 < ihave ) then
-           ihave = 11
-         end if
-   !
-   !  Comma.
-   !
-       else if ( c == ',' .or. c == ';' ) then
-    
-         if ( ihave /= 1 ) then
-           iterm = 1
-           ihave = 12
-           length = length + 1
-         end if
-   !
-   !  Minus sign.
-   !
-       else if ( c == '-' ) then
-    
-         if ( ihave == 1 ) then
-           ihave = 2
-           isgn = -1
-         else if ( ihave == 6 ) then
-           ihave = 7
-           jsgn = -1
+   subroutine s_to_r4(s, r, ierror, length)
+
+      !*****************************************************************************80
+      !
+      !! S_TO_R4 reads an R4 value from a string.
+      !
+      !  Discussion:
+      !
+      !    An "R4" value is simply a real number to be stored as a
+      !    variable of type "real ( kind = 4 )".
+      !
+      !    This routine will read as many characters as possible until it reaches
+      !    the end of the string, or encounters a character which cannot be
+      !    part of the real number.
+      !
+      !    Legal input is:
+      !
+      !       1 blanks,
+      !       2 '+' or '-' sign,
+      !       2.5 spaces
+      !       3 integer part,
+      !       4 decimal point,
+      !       5 fraction part,
+      !       6 'E' or 'e' or 'D' or 'd', exponent marker,
+      !       7 exponent sign,
+      !       8 exponent integer part,
+      !       9 exponent decimal point,
+      !      10 exponent fraction part,
+      !      11 blanks,
+      !      12 final comma or semicolon.
+      !
+      !    with most quantities optional.
+      !
+      !  Example:
+      !
+      !    S                 R
+      !
+      !    '1'               1.0
+      !    '     1   '       1.0
+      !    '1A'              1.0
+      !    '12,34,56'        12.0
+      !    '  34 7'          34.0
+      !    '-1E2ABCD'        -100.0
+      !    '-1X2ABCD'        -1.0
+      !    ' 2E-1'           0.2
+      !    '23.45'           23.45
+      !    '-4.2E+2'         -420.0
+      !    '17d2'            1700.0
+      !    '-14e-2'         -0.14
+      !    'e2'              100.0
+      !    '-12.73e-9.23'   -12.73 * 10.0**(-9.23)
+      !
+      !  Modified:
+      !
+      !    12 February 2001
+      !
+      !  Author:
+      !
+      !    John Burkardt
+      !
+      !  Parameters:
+      !
+      !    Input, character ( len = * ) S, the string containing the
+      !    data to be read.  Reading will begin at position 1 and
+      !    terminate at the end of the string, or when no more
+      !    characters can be read to form a legal real.  Blanks,
+      !    commas, or other nonnumeric data will, in particular,
+      !    cause the conversion to halt.
+      !
+      !    Output, real ( kind = 4 ) R, the real value that was read from the string.
+      !
+      !    Output, integer ( kind = 4 ) IERROR, error flag.
+      !    0, no errors occurred.
+      !    1, 2, 6 or 7, the input number was garbled.  The
+      !    value of IERROR is the last type of input successfully
+      !    read.  For instance, 1 means initial blanks, 2 means
+      !    a plus or minus sign, and so on.
+      !
+      !    Output, integer ( kind = 4 ) LENGTH, the number of characters read from
+      !    the string to form the number, including any terminating
+      !    characters such as a trailing comma or blanks.
+      !
+      implicit none
+
+      character c
+      ! logical ch_eqi
+      integer(kind=4) ierror
+      integer(kind=4) ihave
+      integer(kind=4) isgn
+      integer(kind=4) iterm
+      integer(kind=4) jbot
+      integer(kind=4) jsgn
+      integer(kind=4) jtop
+      integer(kind=4) length
+      integer(kind=4) ndig
+      real(kind=4) r
+      real(kind=4) rbot
+      real(kind=4) rexp
+      real(kind=4) rtop
+      character(len=*) s
+      integer(kind=4) s_length
+      character, parameter :: TAB = achar(9)
+
+      s_length = len_trim(s)
+      ierror = 0
+      r = 0.0E+00
+      length = -1
+      isgn = 1
+      rtop = 0.0E+00
+      rbot = 1.0E+00
+      jsgn = 1
+      jtop = 0
+      jbot = 1
+      ihave = 1
+      iterm = 0
+
+      do
+
+         length = length + 1
+         c = s(length + 1:length + 1)
+         !
+         !  Blank or TAB character.
+         !
+         if (c == ' ' .or. c == TAB) then
+
+            if (ihave == 2) then
+
+            else if (ihave == 6 .or. ihave == 7) then
+               iterm = 1
+            else if (1 < ihave) then
+               ihave = 11
+            end if
+            !
+            !  Comma.
+            !
+         else if (c == ',' .or. c == ';') then
+
+            if (ihave /= 1) then
+               iterm = 1
+               ihave = 12
+               length = length + 1
+            end if
+            !
+            !  Minus sign.
+            !
+         else if (c == '-') then
+
+            if (ihave == 1) then
+               ihave = 2
+               isgn = -1
+            else if (ihave == 6) then
+               ihave = 7
+               jsgn = -1
+            else
+               iterm = 1
+            end if
+            !
+            !  Plus sign.
+            !
+         else if (c == '+') then
+
+            if (ihave == 1) then
+               ihave = 2
+            else if (ihave == 6) then
+               ihave = 7
+            else
+               iterm = 1
+            end if
+            !
+            !  Decimal point.
+            !
+         else if (c == '.') then
+
+            if (ihave < 4) then
+               ihave = 4
+            else if (6 <= ihave .and. ihave <= 8) then
+               ihave = 9
+            else
+               iterm = 1
+            end if
+            !
+            !  Exponent marker.
+            !
+         else if (ch_eqi(c, 'E') .or. ch_eqi(c, 'D')) then
+
+            if (ihave < 6) then
+               ihave = 6
+            else
+               iterm = 1
+            end if
+            !
+            !  Digit.
+            !
+         else if (ihave < 11 .and. lle('0', c) .and. lle(c, '9')) then
+
+            if (ihave <= 2) then
+               ihave = 3
+            else if (ihave == 4) then
+               ihave = 5
+            else if (ihave == 6 .or. ihave == 7) then
+               ihave = 8
+            else if (ihave == 9) then
+               ihave = 10
+            end if
+
+            call ch_to_digit(c, ndig)
+
+            if (ihave == 3) then
+               rtop = 10.0E+00*rtop + real(ndig, kind=4)
+            else if (ihave == 5) then
+               rtop = 10.0E+00*rtop + real(ndig, kind=4)
+               rbot = 10.0E+00*rbot
+            else if (ihave == 8) then
+               jtop = 10*jtop + ndig
+            else if (ihave == 10) then
+               jtop = 10*jtop + ndig
+               jbot = 10*jbot
+            end if
+            !
+            !  Anything else is regarded as a terminator.
+            !
          else
-           iterm = 1
+            iterm = 1
          end if
-   !
-   !  Plus sign.
-   !
-       else if ( c == '+' ) then
-    
-         if ( ihave == 1 ) then
-           ihave = 2
-         else if ( ihave == 6 ) then
-           ihave = 7
+         !
+         !  If we haven't seen a terminator, and we haven't examined the
+         !  entire string, go get the next character.
+         !
+         if (iterm == 1 .or. s_length <= length + 1) then
+            exit
+         end if
+
+      end do
+      !
+      !  If we haven't seen a terminator, and we have examined the
+      !  entire string, then we're done, and LENGTH is equal to S_LENGTH.
+      !
+      if (iterm /= 1 .and. length + 1 == s_length) then
+         length = s_length
+      end if
+      !
+      !  Number seems to have terminated.  Have we got a legal number?
+      !  Not if we terminated in states 1, 2, 6 or 7!
+      !
+      if (ihave == 1 .or. ihave == 2 .or. ihave == 6 .or. ihave == 7) then
+
+         ierror = ihave
+
+         return
+      end if
+      !
+      !  Number seems OK.  Form it.
+      !
+      if (jtop == 0) then
+         rexp = 1.0E+00
+      else
+
+         if (jbot == 1) then
+            rexp = 10.0E+00**(jsgn*jtop)
          else
-           iterm = 1
+            rexp = jsgn*jtop
+            rexp = rexp/jbot
+            rexp = 10.0E+00**rexp
          end if
-   !
-   !  Decimal point.
-   !
-       else if ( c == '.' ) then
-    
-         if ( ihave < 4 ) then
-           ihave = 4
-         else if ( 6 <= ihave .and. ihave <= 8 ) then
-           ihave = 9
-         else
-           iterm = 1
-         end if
-   !
-   !  Exponent marker.
-   !
-       else if ( ch_eqi ( c, 'E' ) .or. ch_eqi ( c, 'D' ) ) then
-    
-         if ( ihave < 6 ) then
-           ihave = 6
-         else
-           iterm = 1
-         end if
-   !
-   !  Digit.
-   !
-       else if ( ihave < 11 .and. lle ( '0', c ) .and. lle ( c, '9' ) ) then
-    
-         if ( ihave <= 2 ) then
-           ihave = 3
-         else if ( ihave == 4 ) then
-           ihave = 5
-         else if ( ihave == 6 .or. ihave == 7 ) then
-           ihave = 8
-         else if ( ihave == 9 ) then
-           ihave = 10
-         end if
-    
-         call ch_to_digit ( c, ndig )
-    
-         if ( ihave == 3 ) then
-           rtop = 10.0E+00 * rtop + real ( ndig, kind = 4 )
-         else if ( ihave == 5 ) then
-           rtop = 10.0E+00 * rtop + real ( ndig, kind = 4 )
-           rbot = 10.0E+00 * rbot
-         else if ( ihave == 8 ) then
-           jtop = 10 * jtop + ndig
-         else if ( ihave == 10 ) then
-           jtop = 10 * jtop + ndig
-           jbot = 10 * jbot
-         end if
-   !
-   !  Anything else is regarded as a terminator.
-   !
-       else
-         iterm = 1
-       end if
-   !
-   !  If we haven't seen a terminator, and we haven't examined the
-   !  entire string, go get the next character.
-   !
-       if ( iterm == 1 .or. s_length <= length + 1 ) then
-         exit
-       end if
-   
-     end do
-   !
-   !  If we haven't seen a terminator, and we have examined the
-   !  entire string, then we're done, and LENGTH is equal to S_LENGTH.
-   !
-     if ( iterm /= 1 .and. length + 1 == s_length ) then
-       length = s_length
-     end if
-   !
-   !  Number seems to have terminated.  Have we got a legal number?
-   !  Not if we terminated in states 1, 2, 6 or 7!
-   !
-     if ( ihave == 1 .or. ihave == 2 .or. ihave == 6 .or. ihave == 7 ) then
-    
-       ierror = ihave
-    
-       return
-     end if
-   !
-   !  Number seems OK.  Form it.
-   !
-     if ( jtop == 0 ) then
-       rexp = 1.0E+00
-     else
-    
-       if ( jbot == 1 ) then
-         rexp = 10.0E+00**( jsgn * jtop )
-       else
-         rexp = jsgn * jtop
-         rexp = rexp / jbot
-         rexp = 10.0E+00**rexp
-       end if
-    
-     end if
-    
-     r = isgn * rexp * rtop / rbot
-    
-     return
+
+      end if
+
+      r = isgn*rexp*rtop/rbot
+
+      return
    end
    ! subroutine s_to_r4vec ( s, n, r4vec, ierror )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TO_R4VEC reads an R4VEC from a string.
@@ -18557,7 +18556,7 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input, character ( len = * ) S, the string to be read. 
+   ! !    Input, character ( len = * ) S, the string to be read.
    ! !
    ! !    Input, integer ( kind = 4 ) N, the number of values expected.
    ! !
@@ -18568,39 +18567,39 @@ contains
    ! !    -K, could not read data for entries -K through N.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) ierror
    !   integer ( kind = 4 ) ilo
    !   integer ( kind = 4 ) length
    !   real ( kind = 4 ) r4vec(n)
    !   character ( len = * ) s
-   ! 
+   !
    !   i = 0
    !   ierror = 0
    !   ilo = 1
-   ! 
+   !
    !   do while ( i < n )
-   ! 
+   !
    !     i = i + 1
-   ! 
+   !
    !     call s_to_r4 ( s(ilo:), r4vec(i), ierror, length )
-   ! 
+   !
    !     if ( ierror /= 0 ) then
    !       ierror = -i
    !       exit
    !     end if
-   ! 
+   !
    !     ilo = ilo + length
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_to_r8 ( s, dval, ierror, length )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TO_R8 reads an R8 value from a string.
@@ -18682,7 +18681,7 @@ contains
    ! !    characters such as a trailing comma or blanks.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical ch_eqi
    !   character c
    !   real ( kind = 8 ) dval
@@ -18700,9 +18699,9 @@ contains
    !   real ( kind = 8 ) rtop
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   ierror = 0
    !   dval = 0.0D+00
    !   length = -1
@@ -18714,23 +18713,23 @@ contains
    !   jbot = 1
    !   ihave = 1
    !   iterm = 0
-   ! 
+   !
    !   do
-   ! 
+   !
    !     length = length + 1
-   ! 
+   !
    !     if ( s_length < length+1 ) then
    !       exit
    !     end if
-   ! 
+   !
    !     c = s(length+1:length+1)
    ! !
    ! !  Blank character.
    ! !
    !     if ( c == ' ' ) then
-   ! 
+   !
    !       if ( ihave == 2 ) then
-   ! 
+   !
    !       else if ( ihave == 6 .or. ihave == 7 ) then
    !         iterm = 1
    !       else if ( 1 < ihave ) then
@@ -18740,7 +18739,7 @@ contains
    ! !  Comma.
    ! !
    !     else if ( c == ',' .or. c == ';' ) then
-   ! 
+   !
    !       if ( ihave /= 1 ) then
    !         iterm = 1
    !         ihave = 12
@@ -18750,7 +18749,7 @@ contains
    ! !  Minus sign.
    ! !
    !     else if ( c == '-' ) then
-   ! 
+   !
    !       if ( ihave == 1 ) then
    !         ihave = 2
    !         isgn = -1
@@ -18764,7 +18763,7 @@ contains
    ! !  Plus sign.
    ! !
    !     else if ( c == '+' ) then
-   ! 
+   !
    !       if ( ihave == 1 ) then
    !         ihave = 2
    !       else if ( ihave == 6 ) then
@@ -18776,7 +18775,7 @@ contains
    ! !  Decimal point.
    ! !
    !     else if ( c == '.' ) then
-   ! 
+   !
    !       if ( ihave < 4 ) then
    !         ihave = 4
    !       else if ( 6 <= ihave .and. ihave <= 8 ) then
@@ -18788,7 +18787,7 @@ contains
    ! !  Scientific notation exponent marker.
    ! !
    !     else if ( ch_eqi ( c, 'E' ) .or. ch_eqi ( c, 'D' ) ) then
-   ! 
+   !
    !       if ( ihave < 6 ) then
    !         ihave = 6
    !       else
@@ -18798,7 +18797,7 @@ contains
    ! !  Digit.
    ! !
    !     else if (  ihave < 11 .and. lle ( '0', c ) .and. lle ( c, '9' ) ) then
-   ! 
+   !
    !       if ( ihave <= 2 ) then
    !         ihave = 3
    !       else if ( ihave == 4 ) then
@@ -18808,9 +18807,9 @@ contains
    !       else if ( ihave == 9 ) then
    !         ihave = 10
    !       end if
-   ! 
+   !
    !       call ch_to_digit ( c, ndig )
-   ! 
+   !
    !       if ( ihave == 3 ) then
    !         rtop = 10.0D+00 * rtop + real ( ndig, kind = 8 )
    !       else if ( ihave == 5 ) then
@@ -18835,7 +18834,7 @@ contains
    !     if ( iterm == 1 ) then
    !       exit
    !     end if
-   ! 
+   !
    !   end do
    ! !
    ! !  If we haven't seen a terminator, and we have examined the
@@ -18869,13 +18868,13 @@ contains
    !         / real ( jbot, kind = 8 ) )
    !     end if
    !   end if
-   ! 
+   !
    !   dval = real ( isgn, kind = 8 ) * rexp * rtop / rbot
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_to_r8vec ( s, n, r8vec, ierror )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TO_R8VEC reads an R8VEC from a string.
@@ -18905,39 +18904,39 @@ contains
    ! !    -K, could not read data for entries -K through N.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) ierror
    !   integer ( kind = 4 ) ilo
    !   integer ( kind = 4 ) lchar
    !   real ( kind = 8 ) r8vec(n)
    !   character ( len = * ) s
-   ! 
+   !
    !   i = 0
    !   ierror = 0
    !   ilo = 1
-   ! 
+   !
    !   do while ( i < n )
-   ! 
+   !
    !     i = i + 1
-   ! 
+   !
    !     call s_to_r8 ( s(ilo:), r8vec(i), ierror, lchar )
-   ! 
+   !
    !     if ( ierror /= 0 ) then
    !       ierror = -i
    !       exit
    !     end if
-   ! 
+   !
    !     ilo = ilo + lchar
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_to_rot13 ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TO_ROT13 "rotates" the alphabetical characters in a string by 13 positions.
@@ -18968,22 +18967,22 @@ contains
    ! !    Input/output, character ( len = * ) S, a string to be "rotated".
    ! !
    !   implicit none
-   ! 
+   !
    !   character ch_to_rot13
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
-   !  
+   !
    !   do i = 1, s_length
    !     s(i:i) = ch_to_rot13 ( s(i:i) )
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine s_to_soundex ( s, code )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TO_SOUNDEX computes the Soundex code of a string.
@@ -19030,7 +19029,7 @@ contains
    ! !    Output, character ( len = 4 ) CODE, the Soundex code for the string.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   character c_put
    !   logical ch_is_alpha
@@ -19041,7 +19040,7 @@ contains
    !   integer ( kind = 4 ) nget
    !   integer ( kind = 4 ) put
    !   character ( len = * ) s
-   ! 
+   !
    !   ch_s = '0'
    !   code = ' '
    !   nget = len_trim ( s )
@@ -19050,26 +19049,26 @@ contains
    ! !  Try to fill position PUT of the code.
    ! !
    !   do put = 1, 4
-   ! 
-   !     do 
-   ! 
+   !
+   !     do
+   !
    !       if ( nget <= get ) then
    !         c_put = '0'
    !         exit
    !       end if
-   ! 
+   !
    !       get = get + 1
    !       c = s(get:get)
    !       call ch_cap ( c )
-   ! 
+   !
    !       if ( .not. ch_is_alpha ( c ) ) then
    !         cycle
    !       end if
-   ! 
+   !
    !       ch_s_old = ch_s
-   ! 
+   !
    !       call ch_to_soundex ( c, ch_s )
-   ! 
+   !
    !       if ( put == 1 ) then
    !         c_put = c
    !         exit
@@ -19077,17 +19076,17 @@ contains
    !         c_put = ch_s
    !         exit
    !       end if
-   ! 
+   !
    !     end do
-   ! 
+   !
    !     code(put:put) = c_put
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_to_w ( s, w, ierror, last )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TO_W reads the next blank-delimited word from a string.
@@ -19113,7 +19112,7 @@ contains
    ! !    Output, integer ( kind = 4 ) LAST, the last character of S used to make W.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   integer ( kind = 4 ) first
    !   integer ( kind = 4 ) i
@@ -19122,20 +19121,20 @@ contains
    !   character ( len = * ) s
    !   integer ( kind = 4 ) state
    !   character ( len = * ) w
-   ! 
+   !
    !   w = ' '
    !   ierror = 0
    !   state = 0
    !   first = 0
    !   last = 0
    !   i = 0
-   ! 
+   !
    !   do
-   ! 
+   !
    !     i = i + 1
-   ! 
+   !
    !     if ( len_trim ( s ) < i ) then
-   ! 
+   !
    !       if ( state == 0 ) then
    !         ierror = 1
    !         last = 0
@@ -19143,36 +19142,36 @@ contains
    !         last = i-1
    !         w = s(first:last)
    !       end if
-   ! 
+   !
    !       exit
-   ! 
+   !
    !     end if
-   ! 
+   !
    !     c = s(i:i)
-   ! 
+   !
    !     if ( state == 0 ) then
-   ! 
+   !
    !       if ( c /= ' ' ) then
    !         first = i
    !         state = 1
    !       end if
-   ! 
+   !
    !     else if ( state == 1 ) then
-   ! 
+   !
    !       if ( c == ' ' ) then
    !         last = i - 1
    !         w = s(first:last)
    !         exit
    !       end if
-   ! 
+   !
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_token_equal ( s, set, nset, iset )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TOKEN_EQUAL checks whether a string is equal to any of a set of strings.
@@ -19204,28 +19203,28 @@ contains
    ! !    S, disregarding case.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) iset
    !   integer ( kind = 4 ) nset
    !   character ( len = * ) s
    !   logical s_eqi
    !   character ( len = * ) set(*)
-   ! 
+   !
    !   iset = 0
    !   do i = 1, nset
-   !  
+   !
    !     if ( s_eqi ( s, set(i) ) ) then
    !       iset = i
    !       return
    !     end if
-   !  
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine s_token_match ( s, token_num, token, match )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TOKEN_MATCH matches the beginning of a string and a set of tokens.
@@ -19262,13 +19261,13 @@ contains
    ! !
    ! !    Input, character ( len = * ) TOKEN(TOKEN_NUM), the tokens.
    ! !
-   ! !    Output, integer ( kind = 4 ) MATCH, the index of the (longest) 
+   ! !    Output, integer ( kind = 4 ) MATCH, the index of the (longest)
    ! !    token that matched the string, or 0 if no match was found.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) token_num
-   ! 
+   !
    !   integer ( kind = 4 ) match
    !   integer ( kind = 4 ) match_length
    !   character ( len = * ) s
@@ -19277,35 +19276,35 @@ contains
    !   integer ( kind = 4 ) token_i
    !   integer ( kind = 4 ) token_length
    !   character ( len = * ) token(token_num)
-   ! 
+   !
    !   match = 0
    !   match_length = 0
-   ! 
+   !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do token_i = 1, token_num
-   ! 
+   !
    !     token_length = len_trim ( token ( token_i ) )
-   ! 
+   !
    !     if ( match_length < token_length ) then
-   ! 
+   !
    !       if ( token_length <= s_length ) then
-   ! 
+   !
    !         if ( s_eqi ( s(1:token_length), token(token_i)(1:token_length) ) ) then
    !           match_length = token_length
    !           match = token_i
    !         end if
-   ! 
+   !
    !       end if
-   ! 
+   !
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_trim_zeros ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_TRIM_ZEROS removes trailing zeros from a string.
@@ -19333,21 +19332,21 @@ contains
    ! !    Input/output, character ( len = * ) S, the string to be operated on.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   do while ( 0 < s_length .and. s(s_length:s_length) == '0' )
    !     s(s_length:s_length) = ' '
    !     s_length = s_length - 1
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_u2b ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_U2B replaces underscores by blanks.
@@ -19366,23 +19365,23 @@ contains
    ! !    transformed.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
-   ! 
+   !
    !   s_length = len_trim ( s )
-   !  
+   !
    !   do i = 1, s_length
    !     if ( s(i:i) == '_' ) then
    !       s(i:i) = ' '
    !     end if
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine s_word_append ( s, w, done )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_WORD_APPEND appends a word to a string.
@@ -19404,7 +19403,7 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input/output, character ( len = * ) S, a line of text.  
+   ! !    Input/output, character ( len = * ) S, a line of text.
    ! !    On input, the current string.  On output, the current string
    ! !    with the integer value appended.
    ! !
@@ -19415,7 +19414,7 @@ contains
    ! !    to append the word.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical done
    !   integer ( kind = 4 ) lens
    !   integer ( kind = 4 ) lents
@@ -19423,25 +19422,25 @@ contains
    !   integer ( kind = 4 ) next
    !   character ( len = * ) s
    !   character ( len = * ) w
-   ! 
+   !
    !   done = .false.
    !   lens = len ( s )
    !   lents = len_trim ( s )
-   ! 
+   !
    !   lenw = len_trim ( w )
-   ! 
+   !
    !   if ( lents == 0 ) then
    !     if ( lens < lenw ) then
    !       done = .true.
    !       return
    !     end if
-   !   else 
+   !   else
    !     if ( lens < lents + 1 + lenw ) then
    !       done = .true.
    !       return
    !     end if
    !   end if
-   ! 
+   !
    !   if ( lents == 0 ) then
    !     next = 1
    !   else
@@ -19449,13 +19448,13 @@ contains
    !     s(next:next) = ' '
    !     next = next + 1
    !   end if
-   ! 
+   !
    !   s(next:next+lenw-1) = w(1:lenw)
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_word_cap ( s )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_WORD_CAP capitalizes the first character of each word in a string.
@@ -19483,32 +19482,32 @@ contains
    ! !    Input/output, character ( len = * ) S, the string to be transformed.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ihi
    !   integer ( kind = 4 ) ilo
    !   character ( len = * ) s
-   ! 
+   !
    !   call s_low ( s )
-   ! 
+   !
    !   ilo = 0
    !   ihi = 0
-   !  
+   !
    !   do
-   !  
+   !
    !     call word_next ( s, ilo, ihi )
-   !  
+   !
    !     if ( ilo <= 0 ) then
    !       exit
    !     end if
-   ! 
+   !
    !     call ch_cap ( s(ilo:ilo) )
-   ! 
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine s_word_count ( s, word_num )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_WORD_COUNT counts the number of "words" in a string.
@@ -19525,41 +19524,41 @@ contains
    ! !
    ! !    Input, character ( len = * ) S, the string to be examined.
    ! !
-   ! !    Output, integer ( kind = 4 ) WORD_NUM, the number of "words" in the 
+   ! !    Output, integer ( kind = 4 ) WORD_NUM, the number of "words" in the
    ! !    string.  Words are presumed to be separated by one or more blanks.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical blank
    !   integer ( kind = 4 ) i
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
    !   integer ( kind = 4 ) word_num
-   ! 
+   !
    !   word_num = 0
    !   s_length = len ( s )
-   ! 
+   !
    !   if ( s_length <= 0 ) then
    !     return
    !   end if
-   ! 
+   !
    !   blank = .true.
-   ! 
+   !
    !   do i = 1, s_length
-   ! 
+   !
    !     if ( s(i:i) == ' ' ) then
    !       blank = .true.
    !     else if ( blank ) then
    !       word_num = word_num + 1
-   !       blank = .false. 
+   !       blank = .false.
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_word_extract_first ( s, w )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_WORD_EXTRACT_FIRST extracts the first word from a string.
@@ -19585,17 +19584,17 @@ contains
    ! !    Output, character ( len = * ) W, the leading word of the string.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) get1
    !   integer ( kind = 4 ) get2
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_length
    !   character ( len = * ) w
-   ! 
+   !
    !   w = ' '
-   ! 
+   !
    !   s_length = len_trim ( s )
-   ! 
+   !
    !   if ( s_length < 1 ) then
    !     return
    !   end if
@@ -19603,37 +19602,37 @@ contains
    ! !  Find the first nonblank.
    ! !
    !   get1 = 0
-   ! 
+   !
    !   do
-   ! 
+   !
    !     get1 = get1 + 1
-   ! 
+   !
    !     if ( s_length < get1 ) then
    !       return
    !     end if
-   ! 
+   !
    !     if ( s(get1:get1) /= ' ' ) then
    !       exit
    !     end if
-   ! 
+   !
    !   end do
    ! !
    ! !  Look for the last contiguous nonblank.
    ! !
    !   get2 = get1
-   ! 
+   !
    !   do
-   ! 
+   !
    !     if ( s_length <= get2 ) then
    !       exit
    !     end if
-   ! 
+   !
    !     if ( s(get2+1:get2+1) == ' ' ) then
    !       exit
    !     end if
-   ! 
+   !
    !     get2 = get2 + 1
-   ! 
+   !
    !   end do
    ! !
    ! !  Copy the word.
@@ -19644,18 +19643,18 @@ contains
    ! !
    !   s(1:get2) = ' '
    !   s = adjustl ( s(get2+1:) )
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_word_find ( s, iword, word, nchar )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_WORD_FIND finds the word of a given index in a string.
    ! !
    ! !  Discussion:
    ! !
-   ! !    A "word" is any string of nonblank characters, separated from other 
+   ! !    A "word" is any string of nonblank characters, separated from other
    ! !    words by one or more blanks or TABS.
    ! !
    ! !  Modified:
@@ -19683,7 +19682,7 @@ contains
    ! !    or 0 if the word could not be found.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) iblank
    !   integer ( kind = 4 ) ihi
@@ -19698,17 +19697,17 @@ contains
    !   integer ( kind = 4 ) s_len
    !   character, parameter :: TAB = achar ( 9 )
    !   character ( len = * ) word
-   ! 
+   !
    !   ilo = 0
    !   ihi = 0
    !   s_len = len_trim ( s )
-   ! 
+   !
    !   if ( s_len <= 0 ) then
    !     return
    !   end if
-   !  
+   !
    !   if ( 0 < iword ) then
-   ! 
+   !
    !     if ( s(1:1) == ' ' .or. s(1:1) == TAB ) then
    !       iblank = 1
    !       jword = 0
@@ -19720,15 +19719,15 @@ contains
    !       jlo = 1
    !       jhi = 1
    !     end if
-   ! 
+   !
    !     i = 1
-   ! 
+   !
    !     do
-   ! 
+   !
    !       i = i + 1
-   ! 
+   !
    !       if ( s_len < i ) then
-   !  
+   !
    !         if ( jword == iword ) then
    !           ilo = jlo
    !           ihi = s_len
@@ -19740,13 +19739,13 @@ contains
    !           nchar = 0
    !           word = ' '
    !         end if
-   !  
+   !
    !         return
-   ! 
+   !
    !       end if
-   ! 
+   !
    !       if ( ( s(i:i) == ' ' .or. s(i:i) == TAB ) .and. iblank == 0 ) then
-   !  
+   !
    !         jhi = i - 1
    !         iblank = 1
    !         if ( jword == iword ) then
@@ -19756,32 +19755,32 @@ contains
    !           word = s(ilo:ihi)
    !           return
    !         end if
-   !  
+   !
    !       else if ( s(i:i) /= ' ' .and. s(i:i) /= TAB .and. iblank == 1 ) then
-   !  
+   !
    !         jlo = i
    !         jword = jword + 1
    !         iblank = 0
-   ! 
+   !
    !       end if
-   ! 
+   !
    !     end do
-   !  
+   !
    !   else
-   ! 
+   !
    !     iblank = 0
    !     kword = 1 - iword
    !     jword = 1
    !     jlo = s_len
    !     jhi = s_len
    !     i = s_len
-   ! 
+   !
    !     do
-   ! 
+   !
    !       i = i - 1
-   !  
+   !
    !       if ( i <= 0 ) then
-   ! 
+   !
    !         if ( jword == kword ) then
    !           ilo = 1
    !           ihi = jhi
@@ -19793,16 +19792,16 @@ contains
    !           nchar = 0
    !           word = ' '
    !         end if
-   ! 
+   !
    !         return
-   ! 
+   !
    !       end if
-   !  
+   !
    !       if ( ( s(i:i) == ' ' .or. s == TAB ) .and. iblank == 0 ) then
-   !  
+   !
    !         jlo = i + 1
    !         iblank = 1
-   ! 
+   !
    !         if ( jword == kword ) then
    !           ilo = jlo
    !           ihi = jhi
@@ -19810,23 +19809,23 @@ contains
    !           word = s(ilo:ihi)
    !           return
    !         end if
-   !  
+   !
    !       else if ( s(i:i) /= ' ' .and. s(i:i) /= TAB .and. iblank == 1 ) then
-   !  
+   !
    !         jhi = i
    !         jword = jword + 1
    !         iblank = 0
-   ! 
+   !
    !       end if
-   !  
+   !
    !     end do
-   ! 
+   !
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine s_word_index ( s, indx, ilo, ihi )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_WORD_INDEX finds the word of a given index in a string.
@@ -19850,37 +19849,37 @@ contains
    ! !
    ! !    Input, integer ( kind = 4 ) INDX is the index of the desired token.
    ! !
-   ! !    Output, integer ( kind = 4 ) ILO is the index of the first character 
+   ! !    Output, integer ( kind = 4 ) ILO is the index of the first character
    ! !    of the INDX-th word, or 0 if there was no INDX-th word.
    ! !
-   ! !    Output, integer ( kind = 4 ) IHI is the index of the last character 
+   ! !    Output, integer ( kind = 4 ) IHI is the index of the last character
    ! !    of the INDX-th word, or 0 if there was no INDX-th word.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) ihi
    !   integer ( kind = 4 ) ilo
    !   integer ( kind = 4 ) indx
    !   character ( len = * ) s
-   ! 
+   !
    !   ihi = 0
    !   ilo = 0
-   !  
+   !
    !   do i = 1, indx
-   !  
+   !
    !     call word_next ( s, ilo, ihi )
-   !  
+   !
    !     if ( ilo == 0 ) then
    !       return
    !     end if
-   !  
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine s_word_next ( s, word, done )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_WORD_NEXT "reads" words from a string, one at a time.
@@ -19919,7 +19918,7 @@ contains
    ! !      TRUE if no more words could be read.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical done
    !   integer ( kind = 4 ) ilo
    !   integer ( kind = 4 ), save :: next = 1
@@ -19933,17 +19932,17 @@ contains
    ! !  An input value of DONE = TRUE signals a new line of text to examine.
    ! !
    !   if ( done ) then
-   ! 
+   !
    !     next = 1
    !     done = .false.
    !     s_length = len_trim ( s )
-   ! 
+   !
    !     if ( s_length <= 0 ) then
    !       done = .true.
    !       word = ' '
    !       return
    !     end if
-   ! 
+   !
    !   end if
    ! !
    ! !  Beginning at index NEXT, search the string for the next nonblank,
@@ -19954,7 +19953,7 @@ contains
    ! !  ...S(NEXT:) is blank.  Return with WORD = ' ' and DONE = TRUE.
    ! !
    !   do
-   ! 
+   !
    !     if ( s_length < ilo ) then
    !       word = ' '
    !       done = .true.
@@ -19967,9 +19966,9 @@ contains
    !     if ( s(ilo:ilo) /= ' ' .and. s(ilo:ilo) /= TAB ) then
    !       exit
    !     end if
-   ! 
+   !
    !     ilo = ilo + 1
-   ! 
+   !
    !   end do
    ! !
    ! !  ILO is the index of the next nonblank character in the string.
@@ -19985,20 +19984,20 @@ contains
    !        s(ilo:ilo) == '}' .or. &
    !        s(ilo:ilo) == '[' .or. &
    !        s(ilo:ilo) == ']' ) then
-   ! 
+   !
    !     word = s(ilo:ilo)
    !     next = ilo + 1
    !     return
-   ! 
+   !
    !   end if
    ! !
    ! !  Now search for the last contiguous character that is not a
    ! !  blank, TAB, or special character.
    ! !
    !   next = ilo + 1
-   ! 
+   !
    !   do while ( next <= s_length )
-   ! 
+   !
    !     if ( s(next:next) == ' ' ) then
    !       exit
    !     else if ( s(next:next) == TAB ) then
@@ -20018,9 +20017,9 @@ contains
    !     else if ( s(next:next) == ']' ) then
    !       exit
    !     end if
-   ! 
+   !
    !     next = next + 1
-   ! 
+   !
    !   end do
    ! !
    ! !  Ignore a trailing comma.
@@ -20030,11 +20029,11 @@ contains
    !   else
    !     word = s(ilo:next-1)
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine s_word_permute ( s1, n, perm, s2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S_WORD_PERMUTE permutes the words in a string.
@@ -20056,7 +20055,7 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input, character ( len = * ) S1, a line of text.  
+   ! !    Input, character ( len = * ) S1, a line of text.
    ! !
    ! !    Input, integer ( kind = 4 ) N, the number of words to permute.
    ! !
@@ -20067,9 +20066,9 @@ contains
    ! !    first N words permuted.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   character c1
    !   character c2
    !   integer ( kind = 4 ) index1
@@ -20088,32 +20087,32 @@ contains
    ! !  Set up word position and length vectors.
    ! !
    !   s1_length = len ( s1 )
-   ! 
+   !
    !   s1_word_length(1:n) = 0
    !   s1_word_index(1:n) = 0
-   ! 
+   !
    !   index1 = 0
    !   c2 = ' '
-   ! 
+   !
    !   do s1_pos = 1, s1_length
-   ! 
+   !
    !     c1 = c2
    !     c2 = s1(s1_pos:s1_pos)
-   ! 
+   !
    !     if ( s1_pos == 1 .or. ( c1 /= ' ' .and. c2 == ' ' ) ) then
-   ! 
+   !
    !       if ( n <= index1 ) then
    !         exit
    !       end if
-   ! 
+   !
    !       index1 = index1 + 1
-   ! 
+   !
    !       s1_word_index(index1) = s1_pos
-   ! 
+   !
    !     end if
-   ! 
+   !
    !     s1_word_length(index1) = s1_word_length(index1) + 1
-   ! 
+   !
    !   end do
    ! !
    ! !  Invert the permutation.
@@ -20127,25 +20126,25 @@ contains
    ! !  Copy the first N words of S1 into S2 in permuted order.
    ! !
    !   s2_pos = 1
-   ! 
+   !
    !   do index2 = 1, n
-   ! 
+   !
    !     index1 = perm_inv(index2)
-   ! 
+   !
    !     s1_pos = s1_word_index(index1)
-   ! 
+   !
    !     word_length = s1_word_length(index1)
-   ! 
+   !
    !     s2(s2_pos:s2_pos+word_length-1) = s1(s1_pos:s1_pos+word_length-1)
-   ! 
+   !
    !     s2_pos = s2_pos + word_length
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! function s32_to_i4 ( s32 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S32_TO_I4 returns an I4 equivalent to a 32 character string.
@@ -20165,51 +20164,51 @@ contains
    ! !    Output, integer ( kind = 4 ) S32_TO_I4, a corresponding integer value.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) intval
    !   character ( len = 32 ) s32
    !   integer ( kind = 4 ) s32_to_i4
    !   character ( len = 32 ) scopy
-   ! 
+   !
    !   scopy = s32
-   ! 
+   !
    !   if ( scopy(1:1) == '1' ) then
-   ! 
+   !
    !     do i = 2, 32
-   ! 
+   !
    !       if ( scopy(i:i) == '0' ) then
    !         scopy(i:i) = '1'
    !       else
    !         scopy(i:i) = '0'
    !       end if
-   ! 
+   !
    !     end do
-   ! 
+   !
    !   end if
-   ! 
+   !
    !   intval = 0
-   ! 
+   !
    !   do i = 2, 32
-   ! 
+   !
    !     intval = 2 * intval
-   ! 
+   !
    !     if ( scopy(i:i) == '1' ) then
    !       intval = intval + 1
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   if ( scopy(1:1) == '1' ) then
    !     intval = -intval
    !   end if
-   ! 
+   !
    !   s32_to_i4 = intval
-   ! 
+   !
    !   return
    ! end
    ! function s32_to_r4 ( s32 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! S32_TO_R4 converts a 32-character variable into an R4.
@@ -20250,7 +20249,7 @@ contains
    ! !    Output, real ( kind = 4 ) RCHAR32, the corresponding real value.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) iexp
    !   integer ( kind = 4 ) j
@@ -20270,24 +20269,24 @@ contains
    ! !  Construct exponent from bits 2 through 9, subtract 128.
    ! !
    !   iexp = 0
-   ! 
+   !
    !   do i = 2, 9
-   ! 
+   !
    !     if ( s32(i:i) == '0' ) then
    !       j = 0
    !     else
    !       j = 1
    !     end if
-   ! 
+   !
    !     iexp = 2 * iexp + j
-   ! 
+   !
    !   end do
-   !  
+   !
    !   if ( iexp == 0 ) then
    !     s32_to_r4 = 0.0E+00
    !     return
    !   end if
-   ! 
+   !
    !   iexp = iexp - 128
    ! !
    ! !  Read mantissa from positions 10 through 32.
@@ -20295,20 +20294,20 @@ contains
    ! !  assumed to be 1 and hence is not stored.
    ! !
    !   mant = 1
-   ! 
+   !
    !   do i = 10, 32
    !     mant = 2 * mant
    !     if ( s32(i:i) == '1' ) then
    !       mant = mant + 1
    !     end if
    !   end do
-   !  
+   !
    !   s32_to_r4 = sgn * mant * ( 2.0E+00 ** ( iexp - 23 ) )
-   !  
+   !
    !   return
    ! end
    ! subroutine sef_to_b4_ieee  ( s, e, f, word )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! SEF_TO_B4_IEEE converts SEF information to a 4 byte IEEE real word.
@@ -20338,7 +20337,7 @@ contains
    ! !    Output, integer ( kind = 4 ) WORD, the real number stored in IEEE format.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) e
    !   integer ( kind = 4 ) e2
    !   integer ( kind = 4 ) f
@@ -20348,7 +20347,7 @@ contains
    !   integer ( kind = 4 ) s
    !   integer ( kind = 4 ) s2
    !   integer ( kind = 4 ) word
-   ! 
+   !
    !   s2 = s
    !   e2 = e
    !   f2 = f
@@ -20391,14 +20390,14 @@ contains
    !     s2 = 1 - s2
    !     f2 = -f2
    !   end if
-   ! 
+   !
    !   e2 = e2 + 127 + 23
-   ! 
+   !
    !   do while ( f_max <= f2 )
    !     f2 = f2 / 2
    !     e2 = e2 + 1
    !   end do
-   ! 
+   !
    !   do while ( f2 < f_min )
    !     f2 = f2 * 2
    !     e2 = e2 - 1
@@ -20427,11 +20426,11 @@ contains
    !     call mvbits ( e2, 0,  8, word, 23 )
    !     call mvbits ( f2, 0, 23, word,  0 )
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine sef_to_r4 ( s, e, f, r )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! SEF_TO_R4 converts SEF information to an R4 = S * 2.0**E * F.
@@ -20441,8 +20440,8 @@ contains
    ! !    An "R4" value is simply a real number to be stored as a
    ! !    variable of type "real ( kind = 4 )".
    ! !
-   ! !    Assuming no arithmetic problems, in fact, this equality should be 
-   ! !    exact, that is, S, E and F should exactly express the value 
+   ! !    Assuming no arithmetic problems, in fact, this equality should be
+   ! !    exact, that is, S, E and F should exactly express the value
    ! !    as stored on the computer.
    ! !
    ! !  Modified:
@@ -20466,18 +20465,18 @@ contains
    ! !    Output, real ( kind = 4 ) R, the real number.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) e
    !   integer ( kind = 4 ) f
    !   integer ( kind = 4 ) i
    !   real ( kind = 4 ) r
    !   integer ( kind = 4 ) s
-   ! 
+   !
    !   if ( f == 0 ) then
    !     r = 0.0E+00
    !     return
    !   end if
-   ! 
+   !
    !   if ( s == 0 ) then
    !     r = 1.0E+00
    !   else if ( s == 1 ) then
@@ -20488,9 +20487,9 @@ contains
    !     write ( *, '(a,i8)' ) '  Illegal input value of S = ', s
    !     stop
    !   end if
-   ! 
+   !
    !   r = r * real ( f, kind = 4 )
-   ! 
+   !
    !   if ( 0 < e ) then
    !     do i = 1, e
    !       r = r * 2.0E+00
@@ -20500,11 +20499,11 @@ contains
    !       r = r / 2.0E+00
    !     end do
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! function state_id ( state )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! STATE_ID returns the 2 letter Postal Code for one of the 50 states.
@@ -20528,7 +20527,7 @@ contains
    ! !    Output, character ( len = 2 ) STATE_ID, the 2 letter code.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = 2 ), parameter, dimension ( 50 ) :: id = (/ &
    !   'DE', 'PA', 'NJ', 'GA', 'CT', &
    !   'MA', 'MD', 'SC', 'NH', 'VA', &
@@ -20542,7 +20541,7 @@ contains
    !   'OK', 'NM', 'AZ', 'AL', 'HI' /)
    !   integer ( kind = 4 ) state
    !   character ( len = 2 ) state_id
-   ! 
+   !
    !   if ( state < 1 ) then
    !     state_id = '\?\?'
    !   else if ( state <= 50 ) then
@@ -20550,11 +20549,11 @@ contains
    !   else
    !     state_id = '\?\?'
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! function state_name ( state )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! STATE_NAME returns the name of one of the 50 states.
@@ -20578,7 +20577,7 @@ contains
    ! !    Output, character ( len = 14 ) STATE_NAME, the name of the state.
    ! !
    !   implicit none
-   ! 
+   !
    !   character ( len = 14 ), parameter, dimension ( 50 ) :: name = (/ &
    !   'Delaware      ', &
    !   'Pennsylvania  ', &
@@ -20632,7 +20631,7 @@ contains
    !   'Hawaii        ' /)
    !   integer ( kind = 4 ) state
    !   character ( len = 14 ) state_name
-   ! 
+   !
    !   if ( state < 1 ) then
    !     state_name = '\?\?\?\?\?\?\?\?\?\?\?\?\?\?'
    !   else if ( state <= 50 ) then
@@ -20640,20 +20639,20 @@ contains
    !   else
    !     state_name = '\?\?\?\?\?\?\?\?\?\?\?\?\?\?'
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine svec_lab ( n, nuniq, svec, ident )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! SVEC_LAB makes an index array for an array of (repeated) strings.
    ! !
    ! !  Discussion:
    ! !
-   ! !    The routine is given an array of strings.  It assigns an integer 
+   ! !    The routine is given an array of strings.  It assigns an integer
    ! !    to each unique string, and returns an equivalent array of
-   ! !    these values.  
+   ! !    these values.
    ! !
    ! !    Note that blank strings are treated specially.  Any blank
    ! !    string gets an identifier of 0.  Blank strings are not
@@ -20689,35 +20688,35 @@ contains
    ! !
    ! !    Output, integer ( kind = 4 ) IDENT(N), the identifiers assigned to the
    ! !    strings.  If SVEC(I) is blank, then IDENT(I) is 0.
-   ! !    Otherwise, if SVEC(I) is the first occurrence of a 
+   ! !    Otherwise, if SVEC(I) is the first occurrence of a
    ! !    given string, then it is assigned a positive identifier.
    ! !    If SVEC(I) is a later occurrence of a string, then
    ! !    it is assigned a negative identifier, whose absolute
    ! !    value is the identifier of the first occurrence.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) ident(n)
    !   integer ( kind = 4 ) j
    !   integer ( kind = 4 ) match
    !   integer ( kind = 4 ) nuniq
    !   character ( len = * ) svec(n)
-   ! 
+   !
    !   nuniq = 0
-   ! 
+   !
    !   do i = 1, n
-   ! 
+   !
    !     if ( svec(i) == ' ' ) then
-   ! 
+   !
    !       ident(i) = 0
-   ! 
+   !
    !     else
-   ! 
+   !
    !       match = 0
-   ! 
+   !
    !       do j = 1, i-1
    !         if ( 0 < ident(j) ) then
    !           if ( svec(j) == svec(i) ) then
@@ -20727,20 +20726,20 @@ contains
    !           end if
    !         end if
    !       end do
-   ! 
+   !
    !       if ( match == 0 ) then
    !         nuniq = nuniq + 1
    !         ident(i) = nuniq
    !       end if
-   ! 
+   !
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine svec_merge_a ( na, a, nb, b, nc, c )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! SVEC_MERGE_A merges two ascending sorted string arrays.
@@ -20769,17 +20768,17 @@ contains
    ! !
    ! !    Input, character ( len = * ) B(NB), the second sorted array.
    ! !
-   ! !    Output, integer ( kind = 4 ) NC, the number of elements in the output 
+   ! !    Output, integer ( kind = 4 ) NC, the number of elements in the output
    ! !    array.  Note that C should usually be dimensioned at least NA+NB in the
    ! !    calling routine.
    ! !
    ! !    Output, character ( len = * ) C(NC), the merged unique sorted array.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) na
    !   integer ( kind = 4 ) nb
-   ! 
+   !
    !   character ( len = * ) a(na)
    !   character ( len = * ) b(nb)
    !   character ( len = * ) c(na+nb)
@@ -20789,20 +20788,20 @@ contains
    !   integer ( kind = 4 ) na2
    !   integer ( kind = 4 ) nb2
    !   integer ( kind = 4 ) nc
-   ! 
+   !
    !   na2 = na
    !   nb2 = nb
-   ! 
+   !
    !   ja = 0
    !   jb = 0
    !   nc = 0
-   ! 
+   !
    !   do
    ! !
    ! !  If we've used up all the entries of A, stick the rest of B on the end.
    ! !
    !     if ( na2 <= ja ) then
-   ! 
+   !
    !       do j = 1, nb2 - jb
    !         jb = jb + 1
    !         if ( nc == 0 ) then
@@ -20813,13 +20812,13 @@ contains
    !           c(nc) = b(jb)
    !         end if
    !       end do
-   ! 
+   !
    !       exit
    ! !
    ! !  If we've used up all the entries of B, stick the rest of A on the end.
    ! !
    !     else if ( nb2 <= jb ) then
-   ! 
+   !
    !       do j = 1, na2 - ja
    !         ja = ja + 1
    !         if ( nc == 0 ) then
@@ -20830,13 +20829,13 @@ contains
    !           c(nc) = a(ja)
    !         end if
    !       end do
-   ! 
+   !
    !       exit
    ! !
    ! !  Otherwise, if the next entry of A is smaller, that's our candidate.
    ! !
    !     else if ( lle ( a(ja+1), b(jb+1) ) ) then
-   ! 
+   !
    !       ja = ja + 1
    !       if ( nc == 0 ) then
    !         nc = nc + 1
@@ -20849,7 +20848,7 @@ contains
    ! !  ...or if the next entry of B is the smaller, consider that.
    ! !
    !     else
-   ! 
+   !
    !       jb = jb + 1
    !       if ( nc == 0 ) then
    !         nc = nc + 1
@@ -20859,13 +20858,13 @@ contains
    !         c(nc) = b(jb)
    !       end if
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine svec_permute ( n, a, p )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! SVEC_PERMUTE permutes a string vector in place.
@@ -20903,9 +20902,9 @@ contains
    ! !    fail catastrophically.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   character ( len = * ) a(n)
    !   character ( len = 256 ) a_temp
    !   integer ( kind = 4 ) ierror
@@ -20913,9 +20912,9 @@ contains
    !   integer ( kind = 4 ) iput
    !   integer ( kind = 4 ) istart
    !   integer ( kind = 4 ) p(n)
-   ! 
+   !
    !   call perm_check ( n, p, ierror )
-   ! 
+   !
    !   if ( ierror /= 0 ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'SVEC_PERMUTE - Fatal error!'
@@ -20928,30 +20927,30 @@ contains
    ! !  Search for the next element of the permutation that has not been used.
    ! !
    !   do istart = 1, n
-   ! 
+   !
    !     if ( p(istart) < 0 ) then
-   ! 
+   !
    !       cycle
-   ! 
+   !
    !     else if ( p(istart) == istart ) then
-   ! 
+   !
    !       p(istart) = -p(istart)
    !       cycle
-   ! 
+   !
    !     else
-   ! 
+   !
    !       a_temp = a(istart)
    !       iget = istart
    ! !
    ! !  Copy the new value into the vacated entry.
    ! !
    !       do
-   ! 
+   !
    !         iput = iget
    !         iget = p(iget)
-   ! 
+   !
    !         p(iput) = -p(iput)
-   ! 
+   !
    !         if ( iget < 1 .or. n < iget ) then
    !           write ( *, '(a)' ) ' '
    !           write ( *, '(a)' ) 'SVEC_PERMUTE - Fatal error!'
@@ -20959,28 +20958,28 @@ contains
    !           write ( *, '(a,i8,a,i8)' ) '  P(', iput, ') = ', iget
    !           stop
    !         end if
-   ! 
+   !
    !         if ( iget == istart ) then
    !           a(iput) = a_temp
    !           exit
    !         end if
-   ! 
+   !
    !         a(iput) = a(iget)
-   ! 
+   !
    !       end do
-   ! 
+   !
    !     end if
-   ! 
+   !
    !   end do
    ! !
    ! !  Restore the signs of the entries.
    ! !
    !   p(1:n) = -p(1:n)
-   ! 
+   !
    !   return
    ! end
    ! subroutine svec_reverse ( n, a )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! SVEC_REVERSE reverses the elements of a string vector.
@@ -21011,23 +21010,23 @@ contains
    ! !    Input/output, character ( len = * ) A(N), the array to be reversed.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   character ( len = * ) a(n)
    !   character ( len = 256 ) a_temp
    !   integer ( kind = 4 ) i
-   ! 
+   !
    !   do i = 1, n/2
    !     a_temp   = a(i)
    !     a(i)     = a(n+1-i)
    !     a(n+1-i) = a_temp
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine svec_search_binary_a ( n, a, b, indx )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! SVEC_SEARCH_BINARY_A searches an ascending sorted string vector.
@@ -21065,25 +21064,25 @@ contains
    ! !    I, A(I) = B.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   character ( len = * ) a(n)
    !   character ( len = * ) b
    !   integer ( kind = 4 ) high
    !   integer ( kind = 4 ) indx
    !   integer ( kind = 4 ) low
    !   integer ( kind = 4 ) mid
-   ! 
+   !
    !   indx = 0
-   ! 
+   !
    !   low = 1
    !   high = n
-   ! 
+   !
    !   do while ( low <= high )
-   ! 
+   !
    !     mid = ( low + high ) / 2
-   ! 
+   !
    !     if ( a(mid) == b ) then
    !       indx = mid
    !       exit
@@ -21092,13 +21091,13 @@ contains
    !     else if ( lgt ( a(mid), b ) ) then
    !       high = mid - 1
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine svec_sort_heap_a ( n, a )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! SVEC_SORT_HEAP_A ascending sorts an SVEC using heap sort.
@@ -21127,9 +21126,9 @@ contains
    ! !    On output, the sorted array.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   character ( len = * ) a(n)
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) indx
@@ -21142,35 +21141,35 @@ contains
    !   indx = 0
    !   isgn = 0
    !   j = 0
-   ! 
+   !
    !   do
-   ! 
+   !
    !     call sort_heap_external ( n, indx, i, j, isgn )
-   ! 
+   !
    !     if ( 0 < indx ) then
-   ! 
+   !
    !       call s_swap ( a(i), a(j) )
-   ! 
+   !
    !     else if ( indx < 0 ) then
-   ! 
+   !
    !       if ( lle ( a(i), a(j) ) ) then
    !         isgn = -1
    !       else
    !         isgn = +1
    !       end if
-   ! 
+   !
    !     else if ( indx == 0 ) then
-   ! 
+   !
    !       exit
-   ! 
+   !
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
-   ! subroutine svec_sort_heap_a_index ( n, sarray, indx ) 
-   ! 
+   ! subroutine svec_sort_heap_a_index ( n, sarray, indx )
+   !
    ! !*****************************************************************************80
    ! !
    ! !! SVEC_SORT_HEAP_A_INDEX: case-sensitive indexed heap sort of an SVEC.
@@ -21185,7 +21184,7 @@ contains
    ! !    The ASCII collating sequence is used, and case is significant.
    ! !    This means
    ! !
-   ! !      A < B < C < .... < Y < Z < a < b < .... < z.  
+   ! !      A < B < C < .... < Y < Z < a < b < .... < z.
    ! !
    ! !    Numbers and other symbols may also occur, and will be sorted according to
    ! !    the ASCII ordering.
@@ -21208,10 +21207,10 @@ contains
    ! !    I-th element of the sorted array is SARRAY ( INDX(I) ).
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ), parameter :: MAX_CHAR = 255
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) indx(n)
    !   integer ( kind = 4 ) indxt
@@ -21220,47 +21219,47 @@ contains
    !   integer ( kind = 4 ) l
    !   character ( len = * ) sarray(n)
    !   character ( len = MAX_CHAR ) string
-   ! 
+   !
    !   do i = 1, n
    !     indx(i) = i
    !   end do
-   !  
+   !
    !   l = n / 2 + 1
    !   ir = n
-   !  
+   !
    !   do
-   !  
+   !
    !     if ( 1 < l ) then
-   ! 
+   !
    !       l = l - 1
    !       indxt = indx(l)
    !       string = sarray(indxt)
-   ! 
+   !
    !     else
-   ! 
+   !
    !       indxt = indx(ir)
    !       string = sarray(indxt)
    !       indx(ir) = indx(1)
    !       ir = ir - 1
-   ! 
+   !
    !       if ( ir == 1 ) then
    !         indx(1) = indxt
    !         return
    !       end if
-   ! 
+   !
    !     end if
-   !  
+   !
    !     i = l
    !     j = l + l
-   !  
-   !     do while ( j <= ir ) 
-   !  
+   !
+   !     do while ( j <= ir )
+   !
    !       if ( j < ir ) then
    !         if ( llt ( sarray ( indx(j) ), sarray ( indx(j+1) ) ) ) then
    !           j = j + 1
    !         end if
    !       end if
-   !  
+   !
    !       if ( llt ( string, sarray ( indx(j) ) ) ) then
    !         indx(i) = indx(j)
    !         i = j
@@ -21268,17 +21267,17 @@ contains
    !       else
    !         j = ir + 1
    !       end if
-   !   
+   !
    !     end do
-   !  
+   !
    !     indx(i) = indxt
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine svec_sorted_unique ( n, a, unique_num )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! SVEC_SORTED_UNIQUE: number of unique entries in a sorted SVEC.
@@ -21299,40 +21298,40 @@ contains
    ! !    On input, the sorted list of strings.
    ! !    On output, the unique elements, in sorted order.
    ! !
-   ! !    Output, integer ( kind = 4 ) UNIQUE_NUM, the number of unique elements 
+   ! !    Output, integer ( kind = 4 ) UNIQUE_NUM, the number of unique elements
    ! !    in the array.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   character ( len = * ) a(n)
    !   integer ( kind = 4 ) itest
    !   integer ( kind = 4 ) unique_num
-   ! 
+   !
    !   if ( n <= 0 ) then
    !     unique_num = 0
    !     return
    !   end if
-   ! 
+   !
    !   unique_num = 1
-   ! 
+   !
    !   do itest = 2, n
-   ! 
+   !
    !     if ( a(itest) /= a(unique_num) ) then
    !       unique_num = unique_num + 1
    !       a(unique_num) = a(itest)
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine sveci_search_binary_a ( n, a, b, indx )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
-   ! !! SVECI_SEARCH_BINARY_A: search ascending sorted implicitly capitalized SVEC 
+   ! !! SVECI_SEARCH_BINARY_A: search ascending sorted implicitly capitalized SVEC
    ! !
    ! !  Modified:
    ! !
@@ -21363,9 +21362,9 @@ contains
    ! !    I, A(I) = B, ignoring capitalization.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   character ( len = * ) a(n)
    !   character ( len = * ) b
    !   integer ( kind = 4 ) high
@@ -21375,16 +21374,16 @@ contains
    !   logical s_eqi
    !   logical s_gti
    !   logical s_lti
-   ! 
+   !
    !   indx = 0
-   ! 
+   !
    !   low = 1
    !   high = n
-   ! 
+   !
    !   do while ( low <= high )
-   ! 
+   !
    !     mid = ( low + high ) / 2
-   ! 
+   !
    !     if ( s_eqi ( a(mid), b ) ) then
    !       indx = mid
    !       exit
@@ -21393,13 +21392,13 @@ contains
    !     else if ( s_gti ( a(mid), b ) ) then
    !       high = mid - 1
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   return
    ! end
    ! subroutine sveci_sort_heap_a ( n, sarray )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! SVECI_SORT_HEAP_A heap sorts an SVEC of implicitly capitalized strings.
@@ -21411,7 +21410,7 @@ contains
    ! !    are considered equal, both 'a' and 'A' precede 'B', and
    ! !    'Fox' and 'fOx' are considered equal.
    ! !
-   ! !    The ASCII collating sequence is used, except that all 
+   ! !    The ASCII collating sequence is used, except that all
    ! !    alphabetic characters are treated as though they were uppercase.
    ! !
    ! !    This means
@@ -21436,10 +21435,10 @@ contains
    ! !    Input/output, character ( len = * ) SARRAY(N), the array to be sorted.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ), parameter :: MAX_CHAR = 255
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   integer ( kind = 4 ) l
    !   integer ( kind = 4 ) l1
    !   logical s_gei
@@ -21448,57 +21447,57 @@ contains
    !   integer ( kind = 4 ) n1
    !   character ( len = * ) sarray(n)
    !   character ( len = MAX_CHAR ) s
-   ! 
+   !
    !   n1 = n
    !   l = n / 2
    !   s = sarray(l)
    !   l1 = l
-   ! 
+   !
    !   do
-   ! 
+   !
    !     m = 2 * l1
-   ! 
+   !
    !     if ( m <= n1 ) then
-   ! 
+   !
    !       if ( m < n1 ) then
    !         if ( s_gei ( sarray(m+1), sarray(m) ) ) then
    !           m = m + 1
    !         end if
    !       end if
-   ! 
+   !
    !       if ( s_lti ( s, sarray(m) ) ) then
    !         sarray(l1) = sarray(m)
    !         l1 = m
    !         cycle
    !       end if
-   ! 
+   !
    !     end if
-   !  
+   !
    !     sarray(l1) = s
-   ! 
+   !
    !     if ( 1 < l ) then
    !       l = l - 1
    !       s = sarray(l)
    !       l1 = l
    !       cycle
    !     end if
-   !  
+   !
    !     if ( n1 < 2 ) then
    !       exit
    !     end if
-   ! 
+   !
    !     s = sarray(n1)
    !     sarray(n1) = sarray(1)
-   ! 
+   !
    !     n1 = n1 - 1
    !     l1 = l
-   ! 
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine sveci_sort_heap_a_index ( n, sarray, indx )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! SVECI_SORT_HEAP_A_INDEX index heap sorts an SVECI.
@@ -21510,12 +21509,12 @@ contains
    ! !    sorting.  This index vector may be used to sort the array, or
    ! !    to sort related arrays keyed on the first one.
    ! !
-   ! !    The ASCII collating sequence is used, except that all 
+   ! !    The ASCII collating sequence is used, except that all
    ! !    alphabetic characters are treated as though they were uppercase.
    ! !
    ! !    This means
    ! !
-   ! !      A = a < B = b < C = c < .... < Y = y < Z = z.  
+   ! !      A = a < B = b < C = c < .... < Y = y < Z = z.
    ! !
    ! !    Numbers and other symbols may also occur, and will be sorted according to
    ! !    the ASCII ordering.
@@ -21538,10 +21537,10 @@ contains
    ! !    I-th element of the sorted array is SARRAY ( INDX(I) ).
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ), parameter :: MAX_CHAR = 255
    !   integer ( kind = 4 ) n
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) indx(n)
    !   integer ( kind = 4 ) indxt
@@ -21551,47 +21550,47 @@ contains
    !   logical s_lti
    !   character ( len = * ) sarray(n)
    !   character ( len = MAX_CHAR ) s
-   ! 
+   !
    !   do i = 1, n
    !     indx(i) = i
    !   end do
-   !  
+   !
    !   l = n / 2 + 1
    !   ir = n
-   !  
+   !
    !   do
-   !  
+   !
    !     if ( 1 < l ) then
-   ! 
+   !
    !       l = l - 1
    !       indxt = indx(l)
    !       s = sarray(indxt)
-   ! 
+   !
    !     else
-   ! 
+   !
    !       indxt = indx(ir)
    !       s = sarray(indxt)
    !       indx(ir) = indx(1)
    !       ir = ir - 1
-   !  
+   !
    !       if ( ir == 1 ) then
    !         indx(1) = indxt
    !         return
    !       end if
-   !  
+   !
    !     end if
-   ! 
+   !
    !     i = l
    !     j = l + l
-   !  
+   !
    !     do while ( j <= ir )
-   !  
+   !
    !       if ( j < ir ) then
    !         if ( s_lti ( sarray ( indx(j) ), sarray ( indx(j+1) ) ) ) then
    !           j = j + 1
    !         end if
    !       end if
-   !  
+   !
    !       if ( s_lti ( s, sarray ( indx(j) ) ) ) then
    !         indx(i) = indx(j)
    !         i = j
@@ -21599,17 +21598,17 @@ contains
    !       else
    !         j = ir + 1
    !       end if
-   !  
+   !
    !     end do
-   !  
+   !
    !     indx(i) = indxt
-   ! 
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine sym_to_ch ( sym, c, ihi )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! SYM_TO_CH returns the character represented by a symbol.
@@ -21638,7 +21637,7 @@ contains
    ! !    IHI = 0 if there was a problem.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   integer ( kind = 4 ) ialt
    !   integer ( kind = 4 ) ichr
@@ -21647,16 +21646,16 @@ contains
    !   logical s_eqi
    !   character ( len = * ) sym
    !   integer ( kind = 4 ) sym_length
-   ! 
+   !
    !   c = ' '
    !   sym_length = len_trim ( sym )
-   ! 
+   !
    !   if ( sym_length <= 0 ) then
    !     c = ' '
    !     ihi = 0
    !     return
    !   end if
-   ! 
+   !
    !   ialt = 0
    !   ictl = 0
    !   ihi = 1
@@ -21678,7 +21677,7 @@ contains
    ! !  Could it be a DEL character?
    ! !
    !   ichr = iachar ( sym(ihi:ihi) )
-   ! 
+   !
    !   if ( ihi+2 <= sym_length ) then
    !     if ( s_eqi ( sym(ihi:ihi+2), 'DEL' ) ) then
    !       ichr = 127
@@ -21700,22 +21699,22 @@ contains
    !   if ( ialt == 1 ) then
    !     ichr = ichr + 128
    !   end if
-   ! 
+   !
    !   if ( ictl == 1 ) then
    !     ichr = ichr - 64
    !   end if
-   ! 
+   !
    !   c = achar ( ichr )
-   ! 
+   !
    !   return
    ! end
    ! subroutine token_expand ( s, tokens )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! TOKEN_EXPAND makes sure certain tokens have spaces surrounding them.
    ! !
-   ! !  Modified:  
+   ! !  Modified:
    ! !
    ! !    05 July 1998
    ! !
@@ -21734,9 +21733,9 @@ contains
    ! !    preceding or trailing blank space is implicit.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ),parameter :: MAX_CHAR = 255
-   ! 
+   !
    !   character c1
    !   character c2
    !   character c3
@@ -21748,27 +21747,27 @@ contains
    !   character ( len = * ) s
    !   character ( len = MAX_CHAR ) s2
    !   character ( len = * ) tokens
-   ! 
+   !
    !   lenc = len_trim ( s )
    !   lent = len_trim ( tokens )
    !   s2 = ' '
    !   put = 0
    !   c2 = ' '
    !   c3 = s(1:1)
-   ! 
+   !
    !   do i = 1, lenc
-   ! 
+   !
    !     c1 = c2
    !     c2 = c3
-   ! 
+   !
    !     if ( i < lenc ) then
    !       c3 = s(i+1:i+1)
    !     else
    !       c3 = ' '
    !     end if
-   ! 
+   !
    !     do j = 1, lent
-   ! 
+   !
    !       if ( c2 == tokens(j:j) ) then
    !         if ( c1 /= ' ' ) then
    !           put = put + 1
@@ -21777,17 +21776,17 @@ contains
    !           end if
    !         end if
    !       end if
-   ! 
+   !
    !     end do
-   ! 
+   !
    !     put = put + 1
-   ! 
+   !
    !     if ( put <= MAX_CHAR ) then
    !       s2(put:put) = c2
    !     end if
-   ! 
+   !
    !     do j = 1, lent
-   ! 
+   !
    !       if ( c2 == tokens(j:j) ) then
    !         if ( c3 /= ' ' ) then
    !           put = put + 1
@@ -21796,17 +21795,17 @@ contains
    !           end if
    !         end if
    !       end if
-   ! 
+   !
    !     end do
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   s = s2
-   ! 
+   !
    !   return
    ! end
    ! subroutine token_extract ( s, token_num, token, match )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! TOKEN_EXTRACT "extracts" a token from the beginning of a string.
@@ -21822,37 +21821,37 @@ contains
    ! !  Parameters:
    ! !
    ! !    Input/output, character ( len = * ) S; on input, a string from
-   ! !    whose beginning a token is to be extracted.  On output, 
+   ! !    whose beginning a token is to be extracted.  On output,
    ! !    the token, if found, has been removed.
    ! !
-   ! !    Input, integer ( kind = 4 ) TOKEN_NUM, the number of tokens to be 
+   ! !    Input, integer ( kind = 4 ) TOKEN_NUM, the number of tokens to be
    ! !    compared.
    ! !
    ! !    Input, character ( len = * ) TOKEN(TOKEN_NUM), the tokens.
    ! !
-   ! !    Output, integer ( kind = 4 ) MATCH, the index of the (longest) token 
+   ! !    Output, integer ( kind = 4 ) MATCH, the index of the (longest) token
    ! !    that matched the string, or 0 if no match was found.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) token_num
-   ! 
+   !
    !   integer ( kind = 4 ) left
    !   integer ( kind = 4 ) match
    !   character ( len = * ) s
    !   character ( len = * ) token(token_num)
-   ! 
+   !
    !   call s_token_match ( s, token_num, token, match )
-   ! 
+   !
    !   if ( match /= 0 ) then
    !     left = len_trim ( token(match) )
    !     call s_shift_left ( s, left )
    !   end if
-   !  
+   !
    !   return
    ! end
    ! subroutine token_index ( s, indx, ilo, ihi )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! TOKEN_INDEX finds the N-th FORTRAN variable name in a string.
@@ -21871,37 +21870,37 @@ contains
    ! !
    ! !    Input, integer ( kind = 4 ) INDX is the index of the desired token.
    ! !
-   ! !    Output, integer ( kind = 4 ) ILO is the index of the first character 
+   ! !    Output, integer ( kind = 4 ) ILO is the index of the first character
    ! !    of the INDX-th token, or 0 if there was no INDX-th token.
    ! !
-   ! !    Output, integer ( kind = 4 ) IHI is the index of the last character 
+   ! !    Output, integer ( kind = 4 ) IHI is the index of the last character
    ! !    of the INDX-th token, or 0 if there was no INDX-th token.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) ihi
    !   integer ( kind = 4 ) ilo
    !   integer ( kind = 4 ) indx
    !   character ( len = * ) s
-   ! 
+   !
    !   ihi = 0
    !   ilo = 0
-   !  
+   !
    !   do i = 1, indx
-   !  
+   !
    !     call token_next ( s, ilo, ihi)
-   !  
+   !
    !     if ( ilo == 0 ) then
    !       return
    !     end if
-   !  
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine token_next ( s, ilo, ihi )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! TOKEN_NEXT finds the next FORTRAN variable name in a string.
@@ -21918,7 +21917,7 @@ contains
    ! !
    ! !    Input, character ( len = * ) S is the string of words to be analyzed.
    ! !
-   ! !    Output, integer ( kind = 4 ) ILO is the location of the first character 
+   ! !    Output, integer ( kind = 4 ) ILO is the location of the first character
    ! !    of the next word, or 0 if there was no next word.
    ! !
    ! !    Input/output, integer ( kind = 4 ) IHI.
@@ -21929,18 +21928,18 @@ contains
    ! !    the next word, or 0 if there was no next word.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ihi
    !   integer ( kind = 4 ) ilo
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_len
    !   logical s_only_alphab
    !   logical s_only_digitb
-   ! 
+   !
    !   s_len = len_trim ( s )
-   !  
+   !
    !   ilo = ihi
-   ! 
+   !
    !   if ( ilo < 0 ) then
    !     ilo = 0
    !   end if
@@ -21948,48 +21947,48 @@ contains
    ! !  Find ILO, the index of the next alphabetic character.
    ! !
    !   do
-   !  
+   !
    !     ilo = ilo + 1
-   ! 
+   !
    !     if ( s_len < ilo ) then
    !       ilo = 0
    !       ihi = 0
    !       return
    !     end if
-   !  
+   !
    !     if ( s_only_alphab ( s(ilo:ilo) ) ) then
    !       exit
    !     end if
-   ! 
+   !
    !   end do
    ! !
    ! !  Find the index of the next character which is neither
    ! !  alphabetic nor numeric.
    ! !
    !   ihi = ilo
-   ! 
+   !
    !   do
-   ! 
+   !
    !     ihi = ihi + 1
-   !  
+   !
    !     if ( s_len < ihi ) then
    !       ihi = s_len
    !       return
    !     end if
-   !  
+   !
    !     if ( .not. ( s_only_alphab ( s(ihi:ihi) ) ) .and. &
    !          .not. ( s_only_digitb ( s(ihi:ihi) ) ) ) then
    !       exit
    !     end if
-   ! 
+   !
    !   end do
-   !  
+   !
    !   ihi = ihi - 1
-   !  
+   !
    !   return
    ! end
    ! subroutine word_bounds ( line, word_num, word_start, word_end )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! WORD_BOUNDS returns the start and end of each word in a string.
@@ -22013,9 +22012,9 @@ contains
    ! !    the locations in LINE of the beginning and end of each word.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) word_num
-   ! 
+   !
    !   logical blank
    !   character c
    !   logical, parameter :: debug = .true.
@@ -22025,45 +22024,45 @@ contains
    !   integer ( kind = 4 ) w
    !   integer ( kind = 4 ) word_end(word_num)
    !   integer ( kind = 4 ) word_start(word_num)
-   ! 
+   !
    !   i = 0
    !   w = 0
    !   blank = .true.
-   ! 
+   !
    !   line_len = len_trim ( line )
-   ! 
+   !
    !   do i = 1, line_len + 1
-   ! 
+   !
    !     if ( i <= line_len ) then
    !       c = line(i:i)
    !     else
    !       c = ' '
    !     end if
-   ! 
+   !
    !     if ( c == ' ' ) then
-   ! 
+   !
    !       if ( .not. blank ) then
    !         word_end(w) = i-1
    !         if ( w == word_num ) then
    !           exit
    !         end if
    !       end if
-   ! 
+   !
    !       blank = .true.
-   ! 
+   !
    !     else
-   ! 
+   !
    !       if ( blank ) then
    !         w = w + 1
    !         word_start(w) = i
    !       end if
-   ! 
+   !
    !       blank = .false.
-   ! 
+   !
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   if ( w /= word_num ) then
    !     if ( debug ) then
    !       write ( *, '(a)' ) ' '
@@ -22071,16 +22070,16 @@ contains
    !       write ( *, '(a)' ) '  Found fewer words than requested.'
    !     end if
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine word_last_read ( s, word )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! WORD_LAST_READ returns the last word from a string.
    ! !
-   ! !  Modified: 
+   ! !  Modified:
    ! !
    ! !    01 April 2001
    ! !
@@ -22090,47 +22089,47 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input, character ( len = * ) S, a string containing words separated 
-   ! !    by spaces. 
+   ! !    Input, character ( len = * ) S, a string containing words separated
+   ! !    by spaces.
    ! !
    ! !    Output, character ( len = * ) WORD, the last word.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) first
    !   integer ( kind = 4 ) last
    !   character ( len = * ) s
    !   character ( len = * ) word
-   ! 
+   !
    !   last = len_trim ( s )
-   ! 
+   !
    !   if ( last <= 0 ) then
    !     word = ' '
    !     return
    !   end if
-   ! 
+   !
    !   first = last
-   ! 
+   !
    !   do
-   ! 
+   !
    !     if ( first <= 1 ) then
    !       exit
    !     end if
-   ! 
+   !
    !     if ( s(first-1:first-1) == ' ' ) then
    !       exit
    !     end if
-   ! 
+   !
    !     first = first - 1
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   word = s(first:last)
-   !  
+   !
    !   return
    ! end
    ! subroutine word_next ( s, ilo, ihi )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! WORD_NEXT finds the next (blank separated) word in a string.
@@ -22138,7 +22137,7 @@ contains
    ! !  Discussion:
    ! !
    ! !    This routine is usually used repetitively on a fixed string.  On each
-   ! !    call, it accepts IHI, the index of the last character of the 
+   ! !    call, it accepts IHI, the index of the last character of the
    ! !    previous word extracted from the string.
    ! !
    ! !    It then computes ILO and IHI, the first and last characters of
@@ -22158,7 +22157,7 @@ contains
    ! !
    ! !    Input/output, character ( len = * ) S, the string of words to be analyzed.
    ! !
-   ! !    Output, integer ( kind = 4 ) ILO is the location of the first character 
+   ! !    Output, integer ( kind = 4 ) ILO is the location of the first character
    ! !    of the next word, or 0 if there was no next word.
    ! !
    ! !    Input/output, integer ( kind = 4 ) IHI.
@@ -22168,12 +22167,12 @@ contains
    ! !    the next word, or 0 if there was no next word.
    ! !
    !   implicit none
-   ! 
+   !
    !   integer ( kind = 4 ) ihi
    !   integer ( kind = 4 ) ilo
    !   character ( len = * ) s
    !   integer ( kind = 4 ) s_len
-   ! 
+   !
    !   s_len = len_trim ( s )
    ! !
    ! !  Find ILO, the index of the first nonblank character after
@@ -22184,50 +22183,50 @@ contains
    !   else
    !     ilo = ihi
    !   end if
-   !  
+   !
    !   do
-   !  
+   !
    !     ilo = ilo + 1
-   !  
+   !
    !     if ( s_len < ilo ) then
    !       ilo = 0
    !       ihi = 0
    !       return
    !     end if
-   !  
+   !
    !     if ( s(ilo:ilo) /= ' ') then
    !       exit
    !     end if
-   ! 
+   !
    !   end do
    ! !
    ! !  Find IHI, the index of the next blank character, or end of line.
    ! !
    !   ihi = ilo
-   !  
+   !
    !   do
-   !  
+   !
    !     ihi = ihi + 1
-   !  
+   !
    !     if ( s_len <= ihi ) then
    !       ihi = s_len
    !       return
    !     end if
-   !  
+   !
    !     if ( s(ihi:ihi) == ' ' ) then
    !       exit
    !     end if
-   ! 
+   !
    !   end do
    ! !
    ! !  Decrement IHI to point to the previous, nonblank, character.
    ! !
    !   ihi = ihi - 1
-   !  
+   !
    !   return
    ! end
    ! subroutine word_next_read ( s, word, done )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! WORD_NEXT_READ "reads" words from a string, one at a time.
@@ -22270,7 +22269,7 @@ contains
    ! !      TRUE if no more words could be read.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical done
    !   integer ( kind = 4 ) ilo
    !   integer ( kind = 4 ), save :: lenc = 0
@@ -22284,17 +22283,17 @@ contains
    ! !  An input value of DONE = TRUE signals a new line of text to examine.
    ! !
    !   if ( done ) then
-   ! 
+   !
    !     next = 1
    !     done = .false.
    !     lenc = len_trim ( s )
-   ! 
+   !
    !     if ( lenc <= 0 ) then
    !       done = .true.
    !       word = ' '
    !       return
    !     end if
-   ! 
+   !
    !   end if
    ! !
    ! !  Beginning at index NEXT, search the string for the next nonblank,
@@ -22305,7 +22304,7 @@ contains
    ! !  ...S(NEXT:) is blank.  Return with WORD = ' ' and DONE = TRUE.
    ! !
    !   do
-   ! 
+   !
    !     if ( lenc < ilo ) then
    !       word = ' '
    !       done = .true.
@@ -22318,9 +22317,9 @@ contains
    !     if ( s(ilo:ilo) /= ' ' .and. s(ilo:ilo) /= TAB ) then
    !       exit
    !     end if
-   ! 
+   !
    !     ilo = ilo + 1
-   ! 
+   !
    !   end do
    ! !
    ! !  ILO is the index of the next nonblank character in the string.
@@ -22336,20 +22335,20 @@ contains
    !        s(ilo:ilo) == '}' .or. &
    !        s(ilo:ilo) == '[' .or. &
    !        s(ilo:ilo) == ']' ) then
-   ! 
+   !
    !     word = s(ilo:ilo)
    !     next = ilo + 1
    !     return
-   ! 
+   !
    !   end if
    ! !
    ! !  Now search for the last contiguous character that is not a
    ! !  blank, TAB, or special character.
    ! !
    !   next = ilo + 1
-   ! 
+   !
    !   do while ( next <= lenc )
-   ! 
+   !
    !     if ( s(next:next) == ' ' ) then
    !       exit
    !     else if ( s(next:next) == TAB ) then
@@ -22369,21 +22368,21 @@ contains
    !     else if ( s(next:next) == ']' ) then
    !       exit
    !     end if
-   ! 
+   !
    !     next = next + 1
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   if ( s(next-1:next-1) == ',' ) then
    !     word = s(ilo:next-2)
    !   else
    !     word = s(ilo:next-1)
    !   end if
-   ! 
+   !
    !   return
    ! end
    ! subroutine word_next2 ( s, first, last )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! WORD_NEXT2 returns the first word in a string.
@@ -22414,7 +22413,7 @@ contains
    ! !    Output, character ( len = * ) LAST, the remaining string.
    ! !
    !   implicit none
-   ! 
+   !
    !   character c
    !   character ( len = * ) first
    !   integer ( kind = 4 ) i
@@ -22426,29 +22425,29 @@ contains
    !   integer ( kind = 4 ) lenl
    !   integer ( kind = 4 ) lens
    !   character ( len = * ) s
-   ! 
+   !
    !   first = ' '
    !   last = ' '
-   !  
+   !
    !   ifirst = 0
    !   ilast = 0
-   !  
+   !
    !   lens = len_trim ( s )
    !   lenf = len ( first )
    !   lenl = len ( last )
-   !  
+   !
    !   ido = 0
-   !  
+   !
    !   do i = 1, lens
-   !  
+   !
    !     c = s(i:i)
-   !  
+   !
    !     if ( ido == 0 ) then
    !       if ( c /= ' ' .and. c /= ',' ) then
    !         ido = 1
    !       end if
    !     end if
-   !  
+   !
    !     if ( ido == 1 ) then
    !       if ( c /= ' ' .and. c /= ',' ) then
    !         ifirst = ifirst + 1
@@ -22459,26 +22458,26 @@ contains
    !         ido = 2
    !       end if
    !     end if
-   !  
+   !
    !     if ( ido == 2 ) then
    !       if ( c /= ' ' .and. c /= ',' ) then
    !         ido = 3
    !       end if
    !     end if
-   !  
+   !
    !     if ( ido == 3 ) then
    !       ilast = ilast + 1
    !       if ( ilast <= lenl ) then
    !         last(ilast:ilast) = c
    !       end if
    !     end if
-   !  
+   !
    !   end do
-   !  
+   !
    !   return
    ! end
    ! subroutine word_swap ( s, i1, i2 )
-   ! 
+   !
    ! !*****************************************************************************80
    ! !
    ! !! WORD_SWAP swaps two words in a given string.
@@ -22493,7 +22492,7 @@ contains
    ! !
    ! !  Parameters:
    ! !
-   ! !    Input/output, character ( len = * ) S, a string of characters.  
+   ! !    Input/output, character ( len = * ) S, a string of characters.
    ! !    "Words" in the string are presumed to be separated by blanks.
    ! !
    ! !    Input, integer ( kind = 4 ) I1, I2, the indices of the words to be swapped.
@@ -22502,7 +22501,7 @@ contains
    ! !    words I1 and I2 are swapped.
    ! !
    !   implicit none
-   ! 
+   !
    !   logical blank
    !   integer ( kind = 4 ) i
    !   integer ( kind = 4 ) i1
@@ -22517,12 +22516,12 @@ contains
    !   character ( len = * ) s
    !   character ( len = 80 ) s2
    !   integer ( kind = 4 ) word_num
-   ! 
+   !
    !   lens = len_trim ( s )
    !   if ( lens <= 0 ) then
    !     return
    !   end if
-   ! 
+   !
    !   if ( 80 < lens ) then
    !     write ( *, '(a)' ) ' '
    !     write ( *, '(a)' ) 'WORD_SWAP - Warning!'
@@ -22536,7 +22535,7 @@ contains
    ! !
    !   j1 = min ( i1, i2)
    !   j2 = max ( i1, i2)
-   ! 
+   !
    !   if ( j1 <= 0 ) then
    !     return
    !   else if ( j2 <= 0 ) then
@@ -22544,48 +22543,48 @@ contains
    !   else if ( j1 == j2 ) then
    !     return
    !   end if
-   ! 
+   !
    !   j1beg = 0
    !   j1end = 0
    !   j2beg = 0
    !   j2end = 0
    !   word_num = 0
    !   blank = .true.
-   ! 
+   !
    !   do i = 1, lens
-   ! 
+   !
    !     if ( s(i:i) == ' ' ) then
-   ! 
+   !
    !       if ( j1beg /= 0 .and. j1end == 0 ) then
    !         j1end = i - 1
    !       else if ( j2beg /= 0 .and. j2end == 0 ) then
    !         j2end = i - 1
    !       end if
-   ! 
+   !
    !       blank = .true.
-   ! 
+   !
    !     else if ( blank ) then
-   ! 
+   !
    !       word_num = word_num + 1
-   ! 
+   !
    !       if ( word_num == j1 ) then
    !         j1beg = i
    !       else if ( word_num == j2 ) then
    !         j2beg = i
    !       end if
-   ! 
-   !       blank = .false. 
-   ! 
+   !
+   !       blank = .false.
+   !
    !     end if
-   ! 
+   !
    !   end do
-   ! 
+   !
    !   if ( j1beg /= 0 .and. j1end == 0 ) then
    !     j1end = lens
    !   else if ( j2beg /= 0 .and. j2end == 0 ) then
    !     j2end = lens
    !   end if
-   ! 
+   !
    !   if ( word_num < j1 .or. word_num < j2 ) then
    !     return
    !   end if
@@ -22606,8 +22605,8 @@ contains
    ! !  Copy word 1.
    ! !
    !   s ( j1beg + j2end - j1end : j2end )  = s2 ( j1beg : j1end )
-   ! 
+   !
    !   return
    ! end
-   ! 
+   !
 end module

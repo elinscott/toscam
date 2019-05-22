@@ -1,30 +1,29 @@
 MODULE correl_class
 
    !$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-   !$$ CORRELATION CLASS FOR SPIN INDEPENDANT CORRELATIONS $$
+   !$$CORRELATION CLASS FOR SPIN INDEPENDANT CORRELATIONS$$
    !$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
    ! USE frequency_class
    ! USE impurity_class
    ! USE mesh
-   use frequency_class,         only: freq_type
-   use genvar,                  only: DBL
-   use globalvar_ed_solver,     only: istati
+   use frequency_class, only: freq_type
+   use genvar, only: DBL
+   use globalvar_ed_solver, only: istati
    use masked_matrix_class_mod, only: masked_cplx_matrix_type
 
    IMPLICIT NONE
 
    private
 
-
    TYPE correl_type
-      CHARACTER(LEN = 100)           :: title = '\0'
-      INTEGER                        :: N     = 0
-      INTEGER                        :: Nw    = 0
-      CHARACTER(LEN = 9)             :: stat  = '\0'
+      CHARACTER(LEN=100)           :: title = '\0'
+      INTEGER                        :: N = 0
+      INTEGER                        :: Nw = 0
+      CHARACTER(LEN=9)             :: stat = '\0'
       TYPE(masked_cplx_matrix_type)  :: MM
-      COMPLEX(DBL),    POINTER       :: fctn(:,:,:) => NULL() ! matrix correlation function
-      COMPLEX(DBL),    POINTER       :: vec(:,:) => NULL() ! vector of independant matrix elements
+      COMPLEX(DBL), POINTER       :: fctn(:, :, :) => NULL() ! matrix correlation function
+      COMPLEX(DBL), POINTER       :: vec(:, :) => NULL() ! vector of independant matrix elements
       TYPE(freq_type)                :: freq ! frequency
    END TYPE
 
@@ -57,52 +56,50 @@ contains
       ! CAST CORRELATION MATRIX IN VECTOR OF INDEPENDANT ELEMENTS
 
       use masked_matrix_class_mod, only: delete_masked_cplx_matrix, &
-           masked_cplx_matrix2vec, masked_cplx_matrix_type, &
-           new_masked_cplx_matrix
+         masked_cplx_matrix2vec, masked_cplx_matrix_type, &
+         new_masked_cplx_matrix
 
       implicit none
 
       TYPE(correl_type)             :: CORREL
       TYPE(masked_cplx_matrix_type) :: corr
       INTEGER                       :: iw
-      complex(8), optional          :: extmat(:,:,:), vecext(:,:)
+      complex(8), optional          :: extmat(:, :, :), vecext(:, :)
 
-
-
-      IF(.NOT.ASSOCIATED(CORREL%vec)) ALLOCATE(CORREL%vec(CORREL%MM%MASK%nind, &
-           CORREL%Nw))
+      IF (.NOT. ASSOCIATED(CORREL%vec)) ALLOCATE (CORREL%vec(CORREL%MM%MASK%nind, &
+                                                             CORREL%Nw))
       CALL new_masked_cplx_matrix(corr, CORREL%MM)
       CALL masked_cplx_matrix2vec(corr)
 
-      if(present(extmat))then
-         if(any(shape(extmat) /= shape(CORREL%fctn))) then
-            write(*, *) 'error shape of array in correl2vec, shape extmat :', &
-                 shape(extmat)
-            write(*, *) 'shape correl%func : ', shape(correl%fctn)
+      if (present(extmat)) then
+         if (any(shape(extmat) /= shape(CORREL%fctn))) then
+            write (*, *) 'error shape of array in correl2vec, shape extmat :', &
+               shape(extmat)
+            write (*, *) 'shape correl%func : ', shape(correl%fctn)
             stop
          endif
       endif
 
-      if(present(vecext))then
-         if(any(shape(vecext) /= shape(CORREL%vec))) then
-            write(*, *) 'error shape of array in correl2vec, shape vecext :', &
-                 shape(vecext)
-            write(*, *) 'shape correl%vec : ', shape(correl%vec)
+      if (present(vecext)) then
+         if (any(shape(vecext) /= shape(CORREL%vec))) then
+            write (*, *) 'error shape of array in correl2vec, shape vecext :', &
+               shape(vecext)
+            write (*, *) 'shape correl%vec : ', shape(correl%vec)
             stop
          endif
       endif
 
       DO iw = 1, CORREL%Nw
-         if(.not.present(extmat))then
+         if (.not. present(extmat)) then
             corr%mat = CORREL%fctn(:, :, iw)
          else
             corr%mat = extmat(:, :, iw)
          endif
          CALL masked_cplx_matrix2vec(corr)
-         if(.not.present(vecext))then
+         if (.not. present(vecext)) then
             CORREL%vec(:, iw) = corr%vec
          else
-            vecext(:, iw)     = corr%vec
+            vecext(:, iw) = corr%vec
          endif
       ENDDO
 
@@ -111,7 +108,7 @@ contains
    end subroutine
 
    subroutine new_correl_from_scratch_ifreq(CORREL, title, N, Nw, beta, STAT, &
-        IMASK, AB)
+                                            IMASK, AB)
 
       ! CREATE NEW MATSUBARA FREQ. CORRELATION FROM SCRATCH
 
@@ -120,54 +117,52 @@ contains
       implicit none
 
       TYPE(correl_type), INTENT(INOUT) :: CORREL
-      CHARACTER(LEN = *), INTENT(IN)   :: title
+      CHARACTER(LEN=*), INTENT(IN)   :: title
       INTEGER, INTENT(IN)              :: N
-      CHARACTER(LEN = 9), INTENT(IN)   :: STAT
+      CHARACTER(LEN=9), INTENT(IN)   :: STAT
       INTEGER, INTENT(IN)              :: Nw
       REAL(DBL), INTENT(IN)            :: beta
       INTEGER, OPTIONAL, INTENT(IN)    :: IMASK(N, N)
       LOGICAL, OPTIONAL, INTENT(IN)    :: AB
 
-
-
-      if(Nw == 0) stop 'new correl from scratch ifrequ Nw = 0'
-      CALL new_correl_from_scratch(CORREL, title, N, Nw, STAT, IMASK, AB = AB)
+      if (Nw == 0) stop 'new correl from scratch ifrequ Nw = 0'
+      CALL new_correl_from_scratch(CORREL, title, N, Nw, STAT, IMASK, AB=AB)
       CALL new_freq(CORREL%freq, Nw, beta, STAT)
 
-      DEALLOCATE(CORREL%MM%mat, STAT = istati)
+      DEALLOCATE (CORREL%MM%mat, STAT=istati)
       CORREL%MM%mat => CORREL%fctn(:, :, CORREL%freq%iwprint)
 
    end subroutine
 
    subroutine new_correl_from_scratch_rfreq(CORREL, title, N, Nw, wmin, wmax, &
-        width, STAT, IMASK, AB)
+                                            width, STAT, IMASK, AB)
 
       ! CREATE NEW REAL FREQ. CORRELATION FROM SCRATCH
 
       use frequency_class, only: new_freq
-      use genvar,          only: ADVANCED, RETARDED
+      use genvar, only: ADVANCED, RETARDED
 
       implicit none
 
       TYPE(correl_type), INTENT(INOUT) :: CORREL
-      CHARACTER(LEN = *), INTENT(IN)   :: title
+      CHARACTER(LEN=*), INTENT(IN)   :: title
       INTEGER, INTENT(IN)              :: N
-      CHARACTER(LEN = 9), INTENT(IN)   :: STAT
+      CHARACTER(LEN=9), INTENT(IN)   :: STAT
       INTEGER, INTENT(IN)              :: Nw
       REAL(DBL), INTENT(IN)            :: wmax, width
       INTEGER, OPTIONAL, INTENT(IN)    :: IMASK(N, N)
       LOGICAL, OPTIONAL, INTENT(IN)    :: AB
-      REAL(DBL) , INTENT(IN)           :: wmin
+      REAL(DBL), INTENT(IN)           :: wmin
 
-      if(Nw == 0) stop 'new correl from scratch rfrequNw = 0'
-      CALL new_correl_from_scratch(CORREL, title, N, Nw, STAT, IMASK, AB = AB)
-      IF(width > 0.0_DBL)THEN
+      if (Nw == 0) stop 'new correl from scratch rfrequNw = 0'
+      CALL new_correl_from_scratch(CORREL, title, N, Nw, STAT, IMASK, AB=AB)
+      IF (width > 0.0_DBL) THEN
          CALL new_freq(CORREL%freq, Nw, wmin, wmax, width, RETARDED)
       ELSE
          CALL new_freq(CORREL%freq, Nw, wmin, wmax, width, ADVANCED)
       ENDIF
 
-      DEALLOCATE(CORREL%MM%mat, STAT = istati)
+      DEALLOCATE (CORREL%MM%mat, STAT=istati)
       CORREL%MM%mat => CORREL%fctn(:, :, CORREL%freq%iwprint)
 
    end subroutine
@@ -176,61 +171,59 @@ contains
 
       ! CREATE NEW CORRELATION (WITHOUT FREQUENCY ARRAY) FROM SCRATCH
 
-      use common_def,              only: dump_message
-      use genvar,                  only: strongstop
+      use common_def, only: dump_message
+      use genvar, only: strongstop
       use masked_matrix_class_mod, only: new_masked_cplx_matrix
-      use matrix,                  only: new_diag
+      use matrix, only: new_diag
 
       implicit none
 
       TYPE(correl_type), INTENT(INOUT) :: CORREL
-      CHARACTER(LEN = *), INTENT(IN)   :: title
+      CHARACTER(LEN=*), INTENT(IN)   :: title
       INTEGER, INTENT(IN)              :: N, Nw
-      CHARACTER(LEN = 9), INTENT(IN)   :: STAT
+      CHARACTER(LEN=9), INTENT(IN)   :: STAT
       INTEGER, OPTIONAL, INTENT(IN)    :: IMASK(N, N)
       LOGICAL, OPTIONAL, INTENT(IN)    :: AB
       LOGICAL :: is_diag(N, N), AB_
       INTEGER :: imask_(N, N)
       INTEGER :: iind, mu, nu
 
-
-
-      if(Nw == 0) stop 'new correl from scratch Nw = 0'
+      if (Nw == 0) stop 'new correl from scratch Nw = 0'
       CALL delete_correl(CORREL)
 
       CORREL%title = TRIM(ADJUSTL(title))
-      CORREL%stat  = STAT
-      CORREL%N     = N
-      CORREL%Nw    = Nw
+      CORREL%stat = STAT
+      CORREL%N = N
+      CORREL%Nw = Nw
 
-      ALLOCATE(CORREL%fctn(N, N, Nw))
-      CORREL%fctn  = 0.0_DBL
+      ALLOCATE (CORREL%fctn(N, N, Nw))
+      CORREL%fctn = 0.0_DBL
 
       AB_ = .false.
-      IF(PRESENT(AB)) AB_ = AB
+      IF (PRESENT(AB)) AB_ = AB
 
 #ifdef _complex
-      IF(PRESENT(IMASK))THEN
+      IF (PRESENT(IMASK)) THEN
          CALL new_diag(is_diag, N)
-         IF((.NOT.AB_) .AND. ANY((.NOT.is_diag) .AND. (IMASK == &
-              TRANSPOSE(IMASK)) .AND. (IMASK /= 0))) CALL dump_message(TEXT = &
-              "WARNING IN new_correl: CPLX H => " // &
-              TRIM(ADJUSTL(CORREL%title)) // " /= TRANSPOSE(" // &
-              TRIM(ADJUSTL(CORREL%title)) // ") A PRIORI!")
+         IF ((.NOT. AB_) .AND. ANY((.NOT. is_diag) .AND. (IMASK == &
+                                                          TRANSPOSE(IMASK)) .AND. (IMASK /= 0))) CALL dump_message(TEXT= &
+                                                                                             "WARNING IN new_correl: CPLX H => "// &
+                                                                                   TRIM(ADJUSTL(CORREL%title))//" /= TRANSPOSE("// &
+                                                                                         TRIM(ADJUSTL(CORREL%title))//") A PRIORI!")
       ENDIF
 #else
-      IF(PRESENT(IMASK))THEN
-         IF(.NOT.AB_ .AND. ANY(IMASK /= TRANSPOSE(IMASK))) then
-            write(*, *) "ERROR IN new_correl: REAL H => " // &
-                 TRIM(ADJUSTL(CORREL%title)) // " = TRANSPOSE(" // &
-                 TRIM(ADJUSTL(CORREL%title)) // ") !"
-            if(strongstop) stop
+      IF (PRESENT(IMASK)) THEN
+         IF (.NOT. AB_ .AND. ANY(IMASK /= TRANSPOSE(IMASK))) then
+            write (*, *) "ERROR IN new_correl: REAL H => "// &
+               TRIM(ADJUSTL(CORREL%title))//" = TRANSPOSE("// &
+               TRIM(ADJUSTL(CORREL%title))//") !"
+            if (strongstop) stop
          endif
       ENDIF
 #endif
 
-      CALL new_masked_cplx_matrix(CORREL%MM, CORREL%title, N, N, IMASK = &
-           IMASK, IS_HERM = .false.)
+      CALL new_masked_cplx_matrix(CORREL%MM, CORREL%title, N, N, IMASK= &
+                                  IMASK, IS_HERM=.false.)
 
       RETURN
    end subroutine
@@ -244,21 +237,20 @@ contains
       TYPE(correl_type), INTENT(INOUT) :: CORRELOUT
       TYPE(correl_type), INTENT(IN)    :: CORRELIN
 
-
-      if(CORRELIN%Nw == 0) stop 'new correl from old Nw = 0'
+      if (CORRELIN%Nw == 0) stop 'new correl from old Nw = 0'
 
       ! THE AB = T FLAG AVOIDS THE SYMMETRY TESTS IN new_correl
 
-      SELECT CASE(CORRELIN%freq%title)
-      CASE(BOSONIC, FERMIONIC)
+      SELECT CASE (CORRELIN%freq%title)
+      CASE (BOSONIC, FERMIONIC)
          CALL new_correl_from_scratch_ifreq(CORRELOUT, CORRELIN%title, &
-              CORRELIN%N, CORRELIN%Nw, CORRELIN%freq%beta, CORRELIN%stat, &
-              IMASK = CORRELIN%MM%MASK%imat, AB = .true.)
-      CASE(RETARDED, ADVANCED)
+                                            CORRELIN%N, CORRELIN%Nw, CORRELIN%freq%beta, CORRELIN%stat, &
+                                            IMASK=CORRELIN%MM%MASK%imat, AB=.true.)
+      CASE (RETARDED, ADVANCED)
          CALL new_correl_from_scratch_rfreq(CORRELOUT, CORRELIN%title, &
-              CORRELIN%N, CORRELIN%Nw, CORRELIN%freq%wmin, CORRELIN%freq%wmax, &
-              CORRELIN%freq%width, CORRELIN%stat, IMASK = &
-              CORRELIN%MM%MASK%imat, AB = .true.)
+                                            CORRELIN%N, CORRELIN%Nw, CORRELIN%freq%wmin, CORRELIN%freq%wmax, &
+                                            CORRELIN%freq%width, CORRELIN%stat, IMASK= &
+                                            CORRELIN%MM%MASK%imat, AB=.true.)
       END SELECT
 
       CALL copy_correl(CORRELOUT, CORRELIN)
@@ -278,21 +270,19 @@ contains
       TYPE(correl_type), INTENT(INOUT) :: CORRELOUT
       integer :: i1, i2, i(3)
 
-
-
-      CORRELOUT%N    = CORRELIN%N
+      CORRELOUT%N = CORRELIN%N
       CALL copy_frequency(CORRELOUT%freq, CORRELIN%freq)
       CORRELOUT%stat = CORRELIN%stat
 
-      if(ASSOCIATED(CORRELIN%fctn)) then
-         if(ASSOCIATED(CORRELOUT%fctn)) DEALLOCATE(CORRELOUT%fctn, STAT = &
-              istati)
+      if (ASSOCIATED(CORRELIN%fctn)) then
+         if (ASSOCIATED(CORRELOUT%fctn)) DEALLOCATE (CORRELOUT%fctn, STAT= &
+                                                     istati)
          i = shape(CORRELIN%fctn)
-         ALLOCATE(CORRELOUT%fctn(i(1), i(2), i(3)))
+         ALLOCATE (CORRELOUT%fctn(i(1), i(2), i(3)))
          CORRELOUT%fctn = CORRELIN%fctn
       endif
 
-      if(ASSOCIATED(CORRELOUT%fctn)) then
+      if (ASSOCIATED(CORRELOUT%fctn)) then
          !CEDRIC BUG
          ! IF(ASSOCIATED(CORRELOUT%MM%mat)) DEALLOCATE(CORRELOUT%MM%mat, STAT
          ! = istati)
@@ -301,10 +291,10 @@ contains
          CORRELOUT%MM%N2 = size(CORRELOUT%fctn, 2)
       endif
 
-      IF(ASSOCIATED(CORRELIN%vec))THEN
-         IF(ASSOCIATED(CORRELOUT%vec)) DEALLOCATE(CORRELOUT%vec, STAT = istati)
+      IF (ASSOCIATED(CORRELIN%vec)) THEN
+         IF (ASSOCIATED(CORRELOUT%vec)) DEALLOCATE (CORRELOUT%vec, STAT=istati)
          i(1:2) = shape(CORRELIN%vec)
-         ALLOCATE(CORRELOUT%vec(i(1), i(2)))
+         ALLOCATE (CORRELOUT%vec(i(1), i(2)))
          CORRELOUT%vec = CORRELIN%vec
       ENDIF
 
@@ -313,28 +303,27 @@ contains
 
    subroutine delete_correl(CORREL)
 
-      use frequency_class,         only: delete_frequency
-      use genvar,                  only: log_unit, messages3
+      use frequency_class, only: delete_frequency
+      use genvar, only: log_unit, messages3
       use masked_matrix_class_mod, only: delete_masked_matrix_
 
       implicit none
 
       TYPE(correl_type) :: CORREL
 
-
-      if(ASSOCIATED(CORREL%MM%mat, CORREL%fctn(:, :, CORREL%freq%iwprint)))then
-         NULLIFY(CORREL%MM%mat)
+      if (ASSOCIATED(CORREL%MM%mat, CORREL%fctn(:, :, CORREL%freq%iwprint))) then
+         NULLIFY (CORREL%MM%mat)
       endif
 
-      if(messages3) write(log_unit, *) '......delete masked matrix.....'
+      if (messages3) write (log_unit, *) '......delete masked matrix.....'
       CALL delete_masked_matrix_(CORREL%MM)
-      if(messages3) write(log_unit, *) '......delete correlations......'
-      IF(ASSOCIATED(CORREL%fctn)) DEALLOCATE(CORREL%fctn, STAT = istati)
-      if(messages3) write(log_unit, *) '......delete vec...............'
-      IF(ASSOCIATED(CORREL%vec))  DEALLOCATE(CORREL%vec, STAT = istati)
-      if(messages3) write(log_unit, *) '......delete frequencies.......'
+      if (messages3) write (log_unit, *) '......delete correlations......'
+      IF (ASSOCIATED(CORREL%fctn)) DEALLOCATE (CORREL%fctn, STAT=istati)
+      if (messages3) write (log_unit, *) '......delete vec...............'
+      IF (ASSOCIATED(CORREL%vec)) DEALLOCATE (CORREL%vec, STAT=istati)
+      if (messages3) write (log_unit, *) '......delete frequencies.......'
       CALL delete_frequency(CORREL%freq)
-      if(messages3) write(log_unit, *) '......now return...............'
+      if (messages3) write (log_unit, *) '......now return...............'
 
       RETURN
    end subroutine
@@ -345,9 +334,9 @@ contains
       ! OPEN OUTPUT FILE
 
       use masked_matrix_class_mod, only: write_raw_masked_cplx_matrix
-      use common_def,              only: close_safe, open_safe
-      use frequency_class,         only: write_raw_freq
-      use string5,                 only: get_unit
+      use common_def, only: close_safe, open_safe
+      use frequency_class, only: write_raw_freq
+      use string5, only: get_unit
 
       implicit none
 
@@ -355,25 +344,23 @@ contains
       INTEGER, OPTIONAL, INTENT(IN) :: UNIT
       INTEGER :: unit_
 
-
-
-      IF(PRESENT(UNIT))THEN
+      IF (PRESENT(UNIT)) THEN
          unit_ = UNIT
       ELSE
-         CALL open_safe(unit_, "./ED_out/" // TRIM(ADJUSTL(CORREL%title)) // &
-              "_raw.dat", "UNKNOWN", "WRITE", get_unit = .true.)
+         CALL open_safe(unit_, "./ED_out/"//TRIM(ADJUSTL(CORREL%title))// &
+                        "_raw.dat", "UNKNOWN", "WRITE", get_unit=.true.)
       ENDIF
 
       ! WRITE RAW CORRELATION TO OUTPUT FILE
-      WRITE(unit_, *) CORREL%title
-      WRITE(unit_, *) CORREL%N
-      WRITE(unit_, *) CORREL%stat
+      WRITE (unit_, *) CORREL%title
+      WRITE (unit_, *) CORREL%N
+      WRITE (unit_, *) CORREL%stat
       CALL write_raw_masked_cplx_matrix(CORREL%MM, unit_)
       CALL write_raw_freq(CORREL%freq, unit_)
-      WRITE(unit_, *) CORREL%fctn
+      WRITE (unit_, *) CORREL%fctn
 
       ! CLOSE OUTPUT FILE
-      IF(.NOT.PRESENT(UNIT)) CALL close_safe(unit_)
+      IF (.NOT. PRESENT(UNIT)) CALL close_safe(unit_)
 
    end subroutine
 
@@ -381,71 +368,71 @@ contains
 
       ! CREATE NEW CORRELATION FROM RAW FILE
 
-      use common_def,              only: close_safe, dump_message, open_safe
-      use genvar,                  only: ADVANCED, BOSONIC, FERMIONIC, RETARDED
-      use frequency_class,         only: delete_frequency, freq_type, &
-           read_raw_freq
+      use common_def, only: close_safe, dump_message, open_safe
+      use genvar, only: ADVANCED, BOSONIC, FERMIONIC, RETARDED
+      use frequency_class, only: delete_frequency, freq_type, &
+         read_raw_freq
       use masked_matrix_class_mod, only: masked_cplx_matrix_type, &
-           read_raw_masked_cplx_matrix
-      use string5,                 only: get_unit
+         read_raw_masked_cplx_matrix
+      use string5, only: get_unit
 
       implicit none
 
       TYPE(correl_type), INTENT(INOUT)         :: CORREL
-      CHARACTER(LEN = *), OPTIONAL, INTENT(IN) :: FILEIN
+      CHARACTER(LEN=*), OPTIONAL, INTENT(IN) :: FILEIN
       INTEGER, OPTIONAL, INTENT(IN)            :: UNIT
-      CHARACTER(LEN = 100)          :: title
-      CHARACTER(LEN = 9)            :: stat
+      CHARACTER(LEN=100)          :: title
+      CHARACTER(LEN=9)            :: stat
       INTEGER                       :: N, Nw, unit_
       TYPE(masked_cplx_matrix_type) :: MM
       TYPE(freq_type)               :: FREQ
 
-      if(Nw == 0) stop 'read raw correl Nw = 0'
+      if (Nw == 0) stop 'read raw correl Nw = 0'
 
       CALL delete_correl(CORREL)
-      IF(PRESENT(UNIT))THEN
+      IF (PRESENT(UNIT)) THEN
          unit_ = UNIT
       ELSE
-         CALL open_safe(unit_, FILEIN, "UNKNOWN", "READ", get_unit = .true.)
+         CALL open_safe(unit_, FILEIN, "UNKNOWN", "READ", get_unit=.true.)
       ENDIF
 
       ! READ RAW CORRELATION FROM INPUT FILE
-      READ(unit_, *) title
+      READ (unit_, *) title
 
-      IF(PRESENT(FILEIN))THEN
-         CALL dump_message(TEXT = "################################")
-         CALL dump_message(TEXT = "### READ " // TRIM(ADJUSTL(title)))
-         CALL dump_message(TEXT = "### FROM FILE" // TRIM(ADJUSTL(FILEIN)) // &
-              " ...")
-         CALL dump_message(TEXT = "################################")
+      IF (PRESENT(FILEIN)) THEN
+         CALL dump_message(TEXT="################################")
+         CALL dump_message(TEXT="### READ "//TRIM(ADJUSTL(title)))
+         CALL dump_message(TEXT="### FROM FILE"//TRIM(ADJUSTL(FILEIN))// &
+                           " ...")
+         CALL dump_message(TEXT="################################")
       ENDIF
 
-      READ(unit_, *) N
-      READ(unit_, *) stat
+      READ (unit_, *) N
+      READ (unit_, *) stat
       CALL read_raw_masked_cplx_matrix(MM, unit_)
       CALL read_raw_freq(FREQ, unit_)
 
       ! WE OVERWRITE THE GENERIC FREQUENCY ACCORDINGLY
-      if(FREQ%Nw == 0) stop 'read raw corel FREQU%Nw = 0'
-      SELECT CASE(FREQ%title)
-      CASE(FERMIONIC, BOSONIC)
+      if (FREQ%Nw == 0) stop 'read raw corel FREQU%Nw = 0'
+      SELECT CASE (FREQ%title)
+      CASE (FERMIONIC, BOSONIC)
          CALL new_correl_from_scratch_ifreq(CORREL, title, N, FREQ%Nw, &
-              FREQ%beta, STAT = stat, IMASK = MM%MASK%imat, AB = .true.)
-      CASE(RETARDED, ADVANCED)
+                                            FREQ%beta, STAT=stat, IMASK=MM%MASK%imat, AB=.true.)
+      CASE (RETARDED, ADVANCED)
          CALL new_correl_from_scratch_rfreq(CORREL, title, N, FREQ%Nw, &
-              FREQ%wmin, FREQ%wmax, FREQ%width, STAT = stat, IMASK = &
-              MM%MASK%imat, AB = .true.)
+                                            FREQ%wmin, FREQ%wmax, FREQ%width, STAT=stat, IMASK= &
+                                            MM%MASK%imat, AB=.true.)
       END SELECT
 
-      READ(unit_, *) CORREL%fctn
+      READ (unit_, *) CORREL%fctn
 
       ! CLOSE INPUT FILE
-      IF(.NOT.PRESENT(UNIT)) CALL close_safe(unit_)
+      IF (.NOT. PRESENT(UNIT)) CALL close_safe(unit_)
       CALL delete_frequency(FREQ)
-      IF(PRESENT(FILEIN))THEN
-         CALL dump_message(TEXT = "################################")
-         CALL dump_message(TEXT = "###      ... DONE ...         ##")
-         CALL dump_message(TEXT = "################################")
+      IF (PRESENT(FILEIN)) THEN
+         CALL dump_message(TEXT="################################")
+         CALL dump_message(TEXT="###      ... DONE ...         ##")
+         CALL dump_message(TEXT="################################")
       ENDIF
 
    end subroutine
@@ -453,16 +440,16 @@ contains
    subroutine glimpse_correl(CORREL, UNIT)
 
       use common_def, only: c2s, i2c
-      use matrix,     only: write_array
+      use matrix, only: write_array
 
       implicit none
 
       TYPE(correl_type), INTENT(IN) :: CORREL
       INTEGER, OPTIONAL, INTENT(IN) :: UNIT
 
-      CALL write_array(CORREL%MM%mat, '# Check ' // &
-           TRIM(ADJUSTL(CORREL%title)) // '(iw = ' // &
-           c2s(i2c(CORREL%freq%iwprint)) // ')', UNIT = UNIT)
+      CALL write_array(CORREL%MM%mat, '# Check '// &
+                       TRIM(ADJUSTL(CORREL%title))//'(iw = '// &
+                       c2s(i2c(CORREL%freq%iwprint))//')', UNIT=UNIT)
       return
    end subroutine
 
@@ -484,10 +471,10 @@ contains
 
          do iw = 1, Nw
             gg(-iw) = conjg(G%vec(j, iw))
-            gg( iw) =       G%vec(j, iw)
+            gg(iw) = G%vec(j, iw)
          enddo
          DO iw = 1, Nw
-            do iw_ = -Nw + iw + 1, Nw-iw-1
+            do iw_ = -Nw + iw + 1, Nw - iw - 1
                chi0(iw) = chi0(iw) + gg(iw_)*gg(iw_ + iw)*2.d0/beta
             enddo
          ENDDO
@@ -506,72 +493,70 @@ contains
       ! CREATE OUTPUT FILE NAME
 
       use common_def, only: close_safe, dump_message, open_safe
-      use genvar,     only: ADVANCED, BOSONIC, FERMIONIC, pi2, RETARDED
-      use string5,    only: get_unit
+      use genvar, only: ADVANCED, BOSONIC, FERMIONIC, pi2, RETARDED
+      use string5, only: get_unit
 
       implicit none
 
       TYPE(correl_type)            :: CORREL
-      CHARACTER(LEN = *), OPTIONAL :: FILEOUT
-      CHARACTER(LEN = 300)         :: fileout_, fmtcorrel, fmtimask
+      CHARACTER(LEN=*), OPTIONAL :: FILEOUT
+      CHARACTER(LEN=300)         :: fileout_, fmtcorrel, fmtimask
       INTEGER                      :: UNIT
       INTEGER                      :: i1, i2, iw
 
-
-
-      fileout_ = "./ED_out/" // TRIM(ADJUSTL(CORREL%title)) // ".dat"
-      IF(PRESENT(FILEOUT)) fileout_ = FILEOUT
+      fileout_ = "./ED_out/"//TRIM(ADJUSTL(CORREL%title))//".dat"
+      IF (PRESENT(FILEOUT)) fileout_ = FILEOUT
 
       ! OPEN OUTPUT FILE
-      CALL open_safe(UNIT, fileout_, "UNKNOWN", "WRITE", get_unit = .true.)
+      CALL open_safe(UNIT, fileout_, "UNKNOWN", "WRITE", get_unit=.true.)
 
       ! WRITE HEADER
 
-      CALL dump_message(UNIT = UNIT, TEXT = "# INDEPENDANT MATRIX ELEMENTS OF &
-           &" // TRIM(CORREL%stat) // " CORRELATION " // &
+      CALL dump_message(UNIT=UNIT, TEXT="# INDEPENDANT MATRIX ELEMENTS OF &
+           &"//TRIM(CORREL%stat)//" CORRELATION "// &
            TRIM(ADJUSTL(CORREL%title)))
 
-      SELECT CASE(CORREL%freq%title)
-      CASE(FERMIONIC, BOSONIC)
-         if(size(CORREL%freq%vec) > 1) then
-            WRITE(UNIT, '(a, f0.6)') "# ON MATSUBARA AXIS WITH beta = ", &
-                 pi2/AIMAG(CORREL%freq%vec(2)-CORREL%freq%vec(1))
+      SELECT CASE (CORREL%freq%title)
+      CASE (FERMIONIC, BOSONIC)
+         if (size(CORREL%freq%vec) > 1) then
+            WRITE (UNIT, '(a, f0.6)') "# ON MATSUBARA AXIS WITH beta = ", &
+               pi2/AIMAG(CORREL%freq%vec(2) - CORREL%freq%vec(1))
          endif
-      CASE(RETARDED, ADVANCED)
-         WRITE(UNIT, '(a, f0.6)') "# ON (" // TRIM(CORREL%freq%title) // ") &
+      CASE (RETARDED, ADVANCED)
+         WRITE (UNIT, '(a, f0.6)') "# ON ("//TRIM(CORREL%freq%title)//") &
               &REAL AXIS WITH BROADENING = ", AIMAG(CORREL%freq%vec(1))
       END SELECT
 
-      WRITE(UNIT, '(a, I0)') "# N = ", CORREL%N
-      CALL dump_message(UNIT = UNIT, TEXT = "# IMASK ")
+      WRITE (UNIT, '(a, I0)') "# N = ", CORREL%N
+      CALL dump_message(UNIT=UNIT, TEXT="# IMASK ")
 
-      if(CORREL%N > 1)then
-         WRITE(fmtimask, *) '(', CORREL%N-1, '(a, ', CORREL%N, '(I2, x)/), a, &
+      if (CORREL%N > 1) then
+         WRITE (fmtimask, *) '(', CORREL%N - 1, '(a, ', CORREL%N, '(I2, x)/), a, &
               &', CORREL%N, '(I2, x))'
-         WRITE(UNIT, fmtimask) ("# ", (CORREL%MM%MASK%imat(i1, i2), i2 = 1, &
-              CORREL%N), i1 = 1, CORREL%N)
+         WRITE (UNIT, fmtimask) ("# ", (CORREL%MM%MASK%imat(i1, i2), i2=1, &
+                                        CORREL%N), i1=1, CORREL%N)
       else
-         WRITE(UNIT, '(a, I5)') "# ", CORREL%MM%MASK%imat(1, 1)
+         WRITE (UNIT, '(a, I5)') "# ", CORREL%MM%MASK%imat(1, 1)
       endif
 
-      WRITE(UNIT, '(a, I0)') "# Nw = ", CORREL%Nw
-      WRITE(fmtcorrel, *) '(f0.12, ', CORREL%MM%MASK%nind, '(2X, f0.12, 2X, &
+      WRITE (UNIT, '(a, I0)') "# Nw = ", CORREL%Nw
+      WRITE (fmtcorrel, *) '(f0.12, ', CORREL%MM%MASK%nind, '(2X, f0.12, 2X, &
            &f0.12, 2X))'
 
       CALL correl2vec(CORREL)
 
-      SELECT CASE(CORREL%freq%title)
-      CASE(FERMIONIC, BOSONIC)
+      SELECT CASE (CORREL%freq%title)
+      CASE (FERMIONIC, BOSONIC)
          DO iw = 1, CORREL%Nw
-            WRITE(UNIT, fmtcorrel) AIMAG(CORREL%freq%vec(iw)), CORREL%vec(:, iw)
+            WRITE (UNIT, fmtcorrel) AIMAG(CORREL%freq%vec(iw)), CORREL%vec(:, iw)
          ENDDO
          !!call plotarray( AIMAG(CORREL%freq%vec), real(CORREL%vec),
          ! 'real_part_matsubara_' // TRIM(ADJUSTL(CORREL%title)))
          !!call plotarray( AIMAG(CORREL%freq%vec), aimag(CORREL%vec),
          ! 'im_part_matsubara_' // TRIM(ADJUSTL(CORREL%title)))
-      CASE(RETARDED, ADVANCED)
+      CASE (RETARDED, ADVANCED)
          DO iw = 1, CORREL%Nw
-            WRITE(UNIT, fmtcorrel)  DBLE(CORREL%freq%vec(iw)), CORREL%vec(:, iw)
+            WRITE (UNIT, fmtcorrel) DBLE(CORREL%freq%vec(iw)), CORREL%vec(:, iw)
          ENDDO
          !!call plotarray( DBLE(CORREL%freq%vec), real(CORREL%vec),
          ! 'real_part_retarded_' // TRIM(ADJUSTL(CORREL%title)))
@@ -587,66 +572,66 @@ contains
 
       ! CREATE NEW CORRELATION FROM FORMATTED FILE
 
-      use common_def,              only: close_safe, open_safe, skip_line
-      use frequency_class,         only: new_freq
-      use genvar,                  only: ADVANCED, BOSONIC, FERMIONIC, &
-           log_unit, MATSUBARA, messages3, RETARDED
+      use common_def, only: close_safe, open_safe, skip_line
+      use frequency_class, only: new_freq
+      use genvar, only: ADVANCED, BOSONIC, FERMIONIC, &
+         log_unit, MATSUBARA, messages3, RETARDED
       use masked_matrix_class_mod, only: masked_cplx_matrix2vec
-      use string5,                 only: get_unit
+      use string5, only: get_unit
 
       implicit none
 
       TYPE(correl_type), INTENT(INOUT) :: CORREL
-      CHARACTER(LEN = *), INTENT(IN)   :: FILEIN
+      CHARACTER(LEN=*), INTENT(IN)   :: FILEIN
       LOGICAL                :: is_sym_
       REAL(DBL)              :: width, beta
       REAL(DBL), ALLOCATABLE :: tmp_freq(:)
-      INTEGER, ALLOCATABLE   :: IMASK(:,:)
+      INTEGER, ALLOCATABLE   :: IMASK(:, :)
       INTEGER                :: UNIT
       INTEGER                :: mu, nu, iw, N, Nw
-      CHARACTER(LEN = 300)   :: header, fmtmask, fmtcorrel, title
-      CHARACTER(LEN = 9)     :: FTYPE, STAT
-      CHARACTER(LEN = 4)     :: junk
+      CHARACTER(LEN=300)   :: header, fmtmask, fmtcorrel, title
+      CHARACTER(LEN=9)     :: FTYPE, STAT
+      CHARACTER(LEN=4)     :: junk
 
       CALL delete_correl(CORREL)
 
       ! OPEN INPUT FILE
-      CALL open_safe(UNIT, FILEIN, "UNKNOWN", "READ", get_unit = .true.)
+      CALL open_safe(UNIT, FILEIN, "UNKNOWN", "READ", get_unit=.true.)
 
       ! READ HEADER
-      READ(UNIT, '(a)') header
-      READ(header(INDEX(header, "OF") + 1:), *) title
-      IF(INDEX(header, "FERM") /= 0) stat = FERMIONIC
-      IF(INDEX(header, "BOSO") /= 0) stat =   BOSONIC
-      READ(UNIT, '(a)') header
-      IF(INDEX(header, "MATS") /= 0)THEN
+      READ (UNIT, '(a)') header
+      READ (header(INDEX(header, "OF") + 1:), *) title
+      IF (INDEX(header, "FERM") /= 0) stat = FERMIONIC
+      IF (INDEX(header, "BOSO") /= 0) stat = BOSONIC
+      READ (UNIT, '(a)') header
+      IF (INDEX(header, "MATS") /= 0) THEN
          FTYPE = MATSUBARA
-         READ(header(INDEX(header, " = ") + 1:), *) beta
+         READ (header(INDEX(header, " = ") + 1:), *) beta
       ELSE
-         IF(INDEX(header, "RETA") /= 0)THEN
+         IF (INDEX(header, "RETA") /= 0) THEN
             FTYPE = RETARDED
          ELSE
             FTYPE = ADVANCED
          ENDIF
       ENDIF
-      READ(header(INDEX(header, " = ") + 1:), *) width
-      READ(UNIT, '(a)') header
-      READ(header(INDEX(header, " = ") + 1:), *) N
+      READ (header(INDEX(header, " = ") + 1:), *) width
+      READ (UNIT, '(a)') header
+      READ (header(INDEX(header, " = ") + 1:), *) N
       CALL skip_line(UNIT, 1)
-      WRITE(fmtmask, *) '(', N-1, '(a4, 10x, ', N, '(I2, x), 3x, ', N, '(I2, &
+      WRITE (fmtmask, *) '(', N - 1, '(a4, 10x, ', N, '(I2, x), 3x, ', N, '(I2, &
            &x)/), a4, 10x, ', N, '(I2, x), 3x, ', N, '(I2, x))'
-      ALLOCATE(IMASK(N, N))
-      READ(UNIT, fmtmask) (junk, (IMASK(mu, nu), nu = 1, N), mu = 1, N)
+      ALLOCATE (IMASK(N, N))
+      READ (UNIT, fmtmask) (junk, (IMASK(mu, nu), nu=1, N), mu=1, N)
       is_sym_ = .false.
-      IF(ALL(IMASK == TRANSPOSE(IMASK))) is_sym_ = .true.
-      READ(UNIT, '(a)') header
-      READ(header(INDEX(header, " = ") + 1:), *) Nw
+      IF (ALL(IMASK == TRANSPOSE(IMASK))) is_sym_ = .true.
+      READ (UNIT, '(a)') header
+      READ (header(INDEX(header, " = ") + 1:), *) Nw
 
-      if(Nw == 0) stop 'read correl Nw = 0'
+      if (Nw == 0) stop 'read correl Nw = 0'
 
       ! CREATE CORRELATION
-      CALL new_correl_from_scratch(CORREL, title, N, Nw, STAT = STAT, IMASK = &
-           IMASK, AB = .true.)
+      CALL new_correl_from_scratch(CORREL, title, N, Nw, STAT=STAT, IMASK= &
+                                   IMASK, AB=.true.)
 
       ! DUMMY TO CREATE INTEGER MAP imaskvec
       CALL masked_cplx_matrix2vec(CORREL%MM)
@@ -654,29 +639,29 @@ contains
       CALL correl2vec(CORREL)
 
       ! READ CORRELATION
-      WRITE(fmtcorrel, *) '(f0.12, ', CORREL%MM%MASK%nind, '(2X, f0.12, 2X, &
+      WRITE (fmtcorrel, *) '(f0.12, ', CORREL%MM%MASK%nind, '(2X, f0.12, 2X, &
            &f0.12, 2X))'
-      ALLOCATE(tmp_freq(Nw))
+      ALLOCATE (tmp_freq(Nw))
       DO iw = 1, Nw
-         READ(UNIT, fmtcorrel) tmp_freq(iw), &
-              CORREL%vec(CORREL%MM%MASK%ivec(:), iw)
+         READ (UNIT, fmtcorrel) tmp_freq(iw), &
+            CORREL%vec(CORREL%MM%MASK%ivec(:), iw)
       ENDDO
       CALL vec2correl(CORREL)
 
       ! ADJUST FREQUENCIES
-      SELECT CASE(FTYPE)
-      CASE(MATSUBARA)
+      SELECT CASE (FTYPE)
+      CASE (MATSUBARA)
          CALL new_freq(CORREL%freq, Nw, beta, STAT)
-      CASE(RETARDED)
+      CASE (RETARDED)
          CALL new_freq(CORREL%freq, Nw, MINVAL(tmp_freq), MAXVAL(tmp_freq), &
-              width, FTYPE)
+                       width, FTYPE)
       END SELECT
-      if(messages3) write(log_unit, *) 'read correl new frequ done'
+      if (messages3) write (log_unit, *) 'read correl new frequ done'
 
       ! CLOSE INPUT FILE
       CALL close_safe(UNIT)
 
-      DEALLOCATE(tmp_freq, IMASK, STAT = istati)
+      DEALLOCATE (tmp_freq, IMASK, STAT=istati)
 
    end subroutine
 
@@ -685,8 +670,8 @@ contains
       ! UNCAST VECTOR OF INDPDT ELEMENTS INTO CORRELATION MATRIX
 
       use masked_matrix_class_mod, only: delete_masked_cplx_matrix, &
-           masked_cplx_matrix2vec, masked_cplx_matrix_type, &
-           new_masked_cplx_matrix, vec2masked_cplx_matrix
+         masked_cplx_matrix2vec, masked_cplx_matrix_type, &
+         new_masked_cplx_matrix, vec2masked_cplx_matrix
 
       implicit none
 
@@ -695,7 +680,7 @@ contains
       TYPE(masked_cplx_matrix_type) :: corr, corrext
       INTEGER                       :: iw
 
-      IF(PRESENT(CORRELEXT))THEN
+      IF (PRESENT(CORRELEXT)) THEN
          CALL new_masked_cplx_matrix(corr, CORREL%MM)
          CALL new_masked_cplx_matrix(corrext, CORRELEXT%MM)
          CALL masked_cplx_matrix2vec(corrext)
@@ -719,65 +704,65 @@ contains
 
    end subroutine
 
-   subroutine diff_correl(diff,CORREL1,CORREL2)
+   subroutine diff_correl(diff, CORREL1, CORREL2)
 
       use globalvar_ed_solver, only: average_G, fit_nw, fit_shift, &
-           fit_weight_power, lambda_sym_fit, MASK_AVERAGE_SIGMA, weight_expo, &
-           window_hybrid, window_hybrid2, window_weight
+         fit_weight_power, lambda_sym_fit, MASK_AVERAGE_SIGMA, weight_expo, &
+         window_hybrid, window_hybrid2, window_weight
 
-      REAL(DBL),         INTENT(INOUT) :: diff
+      REAL(DBL), INTENT(INOUT) :: diff
       REAL(8)                          :: ww_, fit_shift_, sumr, asym_, w2, w1
       TYPE(correl_type), INTENT(IN)    :: CORREL1, CORREL2
       integer                          :: iw, window1_, window2_, tot, &
                                           boundup, ii, jj, nn, b1, b2
       COMPLEX(DBL)                     :: CORREL1_AV(CORREL1%N, CORREL1%N, &
-                                          CORREL1%Nw)
+                                                     CORREL1%Nw)
       logical                          :: asym
 
       diff = 0.0_DBL
       tot = 0
       asym = abs(lambda_sym_fit) > 1.d-3
- 
-      if(abs(fit_shift)<1.d-10)then
-         fit_shift_=abs(CORREL1%freq%vec(1))
+
+      if (abs(fit_shift) < 1.d-10) then
+         fit_shift_ = abs(CORREL1%freq%vec(1))
       else
-         fit_shift_=fit_shift
+         fit_shift_ = fit_shift
       endif
 
-      if(window_hybrid2>0) then
-         window2_ =  min(window_hybrid2,CORREL1%Nw) 
-         window1_ =      window_hybrid
-         ww_      = dble(window_weight)
+      if (window_hybrid2 > 0) then
+         window2_ = min(window_hybrid2, CORREL1%Nw)
+         window1_ = window_hybrid
+         ww_ = dble(window_weight)
       else
          window1_ = window_hybrid
          window2_ = CORREL1%Nw
-         ww_      = 1.d0
+         ww_ = 1.d0
       endif
 
-      if(fit_nw < 0) then
+      if (fit_nw < 0) then
          boundup = CORREL1%Nw
       else
-         boundup = min(fit_nw,CORREL1%Nw)
+         boundup = min(fit_nw, CORREL1%Nw)
       endif
-      nn = size(CORREL1%fctn,1)
+      nn = size(CORREL1%fctn, 1)
 
-      if(asym) call average_correlations(CORREL1,CORREL1_AV,average_G>=0,MASK_AVERAGE_SIGMA,boundup)
+      if (asym) call average_correlations(CORREL1, CORREL1_AV, average_G >= 0, MASK_AVERAGE_SIGMA, boundup)
 
-      DO iw=1,boundup
-         tot  = tot  + 1
-         if(iw>window1_.and.iw<window2_)then
+      DO iw = 1, boundup
+         tot = tot + 1
+         if (iw > window1_ .and. iw < window2_) then
             call define_sumr
-            diff = diff + ww_ * sumr 
+            diff = diff + ww_*sumr
          else
             call define_sumr
             diff = diff + sumr
          endif
       ENDDO
 
-      diff = ABS(diff) / dble( tot * CORREL1%N**2)
+      diff = ABS(diff)/dble(tot*CORREL1%N**2)
 
       return
- 
+
    contains
 
       subroutine define_sumr()
@@ -790,22 +775,22 @@ contains
             do jj = b1, b2
                call get_asym
                w1 = 1.d0
-               if(ii /= jj) w1 = w2
+               if (ii /= jj) w1 = w2
                sumr = sumr + (asym_ + ABS(CORREL2%fctn(ii, jj, &
-                    iw)-CORREL1%fctn(ii, jj, iw)))**weight_expo*w1
+                                                       iw) - CORREL1%fctn(ii, jj, iw)))**weight_expo*w1
             enddo
          enddo
-         sumr = sumr/((ABS(CORREL1%freq%vec(iw)-CORREL1%freq%vec(1)) + &
-              fit_shift_)**fit_weight_power)
+         sumr = sumr/((ABS(CORREL1%freq%vec(iw) - CORREL1%freq%vec(1)) + &
+                       fit_shift_)**fit_weight_power)
       end subroutine
 
       subroutine get_asym()
 
          implicit none
 
-         if(asym) then
-            asym_ = abs(CORREL1_AV(ii, jj, iw)-CORREL1%fctn(ii, jj, &
-                 iw))*lambda_sym_fit
+         if (asym) then
+            asym_ = abs(CORREL1_AV(ii, jj, iw) - CORREL1%fctn(ii, jj, &
+                                                              iw))*lambda_sym_fit
          else
             asym_ = 0.d0
          endif
@@ -820,19 +805,19 @@ contains
          b1 = 1
          b2 = nn
          w2 = 1.d0
-         if(fmos)then
+         if (fmos) then
             b1 = ii
             b2 = ii
             w2 = 1.d0
             return
          endif
-         if(.not.fast_fit) return
+         if (.not. fast_fit) return
 #ifndef _complex
          b1 = ii
          b2 = nn
          w2 = 2.d0
-         if(.not.superconducting_state)then
-            if(ii <= nn/2)then
+         if (.not. superconducting_state) then
+            if (ii <= nn/2) then
                b2 = nn/2
             endif
          endif
@@ -840,11 +825,11 @@ contains
          b1 = 1
          b2 = nn
          w2 = 1.d0
-         if(.not.superconducting_state)then
-            if(ii <= nn/2)then
+         if (.not. superconducting_state) then
+            if (ii <= nn/2) then
                b2 = nn/2
             endif
-            if(ii > nn/2)then
+            if (ii > nn/2) then
                b1 = nn/2 + 1
             endif
          endif
@@ -863,12 +848,12 @@ contains
       TYPE(correl_type), INTENT(IN), OPTIONAL :: CORRELIN
       INTEGER :: i1, i2, iw, rankin, rankout, ii1, ii2
 
-      IF(PRESENT(CORRELIN))THEN
+      IF (PRESENT(CORRELIN)) THEN
          ! FIRST COPY VECTOR OF INDEPENDANT ELEMENTS
          DO rankin = 1, CORRELIN%MM%MASK%nind
             rankout = find_rank(CORRELIN%MM%MASK%ivec(rankin), &
-                 CORRELOUT%MM%MASK%ivec)
-            IF(rankout /= 0) CORRELOUT%vec(rankout, :) = CORRELIN%vec(rankin, :)
+                                CORRELOUT%MM%MASK%ivec)
+            IF (rankout /= 0) CORRELOUT%vec(rankout, :) = CORRELIN%vec(rankin, :)
          ENDDO
          ! THEN EXPAND IT TO FULL MATRIX
          CALL vec2correl(CORRELOUT)
@@ -876,14 +861,14 @@ contains
 
       DO i1 = 1, CORRELOUT%N
          DO i2 = 1, CORRELOUT%N
-            IF(CORRELOUT%MM%MASK%mat(i1, i2))THEN
+            IF (CORRELOUT%MM%MASK%mat(i1, i2)) THEN
                do ii1 = 1, size(CORRELOUT%MM%MASK%imat, 1)
                   do ii2 = 1, size(CORRELOUT%MM%MASK%imat, 2)
                      do iw = 1, CORRELOUT%Nw
-                        if(CORRELOUT%MM%MASK%imat(ii1, ii2) == &
-                             CORRELOUT%MM%MASK%imat(i1, i2)) then
+                        if (CORRELOUT%MM%MASK%imat(ii1, ii2) == &
+                            CORRELOUT%MM%MASK%imat(i1, i2)) then
                            CORRELOUT%fctn(ii1, ii2, iw) = CORRELOUT%fctn(i1, &
-                                i2, iw)
+                                                                         i2, iw)
                         endif
                      ENDDO
                   ENDDO
@@ -896,8 +881,8 @@ contains
 
    subroutine slice_correl(CORRELOUT, CORRELIN, rbounds, cbounds)
 
-      use common_def,              only: c2s, i2c
-      use genvar,                  only: ADVANCED, BOSONIC, FERMIONIC, pi2, RETARDED
+      use common_def, only: c2s, i2c
+      use genvar, only: ADVANCED, BOSONIC, FERMIONIC, pi2, RETARDED
       use masked_matrix_class_mod, only: slice_masked_cplx_matrix
 
       implicit none
@@ -906,56 +891,56 @@ contains
       TYPE(correl_type), INTENT(IN)    :: CORRELIN
       INTEGER, INTENT(IN)              :: rbounds(2), cbounds(2)
       INTEGER              :: n1slice, n2slice
-      CHARACTER(LEN = 100) :: cslice, title
+      CHARACTER(LEN=100) :: cslice, title
       REAL(DBL)            :: beta, width, wmax, wmin
 
-      if(CORRELIN%Nw == 0) stop 'slice correl Nw = 0'
+      if (CORRELIN%Nw == 0) stop 'slice correl Nw = 0'
 
       CALL delete_correl(CORRELOUT)
       ! FIND/CHECK DIMENSIONS
-      n1slice = rbounds(2)-rbounds(1) + 1
-      n2slice = cbounds(2)-cbounds(1) + 1
-      IF(n1slice /= n2slice) STOP "ERROR IN slice_correl: SQUARE SLICE &
+      n1slice = rbounds(2) - rbounds(1) + 1
+      n2slice = cbounds(2) - cbounds(1) + 1
+      IF (n1slice /= n2slice) STOP "ERROR IN slice_correl: SQUARE SLICE &
            &REQUIRED!"
-      IF(n1slice <= 0) STOP "ERROR IN slice_correl: NON-NULL DIMENSIONS &
+      IF (n1slice <= 0) STOP "ERROR IN slice_correl: NON-NULL DIMENSIONS &
            &REQUIRED!"
       ! MAKE TITLE
       title = TRIM(ADJUSTL(CORRELIN%title))
-      IF( rbounds(1) /= LBOUND(CORRELIN%fctn, 1) .OR. rbounds(2) /= &
-           UBOUND(CORRELIN%fctn, 1) .OR. cbounds(1) /= LBOUND(CORRELIN%fctn, &
-           2) .OR. cbounds(2) /= UBOUND(CORRELIN%fctn, 2))THEN
-         cslice = c2s(i2c(rbounds(1))) // "_" // c2s(i2c(rbounds(2))) // "_" &
-              // c2s(i2c(cbounds(1))) // "_" // c2s(i2c(cbounds(2)))
-         title  = TRIM(ADJUSTL(title)) // "_" // TRIM(ADJUSTL(cslice))
+      IF (rbounds(1) /= LBOUND(CORRELIN%fctn, 1) .OR. rbounds(2) /= &
+          UBOUND(CORRELIN%fctn, 1) .OR. cbounds(1) /= LBOUND(CORRELIN%fctn, &
+                                                             2) .OR. cbounds(2) /= UBOUND(CORRELIN%fctn, 2)) THEN
+         cslice = c2s(i2c(rbounds(1)))//"_"//c2s(i2c(rbounds(2)))//"_" &
+                  //c2s(i2c(cbounds(1)))//"_"//c2s(i2c(cbounds(2)))
+         title = TRIM(ADJUSTL(title))//"_"//TRIM(ADJUSTL(cslice))
       ENDIF
 
       ! SLICE
-      SELECT CASE(CORRELIN%freq%title)
-      CASE(FERMIONIC, BOSONIC)
-         beta  = pi2 / AIMAG(CORRELIN%freq%vec(2)-CORRELIN%freq%vec(1))
+      SELECT CASE (CORRELIN%freq%title)
+      CASE (FERMIONIC, BOSONIC)
+         beta = pi2/AIMAG(CORRELIN%freq%vec(2) - CORRELIN%freq%vec(1))
          CALL new_correl_from_scratch_ifreq(CORRELOUT, title, CORRELIN%N, &
-              CORRELIN%Nw, beta, STAT = CORRELIN%STAT, IMASK = &
-              CORRELIN%MM%MASK%imat, AB = .true.)
-      CASE(RETARDED, ADVANCED)
-         wmin  = CORRELIN%freq%wmin
-         wmax  = CORRELIN%freq%wmax
+                                            CORRELIN%Nw, beta, STAT=CORRELIN%STAT, IMASK= &
+                                            CORRELIN%MM%MASK%imat, AB=.true.)
+      CASE (RETARDED, ADVANCED)
+         wmin = CORRELIN%freq%wmin
+         wmax = CORRELIN%freq%wmax
          width = AIMAG(CORRELIN%freq%vec(1))
          CALL new_correl_from_scratch_rfreq(CORRELOUT, title, CORRELIN%N, &
-              CORRELIN%Nw, wmin, wmax, width, STAT = CORRELIN%STAT, IMASK = &
-              CORRELIN%MM%MASK%imat, AB = .true.)
+                                            CORRELIN%Nw, wmin, wmax, width, STAT=CORRELIN%STAT, IMASK= &
+                                            CORRELIN%MM%MASK%imat, AB=.true.)
       END SELECT
 
       CALL slice_masked_cplx_matrix(CORRELOUT%MM, CORRELIN%MM, rbounds, cbounds)
 
-      IF(ASSOCIATED(CORRELOUT%fctn))   DEALLOCATE(CORRELOUT%fctn, STAT = istati)
-      IF(ASSOCIATED(CORRELOUT%MM%mat)) DEALLOCATE(CORRELOUT%MM%mat, STAT = &
-           istati)
-      IF(ASSOCIATED(CORRELOUT%vec))    DEALLOCATE(CORRELOUT%vec, STAT = istati)
+      IF (ASSOCIATED(CORRELOUT%fctn)) DEALLOCATE (CORRELOUT%fctn, STAT=istati)
+      IF (ASSOCIATED(CORRELOUT%MM%mat)) DEALLOCATE (CORRELOUT%MM%mat, STAT= &
+                                                    istati)
+      IF (ASSOCIATED(CORRELOUT%vec)) DEALLOCATE (CORRELOUT%vec, STAT=istati)
 
       CORRELOUT%fctn => CORRELIN%fctn(rbounds(1):rbounds(2), &
-           cbounds(1):cbounds(2), :)
+                                      cbounds(1):cbounds(2), :)
       CORRELOUT%MM%mat => CORRELOUT%fctn(:, :, CORRELOUT%freq%iwprint)
-      CORRELOUT%vec    => CORRELIN%vec
+      CORRELOUT%vec => CORRELIN%vec
 
    end subroutine
 
@@ -963,20 +948,20 @@ contains
 
       use genvar, only: ADVANCED, BOSONIC, FERMIONIC, RETARDED
       use matrix, only: average_matrix
-      use mesh,   only: mirror_array
+      use mesh, only: mirror_array
 
       implicit none
 
-      integer, intent(in):: mask(:,:)
+      integer, intent(in):: mask(:, :)
       TYPE(correl_type) :: G
       INTEGER           :: iw, siz, i, j, miw, si
-      COMPLEX(DBL)      :: Gm1(:,:,:)
+      COMPLEX(DBL)      :: Gm1(:, :, :)
       REAL(DBL)         :: rvec(size(Gm1, 3))
       LOGICAL           :: offdiag_also
       integer           :: Nw
       integer, optional :: boundup
 
-      if(present(boundup)) then
+      if (present(boundup)) then
          Nw = boundup
       else
          Nw = size(Gm1, 3)
@@ -987,30 +972,30 @@ contains
 
       Gm1(:, :, 1:Nw) = G%fctn(:, :, 1:Nw)
 
-      SELECT CASE(G%freq%title)
-      CASE(FERMIONIC)
+      SELECT CASE (G%freq%title)
+      CASE (FERMIONIC)
          do iw = 1, Nw
             Gm1(si + 1:siz, si + 1:siz, iw) = -CONJG(G%fctn(si + 1:siz, si + &
-                 1:siz, iw))
+                                                            1:siz, iw))
          enddo
-      CASE(BOSONIC)
+      CASE (BOSONIC)
          do iw = 1, Nw
             Gm1(si + 1:siz, si + 1:siz, iw) = CONJG(G%fctn(si + 1:siz, si + &
-                 1:siz, iw))
+                                                           1:siz, iw))
          enddo
-      CASE(RETARDED, ADVANCED)
+      CASE (RETARDED, ADVANCED)
          rvec = real(G%freq%vec)
          Gm1(si + 1:siz, si + 1:siz, :) = G%fctn(si + 1:siz, si + 1:siz, :)
          do i = si + 1, siz
             do j = si + 1, siz
 
                call mirror_array(rvec, Gm1(i, j, :))
-               SELECT CASE(G%stat)
-               CASE(FERMIONIC)
+               SELECT CASE (G%stat)
+               CASE (FERMIONIC)
                   Gm1(i, j, :) = -CONJG(Gm1(i, j, :))
-               CASE(BOSONIC)
+               CASE (BOSONIC)
                   Gm1(i, j, :) = CONJG(Gm1(i, j, :))
-                  CASE DEFAULT
+               CASE DEFAULT
                   stop 'average correlations'
                END SELECT
             enddo
@@ -1020,29 +1005,29 @@ contains
       do iw = 1, Nw
          call average_matrix(Gm1(:, :, iw), mask, offdiag_also)
       enddo
-      SELECT CASE(G%freq%title)
-      CASE(FERMIONIC)
+      SELECT CASE (G%freq%title)
+      CASE (FERMIONIC)
          do iw = 1, Nw
             Gm1(si + 1:siz, si + 1:siz, iw) = -CONJG(Gm1(si + 1:siz, si + &
-                 1:siz, iw))
+                                                         1:siz, iw))
          enddo
-      CASE(BOSONIC)
+      CASE (BOSONIC)
          do iw = 1, Nw
             Gm1(si + 1:siz, si + 1:siz, iw) = CONJG(Gm1(si + 1:siz, si + &
-                 1:siz, iw))
+                                                        1:siz, iw))
          enddo
-      CASE(RETARDED, ADVANCED)
+      CASE (RETARDED, ADVANCED)
          rvec = real(G%freq%vec)
          do i = si + 1, siz
             do j = si + 1, siz
 
                call mirror_array(rvec, Gm1(i, j, :))
-               SELECT CASE(G%stat)
-               CASE(FERMIONIC)
+               SELECT CASE (G%stat)
+               CASE (FERMIONIC)
                   Gm1(i, j, :) = -CONJG(Gm1(i, j, :))
-               CASE(BOSONIC)
+               CASE (BOSONIC)
                   Gm1(i, j, :) = CONJG(Gm1(i, j, :))
-                  CASE DEFAULT
+               CASE DEFAULT
                   stop 'average correlations'
                END SELECT
             enddo
@@ -1053,49 +1038,49 @@ contains
       RETURN
    end subroutine
 
-   SUBROUTINE transform_correl(CORRELOUT,CORRELIN)
+   SUBROUTINE transform_correl(CORRELOUT, CORRELIN)
 
-   ! CORRELOUT(z) = (-1)^F * CORRELIN(-z*)
+      ! CORRELOUT(z) = (-1)^F * CORRELIN(-z*)
 
-   use genvar,                  only: ADVANCED, BOSONIC, FERMIONIC, pi2, RETARDED
+      use genvar, only: ADVANCED, BOSONIC, FERMIONIC, pi2, RETARDED
 
-   implicit none
+      implicit none
 
-   TYPE(correl_type)            :: CORRELOUT
-   TYPE(correl_type),INTENT(IN) :: CORRELIN
-   INTEGER                      :: iw,i,j,miw
-   COMPLEX(DBL)                 :: vec(size(CORRELOUT%vec,1),size(CORRELOUT%vec,2))
-   COMPLEX(DBL)                 :: fctn(size(CORRELOUT%fctn,1),size(CORRELOUT%fctn,2),size(CORRELOUT%fctn,3))
-   REAL(DBL)                    :: rvec(size(CORRELOUT%freq%vec))
-   COMPLEX(DBL)                 :: vecin(size(CORRELIN%vec,1),size(CORRELIN%vec,2))
-   COMPLEX(DBL)                 :: fctnin(size(CORRELIN%fctn,1),size(CORRELIN%fctn,2),size(CORRELIN%fctn,3))
-   REAL(DBL)                    :: rvecin(size(CORRELIN%freq%vec))
+      TYPE(correl_type)            :: CORRELOUT
+      TYPE(correl_type), INTENT(IN) :: CORRELIN
+      INTEGER                      :: iw, i, j, miw
+      COMPLEX(DBL)                 :: vec(size(CORRELOUT%vec, 1), size(CORRELOUT%vec, 2))
+      COMPLEX(DBL)                 :: fctn(size(CORRELOUT%fctn, 1), size(CORRELOUT%fctn, 2), size(CORRELOUT%fctn, 3))
+      REAL(DBL)                    :: rvec(size(CORRELOUT%freq%vec))
+      COMPLEX(DBL)                 :: vecin(size(CORRELIN%vec, 1), size(CORRELIN%vec, 2))
+      COMPLEX(DBL)                 :: fctnin(size(CORRELIN%fctn, 1), size(CORRELIN%fctn, 2), size(CORRELIN%fctn, 3))
+      REAL(DBL)                    :: rvecin(size(CORRELIN%freq%vec))
 
-   if(CORRELIN%Nw==0)                            STOP "transform correl Nw=0"
-   IF(CORRELIN%freq%title/=CORRELOUT%freq%title) STOP "ERROR IN transform_correl: INCONSISTENT FREQUENCIES!"
-   IF(CORRELIN%stat      /=CORRELOUT%stat)       STOP "ERROR IN transform_correl: INCONSISTENT STATISTICS!"
-   IF(CORRELIN%Nw        /=CORRELOUT%Nw)         STOP "ERROR IN transform_correl: INCONSISTENT DIMENSIONS!"
+      if (CORRELIN%Nw == 0) STOP "transform correl Nw=0"
+      IF (CORRELIN%freq%title /= CORRELOUT%freq%title) STOP "ERROR IN transform_correl: INCONSISTENT FREQUENCIES!"
+      IF (CORRELIN%stat /= CORRELOUT%stat) STOP "ERROR IN transform_correl: INCONSISTENT STATISTICS!"
+      IF (CORRELIN%Nw /= CORRELOUT%Nw) STOP "ERROR IN transform_correl: INCONSISTENT DIMENSIONS!"
 
-   rvecin = real(CORRELIN%freq%vec)
-   vecin  = CORRELIN%vec
-   fctnin = CORRELIN%fctn
+      rvecin = real(CORRELIN%freq%vec)
+      vecin = CORRELIN%vec
+      fctnin = CORRELIN%fctn
 
-   !==========================================================!
-   SELECT CASE(CORRELIN%freq%title)
-     CASE(FERMIONIC)
-       CORRELOUT%vec   = -CONJG(vecin )
-       CORRELOUT%fctn  = -CONJG(fctnin)
-     CASE(BOSONIC)
-       CORRELOUT%vec   =  CONJG(vecin )
-       CORRELOUT%fctn  =  CONJG(fctnin)
-     CASE(RETARDED,ADVANCED)
-       !-------------------------------------------------------!
-                       call mirror_func_
-       !-------------------------------------------------------!
-     CASE DEFAULT
-       STOP 'ERROR transform_correl case does not exist, critical stop'
-    END SELECT
-   !==========================================================!
+      !==========================================================!
+      SELECT CASE (CORRELIN%freq%title)
+      CASE (FERMIONIC)
+         CORRELOUT%vec = -CONJG(vecin)
+         CORRELOUT%fctn = -CONJG(fctnin)
+      CASE (BOSONIC)
+         CORRELOUT%vec = CONJG(vecin)
+         CORRELOUT%fctn = CONJG(fctnin)
+      CASE (RETARDED, ADVANCED)
+         !-------------------------------------------------------!
+         call mirror_func_
+         !-------------------------------------------------------!
+      CASE DEFAULT
+         STOP 'ERROR transform_correl case does not exist, critical stop'
+      END SELECT
+      !==========================================================!
 
    contains
 
@@ -1105,7 +1090,7 @@ contains
 
          implicit none
 
-         if(rank /= 0) return
+         if (rank /= 0) return
          ! call PGSUBP(1, 1)
          do j = 1, size(CORRELIN%vec, 1)
             !!call plotarray( real(CORRELIN%freq%vec), real(vecin(j, :)),
@@ -1123,15 +1108,14 @@ contains
 
          implicit none
 
-
          DO iw = 1, CORRELOUT%Nw
-            SELECT CASE(CORRELOUT%stat)
-            CASE(FERMIONIC)
-               CORRELOUT%vec   (:, iw) = - CONJG(vecin   (:, iw))
-               CORRELOUT%fctn(:, :, iw) = - CONJG(fctnin(:, :, iw))
-            CASE(BOSONIC)
-               CORRELOUT%vec   (:, iw) =   CONJG(vecin   (:, iw))
-               CORRELOUT%fctn(:, :, iw) =   CONJG(fctnin(:, :, iw))
+            SELECT CASE (CORRELOUT%stat)
+            CASE (FERMIONIC)
+               CORRELOUT%vec(:, iw) = -CONJG(vecin(:, iw))
+               CORRELOUT%fctn(:, :, iw) = -CONJG(fctnin(:, :, iw))
+            CASE (BOSONIC)
+               CORRELOUT%vec(:, iw) = CONJG(vecin(:, iw))
+               CORRELOUT%fctn(:, :, iw) = CONJG(fctnin(:, :, iw))
             END SELECT
          ENDDO
 
@@ -1140,8 +1124,8 @@ contains
          !-----------!
 
          rvec = real(CORRELOUT%freq%vec)
-         vec  =      CORRELOUT%vec
-         fctn =      CORRELOUT%fctn
+         vec = CORRELOUT%vec
+         fctn = CORRELOUT%fctn
 
          do j = 1, size(CORRELOUT%vec, 1)
             call mirror_array(rvec, vec(j, :))
@@ -1152,7 +1136,7 @@ contains
             enddo
          enddo
 
-         CORRELOUT%vec  = vec
+         CORRELOUT%vec = vec
          CORRELOUT%fctn = fctn
 
       end subroutine

@@ -1,6 +1,6 @@
 MODULE eigen_class
 
-   use genvar,         only: DBL, log_unit
+   use genvar, only: DBL, log_unit
    use rcvector_class, only: rcvector_type
 
    private
@@ -62,7 +62,7 @@ contains
 
       CALL delete_eigenlist(list)
       list%neigen = neigen
-      IF(list%neigen > 0) ALLOCATE(list%eigen(neigen))
+      IF (list%neigen > 0) ALLOCATE (list%eigen(neigen))
    end subroutine
 
    subroutine remove_eigen(rank, list)
@@ -78,21 +78,21 @@ contains
 
       truerank = rank_eigen_in_list(rank, list)
 
-      IF(truerank == 0) then
-         write(*, *) 'rank : ', rank
-         write(*, *) 'i2c  : ', i2c(rank-1)
-         write(*, *) 'c2s  : ', c2s(i2c(1))
-         write(*, *) "ERROR IN remove_eigen: E" // c2s(i2c(rank-1)) // " ISNT &
+      IF (truerank == 0) then
+         write (*, *) 'rank : ', rank
+         write (*, *) 'i2c  : ', i2c(rank - 1)
+         write (*, *) 'c2s  : ', c2s(i2c(1))
+         write (*, *) "ERROR IN remove_eigen: E"//c2s(i2c(rank - 1))//" ISNT &
               &IN LIST!"
          stop 'critical, termine'
       endif
 
       CALL copy_eigenlist(tmp, list)
-      CALL  new_eigenlist(list, list%neigen-1)
+      CALL new_eigenlist(list, list%neigen - 1)
 
       jeigen = 0
       DO ieigen = 1, tmp%neigen
-         IF(truerank /= ieigen)THEN
+         IF (truerank /= ieigen) THEN
             jeigen = jeigen + 1
             CALL copy_eigen(list%eigen(jeigen), tmp%eigen(ieigen))
          ENDIF
@@ -112,11 +112,11 @@ contains
       TYPE(eigenlist_type) :: tmp
 
 #ifdef DEBUG
-      write(log_unit, '(a)') "DEBUG: entering eigen_class_add_eigen_"
+      write (log_unit, '(a)') "DEBUG: entering eigen_class_add_eigen_"
 #endif
 
       CALL copy_eigenlist(tmp, list)
-      CALL  new_eigenlist(list, list%neigen + 1)
+      CALL new_eigenlist(list, list%neigen + 1)
       DO ieigen = 1, tmp%neigen
          CALL copy_eigen(list%eigen(ieigen), tmp%eigen(ieigen))
       ENDDO
@@ -124,7 +124,7 @@ contains
       CALL delete_eigenlist(tmp)
 
 #ifdef DEBUG
-      write(log_unit, '(a)') "DEBUG: leaving eigen_class_add_eigen_"
+      write (log_unit, '(a)') "DEBUG: leaving eigen_class_add_eigen_"
 #endif
 
    end subroutine
@@ -138,31 +138,31 @@ contains
       TYPE(eigenlist_type) :: tmp
       REAL(8)              :: VALP(:)
 #ifdef _complex
-      COMPLEX(DBL)         :: VECP(:,:)
+      COMPLEX(DBL)         :: VECP(:, :)
 #else
-      REAL(DBL)            :: VECP(:,:)
+      REAL(DBL)            :: VECP(:, :)
 #endif
 
 #ifdef DEBUG
-      write(log_unit, '(a)') "DEBUG: entering eigen_class_add_eigen__"
+      write (log_unit, '(a)') "DEBUG: entering eigen_class_add_eigen__"
 #endif
 
       CALL delete_eigenlist(list)
       list%neigen = n
-      IF(n == 0) stop 'error add_eigen 0 dimension space'
-      ALLOCATE(list%eigen(n))
+      IF (n == 0) stop 'error add_eigen 0 dimension space'
+      ALLOCATE (list%eigen(n))
       do i = 1, n
-         allocate(list%eigen(i)%vec%rc(size(VECP, 1)))
-         list%eigen(i)%vec%rc    =  VECP(:, i)
-         list%eigen(i)%val       =  VALP(i)
-         list%eigen(i)%vec%n     =  size(VECP(:, 1))
+         allocate (list%eigen(i)%vec%rc(size(VECP, 1)))
+         list%eigen(i)%vec%rc = VECP(:, i)
+         list%eigen(i)%val = VALP(i)
+         list%eigen(i)%vec%n = size(VECP(:, 1))
          list%eigen(i)%converged = .true.
-         list%eigen(i)%rank      =  i
-         list%eigen(i)%dim_space =  size(VECP(:, 1))
+         list%eigen(i)%rank = i
+         list%eigen(i)%dim_space = size(VECP(:, 1))
       enddo
 
 #ifdef DEBUG
-      write(log_unit, '(a)') "DEBUG: leaving eigen_class_add_eigen__"
+      write (log_unit, '(a)') "DEBUG: leaving eigen_class_add_eigen__"
 #endif
 
    end subroutine
@@ -192,16 +192,16 @@ contains
       TYPE(rcvector_type), optional :: vec
       integer, optional             :: N
 
-      if(present(vec))then
+      if (present(vec)) then
          CALL new_rcvector(eigen%vec, vec)
       else
-         if(.not.present(N)) stop 'error allocate eigen vec but no dimension'
+         if (.not. present(N)) stop 'error allocate eigen vec but no dimension'
          call new_rcvector(eigen%vec, N)
       endif
    end subroutine
 
    subroutine new_eigen_from_scratch(eigen, val, vec, CONVERGED, RANK, &
-        no_vector)
+                                     no_vector)
 
       ! ALLOCATE & INITIALIZE SINGLE EIGENPAIR
 
@@ -216,19 +216,17 @@ contains
       INTEGER, OPTIONAL, INTENT(IN)   :: RANK
       LOGICAL :: no_vec
 
-
-
       CALL delete_eigen(eigen)
       eigen%val = val
 
       no_vec = .false.
-      if(present(no_vector)) then
-         if(no_vector) no_vec = .true.
+      if (present(no_vector)) then
+         if (no_vector) no_vec = .true.
       endif
-      if(.not.no_vec) CALL new_rcvector(eigen%vec, vec)
+      if (.not. no_vec) CALL new_rcvector(eigen%vec, vec)
 
-      IF(PRESENT(CONVERGED)) eigen%converged = CONVERGED
-      IF(PRESENT(RANK))      eigen%rank      = RANK
+      IF (PRESENT(CONVERGED)) eigen%converged = CONVERGED
+      IF (PRESENT(RANK)) eigen%rank = RANK
 
    end subroutine
 
@@ -239,17 +237,16 @@ contains
       TYPE(eigen_type), INTENT(INOUT) :: EIGENOUT
       TYPE(eigen_type), INTENT(IN)    :: EIGENIN
 
-
       CALL delete_eigen(EIGENOUT)
       CALL new_eigen_from_scratch(EIGENOUT, EIGENIN%val, EIGENIN%vec, &
-           EIGENIN%converged, EIGENIN%rank, no_vector = &
-           .not.ASSOCIATED(EIGENIN%vec%rc))
+                                  EIGENIN%converged, EIGENIN%rank, no_vector= &
+                                  .not. ASSOCIATED(EIGENIN%vec%rc))
 
-      EIGENOUT%lanczos_vecp  = EIGENIN%lanczos_vecp
-      EIGENOUT%rdist         = EIGENIN%rdist
-      EIGENOUT%lanczos_iter  = EIGENIN%lanczos_iter
-      EIGENOUT%dim_space     = EIGENIN%dim_space
-      EIGENOUT%dim_sector    = EIGENIN%dim_sector
+      EIGENOUT%lanczos_vecp = EIGENIN%lanczos_vecp
+      EIGENOUT%rdist = EIGENIN%rdist
+      EIGENOUT%lanczos_iter = EIGENIN%lanczos_iter
+      EIGENOUT%dim_space = EIGENIN%dim_space
+      EIGENOUT%dim_sector = EIGENIN%dim_sector
 
    end subroutine
 
@@ -276,8 +273,8 @@ contains
       TYPE(eigen_type), INTENT(INOUT) :: eigen
 
       CALL delete_rcvector(eigen%vec)
-      eigen%val       = 0.0_DBL
-      eigen%rank      = 0
+      eigen%val = 0.0_DBL
+      eigen%rank = 0
       eigen%converged = .false.
    end subroutine
 
@@ -289,17 +286,17 @@ contains
       integer :: ieigen
 
 #ifdef DEBUG
-      write(log_unit, '(a)') "DEBUG: entering eigen_class_delete_eigenlist"
+      write (log_unit, '(a)') "DEBUG: entering eigen_class_delete_eigenlist"
 #endif
 
       do ieigen = 1, list%neigen
          call delete_eigen(list%eigen(ieigen))
       enddo
-      if(associated(list%eigen)) deallocate(list%eigen, stat = istati)
+      if (associated(list%eigen)) deallocate (list%eigen, stat=istati)
       list%neigen = 0
 
 #ifdef DEBUG
-      write(log_unit, '(a)') "DEBUG: leaving eigen_class_delete_eigenlist"
+      write (log_unit, '(a)') "DEBUG: leaving eigen_class_delete_eigenlist"
 #endif
 
    end subroutine
@@ -319,7 +316,7 @@ contains
    subroutine filter_eigen(list, window)
 
       use common_def, only: c2s, i2c
-      use genvar,     only: log_unit
+      use genvar, only: log_unit
 
       implicit none
 
@@ -336,32 +333,32 @@ contains
       ! EXPUNGE ALL EIGENSTATES IN list OUTSIDE [E0, E1] window !
       !--------------------------------------------------------!
 
-      rank2remove   = 0
+      rank2remove = 0
       neigen2remove = 0
 
-      if(list%neigen > size(list%eigen(:)))then
-         write(*, *)  ' list%neigen  :  ', list%neigen
-         write(*, *)  ' size in list :  ', size(list%eigen)
-         write(*, *) 'error, list%neigen is bigger than the actual size of &
+      if (list%neigen > size(list%eigen(:))) then
+         write (*, *) ' list%neigen  :  ', list%neigen
+         write (*, *) ' size in list :  ', size(list%eigen)
+         write (*, *) 'error, list%neigen is bigger than the actual size of &
               &list%eigen, critical error, now stop'
       endif
 
-      if(list%neigen > 0)then
+      if (list%neigen > 0) then
          DO ieigen = 1, list%neigen
             ! IF EIGENVALUE OUTSIDE window THEN REMOVE EIGENSTATE FROM list
-            IF(list%eigen(ieigen)%val < E0 .OR. list%eigen(ieigen)%val > E1)THEN
+            IF (list%eigen(ieigen)%val < E0 .OR. list%eigen(ieigen)%val > E1) THEN
                rank = list%eigen(ieigen)%rank
-               WRITE(log_unit, '(a, f20.12, 2(a, E10.3), a)') "# EIGENSTATE E" &
-                    // c2s(i2c(rank-1)) // " : ", list%eigen(ieigen)%val, " : &
-                    &|E" // c2s(i2c(rank-1)) // "-E0| = ", &
-                    list%eigen(ieigen)%val-E0, " > ", E1-E0, " => EXPUNGE"
+               WRITE (log_unit, '(a, f20.12, 2(a, E10.3), a)') "# EIGENSTATE E" &
+                    //c2s(i2c(rank - 1))//" : ", list%eigen(ieigen)%val, " : &
+                    &|E"//c2s(i2c(rank - 1))//"-E0| = ", &
+                    list%eigen(ieigen)%val - E0, " > ", E1 - E0, " => EXPUNGE"
                neigen2remove = neigen2remove + 1
                rank2remove(neigen2remove) = rank
             ENDIF
          ENDDO
       endif
 
-      if(neigen2remove > 0)then
+      if (neigen2remove > 0) then
          DO ieigen = 1, neigen2remove
             CALL remove_eigen(rank2remove(ieigen), list)
          ENDDO
@@ -372,7 +369,7 @@ contains
    function min_eigen(list)
 
       ! FIND THE LOWEST EIGENVALUE IN list
-      
+
       use genvar, only: huge_
 
       implicit none
@@ -383,8 +380,8 @@ contains
 
       min_eigen = huge_
       DO ieigen = 1, list%neigen
-         IF(list%eigen(ieigen)%val < min_eigen) min_eigen = &
-              list%eigen(ieigen)%val
+         IF (list%eigen(ieigen)%val < min_eigen) min_eigen = &
+            list%eigen(ieigen)%val
       ENDDO
 
    end function
@@ -394,7 +391,7 @@ contains
       ! SUM THE BOLTZMANN WEIGHTS
 
       use globalvar_ed_solver, only: dEmax0, FLAG_FULL_ED_GREEN
-      use linalg,              only: dexpc
+      use linalg, only: dexpc
 
       implicit none
 
@@ -403,14 +400,14 @@ contains
       REAL(DBL) :: sum_boltz
       INTEGER   :: ieigen
 
-      if(.not.FLAG_FULL_ED_GREEN)then
-         sum_boltz = SUM((/(DEXPc(-beta*(list%eigen(ieigen)%val-E0)), ieigen = &
-              1, list%neigen)/))
+      if (.not. FLAG_FULL_ED_GREEN) then
+         sum_boltz = SUM((/(DEXPc(-beta*(list%eigen(ieigen)%val - E0)), ieigen= &
+                            1, list%neigen)/))
       else
          sum_boltz = 0.d0
          do ieigen = 1, list%neigen
-            if(beta*(list%eigen(ieigen)%val-E0) <= dEmax0 )then
-               sum_boltz = sum_boltz + DEXPc(-beta*(list%eigen(ieigen)%val-E0))
+            if (beta*(list%eigen(ieigen)%val - E0) <= dEmax0) then
+               sum_boltz = sum_boltz + DEXPc(-beta*(list%eigen(ieigen)%val - E0))
             endif
          enddo
       endif
@@ -431,14 +428,14 @@ contains
       REAL(DBL) :: sum_boltz_times_E
       INTEGER   :: ieigen
 
-      if(.not.FLAG_FULL_ED_GREEN)then
-         sum_boltz_times_E = SUM((/((list%eigen(ieigen)%val-E0)*DEXPc(-beta*(list%eigen(ieigen)%val-E0)), &
-              ieigen = 1, list%neigen)/))
+      if (.not. FLAG_FULL_ED_GREEN) then
+         sum_boltz_times_E = SUM((/((list%eigen(ieigen)%val - E0)*DEXPc(-beta*(list%eigen(ieigen)%val - E0)), &
+                                    ieigen=1, list%neigen)/))
       else
          sum_boltz_times_E = 0.d0
          do ieigen = 1, list%neigen
-            if(beta*(list%eigen(ieigen)%val-E0) <= dEmax0 )then
-               sum_boltz_times_E = sum_boltz_times_E + (list%eigen(ieigen)%val-E0)*DEXPc(-beta*(list%eigen(ieigen)%val-E0))
+            if (beta*(list%eigen(ieigen)%val - E0) <= dEmax0) then
+               sum_boltz_times_E = sum_boltz_times_E + (list%eigen(ieigen)%val - E0)*DEXPc(-beta*(list%eigen(ieigen)%val - E0))
             endif
          enddo
       endif
@@ -448,7 +445,7 @@ contains
    subroutine print_eigenlist(list, UNIT)
 
       use common_def, only: c2s, i2c
-      use genvar,     only: log_unit
+      use genvar, only: log_unit
 
       implicit none
 
@@ -457,11 +454,11 @@ contains
       INTEGER :: ieigen, unit_
 
       unit_ = log_unit
-      IF(PRESENT(UNIT)) unit_ = UNIT
+      IF (PRESENT(UNIT)) unit_ = UNIT
       DO ieigen = 1, list%neigen
-         WRITE(unit_, '(a, f0.12)') "# E" // &
-              c2s(i2c(list%eigen(ieigen)%rank-1)) // " = ", &
-              list%eigen(ieigen)%val
+         WRITE (unit_, '(a, f0.12)') "# E"// &
+            c2s(i2c(list%eigen(ieigen)%rank - 1))//" = ", &
+            list%eigen(ieigen)%val
       ENDDO
    end subroutine
 
@@ -476,13 +473,13 @@ contains
       INTEGER :: ieigen
 
       DO ieigen = 1, list%neigen
-         WRITE(UNIT, *) .true. ! there is another item
-         WRITE(UNIT, *) list%eigen(ieigen)%val
-         WRITE(UNIT, *) list%eigen(ieigen)%converged
-         WRITE(UNIT, *) list%eigen(ieigen)%rank
+         WRITE (UNIT, *) .true. ! there is another item
+         WRITE (UNIT, *) list%eigen(ieigen)%val
+         WRITE (UNIT, *) list%eigen(ieigen)%converged
+         WRITE (UNIT, *) list%eigen(ieigen)%rank
          CALL write_raw_rcvector(list%eigen(ieigen)%vec, UNIT)
       ENDDO
-      WRITE(UNIT, *) .false. ! last item
+      WRITE (UNIT, *) .false. ! last item
    end subroutine
 
    subroutine read_raw_eigenlist(list, UNIT)
@@ -497,11 +494,11 @@ contains
       LOGICAL          :: new_item
 
       DO
-         READ(UNIT, *) new_item
-         IF(.NOT.new_item) EXIT
-         READ(UNIT, *) eigen%val
-         READ(UNIT, *) eigen%converged
-         READ(UNIT, *) eigen%rank
+         READ (UNIT, *) new_item
+         IF (.NOT. new_item) EXIT
+         READ (UNIT, *) eigen%val
+         READ (UNIT, *) eigen%converged
+         READ (UNIT, *) eigen%rank
          CALL read_raw_rcvector(eigen%vec, UNIT)
          CALL add_eigen(eigen, list)
       ENDDO
@@ -518,15 +515,15 @@ contains
       INTEGER :: eigenrank
       INTEGER :: ieigen
 
-      eigenrank = find_rank(rank, (/(list%eigen(ieigen)%rank, ieigen = 1, &
-           list%neigen)/))
-      if(eigenrank == 0) then
-         write(*, *) 'DID NOT FIND RANK IN EIGENVALUE LIST'
-         write(*, *) 'neigen in list   : ', list%neigen
-         write(*, *) 'rank list : ', (/(list%eigen(ieigen)%rank, ieigen = 1, &
-              list%neigen)/)
-         write(*, *) 'looking for rank : ', rank
-         write(*, *) 'size list        : ', size(list%eigen)
+      eigenrank = find_rank(rank, (/(list%eigen(ieigen)%rank, ieigen=1, &
+                                     list%neigen)/))
+      if (eigenrank == 0) then
+         write (*, *) 'DID NOT FIND RANK IN EIGENVALUE LIST'
+         write (*, *) 'neigen in list   : ', list%neigen
+         write (*, *) 'rank list : ', (/(list%eigen(ieigen)%rank, ieigen=1, &
+                                         list%neigen)/)
+         write (*, *) 'looking for rank : ', rank
+         write (*, *) 'size list        : ', size(list%eigen)
          stop 'CRITICAL ERROR'
       endif
    end function

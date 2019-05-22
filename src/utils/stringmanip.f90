@@ -1,33 +1,32 @@
 module StringManip
 
-private
-public :: toString
-public :: strint2
+   private
+   public :: toString
+   public :: strint2
 ! INTERFACE putinString
 !  MODULE PROCEDURE putinStringstring,putinStringreal, &
 !                   & putinStringint,putinStringarray, &
 !                   & putinStringreals,putinStringComp
 ! END INTERFACE
-INTERFACE toString
- MODULE PROCEDURE StringToInt,StringToReal,StringToComp,StringToRealr,StringToLog
-END INTERFACE
+   INTERFACE toString
+      MODULE PROCEDURE StringToInt, StringToReal, StringToComp, StringToRealr, StringToLog
+   END INTERFACE
 
 ! INTERFACE ASSIGNMENT (=)
 !  MODULE PROCEDURE putinStringreal,                   &
 !                 & putinStringint,putinStringarray,   &
 !                 & putinStringreals,putinStringComp
 ! END INTERFACE
-! 
+!
 contains
 
-
 !***********************************************
 !***********************************************
 !***********************************************
 !***********************************************
 !***********************************************
 !***********************************************
-! 
+!
 ! function string_vec(k1,k2,decb,dec)
 ! real(8)                   :: k1,k2,dec_
 ! integer                   :: dec,i,decb
@@ -41,27 +40,27 @@ contains
 !  aa2=TRIM(ADJUSTL(toString(dble(NINT(real(k2*dec_)))/dec_)))
 !  string_vec="("//aa1//","//aa2//")"
 ! end function
-! 
-! 
+!
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! subroutine define_safe_array(filename,filename2)
 ! implicit none
 ! character*(*)   :: filename
 ! character*(*)   :: filename2
 ! integer,save    :: ER=0
 ! integer         :: i
-! 
+!
 ! interface
 !  logical function ch_is_space(ch)
 !   character :: ch
 !  end function
 ! end interface
-! 
+!
 !  do i=1,len(filename)
-!   if(i<=len(filename2))then 
+!   if(i<=len(filename2))then
 !    if( CH_IS_SPACE(filename(i:i) ) ) then
 !      filename2(i:i)=" "
 !    else
@@ -69,12 +68,12 @@ contains
 !    endif
 !   endif
 !  enddo
-! 
+!
 !  call S_CONTROL_BLANK(filename2)
 !  call S_BLANKS_DELETE(filename2)
 !  call S_TAB_BLANK(filename2)
 !  call S_B2U(filename2)
-! 
+!
 !  do i=1,len(filename2)
 !    if( CH_IS_SPACE(filename2(i:i) ) ) then
 !      filename2(i:i)=" "
@@ -82,22 +81,22 @@ contains
 !      filename2(i:i)=filename2(i:i)
 !    endif
 !  enddo
-! 
+!
 !  if(len(filename)<1) then
 !   ER=ER+1
 !   filename2=toString(ER)//'no valid name'
 !  endif
-! 
+!
 ! return
 ! end subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! ! Nom       :NUMTOASCII
 ! ! Fonction  :Transforme en CHARACTER
-! 
+!
 !       CHARACTER(LEN=10) FUNCTION NUMTOASCII(I)
 !       IMPLICIT NONE
 !       CHARACTER(LEN=10)            :: TMP
@@ -117,7 +116,7 @@ contains
 !           NUMTOASCII(K:K)=TMP(J-K:J-K)
 !       END DO
 !       END FUNCTION NUMTOASCII
-! 
+!
 !***********************************************
 !***********************************************
 !***********************************************
@@ -127,61 +126,61 @@ contains
 
    !----------------------!
 
-character*30 function StringToLog(i)
-logical :: i
+   character*30 function StringToLog(i)
+      logical :: i
 !BUG September 6th, corrected
 !call initString(StringToInt)
-call initString(StringToLog)
-if(i) then
- write(StringToLog,'(a1)') 'T'
-else
- write(StringToLog,'(a1)') 'F'
-endif
-StringToLog=TRIM(ADJUSTL(StringToLog))
-end function
+      call initString(StringToLog)
+      if (i) then
+         write (StringToLog, '(a1)') 'T'
+      else
+         write (StringToLog, '(a1)') 'F'
+      endif
+      StringToLog = TRIM(ADJUSTL(StringToLog))
+   end function
 
-character*30 function StringToInt(i)
-integer :: i
-call initString(StringToInt)
-write(StringToInt,'(i8)') i
-StringToInt=TRIM(ADJUSTL(StringToInt))
-end function
+   character*30 function StringToInt(i)
+      integer :: i
+      call initString(StringToInt)
+      write (StringToInt, '(i8)') i
+      StringToInt = TRIM(ADJUSTL(StringToInt))
+   end function
 
-character*30 function StringToReal(i)
-real(8) :: i
-call initString(StringToReal)
-if(abs(i)>=1.d-8)then
- write(StringToReal,'(f15.8)') i
- StringToReal=TRIM(ADJUSTL(StringToReal))
-else
- write(StringToReal,'(f17.15)') i
- StringToReal=TRIM(ADJUSTL(StringToReal))
-endif
-end function
+   character*30 function StringToReal(i)
+      real(8) :: i
+      call initString(StringToReal)
+      if (abs(i) >= 1.d-8) then
+         write (StringToReal, '(f15.8)') i
+         StringToReal = TRIM(ADJUSTL(StringToReal))
+      else
+         write (StringToReal, '(f17.15)') i
+         StringToReal = TRIM(ADJUSTL(StringToReal))
+      endif
+   end function
 
-character*30 function StringToRealr(i)
-real(4) :: i
-call initString(StringToRealr)
-write(StringToRealr,'(f12.4)') i
-StringToRealr=TRIM(ADJUSTL(StringToRealr))
-end function
+   character*30 function StringToRealr(i)
+      real(4) :: i
+      call initString(StringToRealr)
+      write (StringToRealr, '(f12.4)') i
+      StringToRealr = TRIM(ADJUSTL(StringToRealr))
+   end function
 
-character*30 function StringToComp(i)
-complex(8) :: i
-call initString(StringToComp)
-write(StringToComp,'(2f10.3)') real(i),aimag(i)
-StringToComp=TRIM(ADJUSTL(StringToComp))
-end function
-! 
+   character*30 function StringToComp(i)
+      complex(8) :: i
+      call initString(StringToComp)
+      write (StringToComp, '(2f10.3)') real(i), aimag(i)
+      StringToComp = TRIM(ADJUSTL(StringToComp))
+   end function
+!
 !    !----------------------!
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 !    subroutine HowManyLineString(string,k)
 !     implicit none
-!    character*(*) string 
+!    character*(*) string
 !     integer :: i,j,k,n
 !     k=0
 !    do i=1,len(string)
@@ -191,14 +190,14 @@ end function
 !     enddo
 !    return
 !    end subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 !    subroutine NiethLineString(string,n,string2)
 !     implicit none
-!    character*(*) string 
+!    character*(*) string
 !     character*(*) string2
 !     integer :: i,j,k,n
 !     i=0
@@ -208,7 +207,7 @@ end function
 !       if(string(i:i).ne.';') then
 !          k=k+1
 !          string2(k:k)=string(i:i)
-!         else 
+!         else
 !          j=j+1
 !          if(j==n)goto 102
 !          k=0
@@ -222,14 +221,14 @@ end function
 !     string2=ADJUSTL(string2)
 !      return
 !    end subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 !    subroutine reformString(string,arrayd)
 !     implicit none
-!    character*(*) string 
+!    character*(*) string
 !    character*(*) arrayd
 !    integer i,last
 !    do last = len(string),1,-1
@@ -241,27 +240,27 @@ end function
 !       arrayd(i:i)=string(i:i)
 !     enddo
 ! 101   continue
-! 
+!
 !    return
 !    end subroutine
-! 
+!
 !***********************************************
 !***********************************************
 !***********************************************
 
-subroutine initString(STRING)
-character*(*) :: STRING
-integer :: i
- do i=1,len(STRING)
-  STRING(i:i) = " "
- enddo
-end subroutine
-! 
+   subroutine initString(STRING)
+      character*(*) :: STRING
+      integer :: i
+      do i = 1, len(STRING)
+         STRING(i:i) = " "
+      enddo
+   end subroutine
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! subroutine finalizeString(STRING)
 ! character*(*) :: STRING
 ! integer :: aa
@@ -272,13 +271,13 @@ end subroutine
 ! endif
 ! STRING(aa+1:aa+1)=CHAR(0)
 ! end subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! subroutine putinStringstring(STRING,sput)
 ! character*(*),intent(inout) :: STRING
 ! character*(*),intent(in)  :: sput
@@ -290,13 +289,13 @@ end subroutine
 ! endif
 ! write(STRING,*) STRING(1:LEN_TRIM(STRING))//sput
 ! end subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! subroutine putinStringreal(STRING,numb)
 ! character*(*),intent(inout) :: STRING
 ! real(8),intent(in) :: numb
@@ -305,11 +304,11 @@ end subroutine
 ! write(STRING,*) STRING(1:LEN_TRIM(STRING))//' '//&
 !  & sput(1:LEN_TRIM(sput))
 ! end subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! subroutine putinStringreals(STRING,numb)
 ! character*(*),intent(inout) :: STRING
 ! real,intent(in) :: numb
@@ -318,11 +317,11 @@ end subroutine
 ! write(STRING,*) STRING(1:LEN_TRIM(STRING))//' '//&
 !  & sput(1:LEN_TRIM(sput))
 ! end subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! subroutine putinStringComp(STRING,numb)
 ! character*(*),intent(inout) :: STRING
 ! complex(8),intent(in) :: numb
@@ -331,67 +330,67 @@ end subroutine
 ! write(STRING,*) STRING(1:LEN_TRIM(STRING))//' '//&
 !  & sput(1:LEN_TRIM(sput))
 ! end subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! subroutine putinStringint(STRING,numb)
 ! character*(*),intent(inout) :: STRING
 ! integer,intent(in) :: numb
 ! character*40  :: sput
 ! write(sput,*) numb
-! write(STRING,*) STRING(1:LEN_TRIM(STRING))//' '// & 
+! write(STRING,*) STRING(1:LEN_TRIM(STRING))//' '// &
 !  & sput(1:LEN_TRIM(sput))
 ! end subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! subroutine putinStringarray(STRING,array)
 ! character*(*),intent(inout) :: STRING
 ! character*(*), dimension(:),intent(in) :: array
 ! integer :: i
-! 
+!
 ! do i=1,size(array(:))
 ! if(i==1) write(STRING,*) STRING(1:LEN_TRIM(STRING))//' '//array(i)
 ! if(i>1 ) write(STRING,*) STRING(1:LEN_TRIM(STRING))//array(i)
 ! enddo
 ! end subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! subroutine PrintString(STRING)
 ! character*(*) :: STRING
 ! write(*,*) STRING(1:LEN_TRIM(STRING))
 ! end subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! subroutine LineBreakString(STRING)
 ! character*(*) :: STRING
 ! STRING=STRING(1:LEN_TRIM(STRING))//" ;  "
 ! end subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 !       SUBROUTINE FORMTQ(STRING,NCHAR,NNN)
 !       CHARACTER*(*) STRING
 !       READ(*,200) STRING
@@ -400,13 +399,13 @@ end subroutine
 !       DO 10 I=1,NCHAR
 !   10    IF (STRING(I:I).NE.' ') NNN=NNN+1
 !       END subroutine
-! 
+!
 ! !***********************************************************
 ! !***********************************************************
 ! !***********************************************************
 ! !***********************************************************
 ! !***********************************************************
-! 
+!
 !       SUBROUTINE LOGQYN(S,D,L)
 !       LOGICAL      L,L2
 !       CHARACTER*1  D,D2,A
@@ -439,14 +438,14 @@ end subroutine
 !       ENDIF
 !       GOTO 1
 !       END subroutine
-! 
+!
 ! !***********************************************************
 ! !***********************************************************
 ! !***********************************************************
 ! !***********************************************************
 ! !***********************************************************
-! 
-! 
+!
+!
 !       SUBROUTINE STPACK(STRING,S,N)
 !       CHARACTER STRING*(*),S*(*)
 !       DO 10 I=1,N
@@ -456,17 +455,17 @@ end subroutine
 !   20  DO 30 J=I+1,N
 !   30    STRING(J:J)=' '
 !       END subroutine
-! 
+!
 ! !***********************************************************
 ! !***********************************************************
 ! !***********************************************************
 ! !***********************************************************
 ! !***********************************************************
-! 
+!
 !       SUBROUTINE FINDNC(STRING,NCHARS,NC)
 !       CHARACTER STRING(*)
 !       integer i,NC,NCHARS
-! 
+!
 !       DO 10 I=1,NCHARS
 !   10    IF (STRING(I).NE.' ') GOTO 1
 !    1  IMIN=I
@@ -491,17 +490,17 @@ end subroutine
 !         NC=0
 !       ENDIF
 !       END subroutine
-! 
+!
 ! !***********************************************************
 ! !***********************************************************
 ! !***********************************************************
 ! !***********************************************************
 ! !***********************************************************
-! 
+!
 !       INTEGER FUNCTION CTOI (S, I)
 !       CHARACTER*(*) S
 !       INTEGER I
-! 
+!
 ! ! Attempt to read an integer from a character string, and return
 ! ! the result. No attempt is made to avoid integer overflow. A valid
 ! ! integer is any sequence of decimal digits.
@@ -532,13 +531,13 @@ end subroutine
 !       I = I+1
 !       GOTO 10
 !       END function
-! 
+!
 ! !***********************************************************
 ! !***********************************************************
 ! !***********************************************************
 ! !***********************************************************
 ! !***********************************************************
-! 
+!
 ! !     ---------------------------------
 !       subroutine GetName ( ic , fname )
 ! !     ---------------------------------
@@ -561,13 +560,13 @@ end subroutine
 !       fname = prefix//d2ch(i1)//d2ch(i2)//d2ch(i3)//d2ch(i4)//suffix
 !       return
 !       end subroutine
-! 
+!
 ! !***********************************************************
 ! !***********************************************************
 ! !***********************************************************
 ! !***********************************************************
 ! !***********************************************************
-! 
+!
 ! !     --------------------------------
 !       character function d2ch ( idig )
 ! !     --------------------------------
@@ -581,19 +580,19 @@ end subroutine
 !       endif
 !       return
 !       end function
-! 
+!
 ! !***************************************
 ! !***************************************
 ! !***************************************
 ! !***************************************
-! 
+!
 ! !convert string ch to a real(8) (positive only)
 ! Function StrDbl(ch)
 ! real(8) :: StrDbl
 ! character*(*) ch
 ! integer i, ipos
 ! real(8)  x
-! 
+!
 ! ipos=0
 ! do i=1,LEN_TRIM(ch)
 !   if (ch(i:i).eq.'.') ipos=i
@@ -607,7 +606,7 @@ end subroutine
 ! StrDbl=x
 ! return
 ! endif
-! 
+!
 ! x=0.d0
 ! do i=1, ipos-1
 !   x=x+(IACHAR(ch(i:i))-48)*10**(ipos-1-i)
@@ -617,12 +616,12 @@ end subroutine
 ! end do
 ! StrDbl=x
 ! END Function StrDbl
-! 
+!
 ! !***************************************
 ! !***************************************
 ! !***************************************
 ! !***************************************
-! 
+!
 ! !convert string ch to an integer*4 (positive only)
 ! INTEGER(4) Function StrInt(ch)
 ! character*(*) ch
@@ -639,28 +638,28 @@ end subroutine
 ! end do
 ! StrInt=j
 ! END Function
-! 
+!
 ! !***************************************
 ! !***************************************
 ! !***************************************
 ! !***************************************
-! 
+!
 ! !convert string ch to an integer (positive only)
-INTEGER Function StrInt2(ch)
-character*(*) ch
-integer i,j,ilen
-j=0;
-ilen=LEN_TRIM(ch)
-do i=1, ilen !+1 BUG corrected
-  if (i.eq.ilen) then
-    j=j+IACHAR(ch(i:i))-48
-  else
-    j=j+INT((IACHAR(ch(i:i))-48)*10**(ilen-i))
-  end if
-end do
-StrInt2=j
-END Function
-! 
+   INTEGER Function StrInt2(ch)
+      character*(*) ch
+      integer i, j, ilen
+      j = 0; 
+      ilen = LEN_TRIM(ch)
+      do i = 1, ilen !+1 BUG corrected
+         if (i .eq. ilen) then
+            j = j + IACHAR(ch(i:i)) - 48
+         else
+            j = j + INT((IACHAR(ch(i:i)) - 48)*10**(ilen - i))
+         end if
+      end do
+      StrInt2 = j
+   END Function
+!
 ! !***************************************
 ! !***************************************
 ! !***************************************

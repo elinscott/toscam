@@ -1,54 +1,54 @@
 module sorting
-use linalg
-use random
+   use linalg
+   use random
 
-implicit none
-private
-public :: fastsearchreal
-public :: group_data_rrr
-public :: qsort_adj_array
-public :: qsort_array
+   implicit none
+   private
+   public :: fastsearchreal
+   public :: group_data_rrr
+   public :: qsort_adj_array
+   public :: qsort_array
 
 ! INTERFACE askinset
 !    MODULE PROCEDURE askinseti,askinsetr,askinsets,askinsetc,askinseta
 ! END INTERFACE
-! 
-INTERFACE qsort_adj_array
- MODULE PROCEDURE qsort_adj_array_c,qsort_adj_array_r,qsort_adj_array_c_s,qsort_adj_array_rs &
-               & ,qsort_adj_array_veccs,qsort_adj_array_vecrs,qsort_adj_array_vecc,qsort_adj_array_vecr,&
-               &  qsort_adj_array_i
-END INTERFACE
+!
+   INTERFACE qsort_adj_array
+      MODULE PROCEDURE qsort_adj_array_c, qsort_adj_array_r, qsort_adj_array_c_s, qsort_adj_array_rs &
+                    & , qsort_adj_array_veccs, qsort_adj_array_vecrs, qsort_adj_array_vecc, qsort_adj_array_vecr,&
+                    &  qsort_adj_array_i
+   END INTERFACE
 
-INTERFACE qsort_array
- MODULE PROCEDURE qsort_array_r,qsort_array_rs,qsort_array_i
-END INTERFACE
-! 
+   INTERFACE qsort_array
+      MODULE PROCEDURE qsort_array_r, qsort_array_rs, qsort_array_i
+   END INTERFACE
+!
 ! INTERFACE group_data
 !  MODULE PROCEDURE group_data_rr,group_data_r,group_data_c
 ! END INTERFACE
-! 
-INTERFACE fastsearchreal
- MODULE PROCEDURE fastsearchreal_r,fastsearchreal_d
-END INTERFACE
-! 
+!
+   INTERFACE fastsearchreal
+      MODULE PROCEDURE fastsearchreal_r, fastsearchreal_d
+   END INTERFACE
+!
 ! INTERFACE searchwitherror
 !  MODULE PROCEDURE searchwitherror_r,searchwitherror_f
 ! END INTERFACE
-! 
+!
 ! INTERFACE maxval_set
 !  MODULE PROCEDURE maxval_setr,maxval_setrr
 ! END INTERFACE
-! 
+!
 ! INTERFACE minval_set
 !  MODULE PROCEDURE minval_setr,minval_setrr
 ! END INTERFACE
-! 
+!
 ! INTERFACE SSORT
 !  MODULE PROCEDURE SSORT_,SSORT__
 ! END INTERFACE
 
 contains
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -58,7 +58,7 @@ contains
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 !  real(8) function maxval_setr(tab,set)
 !  implicit none
 !  real(8)  :: tab(:,:),r1,r2
@@ -67,12 +67,12 @@ contains
 !   do j=1,size(tab(:,1))
 !    if(askinset(j,set))then
 !      r2=maxval(tab(j,:))
-!      if(r2>r1) r1=r2 
+!      if(r2>r1) r1=r2
 !    endif
 !   enddo
 !   maxval_setr=r1
 !  end function
-! 
+!
 !  real(8) function maxval_setrr(tab,set)
 !  implicit none
 !  real  :: tab(:,:),r1,r2
@@ -86,7 +86,7 @@ contains
 !   enddo
 !   maxval_setrr=r1
 !  end function
-! 
+!
 !  real(8) function minval_setr(tab,set)
 !  implicit none
 !  real(8)  :: tab(:,:),r1,r2
@@ -100,7 +100,7 @@ contains
 !   enddo
 !   minval_setr=r1
 !  end function
-! 
+!
 !  real(8) function minval_setrr(tab,set)
 !  implicit none
 !  real  :: tab(:,:),r1,r2
@@ -114,7 +114,7 @@ contains
 !   enddo
 !   minval_setrr=r1
 !  end function
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -127,8 +127,8 @@ contains
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
-!       ! Nom : SORT3  
+!
+!       ! Nom : SORT3
 !       SUBROUTINE SORT3(N,np,RA,RB,WKSP,IWKSP)
 !       implicit real(8)(a-h,o-z)
 !       DIMENSION RA(Np),RB(Np,Np),WKSP(Np),IWKSP(Np)
@@ -148,15 +148,15 @@ contains
 ! 14    CONTINUE
 !       enddo
 !       RETURN
-!  
+!
 !      contains
-! 
+!
 !     !----------------!
 !     !----------------!
 !     !----------------!
 !     !----------------!
 !     !----------------!
-! 
+!
 !       ! Nom : INDEXX
 !       SUBROUTINE INDEXX(N,np,ARRIN,INDX)
 !       implicit real(8)(a-h,o-z)
@@ -200,15 +200,15 @@ contains
 !       GO TO 10
 !       return
 !       END subroutine
-! 
+!
 !     !----------------!
 !     !----------------!
 !     !----------------!
 !     !----------------!
 !     !----------------!
-!  
+!
 !    end subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -220,7 +220,7 @@ contains
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 !       ! Nom : SORT3
 !       SUBROUTINE SORT3q(N,np,RA,RB,WKSP,IWKSP)
 !       implicit real(16)(a-h,o-z)
@@ -241,15 +241,15 @@ contains
 ! 14    CONTINUE
 !       enddo
 !       RETURN
-! 
+!
 !      contains
-! 
+!
 !     !----------------!
 !     !----------------!
 !     !----------------!
 !     !----------------!
 !     !----------------!
-! 
+!
 !       ! Nom : INDEXX
 !       SUBROUTINE INDEXX(N,np,ARRIN,INDX)
 !       implicit real(16)(a-h,o-z)
@@ -293,15 +293,15 @@ contains
 !       GO TO 10
 !       return
 !       END subroutine
-! 
+!
 !     !----------------!
 !     !----------------!
 !     !----------------!
 !     !----------------!
 !     !----------------!
-! 
+!
 !    end subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -319,17 +319,17 @@ contains
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! function ind_cycle(i,siz,n,ind)
 ! implicit none
 ! integer          :: k,kk,siz,i,n,ind_cycle(siz),s1
 ! integer,optional :: ind(:)
-! 
+!
 ! !ind:forbidden indices
-! 
+!
 ! if(present(ind)) s1=size(ind)
 ! k=0; kk=0
-! 
+!
 ! do
 !  if(present(ind))then
 !   if(askinset(i+kk,ind)) goto 38
@@ -344,10 +344,10 @@ contains
 !  38 continue
 !  kk=kk+1
 ! enddo
-! 
+!
 ! return
 ! end function
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -357,7 +357,7 @@ contains
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! logical function askinseti(a,set)
 ! implicit none
 ! integer,intent(in)::a,set(:)
@@ -371,7 +371,7 @@ contains
 ! endif
 ! enddo
 ! end function
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -381,7 +381,7 @@ contains
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! logical function askinsets(a,set)
 ! implicit none
 ! real(4),intent(in)::a,set(:)
@@ -395,7 +395,7 @@ contains
 ! endif
 ! enddo
 ! end function
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -405,7 +405,7 @@ contains
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! logical function askinsetr(a,set)
 ! implicit none
 ! real(8),intent(in)::a,set(:)
@@ -419,7 +419,7 @@ contains
 ! endif
 ! enddo
 ! end function
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -429,7 +429,7 @@ contains
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! logical function askinsetc(a,set)
 ! implicit none
 ! complex(8),intent(in)::a,set(:)
@@ -443,7 +443,7 @@ contains
 ! endif
 ! enddo
 ! end function
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -453,7 +453,7 @@ contains
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! logical function askinseta(a,set)
 ! implicit none
 ! character*(*),intent(in)::a,set(:)
@@ -467,7 +467,7 @@ contains
 ! endif
 ! enddo
 ! end function
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -477,7 +477,7 @@ contains
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! integer function find_vec_in_array(vec,table)
 ! implicit none
 ! real(8),dimension(:,:),intent(in)::table
@@ -493,8 +493,8 @@ contains
 !  enddo
 ! return
 ! end function
-! 
-! 
+!
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -504,7 +504,7 @@ contains
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! subroutine SSORT__(n,ra)
 !       implicit none
 !       integer          :: n,l,ir,i,j
@@ -542,10 +542,10 @@ contains
 !       end if
 !       ra(i)=rra
 !       go to 10
-! 
+!
 ! return
 ! end subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -563,7 +563,7 @@ contains
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! subroutine ordertab(dim,A,Idisorder,Iorder,Jdisorder, Jorder, numbcross)
 ! implicit none
 ! integer,intent(in)::  dim
@@ -577,7 +577,7 @@ contains
 ! integer  ::  temp
 ! integer::  i,j
 ! real(8), dimension(dim), intent(in)::  A
-! 
+!
 ! do i=1,numbcross
 ! normeval=norme(Idisorder(i,:) - A(:))
 ! norm(i)=normeval
@@ -594,8 +594,8 @@ contains
 ! Iorder(numbcross-j+1,:) = Idisorder(temp,:)
 ! Jorder(numbcross-j+1) = Jdisorder(temp)
 ! enddo
-! end subroutine 
-! 
+! end subroutine
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -605,7 +605,7 @@ contains
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 !  SUBROUTINE SORT (SIZ, ARR, numb)
 !  implicit none
 !   INTEGER*4   SIZ, i,j,numb(SIZ),TMP2
@@ -626,7 +626,7 @@ contains
 !    enddo
 !   enddo
 ! end subroutine
-! 
+!
 !***********************************************
 !***********************************************
 !***********************************************
@@ -637,16 +637,16 @@ contains
 !***********************************************
 !***********************************************
 
-function compare(f,g)
-implicit none
-real(8) :: f,g
-integer :: compare
- if(f<g) then
-  compare=-1
- else
-  compare=1
- endif
-end function
+   function compare(f, g)
+      implicit none
+      real(8) :: f, g
+      integer :: compare
+      if (f < g) then
+         compare = -1
+      else
+         compare = 1
+      endif
+   end function
 
 !***********************************************
 !***********************************************
@@ -658,15 +658,15 @@ end function
 !***********************************************
 !***********************************************
 
-function compare_r(f,g)
-real :: f,g
-integer :: compare_r
- if(f<g) then
-  compare_r=-1
- else
-  compare_r=1
- endif
-end function
+   function compare_r(f, g)
+      real :: f, g
+      integer :: compare_r
+      if (f < g) then
+         compare_r = -1
+      else
+         compare_r = 1
+      endif
+   end function
 
 !***********************************************
 !***********************************************
@@ -677,7 +677,7 @@ end function
 !***********************************************
 !***********************************************
 !***********************************************
-! 
+!
 ! subroutine group_data_c(n1,array,array2,lbin)
 ! implicit none
 ! integer     :: n1
@@ -686,9 +686,9 @@ end function
 ! integer     :: lbin,i,j,k,l,m,n,siz,count
 ! complex     :: mean(n1)
 ! integer     :: howmany(n1)
-! 
+!
 ! siz=n1; temp=0.;count=0; good=0.0; howmany=0; mean=0.
-! 
+!
 ! do i=1,siz
 !  temp=array(i)
 !  dist=abs(temp-good)
@@ -702,7 +702,7 @@ end function
 !   mean(count)=mean(count)+array2(i)
 !  endif
 ! enddo
-! 
+!
 ! lbin=count
 ! do i=1,lbin
 ! temp=dble(howmany(i))
@@ -712,10 +712,10 @@ end function
 !   array2(i)=0.
 !  endif
 ! enddo
-! 
+!
 ! return
 ! end subroutine
-! 
+!
 !***********************************************
 !***********************************************
 !***********************************************
@@ -724,45 +724,44 @@ end function
 !***********************************************
 !***********************************************
 
-subroutine group_data_rrr(n1,array,array2,array2b,lbin)
-implicit none
-integer     :: n1
-real(8)     :: array(n1),dist,temp,good
-real(8)     :: array2(n1),array2b(n1)
-integer     :: lbin,i,siz,count
-real(8)     :: mean(n1)
-integer     :: howmany(n1)
+   subroutine group_data_rrr(n1, array, array2, array2b, lbin)
+      implicit none
+      integer     :: n1
+      real(8)     :: array(n1), dist, temp, good
+      real(8)     :: array2(n1), array2b(n1)
+      integer     :: lbin, i, siz, count
+      real(8)     :: mean(n1)
+      integer     :: howmany(n1)
 
-   siz=n1; temp=0.;count=0; good=0.d0; howmany=0; mean=0.
+      siz = n1; temp = 0.; count = 0; good = 0.d0; howmany = 0; mean = 0.
 
-   do i=1,siz
-    temp=array(i); dist=abs(temp-good)
-    if(dist>3.d-3.or.count==0)then
-     count=count+1
-     howmany(count)=1
-     mean(count)=array2(i)
-     array2b(count)=array(i)
-     good=temp
-    else
-     howmany(count)=howmany(count)+1
-     mean(count)=mean(count)+array2(i)
-    endif
-   enddo
+      do i = 1, siz
+         temp = array(i); dist = abs(temp - good)
+         if (dist > 3.d-3 .or. count == 0) then
+            count = count + 1
+            howmany(count) = 1
+            mean(count) = array2(i)
+            array2b(count) = array(i)
+            good = temp
+         else
+            howmany(count) = howmany(count) + 1
+            mean(count) = mean(count) + array2(i)
+         endif
+      enddo
 
-   lbin=count
-   do i=1,lbin
-   temp=dble(howmany(i))
-    if(abs(temp)>1.d-4) then
-     array2(i)=mean(i)/temp
-    else
-     array2(i)=0.
-    endif
-   enddo
+      lbin = count
+      do i = 1, lbin
+         temp = dble(howmany(i))
+         if (abs(temp) > 1.d-4) then
+            array2(i) = mean(i)/temp
+         else
+            array2(i) = 0.
+         endif
+      enddo
 
-return
-end subroutine
+      return
+   end subroutine
 
-
 !***********************************************
 !***********************************************
 !***********************************************
@@ -771,7 +770,7 @@ end subroutine
 !***********************************************
 !***********************************************
 !***********************************************
-! 
+!
 ! subroutine group_data_rr(n1,array,array2,lbin)
 ! implicit none
 ! integer     :: n1
@@ -805,7 +804,7 @@ end subroutine
 ! enddo
 ! return
 ! end subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -816,7 +815,7 @@ end subroutine
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! subroutine group_data_r(n1,array,array2,lbin)
 ! implicit none
 ! integer     :: n1
@@ -839,7 +838,7 @@ end subroutine
 !   mean(count)=mean(count)+array2(i)
 !  endif
 ! enddo
-! 
+!
 ! lbin=count
 ! do i=1,lbin
 ! temp=dble(howmany(i))
@@ -851,7 +850,7 @@ end subroutine
 ! enddo
 ! return
 ! end subroutine
-! 
+!
 !***********************************************
 !***********************************************
 !***********************************************
@@ -862,133 +861,131 @@ end subroutine
 !***********************************************
 !***********************************************
 
-           !-------------!
+   !-------------!
 
-subroutine qsort_adj_array_i(array,order)
-implicit none
-   integer, dimension(:)            :: array
-   integer, dimension(size(array))  :: backup
-   integer, dimension(size(array))  :: order
-   integer                          :: j
-   backup=array
-   do j=1,size(array)
-     array(j)=backup(order(j))
-   enddo
-end subroutine
+   subroutine qsort_adj_array_i(array, order)
+      implicit none
+      integer, dimension(:)            :: array
+      integer, dimension(size(array))  :: backup
+      integer, dimension(size(array))  :: order
+      integer                          :: j
+      backup = array
+      do j = 1, size(array)
+         array(j) = backup(order(j))
+      enddo
+   end subroutine
 
-           !-------------!
+   !-------------!
 
-subroutine qsort_adj_array_veccs(array,order)
-implicit none
-   complex(4), dimension(:,:)                          :: array
-   complex(4), dimension(size(array,1),size(array,2))  :: backup
-   integer, dimension(size(array,2))                   :: order
-   integer                                             :: j
-   backup=array
-   do j=1,size(array,2)
-     array(:,j)=backup(:,order(j))
-   enddo
-end subroutine
+   subroutine qsort_adj_array_veccs(array, order)
+      implicit none
+      complex(4), dimension(:, :)                          :: array
+      complex(4), dimension(size(array, 1), size(array, 2))  :: backup
+      integer, dimension(size(array, 2))                   :: order
+      integer                                             :: j
+      backup = array
+      do j = 1, size(array, 2)
+         array(:, j) = backup(:, order(j))
+      enddo
+   end subroutine
 
-           !-------------!
+   !-------------!
 
-subroutine qsort_adj_array_vecrs(array,order)
-implicit none
-   real(4), dimension(:,:)                          :: array
-   real(4), dimension(size(array,1),size(array,2))  :: backup
-   integer, dimension(size(array,2))                :: order
-   integer                                          :: j
-   backup=array
-   do j=1,size(array,2)
-     array(:,j)=backup(:,order(j))
-   enddo
-end subroutine
+   subroutine qsort_adj_array_vecrs(array, order)
+      implicit none
+      real(4), dimension(:, :)                          :: array
+      real(4), dimension(size(array, 1), size(array, 2))  :: backup
+      integer, dimension(size(array, 2))                :: order
+      integer                                          :: j
+      backup = array
+      do j = 1, size(array, 2)
+         array(:, j) = backup(:, order(j))
+      enddo
+   end subroutine
 
-           !-------------!
+   !-------------!
 
-subroutine qsort_adj_array_vecc(array,order)
-implicit none
-   complex(8), dimension(:,:)                          :: array
-   complex(8), dimension(size(array,1),size(array,2))  :: backup
-   integer, dimension(size(array,2))                :: order
-   integer                                          :: j
-   backup=array
-   do j=1,size(array,2)
-     array(:,j)=backup(:,order(j))
-   enddo
-end subroutine
+   subroutine qsort_adj_array_vecc(array, order)
+      implicit none
+      complex(8), dimension(:, :)                          :: array
+      complex(8), dimension(size(array, 1), size(array, 2))  :: backup
+      integer, dimension(size(array, 2))                :: order
+      integer                                          :: j
+      backup = array
+      do j = 1, size(array, 2)
+         array(:, j) = backup(:, order(j))
+      enddo
+   end subroutine
 
-           !-------------!
+   !-------------!
 
-subroutine qsort_adj_array_vecr(array,order)
-implicit none
-   real(8), dimension(:,:)                          :: array
-   real(8), dimension(size(array,1),size(array,2))  :: backup
-   integer, dimension(size(array,2))                :: order
-   integer                                          :: j
-   backup=array
-   do j=1,size(array,2)
-     array(:,j)=backup(:,order(j))
-   enddo
-end subroutine
+   subroutine qsort_adj_array_vecr(array, order)
+      implicit none
+      real(8), dimension(:, :)                          :: array
+      real(8), dimension(size(array, 1), size(array, 2))  :: backup
+      integer, dimension(size(array, 2))                :: order
+      integer                                          :: j
+      backup = array
+      do j = 1, size(array, 2)
+         array(:, j) = backup(:, order(j))
+      enddo
+   end subroutine
 
-           !-------------!
+   !-------------!
 
+   subroutine qsort_adj_array_r(array, order)
+      implicit none
+      real(8), dimension(:)            :: array
+      real(8), dimension(size(array))  :: backup
+      integer, dimension(size(array)) :: order
+      integer                         :: j
+      backup = array
+      do j = 1, size(array)
+         array(j) = backup(order(j))
+      enddo
+   end subroutine
 
-subroutine qsort_adj_array_r(array,order)
-implicit none
-   real(8), dimension(:)            :: array
-   real(8), dimension(size(array))  :: backup
-   integer, dimension(size(array)) :: order
-   integer                         :: j
-   backup=array
-   do j=1,size(array)
-     array(j)=backup(order(j))
-   enddo
-end subroutine
+   !-------------!
 
-           !-------------!
+   subroutine qsort_adj_array_rs(array, order)
+      implicit none
+      real, dimension(:)            :: array
+      real, dimension(size(array))  :: backup
+      integer, dimension(size(array)) :: order
+      integer                         :: j
+      backup = array
+      do j = 1, size(array)
+         array(j) = backup(order(j))
+      enddo
+   end subroutine
 
-subroutine qsort_adj_array_rs(array,order)
-implicit none
-   real, dimension(:)            :: array
-   real, dimension(size(array))  :: backup
-   integer, dimension(size(array)) :: order
-   integer                         :: j
-   backup=array
-   do j=1,size(array)
-     array(j)=backup(order(j))
-   enddo
-end subroutine
+   !-------------!
 
-           !-------------!
+   subroutine qsort_adj_array_c(array, order)
+      implicit none
+      complex(8), dimension(:)            :: array
+      complex(8), dimension(size(array))  :: backup
+      integer, dimension(size(array))     :: order
+      integer                             :: j
+      backup = array
+      do j = 1, size(array)
+         array(j) = backup(order(j))
+      enddo
+   end subroutine
 
-subroutine qsort_adj_array_c(array,order)
-implicit none
-   complex(8), dimension(:)            :: array
-   complex(8), dimension(size(array))  :: backup
-   integer, dimension(size(array))     :: order
-   integer                             :: j
-   backup=array
-   do j=1,size(array)
-     array(j)=backup(order(j))
-   enddo
-end subroutine
+   !-------------!
 
-           !-------------!
-
-subroutine qsort_adj_array_c_s(array,order)
-implicit none
-   complex, dimension(:)            :: array
-   complex, dimension(size(array))  :: backup
-   integer, dimension(size(array))  :: order
-   integer                          :: j
-   backup=array
-   do j=1,size(array)
-     array(j)=backup(order(j))
-   enddo
-end subroutine
-
+   subroutine qsort_adj_array_c_s(array, order)
+      implicit none
+      complex, dimension(:)            :: array
+      complex, dimension(size(array))  :: backup
+      integer, dimension(size(array))  :: order
+      integer                          :: j
+      backup = array
+      do j = 1, size(array)
+         array(j) = backup(order(j))
+      enddo
+   end subroutine
 
 !***********************************************
 !***********************************************
@@ -1000,23 +997,23 @@ end subroutine
 !***********************************************
 !***********************************************
 
-subroutine qsort_array_r(array,order2)
-implicit none
-    real(8),dimension(:)                    :: array
-    real(8),dimension(size(array))          :: backup
-    integer,dimension(size(array))          :: order
-    integer,dimension(size(array)),optional :: order2
-    integer                                 :: i
-    do i=1,size(order)
-      order(i)=i
-    enddo
-    call qsort_sort( array, order, 1, size(array) )
-    do i=1,size(order)
-       backup(i)=array(order(i))
-    enddo
-    array=backup
-    if(present(order2)) order2=order
-end subroutine
+   subroutine qsort_array_r(array, order2)
+      implicit none
+      real(8), dimension(:)                    :: array
+      real(8), dimension(size(array))          :: backup
+      integer, dimension(size(array))          :: order
+      integer, dimension(size(array)), optional :: order2
+      integer                                 :: i
+      do i = 1, size(order)
+         order(i) = i
+      enddo
+      call qsort_sort(array, order, 1, size(array))
+      do i = 1, size(order)
+         backup(i) = array(order(i))
+      enddo
+      array = backup
+      if (present(order2)) order2 = order
+   end subroutine
 
 !***********************************************
 !***********************************************
@@ -1028,23 +1025,23 @@ end subroutine
 !***********************************************
 !***********************************************
 
-subroutine qsort_array_rs(array,order2)
-implicit none
-    real,dimension(:)                       :: array
-    real,dimension(size(array))             :: backup
-    integer,dimension(size(array))          :: order
-    integer,dimension(size(array)),optional :: order2
-    integer                                 :: i
-    do i=1,size(order)
-      order(i)=i
-    enddo
-    call qsort_sort_r( array, order, 1, size(array) )
-    do i=1,size(order)
-       backup(i)=array(order(i))
-    enddo
-    array=backup
-    if(present(order2)) order2=order
-end subroutine
+   subroutine qsort_array_rs(array, order2)
+      implicit none
+      real, dimension(:)                       :: array
+      real, dimension(size(array))             :: backup
+      integer, dimension(size(array))          :: order
+      integer, dimension(size(array)), optional :: order2
+      integer                                 :: i
+      do i = 1, size(order)
+         order(i) = i
+      enddo
+      call qsort_sort_r(array, order, 1, size(array))
+      do i = 1, size(order)
+         backup(i) = array(order(i))
+      enddo
+      array = backup
+      if (present(order2)) order2 = order
+   end subroutine
 
 !***********************************************
 !***********************************************
@@ -1056,26 +1053,26 @@ end subroutine
 !***********************************************
 !***********************************************
 
-subroutine qsort_array_i(array_,order2)
-implicit none
-    integer,dimension(:)                    :: array_
-    real,dimension(size(array_))            :: array
-    real,dimension(size(array))             :: backup
-    integer,dimension(size(array))          :: order
-    integer,dimension(size(array)),optional :: order2
-    integer                                 :: i
-    do i=1,size(order)
-      order(i)=i
-    enddo
-    array=float(array_)
-    call qsort_sort_r( array, order, 1, size(array) )
-    do i=1,size(order)
-       backup(i)=array(order(i))
-    enddo
-    array=backup
-    if(present(order2)) order2=order
-    array_=NINT(array)
-end subroutine
+   subroutine qsort_array_i(array_, order2)
+      implicit none
+      integer, dimension(:)                    :: array_
+      real, dimension(size(array_))            :: array
+      real, dimension(size(array))             :: backup
+      integer, dimension(size(array))          :: order
+      integer, dimension(size(array)), optional :: order2
+      integer                                 :: i
+      do i = 1, size(order)
+         order(i) = i
+      enddo
+      array = float(array_)
+      call qsort_sort_r(array, order, 1, size(array))
+      do i = 1, size(order)
+         backup(i) = array(order(i))
+      enddo
+      array = backup
+      if (present(order2)) order2 = order
+      array_ = NINT(array)
+   end subroutine
 
 !***********************************************
 !***********************************************
@@ -1087,28 +1084,28 @@ end subroutine
 !***********************************************
 !***********************************************
 
-recursive subroutine qsort_sort( array, order, left, right )
-implicit none
-    real(8), dimension(:)         :: array
-    integer, dimension(:)         :: order
-    integer                       :: left
-    integer                       :: right
-    integer                       :: i
-    integer                       :: last
-    if ( left .ge. right ) return
-    call qsort_swap( order, left, qsort_rand(left,right) )
-    last = left
-    do i = left+1, right
-        if ( compare(array(order(i)), array(order(left)) ) .lt. 0 ) then
+   recursive subroutine qsort_sort(array, order, left, right)
+      implicit none
+      real(8), dimension(:)         :: array
+      integer, dimension(:)         :: order
+      integer                       :: left
+      integer                       :: right
+      integer                       :: i
+      integer                       :: last
+      if (left .ge. right) return
+      call qsort_swap(order, left, qsort_rand(left, right))
+      last = left
+      do i = left + 1, right
+         if (compare(array(order(i)), array(order(left))) .lt. 0) then
             last = last + 1
-            call qsort_swap( order, last, i )
-        endif
-    enddo
-    call qsort_swap( order, left, last )
-    call qsort_sort( array, order, left, last-1 )
-    call qsort_sort( array, order, last+1, right )
+            call qsort_swap(order, last, i)
+         endif
+      enddo
+      call qsort_swap(order, left, last)
+      call qsort_sort(array, order, left, last - 1)
+      call qsort_sort(array, order, last + 1, right)
 
-end subroutine qsort_sort
+   end subroutine qsort_sort
 
 !***********************************************
 !***********************************************
@@ -1120,27 +1117,27 @@ end subroutine qsort_sort
 !***********************************************
 !***********************************************
 
-recursive subroutine qsort_sort_r( array, order, left, right )
-implicit none
-    real,dimension(:)             :: array
-    integer, dimension(:)         :: order
-    integer                       :: left
-    integer                       :: right
-    integer                       :: i
-    integer                       :: last
-    if ( left .ge. right ) return
-    call qsort_swap( order, left, qsort_rand(left,right) )
-    last = left
-    do i = left+1, right
-        if ( compare_r(array(order(i)), array(order(left)) ) .lt. 0 ) then
+   recursive subroutine qsort_sort_r(array, order, left, right)
+      implicit none
+      real, dimension(:)             :: array
+      integer, dimension(:)         :: order
+      integer                       :: left
+      integer                       :: right
+      integer                       :: i
+      integer                       :: last
+      if (left .ge. right) return
+      call qsort_swap(order, left, qsort_rand(left, right))
+      last = left
+      do i = left + 1, right
+         if (compare_r(array(order(i)), array(order(left))) .lt. 0) then
             last = last + 1
-            call qsort_swap( order, last, i )
-        endif
-    enddo
-    call qsort_swap( order, left, last )
-    call qsort_sort_r( array, order, left, last-1 )
-    call qsort_sort_r( array, order, last+1, right )
-end subroutine
+            call qsort_swap(order, last, i)
+         endif
+      enddo
+      call qsort_swap(order, left, last)
+      call qsort_sort_r(array, order, left, last - 1)
+      call qsort_sort_r(array, order, last + 1, right)
+   end subroutine
 
 !***********************************************
 !***********************************************
@@ -1152,15 +1149,15 @@ end subroutine
 !***********************************************
 !***********************************************
 
-subroutine qsort_swap( order, first, second )
-implicit none
-    integer, dimension(:)         :: order
-    integer                       :: first, second
-    integer                       :: tmp
-    tmp           = order(first)
-    order(first)  = order(second)
-    order(second) = tmp
-end subroutine
+   subroutine qsort_swap(order, first, second)
+      implicit none
+      integer, dimension(:)         :: order
+      integer                       :: first, second
+      integer                       :: tmp
+      tmp = order(first)
+      order(first) = order(second)
+      order(second) = tmp
+   end subroutine
 
 !***********************************************
 !***********************************************
@@ -1172,13 +1169,13 @@ end subroutine
 !***********************************************
 !***********************************************
 
-integer function qsort_rand( lower, upper )
-implicit none
-    integer                       :: lower, upper
-    real(4)                       :: r
-    r=real(drand1(), kind=4)
-    qsort_rand =  lower + nint(r * (upper-lower))
-end function qsort_rand
+   integer function qsort_rand(lower, upper)
+      implicit none
+      integer                       :: lower, upper
+      real(4)                       :: r
+      r = real(drand1(), kind=4)
+      qsort_rand = lower + nint(r*(upper - lower))
+   end function qsort_rand
 
 !***********************************************
 !***********************************************
@@ -1189,7 +1186,7 @@ end function qsort_rand
 !***********************************************
 !***********************************************
 !***********************************************
-!  
+!
 !     recursive function qfindmm(a, b, l, r) result(res)
 !       !bissection recursive
 !       implicit none
@@ -1211,7 +1208,7 @@ end function qsort_rand
 !        res=qfindmm(a,b,m+1,r)
 !       endif
 !     end function
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -1221,38 +1218,38 @@ end function qsort_rand
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 !   subroutine fastsearchrealwithdeg(xx,tab,jmin,jmax,err)
 !   implicit none
 !   integer          :: i,j,k,l,siz,jmin,jmax
 !   real(8)          :: xx,tab(:),err2
 !   real(8),optional :: err
-! 
+!
 !   err2=1.d-3
 !   if(present(err)) err2=err
-! 
+!
 !   siz=size(tab(:))
 !   i=searchwitherror(xx,tab,err2)
-! 
+!
 !   jmin=i; jmax=i
-! 
-!   do 
+!
+!   do
 !    jmin=jmin-1
 !    if(jmin<1) exit
 !    if(abs(tab(jmin)-xx)>err2) exit
 !   enddo
 !   jmin=max(1,jmin)
-! 
+!
 !   do
 !    jmax=jmax+1
 !    if(jmax>siz) exit
 !    if(abs(tab(jmax)-xx)>err2) exit
 !   enddo
 !   jmax=min(size(tab),jmax)
-! 
+!
 !   return
 !   end subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -1262,54 +1259,54 @@ end function qsort_rand
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
-   function fastsearchreal_r(xx,tab)
-   implicit none
-   !bissection non recursive
-   !LES BIN COMMENCE A GAUCHE : gauche_bin_i=tab(xi)
-   integer :: i1,i2,is,siz
-   real(4) :: xx,tab(:)
-   integer :: fastsearchreal_r
-   siz=size(tab)
-   is=siz/2
-   i1=1
-   i2=siz
-   fastsearchreal_r=0
-   if(tab(1)>xx)then
-    fastsearchreal_r=siz
-    write(*,*) 'element pas dans le tableau'
-    return
-   endif
-   if(tab(siz)<=xx)then
-    fastsearchreal_r=siz
-    return
-   endif
-     do
-     !*********************************
-     if(tab(is)<=xx) then
-      i1=is
-      is=i1+max(1,(i2-i1)/2)
-      goto 28
-     endif
-     !*********************************
-     if(tab(is)>xx)then
-      i2=is
-      is=i1+(i2-i1)/2
-      goto 28
-     endif
-     !**********************************
-     28 continue
-     if(is==siz.and.tab(is)<=xx)then
-      fastsearchreal_r=is
-      return
-     endif
-     if(is+1<=siz)then
-     if(tab(is)<=xx.and.tab(is+1)>xx)then
-      fastsearchreal_r=is
-      return
-     endif
-     endif
-     enddo
+!
+   function fastsearchreal_r(xx, tab)
+      implicit none
+      !bissection non recursive
+      !LES BIN COMMENCE A GAUCHE : gauche_bin_i=tab(xi)
+      integer :: i1, i2, is, siz
+      real(4) :: xx, tab(:)
+      integer :: fastsearchreal_r
+      siz = size(tab)
+      is = siz/2
+      i1 = 1
+      i2 = siz
+      fastsearchreal_r = 0
+      if (tab(1) > xx) then
+         fastsearchreal_r = siz
+         write (*, *) 'element pas dans le tableau'
+         return
+      endif
+      if (tab(siz) <= xx) then
+         fastsearchreal_r = siz
+         return
+      endif
+      do
+         !*********************************
+         if (tab(is) <= xx) then
+            i1 = is
+            is = i1 + max(1, (i2 - i1)/2)
+            goto 28
+         endif
+         !*********************************
+         if (tab(is) > xx) then
+            i2 = is
+            is = i1 + (i2 - i1)/2
+            goto 28
+         endif
+         !**********************************
+28       continue
+         if (is == siz .and. tab(is) <= xx) then
+            fastsearchreal_r = is
+            return
+         endif
+         if (is + 1 <= siz) then
+         if (tab(is) <= xx .and. tab(is + 1) > xx) then
+            fastsearchreal_r = is
+            return
+         endif
+         endif
+      enddo
    end function
 
 !***********************************************
@@ -1322,56 +1319,55 @@ end function qsort_rand
 !***********************************************
 !***********************************************
 
-  function fastsearchreal_d(xx,tab)
-  implicit none
-   !bissection non recursive
-   !LES BIN COMMENCE A GAUCHE : gauche_bin_i=tab(xi)
-   integer :: i1,i2,is,siz
-   real(8)  :: xx,tab(:)
-   integer :: fastsearchreal_d
-   siz=size(tab)
-   is=siz/2
-   i1=1
-   i2=siz
-   fastsearchreal_d=0
-   if(tab(1)>xx)then
-    fastsearchreal_d=siz
-    write(*,*) 'element pas dans le tableau'
-    return
-   endif
-   if(tab(siz)<=xx)then
-    fastsearchreal_d=siz
-    return
-   endif
-     do
-     !*********************************
-     if(tab(is)<=xx) then
-      i1=is
-      is=i1+max(1,(i2-i1)/2)
-      goto 28
-     endif
-     !*********************************
-     if(tab(is)>xx)then
-      i2=is
-      is=i1+(i2-i1)/2
-      goto 28
-     endif
-     !**********************************
-     28 continue
-     if(is==siz.and.tab(is)<=xx)then
-      fastsearchreal_d=is
-      return
-     endif
-     if(is+1<=siz)then
-     if(tab(is)<=xx.and.tab(is+1)>xx)then
-      fastsearchreal_d=is
-      return
-     endif
-     endif
-     enddo
+   function fastsearchreal_d(xx, tab)
+      implicit none
+      !bissection non recursive
+      !LES BIN COMMENCE A GAUCHE : gauche_bin_i=tab(xi)
+      integer :: i1, i2, is, siz
+      real(8)  :: xx, tab(:)
+      integer :: fastsearchreal_d
+      siz = size(tab)
+      is = siz/2
+      i1 = 1
+      i2 = siz
+      fastsearchreal_d = 0
+      if (tab(1) > xx) then
+         fastsearchreal_d = siz
+         write (*, *) 'element pas dans le tableau'
+         return
+      endif
+      if (tab(siz) <= xx) then
+         fastsearchreal_d = siz
+         return
+      endif
+      do
+         !*********************************
+         if (tab(is) <= xx) then
+            i1 = is
+            is = i1 + max(1, (i2 - i1)/2)
+            goto 28
+         endif
+         !*********************************
+         if (tab(is) > xx) then
+            i2 = is
+            is = i1 + (i2 - i1)/2
+            goto 28
+         endif
+         !**********************************
+28       continue
+         if (is == siz .and. tab(is) <= xx) then
+            fastsearchreal_d = is
+            return
+         endif
+         if (is + 1 <= siz) then
+         if (tab(is) <= xx .and. tab(is + 1) > xx) then
+            fastsearchreal_d = is
+            return
+         endif
+         endif
+      enddo
    end function
 
-
 !***********************************************
 !***********************************************
 !***********************************************
@@ -1381,12 +1377,12 @@ end function qsort_rand
 !***********************************************
 !***********************************************
 !***********************************************
-! 
+!
 !    function searchwitherror_r(xx,tab,error)
 !    implicit none
-! 
+!
 !    !LES BIN COMMENCE A GAUCHE : gauche_bin_i=tab(xi)
-! 
+!
 !    integer                         :: i1,i2,is,siz,jj
 !    real(8),intent(in),dimension(:) :: tab
 !    real(8),intent(in)              :: xx,error
@@ -1436,7 +1432,7 @@ end function qsort_rand
 !      is=1
 !      return
 !    end function
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -1446,17 +1442,17 @@ end function qsort_rand
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 !    function searchwitherror_f(xx,tab,error,calls,func)
 !    implicit none
-! 
+!
 !    !LES BIN COMMENCE A GAUCHE : gauche_bin_i=tab(xi)
-! 
+!
 !    integer                         :: i1,i2,is,siz,jj,calls
 !    real(8),intent(in),dimension(:) :: tab
 !    real(8),intent(in)              :: xx,error
 !    integer                         :: searchwitherror_f
-! 
+!
 !    interface
 !     real(8) function func(x,i)
 !     implicit none
@@ -1464,15 +1460,15 @@ end function qsort_rand
 !     integer      :: i
 !     end function
 !    end interface
-!    
+!
 !    calls=NINT(func(0.d0,-2))
-! 
+!
 !    siz=size(tab(:))
 !    is=siz/2
 !    i1=1
 !    i2=siz
 !    searchwitherror_f=0
-! 
+!
 !      if(func(tab(1),1)-error>xx)then
 !        searchwitherror_f=0
 !        goto 31
@@ -1481,9 +1477,9 @@ end function qsort_rand
 !        searchwitherror_f=siz
 !        goto 31
 !      endif
-! 
+!
 !      do jj=1,100000
-! 
+!
 !      !*********************************
 !      if(func(tab(is),1)-error<xx) then
 !       i1=is
@@ -1498,7 +1494,7 @@ end function qsort_rand
 !      endif
 !      !**********************************
 !      28 continue
-! 
+!
 !      if(is==siz.and.func(tab(is),1)-error<=xx)then
 !       searchwitherror_f=is
 !       goto 31
@@ -1509,22 +1505,22 @@ end function qsort_rand
 !        goto 31
 !       endif
 !      endif
-! 
-! 
+!
+!
 !      enddo
-! 
-! 
+!
+!
 !      write(*,*) 'elements not found in search'
 !      write(*,*) 'elements : ', xx
 !      is=1
-! 
-! 
+!
+!
 ! 31   continue
 !      calls=NINT(func(0.d0,-1))
 !      return
-! 
+!
 !    end function
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -1534,7 +1530,7 @@ end function qsort_rand
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 !     recursive subroutine qsortmm(a,order,l,r)
 !       implicit none
 !       integer*4,dimension(:)                 :: order
@@ -1564,10 +1560,10 @@ end function qsort_rand
 !       enddo
 !       if(l.lt.j) call qsortmm(a,order,l,j)
 !       if(i.lt.r) call qsortmm(a,order,i,r)
-! 
+!
 !      return
 !     end subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -1657,7 +1653,7 @@ end function qsort_rand
 !       endif
 !       goto 1
 !       END subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -1667,7 +1663,7 @@ end function qsort_rand
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 !       SUBROUTINE SORTLI(N,RA1,IA1,IA2,IA3)
 !       REAL RA1, RRA1
 !       INTEGER L, N, IR, I, J, IRA1, IRA2, IRA3, IA1, IA2, IA3
@@ -1722,9 +1718,9 @@ end function qsort_rand
 !       IA2(I)=IRA2
 !       IA3(I)=IRA3
 !       GO TO 10
-! 
+!
 !       END subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -1734,7 +1730,7 @@ end function qsort_rand
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 !       SUBROUTINE SORTPP(N,ITYPE,RA1,RA2,RA3)
 !       REAL RA1, RA2, RA3, RRA1, RRA2, RRA3
 !       INTEGER ITYPE(*), L, N, IR, I, J, IRRA1
@@ -1790,7 +1786,7 @@ end function qsort_rand
 !       RA3(I)=RRA3
 !       GO TO 10
 !       END subroutine
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -1800,7 +1796,7 @@ end function qsort_rand
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 !       SUBROUTINE SSORT_ (X, IY, N)
 !       IMPLICIT NONE
 ! !
@@ -1836,7 +1832,7 @@ end function qsort_rand
 !   200 END DO
 !   300 RETURN
 !       END SUBROUTINE
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -1846,8 +1842,8 @@ end function qsort_rand
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
-! 
+!
+!
 ! SUBROUTINE creorder( e,isrt,flg )
 ! !!!----------------------------------------------------------------------!!!
 ! !!!  subroutine creorder( e,isrt,flg )                                   !!!
@@ -1878,12 +1874,12 @@ end function qsort_rand
 !   INTEGER    :: flg,isrt(4)
 !   complex(8) :: e(4)
 !   !---------- Local parameters ----------
-!   real(8), parameter :: eps = 1.d-6   
+!   real(8), parameter :: eps = 1.d-6
 !   !---------- Local variables ----------
 !   INTEGER    :: p,q,idx
 !   real(8)    :: rez,imz
 !   complex(8) :: z,w,e_new(4)
-! 
+!
 !   !---------- Set up prime number matrix ----------
 !   idx = 1
 !   DO p = 1,3
@@ -1933,9 +1929,9 @@ end function qsort_rand
 !      e(p) = e_new(p)
 !   ENDDO
 !   RETURN
-! END SUBROUTINE 
-! 
-! 
+! END SUBROUTINE
+!
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -1945,8 +1941,8 @@ end function qsort_rand
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
-! 
+!
+!
 ! FUNCTION prime(p,q)
 ! !!!------------------------------------------------------------------------!!!
 ! !!!  This function associates a prime number to pairs of small integers.   !!!
@@ -1967,8 +1963,8 @@ end function qsort_rand
 !   ENDIF
 !   RETURN
 ! END FUNCTION prime
-! 
-! 
+!
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -1978,8 +1974,8 @@ end function qsort_rand
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
-! 
+!
+!
 ! SUBROUTINE setmap(v,a,b,c,d)
 ! !!!-----------------------------------------------------------!!!
 ! !!!                                                           !!!
@@ -1994,9 +1990,9 @@ end function qsort_rand
 !   v(3) = c
 !   v(4) = d
 !   RETURN
-! 
+!
 ! END SUBROUTINE
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -2006,7 +2002,7 @@ end function qsort_rand
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! SUBROUTINE Permute_TEV_g(ndim, zp, indx)
 !   IMPLICIT NONE
 !   complex(8), intent(inout) :: zp(ndim,4)
@@ -2020,8 +2016,8 @@ end function qsort_rand
 !      ENDDO
 !      zp(:,i) = eval
 !   ENDDO
-! END SUBROUTINE 
-! 
+! END SUBROUTINE
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -2031,7 +2027,7 @@ end function qsort_rand
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! SUBROUTINE InversePermute_g(ndim, indx, wgh)
 !   IMPLICIT NONE
 !   complex(8), intent(inout) :: wgh(ndim,4)
@@ -2045,8 +2041,8 @@ end function qsort_rand
 !      ENDDO
 !      wgh(:,i) = eval
 !   ENDDO
-! END SUBROUTINE 
-! 
+! END SUBROUTINE
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -2056,7 +2052,7 @@ end function qsort_rand
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! SUBROUTINE eig_order_real_part(ev, idxarr, ndim)
 !   IMPLICIT NONE
 ! !!!-----------------------------------------------------------------!!!
@@ -2100,7 +2096,7 @@ end function qsort_rand
 !   DEALLOCATE(sortonr, sorted)
 !   RETURN
 ! END SUBROUTINE eig_order_real_part
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -2110,7 +2106,7 @@ end function qsort_rand
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! SUBROUTINE permute_eigensystem(idxarr, ev, evl, evr, ndim)
 !   IMPLICIT NONE
 !   !---------- Passed variables ----------
@@ -2143,13 +2139,13 @@ end function qsort_rand
 !   DEALLOCATE(eval, evec)
 !   RETURN
 ! END SUBROUTINE permute_eigensystem
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-! 
+!
 ! SUBROUTINE permute_eigenvals(idxarr, ev, ndim)
 !   IMPLICIT NONE
 !   !---------- Passed variables ----------
@@ -2169,7 +2165,7 @@ end function qsort_rand
 !   DEALLOCATE(eval)
 !   RETURN
 ! END SUBROUTINE permute_eigenvals
-! 
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -2180,37 +2176,37 @@ end function qsort_rand
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
-!        
-! ! sorting subroutine                                                 
-! 
-!       SUBROUTINE EIGSRT (D, V, N, NP) 
-!       IMPLICIT none 
-!       INTEGER N, NP, i, k, j 
-!       REAL(8) D (NP), V (NP, NP) 
-!       REAL(8) P 
-!                                                                         
-!       DO 13 I = 1, N - 1 
-!          K = I 
-!          P = D (I) 
-!          DO 11 J = I + 1, N 
-!             IF (D (J) .GE.P) THEN 
-!                K = J 
-!                P = D (J) 
-!             ENDIF 
-!    11    END DO 
-!          IF (K.NE.I) THEN 
-!             D (K) = D (I) 
-!             D (I) = P 
-!             DO 12 J = 1, N 
-!                P = V (J, I) 
-!                V (J, I) = V (J, K) 
-!                V (J, K) = P 
-!    12       END DO 
-!          ENDIF 
-!    13 END DO 
-!       RETURN 
-!       END SUBROUTINE                   
-! 
+!
+! ! sorting subroutine
+!
+!       SUBROUTINE EIGSRT (D, V, N, NP)
+!       IMPLICIT none
+!       INTEGER N, NP, i, k, j
+!       REAL(8) D (NP), V (NP, NP)
+!       REAL(8) P
+!
+!       DO 13 I = 1, N - 1
+!          K = I
+!          P = D (I)
+!          DO 11 J = I + 1, N
+!             IF (D (J) .GE.P) THEN
+!                K = J
+!                P = D (J)
+!             ENDIF
+!    11    END DO
+!          IF (K.NE.I) THEN
+!             D (K) = D (I)
+!             D (I) = P
+!             DO 12 J = 1, N
+!                P = V (J, I)
+!                V (J, I) = V (J, K)
+!                V (J, K) = P
+!    12       END DO
+!          ENDIF
+!    13 END DO
+!       RETURN
+!       END SUBROUTINE
+!
 ! !***********************************************
 ! !***********************************************
 ! !***********************************************
@@ -2223,6 +2219,4 @@ end function qsort_rand
 ! !***********************************************
 
 end module
-
-
 

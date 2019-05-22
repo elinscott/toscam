@@ -1,305 +1,305 @@
 module geomlib
 
-use genvar
+   use genvar
 
-IMPLICIT NONE
+   IMPLICIT NONE
 
 contains
-! 
-! !ARC_COSINE computes the arc cosine function, with argument truncation. 
-! !ANGLE_CONTAINS_RAY_2D determines if an angle contains a ray, in 2D. 
-! !ANGLE_DEG_2D returns the angle swept out between two rays in 2D. 
-! !ANGLE_RAD_2D returns the angle swept out between two rays in 2D. 
-! !ANGLE_RAD_3D returns the angle in radians between two rays in 3D. 
-! !ANGLE_RAD_ND returns the angle in radians between two rays in ND. 
-! !ANGLEI_DEG_2D returns the interior angle in degrees between two rays in 2D. 
-! !ANGLEI_RAD_2D returns the interior angle in radians between two rays in 2D. 
-! !ATAN4 computes the inverse tangent of the ratio Y / X. 
-! !BASIS_MAP_3D computes the matrix which maps one basis to another. 
-! !BOX_CONTAINS_POINT_3D determines if a point is inside a parallelepiped in 3D. 
-! !BOX_POINT_DIST_3D: distance ( parallelepiped, point ) in 3D. 
-! !CIRCLE_AREA_2D computes the area of a circle in 2D. 
-! !CIRCLE_LUNE_AREA_2D returns the area of a circular lune in 2D. 
-! !CIRCLE_LUNE_CENTROID_2D returns the centroid of a circular lune in 2D. 
-! !CIRCLE_SECTOR_AREA_2D computes the area of a circular sector in 2D. 
-! !CIRCLE_SECTOR_CENTROID_2D returns the centroid of a circular sector in 2D. 
-! !CIRCLE_TRIANGLE_AREA_2D returns the area of a circle triangle in 2D. 
-! !CIRCLE_DIA2IMP_2D converts a diameter to an implicit circle in 2D. 
-! !CIRCLE_EXP_CONTAINS_POINT_2D determines if an explicit circle contains a point in 2D. 
-! !CIRCLE_EXP2IMP_2D converts a circle from explicit to implicit form in 2D. 
-! !CIRCLE_IMP_CONTAINS_POINT_2D determines if an implicit circle contains a point in 2D. 
-! !CIRCLE_IMP_LINE_PAR_INT_2D: ( implicit circle, parametric line ) intersection in 2D. 
-! !CIRCLE_IMP_POINTS_2D returns N equally spaced points on an implicit circle in 2D. 
-! !CIRCLE_IMP_POINTS_ARC_2D returns N points on an arc of an implicit circle in 2D. 
-! !CONE_AREA_3D computes the surface area of a right circular cone in 3D. 
-! !CONE_SECTOR_CENTROID_2D returns the centroid of a cone in 3D. 
-! !CONE_VOLUME_3D computes the volume of a right circular cone in 3D. 
-! !CONV3D converts 3D data to a 2D projection. 
-! !CORPL_2D "boxes" an angle defined by three points in 2D. 
-! !COT returns the cotangent of an angle. 
-! !COTD returns the cotangent of an angle given in degrees. 
-! !CROSS_2D finds the cross product of a pair of vectors in 2D. 
-! !CROSS_3D computes the cross product of two vectors in 3D. 
-! !CROSS0_2D finds the cross product of (P1-P0) and (P2-P0) in 2D. 
-! !CROSS0_3D computes the cross product of (P1-P0) and (P2-P0) in 3D. 
-! !CUBE_SHAPE_3D describes a cube in 3D. 
-! !DEGREES_TO_RADIANS converts an angle from degrees to radians. 
-! !DIRECTION_PERT_3D randomly perturbs a direction vector in 3D. 
-! !DIRECTION_RANDOM_3D picks a random direction vector in 3D. 
-! !DIRECTION_RANDOM_ND generates a random direction vector in ND. 
-! !DODEC_SHAPE_3D describes an dodecahedron in 3D. 
-! !DOT_2D computes the dot product of a pair of vectors in 2D. 
-! !DOT_3D computes the dot product of a pair of vectors in 3D. 
-! !DOT_ND computes the dot product of a pair of vectors in ND. 
-! !DOT0_2D computes the dot product of (P1-P0) and (P2-P0) in 2D. 
-! !DOT0_3D computes the dot product of (P1-P0) and (P2-P0) in 3D. 
-! !DUAL_SHAPE_3D constructs the dual of a shape in 3D. 
-! !ELLIPSE_AREA_2D returns the area of an ellipse in 2D. 
-! !ELLIPSE_POINTS_2D returns N points on an ellipse in 2D. 
-! !ELLIPSE_POINTS_ARC_2D returns N points on an elliptical arc in 2D. 
-! !ENORM_2D computes the Euclidean norm of a vector in 2D. 
-! !ENORM_3D computes the Euclidean norm of a vector in 3D. 
-! !ENORM_ND computes the Euclidean norm of a vector in ND. 
-! !ENORM0_2D computes the Euclidean norm of (P1-P0) in 2D. 
-! !ENORM0_3D computes the Euclidean norm of (P1-P0) in 3D. 
-! !ENORM0_ND computes the Euclidean norm of (P1-P0) in ND. 
-! !ENORMSQ0_2D computes the square of the Euclidean norm of (P1-P0) in 2D. 
-! !ENORMSQ0_3D computes the square of the Euclidean norm of (P1-P0) in 3D. 
-! !ENORMSQ0_ND computes the squared Euclidean norm of (P1-P0) in ND. 
-! !GLOB2LOC_3D converts from a global to a local coordinate system in 3D. 
-! !HALFSPACE_IMP_TRIANGLE_INT_3D: intersection ( implicit halfspace, triangle ) in 3D. 
-! !HALFSPACE_NORM_TRIANGLE_INT_3D: intersection ( normal halfspace, triangle ) in 3D. 
-! !HALFSPACE_TRIANGLE_INT_3D: intersection ( halfspace, triangle ) in 3D. 
-! !HELIX_SHAPE_3D computes points on a helix in 3D. 
-! !HEXAGON_AREA_2D returns the area of a regular hexagon in 2D. 
-! !HEXAGON_UNIT_AREA_2D returns the area of a unit regular hexagon in 2D. 
-! !HEXAGON_SHAPE_2D returns points on the unit hexagon in 2D. 
-! !I_RANDOM returns a random integer in a given range. 
-! !I_SWAP switches two integer values. 
-! !ICOL_FIND_ITEM searches a table by columns for a given value. 
-! !ICOL_FIND_ITEM wrap searches a table by columns for a pair of items. 
-! !ICOS_SHAPE_3D describes an icosahedron in 3D. 
-! !LINE_EXP_POINT_DIST_2D: distance ( explicit line, point ) in 2D. 
-! !LINE_EXP_POINT_DIST_3D: distance ( explicit line, point ) in 3D. 
-! !LINE_EXP_POINT_DIST_SIGNED_2D: signed distance ( explicit line, point ) in 2D. 
-! !LINE_EXP_POINT_NEAR_2D computes the point on an explicit line nearest a point in 2D. 
-! !LINE_EXP_POINT_NEAR_3D: nearest point on explicit line to point in 3D. 
-! !LINE_EXP2IMP_2D converts an explicit line to implicit form in 2D. 
-! !LINE_EXP2PAR_2D converts a line from explicit to parametric form in 2D. 
-! !LINE_EXP2PAR_3D converts a line from explicit to parametric form in 3D. 
-! !LINE_IMP2PAR_2D converts an implicit line to parametric form in 2D. 
-! !LINE_IMP_POINT_DIST_2D: distance ( implicit line, point ) in 2D. 
-! !LINE_IMP_POINT_DIST_3D: distance ( implicit line, point ) in 3D. 
-! !LINE_IMP_POINT_DIST_SIGNED_2D: signed distance ( implicit line, point ) in 2D. 
-! !LINE_PAR2IMP_2D converts a parametric line to implicit form in 2D. 
-! !LINE_PAR_POINT_DIST_2D: distance ( parametric line, point ) in 2D. 
-! !LINE_PAR_POINT_DIST_3D: distance ( parametric line, point ) in 3D. 
-! !LINE_SEG_CONTAINS_POINT_1D reports if a line  contains a point in 1D. 
-! !LINE_SEG_CONTAINS_POINT_2D reports if a line segment contains a point in 2D. 
-! !LINE_SEG_POINT_DIST_2D: distance ( line segment, point ) in 2D. 
-! !LINE_SEG_POINT_DIST_3D: distance ( line segment, point ) in 3D. 
-! !LINE_SEG_POINT_NEAR_2D finds the point on a line segment nearest a point in 2D. 
-! !LINE_SEG_POINT_NEAR_3D finds the point on a line segment nearest a point in 3D. 
-! !LINES_EXP_ANGLE_3D finds the angle between two explicit lines in 3D. 
-! !LINES_EXP_ANGLE_ND returns the angle between two explicit lines in ND. 
-! !LINES_EXP_DIST_3D computes the distance between two explicit lines in 3D. 
-! !LINES_EXP_INT_2D determines where two explicit lines intersect in 2D. 
-! !LINES_IMP_ANGLE_2D finds the angle between two implicit lines in 2D. 
-! !LINES_IMP_DIST_2D determines the distance between two implicit lines in 2D. 
-! !LINES_IMP_INT_2D determines where two implicit lines intersect in 2D. 
-! !LINES_PAR_ANGLE_2D finds the angle between two parametric lines in 2D. 
-! !LINES_PAR_ANGLE_3D finds the angle between two parametric lines in 3D. 
-! !LINES_PAR_DIST_3D finds the distance between two parametric lines in 3D. 
-! !LINES_PAR_INT_2D determines where two parametric lines intersect in 2D. 
-! !LINES_SEG_DIST_2D computes the distance between two line segments in 2D. 
-! !LINES_SEG_DIST_3D computes the distance between two line segments in 3D. 
-! !LINES_SEG_INT_1D computes the intersection of two line segments in 1D. 
-! !LINES_SEG_INT_2D computes the intersection of two line segments in 2D. 
-! !LOC2GLOB_3D converts from a local to global coordinate system in 3D. 
-! !MINABS finds a local minimum of F(X) = A * abs ( X ) + B. 
-! !MINQUAD finds a local minimum of F(X) = A * X * X + B * X + C. 
-! !NORMAL_01_SAMPLE samples the standard Normal PDF. 
-! !NORP2L_2D finds two points on a line normal to a given line in 2D. 
-! !OCTAHEDRON_SHAPE_3D describes an octahedron in 3D. 
-! !PARA_CONTAINS_POINT_2D determines if a point is inside a parallelogram in 2D. 
-! !PARA_CONTAINS_POINT_3D determines if a point is inside a parallelogram in 3D. 
-! !PARA_POINT_DIST_3D: distance ( parallelogram, point ) in 3D. 
-! !PARABOLA_EX finds the extremal point of a parabola determined by three points. 
-! !PARABOLA_EX2 finds the extremal point of a parabola determined by three points. 
-! !PI returns the value of pi. 
-! !PLANE_EXP_NORMAL_3D finds the normal to an explicit plane in 3D. 
-! !PLANE_EXP_POINT_DIST_3D: distance ( explicit plane, point ) in 3D. 
-! !PLANE_EXP_PROJECT_3D projects points through a point onto a plane in 3D. 
-! !PLANE_EXP2IMP_3D converts an explicit plane to implicit form in 3D. 
-! !PLANE_EXP2NORM_3D converts an explicit plane to normal form in 3D. 
-! !PLANE_GRID_3D computes points and lines making up a planar grid in 3D. 
-! !PLANE_IMP_LINE_PAR_INT_3D: intersection ( implicit plane, parametric line ) in 3D. 
-! !PLANE_IMP_LINE_SEG_NEAR_3D: nearest ( implicit plane, line segment ) in 3D. 
-! !PLANE_IMP_POINT_DIST_3D: distance ( implicit plane, point ) in 3D. 
-! !PLANE_IMP_POINT_DIST_SIGNED_3D: signed distance ( implicit plane, point) in 3D. 
-! !PLANE_IMP_POINT_NEAR_3D: nearest point on a implicit plane to a point in 3D. 
-! !PLANE_IMP_TRIANGLE_INT_3D: intersection ( implicit plane, triangle ) in 3D. 
-! !PLANE_IMP_TRIANGLE_NEAR_3D: nearest ( implicit plane, triangle ) in 3D. 
-! !PLANE_IMP2EXP_3D converts an implicit plane to explicit form in 3D. 
-! !PLANE_IMP2NORM_3D converts an implicit plane to normal form in 3D. 
-! !PLANE_NORM_BASIS_3D finds two perpendicular vectors in a plane in 3D. 
-! !PLANE_NORM_TRIANGLE_INT_3D: intersection ( normal plane, triangle ) in 3D. 
-! !PLANE_NORM2EXP_3D converts a normal plane to explicit form in 3D. 
-! !PLANE_NORM2IMP_3D converts a normal form plane to implicit form in 3D. 
-! !PLANE_TRIANGLE_INT_ADD_3D is a utility for plane/triangle intersections. 
-! !POINTS_AVOID_POINT_NAIVE_2D determines if a point is "far enough" from a set of points in 2D. 
-! !POINTS_BISECT_LINE_IMP_2D finds the implicit line bisecting the line between two points in 2D. 
-! !POINTS_BISECT_LINE_PAR_2D finds the parametric line bisecting the line between two points in 2D. 
-! !POINTS_CENTROID_2D computes the discrete centroid of a point set in 2D. 
-! !POINTS_COLIN_2D estimates the colinearity of 3 points in 2D. 
-! !POINTS_COLIN_3D estimates the colinearity of 3 points in 3D. 
-! !POINTS_DELAUNAY_NAIVE_2D is a naive Delaunay triangulation scheme. 
-! !POINTS_DIST_2D finds the distance between two points in 2D. 
-! !POINTS_DIST_3D finds the distance between two points in 3D. 
-! !POINTS_DIST_ND finds the distance between two points in ND. 
-! !POINTS_HULL_2D computes the convex hull of a set of points in 2D. 
-! !POINTS_NEAREST_POINT_NAIVE_ND finds the nearest point to a given point in ND. 
-! !POLYGON_1_2D integrates the function 1 over a polygon in 2D. 
-! !POLYGON_X_2D integrates the function X over a polygon in 2D. 
-! !POLYGON_Y_2D integrates the function Y over a polygon in 2D. 
-! !POLYGON_XX_2D integrates the function X*X over a polygon in 2D. 
-! !POLYGON_XY_2D integrates the function X*Y over a polygon in 2D. 
-! !POLYGON_YY_2D integrates the function Y*Y over a polygon in 2D. 
-! !POLYGON_AREA_2D computes the area of a polygon in 2D. 
-! !POLYGON_AREA_2_2D computes the area of a polygon in 2D. 
-! !POLYGON_AREA_3D computes the area of a polygon in 3D. 
-! !POLYGON_AREA_2_3D computes the area of a polygon in 3D. 
-! !POLYGON_CENTROID_2D computes the centroid of a polygon in 2D. 
-! !POLYGON_CENTROID_2_2D computes the centroid of a polygon in 2D. 
-! !POLYGON_CENTROID_3D computes the centroid of a polygon in 3D. 
-! !POLYGON_CONTAINS_POINT_2D finds if a point is inside a simple polygon in 2D. 
-! !POLYGON_CONTAINS_POINT_2_2D finds if a point is inside a convex polygon in 2D. 
-! !POLYGON_CONVEX determines whether a polygon is convex in 2D. 
-! !POLYGON_INRAD_DATA_2D determines polygonal data from its inner radius in 2D. 
-! !POLYGON_OUTRAD_DATA_2D determines polygonal data from its outer radius in 2D. 
-! !POLYGON_SIDE_DATA_2D determines polygonal data from its side length in 2D. 
-! !POLYHEDRON_SURFACE_3D computes the surface area of a polyhedron in 3D. 
-! !POLYHEDRON_VOLUME_3D computes the volume of a polyhedron in 3D. 
-! !POLYLINE_INDEX_POINT_ND evaluates a polyline at a given arclength in ND. 
-! !POLYLINE_LENGTH_ND computes the length of a polyline in ND. 
-! !PROPLANE2 produces 2D coordinates of points that lie in a plane, in 3D. 
-! !PROPLANE3 projects points orthographically onto a plane, in 3D. 
-! !PROVEC projects a vector from M space into N space. 
-! !PYRAMID_VOLUME_3D computes the volume of a pyramid with square base in 3D. 
-! !QUAD_AREA_2D computes the area of a quadrilateral in 2D. 
-! !QUAD_CONTAINS_POINT_2D finds if a point is inside a convex quadrilateral in 2D. 
-! !QUAD_POINT_DIST_2D finds the distance from a point to a quadrilateral in 2D. 
-! !QUAD_POINT_DIST_SIGNED_2D: signed distanct ( quadrilateral, point ) in 2D. 
-! !QUAT_CONJ conjugates a quaternion. 
-! !QUAT_INV inverts a quaternion. 
-! !QUAT_MUL multiplies two quaternions. 
-! !QUAT_NORM computes the norm of a quaternion. 
-! !R_MODP returns the nonnegative remainder of real division. 
-! !R_RANDOM returns a random real in a given range. 
-! !R_SWAP switches two real values. 
-! !RADEC_SEPARATION: separation between right ascension-declination points. 
+!
+! !ARC_COSINE computes the arc cosine function, with argument truncation.
+! !ANGLE_CONTAINS_RAY_2D determines if an angle contains a ray, in 2D.
+! !ANGLE_DEG_2D returns the angle swept out between two rays in 2D.
+! !ANGLE_RAD_2D returns the angle swept out between two rays in 2D.
+! !ANGLE_RAD_3D returns the angle in radians between two rays in 3D.
+! !ANGLE_RAD_ND returns the angle in radians between two rays in ND.
+! !ANGLEI_DEG_2D returns the interior angle in degrees between two rays in 2D.
+! !ANGLEI_RAD_2D returns the interior angle in radians between two rays in 2D.
+! !ATAN4 computes the inverse tangent of the ratio Y / X.
+! !BASIS_MAP_3D computes the matrix which maps one basis to another.
+! !BOX_CONTAINS_POINT_3D determines if a point is inside a parallelepiped in 3D.
+! !BOX_POINT_DIST_3D: distance ( parallelepiped, point ) in 3D.
+! !CIRCLE_AREA_2D computes the area of a circle in 2D.
+! !CIRCLE_LUNE_AREA_2D returns the area of a circular lune in 2D.
+! !CIRCLE_LUNE_CENTROID_2D returns the centroid of a circular lune in 2D.
+! !CIRCLE_SECTOR_AREA_2D computes the area of a circular sector in 2D.
+! !CIRCLE_SECTOR_CENTROID_2D returns the centroid of a circular sector in 2D.
+! !CIRCLE_TRIANGLE_AREA_2D returns the area of a circle triangle in 2D.
+! !CIRCLE_DIA2IMP_2D converts a diameter to an implicit circle in 2D.
+! !CIRCLE_EXP_CONTAINS_POINT_2D determines if an explicit circle contains a point in 2D.
+! !CIRCLE_EXP2IMP_2D converts a circle from explicit to implicit form in 2D.
+! !CIRCLE_IMP_CONTAINS_POINT_2D determines if an implicit circle contains a point in 2D.
+! !CIRCLE_IMP_LINE_PAR_INT_2D: ( implicit circle, parametric line ) intersection in 2D.
+! !CIRCLE_IMP_POINTS_2D returns N equally spaced points on an implicit circle in 2D.
+! !CIRCLE_IMP_POINTS_ARC_2D returns N points on an arc of an implicit circle in 2D.
+! !CONE_AREA_3D computes the surface area of a right circular cone in 3D.
+! !CONE_SECTOR_CENTROID_2D returns the centroid of a cone in 3D.
+! !CONE_VOLUME_3D computes the volume of a right circular cone in 3D.
+! !CONV3D converts 3D data to a 2D projection.
+! !CORPL_2D "boxes" an angle defined by three points in 2D.
+! !COT returns the cotangent of an angle.
+! !COTD returns the cotangent of an angle given in degrees.
+! !CROSS_2D finds the cross product of a pair of vectors in 2D.
+! !CROSS_3D computes the cross product of two vectors in 3D.
+! !CROSS0_2D finds the cross product of (P1-P0) and (P2-P0) in 2D.
+! !CROSS0_3D computes the cross product of (P1-P0) and (P2-P0) in 3D.
+! !CUBE_SHAPE_3D describes a cube in 3D.
+! !DEGREES_TO_RADIANS converts an angle from degrees to radians.
+! !DIRECTION_PERT_3D randomly perturbs a direction vector in 3D.
+! !DIRECTION_RANDOM_3D picks a random direction vector in 3D.
+! !DIRECTION_RANDOM_ND generates a random direction vector in ND.
+! !DODEC_SHAPE_3D describes an dodecahedron in 3D.
+! !DOT_2D computes the dot product of a pair of vectors in 2D.
+! !DOT_3D computes the dot product of a pair of vectors in 3D.
+! !DOT_ND computes the dot product of a pair of vectors in ND.
+! !DOT0_2D computes the dot product of (P1-P0) and (P2-P0) in 2D.
+! !DOT0_3D computes the dot product of (P1-P0) and (P2-P0) in 3D.
+! !DUAL_SHAPE_3D constructs the dual of a shape in 3D.
+! !ELLIPSE_AREA_2D returns the area of an ellipse in 2D.
+! !ELLIPSE_POINTS_2D returns N points on an ellipse in 2D.
+! !ELLIPSE_POINTS_ARC_2D returns N points on an elliptical arc in 2D.
+! !ENORM_2D computes the Euclidean norm of a vector in 2D.
+! !ENORM_3D computes the Euclidean norm of a vector in 3D.
+! !ENORM_ND computes the Euclidean norm of a vector in ND.
+! !ENORM0_2D computes the Euclidean norm of (P1-P0) in 2D.
+! !ENORM0_3D computes the Euclidean norm of (P1-P0) in 3D.
+! !ENORM0_ND computes the Euclidean norm of (P1-P0) in ND.
+! !ENORMSQ0_2D computes the square of the Euclidean norm of (P1-P0) in 2D.
+! !ENORMSQ0_3D computes the square of the Euclidean norm of (P1-P0) in 3D.
+! !ENORMSQ0_ND computes the squared Euclidean norm of (P1-P0) in ND.
+! !GLOB2LOC_3D converts from a global to a local coordinate system in 3D.
+! !HALFSPACE_IMP_TRIANGLE_INT_3D: intersection ( implicit halfspace, triangle ) in 3D.
+! !HALFSPACE_NORM_TRIANGLE_INT_3D: intersection ( normal halfspace, triangle ) in 3D.
+! !HALFSPACE_TRIANGLE_INT_3D: intersection ( halfspace, triangle ) in 3D.
+! !HELIX_SHAPE_3D computes points on a helix in 3D.
+! !HEXAGON_AREA_2D returns the area of a regular hexagon in 2D.
+! !HEXAGON_UNIT_AREA_2D returns the area of a unit regular hexagon in 2D.
+! !HEXAGON_SHAPE_2D returns points on the unit hexagon in 2D.
+! !I_RANDOM returns a random integer in a given range.
+! !I_SWAP switches two integer values.
+! !ICOL_FIND_ITEM searches a table by columns for a given value.
+! !ICOL_FIND_ITEM wrap searches a table by columns for a pair of items.
+! !ICOS_SHAPE_3D describes an icosahedron in 3D.
+! !LINE_EXP_POINT_DIST_2D: distance ( explicit line, point ) in 2D.
+! !LINE_EXP_POINT_DIST_3D: distance ( explicit line, point ) in 3D.
+! !LINE_EXP_POINT_DIST_SIGNED_2D: signed distance ( explicit line, point ) in 2D.
+! !LINE_EXP_POINT_NEAR_2D computes the point on an explicit line nearest a point in 2D.
+! !LINE_EXP_POINT_NEAR_3D: nearest point on explicit line to point in 3D.
+! !LINE_EXP2IMP_2D converts an explicit line to implicit form in 2D.
+! !LINE_EXP2PAR_2D converts a line from explicit to parametric form in 2D.
+! !LINE_EXP2PAR_3D converts a line from explicit to parametric form in 3D.
+! !LINE_IMP2PAR_2D converts an implicit line to parametric form in 2D.
+! !LINE_IMP_POINT_DIST_2D: distance ( implicit line, point ) in 2D.
+! !LINE_IMP_POINT_DIST_3D: distance ( implicit line, point ) in 3D.
+! !LINE_IMP_POINT_DIST_SIGNED_2D: signed distance ( implicit line, point ) in 2D.
+! !LINE_PAR2IMP_2D converts a parametric line to implicit form in 2D.
+! !LINE_PAR_POINT_DIST_2D: distance ( parametric line, point ) in 2D.
+! !LINE_PAR_POINT_DIST_3D: distance ( parametric line, point ) in 3D.
+! !LINE_SEG_CONTAINS_POINT_1D reports if a line  contains a point in 1D.
+! !LINE_SEG_CONTAINS_POINT_2D reports if a line segment contains a point in 2D.
+! !LINE_SEG_POINT_DIST_2D: distance ( line segment, point ) in 2D.
+! !LINE_SEG_POINT_DIST_3D: distance ( line segment, point ) in 3D.
+! !LINE_SEG_POINT_NEAR_2D finds the point on a line segment nearest a point in 2D.
+! !LINE_SEG_POINT_NEAR_3D finds the point on a line segment nearest a point in 3D.
+! !LINES_EXP_ANGLE_3D finds the angle between two explicit lines in 3D.
+! !LINES_EXP_ANGLE_ND returns the angle between two explicit lines in ND.
+! !LINES_EXP_DIST_3D computes the distance between two explicit lines in 3D.
+! !LINES_EXP_INT_2D determines where two explicit lines intersect in 2D.
+! !LINES_IMP_ANGLE_2D finds the angle between two implicit lines in 2D.
+! !LINES_IMP_DIST_2D determines the distance between two implicit lines in 2D.
+! !LINES_IMP_INT_2D determines where two implicit lines intersect in 2D.
+! !LINES_PAR_ANGLE_2D finds the angle between two parametric lines in 2D.
+! !LINES_PAR_ANGLE_3D finds the angle between two parametric lines in 3D.
+! !LINES_PAR_DIST_3D finds the distance between two parametric lines in 3D.
+! !LINES_PAR_INT_2D determines where two parametric lines intersect in 2D.
+! !LINES_SEG_DIST_2D computes the distance between two line segments in 2D.
+! !LINES_SEG_DIST_3D computes the distance between two line segments in 3D.
+! !LINES_SEG_INT_1D computes the intersection of two line segments in 1D.
+! !LINES_SEG_INT_2D computes the intersection of two line segments in 2D.
+! !LOC2GLOB_3D converts from a local to global coordinate system in 3D.
+! !MINABS finds a local minimum of F(X) = A * abs ( X ) + B.
+! !MINQUAD finds a local minimum of F(X) = A * X * X + B * X + C.
+! !NORMAL_01_SAMPLE samples the standard Normal PDF.
+! !NORP2L_2D finds two points on a line normal to a given line in 2D.
+! !OCTAHEDRON_SHAPE_3D describes an octahedron in 3D.
+! !PARA_CONTAINS_POINT_2D determines if a point is inside a parallelogram in 2D.
+! !PARA_CONTAINS_POINT_3D determines if a point is inside a parallelogram in 3D.
+! !PARA_POINT_DIST_3D: distance ( parallelogram, point ) in 3D.
+! !PARABOLA_EX finds the extremal point of a parabola determined by three points.
+! !PARABOLA_EX2 finds the extremal point of a parabola determined by three points.
+! !PI returns the value of pi.
+! !PLANE_EXP_NORMAL_3D finds the normal to an explicit plane in 3D.
+! !PLANE_EXP_POINT_DIST_3D: distance ( explicit plane, point ) in 3D.
+! !PLANE_EXP_PROJECT_3D projects points through a point onto a plane in 3D.
+! !PLANE_EXP2IMP_3D converts an explicit plane to implicit form in 3D.
+! !PLANE_EXP2NORM_3D converts an explicit plane to normal form in 3D.
+! !PLANE_GRID_3D computes points and lines making up a planar grid in 3D.
+! !PLANE_IMP_LINE_PAR_INT_3D: intersection ( implicit plane, parametric line ) in 3D.
+! !PLANE_IMP_LINE_SEG_NEAR_3D: nearest ( implicit plane, line segment ) in 3D.
+! !PLANE_IMP_POINT_DIST_3D: distance ( implicit plane, point ) in 3D.
+! !PLANE_IMP_POINT_DIST_SIGNED_3D: signed distance ( implicit plane, point) in 3D.
+! !PLANE_IMP_POINT_NEAR_3D: nearest point on a implicit plane to a point in 3D.
+! !PLANE_IMP_TRIANGLE_INT_3D: intersection ( implicit plane, triangle ) in 3D.
+! !PLANE_IMP_TRIANGLE_NEAR_3D: nearest ( implicit plane, triangle ) in 3D.
+! !PLANE_IMP2EXP_3D converts an implicit plane to explicit form in 3D.
+! !PLANE_IMP2NORM_3D converts an implicit plane to normal form in 3D.
+! !PLANE_NORM_BASIS_3D finds two perpendicular vectors in a plane in 3D.
+! !PLANE_NORM_TRIANGLE_INT_3D: intersection ( normal plane, triangle ) in 3D.
+! !PLANE_NORM2EXP_3D converts a normal plane to explicit form in 3D.
+! !PLANE_NORM2IMP_3D converts a normal form plane to implicit form in 3D.
+! !PLANE_TRIANGLE_INT_ADD_3D is a utility for plane/triangle intersections.
+! !POINTS_AVOID_POINT_NAIVE_2D determines if a point is "far enough" from a set of points in 2D.
+! !POINTS_BISECT_LINE_IMP_2D finds the implicit line bisecting the line between two points in 2D.
+! !POINTS_BISECT_LINE_PAR_2D finds the parametric line bisecting the line between two points in 2D.
+! !POINTS_CENTROID_2D computes the discrete centroid of a point set in 2D.
+! !POINTS_COLIN_2D estimates the colinearity of 3 points in 2D.
+! !POINTS_COLIN_3D estimates the colinearity of 3 points in 3D.
+! !POINTS_DELAUNAY_NAIVE_2D is a naive Delaunay triangulation scheme.
+! !POINTS_DIST_2D finds the distance between two points in 2D.
+! !POINTS_DIST_3D finds the distance between two points in 3D.
+! !POINTS_DIST_ND finds the distance between two points in ND.
+! !POINTS_HULL_2D computes the convex hull of a set of points in 2D.
+! !POINTS_NEAREST_POINT_NAIVE_ND finds the nearest point to a given point in ND.
+! !POLYGON_1_2D integrates the function 1 over a polygon in 2D.
+! !POLYGON_X_2D integrates the function X over a polygon in 2D.
+! !POLYGON_Y_2D integrates the function Y over a polygon in 2D.
+! !POLYGON_XX_2D integrates the function X*X over a polygon in 2D.
+! !POLYGON_XY_2D integrates the function X*Y over a polygon in 2D.
+! !POLYGON_YY_2D integrates the function Y*Y over a polygon in 2D.
+! !POLYGON_AREA_2D computes the area of a polygon in 2D.
+! !POLYGON_AREA_2_2D computes the area of a polygon in 2D.
+! !POLYGON_AREA_3D computes the area of a polygon in 3D.
+! !POLYGON_AREA_2_3D computes the area of a polygon in 3D.
+! !POLYGON_CENTROID_2D computes the centroid of a polygon in 2D.
+! !POLYGON_CENTROID_2_2D computes the centroid of a polygon in 2D.
+! !POLYGON_CENTROID_3D computes the centroid of a polygon in 3D.
+! !POLYGON_CONTAINS_POINT_2D finds if a point is inside a simple polygon in 2D.
+! !POLYGON_CONTAINS_POINT_2_2D finds if a point is inside a convex polygon in 2D.
+! !POLYGON_CONVEX determines whether a polygon is convex in 2D.
+! !POLYGON_INRAD_DATA_2D determines polygonal data from its inner radius in 2D.
+! !POLYGON_OUTRAD_DATA_2D determines polygonal data from its outer radius in 2D.
+! !POLYGON_SIDE_DATA_2D determines polygonal data from its side length in 2D.
+! !POLYHEDRON_SURFACE_3D computes the surface area of a polyhedron in 3D.
+! !POLYHEDRON_VOLUME_3D computes the volume of a polyhedron in 3D.
+! !POLYLINE_INDEX_POINT_ND evaluates a polyline at a given arclength in ND.
+! !POLYLINE_LENGTH_ND computes the length of a polyline in ND.
+! !PROPLANE2 produces 2D coordinates of points that lie in a plane, in 3D.
+! !PROPLANE3 projects points orthographically onto a plane, in 3D.
+! !PROVEC projects a vector from M space into N space.
+! !PYRAMID_VOLUME_3D computes the volume of a pyramid with square base in 3D.
+! !QUAD_AREA_2D computes the area of a quadrilateral in 2D.
+! !QUAD_CONTAINS_POINT_2D finds if a point is inside a convex quadrilateral in 2D.
+! !QUAD_POINT_DIST_2D finds the distance from a point to a quadrilateral in 2D.
+! !QUAD_POINT_DIST_SIGNED_2D: signed distanct ( quadrilateral, point ) in 2D.
+! !QUAT_CONJ conjugates a quaternion.
+! !QUAT_INV inverts a quaternion.
+! !QUAT_MUL multiplies two quaternions.
+! !QUAT_NORM computes the norm of a quaternion.
+! !R_MODP returns the nonnegative remainder of real division.
+! !R_RANDOM returns a random real in a given range.
+! !R_SWAP switches two real values.
+! !RADEC_SEPARATION: separation between right ascension-declination points.
 ! !RADEC_TO_XYZ converts right ascension declination to (X,Y,Z) coordinates
-! !RADIANS_TO_DEGREES converts an angle from radians to degrees. 
-! !RMAT2_DET computes the determinant of a 2 by 2 matrix. 
-! !RMAT2_INVERSE inverts a 2 by 2 real matrix using Cramer's rule. 
-! !RMAT3_DET computes the determinant of a 3 by 3 matrix. 
-! !RMAT3_INVERSE inverts a 3 by 3 real matrix using Cramer's rule. 
-! !RMAT4_DET computes the determinant of a 4 by 4 matrix. 
-! !RMAT5_DET computes the determinant of a 5 by 5 matrix. 
-! !RMAT_PRINT prints a real matrix. 
-! !RMAT_SOLVE uses Gauss-Jordan elimination to solve an N by N linear system. 
-! !ROTATION_AXIS_VECTOR_3D rotates a vector around an axis vector in 3D. 
-! !ROTATION_AXIS2MAT_3D converts a rotation from axis to matrix format in 3D. 
-! !ROTATION_AXIS2QUAT_3D converts a rotation from axis to quaternion format in 3D. 
-! !ROTATION_MAT_VECTOR applies a marix rotation to a vector in 3d. 
-! !ROTATION_MAT2AXIS_3D converts a rotation from matrix to axis format in 3D. 
-! !ROTATION_MAT2QUAT_3D converts a rotation from matrix to quaternion format in 3D. 
-! !ROTATION_QUAT_VECTOR applies a quaternion rotation to a vector in 3d. 
-! !ROTATION_QUAT2AXIS_3D converts a rotation from quaternion to axis format in 3D. 
-! !ROTATION_QUAT2MAT_3D converts a rotation from quaternion to matrix format in 3D. 
-! !RVEC_PRINT_2D prints a 2D vector. 
-! !RVEC_PRINT_3D prints a 3D vector. 
-! !RVEC2_PRINT prints a pair of real vectors. 
-! !RVEC3_PRINT prints a trio of real vectors. 
-! !SHAPE_POINT_DIST_2D: distance ( regular shape, point ) in 2D. 
-! !SHAPE_POINT_NEAR_2D: nearest point ( regular shape, point ) in 2D. 
-! !SHAPE_PRINT_3D prints information about a polyhedron in 3D. 
-! !SHAPE_RAY_INT_2D: intersection ( regular shape, ray ) in 2D. 
-! !SORT_HEAP_EXTERNAL externally sorts a list of items into linear order. 
-! !SPHERE_DIA2IMP_3D converts a diameter to an implicit sphere in 3D. 
-! !SPHERE_EXP_CONTAINS_POINT_3D determines if an explicit sphere contains a point in 3D. 
-! !SPHERE_EXP_NEAR_POINT_3D finds the nearest point on an explicit sphere to a point in 3D. 
-! !SPHERE_EXP2IMP_3D converts a sphere from explicit to implicit form in 3D. 
-! !SPHERE_IMP_AREA_3D computes the surface area of an implicit sphere in 3D. 
-! !SPHERE_IMP_AREA_ND computes the surface area of an implicit sphere in ND. 
-! !SPHERE_IMP_CONTAINS_POINT_3D determines if an implicit sphere contains a point in 3D. 
-! !SPHERE_IMP_GRIDFACES_3D produces a grid of triangles on an implicit sphere in 3D. 
-! !SPHERE_IMP_GRIDLINES_3D produces "grid lines" on an implicit sphere in 3D. 
-! !SPHERE_IMP_GRIDPOINTS_3D produces "grid points" on an implicit sphere in 3D. 
-! !SPHERE_IMP_LINE_PROJECT_3D projects a line onto an implicit sphere in 3D. 
-! !SPHERE_IMP_LOCAL2XYZ_3D converts local to XYZ coordinates on an implicit sphere in 3D. 
-! !SPHERE_IMP_NEAR_POINT_3D finds the nearest point on an implicit sphere to a point in 3D. 
-! !SPHERE_IMP_POINT_PROJECT_3D projects a point onto an implicit sphere, in 3D. 
-! !SPHERE_IMP_UNIT_AREA_ND computes the surface area of a unit sphere in ND. 
-! !SPHERE_IMP_UNIT_VOLUME_ND computes the volume of a unit sphere in ND. 
-! !SPHERE_IMP_VOLUME_3D computes the volume of an implicit sphere in 3D. 
-! !SPHERE_IMP_VOLUME_ND computes the volume of an implicit sphere in ND. 
-! !STRING_2D groups line segments into connected lines in 2D. 
-! !TAND returns the tangent of an angle given in degrees. 
-! !TETRA_CENTROID_3D computes the centroid of a tetrahedron in 3D. 
-! !TETRA_CONTAINS_POINT_3D finds if a point is inside a tetrahedron in 3D. 
-! !TETRA_OUTSPHERE_3D computes the exscribed sphere of a tetrahedron in 3D. 
-! !TETRA_SHAPE_3D describes a tetrahedron in 3D. 
-! !TETRA_VOLUME_3D computes the volume of a tetrahedron in 3D. 
-! !TMAT_INIT initializes the geometric transformation matrix. 
-! !TMAT_MXM multiplies two geometric transformation matrices. 
-! !TMAT_MXP multiplies a geometric transformation matrix times a point. 
-! !TMAT_MXP2 multiplies a geometric transformation matrix times N points. 
-! !TMAT_MXV multiplies a geometric transformation matrix times a vector. 
-! !TMAT_ROT_AXIS applies a coordinate axis rotation to the geometric transformation matrix. 
-! !TMAT_ROT_VECTOR applies an arbitrary axis rotation to the geometric transformation matrix. 
-! !TMAT_SCALE applies a scaling to the geometric transformation matrix. 
-! !TMAT_SHEAR applies a shear to the geometric transformation matrix. 
-! !TMAT_TRANS applies a translation to the geometric transformation matrix. 
-! !TORUS_AREA_3D returns the area of a torus in 3D. 
-! !TORUS_VOLUME_3D computes the volume of a torus in 3D. 
-! !TRIANGLE_ANGLES_2D computes the angles of a triangle in 2D. 
-! !TRIANGLE_ANGLES_3D computes the angles of a triangle in 3D. 
-! !TRIANGLE_AREA_2D computes the area of a triangle in 2D. 
-! !TRIANGLE_AREA_SIGNED_2D computes the signed area of a triangle in 2D. 
-! !TRIANGLE_AREA_3D computes the area of a triangle in 3D. 
-! !TRIANGLE_AREA_2_3D computes the area of a triangle in 3D. 
-! !TRIANGLE_CENTROID_2D computes the centroid of a triangle in 2D. 
-! !TRIANGLE_CENTROID_3D computes the centroid of a triangle in 3D. 
-! !TRIANGLE_CONTAINS_POINT_2D finds if a point is inside a triangle in 2D. 
-! !TRIANGLE_DIAMETER_2D computes the diameter of a triangle in 2D. 
-! !TRIANGLE_GRIDPOINTS_2D computes gridpoints within a triangle in 2D. 
-! !TRIANGLE_INCIRCLE_2D computes the inscribed circle of a triangle in 2D. 
-! !TRIANGLE_LINE_IMP_INT_2D finds where an implicit line intersects a triangle in 2D. 
-! !TRIANGLE_ORIENTATION_2D determines the orientation of a triangle in 2D. 
-! !TRIANGLE_OUTCIRCLE_2D computes the exscribed circle of a triangle in 2D. 
-! !TRIANGLE_POINT_DIST_2D: distance ( triangle, point ) in 2D. 
-! !TRIANGLE_POINT_DIST_3D: distance ( triangle, point ) in 3D. 
-! !TRIANGLE_POINT_DIST_SIGNED_2D: signed distance ( triangle, point ) in 2D. 
-! !TRIANGLE_POINT_NEAR_2D computes the nearest triangle point to a point in 2D. 
-! !TUBE_2D constructs a "tube" of given width around a path in 2D. 
-! !VECTOR_DIRECTIONS_2D returns the direction angles of a vector in 2D. 
-! !VECTOR_DIRECTIONS_3D returns the direction angles of a vector in 3D. 
-! !VECTOR_ROTATE_2D rotates a vector around the origin in 2D. 
-! !VECTOR_ROTATE_BASE_2D rotates a vector around a base point in 2D. 
-! !VECTOR_SEPARATION_3D finds the angular separation between vectors in 3D. 
-! !VECTOR_SEPARATION_ND finds the angular separation between vectors in ND. 
-! !VECTOR_UNIT_2D normalizes a vector in 2D. 
-! !VECTOR_UNIT_3D normalizes a vector in 3D. 
-! !VECTOR_UNIT_ND normalizes a vector in ND. 
-! !VOXEL_LINE_3D computes the voxels that line on a line in 3D. 
-! !VOXEL_REGION_3D arranges a set of voxels into contiguous regions in 3D. 
-! !VOXEL_STEP_3D computes voxels along a line from a given point in 3D. 
+! !RADIANS_TO_DEGREES converts an angle from radians to degrees.
+! !RMAT2_DET computes the determinant of a 2 by 2 matrix.
+! !RMAT2_INVERSE inverts a 2 by 2 real matrix using Cramer's rule.
+! !RMAT3_DET computes the determinant of a 3 by 3 matrix.
+! !RMAT3_INVERSE inverts a 3 by 3 real matrix using Cramer's rule.
+! !RMAT4_DET computes the determinant of a 4 by 4 matrix.
+! !RMAT5_DET computes the determinant of a 5 by 5 matrix.
+! !RMAT_PRINT prints a real matrix.
+! !RMAT_SOLVE uses Gauss-Jordan elimination to solve an N by N linear system.
+! !ROTATION_AXIS_VECTOR_3D rotates a vector around an axis vector in 3D.
+! !ROTATION_AXIS2MAT_3D converts a rotation from axis to matrix format in 3D.
+! !ROTATION_AXIS2QUAT_3D converts a rotation from axis to quaternion format in 3D.
+! !ROTATION_MAT_VECTOR applies a marix rotation to a vector in 3d.
+! !ROTATION_MAT2AXIS_3D converts a rotation from matrix to axis format in 3D.
+! !ROTATION_MAT2QUAT_3D converts a rotation from matrix to quaternion format in 3D.
+! !ROTATION_QUAT_VECTOR applies a quaternion rotation to a vector in 3d.
+! !ROTATION_QUAT2AXIS_3D converts a rotation from quaternion to axis format in 3D.
+! !ROTATION_QUAT2MAT_3D converts a rotation from quaternion to matrix format in 3D.
+! !RVEC_PRINT_2D prints a 2D vector.
+! !RVEC_PRINT_3D prints a 3D vector.
+! !RVEC2_PRINT prints a pair of real vectors.
+! !RVEC3_PRINT prints a trio of real vectors.
+! !SHAPE_POINT_DIST_2D: distance ( regular shape, point ) in 2D.
+! !SHAPE_POINT_NEAR_2D: nearest point ( regular shape, point ) in 2D.
+! !SHAPE_PRINT_3D prints information about a polyhedron in 3D.
+! !SHAPE_RAY_INT_2D: intersection ( regular shape, ray ) in 2D.
+! !SORT_HEAP_EXTERNAL externally sorts a list of items into linear order.
+! !SPHERE_DIA2IMP_3D converts a diameter to an implicit sphere in 3D.
+! !SPHERE_EXP_CONTAINS_POINT_3D determines if an explicit sphere contains a point in 3D.
+! !SPHERE_EXP_NEAR_POINT_3D finds the nearest point on an explicit sphere to a point in 3D.
+! !SPHERE_EXP2IMP_3D converts a sphere from explicit to implicit form in 3D.
+! !SPHERE_IMP_AREA_3D computes the surface area of an implicit sphere in 3D.
+! !SPHERE_IMP_AREA_ND computes the surface area of an implicit sphere in ND.
+! !SPHERE_IMP_CONTAINS_POINT_3D determines if an implicit sphere contains a point in 3D.
+! !SPHERE_IMP_GRIDFACES_3D produces a grid of triangles on an implicit sphere in 3D.
+! !SPHERE_IMP_GRIDLINES_3D produces "grid lines" on an implicit sphere in 3D.
+! !SPHERE_IMP_GRIDPOINTS_3D produces "grid points" on an implicit sphere in 3D.
+! !SPHERE_IMP_LINE_PROJECT_3D projects a line onto an implicit sphere in 3D.
+! !SPHERE_IMP_LOCAL2XYZ_3D converts local to XYZ coordinates on an implicit sphere in 3D.
+! !SPHERE_IMP_NEAR_POINT_3D finds the nearest point on an implicit sphere to a point in 3D.
+! !SPHERE_IMP_POINT_PROJECT_3D projects a point onto an implicit sphere, in 3D.
+! !SPHERE_IMP_UNIT_AREA_ND computes the surface area of a unit sphere in ND.
+! !SPHERE_IMP_UNIT_VOLUME_ND computes the volume of a unit sphere in ND.
+! !SPHERE_IMP_VOLUME_3D computes the volume of an implicit sphere in 3D.
+! !SPHERE_IMP_VOLUME_ND computes the volume of an implicit sphere in ND.
+! !STRING_2D groups line segments into connected lines in 2D.
+! !TAND returns the tangent of an angle given in degrees.
+! !TETRA_CENTROID_3D computes the centroid of a tetrahedron in 3D.
+! !TETRA_CONTAINS_POINT_3D finds if a point is inside a tetrahedron in 3D.
+! !TETRA_OUTSPHERE_3D computes the exscribed sphere of a tetrahedron in 3D.
+! !TETRA_SHAPE_3D describes a tetrahedron in 3D.
+! !TETRA_VOLUME_3D computes the volume of a tetrahedron in 3D.
+! !TMAT_INIT initializes the geometric transformation matrix.
+! !TMAT_MXM multiplies two geometric transformation matrices.
+! !TMAT_MXP multiplies a geometric transformation matrix times a point.
+! !TMAT_MXP2 multiplies a geometric transformation matrix times N points.
+! !TMAT_MXV multiplies a geometric transformation matrix times a vector.
+! !TMAT_ROT_AXIS applies a coordinate axis rotation to the geometric transformation matrix.
+! !TMAT_ROT_VECTOR applies an arbitrary axis rotation to the geometric transformation matrix.
+! !TMAT_SCALE applies a scaling to the geometric transformation matrix.
+! !TMAT_SHEAR applies a shear to the geometric transformation matrix.
+! !TMAT_TRANS applies a translation to the geometric transformation matrix.
+! !TORUS_AREA_3D returns the area of a torus in 3D.
+! !TORUS_VOLUME_3D computes the volume of a torus in 3D.
+! !TRIANGLE_ANGLES_2D computes the angles of a triangle in 2D.
+! !TRIANGLE_ANGLES_3D computes the angles of a triangle in 3D.
+! !TRIANGLE_AREA_2D computes the area of a triangle in 2D.
+! !TRIANGLE_AREA_SIGNED_2D computes the signed area of a triangle in 2D.
+! !TRIANGLE_AREA_3D computes the area of a triangle in 3D.
+! !TRIANGLE_AREA_2_3D computes the area of a triangle in 3D.
+! !TRIANGLE_CENTROID_2D computes the centroid of a triangle in 2D.
+! !TRIANGLE_CENTROID_3D computes the centroid of a triangle in 3D.
+! !TRIANGLE_CONTAINS_POINT_2D finds if a point is inside a triangle in 2D.
+! !TRIANGLE_DIAMETER_2D computes the diameter of a triangle in 2D.
+! !TRIANGLE_GRIDPOINTS_2D computes gridpoints within a triangle in 2D.
+! !TRIANGLE_INCIRCLE_2D computes the inscribed circle of a triangle in 2D.
+! !TRIANGLE_LINE_IMP_INT_2D finds where an implicit line intersects a triangle in 2D.
+! !TRIANGLE_ORIENTATION_2D determines the orientation of a triangle in 2D.
+! !TRIANGLE_OUTCIRCLE_2D computes the exscribed circle of a triangle in 2D.
+! !TRIANGLE_POINT_DIST_2D: distance ( triangle, point ) in 2D.
+! !TRIANGLE_POINT_DIST_3D: distance ( triangle, point ) in 3D.
+! !TRIANGLE_POINT_DIST_SIGNED_2D: signed distance ( triangle, point ) in 2D.
+! !TRIANGLE_POINT_NEAR_2D computes the nearest triangle point to a point in 2D.
+! !TUBE_2D constructs a "tube" of given width around a path in 2D.
+! !VECTOR_DIRECTIONS_2D returns the direction angles of a vector in 2D.
+! !VECTOR_DIRECTIONS_3D returns the direction angles of a vector in 3D.
+! !VECTOR_ROTATE_2D rotates a vector around the origin in 2D.
+! !VECTOR_ROTATE_BASE_2D rotates a vector around a base point in 2D.
+! !VECTOR_SEPARATION_3D finds the angular separation between vectors in 3D.
+! !VECTOR_SEPARATION_ND finds the angular separation between vectors in ND.
+! !VECTOR_UNIT_2D normalizes a vector in 2D.
+! !VECTOR_UNIT_3D normalizes a vector in 3D.
+! !VECTOR_UNIT_ND normalizes a vector in ND.
+! !VOXEL_LINE_3D computes the voxels that line on a line in 3D.
+! !VOXEL_REGION_3D arranges a set of voxels into contiguous regions in 3D.
+! !VOXEL_STEP_3D computes voxels along a line from a given point in 3D.
 ! !XYZ TO RADEC converts (XYZ) to right ascension declination coordinates
-! 
-! 
-! 
-! 
+!
+!
+!
+!
 ! function arc_cosine ( c )
 ! real arc_cosine
 ! !
@@ -334,12 +334,12 @@ contains
 !   c2 = c
 !   c2 = max ( c2, -1.0E+00 )
 !   c2 = min ( c2, +1.0E+00 )
-! 
+!
 !   arc_cosine = acos ( c2 )
-! 
+!
 !   return
 ! end function
-! 
+!
 ! subroutine angle_contains_ray_2d ( inside, x1, y1, x2, y2, x3, y3, x, y )
 ! !
 ! !*******************************************************************************
@@ -385,18 +385,18 @@ contains
 !   real y2
 !   real y3
 ! !
-!   a1 = angle_deg_2d ( x1, y1, x2, y2, x, y ) 
-!   a2 = angle_deg_2d ( x1, y1, x2, y2, x3, y3 ) 
-! 
+!   a1 = angle_deg_2d ( x1, y1, x2, y2, x, y )
+!   a2 = angle_deg_2d ( x1, y1, x2, y2, x3, y3 )
+!
 !   if ( a1 <= a2 ) then
 !     inside = .true.
 !   else
 !     inside = .false.
 !   end if
-!  
+!
 !   return
 ! end subroutine
-! 
+!
 ! function angle_deg_2d ( x1, y1, x2, y2, x3, y3 )
 ! !
 ! !*******************************************************************************
@@ -408,7 +408,7 @@ contains
 ! !
 ! !    Except for the zero angle case, it should be true that
 ! !
-! !      ANGLE_DEG_2D(X1,Y1,X2,Y2,X3,Y3) 
+! !      ANGLE_DEG_2D(X1,Y1,X2,Y2,X3,Y3)
 ! !    + ANGLE_DEG_2D(X3,Y3,X2,Y2,X1,Y1) = 360.0
 ! !
 ! !  Modified:
@@ -422,7 +422,7 @@ contains
 ! !  Parameters:
 ! !
 ! !    Input, real X1, Y1, X2, Y2, X3, Y3, define the rays
-! !    ( X1-X2, Y1-Y2 ) and ( X3-X2, Y3-Y2 ) which in turn define the 
+! !    ( X1-X2, Y1-Y2 ) and ( X3-X2, Y3-Y2 ) which in turn define the
 ! !    angle, counterclockwise from ( X1-X2, Y1-Y2 ).
 ! !
 ! !    Output, real ANGLE_DEG_2D, the angle swept out by the rays, measured
@@ -442,13 +442,13 @@ contains
 ! !
 !   x = ( x1 - x2 ) * ( x3 - x2 ) + ( y1 - y2 ) * ( y3 - y2 )
 !   y = ( x1 - x2 ) * ( y3 - y2 ) - ( y1 - y2 ) * ( x3 - x2 )
-!  
+!
 !   if ( x == 0.0E+00 .and. y == 0.0E+00 ) then
-! 
+!
 !    angle_deg_2d = 0.0E+00
-! 
+!
 !   else
-! 
+!
 !   if( x == 0.0D+00) then
 !    if(y>0.d0) then
 !      angle_rad_2d =        pi/2.d0
@@ -458,20 +458,20 @@ contains
 !   else
 !    angle_rad_2d = atan2 ( y, x )
 !   endif
-!  
+!
 !   if ( angle_rad_2d < 0.0E+00 ) then
 !     angle_rad_2d = angle_rad_2d + 2.0E+00 * dacos(-1.d0)
 !   end if
-! 
+!
 !   angle_deg_2d = radians_to_degrees ( angle_rad_2d )
-! 
+!
 !   end if
-!  
+!
 !   return
 ! end function
-! 
-! 
-! 
+!
+!
+!
 ! function angle_rad_2d ( x1, y1, x2, y2, x3, y3 )
 ! !
 ! !*******************************************************************************
@@ -483,7 +483,7 @@ contains
 ! !
 ! !    Except for the zero angle case, it should be true that
 ! !
-! !      ANGLE_RAD_2D(X1,Y1,X2,Y2,X3,Y3) 
+! !      ANGLE_RAD_2D(X1,Y1,X2,Y2,X3,Y3)
 ! !    + ANGLE_RAD_2D(X3,Y3,X2,Y2,X1,Y1) = 2 * PI
 ! !
 ! !  Modified:
@@ -497,11 +497,11 @@ contains
 ! !  Parameters:
 ! !
 ! !    Input, real X1, Y1, X2, Y2, X3, Y3, define the rays
-! !    ( X1-X2, Y1-Y2 ) and ( X3-X2, Y3-Y2 ) which in turn define the 
+! !    ( X1-X2, Y1-Y2 ) and ( X3-X2, Y3-Y2 ) which in turn define the
 ! !    angle, counterclockwise from ( X1-X2, Y1-Y2 ).
 ! !
 ! !    Output, real ANGLE_RAD_2D, the angle swept out by the rays,
-! !    in radians.  0 <= ANGLE_RAD_2D < 2 PI.  If either ray has zero 
+! !    in radians.  0 <= ANGLE_RAD_2D < 2 PI.  If either ray has zero
 ! !    length, then ANGLE_RAD_2D is set to 0.
 ! !
 !   real angle_rad_2d
@@ -516,13 +516,13 @@ contains
 ! !
 !   x = ( x1 - x2 ) * ( x3 - x2 ) + ( y1 - y2 ) * ( y3 - y2 )
 !   y = ( x1 - x2 ) * ( y3 - y2 ) - ( y1 - y2 ) * ( x3 - x2 )
-!  
+!
 !   if ( x == 0.0E+00 .and. y == 0.0E+00 ) then
-! 
+!
 !     angle_rad_2d = 0.0E+00
-!   
+!
 !   else
-! 
+!
 !   if( x == 0.0D+00) then
 !    if(y>0.d0) then
 !      angle_rad_2d =        pi/2.d0
@@ -532,17 +532,17 @@ contains
 !   else
 !    angle_rad_2d = atan2 ( y, x )
 !   endif
-!  
+!
 !     if ( angle_rad_2d < 0.0E+00 ) then
 !       angle_rad_2d = angle_rad_2d + 2.0E+00 * pi
 !     end if
-!  
+!
 !   end if
-! 
+!
 !   return
 ! end function
-! 
-! 
+!
+!
 ! function angle_rad_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3 )
 ! real angle_rad_3d
 ! !
@@ -554,7 +554,7 @@ contains
 ! !  Discussion:
 ! !
 ! !    The routine always computes the SMALLER of the two angles between
-! !    two rays.  Thus, if the rays make an (exterior) angle of 
+! !    two rays.  Thus, if the rays make an (exterior) angle of
 ! !    1.5 radians, the (interior) angle of 0.5 radians will be reported.
 ! !
 ! !  Formula:
@@ -576,7 +576,7 @@ contains
 ! !    ( X1-X2, Y1-Y2, Z1-Z2 ) and ( X3-X2, Y3-Y2, Z3-Z2 ).
 ! !
 ! !    Output, real ANGLE_RAD_3D, the angle between the two rays, in radians.
-! !    This value will always be between 0 and PI.  If either ray has 
+! !    This value will always be between 0 and PI.  If either ray has
 ! !    zero length, then the angle is returned as zero.
 ! !
 !   real theta
@@ -594,14 +594,14 @@ contains
 ! !
 !   v1norm = enorm0_3d ( x1, y1, z1, x2, y2, z2 )
 !   v2norm = enorm0_3d ( x3, y3, z3, x2, y2, z2 )
-!  
+!
 !   if ( v1norm == 0.0E+00 .or. v2norm == 0.0E+00 ) then
 !     angle_rad_3d = 0.0E+00
 !   else
 !     dot = dot0_3d ( x2, y2, y2, x1, y1, z1, x3, y3, z3 )
 !     angle_rad_3d = arc_cosine ( dot / ( v1norm * v2norm ) )
 !   end if
-!  
+!
 !   return
 ! end function
 ! function angle_rad_nd ( n, vec1, vec2 )
@@ -648,20 +648,20 @@ contains
 !   real vec2(n),dot
 ! !
 !   dot = dot_nd ( n, vec1, vec2 )
-!  
-!   v1norm = enorm_nd ( n, vec1 ) 
-! 
+!
+!   v1norm = enorm_nd ( n, vec1 )
+!
 !   v2norm = enorm_nd ( n, vec2 )
-!  
+!
 !   if ( v1norm == 0.0E+00 .or. v2norm == 0.0E+00 ) then
 !     angle_rad_nd = 0.0E+00
 !   else
 !     angle_rad_nd = arc_cosine ( dot / ( v1norm * v2norm ) )
 !   end if
-!  
+!
 !   return
 ! end function
-! 
+!
 ! function anglei_deg_2d ( x1, y1, x2, y2, x3, y3 )
 ! real anglei_deg_2d
 ! !
@@ -699,30 +699,30 @@ contains
 ! !
 !   x = ( x1 - x2 ) * ( x3 - x2 ) + ( y1 - y2 ) * ( y3 - y2 )
 !   y = ( x1 - x2 ) * ( y3 - y2 ) - ( y1 - y2 ) * ( x3 - x2 )
-!  
+!
 !   if ( x == 0.0E+00 .and. y == 0.0E+00 ) then
-! 
+!
 !     anglei_deg_2d = 0.0E+00
-!   
+!
 !   else
-!  
+!
 !     anglei_rad_2d = atan2 ( y, x )
-!  
+!
 !     if ( anglei_rad_2d < 0.0E+00 ) then
 !       anglei_rad_2d = anglei_rad_2d + 2.0E+00 * pi
 !     end if
-!  
+!
 !     anglei_deg_2d = radians_to_degrees ( anglei_rad_2d )
-! 
-!     if ( anglei_deg_2d > 180.0E+00 ) then 
+!
+!     if ( anglei_deg_2d > 180.0E+00 ) then
 !       anglei_deg_2d = 360.0E+00 - anglei_deg_2d
 !     end if
-! 
+!
 !   end if
-!  
+!
 !   return
 ! end function
-! 
+!
 ! function anglei_rad_2d ( x1, y1, x2, y2, x3, y3 )
 ! !
 ! !*******************************************************************************
@@ -759,24 +759,24 @@ contains
 ! !
 !   x = ( x1 - x2 ) * ( x3 - x2 ) + ( y1 - y2 ) * ( y3 - y2 )
 !   y = ( x1 - x2 ) * ( y3 - y2 ) - ( y1 - y2 ) * ( x3 - x2 )
-!  
+!
 !   if ( x == 0.0E+00 .and. y == 0.0E+00 ) then
-! 
+!
 !     anglei_rad_2d = 0.0E+00
-! 
+!
 !   else
-!  
+!
 !     anglei_rad_2d = atan2 ( y, x )
-!  
+!
 !     if ( anglei_rad_2d < 0.0E+00 ) then
 !       anglei_rad_2d = anglei_rad_2d + 2.0E+00 * pi
 !     end if
-!  
+!
 !   end if
-! 
+!
 !   return
 ! end function
-! 
+!
 ! function atan4( y, x )
 ! real atan4
 ! !
@@ -829,7 +829,7 @@ contains
 ! !  Special cases:
 ! !
 !   if ( x == 0.0E+00 ) then
-! 
+!
 !     if ( y > 0.0E+00 ) then
 !       theta = PI / 2.0E+00
 !     else if ( y < 0.0E+00 ) then
@@ -837,9 +837,9 @@ contains
 !     else if ( y == 0.0E+00 ) then
 !       theta = 0.0E+00
 !     end if
-! 
+!
 !   else if ( y == 0.0E+00 ) then
-! 
+!
 !     if ( x > 0.0E+00 ) then
 !       theta = 0.0E+00
 !     else if ( x < 0.0E+00 ) then
@@ -849,12 +849,12 @@ contains
 ! !  We assume that ATAN2 is correct when both arguments are positive.
 ! !
 !   else
-! 
+!
 !     abs_y = abs ( y )
 !     abs_x = abs ( x )
-! 
+!
 !     theta_0 = atan2 ( abs_y, abs_x )
-! 
+!
 !     if ( x > 0.0E+00 .and. y > 0.0E+00 ) then
 !       theta = theta_0
 !     else if ( x < 0.0E+00 .and. y > 0.0E+00 ) then
@@ -864,14 +864,14 @@ contains
 !     else if ( x > 0.0E+00 .and. y < 0.0E+00 ) then
 !       theta = 2.0E+00 * PI - theta_0
 !     end if
-! 
+!
 !   end if
-! 
+!
 !   atan4 = theta
-! 
+!
 !   return
 !   end function
-! 
+!
 ! subroutine basis_map_3d ( u1, u2, u3, v1, v2, v3, a, ierror )
 ! !
 ! !*******************************************************************************
@@ -886,7 +886,7 @@ contains
 ! !    U3 to V3.
 ! !
 ! !    Depending on the values of the vectors, A may represent a
-! !    rotation, reflection, dilation, project, or a combination of these 
+! !    rotation, reflection, dilation, project, or a combination of these
 ! !    basic linear transformations.
 ! !
 ! !  Modified:
@@ -899,7 +899,7 @@ contains
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real U1(3), U2(3), U3(3), the three "domain" or "preaimage" 
+! !    Input, real U1(3), U2(3), U3(3), the three "domain" or "preaimage"
 ! !    vectors, which should be linearly independent.
 ! !
 ! !    Input, real V1(3), V2(3), V3(3), the three "range" or "aimage" vectors.
@@ -937,7 +937,7 @@ contains
 ! !  Compute C = the inverse of [ U1 | U2 | U3 ].
 ! !
 !   call rmat3_inverse ( b, c, det )
-! 
+!
 !   if ( det == 0.0E+00 ) then
 !     ierror = 1
 !     return
@@ -952,10 +952,10 @@ contains
 ! !  A = [ V1 | V2 | V3 ] * inverse [ U1 | U2 | U3 ].
 ! !
 !   a(1:3,1:3) = matmul ( b(1:3,1:3), c(1:3,1:3) )
-! 
+!
 !   return
 ! end subroutine
-! 
+!
 ! function point_inside_parallelipiped_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, &
 !   x4, y4, z4, x, y, z )
 ! !
@@ -1003,7 +1003,7 @@ contains
 ! !
 ! !    Input, real X, Y, Z, the point to be checked.
 ! !
-! !    Output, logical POINT_INSIDE_PARALLELIPIPED_3D, is .TRUE. if (X,Y,Z) 
+! !    Output, logical POINT_INSIDE_PARALLELIPIPED_3D, is .TRUE. if (X,Y,Z)
 ! !    is inside the parallelepiped, or on its boundary, and .FALSE. otherwise.
 ! !
 !   implicit none
@@ -1034,11 +1034,11 @@ contains
 !   p21normsq = enormsq0_3d ( x1, y1, z1, x2, y2, z2 )
 !   p31normsq = enormsq0_3d ( x1, y1, z1, x3, y3, z3 )
 !   p41normsq = enormsq0_3d ( x1, y1, z1, x4, y4, z4 )
-! 
+!
 !   p21dot = dot0_3d ( x1, y1, z1, x2, y2, z2, x, y, z )
 !   p31dot = dot0_3d ( x1, y1, z1, x3, y3, z3, x, y, z )
 !   p41dot = dot0_3d ( x1, y1, z1, x4, y4, z4, x, y, z )
-! 
+!
 !   if ( 0.0E+00 <= p21dot .and. p21dot <= p21normsq .and. &
 !        0.0E+00 <= p31dot .and. p31dot <= p31normsq .and. &
 !        0.0E+00 <= p41dot .and. p41dot <= p41normsq ) then
@@ -1046,10 +1046,10 @@ contains
 !   else
 !     point_inside_parallelipiped_3d = .false.
 !   end if
-! 
+!
 !   return
 ! end function
-! 
+!
 ! subroutine box_contains_point_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, &
 !   x4, y4, z4, x, y, z, inside )
 ! !
@@ -1060,7 +1060,7 @@ contains
 ! !
 ! !  Definition:
 ! !
-! !    A parallelepiped is a "slanted box", that is, opposite 
+! !    A parallelepiped is a "slanted box", that is, opposite
 ! !    sides are parallel planes.
 ! !
 ! !  Diagram:
@@ -1089,14 +1089,14 @@ contains
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4, the 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4, the
 ! !    coordinates of four corners of the parallelepiped, which we will
 ! !    call P1, P2, P3 and P4.  It is assumed that P2, P3 and P4 are
 ! !    immediate neighbors of P1.
 ! !
 ! !    Input, real X, Y, Z, the point to be checked.
 ! !
-! !    Output, logical INSIDE, is .TRUE. if (X,Y,Z) is inside the 
+! !    Output, logical INSIDE, is .TRUE. if (X,Y,Z) is inside the
 ! !    parallelepiped, or on its boundary, and .FALSE. otherwise.
 ! !
 !   logical inside
@@ -1125,11 +1125,11 @@ contains
 !   p21normsq = enormsq0_3d ( x1, y1, z1, x2, y2, z2 )
 !   p31normsq = enormsq0_3d ( x1, y1, z1, x3, y3, z3 )
 !   p41normsq = enormsq0_3d ( x1, y1, z1, x4, y4, z4 )
-! 
+!
 !   p21dot = dot0_3d ( x1, y1, z1, x2, y2, z2, x, y, z )
 !   p31dot = dot0_3d ( x1, y1, z1, x3, y3, z3, x, y, z )
 !   p41dot = dot0_3d ( x1, y1, z1, x4, y4, z4, x, y, z )
-! 
+!
 !   if ( 0.0E+00 <= p21dot .and. p21dot <= p21normsq .and. &
 !        0.0E+00 <= p31dot .and. p31dot <= p31normsq .and. &
 !        0.0E+00 <= p41dot .and. p41dot <= p41normsq ) then
@@ -1137,7 +1137,7 @@ contains
 !   else
 !     inside = .false.
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine box_point_dist_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, &
@@ -1150,7 +1150,7 @@ contains
 ! !
 ! !  Definition:
 ! !
-! !    A parallelepiped is a "slanted box", that is, opposite 
+! !    A parallelepiped is a "slanted box", that is, opposite
 ! !    sides are parallel planes.
 ! !
 ! !  Diagram:
@@ -1160,7 +1160,7 @@ contains
 ! !         / 3--/-5
 ! !        4----6 /
 ! !        |/   |/
-! !        1----2  
+! !        1----2
 ! !
 ! !  Modified:
 ! !
@@ -1173,15 +1173,15 @@ contains
 ! !  Parameters:
 ! !
 ! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4, half of
-! !    the corners of the box, from which the other corners can be 
-! !    deduced.  The corners should be chosen so that the first corner 
-! !    is directly connected to the other three.  The locations of 
-! !    corners 5, 6, 7 and 8 will be computed by the parallelogram 
+! !    the corners of the box, from which the other corners can be
+! !    deduced.  The corners should be chosen so that the first corner
+! !    is directly connected to the other three.  The locations of
+! !    corners 5, 6, 7 and 8 will be computed by the parallelogram
 ! !    relation.
 ! !
 ! !    Input, real X, Y, Z, the point which is to be checked.
 ! !
-! !    Output, real DIST, the distance from the point to the box.  DIST is 
+! !    Output, real DIST, the distance from the point to the box.  DIST is
 ! !    zero if the point lies exactly on the box.
 ! !
 !   real dis
@@ -1195,7 +1195,7 @@ contains
 !   real x6
 !   real x7
 !   real x8
-! 
+!
 !   real y
 !   real y1
 !   real y2
@@ -1205,7 +1205,7 @@ contains
 !   real y6
 !   real y7
 !   real y8
-! 
+!
 !   real z
 !   real z1
 !   real z2
@@ -1221,46 +1221,46 @@ contains
 !   x5 = x2 + x3 - x1
 !   y5 = y2 + y3 - y1
 !   z5 = z2 + z3 - z1
-! 
+!
 !   x6 = x2 + x4 - x1
 !   y6 = y2 + y4 - y1
 !   z6 = z2 + z4 - z1
-! 
+!
 !   x7 = x3 + x4 - x1
 !   y7 = y3 + y4 - y1
 !   z7 = z3 + z4 - z1
-! 
+!
 !   x8 = x2 + x3 + x4 - 2.0E+00 * x1
 !   y8 = y2 + y3 + y4 - 2.0E+00 * y1
 !   z8 = z2 + z3 + z4 - 2.0E+00 * z1
 ! !
-! !  Compute the distance from the point ( X, Y, Z ) to each of the six 
+! !  Compute the distance from the point ( X, Y, Z ) to each of the six
 ! !  paralleogram faces.
 ! !
 !   call para_point_dist_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, x, y, z, dis )
-! 
+!
 !   dist = dis
-! 
+!
 !   call para_point_dist_3d ( x1, y1, z1, x2, y2, z2, x4, y4, z4, x, y, z, dis )
-! 
+!
 !   dist = min ( dist, dis )
-! 
+!
 !   call para_point_dist_3d ( x1, y1, z1, x3, y3, z3, x4, y4, z4, x, y, z, dis )
-! 
+!
 !   dist = min ( dist, dis )
-! 
+!
 !   call para_point_dist_3d ( x8, y8, z8, x5, y5, z5, x6, y6, z6, x, y, z, dis )
-! 
+!
 !   dist = min ( dist, dis )
-! 
+!
 !   call para_point_dist_3d ( x8, y8, z8, x5, y5, z5, x7, y7, z7, x, y, z, dis )
-! 
+!
 !   dist = min ( dist, dis )
-! 
+!
 !   call para_point_dist_3d ( x8, y8, z8, x6, y6, z6, x7, y7, z7, x, y, z, dis )
-! 
+!
 !   dist = min ( dist, dis )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine circle_area_2d ( r, area )
@@ -1288,7 +1288,7 @@ contains
 !   real r
 ! !
 !   area = pi * r * r
-! 
+!
 !   return
 ! end subroutine
 ! subroutine circle_lune_area_2d ( r, theta, area )
@@ -1326,9 +1326,9 @@ contains
 ! !
 !   call circle_sector_area_2d ( r, theta, area_sector )
 !   call circle_triangle_area_2d ( r, theta, area_triangle )
-! 
+!
 !   area = area_sector - area_triangle
-! 
+!
 !   return
 ! end subroutine
 ! subroutine circle_lune_centroid_2d ( r, xc, yc, theta1, theta2, x, y )
@@ -1379,17 +1379,17 @@ contains
 !   real yc
 ! !
 !   theta = theta2 - theta1
-! 
+!
 !   if ( theta == 0.0E+00 ) then
 !     d = r
 !   else
 !     d = 4.0E+00 * r * ( sin ( 0.5E+00 * theta ) )**3 / &
 !       ( 3.0E+00 * ( theta - sin ( theta ) ) )
 !   end if
-! 
+!
 !   x = xc + d * cos ( theta )
 !   y = yc + d * sin ( theta )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine circle_sector_area_2d ( r, theta, area )
@@ -1420,7 +1420,7 @@ contains
 !   real theta
 ! !
 !   area = 0.5E+00 * r * r * theta
-! 
+!
 !   return
 ! end subroutine
 ! subroutine circle_sector_centroid_2d ( r, xc, yc, theta1, theta2, x, y )
@@ -1467,17 +1467,17 @@ contains
 !   real yc
 ! !
 !   theta = theta2 - theta1
-! 
+!
 !   if ( theta == 0.0E+00 ) then
 !     d = 2.0E+00 * r / 3.0E+00
 !   else
 !     d = 4.0E+00 * r * sin ( 0.5E+00 * theta ) / &
 !       ( 3.0E+00 * theta )
 !   end if
-! 
+!
 !   x = xc + d * cos ( theta )
 !   y = yc + d * sin ( theta )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine circle_triangle_area_2d ( r, theta, area )
@@ -1517,7 +1517,7 @@ contains
 !   real theta
 ! !
 !   area = 0.5E+00 * r**2 * sin ( theta )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine circle_dia2imp_2d ( x1, y1, x2, y2, r, xc, yc )
@@ -1563,10 +1563,10 @@ contains
 !   real yc
 ! !
 !   r = 0.5E+00 * enorm0_2d ( x1, y1, x2, y2 )
-! 
+!
 !   xc = 0.5E+00 * ( x1 + x2 )
 !   yc = 0.5E+00 * ( y1 + y2 )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine circle_exp_contains_point_2d ( x1, y1, x2, y2, x3, y3, x, y, inside )
@@ -1633,65 +1633,65 @@ contains
 ! !  P1 = P2?
 ! !
 !   if ( x1 == x2 .and. y1 == y2 ) then
-! 
+!
 !     if ( x1 == x3 .and. y1 == y3 ) then
-! 
+!
 !       if ( x1 == x .and. y1 == y ) then
 !         inside = 6
 !       else
 !         inside = 7
 !       end if
-! 
+!
 !     else
-! 
+!
 !       det = ( x1 - x3 ) * ( y - y3 ) - ( x - x3 ) * ( y1 - y3 )
-! 
+!
 !       if ( det == 0.0E+00 ) then
 !         inside = 4
 !       else
 !         inside = 5
 !       end if
 !     end if
-! 
+!
 !     return
-! 
+!
 !   end if
 ! !
 ! !  P1 does not equal P2.  Does P1 = P3?
 ! !
 !   if ( x1 == x3 .and. y1 == y3 ) then
-! 
+!
 !     det = ( x1 - x2 ) * ( y - y2 ) - ( x - x2 ) * ( y1 - y2 )
-! 
+!
 !     if ( det == 0.0E+00 ) then
 !       inside = 4
 !     else
 !       inside = 5
 !     end if
-! 
+!
 !     return
-! 
+!
 !   end if
 ! !
 ! !  The points are distinct.  Are they colinear?
 ! !
 !   det = ( x1 - x2 ) * ( y3 - y2 ) - ( x3 - x2 ) * ( y1 - y2 )
-! 
+!
 !   if ( det == 0.0E+00 ) then
-! 
+!
 !     det = ( x1 - x2 ) * ( y - y2 ) - ( x - x2 ) * ( y1 - y2 )
-! 
+!
 !     if ( det == 0.0E+00 ) then
 !       inside = 2
-!     else 
+!     else
 !       inside = 3
 !     end if
-! 
+!
 !     return
-! 
+!
 !   end if
 ! !
-! !  The points are distinct and non-colinear.  
+! !  The points are distinct and non-colinear.
 ! !
 ! !  Compute the determinant
 ! !
@@ -1699,24 +1699,24 @@ contains
 !   a(1,2) = y1
 !   a(1,3) = x1 * x1 + y1 * y1
 !   a(1,4) = 1.0E+00
-! 
+!
 !   a(2,1) = x2
 !   a(2,2) = y2
 !   a(2,3) = x2 * x2 + y2 * y2
 !   a(2,4) = 1.0E+00
-! 
+!
 !   a(3,1) = x3
 !   a(3,2) = y3
 !   a(3,3) = x3 * x3 + y3 * y3
 !   a(3,4) = 1.0E+00
-! 
+!
 !   a(4,1) = x
 !   a(4,2) = y
 !   a(4,3) = x * x + y * y
 !   a(4,4) = 1.0E+00
-! 
+!
 !   det = rmat4_det ( a )
-! 
+!
 !   if ( det < 0.0E+00 ) then
 !     inside = 1
 !   else if ( det == 0.0E+00 ) then
@@ -1724,7 +1724,7 @@ contains
 !   else
 !     inside = -1
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine circle_exp2imp_2d ( x1, y1, x2, y2, x3, y3, r, xc, yc )
@@ -1746,17 +1746,17 @@ contains
 ! !
 ! !  Discussion:
 ! !
-! !    Any three points define a circle, as long as they don't lie on a straight 
+! !    Any three points define a circle, as long as they don't lie on a straight
 ! !    line.  (If the points do lie on a straight line, we could stretch the
 ! !    definition of a circle to allow an infinite radius and a center at
-! !    some infinite point.)  
+! !    some infinite point.)
 ! !
 ! !    Instead of the formulas used here, you can use the linear system
 ! !    approach in the routine TRIANGLE_OUTCIRCLE_2D.
 ! !
-! !    The diameter of the circle can be found by solving a 2 by 2 linear system. 
-! !    This is because the vectors P2 - P1 and P3 - P1 are secants of the circle, 
-! !    and each forms a right triangle with the diameter.  Hence, the dot product 
+! !    The diameter of the circle can be found by solving a 2 by 2 linear system.
+! !    This is because the vectors P2 - P1 and P3 - P1 are secants of the circle,
+! !    and each forms a right triangle with the diameter.  Hence, the dot product
 ! !    of P2 - P1 with the diameter is equal to the square of the length
 ! !    of P2 - P1, and similarly for P3 - P1.  These two equations determine the
 ! !    diameter vector originating at P1.
@@ -1765,7 +1765,7 @@ contains
 ! !
 ! !    Joseph O'Rourke,
 ! !    Computational Geometry,
-! !    Cambridge University Press, 
+! !    Cambridge University Press,
 ! !    Second Edition, 1998, page 187.
 ! !
 ! !  Modified:
@@ -1779,11 +1779,11 @@ contains
 ! !  Parameters:
 ! !
 ! !    Input, real X1, Y1, X2, Y2, X3, Y3, are the X and Y coordinates
-! !    of three points that lie on the circle.  These points should be 
-! !    distinct, and not collinear. 
+! !    of three points that lie on the circle.  These points should be
+! !    distinct, and not collinear.
 ! !
 ! !    Output, real R, the radius of the circle.  Normally, R will be positive.
-! !    R is returned as -1 in the unlikely event that the points are 
+! !    R is returned as -1 in the unlikely event that the points are
 ! !    numerically collinear.
 ! !
 ! !    Output, real XC, YC, the center of the circle.
@@ -1809,7 +1809,7 @@ contains
 !   b = y2 - y1
 !   c = x3 - x1
 !   d = y3 - y1
-! 
+!
 !   e = a * ( x1 + x2 ) + b * ( y1 + y2 )
 !   f = c * ( x1 + x3 ) + d * ( y1 + y3 )
 ! !
@@ -1839,7 +1839,7 @@ contains
 ! !  Knowing the center, the radius is now easy to compute.
 ! !
 !   r = sqrt ( ( x1 - xc )**2 + ( y1 - yc )**2 )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine circle_imp_contains_point_2d ( r, xc, yc, x, y, inside )
@@ -1886,7 +1886,7 @@ contains
 !   else
 !     inside = .false.
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine circle_imp_line_par_int_2d ( r, xc, yc, x0, y0, f, g, num_int, x, y )
@@ -1943,37 +1943,37 @@ contains
 !   real yc
 ! !
 !   root = r * r * ( f * f + g * g ) - ( f * ( yc - y0 ) - g * ( xc - x0 ) )**2
-! 
+!
 !   if ( root < 0.0E+00 ) then
-! 
+!
 !     num_int = 0
-! 
+!
 !   else if ( root == 0.0E+00 )then
-! 
+!
 !     num_int = 1
-! 
+!
 !     t = ( f * ( xc - x0 ) + g * ( yc - y0 ) ) / ( f * f + g * g )
 !     x(1) = x0 + f * t
 !     y(1) = y0 + g * t
-! 
+!
 !   else if ( root > 0.0E+00 ) then
-! 
+!
 !     num_int = 2
-! 
+!
 !     t = ( ( f * ( xc - x0 ) + g * ( yc - y0 ) ) - sqrt ( root ) ) &
 !       / ( f * f + g * g )
-! 
+!
 !     x(1) = x0 + f * t
 !     y(1) = y0 + g * t
-! 
+!
 !     t = ( ( f * ( xc - x0 ) + g * ( yc - y0 ) ) + sqrt ( root ) ) &
 !       / ( f * f + g * g )
-! 
+!
 !     x(2) = x0 + f * t
 !     y(2) = y0 + g * t
-! 
+!
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine circle_imp_points_2d ( r, xc, yc, n, x, y )
@@ -1985,7 +1985,7 @@ contains
 ! !
 ! !  Note:
 ! !
-! !    The first point is always ( XC + R, YC ), and subsequent points 
+! !    The first point is always ( XC + R, YC ), and subsequent points
 ! !    proceed counterclockwise around the circle.
 ! !
 ! !  Definition:
@@ -2027,7 +2027,7 @@ contains
 !     x(i) = xc + r * cos ( theta )
 !     y(i) = yc + r * sin ( theta )
 !   end do
-!  
+!
 !   return
 ! end subroutine
 ! subroutine circle_imp_points_arc_2d ( r, xc, yc, theta1, theta2, n, x, y )
@@ -2065,7 +2065,7 @@ contains
 ! !    Input, real XC, YC, the coordinates of the center of the circle.
 ! !
 ! !    Input, real THETA1, THETA2, the angular coordinates of the first
-! !    and last points to be drawn, in radians.  
+! !    and last points to be drawn, in radians.
 ! !
 ! !    Input, integer N, the number of points desired.  N must be at least 1.
 ! !
@@ -2084,25 +2084,25 @@ contains
 !   real y(n)
 !   real yc
 ! !
-! !  THETA3 is the smallest angle, no less than THETA1, which 
+! !  THETA3 is the smallest angle, no less than THETA1, which
 ! !  coincides with THETA2.
 ! !
 !   theta3 = theta1 + r_modp ( theta2 - theta1, 2.0E+00 * real(pi) )
-! 
+!
 !   do i = 1, n
-! 
+!
 !     if ( n > 1 ) then
 !       theta = ( real ( n - i ) * theta1 + real ( i - 1 ) * theta3 ) &
 !         / real ( n - 1 )
 !     else
 !       theta = 0.5E+00 * ( theta1 + theta3 )
 !     end if
-! 
+!
 !     x(i) = xc + r * cos ( theta )
 !     y(i) = yc + r * sin ( theta )
-! 
+!
 !   end do
-!  
+!
 !   return
 ! end subroutine
 ! subroutine cone_area_3d ( h, r, area )
@@ -2132,7 +2132,7 @@ contains
 !   real r
 ! !
 !   area = pi * r * sqrt ( h * h + r * r )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine cone_centroid_3d ( r, xc, yc, zc, xh, yh, zh, x, y, z )
@@ -2180,7 +2180,7 @@ contains
 !   x = 0.75 * xc + 0.25 * xh
 !   y = 0.75 * yc + 0.25 * yh
 !   z = 0.75 * zc + 0.25 * zh
-! 
+!
 !   return
 ! end subroutine
 ! subroutine cone_volume_3d ( h, r, volume )
@@ -2210,7 +2210,7 @@ contains
 !   real volume
 ! !
 !   volume = pi * r * r * h / 3.0E+00
-! 
+!
 !   return
 ! end subroutine
 ! subroutine conv3d ( cor, cor2, cor3, maxcor2, maxcor3, ncor2, theta )
@@ -2268,24 +2268,24 @@ contains
 !   real theta
 ! !
 !   stheta = sin ( degrees_to_radians ( theta ) )
-!  
+!
 !   if ( cor=='X' ) then
-! 
+!
 !     cor2(1,1:ncor2) = cor3(2,1:ncor2) - stheta * cor3(1,1:ncor2)
 !     cor2(2,1:ncor2) = cor3(3,1:ncor2) - stheta * cor3(1,1:ncor2)
-! 
+!
 !   else if ( cor=='Y' ) then
-! 
+!
 !     cor2(1,1:ncor2) = cor3(1,1:ncor2) - stheta * cor3(2,1:ncor2)
 !     cor2(2,1:ncor2) = cor3(3,1:ncor2) - stheta * cor3(2,1:ncor2)
-! 
+!
 !   else
-! 
+!
 !     cor2(1,1:ncor2) = cor3(1,1:ncor2) - stheta * cor3(3,1:ncor2)
 !     cor2(2,1:ncor2) = cor3(2,1:ncor2) - stheta * cor3(3,1:ncor2)
-! 
+!
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine corpl_2d ( dist, x1, y1, x2, y2, x3, y3, x4, y4, x5, y5 )
@@ -2404,7 +2404,7 @@ contains
 !     x1copy = x1
 !     y1copy = y1
 !   end if
-!  
+!
 !   if ( x2 == x3 .and. y2 == y3 ) then
 !     x3copy = 2.0E+00 * x2 - x1
 !     y3copy = 2.0E+00 * y2 - y1
@@ -2422,18 +2422,18 @@ contains
 !   temp = sqrt ( ux1 * ux1 + uy1 * uy1 )
 !   ux1 = ux1 / temp
 !   uy1 = uy1 / temp
-!  
+!
 !   if ( ux1 * ( x3copy - x2 ) + uy1 * ( y3copy - y2 ) < 0.0E+00 ) then
 !     ux1 = - ux1
 !     uy1 = - uy1
 !   end if
-!  
+!
 !   ux2 = y3copy - y2
 !   uy2 = x2 - x3copy
 !   temp = sqrt ( ux2 * ux2 + uy2 * uy2)
 !   ux2 = ux2 / temp
 !   uy2 = uy2 / temp
-!  
+!
 !   if ( ux2 * ( x1copy - x2 ) + uy2 * ( y1copy - y2 ) < 0.0E+00 ) then
 !     ux2 = - ux2
 !     uy2 = - uy2
@@ -2445,12 +2445,12 @@ contains
 ! !
 !   if ( ux1 * ( x3copy - x2) + uy1 * ( y3copy - y2 ) == 0.0E+00 .or. &
 !        ux2 * ( x1copy - x2) + uy2 * ( y1copy - y2 ) == 0.0E+00 ) then
-!  
+!
 !     if ( ux1 * ux2 + uy1 * uy2 < 0.0E+00 ) then
 !       ux1 = -ux1
 !       uy1 = -uy1
 !     end if
-!  
+!
 !   end if
 ! !
 ! !  Try to catch a line turning back on itself, evidenced by
@@ -2459,11 +2459,11 @@ contains
 ! !
 !   temp = ( ( x3copy - x2 ) * ( x2 - x1copy ) &
 !          + ( y3copy - y2 ) * ( y2 - y1copy ) )
-!  
+!
 !   temp = temp / &
 !         ( sqrt ( ( x3copy - x2 )**2 + ( y3copy - y2 )**2 ) &
 !         * sqrt ( ( x2 - x1copy )**2 + ( y2 - y1copy )**2 ) )
-!  
+!
 !   if ( temp < -0.99 ) then
 !     temp = sqrt ( ( x2 - x1copy)**2 + ( y2 - y1copy )**2 )
 !     x4 = x2 + dist * ( x2 - x1copy ) / temp + dist * ux1
@@ -2489,13 +2489,13 @@ contains
 ! !  result in a distance DIST from line1 (and line2).
 ! !
 !   stheta = ux * ux1 + uy * uy1
-!  
+!
 !   x4 = x2 + dist * ux / stheta
 !   y4 = y2 + dist * uy / stheta
-!  
+!
 !   x5 = x2 - dist * ux / stheta
 !   y5 = y2 - dist * uy / stheta
-!  
+!
 !   return
 ! end subroutine
 ! function cot ( angle )
@@ -2523,7 +2523,7 @@ contains
 !   real cot
 ! !
 !   cot  = cos ( angle ) / sin ( angle )
-! 
+!
 !   return
 ! end function
 ! function cotd ( angle )
@@ -2552,9 +2552,9 @@ contains
 !   real cotd
 ! !
 !   angle_rad = degrees_to_radians ( angle )
-! 
+!
 !   cotd  = cos ( angle_rad ) / sin ( angle_rad )
-! 
+!
 !   return
 ! end function
 ! function cross_2d ( x1, y1, x2, y2 )
@@ -2591,7 +2591,7 @@ contains
 !   real y2
 ! !
 !   cross_2d = x1 * y2 - y1 * x2
-!  
+!
 !   return
 ! end function
 ! subroutine cross_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3 )
@@ -2610,7 +2610,7 @@ contains
 ! !      det | x1 y1 z1 |
 ! !          | x2 y2 z2 |
 ! !
-! !      = ( y1 * z2 - z1 * y2 ) * i 
+! !      = ( y1 * z2 - z1 * y2 ) * i
 ! !      + ( z1 * x2 - x1 * z2 ) * j
 ! !      + ( x1 * y2 - y1 * x2 ) * k
 ! !
@@ -2641,7 +2641,7 @@ contains
 !   x3 = y1 * z2 - z1 * y2
 !   y3 = z1 * x2 - x1 * z2
 !   z3 = x1 * y2 - y1 * x2
-!  
+!
 !   return
 ! end subroutine
 ! function cross0_2d ( x0, y0, x1, y1, x2, y2 )
@@ -2656,7 +2656,7 @@ contains
 ! !    Strictly speaking, the vectors lie in the (X,Y) plane, and
 ! !    the cross product here is a vector in the Z direction.
 ! !
-! !    The vectors are specified with respect to a basis point P0.  
+! !    The vectors are specified with respect to a basis point P0.
 ! !    We are computing the normal to the triangle (P0,P1,P2).
 ! !
 ! !  Modified:
@@ -2687,7 +2687,7 @@ contains
 !   real y2
 ! !
 !   cross0_2d = ( x1 - x0 ) * ( y2 - y0 ) - ( y1 - y0 ) * ( x2 - x0 )
-!  
+!
 !   return
 ! end function
 ! subroutine cross0_3d ( x0, y0, z0, x1, y1, z1, x2, y2, z2, x3, y3, z3 )
@@ -2699,7 +2699,7 @@ contains
 ! !
 ! !  Discussion:
 ! !
-! !    The vectors are specified with respect to a basis point P0.  
+! !    The vectors are specified with respect to a basis point P0.
 ! !    We are computing the normal to the triangle (P0,P1,P2).
 ! !
 ! !  Modified:
@@ -2734,7 +2734,7 @@ contains
 !   x3 = ( y1 - y0 ) * ( z2 - z0 ) - ( z1 - z0 ) * ( y2 - y0 )
 !   y3 = ( z1 - z0 ) * ( x2 - x0 ) - ( x1 - x0 ) * ( z2 - z0 )
 !   z3 = ( x1 - x0 ) * ( y2 - y0 ) - ( y1 - y0 ) * ( x2 - x0 )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine cube_shape_3d ( max_num, max_order, point_num, face_num, &
@@ -2794,7 +2794,7 @@ contains
 ! !
 !   point_num = 8
 !   face_num = 6
-!   face_order = 4 
+!   face_order = 4
 ! !
 ! !  Check.
 ! !
@@ -2804,14 +2804,14 @@ contains
 !     write ( *, * ) '  Number of vertices exceeds MAX_NUM.'
 !     return
 !   end if
-! 
+!
 !   if ( face_num > max_num ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'CUBE_SHAPE_3D - Fatal error!'
 !     write ( *, * ) '  Number of faces exceeds MAX_NUM.'
 !     return
 !   end if
-! 
+!
 !   if ( face_order > max_order ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'CUBE_SHAPE_3D - Fatal error!'
@@ -2822,35 +2822,35 @@ contains
 ! !  Set point coordinates.
 ! !
 !   a = sqrt ( 1.0E+00 / 3.0E+00 )
-! 
+!
 !   point_coord(1,1) = - a
 !   point_coord(2,1) = - a
 !   point_coord(3,1) = - a
-! 
+!
 !   point_coord(1,2) =   a
 !   point_coord(2,2) = - a
 !   point_coord(3,2) = - a
-! 
+!
 !   point_coord(1,3) =   a
 !   point_coord(2,3) =   a
 !   point_coord(3,3) = - a
-! 
+!
 !   point_coord(1,4) = - a
 !   point_coord(2,4) =   a
 !   point_coord(3,4) = - a
-! 
+!
 !   point_coord(1,5) = - a
 !   point_coord(2,5) = - a
 !   point_coord(3,5) =   a
-! 
+!
 !   point_coord(1,6) =   a
 !   point_coord(2,6) = - a
 !   point_coord(3,6) =   a
-! 
+!
 !   point_coord(1,7) =   a
 !   point_coord(2,7) =   a
 !   point_coord(3,7) =   a
-! 
+!
 !   point_coord(1,8) = - a
 !   point_coord(2,8) =   a
 !   point_coord(3,8) =   a
@@ -2861,32 +2861,32 @@ contains
 !   face_point(2,1) = 4
 !   face_point(3,1) = 3
 !   face_point(4,1) = 2
-! 
+!
 !   face_point(1,2) = 1
 !   face_point(2,2) = 2
 !   face_point(3,2) = 6
 !   face_point(4,2) = 5
-! 
+!
 !   face_point(1,3) = 2
 !   face_point(2,3) = 3
 !   face_point(3,3) = 7
 !   face_point(4,3) = 6
-! 
+!
 !   face_point(1,4) = 3
 !   face_point(2,4) = 4
 !   face_point(3,4) = 8
 !   face_point(4,4) = 7
-! 
+!
 !   face_point(1,5) = 1
 !   face_point(2,5) = 5
 !   face_point(3,5) = 8
 !   face_point(4,5) = 4
-! 
+!
 !   face_point(1,6) = 5
 !   face_point(2,6) = 6
 !   face_point(3,6) = 7
 !   face_point(4,6) = 8
-! 
+!
 !   return
 ! end subroutine
 ! function degrees_to_radians ( angle )
@@ -2911,12 +2911,12 @@ contains
 ! !    Output, real DEGREES_TO_RADIANS, the equivalent angle
 ! !    in radians.
 ! !
-! 
+!
 !   real angle
 !   real degrees_to_radians
-! 
+!
 !   degrees_to_radians = ( angle / 180.0E+00 ) * pi
-! 
+!
 !   return
 ! end function
 ! subroutine direction_pert_3d ( sigma, vbase, vran )
@@ -2942,7 +2942,7 @@ contains
 ! !    0 < SIGMA < 1 results in a perturbation from VBASE, which is
 ! !    large when SIGMA is near 0, and small when SIGMA is near 1.
 ! !
-! !    Input, real VBASE(3), the base direction vector, which should have 
+! !    Input, real VBASE(3), the base direction vector, which should have
 ! !    unit norm.
 ! !
 ! !    Output, real VRAN(3), the perturbed vector, which will have unit norm.
@@ -2963,22 +2963,22 @@ contains
 ! !  SIGMA >= 0, just use the base vector.
 ! !
 !   if ( sigma >= 1.0E+00 ) then
-! 
+!
 !     vran(1:3) = vbase(1:3)
-! 
+!
 !   else if ( sigma <= 0.0E+00 ) then
-! 
+!
 !     call r_random ( -1.0E+00, 1.0E+00, vdot )
 !     phi = arc_cosine ( vdot )
-! 
+!
 !     call r_random ( 0.0E+00, 2.0E+00 * real(pi), theta )
-! 
+!
 !     vran(1) = cos ( theta ) * sin ( phi )
 !     vran(2) = sin ( theta ) * sin ( phi )
 !     vran(3) = cos ( phi )
-! 
+!
 !   else
-! 
+!
 !     phi = arc_cosine ( vbase(3) )
 !     theta = atan2 ( vbase(2), vbase(1) )
 ! !
@@ -2987,7 +2987,7 @@ contains
 ! !
 ! !  RANDOM_NUMBER returns a uniformly random value between 0 and 1.
 ! !  The operations we perform on this quantity tend to bias it
-! !  out towards 1, as SIGMA grows from 0 to 1.  
+! !  out towards 1, as SIGMA grows from 0 to 1.
 ! !
 ! !  VDOT, in turn, is a value between -1 and 1, which, for large
 ! !  SIGMA, we want biased towards 1.
@@ -2997,7 +2997,7 @@ contains
 !     dphi = arc_cosine ( 2.0E+00 * x - 1.0E+00 )
 ! !
 ! !  Now we know enough to write down a vector that is rotated DPHI
-! !  from the base vector.  
+! !  from the base vector.
 ! !
 !     v(1) = cos ( theta ) * sin ( phi + dphi )
 !     v(2) = sin ( theta ) * sin ( phi + dphi )
@@ -3011,9 +3011,9 @@ contains
 ! !  Carry out the rotation.
 ! !
 !     call rotation_axis_vector_3d ( vbase, psi, v, vran )
-! 
+!
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine direction_random_3d ( vran )
@@ -3041,7 +3041,7 @@ contains
 !   real vdot
 !   real vran(3)
 ! !
-! !  Pick a uniformly random VDOT, which must be between -1 and 1.  
+! !  Pick a uniformly random VDOT, which must be between -1 and 1.
 ! !  This represents the dot product of the random vector with the Z unit vector.
 ! !
 ! !  Note: this works because the surface area of the sphere between
@@ -3049,17 +3049,17 @@ contains
 ! !  a patch of area uniformly.
 ! !
 !   call r_random ( -1.0E+00, 1.0E+00, vdot )
-!   phi = arc_cosine ( vdot ) 
+!   phi = arc_cosine ( vdot )
 ! !
 ! !  Pick a uniformly random rotation between 0 and 2 Pi around the
 ! !  axis of the Z vector.
 ! !
 !   call r_random ( 0.0E+00, 2.0E+00 * real(pi), theta )
-! 
+!
 !   vran(1) = cos ( theta ) * sin ( phi )
 !   vran(2) = sin ( theta ) * sin ( phi )
 !   vran(3) = cos ( phi )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine direction_random_nd ( n, w )
@@ -3082,7 +3082,7 @@ contains
 ! !    Input, integer N, the dimension of the space.
 ! !
 ! !    Output, real W(N), a random direction vector, with unit norm.
-! ! 
+! !
 !   integer n
 ! !
 !   integer i
@@ -3102,7 +3102,7 @@ contains
 ! !  Normalize the vector.
 ! !
 !   w(1:n) = w(1:n) / norm
-! 
+!
 !   return
 ! end subroutine
 ! subroutine dodec_shape_3d ( max_num, max_order, point_num, face_num, &
@@ -3175,14 +3175,14 @@ contains
 !     write ( *, * ) '  Number of vertices exceeds MAX_NUM.'
 !     return
 !   end if
-! 
+!
 !   if ( face_num > max_num ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'DODEC_SHAPE_3D - Fatal error!'
 !     write ( *, * ) '  Number of faces exceeds MAX_NUM.'
 !     return
 !   end if
-! 
+!
 !   if ( face_order > max_order ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'DODEC_SHAPE_3D - Fatal error!'
@@ -3193,87 +3193,87 @@ contains
 ! !  Set point coordinates.
 ! !
 !   phi = 0.5E+00 * ( sqrt ( 5.0E+00 ) + 1.0E+00 )
-! 
+!
 !   a = 1.0E+00 / sqrt ( 3.0E+00 )
 !   b = phi / sqrt ( 3.0E+00 )
 !   c = ( phi - 1.0E+00 ) / sqrt ( 3.0E+00 )
-! 
+!
 !   point_coord(1,1) =   a
 !   point_coord(2,1) =   a
 !   point_coord(3,1) =   a
-! 
+!
 !   point_coord(1,2) =   a
 !   point_coord(2,2) =   a
 !   point_coord(3,2) = - a
-! 
+!
 !   point_coord(1,3) =   a
 !   point_coord(2,3) = - a
 !   point_coord(3,3) =   a
-! 
+!
 !   point_coord(1,4) =   a
 !   point_coord(2,4) = - a
 !   point_coord(3,4) = - a
-! 
+!
 !   point_coord(1,5) = - a
 !   point_coord(2,5) =   a
 !   point_coord(3,5) =   a
-! 
+!
 !   point_coord(1,6) = - a
 !   point_coord(2,6) =   a
 !   point_coord(3,6) = - a
-! 
+!
 !   point_coord(1,7) = - a
 !   point_coord(2,7) = - a
 !   point_coord(3,7) =   a
-! 
+!
 !   point_coord(1,8) = - a
 !   point_coord(2,8) = - a
 !   point_coord(3,8) = - a
-! 
+!
 !   point_coord(1,9) =    c
 !   point_coord(2,9) =    b
 !   point_coord(3,9) =    0.0E+00
-! 
+!
 !   point_coord(1,10) = - c
 !   point_coord(2,10) =   b
 !   point_coord(3,10) =   0.0E+00
-! 
+!
 !   point_coord(1,11) =   c
 !   point_coord(2,11) = - b
 !   point_coord(3,11) =   0.0E+00
-! 
+!
 !   point_coord(1,12) = - c
 !   point_coord(2,12) = - b
 !   point_coord(3,12) =   0.0E+00
-! 
+!
 !   point_coord(1,13) =   b
 !   point_coord(2,13) =   0.0E+00
 !   point_coord(3,13) =   c
-! 
+!
 !   point_coord(1,14) =   b
 !   point_coord(2,14) =   0.0E+00
 !   point_coord(3,14) = - c
-! 
+!
 !   point_coord(1,15) = - b
 !   point_coord(2,15) =   0.0E+00
 !   point_coord(3,15) =   c
-! 
+!
 !   point_coord(1,16) = - b
 !   point_coord(2,16) =   0.0E+00
 !   point_coord(3,16) = - c
-! 
+!
 !   point_coord(1,17) =   0.0E+00
 !   point_coord(2,17) =   c
 !   point_coord(3,17) =   b
-! 
+!
 !   point_coord(1,18) =   0.0E+00
 !   point_coord(2,18) = - c
 !   point_coord(3,18) =   b
-! 
+!
 !   point_coord(1,19) =   0.0E+00
 !   point_coord(2,19) =   c
 !   point_coord(3,19) = - b
-! 
+!
 !   point_coord(1,20) =   0.0E+00
 !   point_coord(2,20) = - c
 !   point_coord(3,20) = - b
@@ -3285,73 +3285,73 @@ contains
 !   face_point(3,1) = 1
 !   face_point(4,1) = 13
 !   face_point(5,1) = 14
-! 
+!
 !   face_point(1,2) = 5
 !   face_point(2,2) = 10
 !   face_point(3,2) = 6
 !   face_point(4,2) = 16
 !   face_point(5,2) = 15
-! 
+!
 !   face_point(1,3) = 3
 !   face_point(2,3) = 11
 !   face_point(3,3) = 4
 !   face_point(4,3) = 14
 !   face_point(5,3) = 13
-! 
+!
 !   face_point(1,4) = 8
 !   face_point(2,4) = 12
 !   face_point(3,4) = 7
 !   face_point(4,4) = 15
 !   face_point(5,4) = 16
-! 
+!
 !   face_point(1,5) = 3
 !   face_point(2,5) = 13
 !   face_point(3,5) = 1
 !   face_point(4,5) = 17
 !   face_point(5,5) = 18
-! 
+!
 !   face_point(1,6) = 2
 !   face_point(2,6) = 14
 !   face_point(3,6) = 4
 !   face_point(4,6) = 20
 !   face_point(5,6) = 19
-! 
+!
 !   face_point(1,7) = 5
 !   face_point(2,7) = 15
 !   face_point(3,7) = 7
 !   face_point(4,7) = 18
 !   face_point(5,7) = 17
-! 
+!
 !   face_point(1,8) = 8
 !   face_point(2,8) = 16
 !   face_point(3,8) = 6
 !   face_point(4,8) = 19
 !   face_point(5,8) = 20
-! 
+!
 !   face_point(1,9) = 5
 !   face_point(2,9) = 17
 !   face_point(3,9) = 1
 !   face_point(4,9) = 9
 !   face_point(5,9) = 10
-! 
+!
 !   face_point(1,10) = 3
 !   face_point(2,10) = 18
 !   face_point(3,10) = 7
 !   face_point(4,10) = 12
 !   face_point(5,10) = 11
-! 
+!
 !   face_point(1,11) = 2
 !   face_point(2,11) = 19
 !   face_point(3,11) = 6
 !   face_point(4,11) = 10
 !   face_point(5,11) = 9
-! 
+!
 !   face_point(1,12) = 8
 !   face_point(2,12) = 20
 !   face_point(3,12) = 4
 !   face_point(4,12) = 11
 !   face_point(5,12) = 12
-! 
+!
 !   return
 ! end subroutine
 ! function dot_2d ( x1, y1, x2, y2 )
@@ -3382,7 +3382,7 @@ contains
 !   real y2
 ! !
 !   dot_2d = x1 * x2 + y1 * y2
-!  
+!
 !   return
 ! end function
 ! function dot_3d ( x1, y1, z1, x2, y2, z2 )
@@ -3415,7 +3415,7 @@ contains
 !   real z2
 ! !
 !   dot_3d = x1 * x2 + y1 * y2 + z1 * z2
-!  
+!
 !   return
 ! end function
 ! function dot_nd ( n, v1, v2 )
@@ -3449,7 +3449,7 @@ contains
 !   real v2(n)
 ! !
 !   dot_nd = dot_product ( v1(1:n), v2(1:n) )
-!  
+!
 !   return
 ! end function
 ! function dot0_2d ( x0, y0, x1, y1, x2, y2 )
@@ -3469,7 +3469,7 @@ contains
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X0, Y0, X1, Y1, X2, Y2, the coordinates of 
+! !    Input, real X0, Y0, X1, Y1, X2, Y2, the coordinates of
 ! !    the points P0, P1 and P1.
 ! !
 ! !    Output, real DOT0_2D, the dot product of (P1-P0) and (P2-P0).
@@ -3482,8 +3482,8 @@ contains
 !   real y1
 !   real y2
 ! !
-!   dot0_2d = ( x1 - x0 ) * ( x2 - x0 ) + ( y1 - y0 ) * ( y2 - y0 ) 
-!  
+!   dot0_2d = ( x1 - x0 ) * ( x2 - x0 ) + ( y1 - y0 ) * ( y2 - y0 )
+!
 !   return
 ! end function
 ! function dot0_3d ( x0, y0, z0, x1, y1, z1, x2, y2, z2 )
@@ -3524,12 +3524,12 @@ contains
 ! !
 !   dot0_3d = ( x1 - x0 ) * ( x2 - x0 ) + ( y1 - y0 ) * ( y2 - y0 ) + &
 !             ( z1 - z0 ) * ( z2 - z0 )
-!  
+!
 !   return
 ! end function
 ! subroutine dual_shape_3d ( max_num, max_order, point_num1, face_num1, &
 !   face_order1, point_coord1, face_point1, point_num2, face_num2, face_order2, &
-!   point_coord2, face_point2 ) 
+!   point_coord2, face_point2 )
 ! !
 ! !*******************************************************************************
 ! !
@@ -3561,7 +3561,7 @@ contains
 ! !
 ! !    Input, integer FACE_ORDER1, the number of vertices per face.
 ! !
-! !    Input, real POINT_COORD1(3,MAX_NUM); POINT_COORD1(*,J) contains 
+! !    Input, real POINT_COORD1(3,MAX_NUM); POINT_COORD1(*,J) contains
 ! !    the X, Y and Z coordinates of point J.
 ! !
 ! !    Input, integer FACE_POINT1(MAX_ORDER,MAX_NUM); FACE_POINT1(I,J)
@@ -3620,7 +3620,7 @@ contains
 ! !  position vector of the vertex.
 ! !
 !   do i = 1, face_num1
-! 
+!
 !     x = 0.0E+00
 !     y = 0.0E+00
 !     z = 0.0E+00
@@ -3630,13 +3630,13 @@ contains
 !       y = y + point_coord1(2,k)
 !       z = z + point_coord1(3,k)
 !     end do
-! 
+!
 !     norm = sqrt ( x * x + y * y + z * z )
-! 
+!
 !     point_coord2(1,i) = x / norm
 !     point_coord2(2,i) = y / norm
 !     point_coord2(3,i) = z / norm
-! 
+!
 !   end do
 ! !
 ! !  Now build the face in the dual associated with each node IFACE.
@@ -3651,7 +3651,7 @@ contains
 ! !
 !     call icol_find_item ( face_point1, max_order, face_order1, face_num1, &
 !       iface, irow, icol )
-! 
+!
 !     if ( irow == 0 ) then
 !       write ( *, * ) ' '
 !       write ( *, * ) 'DUAL_SHAPE_3D - Fatal error!'
@@ -3666,22 +3666,22 @@ contains
 !     if ( i > face_order1 ) then
 !       i = 1
 !     end if
-! 
+!
 !     istop = face_point1(i,icol)
 ! !
 ! !  Save the previous node as INEXT.
 ! !
 !     do
-! 
+!
 !       i = irow - 1
 !       if ( i < 1 ) then
 !         i = i + face_order1
 !       end if
-! 
+!
 !       inext = face_point1(i,icol)
-! 
+!
 !       face_order2 = face_order2 + 1
-! 
+!
 !       face_point2(face_order2,iface) = icol
 ! !
 ! !  If INEXT =/= ISTOP, continue.
@@ -3698,7 +3698,7 @@ contains
 ! !
 !       call icol_find_pair_wrap ( face_point1, max_order, face_order1, &
 !         face_num1, iface, iprev, irow, icol )
-! 
+!
 !       if ( irow == 0 ) then
 !         write ( *, * ) ' '
 !         write ( *, * ) 'DUAL_SHAPE_3D - Fatal error!'
@@ -3706,14 +3706,14 @@ contains
 !         write ( *, * ) '  to node ', iface
 !         return
 !       end if
-! 
+!
 !     end do
-! 
+!
 !   end do
-! 
+!
 !   return
 ! end subroutine
-! 
+!
 ! subroutine ellipse_area_2d ( r1, r2, area )
 ! !
 ! !*******************************************************************************
@@ -3741,7 +3741,7 @@ contains
 !   real r2
 ! !
 !   area = pi* r1 * r2
-! 
+!
 !   return
 ! end subroutine
 ! subroutine ellipse_points_2d ( x0, y0, r1, r2, psi, n, x, y )
@@ -3792,17 +3792,17 @@ contains
 !   real y(n)
 ! !
 !   do i = 1, n
-! 
+!
 !     theta = ( 2.0E+00 * pi * real ( i - 1 ) ) / real ( n )
-! 
+!
 !     x(i) = x0 + r1 * cos ( psi ) * cos ( theta ) &
 !               - r2 * sin ( psi ) * sin ( theta )
-! 
+!
 !     y(i) = y0 + r1 * sin ( psi ) * cos ( theta ) &
 !               + r2 * cos ( psi ) * sin ( theta )
-! 
+!
 !   end do
-!  
+!
 !   return
 ! end subroutine
 ! subroutine ellipse_points_arc_2d ( x0, y0, r1, r2, psi, theta1, theta2, n, &
@@ -3839,7 +3839,7 @@ contains
 ! !
 ! !    Input, real THETA1, THETA2, the angular coordinates of the first
 ! !    and last points to be drawn, in radians.  This angle is measured
-! !    with respect to the (possibly tilted) major axis.  
+! !    with respect to the (possibly tilted) major axis.
 ! !
 ! !    Input, integer N, the number of points desired.  N must be at least 1.
 ! !
@@ -3860,28 +3860,28 @@ contains
 !   real y0
 !   real y(n)
 ! !
-! !  THETA3 is the smallest angle, no less than THETA1, which 
+! !  THETA3 is the smallest angle, no less than THETA1, which
 ! !  coincides with THETA2.
 ! !
 !   theta3 = theta1 + r_modp ( theta2 - theta1, 2.0E+00 * real(pi) )
-! 
+!
 !   do i = 1, n
-! 
+!
 !     if ( n > 1 ) then
 !       theta = ( real ( n - i ) * theta1 + real ( i - 1 ) * theta3 ) &
 !         / real ( n - 1 )
 !     else
 !       theta = 0.5E+00 * ( theta1 + theta3 )
 !     end if
-!  
+!
 !     x(i) = x0 + r1 * cos ( psi ) * cos ( theta ) &
 !               - r2 * sin ( psi ) * sin ( theta )
-! 
+!
 !     y(i) = y0 + r1 * sin ( psi ) * cos ( theta ) &
 !               + r2 * cos ( psi ) * sin ( theta )
-! 
+!
 !   end do
-!  
+!
 !   return
 ! end subroutine
 ! function enorm_2d ( x1, y1 )
@@ -3910,7 +3910,7 @@ contains
 !   real y1
 ! !
 !   enorm_2d = sqrt ( x1 * x1 + y1 * y1 )
-!  
+!
 !   return
 ! end function
 ! function enorm_3d ( x1, y1, z1 )
@@ -3940,7 +3940,7 @@ contains
 !   real z1
 ! !
 !   enorm_3d = sqrt ( x1 * x1 + y1 * y1 + z1 * z1 )
-!  
+!
 !   return
 ! end function
 ! function enorm_nd ( n, x )
@@ -3973,13 +3973,13 @@ contains
 !   real x(n)
 ! !
 !   enorm_nd = sqrt ( sum ( x(1:n)**2 ) )
-!  
+!
 !   return
 ! end function
-! 
-! 
+!
+!
 ! function enorm0_2d ( x0, y0, x1, y1 )
-! real enorm0_2d 
+! real enorm0_2d
 ! !
 ! !*******************************************************************************
 ! !
@@ -4006,11 +4006,11 @@ contains
 !   real y1
 ! !
 !   enorm0_2d = sqrt ( ( x1 - x0 )**2 + ( y1 - y0 )**2 )
-!  
+!
 !   return
 ! end function
-! 
-! 
+!
+!
 ! function enorm0_3d ( x0, y0, z0, x1, y1, z1 )
 ! real enorm0_3d
 ! !
@@ -4029,7 +4029,7 @@ contains
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X0, Y0, Z0, X1, Y1, Z1, the coordinates of the points 
+! !    Input, real X0, Y0, Z0, X1, Y1, Z1, the coordinates of the points
 ! !    P0 and P1.
 ! !
 ! !    Output, real ENORM0_3D, the Euclidean norm of (P1-P0).
@@ -4042,13 +4042,13 @@ contains
 !   real z1
 ! !
 !   enorm0_3d = sqrt ( ( x1 - x0 )**2 + ( y1 - y0 )**2 + ( z1 - z0 )**2 )
-!  
+!
 !   return
 ! end function
-! 
-! 
+!
+!
 ! function enorm0_nd ( n, x0, x1 )
-! real enorm0_nd 
+! real enorm0_nd
 ! !
 ! !*******************************************************************************
 ! !
@@ -4080,11 +4080,11 @@ contains
 !   real x1(n)
 ! !
 !   enorm0_nd = sqrt ( sum ( ( x1(1:n) - x0(1:n) )**2 ) )
-! 
+!
 !   return
 ! end function
-! 
-! 
+!
+!
 ! function enormsq0_2d ( x0, y0, x1, y1 )
 ! real enormsq0_2d
 ! !
@@ -4103,7 +4103,7 @@ contains
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X0, Y0, X1, Y1, the coordinates of the points 
+! !    Input, real X0, Y0, X1, Y1, the coordinates of the points
 ! !    P0 and P1.
 ! !
 ! !    Output, real ENORMSQ0_2D, the square of the Euclidean norm of (P1-P0).
@@ -4114,7 +4114,7 @@ contains
 !   real y1
 ! !
 !   enormsq0_2d = ( x1 - x0 )**2 + ( y1 - y0 )**2
-!  
+!
 !   return
 ! end function
 ! function enormsq0_3d ( x0, y0, z0, x1, y1, z1 )
@@ -4134,7 +4134,7 @@ contains
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X0, Y0, Z0, X1, Y1, Z1, the coordinates of the points 
+! !    Input, real X0, Y0, Z0, X1, Y1, Z1, the coordinates of the points
 ! !    P0 and P1.
 ! !
 ! !    Output, real ENORMSQ0_3D, the square of the Euclidean norm of (P1-P0).
@@ -4147,13 +4147,13 @@ contains
 !   real z0
 !   real z1
 ! !
-!   enormsq0_3d =( x1 - x0 )**2 + ( y1 - y0 )**2 + ( z1 - z0 )**2 
-!  
+!   enormsq0_3d =( x1 - x0 )**2 + ( y1 - y0 )**2 + ( z1 - z0 )**2
+!
 !   return
 ! end function
-! 
+!
 ! function enormsq0_nd ( n, x0, x1 )
-! 
+!
 ! !
 ! !*******************************************************************************
 ! !
@@ -4186,7 +4186,7 @@ contains
 !   real x1(n)
 ! !
 !   enormsq0_nd = sum ( ( x1(1:n) - x0(1:n) )**2 )
-! 
+!
 !   return
 ! end function
 ! subroutine glob2loc_3d ( cospitch, cosroll, cosyaw, locpts, globas, glopts, &
@@ -4199,10 +4199,10 @@ contains
 ! !
 ! !  Discussion:
 ! !
-! !    A global coordinate system is given.  
+! !    A global coordinate system is given.
 ! !
 ! !    A local coordinate system has been translated to the point with
-! !    global coordinates GLOBAS, and rotated through a yaw, a pitch, and 
+! !    global coordinates GLOBAS, and rotated through a yaw, a pitch, and
 ! !    a roll.
 ! !
 ! !    A point has global coordinates GLOPTS, and it is desired to know
@@ -4212,7 +4212,7 @@ contains
 ! !
 ! !      LOC = M_ROLL * M_PITCH * M_YAW * ( GLOB - GLOBAS )
 ! !
-! !    where 
+! !    where
 ! !
 ! !               (       1            0            0      )
 ! !    M_ROLL =   (       0        cos(Roll)    sin(Roll)  )
@@ -4236,7 +4236,7 @@ contains
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real COSPITCH, COSROLL, COSYAW, the cosines of the pitch, 
+! !    Input, real COSPITCH, COSROLL, COSYAW, the cosines of the pitch,
 ! !    roll and yaw angles.
 ! !
 ! !    Input, real GLOBAS(3), the X, Y, and Z coordinates of the
@@ -4248,7 +4248,7 @@ contains
 ! !    Output, real LOCPTS(3), the local coordinates of the point
 ! !    whose global coordinates were given in GLOPTS.
 ! !
-! !    Input, real SINPITCH, SINROLL, SINYAW, the sines of the pitch, 
+! !    Input, real SINPITCH, SINROLL, SINYAW, the sines of the pitch,
 ! !    roll and yaw angles.
 ! !
 !   real cospitch
@@ -4263,20 +4263,20 @@ contains
 ! !
 !   locpts(1) = ( cosyaw * cospitch ) * ( glopts(1) - globas(1) ) &
 !             + ( sinyaw * cospitch ) * ( glopts(2) - globas(2) ) &
-!             -   sinpitch * ( glopts(3) - globas(3) ) 
-! 
+!             -   sinpitch * ( glopts(3) - globas(3) )
+!
 !   locpts(2) = ( cosyaw * sinpitch * sinroll - sinyaw * cosroll ) &
 !     * ( glopts(1) - globas(1) ) &
 !     + ( sinyaw * sinpitch * sinroll + cosyaw * cosroll ) &
 !     * ( glopts(2) - globas(2) ) &
 !     +   cospitch * sinroll * ( glopts(3) - globas(3) )
-! 
-!   locpts(3) = ( cosyaw * sinpitch * cosroll + sinyaw * sinroll ) &         
+!
+!   locpts(3) = ( cosyaw * sinpitch * cosroll + sinyaw * sinroll ) &
 !     * ( glopts(1) - globas(1) ) &
 !     + ( sinyaw * sinpitch * cosroll - cosyaw * sinroll  ) &
 !     * ( glopts(2) - globas(2) ) &
 !     + ( cospitch * cosroll ) * ( glopts(3) - globas(3) )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine halfspace_imp_triangle_int_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, &
@@ -4330,7 +4330,7 @@ contains
 ! !    Output, integer NUM_INT, the number of intersection points returned,
 ! !    which will always be between 0 and 4.
 ! !
-! !    Output, real X(4), Y(4), Z(4), the coordinates of the NUM_INT 
+! !    Output, real X(4), Y(4), Z(4), the coordinates of the NUM_INT
 ! !    intersection points.  The points will lie in sequence on the triangle.
 ! !    Some points will be vertices, and some may be separators.
 ! !
@@ -4365,7 +4365,7 @@ contains
 ! !
 !   call halfspace_triangle_int_3d ( x1, y1, z1, x2, y2, &
 !     z2, x3, y3, z3, dist1, dist2, dist3, num_int, x, y, z )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine halfspace_norm_triangle_int_3d ( x1, y1, z1, x2, y2, z2, &
@@ -4417,14 +4417,14 @@ contains
 ! !    Input, real XP, YP, ZP, a point on the bounding plane that defines
 ! !    the halfspace.
 ! !
-! !    Input, real XN, YN, ZN, the components of the normal vector to the 
+! !    Input, real XN, YN, ZN, the components of the normal vector to the
 ! !    bounding plane that defines the halfspace.  By convention, the
 ! !    normal vector points "outwards" from the halfspace.
 ! !
 ! !    Output, integer NUM_INT, the number of intersection points returned,
 ! !    which will always be between 0 and 4.
 ! !
-! !    Output, real X(4), Y(4), Z(4), the coordinates of the NUM_INT 
+! !    Output, real X(4), Y(4), Z(4), the coordinates of the NUM_INT
 ! !    intersection points.  The points will lie in sequence on the triangle.
 ! !    Some points will be vertices, and some may be separators.
 ! !
@@ -4455,7 +4455,7 @@ contains
 ! !  Compute the signed distances between the vertices and the plane.
 ! !
 !   d = - xn * xp - yn * yp - zn * zp
-! 
+!
 !   dist1 = xn * x1 + yn * y1 + zn * z1 + d
 !   dist2 = xn * x2 + yn * y2 + zn * z2 + d
 !   dist3 = xn * x3 + yn * y3 + zn * z3 + d
@@ -4464,7 +4464,7 @@ contains
 ! !
 !   call halfspace_triangle_int_3d ( x1, y1, z1, x2, y2, &
 !     z2, x3, y3, z3, dist1, dist2, dist3, num_int, x, y, z )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine halfspace_triangle_int_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, &
@@ -4510,7 +4510,7 @@ contains
 ! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, the coordinates
 ! !    of the vertices of the triangle.
 ! !
-! !    Input, real DIST1, DIST2, DIST3, the distances from each of the 
+! !    Input, real DIST1, DIST2, DIST3, the distances from each of the
 ! !    three vertices of the triangle to the halfspace.  The distance is
 ! !    zero if a vertex lies within the halfspace, or on the plane that
 ! !    defines the boundary of the halfspace.  Otherwise, it is the
@@ -4519,7 +4519,7 @@ contains
 ! !    Output, integer NUM_INT, the number of intersection points returned,
 ! !    which will always be between 0 and 4.
 ! !
-! !    Output, real X(4), Y(4), Z(4), the coordinates of the NUM_INT 
+! !    Output, real X(4), Y(4), Z(4), the coordinates of the NUM_INT
 ! !    intersection points.  The points will lie in sequence on the triangle.
 ! !    Some points will be vertices, and some may be separators.
 ! !
@@ -4544,62 +4544,62 @@ contains
 ! !  and points of separation.
 ! !
 !   num_int = 0
-! 
+!
 !   if ( dist1 <= 0.0E+00 ) then
-! 
+!
 !     num_int = num_int + 1
 !     x(num_int) = x1
 !     y(num_int) = y1
 !     z(num_int) = z1
-! 
+!
 !   end if
-! 
+!
 !   if ( dist1 * dist2 < 0.0E+00 ) then
-! 
+!
 !     num_int = num_int + 1
 !     x(num_int) = ( dist1 * x2 - dist2 * x1 ) / ( dist1 - dist2 )
 !     y(num_int) = ( dist1 * y2 - dist2 * y1 ) / ( dist1 - dist2 )
 !     z(num_int) = ( dist1 * z2 - dist2 * z1 ) / ( dist1 - dist2 )
-! 
+!
 !   end if
-! 
+!
 !   if ( dist2 <= 0.0E+00 ) then
-! 
+!
 !     num_int = num_int + 1
 !     x(num_int) = x2
 !     y(num_int) = y2
 !     z(num_int) = z2
-! 
+!
 !   end if
-! 
+!
 !   if ( dist2 * dist3 < 0.0E+00 ) then
-! 
+!
 !     num_int = num_int + 1
-! 
+!
 !     x(num_int) = ( dist2 * x3 - dist3 * x2 ) / ( dist2 - dist3 )
 !     y(num_int) = ( dist2 * y3 - dist3 * y2 ) / ( dist2 - dist3 )
 !     z(num_int) = ( dist2 * z3 - dist3 * z2 ) / ( dist2 - dist3 )
-! 
+!
 !   end if
-! 
+!
 !   if ( dist3 <= 0.0E+00 ) then
-! 
+!
 !     num_int = num_int + 1
 !     x(num_int) = x3
 !     y(num_int) = y3
 !     z(num_int) = z3
-! 
+!
 !   end if
-! 
+!
 !   if ( dist3 * dist1 < 0.0E+00 ) then
-! 
+!
 !     num_int = num_int + 1
 !     x(num_int) = ( dist3 * x1 - dist1 * x3 ) / ( dist3 - dist1 )
 !     y(num_int) = ( dist3 * y1 - dist1 * y3 ) / ( dist3 - dist1 )
 !     z(num_int) = ( dist3 * z1 - dist1 * z3 ) / ( dist3 - dist1 )
-! 
+!
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine helix_shape_3d ( a, n, r, theta1, theta2, x, y, z )
@@ -4657,20 +4657,20 @@ contains
 !   real z(n)
 ! !
 !   do i = 1, n
-! 
+!
 !     if ( n == 1 ) then
 !       theta = 0.5E+00 * ( theta1 + theta2 )
 !     else
 !       theta = ( real ( n - i ) * theta1 + real ( i - 1 ) * theta2 ) &
 !         / real ( n - 1 )
 !     end if
-!  
+!
 !     x(i) = r * cos ( theta )
 !     y(i) = r * sin ( theta )
 !     z(i) = a * theta
-!  
+!
 !   end do
-!  
+!
 !   return
 ! end subroutine
 ! function hexagon_area_2d ( rad )
@@ -4699,7 +4699,7 @@ contains
 !   real rad
 ! !
 !   hexagon_area_2d = rad**2 * hexagon_unit_area_2d ( )
-! 
+!
 !   return
 ! end function
 ! function hexagon_unit_area_2d ( )
@@ -4725,7 +4725,7 @@ contains
 !   real rad
 ! !
 !   hexagon_unit_area_2d = 3.0D+00 * sqrt ( 3.0D+00 ) / 2.0D+00
-! 
+!
 !   return
 ! end function
 ! subroutine hexagon_shape_2d ( angle, x, y )
@@ -4747,12 +4747,12 @@ contains
 ! !  Discussion:
 ! !
 ! !    The unit hexagon has maximum radius 1, and is the hull of the points
-! ! 
-! !      (   1,              0 ), 
-! !      (   0.5,   sqrt (3)/2 ), 
-! !      ( - 0.5,   sqrt (3)/2 ), 
-! !      ( - 1,              0 ), 
-! !      ( - 0.5, - sqrt (3)/2 ), 
+! !
+! !      (   1,              0 ),
+! !      (   0.5,   sqrt (3)/2 ),
+! !      ( - 0.5,   sqrt (3)/2 ),
+! !      ( - 1,              0 ),
+! !      ( - 0.5, - sqrt (3)/2 ),
 ! !      (   0.5, - sqrt (3)/2 ).
 ! !
 ! !  Modified:
@@ -4768,7 +4768,7 @@ contains
 ! !    Input, real ANGLE, the angle, in degrees, of the point.
 ! !
 ! !    Output, real X, Y, the coordinates of the point.
-! ! 
+! !
 !   real angle
 !   real angle2
 !   real x
@@ -4782,47 +4782,47 @@ contains
 ! !  y = - sqrt(3) * x + sqrt(3)
 ! !
 !   if ( 0.0E+00 <= angle2 .and. angle2 <= 60.0E+00 ) then
-! 
+!
 !     x = sqrt ( 3.0E+00 ) / ( tand ( angle2 ) + sqrt ( 3.0E+00 ) )
 !     y = tand ( angle2 ) * x
 ! !
 ! !  y = sqrt(3) / 2
 ! !
 !   else if ( angle2 <= 120.0E+00 ) then
-! 
+!
 !     y = sqrt ( 3.0E+00 ) / 2.0E+00
 !     x = cotd ( angle2 ) * y
 ! !
 ! !  y = sqrt(3) * x + sqrt(3)
 ! !
 !   else if ( angle2 <= 180.0E+00 ) then
-! 
+!
 !     x = sqrt ( 3.0E+00 ) / ( tand ( angle2 ) - sqrt ( 3.0E+00 ) )
 !     y = tand ( angle2 ) * x
 ! !
 ! !  y = - sqrt(3) * x - sqrt(3)
 ! !
 !   else if ( angle2 <= 240.0E+00 ) then
-! 
+!
 !     x = - sqrt ( 3.0E+00 ) / ( tand ( angle2 ) + sqrt ( 3.0E+00 ) )
 !     y = tand ( angle2 ) * x
 ! !
 ! !  y = - sqrt(3) / 2
 ! !
 !   else if ( angle2 <= 300.0E+00 ) then
-! 
+!
 !     y = - sqrt ( 3.0E+00 ) / 2.0E+00
 !     x = y * cotd ( angle2 )
 ! !
 ! !  y = sqrt(3) * x - sqrt(3)
 ! !
 !   else if ( angle2 <= 360.0E+00 ) then
-! 
+!
 !     x = - sqrt ( 3.0E+00 ) / ( tand ( angle2 ) - sqrt ( 3.0E+00 ) )
 !     y = tand ( angle2 ) * x
-! 
+!
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine i_random ( ilo, ihi, i )
@@ -4877,7 +4877,7 @@ contains
 ! !
 !   i = max ( i, ilo )
 !   i = min ( i, ihi )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine i_swap ( i, j )
@@ -4907,7 +4907,7 @@ contains
 !   k = i
 !   i = j
 !   j = k
-! 
+!
 !   return
 ! end subroutine
 ! subroutine icol_find_item ( itable, maxrow, nrow, ncol, item, irow, icol )
@@ -4954,17 +4954,17 @@ contains
 ! !
 !   do j = 1, ncol
 !     do i = 1, nrow
-!       if ( itable(i,j) == item ) then 
+!       if ( itable(i,j) == item ) then
 !         irow = i
 !         icol = j
 !         return
 !       end if
 !     end do
 !   end do
-! 
+!
 !   irow = 0
 !   icol = 0
-! 
+!
 !   return
 ! end subroutine
 ! subroutine icol_find_pair_wrap ( itable, maxrow, nrow, ncol, item1, item2, &
@@ -5022,29 +5022,29 @@ contains
 ! !
 !   do j = 1, ncol
 !     do i = 1, nrow
-! 
-!       if ( itable(i,j) == item1 ) then 
-! 
+!
+!       if ( itable(i,j) == item1 ) then
+!
 !         if ( i < nrow ) then
 !           ip1 = i + 1
 !         else
 !           ip1 = 1
 !         end if
-! 
+!
 !         if ( itable(ip1,j) == item2 ) then
 !           irow = i
 !           icol = j
 !           return
 !         end if
-! 
+!
 !       end if
-! 
+!
 !     end do
 !   end do
-! 
+!
 !   irow = 0
 !   icol = 0
-! 
+!
 !   return
 ! end subroutine
 ! subroutine icos_shape_3d ( max_num, max_order, point_num, face_num, &
@@ -5116,14 +5116,14 @@ contains
 !     write ( *, * ) '  Number of vertices exceeds MAX_NUM.'
 !     return
 !   end if
-! 
+!
 !   if ( face_num > max_num ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'ICOS_SHAPE_3D - Fatal error!'
 !     write ( *, * ) '  Number of faces exceeds MAX_NUM.'
 !     return
 !   end if
-! 
+!
 !   if ( face_order > max_order ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'ICOS_SHAPE_3D - Fatal error!'
@@ -5136,51 +5136,51 @@ contains
 !   phi = 0.5E+00 * ( sqrt ( 5.0E+00 ) + 1.0E+00 )
 !   b = 1.0E+00 / sqrt ( 1.0E+00 + phi * phi )
 !   a = phi * b
-! 
+!
 !   point_coord(1,1) =   a
 !   point_coord(2,1) =   b
 !   point_coord(3,1) = 0.0E+00
-! 
+!
 !   point_coord(1,2) = - a
 !   point_coord(2,2) =   b
 !   point_coord(3,2) = 0.0E+00
-! 
+!
 !   point_coord(1,3) =   a
 !   point_coord(2,3) = - b
 !   point_coord(3,3) = 0.0E+00
-! 
+!
 !   point_coord(1,4) = - a
 !   point_coord(2,4) = - b
 !   point_coord(3,4) = 0.0E+00
-! 
+!
 !   point_coord(1,5) =   b
 !   point_coord(2,5) = 0.0E+00
 !   point_coord(3,5) =   a
-! 
+!
 !   point_coord(1,6) =   b
 !   point_coord(2,6) = 0.0E+00
 !   point_coord(3,6) = - a
-! 
+!
 !   point_coord(1,7) = - b
 !   point_coord(2,7) = 0.0E+00
 !   point_coord(3,7) =   a
-! 
+!
 !   point_coord(1,8) = - b
 !   point_coord(2,8) = 0.0E+00
 !   point_coord(3,8) = - a
-! 
+!
 !   point_coord(1,9) =  0.0E+00
 !   point_coord(2,9) =    a
 !   point_coord(3,9) =    b
-! 
+!
 !   point_coord(1,10) = 0.0E+00
 !   point_coord(2,10) = - a
 !   point_coord(3,10) =   b
-! 
+!
 !   point_coord(1,11) = 0.0E+00
 !   point_coord(2,11) =   a
 !   point_coord(3,11) = - b
-! 
+!
 !   point_coord(1,12) = 0.0E+00
 !   point_coord(2,12) = - a
 !   point_coord(3,12) = - b
@@ -5190,83 +5190,83 @@ contains
 !   face_point(1,1) = 1
 !   face_point(2,1) = 9
 !   face_point(3,1) = 5
-! 
+!
 !   face_point(1,2) = 1
 !   face_point(2,2) = 6
 !   face_point(3,2) = 11
-! 
+!
 !   face_point(1,3) = 3
 !   face_point(2,3) = 5
 !   face_point(3,3) = 10
-! 
+!
 !   face_point(1,4) = 3
 !   face_point(2,4) = 12
 !   face_point(3,4) = 6
-! 
+!
 !   face_point(1,5) = 2
 !   face_point(2,5) = 7
 !   face_point(3,5) = 9
-! 
+!
 !   face_point(1,6) = 2
 !   face_point(2,6) = 11
 !   face_point(3,6) = 8
-! 
+!
 !   face_point(1,7) = 4
 !   face_point(2,7) = 10
 !   face_point(3,7) = 7
-! 
+!
 !   face_point(1,8) = 4
 !   face_point(2,8) = 8
 !   face_point(3,8) = 12
-! 
+!
 !   face_point(1,9) = 1
 !   face_point(2,9) = 11
 !   face_point(3,9) = 9
-! 
+!
 !   face_point(1,10) = 2
 !   face_point(2,10) = 9
 !   face_point(3,10) = 11
-! 
+!
 !   face_point(1,11) = 3
 !   face_point(2,11) = 10
 !   face_point(3,11) = 12
-! 
+!
 !   face_point(1,12) = 4
 !   face_point(2,12) = 12
 !   face_point(3,12) = 10
-! 
+!
 !   face_point(1,13) = 5
 !   face_point(2,13) = 3
 !   face_point(3,13) = 1
-! 
+!
 !   face_point(1,14) = 6
 !   face_point(2,14) = 1
 !   face_point(3,14) = 3
-! 
+!
 !   face_point(1,15) = 7
 !   face_point(2,15) = 2
 !   face_point(3,15) = 4
-! 
+!
 !   face_point(1,16) = 8
 !   face_point(2,16) = 4
 !   face_point(3,16) = 2
-! 
+!
 !   face_point(1,17) = 9
 !   face_point(2,17) = 7
 !   face_point(3,17) = 5
-! 
+!
 !   face_point(1,18) = 10
 !   face_point(2,18) = 5
 !   face_point(3,18) = 7
-! 
+!
 !   face_point(1,19) = 11
 !   face_point(2,19) = 6
 !   face_point(3,19) = 8
-! 
+!
 !   face_point(1,20) = 12
 !   face_point(2,20) = 8
 !   face_point(3,20) = 6
-! 
+!
 !   return
 ! end subroutine
 ! subroutine line_exp_point_dist_2d ( x1, y1, x2, y2, x, y, dist )
@@ -5292,10 +5292,10 @@ contains
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, X2, Y2.  (X1,Y1) and (X2,Y2) are two points on 
+! !    Input, real X1, Y1, X2, Y2.  (X1,Y1) and (X2,Y2) are two points on
 ! !    the line.
 ! !
-! !    Input, real X, Y, the point whose distance from the line is 
+! !    Input, real X, Y, the point whose distance from the line is
 ! !    to be measured.
 ! !
 ! !    Output, real DIST, the distance from the point to the line.
@@ -5314,9 +5314,9 @@ contains
 !   real y2
 ! !
 !   bot = enormsq0_2d ( x1, y1, x2, y2 )
-!  
+!
 !   if ( bot == 0.0E+00 ) then
-! 
+!
 !     xn = x1
 !     yn = y1
 ! !
@@ -5325,19 +5325,19 @@ contains
 ! !  (P-P1) dot (P2-P1) / Norm(P-P1)**2 = normalized coordinate T
 ! !  of the projection of (P-P1) onto (P2-P1).
 ! !
-!   else 
-! 
+!   else
+!
 !     dot = ( x - x1 ) * ( x2 - x1 ) + ( y - y1 ) * ( y2 - y1 )
-! 
+!
 !     t = dot / bot
-!  
+!
 !     xn = x1 + t * ( x2 - x1 )
 !     yn = y1 + t * ( y2 - y1 )
-! 
+!
 !   end if
-!  
+!
 !   dist = enorm0_2d ( xn, yn, x, y )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine line_exp_point_dist_3d ( x1, y1, z1, x2, y2, z2, x, y, z, dist )
@@ -5363,11 +5363,11 @@ contains
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, Z2, (X1,Y1,Z1) and (X2,Y2,Z2) are 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z2, (X1,Y1,Z1) and (X2,Y2,Z2) are
 ! !    two points on the line.  If the points are identical, then
 ! !    the line will be treated as a single point.
 ! !
-! !    Input, real X, Y, Z, the point whose distance from the line is 
+! !    Input, real X, Y, Z, the point whose distance from the line is
 ! !    to be measured.
 ! !
 ! !    Output, real DIST, the distance from the point to the line.
@@ -5389,9 +5389,9 @@ contains
 !   real z2
 ! !
 !   bot = enormsq0_3d ( x1, y1, z1, x2, y2, z2 )
-!  
+!
 !   if ( bot == 0.0E+00 ) then
-! 
+!
 !     xn = x1
 !     yn = y1
 !     zn = z1
@@ -5402,21 +5402,21 @@ contains
 ! !  of the projection of (P-P1) onto (P2-P1).
 ! !
 !   else
-! 
+!
 !     t = ( ( x - x1 ) * ( x2 - x1 ) + &
 !           ( y - y1 ) * ( y2 - y1 ) + &
 !           ( z - z1 ) * ( z2 - z1 ) ) / bot
-! 
+!
 !     xn = x1 + t * ( x2 - x1 )
 !     yn = y1 + t * ( y2 - y1 )
 !     zn = z1 + t * ( z2 - z1 )
-! 
+!
 !   end if
 ! !
 ! !  Now compute the distance between the projection point and P.
 ! !
 !   dist = enorm0_3d ( x, y, z, xn, yn, zn )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine line_exp_point_dist_signed_2d ( x1, y1, x2, y2, x, y, dist_signed )
@@ -5479,7 +5479,7 @@ contains
 ! !  Compute the signed distance from the point to the line.
 ! !
 !   dist_signed = ( a * x + b * y + c ) / sqrt ( a * a + b * b )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine line_exp_point_near_2d ( x1, y1, x2, y2, x, y, xn, yn, dist, t )
@@ -5531,7 +5531,7 @@ contains
 !   real y2
 ! !
 !   bot = enormsq0_2d ( x1, y1, x2, y2 )
-!  
+!
 !   if ( bot == 0.0E+00 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'LINE_POINT_NEAR_2D - Fatal error!'
@@ -5545,12 +5545,12 @@ contains
 ! !  of the projection of (P-P1) onto (P2-P1).
 ! !
 !   t = ( ( x1 - x ) * ( x1 - x2 ) + ( y1 - y ) * ( y1 - y2 ) ) / bot
-!  
+!
 !   xn = x1 + t * ( x2 - x1 )
 !   yn = y1 + t * ( y2 - y1 )
-!  
+!
 !   dist = enorm0_2d ( xn, yn, x, y )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine line_exp_point_near_3d ( x1, y1, z1, x2, y2, z2, x, y, z, &
@@ -5575,13 +5575,13 @@ contains
 ! !    (X1,Y1,Z1) and (X2,Y2,Z2) are two points on the line.  They
 ! !    must be distinct.
 ! !
-! !    Input, real X, Y, Z, the point whose nearest neighbor on the line 
+! !    Input, real X, Y, Z, the point whose nearest neighbor on the line
 ! !    is to be determined.
 ! !
-! !    Output, real XN, YN, ZN, the point which is the nearest point on 
+! !    Output, real XN, YN, ZN, the point which is the nearest point on
 ! !    the line to (X,Y,Z).
 ! !
-! !    Output, real DIST, the distance from the point to the nearest point 
+! !    Output, real DIST, the distance from the point to the nearest point
 ! !    on the line.
 ! !
 ! !    Output, real T, the relative position of the point
@@ -5610,7 +5610,7 @@ contains
 !   real z2
 ! !
 !   bot = enormsq0_3d ( x1, y1, z1, x2, y2, z2 )
-!  
+!
 !   if ( bot == 0.0E+00 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'LINE_EXP_POINT_NEAR_3D - Fatal error!'
@@ -5637,10 +5637,10 @@ contains
 ! !  Now compute the distance between the projection point and P.
 ! !
 !   dist = enorm0_3d ( xn, yn, zn, x, y, z )
-!  
+!
 !   return
 ! end subroutine
-! 
+!
 ! subroutine line_exp2par_2d ( x1, y1, x2, y2, f, g, x0, y0 )
 ! !
 ! !*******************************************************************************
@@ -5669,7 +5669,7 @@ contains
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, X2, Y2, two points on the line. 
+! !    Input, real X1, Y1, X2, Y2, two points on the line.
 ! !
 ! !    Output, real F, G, X0, Y0, the parametric parameters of the line.
 ! !
@@ -5685,17 +5685,17 @@ contains
 ! !
 !   x0 = x1
 !   y0 = y1
-!  
+!
 !   f = x2 - x1
 !   g = y2 - y1
-! 
+!
 !   norm = sqrt ( f * f + g * g )
-! 
+!
 !   if ( norm /= 0.0E+00 ) then
 !     f = f / norm
 !     g = g / norm
 !   end if
-!  
+!
 !   return
 ! end subroutine
 ! subroutine line_exp2par_3d ( x1, y1, z1, x2, y2, z2, f, g, h, x0, y0, z0 )
@@ -5727,7 +5727,7 @@ contains
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, Z3, two points on the line. 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z3, two points on the line.
 ! !
 ! !    Output, real F, G, H, X0, Y0, Z0, the parametric parameters of the line.
 ! !
@@ -5748,22 +5748,22 @@ contains
 !   x0 = x1
 !   y0 = y1
 !   z0 = z1
-!  
+!
 !   f = x2 - x1
 !   g = y2 - y1
 !   h = z2 - z1
-! 
+!
 !   norm = sqrt ( f * f + g * g + h * h )
-! 
+!
 !   if ( norm /= 0.0E+00 ) then
 !     f = f / norm
 !     g = g / norm
 !     h = h / norm
 !   end if
-!  
+!
 !   return
 ! end subroutine
-! 
+!
 ! subroutine line_exp2imp_2d ( x1, y1, x2, y2, a, b, c )
 ! !
 ! !*******************************************************************************
@@ -5816,14 +5816,14 @@ contains
 !     write ( *, * ) '  (X2,Y2) = ', x2, y2
 !     stop
 !   end if
-!  
+!
 !   a = y2 - y1
 !   b = x1 - x2
 !   c = x2 * y1 - x1 * y2
-!  
+!
 !   return
 ! end subroutine
-! 
+!
 ! subroutine line_imp2par_2d ( a, b, c, f, g, x0, y0 )
 ! !
 ! !*******************************************************************************
@@ -5876,12 +5876,12 @@ contains
 !     write ( *, * ) '  A * A + B * B = 0.'
 !     stop
 !   end if
-! 
+!
 !   x0 = - a * c / ( a * a + b * b )
 !   y0 = - b * c / ( a * a + b * b )
 !   f =   b / sqrt ( a * a + b * b )
 !   g = - a / sqrt ( a * a + b * b )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine line_imp_point_dist_2d ( a, b, c, x, y, dist )
@@ -5909,7 +5909,7 @@ contains
 ! !
 ! !    Input, real A, B, C, the implicit line parameters.
 ! !
-! !    Input, real X, Y, the point whose distance from the line is 
+! !    Input, real X, Y, the point whose distance from the line is
 ! !    to be measured.
 ! !
 ! !    Output, real DIST, the distance from the point to the line.
@@ -5927,9 +5927,9 @@ contains
 !     write ( *, * ) '  A * A + B * B = 0.'
 !     stop
 !   end if
-! 
+!
 !   dist = abs ( a * x + b * y + c ) / sqrt ( a * a + b * b )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine line_imp_point_dist_3d ( a, b, c, d, x, y, z, dist )
@@ -5957,7 +5957,7 @@ contains
 ! !
 ! !    Input, real A, B, C, D, the implicit line parameters.
 ! !
-! !    Input, real X, Y, Z, the point whose distance from the line is 
+! !    Input, real X, Y, Z, the point whose distance from the line is
 ! !    to be measured.
 ! !
 ! !    Output, real DIST, the distance from the point to the line.
@@ -5977,9 +5977,9 @@ contains
 !     write ( *, * ) '  A * A + B * B + C * C = 0.'
 !     stop
 !   end if
-! 
+!
 !   dist = abs ( a * x + b * y + c * z + d ) / sqrt ( a * a + b * b + c * c )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine line_imp_point_dist_signed_2d ( a, b, c, x, y, dist_signed )
@@ -6003,7 +6003,7 @@ contains
 ! !
 ! !    Input, real X, Y, the coordinates of the point.
 ! !
-! !    Output, real DIST_SIGNED, the signed distance from the point to 
+! !    Output, real DIST_SIGNED, the signed distance from the point to
 ! !    the line.
 ! !
 !   real a
@@ -6019,10 +6019,10 @@ contains
 !     write ( *, * ) '  A * A + B * B = 0.'
 !     stop
 !   end if
-! 
+!
 !   dist_signed = - sign ( 1.0E+00, c ) * ( a * x + b * y + c ) / &
 !     sqrt ( a * a + b * b )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine line_par2imp_2d ( f, g, x0, y0, a, b, c )
@@ -6074,7 +6074,7 @@ contains
 !   a = - g
 !   b = f
 !   c = g * x0 - f * y0
-! 
+!
 !   return
 ! end subroutine
 ! subroutine line_par_point_dist_2d ( f, g, x0, y0, x, y, dist )
@@ -6109,7 +6109,7 @@ contains
 ! !
 ! !    Input, real F, G, X0, Y0, the parametric line parameters.
 ! !
-! !    Input, real X, Y, the point whose distance from the line is 
+! !    Input, real X, Y, the point whose distance from the line is
 ! !    to be measured.
 ! !
 ! !    Output, real DIST, the distance from the point to the line.
@@ -6126,9 +6126,9 @@ contains
 ! !
 !   dx =   g * g * ( x - x0 ) - f * g * ( y - y0 )
 !   dy = - f * g * ( x - x0 ) + f * f * ( y - y0 )
-! 
+!
 !   dist = sqrt ( dx * dx + dy * dy ) / ( f * f + g * g )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine line_par_point_dist_3d ( f, g, h, x0, y0, z0, x, y, z, dist )
@@ -6164,7 +6164,7 @@ contains
 ! !
 ! !    Input, real F, G, H, X0, Y0, Z0, the parametric line parameters.
 ! !
-! !    Input, real X, Y, Z, the point whose distance from the line is 
+! !    Input, real X, Y, Z, the point whose distance from the line is
 ! !    to be measured.
 ! !
 ! !    Output, real DIST, the distance from the point to the line.
@@ -6185,16 +6185,16 @@ contains
 ! !
 !   dx =   g * ( f * ( y - y0 ) - g * ( x - x0 ) ) &
 !        + h * ( f * ( z - z0 ) - h * ( x - x0 ) )
-! 
+!
 !   dy =   h * ( g * ( z - z0 ) - h * ( y - y0 ) )  &
 !        - f * ( f * ( y - y0 ) - g * ( x - x0 ) )
-! 
-!   dz = - f * ( f * ( z - z0 ) - h * ( x - x0 ) ) & 
+!
+!   dz = - f * ( f * ( z - z0 ) - h * ( x - x0 ) ) &
 !        - g * ( g * ( z - z0 ) - h * ( y - y0 ) )
-! 
+!
 !   dist = sqrt ( dx * dx + dy * dy + dz * dz ) &
 !     / ( f * f + g * g + h * h )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine line_seg_contains_point_1d ( x1, x2, x3, u )
@@ -6229,9 +6229,9 @@ contains
 !   real x3
 ! !
 !   unit = x2 - x1
-! 
+!
 !   if ( unit == 0.0E+00 ) then
-! 
+!
 !     if ( x3 == x1 ) then
 !       u = 0.5E+00
 !     else if ( x3 < x1 ) then
@@ -6239,13 +6239,13 @@ contains
 !     else if ( x3 > x1 ) then
 !       u = huge ( u )
 !     end if
-! 
+!
 !   else
-! 
+!
 !     u = ( x3 - x1 ) / unit
-! 
+!
 !   end if
-!  
+!
 !   return
 ! end subroutine
 ! subroutine line_seg_contains_point_2d ( x1, y1, x2, y2, x3, y3, u, v )
@@ -6277,7 +6277,7 @@ contains
 ! !    Output, real U, the coordinate of (X3,Y3) along the axis from
 ! !    with origin at P1 and unit at P2.
 ! !
-! !    Output, real V, the magnitude of the off-axis portion of the 
+! !    Output, real V, the magnitude of the off-axis portion of the
 ! !    vector P3-P1, measured in units of (P2-P1).
 ! !
 !   real u
@@ -6291,9 +6291,9 @@ contains
 !   real y3
 ! !
 !   unit = sqrt ( ( x2 - x1 )**2 + ( y2 - y1 )**2 )
-! 
+!
 !   if ( unit == 0.0E+00 ) then
-! 
+!
 !     if ( x3 == x1 .and. y3 == y1 ) then
 !       u = 0.5E+00
 !       v = 0.0E+00
@@ -6301,16 +6301,16 @@ contains
 !       u = 0.5E+00
 !       v = huge ( v )
 !     end if
-! 
+!
 !   else
-! 
+!
 !     u = ( ( x3 - x1 ) * ( x2 - x1 ) + ( y3 - y1 ) * ( y2 - y1 ) ) / unit**2
-! 
+!
 !     v = sqrt ( ( ( u - 1.0E+00 ) * x1 - u * x2 + x3 )**2 &
 !              + ( ( u - 1.0E+00 ) * y1 - u * y2 + y3 )**2 ) / unit
-! 
+!
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine line_seg_point_dist_2d ( x1, y1, x2, y2, x, y, dist )
@@ -6322,7 +6322,7 @@ contains
 ! !    John Burkardt
 ! !  Parameters:
 ! !    Input, real X1, Y1, X2, Y2, the endpoints of the line segment.
-! !    Input, real X, Y, the point whose nearest neighbor on the line 
+! !    Input, real X, Y, the point whose nearest neighbor on the line
 ! !    segment is to be determined.
 ! !    Output, real DIST, the distance from the point to the line segment.
 ! !
@@ -6341,29 +6341,29 @@ contains
 ! !  If the line segment is actually a point, then the answer is easy.
 ! !
 !   if ( x1 == x2 .and. y1 == y2 ) then
-! 
+!
 !     xn = x1
 !     yn = y1
-! 
+!
 !   else
-!  
+!
 !     bot = enormsq0_2d ( x1, y1, x2, y2 )
-! 
+!
 !     t = ( ( x1 - x ) * ( x1 - x2 ) + ( y1 - y ) * ( y1 - y2 ) ) / bot
-!  
+!
 !     t = max ( t, 0.0E+00 )
 !     t = min ( t, 1.0E+00 )
-! 
+!
 !     xn = x1 + t * ( x2 - x1 )
 !     yn = y1 + t * ( y2 - y1 )
-!  
+!
 !   end if
-!  
+!
 !   dist = enorm0_2d ( xn, yn, x, y )
-!  
+!
 !   return
 ! end subroutine
-! 
+!
 ! subroutine line_seg_point_dist_3d ( x1, y1, z1, x2, y2, z2, x, y, z, dist )
 ! !*******************************************************************************
 ! ! LINE_SEG_POINT_DIST_3D: distance ( line segment, point ) in 3D.
@@ -6372,9 +6372,9 @@ contains
 ! !  Author:
 ! !    John Burkardt
 ! !  Parameters:
-! !    Input, real X1, Y1, Z1, X2, Y2, Z2, the endpoints of the line 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z2, the endpoints of the line
 ! !    segment.
-! !    Input, real X, Y, Z, the point whose nearest neighbor on the line 
+! !    Input, real X, Y, Z, the point whose nearest neighbor on the line
 ! !    segment is to be determined.
 ! !    Output, real DIST, the distance from the point to the line segment.
 !   real bot
@@ -6396,30 +6396,30 @@ contains
 ! !  If the line segment is actually a point, then the answer is easy.
 ! !
 !   if ( x1 == x2 .and. y1 == y2 .and. z1 == z2 ) then
-! 
+!
 !     xn = x1
 !     yn = y1
 !     zn = z1
-! 
+!
 !   else
-!  
+!
 !     bot = enormsq0_3d ( x1, y1, z1, x2, y2, z2 )
-! 
+!
 !     t = (   ( x1 - x ) * ( x1 - x2 ) &
 !           + ( y1 - y ) * ( y1 - y2 ) &
 !           + ( z1 - z ) * ( z1 - z2 ) ) / bot
-!  
+!
 !     t = max ( t, 0.0E+00 )
 !     t = min ( t, 1.0E+00 )
-! 
+!
 !     xn = x1 + t * ( x2 - x1 )
 !     yn = y1 + t * ( y2 - y1 )
 !     zn = z1 + t * ( z2 - z1 )
-! 
+!
 !   end if
-!  
+!
 !   dist = enorm0_3d ( x, y, z, xn, yn, zn )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine line_seg_point_near_2d ( x1, y1, x2, y2, x, y, xn, yn, dist, t )
@@ -6448,13 +6448,13 @@ contains
 ! !    Input, real X, Y, the point whose nearest neighbor
 ! !    on the line segment is to be determined.
 ! !
-! !    Output, real XN, YN, the point on the line segment which is 
+! !    Output, real XN, YN, the point on the line segment which is
 ! !    nearest the point (X,Y).
 ! !
-! !    Output, real DIST, the distance from the point to the nearest point 
+! !    Output, real DIST, the distance from the point to the nearest point
 ! !    on the line segment.
 ! !
-! !    Output, real T, the relative position of the point (XN,YN) to the 
+! !    Output, real T, the relative position of the point (XN,YN) to the
 ! !    points (X1,Y1) and (X2,Y2).
 ! !
 ! !      (XN,YN) = (1-T) * (X1,Y1) + T * (X2,Y2).
@@ -6472,20 +6472,20 @@ contains
 !   real yn
 !   real y1
 !   real y2
-! ! 
+! !
 !   if ( x1 == x2 .and. y1 == y2 ) then
-! 
+!
 !     t = 0.0E+00
 !     xn = x1
 !     yn = y1
-!  
+!
 !   else
-!  
+!
 !     bot = enormsq0_2d ( x1, y1, x2, y2 )
-! 
+!
 !     t = (   ( x1 - x ) * ( x1 - x2 ) &
 !           + ( y1 - y ) * ( y1 - y2 ) ) / bot
-!  
+!
 !     if ( t < 0.0E+00 ) then
 !       t = 0.0E+00
 !       xn = x1
@@ -6498,11 +6498,11 @@ contains
 !       xn = x1 + t * ( x2 - x1 )
 !       yn = y1 + t * ( y2 - y1 )
 !     end if
-!  
+!
 !   end if
-!  
+!
 !   dist = enorm0_2d ( x, y, xn, yn )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine line_seg_point_near_3d ( x1, y1, z1, x2, y2, z2, x, y, z, &
@@ -6526,19 +6526,19 @@ contains
 ! !    Input, real X1, Y1, Z1, X2, Y2, Z2, the two endpoints of the line segment.
 ! !
 ! !    (X1,Y1,Z1) should generally be different from (X2,Y2,Z2), but
-! !    if they are equal, the program will still compute a meaningful 
+! !    if they are equal, the program will still compute a meaningful
 ! !    result.
 ! !
 ! !    Input, real X, Y, Z, the point whose nearest neighbor
 ! !    on the line segment is to be determined.
 ! !
-! !    Output, real XN, YN, ZN, the point on the line segment which is 
+! !    Output, real XN, YN, ZN, the point on the line segment which is
 ! !    nearest the point (X,Y,Z).
 ! !
-! !    Output, real DIST, the distance from the point to the nearest point 
+! !    Output, real DIST, the distance from the point to the nearest point
 ! !    on the line segment.
 ! !
-! !    Output, real T, the relative position of the nearest point 
+! !    Output, real T, the relative position of the nearest point
 ! !    (XN,YN,ZN) to the defining points (X1,Y1,Z1) and (X2,Y2,Z2).
 ! !
 ! !      (XN,YN,ZN) = (1-T)*(X1,Y1,Z1) + T*(X2,Y2,Z2).
@@ -6560,22 +6560,22 @@ contains
 !   real zn
 !   real z1
 !   real z2
-! ! 
+! !
 !   if ( x1 == x2 .and. y1 == y2 .and. z1 == z2 ) then
-!  
+!
 !     t = 0.0E+00
 !     xn = x1
 !     yn = y1
 !     zn = z1
-!  
+!
 !   else
-!  
+!
 !     bot = enormsq0_3d ( x1, y1, z1, x2, y2, z2 )
-!  
+!
 !     t = (   ( x1 - x ) * ( x1 - x2 ) &
 !           + ( y1 - y ) * ( y1 - y2 ) &
 !           + ( z1 - z ) * ( z1 - z2 ) ) / bot
-!  
+!
 !     if ( t < 0.0E+00 ) then
 !       t = 0.0E+00
 !       xn = x1
@@ -6591,11 +6591,11 @@ contains
 !       yn = y1 + t * ( y2 - y1 )
 !       zn = z1 + t * ( z2 - z1 )
 !     end if
-!  
+!
 !   end if
-!  
+!
 !   dist = enorm0_3d ( xn, yn, zn, x, y, z )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine lines_exp_angle_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, &
@@ -6626,7 +6626,7 @@ contains
 ! !
 ! !    Input, real X3, Y3, Z3, X4, Y4, Z4, two distinct points on the second line.
 ! !
-! !    Output, real ANGLE, the angle in radians between the two lines.  
+! !    Output, real ANGLE, the angle in radians between the two lines.
 ! !    ANGLE is computed using the ACOS function, and so lies between 0 and PI.
 ! !    But if one of the lines is degenerate, ANGLE is returned as -1.0.
 ! !
@@ -6650,24 +6650,24 @@ contains
 ! !
 !   pnorm = enorm0_3d ( x1, y1, z1, x2, y2, z2 )
 !   qnorm = enorm0_3d ( x3, y3, z3, x4, y4, z4 )
-! 
+!
 !   pdotq =    ( x2 - x1 ) * ( x4 - x3 ) &
 !            + ( y2 - y1 ) * ( y4 - y3 ) &
 !            + ( z2 - z1 ) * ( z4 - z3 )
-! 
+!
 !   if ( pnorm == 0.0E+00 .or. qnorm == 0.0E+00 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'LINES_EXP_ANGLE_3D - Fatal error!'
 !     write ( *, * ) '  One of the lines is degenerate!'
 !     angle = - 1.0E+00
-! 
+!
 !   else
-! 
+!
 !     ctheta = pdotq / ( pnorm * qnorm )
 !     angle = arc_cosine ( ctheta )
-! 
+!
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine lines_exp_angle_nd ( p1, p2, q1, q2, n, angle )
@@ -6693,7 +6693,7 @@ contains
 ! !
 ! !    Input, integer N, the dimension of the space.
 ! !
-! !    Output, real ANGLE, the angle in radians between the two lines.  
+! !    Output, real ANGLE, the angle in radians between the two lines.
 ! !    ANGLE is computed using the ACOS function, and so lies between 0 and PI.
 ! !    But if one of the lines is degenerate, ANGLE is returned as -1.0.
 ! !
@@ -6712,12 +6712,12 @@ contains
 ! !
 !   pnorm = enorm0_nd ( n, p1, p2 )
 !   qnorm = enorm0_nd ( n, q1, q2 )
-! 
+!
 !   pdotq = 0.0E+00
 !   do i = 1, n
 !     pdotq = pdotq + ( p2(i) - p1(i) ) * ( q2(i) - q1(i) )
 !   end do
-! 
+!
 !   if ( pnorm == 0.0E+00 .or. qnorm == 0.0E+00 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'LINES_EXP_ANGLE_ND - Fatal error!'
@@ -6726,9 +6726,9 @@ contains
 !   else
 !     ctheta = pdotq / ( pnorm * qnorm )
 !     angle = arc_cosine ( ctheta )
-! 
+!
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine lines_exp_dist_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, &
@@ -6755,10 +6755,10 @@ contains
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, Z2, (X1,Y1,Z1) and (X2,Y2,Z2) are 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z2, (X1,Y1,Z1) and (X2,Y2,Z2) are
 ! !    two points on the first line.  They must be distinct.
 ! !
-! !    Input, real X3, Y3, Z3, X4, Y4, Z4, (X3,Y3,Z3) and (X4,Y4,Z4) are 
+! !    Input, real X3, Y3, Z3, X4, Y4, Z4, (X3,Y3,Z3) and (X4,Y4,Z4) are
 ! !    two points on the second line.  They must be distinct.
 ! !
 ! !    Output, real DIST, the distance between the lines.
@@ -6791,7 +6791,7 @@ contains
 !   real z3
 !   real z4
 ! !
-! !  The distance is found by computing the volume of a parallelipiped, 
+! !  The distance is found by computing the volume of a parallelipiped,
 ! !  and dividing by the area of its base.
 ! !
 ! !  But if the lines are parallel, we compute the distance by
@@ -6801,33 +6801,33 @@ contains
 !   a11 = x3 - x1
 !   a12 = y3 - y1
 !   a13 = z3 - z1
-! 
+!
 !   a21 = x2 - x1
 !   a22 = y2 - y1
 !   a23 = z2 - z1
-! 
+!
 !   a31 = x4 - x3
 !   a32 = y4 - y3
 !   a33 = z4 - z3
-! 
+!
 !   call cross_3d ( a21, a22, a23, a31, a32, a33, cr1, cr2, cr3 )
-! 
+!
 !   bot = sqrt ( cr1 * cr1 + cr2 * cr2 + cr3 * cr3 )
-! 
+!
 !   if ( bot == 0.0E+00 ) then
-! 
+!
 !     call line_exp_point_dist_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, dist )
-! 
+!
 !   else
-! 
+!
 !     top = abs (   a11 * ( a22 * a33 - a23 * a32 ) &
 !                 - a12 * ( a21 * a33 - a23 * a31 ) &
 !                 + a13 * ( a21 * a32 - a22 * a31 ) )
-! 
+!
 !     dist = top / bot
-! 
+!
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine lines_exp_int_2d ( ival, x, y, x1, y1, x2, y2, x3, y3, x4, y4 )
@@ -6891,13 +6891,13 @@ contains
 !   y = 0.0E+00
 ! !
 ! !  Check whether either line is a point.
-! ! 
+! !
 !   if ( x1 == x2 .and. y1 == y2 ) then
 !     point_1 = .true.
 !   else
 !     point_1 = .false.
 !   end if
-! 
+!
 !   if ( x3 == x4 .and. y3 == y4 ) then
 !     point_2 = .true.
 !   else
@@ -6909,7 +6909,7 @@ contains
 !   if ( .not. point_1 ) then
 !     call line_exp2imp_2d ( x1, y1, x2, y2, a1, b1, c1 )
 !   end if
-! 
+!
 !   if ( .not. point_2 ) then
 !     call line_exp2imp_2d ( x3, y3, x4, y4, a2, b2, c2 )
 !   end if
@@ -6927,7 +6927,7 @@ contains
 !       ival = 1
 !       x = x1
 !       y = y1
-!     end if    
+!     end if
 !   else if ( point_2 ) then
 !     if ( a1 * x3 + b1 * y3 == c1 ) then
 !       ival = 1
@@ -6935,12 +6935,12 @@ contains
 !       y = y3
 !     end if
 !   else
-!     call lines_imp_int_2d ( a1, b1, c1, a2, b2, c2, ival, x, y ) 
+!     call lines_imp_int_2d ( a1, b1, c1, a2, b2, c2, ival, x, y )
 !   end if
-!  
+!
 !   return
 ! end subroutine
-! 
+!
 ! subroutine lines_imp_angle_2d ( a1, b1, c1, a2, b2, c2, theta )
 ! !
 ! !*******************************************************************************
@@ -6990,9 +6990,9 @@ contains
 !   pdotq = a1 * a2 + b1 * b2
 !   pnorm = sqrt ( a1 * a1 + b1 * b1 )
 !   qnorm = sqrt ( a2 * a2 + b2 * b2 )
-! 
+!
 !   theta = arc_cosine ( pdotq / ( pnorm * qnorm ) )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine lines_imp_dist_2d ( a1, b1, c1, a2, b2, c2, dist )
@@ -7063,7 +7063,7 @@ contains
 ! !  Determine the distance between the parallel lines.
 ! !
 !   dist = abs ( c2 / sqrt ( a2**2 + b2**2 ) - c1 / sqrt ( a1**2 + b1**2 ) )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine lines_imp_int_2d ( a1, b1, c1, a2, b2, c2, ival, x, y )
@@ -7138,14 +7138,14 @@ contains
 !   a(1,2) = b1
 !   a(2,1) = a2
 !   a(2,2) = b2
-! 
+!
 !   call rmat2_inverse ( a, b, det )
 ! !
 ! !  If the inverse exists, then the lines intersect.
 ! !  Multiply the inverse times -C to get the intersection point.
 ! !
 !   if ( det /= 0.0E+00 ) then
-!  
+!
 !     ival = 1
 !     x = - b(1,1) * c1 - b(1,2) * c2
 !     y = - b(2,1) * c1 - b(2,2) * c2
@@ -7155,9 +7155,9 @@ contains
 ! !  C entries are in the same ratio as the A or B entries.
 ! !
 !   else
-!  
+!
 !     ival = 0
-!  
+!
 !     if ( a1 == 0.0E+00 ) then
 !       if ( b2 * c1 == c2 * b1 ) then
 !         ival = 2
@@ -7167,12 +7167,12 @@ contains
 !         ival = 2
 !       end if
 !     end if
-!  
+!
 !   end if
-!  
+!
 !   return
 ! end subroutine
-! 
+!
 ! subroutine lines_par_angle_2d ( f1, g1, x01, y01, f2, g2, x02, y02, theta )
 ! !
 ! !*******************************************************************************
@@ -7203,10 +7203,10 @@ contains
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real F1, G1, X01, Y01, the parametric parameters of the 
+! !    Input, real F1, G1, X01, Y01, the parametric parameters of the
 ! !    first line.
 ! !
-! !    Input, real F2, G2, X02, Y02, the parametric parameters of the 
+! !    Input, real F2, G2, X02, Y02, the parametric parameters of the
 ! !    second line.
 ! !
 ! !    Output, real THETA, the angle between the two lines.
@@ -7227,9 +7227,9 @@ contains
 !   pdotq = f1 * f2 + g1 * g2
 !   pnorm = sqrt ( f1 * f1 + g1 * g1 )
 !   qnorm = sqrt ( f2 * f2 + g2 * g2 )
-! 
+!
 !   theta = arc_cosine ( pdotq / ( pnorm * qnorm ) )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine lines_par_angle_3d ( f1, g1, h1, x01, y01, z01, f2, g2, h2, &
@@ -7264,10 +7264,10 @@ contains
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real F1, G1, H1, X01, Y01, Z01, the parametric parameters 
+! !    Input, real F1, G1, H1, X01, Y01, Z01, the parametric parameters
 ! !    of the first line.
 ! !
-! !    Input, real F2, G2, H2, X02, Y02, Z02, the parametric parameters 
+! !    Input, real F2, G2, H2, X02, Y02, Z02, the parametric parameters
 ! !    of the second line.
 ! !
 ! !    Output, real THETA, the angle between the two lines.
@@ -7292,9 +7292,9 @@ contains
 !   pdotq = f1 * f2 + g1 * g2 + h1 * h2
 !   pnorm = sqrt ( f1 * f1 + g1 * g1 + h1 * h1 )
 !   qnorm = sqrt ( f2 * f2 + g2 * g2 + h2 * h2 )
-! 
+!
 !   theta = arc_cosine ( pdotq / ( pnorm * qnorm ) )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine lines_par_dist_3d ( f1, g1, h1, x01, y01, z01, f2, g2, h2, &
@@ -7333,10 +7333,10 @@ contains
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real F1, G1, H1, X01, Y01, Z01, the parametric parameters 
+! !    Input, real F1, G1, H1, X01, Y01, Z01, the parametric parameters
 ! !    of the first line.
 ! !
-! !    Input, real F2, G2, H2, X02, Y02, Z02, the parametric parameters 
+! !    Input, real F2, G2, H2, X02, Y02, Z02, the parametric parameters
 ! !    of the second line.
 ! !
 ! !    Output, real DIST, the distance between the two lines.
@@ -7361,7 +7361,7 @@ contains
 !              ( ( f1 * g2 - f2 * g1 )**2 &
 !              + ( g1 * h2 - g2 * h1 )**2 &
 !              + ( h1 * f2 - h2 * f1 )**2 )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine lines_par_int_2d ( f1, g1, x1, y1, f2, g2, x2, y2, t1, t2, &
@@ -7405,7 +7405,7 @@ contains
 ! !    Output, real T1, T2, the T parameters on the first and second
 ! !    lines of the intersection point.
 ! !
-! !    Output, real XINT, YINT, the intersection point.  
+! !    Output, real XINT, YINT, the intersection point.
 ! !
 !   real det
 !   real f1
@@ -7422,7 +7422,7 @@ contains
 !   real yint
 ! !
 !   det = f2 * g1 - f1 * g2
-! 
+!
 !   if ( det == 0.0E+00 ) then
 !     t1 = 0.0E+00
 !     t2 = 0.0E+00
@@ -7434,7 +7434,7 @@ contains
 !     xint = x1 + f1 * t1
 !     yint = y1 + g1 * t1
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine lines_seg_dist_2d ( x1, y1, x2, y2, x3, y3, x4, y4, dist )
@@ -7486,12 +7486,12 @@ contains
 ! !  Compute the distance from each point to the opposite line segment.
 ! !
 !   call line_seg_point_dist_2d ( x3, y3, x4, y4, x1, y1, dl )
-! 
+!
 !   xm = 0.5E+00 * ( x1 + x2 )
 !   ym = 0.5E+00 * ( y1 + y2 )
-! 
+!
 !   call line_seg_point_dist_2d ( x3, y3, x4, y4, xm, ym, dm )
-! 
+!
 !   call line_seg_point_dist_2d ( x3, y3, x4, y4, x2, y2, dr )
 ! !
 ! !  Now find the "theoretical" minimum of the distance function.
@@ -7508,7 +7508,7 @@ contains
 !   xmin = x1 + tmin * ( x2 - x1 )
 !   ymin = y1 + tmin * ( y2 - y1 )
 !   call line_seg_point_dist_2d ( x3, y3, x4, y4, xmin, ymin, dist )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine lines_seg_dist_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, &
@@ -7570,39 +7570,39 @@ contains
 ! !
 !   call line_seg_point_near_3d ( x3, y3, z3, x4, y4, z4, x1, y1, z1, &
 !     xn1, yn1, zn1, d1, t1 )
-! 
+!
 !   call line_seg_point_near_3d ( x3, y3, z3, x4, y4, z4, x2, y2, z2, &
 !      xn2, yn2, zn2, d2, t2 )
-! 
+!
 !   if ( t1 == t2 ) then
 !     call line_seg_point_dist_3d ( x1, y1, z1, x2, y2, z2, xn1, yn1, zn1, dist )
 !     return
 !   end if
 ! !
-! !  On line 2, over the interval between the points nearest to line 1, 
-! !  the square of the distance of any point to line 1 is a quadratic function.  
+! !  On line 2, over the interval between the points nearest to line 1,
+! !  the square of the distance of any point to line 1 is a quadratic function.
 ! !  Evaluate it at three points, and seek its local minimum.
 ! !
 !   call line_seg_point_dist_3d ( x1, y1, z1, x2, y2, z2, xn1, yn1, zn1, dl )
-! 
+!
 !   call line_seg_point_dist_3d ( x1, y1, z1, x2, y2, z2, &
 !     0.5E+00 * ( xn1 + xn2 ), 0.5E+00 * ( yn1 + yn2 ), &
 !     0.5E+00 * ( zn1 + zn2 ), dm )
-! 
+!
 !   call line_seg_point_dist_3d ( x1, y1, z1, x2, y2, z2, xn2, yn2, zn2, dr )
-! 
+!
 !   tl = 0.0E+00
 !   tm = 0.5E+00
 !   tr = 1.0E+00
-! 
+!
 !   dl = dl * dl
 !   dm = dm * dm
 !   dr = dr * dr
-! 
+!
 !   call minquad ( tl, dl, tm, dm, tr, dr, tmin, dist )
-! 
+!
 !   dist = sqrt ( dist )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine lines_seg_int_1d ( x1, x2, x3, x4, flag, x5, x6 )
@@ -7649,21 +7649,21 @@ contains
 !   y2 = max ( x1, x2 )
 !   y3 = min ( x3, x4 )
 !   y4 = max ( x3, x4 )
-! 
+!
 !   flag = 0
 !   x5 = 0.0E+00
 !   x6 = 0.0E+00
-! 
+!
 !   if ( y4 < y1 ) then
 !     return
 !   else if ( y3 > y2 ) then
 !     return
 !   end if
-! 
+!
 !   flag = 1
 !   x5 = max ( y1, y3 )
 !   x6 = min ( y2, y4 )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine lines_seg_int_2d ( x1, y1, x2, y2, x3, y3, x4, y4, flag, x5, y5 )
@@ -7716,7 +7716,7 @@ contains
 ! !  Find the intersection of the two lines.
 ! !
 !   call lines_exp_int_2d ( ival, x5, y5, x1, y1, x2, y2, x3, y3, x4, y4 )
-! 
+!
 !   if ( ival == 0 ) then
 !     flag = 0
 !     return
@@ -7725,7 +7725,7 @@ contains
 ! !  Is the point on the first segment?
 ! !
 !   call line_seg_contains_point_2d ( x1, y1, x2, y2, x5, y5, u, v )
-! 
+!
 !   if ( u < 0.0E+00 .or. 1.0E+00 < u .or. v > 0.001E+00 ) then
 !     flag = 0
 !     return
@@ -7734,14 +7734,14 @@ contains
 ! !  Is the point on the second segment?
 ! !
 !   call line_seg_contains_point_2d ( x3, y3, x4, y4, x5, y5, u, v )
-! 
+!
 !   if ( u < 0.0E+00 .or. 1.0E+00 < u .or. v > 0.001E+00 ) then
 !     flag = 0
 !     return
 !   end if
-! 
+!
 !   flag = 1
-! 
+!
 !   return
 ! end subroutine
 ! subroutine loc2glob_3d ( cospitch, cosroll, cosyaw, locpts, globas, glopts, &
@@ -7754,10 +7754,10 @@ contains
 ! !
 ! !  Discussion:
 ! !
-! !    A global coordinate system is given.  
+! !    A global coordinate system is given.
 ! !
 ! !    A local coordinate system has been translated to the point with
-! !    global coordinates GLOBAS, and rotated through a yaw, a pitch, and 
+! !    global coordinates GLOBAS, and rotated through a yaw, a pitch, and
 ! !    a roll.
 ! !
 ! !    A point has local coordinates LOCPTS, and it is desired to know
@@ -7767,7 +7767,7 @@ contains
 ! !
 ! !      GLOB = GLOBAS + N_YAW * N_PITCH * N_ROLL * LOC
 ! !
-! !    where 
+! !    where
 ! !
 ! !               (  cos(Yaw)   -sin(Yaw)        0      )
 ! !    N_YAW    = (  sin(Yaw)    cos(Yaw)        0      )
@@ -7791,7 +7791,7 @@ contains
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real COSPITCH, COSROLL, COSYAW, the cosines of the pitch, 
+! !    Input, real COSPITCH, COSROLL, COSYAW, the cosines of the pitch,
 ! !    roll and yaw angles.
 ! !
 ! !    Input, real GLOBAS(3), the global coordinates of the base vector.
@@ -7800,7 +7800,7 @@ contains
 ! !
 ! !    Input, real LOCPTS(3), the local coordinates of the point.
 ! !
-! !    Input, real SINPITCH, SINROLL, SINYAW, the sines of the pitch, 
+! !    Input, real SINPITCH, SINROLL, SINYAW, the sines of the pitch,
 ! !    roll and yaw angles.
 ! !
 !   real cospitch
@@ -7816,15 +7816,15 @@ contains
 !   glopts(1) = globas(1) + (  cosyaw * cospitch ) * locpts(1) &
 !     + (  cosyaw * sinpitch * sinroll - sinyaw * cosroll ) * locpts(2) &
 !     + (  cosyaw * sinpitch * cosroll + sinyaw * sinroll ) * locpts(3)
-! 
+!
 !   glopts(2) = globas(2) + (  sinyaw * cospitch ) * locpts(1) &
 !     + (  sinyaw * sinpitch * sinroll + cosyaw * cosroll ) * locpts(2) &
 !     + (  sinyaw * sinpitch * cosroll - cosyaw * sinroll ) * locpts(3)
-! 
+!
 !   glopts(3) = globas(3) + ( -sinpitch ) * locpts(1) &
 !     + (  cospitch * sinroll ) * locpts(2) &
 !     + (  cospitch * cosroll ) * locpts(3)
-! 
+!
 !   return
 ! end subroutine
 ! subroutine minabs ( x1, y1, x2, y2, x3, y3, xmin, ymin )
@@ -7882,12 +7882,12 @@ contains
 !     call r_swap ( x1, x2 )
 !     call r_swap ( y1, y2 )
 !   end if
-! 
+!
 !   if ( x3 < x1 ) then
 !     call r_swap ( x1, x3 )
 !     call r_swap ( y1, y3 )
 !   end if
-! 
+!
 !   if ( x3 < x2 ) then
 !     call r_swap ( x2, x3 )
 !     call r_swap ( y2, y3 )
@@ -7902,7 +7902,7 @@ contains
 ! !  Case 1: Minimum must be at an endpoint.
 ! !
 !   if ( slope12 >= slope13 .or. slope12 >= 0.0E+00 ) then
-! 
+!
 !     if ( y1 < y3 ) then
 !       xmin = x1
 !       ymin = y1
@@ -7920,14 +7920,14 @@ contains
 ! !  endpoint data, intersect.
 ! !
 !   else
-! 
+!
 !     slope = max ( abs ( slope12 ), slope23 )
-! 
+!
 !     xmin = 0.5E+00 * ( x1 + x3 + ( y1 - y3 ) / slope )
 !     ymin = y1 - slope * ( xmin - x1 )
-! 
+!
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine minquad ( x1, y1, x2, y2, x3, y3, xmin, ymin )
@@ -8024,14 +8024,14 @@ contains
 ! !  If the minimizer is to the right, take the already computed min.
 ! !
 !   else if ( x > xrite ) then
-! 
+!
 !   else
-! 
+!
 !     xmin = x
 !     ymin = y
-! 
+!
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine normal_01_sample ( x )
@@ -8074,11 +8074,11 @@ contains
 !     call random_seed
 !     iset = 0
 !   end if
-! 
+!
 !   if ( iset == 0 ) then
-! 
+!
 !     call random_number ( harvest = v1 )
-! 
+!
 !     if ( v1 <= 0.0E+00 ) then
 !       write ( *, * ) ' '
 !       write ( *, * ) 'NORMAL_01_SAMPLE - Fatal error!'
@@ -8086,9 +8086,9 @@ contains
 !       write ( *, * ) '  V1 = ', v1
 !       stop
 !     end if
-! 
+!
 !     call random_number ( harvest = v2 )
-! 
+!
 !     if ( v2 <= 0.0E+00 ) then
 !       write ( *, * ) ' '
 !       write ( *, * ) 'NORMAL_01_SAMPLE - Fatal error!'
@@ -8096,20 +8096,20 @@ contains
 !       write ( *, * ) '  V2 = ', v2
 !       stop
 !     end if
-! 
+!
 !     x = sqrt ( - 2.0E+00 * log ( v1 ) ) * cos ( 2.0E+00 * PI * v2 )
-! 
+!
 !     xsave = sqrt ( - 2.0E+00 * log ( v1 ) ) * sin ( 2.0E+00 * PI * v2 )
-! 
+!
 !     iset = 1
-! 
+!
 !   else
-! 
+!
 !     x = xsave
 !     iset = 0
-! 
+!
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine norp2l_2d ( dist, x1, y1, x2, y2, x3, y3, x4, y4 )
@@ -8129,9 +8129,9 @@ contains
 ! !
 ! !  Discussion:
 ! !
-! !    The routine is given points P1 = (X1,Y1) and P2 = (X2,Y2) 
-! !    determining a line, and a distance DIST.  It returns the pair 
-! !    of points P3 = (X3,Y3) and P4 = (X4,Y4) which are a distance 
+! !    The routine is given points P1 = (X1,Y1) and P2 = (X2,Y2)
+! !    determining a line, and a distance DIST.  It returns the pair
+! !    of points P3 = (X3,Y3) and P4 = (X4,Y4) which are a distance
 ! !    DIST from (X1,Y1), and lie on a line perpendicular to P2-P1.
 ! !
 ! !  Modified:
@@ -8191,10 +8191,10 @@ contains
 ! !
 !   x3 = x1 + a * dist / length
 !   y3 = y1 + b * dist / length
-!  
+!
 !   x4 = x1 - a * dist / length
 !   y4 = y1 - b * dist / length
-!  
+!
 !   return
 ! end subroutine
 ! subroutine octahedron_shape_3d ( max_num, max_order, point_num, face_num, &
@@ -8263,14 +8263,14 @@ contains
 !     write ( *, * ) '  Number of vertices exceeds MAX_NUM.'
 !     return
 !   end if
-! 
+!
 !   if ( face_num > max_num ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'OCTAHEDRON_SHAPE_3D - Fatal error!'
 !     write ( *, * ) '  Number of faces exceeds MAX_NUM.'
 !     return
 !   end if
-! 
+!
 !   if ( face_order > max_order ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'OCTAHEDRON_SHAPE_3D - Fatal error!'
@@ -8283,23 +8283,23 @@ contains
 !   point_coord(1,1) =   0.0E+00
 !   point_coord(2,1) =   0.0E+00
 !   point_coord(3,1) = - 1.0E+00
-! 
+!
 !   point_coord(1,2) =   0.0E+00
 !   point_coord(2,2) = - 1.0E+00
 !   point_coord(3,2) =   0.0E+00
-! 
+!
 !   point_coord(1,3) =   1.0E+00
 !   point_coord(2,3) =   0.0E+00
 !   point_coord(3,3) =   0.0E+00
-! 
+!
 !   point_coord(1,4) =   0.0E+00
 !   point_coord(2,4) =   1.0E+00
 !   point_coord(3,4) =   0.0E+00
-! 
+!
 !   point_coord(1,5) =   0.0E+00
 !   point_coord(2,5) = - 1.0E+00
 !   point_coord(3,5) =   0.0E+00
-! 
+!
 !   point_coord(1,6) =   0.0E+00
 !   point_coord(2,6) =   0.0E+00
 !   point_coord(3,6) =   1.0E+00
@@ -8309,35 +8309,35 @@ contains
 !   face_point(1,1) = 1
 !   face_point(2,1) = 3
 !   face_point(3,1) = 2
-! 
+!
 !   face_point(1,2) = 1
 !   face_point(2,2) = 4
 !   face_point(3,2) = 3
-! 
+!
 !   face_point(1,3) = 1
 !   face_point(2,3) = 5
 !   face_point(3,3) = 4
-! 
+!
 !   face_point(1,4) = 1
 !   face_point(2,4) = 2
 !   face_point(3,4) = 5
-! 
+!
 !   face_point(1,5) = 2
 !   face_point(2,5) = 3
 !   face_point(3,5) = 6
-! 
+!
 !   face_point(1,6) = 3
 !   face_point(2,6) = 4
 !   face_point(3,6) = 6
-! 
+!
 !   face_point(1,7) = 4
 !   face_point(2,7) = 5
 !   face_point(3,7) = 6
-! 
+!
 !   face_point(1,8) = 5
 !   face_point(2,8) = 2
 !   face_point(3,8) = 6
-! 
+!
 !   return
 ! end subroutine
 ! subroutine para_contains_point_2d ( x1, y1, x2, y2, x3, y3, x, y, inside )
@@ -8366,12 +8366,12 @@ contains
 ! !  Parameters:
 ! !
 ! !    Input, real X1, Y1, X2, Y2, X3, Y3, the coordinates of three
-! !    corners of the parallelogram.  (X1,Y1) should be directly connected 
+! !    corners of the parallelogram.  (X1,Y1) should be directly connected
 ! !    to (X2,Y2) and (X3,Y3).
 ! !
 ! !    Input, real X, Y, the point to be checked.
 ! !
-! !    Output, logical INSIDE, is .TRUE. if (X,Y) is inside the 
+! !    Output, logical INSIDE, is .TRUE. if (X,Y) is inside the
 ! !    parallelogram, or on its boundary, and .FALSE. otherwise.
 ! !
 !   logical inside
@@ -8390,17 +8390,17 @@ contains
 ! !
 !   p21normsq = enormsq0_2d ( x1, y1, x2, y2 )
 !   p31normsq = enormsq0_2d ( x1, y1, x3, y3 )
-! 
+!
 !   p21dot = dot0_2d ( x1, y1, x2, y2, x, y )
 !   p31dot = dot0_2d ( x1, y1, x3, y3, x, y )
-! 
+!
 !   if ( 0.0E+00 <= p21dot .and. p21dot <= p21normsq .and. &
 !        0.0E+00 <= p31dot .and. p31dot <= p31normsq ) then
 !     inside = .true.
 !   else
 !     inside = .false.
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine para_contains_point_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, &
@@ -8434,9 +8434,9 @@ contains
 ! !
 ! !    Input, real X, Y, Z, the point to be checked.
 ! !
-! !    Output, logical INSIDE, is .TRUE. if (X,Y,Z) is inside the 
+! !    Output, logical INSIDE, is .TRUE. if (X,Y,Z) is inside the
 ! !    parallelogram, or on its boundary, and .FALSE. otherwise.
-! !    A slight amount of leeway is allowed for error, since a three 
+! !    A slight amount of leeway is allowed for error, since a three
 ! !    dimensional point may lie exactly in the plane of the parallelogram,
 ! !    and yet be computationally slightly outside it.
 ! !
@@ -8477,9 +8477,9 @@ contains
 ! !  then it does not lie in the parallelogram.
 ! !
 !   dot = ( x - x1 ) * xn12 + ( y - y1 ) * yn12 +  ( z - z1 ) * zn12
-! 
+!
 !   v = enorm0_3d ( x, y, z, x2, y2, z2 )
-! 
+!
 !   if ( abs ( dot ) > tol * ( 1.0E+00 + v ) ) then
 !     inside = .false.
 !     return
@@ -8492,14 +8492,14 @@ contains
 ! !  Compute ALPHA = ( V dot V23 ) / ( V1 dot V23 )
 ! !
 !   dott = ( x - x1 ) * xn23 + ( y - y1 ) * yn23 + ( z - z1 ) * zn23
-! 
+!
 !   dotb = ( x2 - x1 ) * xn23 + ( y2 - y1 ) * yn23 + ( z2 - z1 ) * zn23
-! 
+!
 !   if ( dotb < 0.0E+00 ) then
 !     dott = - dott
 !     dotb = - dotb
 !   end if
-! 
+!
 !   if ( dott < 0.0E+00 .or. dott > dotb ) then
 !     inside = .false.
 !     return
@@ -8512,14 +8512,14 @@ contains
 ! !  Compute BETA = ( V dot V31 ) / ( V2 dot V31 )
 ! !
 !   dott = ( x - x1 ) * xn31 + ( y - y1 ) * yn31 + ( z - z1 ) * zn31
-! 
+!
 !   dotb = ( x3 - x1 ) * xn31 + ( y3 - y1 ) * yn31 + ( z3 - z1 ) * zn31
-! 
+!
 !   if ( dotb < 0.0E+00 ) then
 !     dott = - dott
 !     dotb = - dotb
 !   end if
-! 
+!
 !   if ( dott < 0.0E+00 .or. dott > dotb ) then
 !     inside = .false.
 !     return
@@ -8529,7 +8529,7 @@ contains
 ! !  0 and 1.
 ! !
 !   inside = .true.
-! 
+!
 !   return
 ! end subroutine
 ! subroutine para_point_dist_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, x, y, z, &
@@ -8558,14 +8558,14 @@ contains
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, determine the 
-! !    parallelogram, generated by the vectors from (X1,Y1) to (X2,Y2) 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, determine the
+! !    parallelogram, generated by the vectors from (X1,Y1) to (X2,Y2)
 ! !    and from (X1,Y1) to (X3,Y3).
 ! !
 ! !    Input, real X, Y, Z, the point which is to be checked.
 ! !
-! !    Output, real DIST, the distance from the point to the 
-! !    parallelogram.  DIST is zero if the point lies exactly on the 
+! !    Output, real DIST, the distance from the point to the
+! !    parallelogram.  DIST is zero if the point lies exactly on the
 ! !    parallelogram.
 ! !
 !   real dis13
@@ -8601,16 +8601,16 @@ contains
 ! !  Compute P, the unit normal to X2-X1 and X3-X1:
 ! !
 !   call cross0_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, xp, yp, zp )
-! 
+!
 !   temp = sqrt ( xp * xp + yp * yp + zp * zp )
-! 
+!
 !   if ( temp == 0.0E+00 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'PARA_POINT_DIST_3D - Fatal error!'
 !     write ( *, * ) '  The normal vector is zero.'
 !     stop
 !   end if
-! 
+!
 !   xp = xp / temp
 !   yp = yp / temp
 !   zp = zp / temp
@@ -8618,7 +8618,7 @@ contains
 ! !  Find ( XN, YN, ZN), the nearest point to ( X, Y, Z ) in the plane.
 ! !
 !   t = xp * ( x - x1 ) + yp * ( y - y1 ) + zp * ( z - z1 )
-!  
+!
 !   xn = x - xp * t
 !   yn = y - yp * t
 !   zn = z - zp * t
@@ -8627,29 +8627,29 @@ contains
 ! !
 !   call para_contains_point_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, &
 !     x, y, z, inside )
-! 
+!
 !   if ( inside ) then
 !     dist = enorm0_3d ( x, y, z, xn, yn, zn )
 !     return
 !   end if
 ! !
-! !  Otherwise, find the distance between ( X, Y, Z ) and each of the 
+! !  Otherwise, find the distance between ( X, Y, Z ) and each of the
 ! !  four line segments that make up the boundary of the parallelogram.
 ! !
 !   x4 = x2 + x3 - x1
 !   y4 = y2 + y3 - y1
 !   z4 = z2 + z3 - z1
-! 
+!
 !   call line_seg_point_dist_3d ( x1, y1, z1, x3, y3, z3, x, y, z, dis13 )
-! 
+!
 !   call line_seg_point_dist_3d ( x3, y3, z3, x4, y4, z4, x, y, z, dis34 )
-! 
+!
 !   call line_seg_point_dist_3d ( x4, y4, z4, x2, y2, z2, x, y, z, dis42 )
-! 
+!
 !   call line_seg_point_dist_3d ( x2, y2, z2, x1, y1, z1, x, y, z, dis21 )
-! 
+!
 !   dist = min ( dis13, dis34, dis42, dis21 )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine parabola_ex ( x1, y1, x2, y2, x3, y3, x, y, ierror )
@@ -8692,34 +8692,34 @@ contains
 !   real y3
 ! !
 !   ierror = 0
-! 
+!
 !   if ( x1 == x2 .or. x2 == x3 .or. x3 == x1 ) then
 !     ierror = 1
 !     return
 !   end if
-! 
+!
 !   if ( y1 == y2 .and. y2 == y3 .and. y3 == y1 ) then
 !     x = x1
 !     y = y1
 !     return
 !   end if
-! 
+!
 !   bot = ( x2 - x3 ) * y1 - ( x1 - x3 ) * y2 + ( x1 - x2 ) * y3
-! 
+!
 !   if ( bot == 0.0E+00 ) then
 !     ierror = 2
 !     return
 !   end if
-! 
+!
 !   x = 0.5E+00 * (    x1 * x1 * ( y3 - y2 ) &
 !                + x2 * x2 * ( y1 - y3 ) &
 !                + x3 * x3 * ( y2 - y1 ) ) / bot
-! 
+!
 !   y = (    ( x - x2 ) * ( x - x3 ) * ( x2 - x3 ) * y1 &
 !          - ( x - x1 ) * ( x - x3 ) * ( x1 - x3 ) * y2 &
 !           + ( x - x1 ) * ( x - x2 ) * ( x1 - x2 ) * y3 ) / &
 !           ( ( x1 - x2 ) * ( x2 - x3 ) * ( x1 - x3 ) )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine parabola_ex2 ( x1, y1, x2, y2, x3, y3, x, y, a, b, c, ierror )
@@ -8771,12 +8771,12 @@ contains
 !   real y3
 ! !
 !   ierror = 0
-! 
+!
 !   if ( x1 == x2 .or. x2 == x3 .or. x3 == x1 ) then
 !     ierror = 1
 !     return
 !   end if
-! 
+!
 !   if ( y1 == y2 .and. y2 == y3 .and. y3 == y1 ) then
 !     x = x1
 !     y = y1
@@ -8788,11 +8788,11 @@ contains
 !   v(1,1) = 1.0E+00
 !   v(1,2) = x1
 !   v(1,3) = x1 * x1
-! 
+!
 !   v(2,1) = 1.0E+00
 !   v(2,2) = x2
 !   v(2,3) = x2 * x2
-! 
+!
 !   v(3,1) = 1.0E+00
 !   v(3,2) = x3
 !   v(3,3) = x3 * x3
@@ -8813,13 +8813,13 @@ contains
 !     ierror = 2
 !     return
 !   end if
-! 
+!
 !   x = - b / ( 2.0E+00 * a )
 !   y = a * x * x + b * x + c
-! 
+!
 !   return
 ! end subroutine
-! 
+!
 ! subroutine plane_exp_normal_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, xn, yn, &
 !   zn )
 ! !
@@ -8844,11 +8844,11 @@ contains
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, the coordinates 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, the coordinates
 ! !    of three points that constitute a line.  These points should not
 ! !    be identical, nor colinear.
 ! !
-! !    Output, real XN, YN, ZN, the coordinates of the unit normal 
+! !    Output, real XN, YN, ZN, the coordinates of the unit normal
 ! !    vector to the plane containing the three points.
 ! !
 !   real temp
@@ -8869,9 +8869,9 @@ contains
 ! !  (P2-P1) and (P3-P1).
 ! !
 !   call cross0_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, xn, yn, zn )
-! 
+!
 !   temp = sqrt ( xn * xn + yn * yn + zn * zn )
-! 
+!
 !   if ( temp == 0.0E+00 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'PLANE_EXP_NORMAL_3D - Fatal error!'
@@ -8882,11 +8882,11 @@ contains
 !     yn = yn / temp
 !     zn = zn / temp
 !   end if
-! 
+!
 !   return
 ! end subroutine
-subroutine plane_exp_point_dist_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, &
-  x, y, z, dist )
+   subroutine plane_exp_point_dist_3d(x1, y1, z1, x2, y2, z2, x3, y3, z3, &
+                                      x, y, z, dist)
 !
 !*******************************************************************************
 !
@@ -8909,37 +8909,37 @@ subroutine plane_exp_point_dist_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, &
 !
 !  Parameters:
 !
-!    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, are the 
+!    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, are the
 !    coordinates of three points on the plane.
 !
 !    Input, real X, Y, Z, the coordinates of the point.
 !
 !    Output, real DIST, the distance from the point to the plane.
 !
-  real a
-  real b
-  real c
-  real d
-  real dist
-  real x
-  real x1
-  real x2
-  real x3
-  real y
-  real y1
-  real y2
-  real y3
-  real z
-  real z1
-  real z2
-  real z3
-! 
-  call plane_exp2imp_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, a, b, c, d )
+      real a
+      real b
+      real c
+      real d
+      real dist
+      real x
+      real x1
+      real x2
+      real x3
+      real y
+      real y1
+      real y2
+      real y3
+      real z
+      real z1
+      real z2
+      real z3
+!
+      call plane_exp2imp_3d(x1, y1, z1, x2, y2, z2, x3, y3, z3, a, b, c, d)
 
-  call plane_imp_point_dist_3d ( a, b, c, d, x, y, z, dist )
- 
-  return
-end subroutine
+      call plane_imp_point_dist_3d(a, b, c, d, x, y, z, dist)
+
+      return
+   end subroutine
 ! subroutine plane_exp_project_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, &
 !   xf, yf, zf, npnt, xo, yo, zo, xp, yp, zp, ivis )
 ! !
@@ -8964,19 +8964,19 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, are the 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, are the
 ! !    coordinates of three points on the plane.
 ! !
 ! !    Input, real XF, YF, ZF, are the coordinates of the focus point.
 ! !
 ! !    Input, integer NPNT, the number of points to project.
 ! !
-! !    Input, real XO(NPNT), YO(NPNT), ZO(NPNT), are the coordinates of 
+! !    Input, real XO(NPNT), YO(NPNT), ZO(NPNT), are the coordinates of
 ! !    the object points.
 ! !
-! !    Output, real XP(NPNT), YP(NPNT), ZP(NPNT), are the coordinates of the 
-! !    projections of the object points through the focus point onto 
-! !    the plane.  XP, YP, and ZP may share the same memory as XO, YO, 
+! !    Output, real XP(NPNT), YP(NPNT), ZP(NPNT), are the coordinates of the
+! !    projections of the object points through the focus point onto
+! !    the plane.  XP, YP, and ZP may share the same memory as XO, YO,
 ! !    and ZO, in which case the projections will overwrite the original data.
 ! !
 ! !    Output, integer IVIS(NPNT), visibility indicator:
@@ -9053,33 +9053,33 @@ end subroutine
 ! !  Get the distance from the focus to the object.
 ! !
 !     call points_dist_3d ( xf, yf, zf, xo(i), yo(i), zo(i), disfo )
-!  
+!
 !     if ( disfo == 0.0E+00 ) then
-!  
+!
 !       ivis(i) = 0
 !       xp(i) = xn
 !       yp(i) = yn
 !       zp(i) = zn
-!  
+!
 !     else
 ! !
 ! !  Compute ALPHA, the angle between (OBJECT-FOCUS) and (NEAREST-FOCUS).
 ! !
 !       alpha = angle_rad_3d ( xo(i), yo(i), zo(i), xf, yf, zf, xn, yn, zn )
-!  
+!
 !       if ( cos ( alpha ) == 0.0E+00 ) then
-!  
+!
 !         ivis(i) = 0
 !         xp(i) = xn
 !         yp(i) = yn
 !         zp(i) = zn
-!  
+!
 !       else
 ! !
 ! !  BETA is Dist(NEAREST-FOCUS) / ( Cos(ALPHA)*Dist(OBJECT-FOCUS) )
 ! !
 !         beta = disfn / ( cos ( alpha ) * disfo )
-!    
+!
 !         if ( beta > 1.0E+00 ) then
 !           ivis(i) = 1
 !         else if ( beta == 1.0E+00 ) then
@@ -9095,16 +9095,16 @@ end subroutine
 !         xp(i) = xf + beta * ( xo(i) - xf )
 !         yp(i) = yf + beta * ( yo(i) - yf )
 !         zp(i) = zf + beta * ( zo(i) - zf )
-!  
+!
 !       end if
-!  
+!
 !     end if
-!  
+!
 !   end do
-!  
+!
 !   return
 ! end subroutine
-subroutine plane_exp2imp_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, a, b, c, d )
+   subroutine plane_exp2imp_3d(x1, y1, z1, x2, y2, z2, x3, y3, z3, a, b, c, d)
 !
 !*******************************************************************************
 !
@@ -9137,32 +9137,32 @@ subroutine plane_exp2imp_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, a, b, c, d )
 !
 !  Parameters:
 !
-!    Input, real X1, Y1, Z1, X2, Y2, X2, X3, Y3, Z3, are three points 
+!    Input, real X1, Y1, Z1, X2, Y2, X2, X3, Y3, Z3, are three points
 !    on the plane, which must be distinct, and not collinear.
 !
 !    Output, real A, B, C, D, coefficients which describe the plane.
 !
-  real a
-  real b
-  real c
-  real d
-  real x1
-  real x2
-  real x3
-  real y1
-  real y2
-  real y3
-  real z1
-  real z2
-  real z3
+      real a
+      real b
+      real c
+      real d
+      real x1
+      real x2
+      real x3
+      real y1
+      real y2
+      real y3
+      real z1
+      real z2
+      real z3
 
-  a = ( y2 - y1 ) * ( z3 - z1 ) - ( z2 - z1 ) * ( y3 - y1 )
-  b = ( z2 - z1 ) * ( x3 - x1 ) - ( x2 - x1 ) * ( z3 - z1 )
-  c = ( x2 - x1 ) * ( y3 - y1 ) - ( y2 - y1 ) * ( x3 - x1 ) 
-  d = - x2 * a - y2 * b - z2 * c 
+      a = (y2 - y1)*(z3 - z1) - (z2 - z1)*(y3 - y1)
+      b = (z2 - z1)*(x3 - x1) - (x2 - x1)*(z3 - z1)
+      c = (x2 - x1)*(y3 - y1) - (y2 - y1)*(x3 - x1)
+      d = -x2*a - y2*b - z2*c
 
-  return
-end subroutine
+      return
+   end subroutine
 ! subroutine plane_exp2norm_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, xp, yp, zp, &
 !   xn, yn, zn )
 ! !
@@ -9192,7 +9192,7 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, X2, X3, Y3, Z3, are three points 
+! !    Input, real X1, Y1, Z1, X2, Y2, X2, X3, Y3, Z3, are three points
 ! !    on the plane, which must be distinct, and not collinear.
 ! !
 ! !    Output, real XP, YP, ZP, a point on the plane.
@@ -9215,17 +9215,17 @@ end subroutine
 !   real z3
 !   real zn
 !   real zp
-! 
+!
 !   xp = x1
 !   yp = y1
 !   zp = z1
-! 
+!
 !   xn = ( y2 - y1 ) * ( z3 - z1 ) - ( z2 - z1 ) * ( y3 - y1 )
 !   yn = ( z2 - z1 ) * ( x3 - x1 ) - ( x2 - x1 ) * ( z3 - z1 )
-!   zn = ( x2 - x1 ) * ( y3 - y1 ) - ( y2 - y1 ) * ( x3 - x1 ) 
-! 
+!   zn = ( x2 - x1 ) * ( y3 - y1 ) - ( y2 - y1 ) * ( x3 - x1 )
+!
 !   norm = sqrt ( xn * xn + yn * yn + zn * zn )
-! 
+!
 !   if ( norm == 0.0E+00 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'PLANE_EXP2NORM_3D - Fatal error!'
@@ -9233,11 +9233,11 @@ end subroutine
 !     write ( *, * ) '  Two points coincide, or nearly so.'
 !     stop
 !   end if
-! 
+!
 !   xn = xn / norm
 !   yn = yn / norm
 !   zn = zn / norm
-! 
+!
 !   return
 ! end subroutine
 ! subroutine plane_grid_3d ( cor3, ierror, lines, maxcor3, maxline, &
@@ -9270,7 +9270,7 @@ end subroutine
 ! !    1, more space for point coordinates is needed.
 ! !    2, more space for line data is needed.
 ! !
-! !    Output, integer LINES(MAXLINE), the indices of points used in 
+! !    Output, integer LINES(MAXLINE), the indices of points used in
 ! !    the lines of the grid.  Successive entries of LINES are joined
 ! !    by a line, unless an entry equals -1.  Note that indices begin
 ! !    with 0.
@@ -9301,7 +9301,7 @@ end subroutine
 ! !    On output, NLINE is increased by the number of points computed
 ! !    by this routine.
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, X2, X3, Y3, Z3, are three points 
+! !    Input, real X1, Y1, Z1, X2, Y2, X2, X3, Y3, Z3, are three points
 ! !    on the plane, which must be distinct, and not collinear.
 ! !
 !   integer, parameter :: nx = 5
@@ -9339,7 +9339,7 @@ end subroutine
 !   real z3
 ! !
 !   ierror = 0
-! 
+!
 !   nbase = ncor3
 ! !
 ! !  Compute the two basis vectors for the affine plane.
@@ -9347,17 +9347,17 @@ end subroutine
 !   v1(1) = x2 - x1
 !   v1(2) = y2 - y1
 !   v1(3) = z2 - z1
-! 
+!
 !   call vector_unit_nd ( 3, v1 )
-! 
+!
 !   v2(1) = x3 - x1
 !   v2(2) = y3 - y1
 !   v2(3) = z3 - z1
-! 
+!
 !   dot = v1(1) * v2(1) + v1(2) * v2(2) + v1(3) * v2(3)
-! 
+!
 !   v2(1:3) = v2(1:3) - dot * v1(1:3)
-! 
+!
 !   call vector_unit_nd ( 3, v2 )
 ! !
 ! !  Compute the (V1,V2) coordinate range of the data.
@@ -9366,16 +9366,16 @@ end subroutine
 !   amin = 0.0E+00
 !   bmax = 0.0E+00
 !   bmin = 0.0E+00
-! 
+!
 !   do i = 1, ncor3
-! 
+!
 !     a = 0.0E+00
 !     b = 0.0E+00
 !     do j = 1, 3
 !       a = a + v1(j) * cor3(j,i)
 !       b = b + v2(j) * cor3(j,i)
 !     end do
-! 
+!
 !     if ( i == 1 ) then
 !       amax = a
 !       amin = a
@@ -9387,7 +9387,7 @@ end subroutine
 !       bmax = max ( bmax, b )
 !       bmin = min ( bmin, b )
 !     end if
-! 
+!
 !   end do
 ! !
 ! !  Generate the points we will use.
@@ -9396,74 +9396,74 @@ end subroutine
 !     ierror = 1
 !     return
 !   end if
-! 
+!
 !   do j = 1, ny
-! 
+!
 !     b = ( real ( ny - j ) * bmin + real ( j - 1 ) * bmax ) / real ( ny - 1 )
-! 
+!
 !     do i = 1, nx
-! 
+!
 !       a = ( real ( nx - i ) * amin + real ( i - 1 ) * amax ) / real ( nx - 1 )
-! 
+!
 !       ncor3 = ncor3 + 1
 !       cor3(1:3,ncor3) = a * v1(1:3) + b * v2(1:3)
-! 
+!
 !     end do
-! 
+!
 !   end do
 ! !
 ! !  Do the "horizontals".
 ! !
 !   do i = 1, nx
-! 
+!
 !     do j = 1, ny
-! 
+!
 !       if ( nline >= maxline ) then
 !         ierror = 2
 !         return
 !       end if
-! 
+!
 !       nline = nline + 1
 !       lines(nline) = nbase + ( j - 1 ) * nx + i
-! 
+!
 !     end do
-! 
+!
 !     if ( nline >= maxline ) then
 !       ierror = 2
 !       return
 !     end if
-! 
+!
 !     nline = nline + 1
 !     lines(nline) = 0
-! 
+!
 !   end do
 ! !
 ! !  Do the "verticals".
 ! !
 !   do j = 1, ny
-! 
+!
 !     do i = 1, nx
-! 
+!
 !       if ( nline >= maxline ) then
 !         ierror = 2
 !         return
 !       end if
-! 
+!
 !       nline = nline + 1
 !       lines(nline) = nbase + ( j - 1 ) * nx + i
-! 
+!
 !     end do
-! 
+!
 !     if ( nline >= maxline ) then
 !       ierror = 2
 !       return
 !     end if
-! 
+!
 !     nline = nline + 1
 !     lines(nline) = 0
-! 
+!
 !   end do
-! 
+!
 !   return
 ! end subroutine
 ! subroutine plane_imp_line_par_int_3d ( a, b, c, d, x0, y0, z0, f, g, h, &
@@ -9498,10 +9498,10 @@ end subroutine
 ! !
 ! !    Input, real A, B, C, D, parameters that define the implicit plane.
 ! !
-! !    Input, real X0, Y0, Z0, F, G, H, parameters that define the 
+! !    Input, real X0, Y0, Z0, F, G, H, parameters that define the
 ! !    parametric line.
 ! !
-! !    Output, logical INTERSECT, is TRUE if the line and the plane 
+! !    Output, logical INTERSECT, is TRUE if the line and the plane
 ! !    intersect, and false otherwise.
 ! !
 ! !    Output, real X, Y, Z, is a point of intersection of the line
@@ -9531,29 +9531,29 @@ end subroutine
 ! !  Check.
 ! !
 !   norm1 = sqrt ( a * a + b * b + c * c )
-! 
+!
 !   if ( norm1 == 0.0E+00 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'PLANE_IMP_LINE_PAR_INT_3D - Fatal error!'
 !     write ( *, * ) '  The plane normal vector is null.'
 !     stop
 !   end if
-! 
+!
 !   norm2 = sqrt ( f * f + g * g + h * h )
-! 
+!
 !   if ( norm2 == 0.0E+00 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'PLANE_IMP_LINE_PAR_INT_3D - Fatal error!'
 !     write ( *, * ) '  The line direction vector is null.'
 !     stop
 !   end if
-! 
+!
 !   denom = a * f + b * g + c * h
 ! !
 ! !  The line and the plane may be parallel.
 ! !
 !   if ( abs ( denom ) < TOL * norm1 * norm2 ) then
-! 
+!
 !     if ( a * x0 + b * y0 + c * z0 + d == 0.0E+00 ) then
 !       intersect = .TRUE.
 !       x = x0
@@ -9569,15 +9569,15 @@ end subroutine
 ! !  If they are not parallel, they must intersect.
 ! !
 !   else
-! 
+!
 !     intersect = .TRUE.
 !     t = - ( a * x0 + b * y0 + c * z0 + d ) / denom
 !     x = x0 + t * f
 !     y = y0 + t * g
 !     z = z0 + t * h
-! 
+!
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine plane_imp_line_seg_near_3d ( x1, y1, z1, x2, y2, z2, &
@@ -9604,7 +9604,7 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, Z2, the endpoints of the line 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z2, the endpoints of the line
 ! !    segment.
 ! !
 ! !    Input, real A, B, C, D, the parameters that define the implicit
@@ -9651,9 +9651,9 @@ end subroutine
 !   xp = 0.0E+00
 !   yp = 0.0E+00
 !   zp = 0.0E+00
-! 
+!
 !   norm = sqrt ( a * a + b * b + c * c )
-! 
+!
 !   if ( norm == 0.0E+00 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'PLANE_IMP_LINE_SEG_NEAR_3D - Fatal error!'
@@ -9671,7 +9671,7 @@ end subroutine
 ! !  If the line segment is actually a point, then the answer is easy.
 ! !
 !   if ( x1 == x2 .and. y1 == y2 .and. z1 == z2 ) then
-! 
+!
 !     p1 = an * x1 + bn * y1 + cn * z1 + dn
 !     dist = abs ( p1 )
 !     xls = x1
@@ -9681,7 +9681,7 @@ end subroutine
 !     yp = yls - bn * p1
 !     zp = zls - cn * p1
 !     return
-! 
+!
 !   end if
 ! !
 ! !  Compute the projections of the two points onto the normal vector.
@@ -9694,10 +9694,10 @@ end subroutine
 ! !
 !   if ( ( p1 > 0.0E+00 .and. p2 > 0.0E+00 ) .or. &
 !        ( p1 < 0.0E+00 .and. p2 < 0.0E+00 ) ) then
-! 
+!
 !     p1 = abs ( p1 )
 !     p2 = abs ( p2 )
-! 
+!
 !     if ( p1 < p2 ) then
 !       xls = x1
 !       yls = y1
@@ -9719,7 +9719,7 @@ end subroutine
 ! !  If the projections differ in sign, the line segment crosses the plane.
 ! !
 !   else
-! 
+!
 !     if ( p1 == 0.0E+00 ) then
 !       alpha = 0.0E+00
 !     else if ( p2 == 0.0E+00 ) then
@@ -9727,21 +9727,21 @@ end subroutine
 !     else
 !       alpha = p2 / ( p2 - p1 )
 !     end if
-! 
+!
 !     xls = alpha * x1 + ( 1.0E+00 - alpha ) * x2
 !     yls = alpha * y1 + ( 1.0E+00 - alpha ) * y2
 !     zls = alpha * z1 + ( 1.0E+00 - alpha ) * z2
 !     xp = xls
 !     yp = yls
 !     zp = zls
-! 
+!
 !     dist = 0.0E+00
-! 
+!
 !   end if
-!  
+!
 !   return
 ! end subroutine
-subroutine plane_imp_point_dist_3d ( a, b, c, d, x, y, z, dist )
+   subroutine plane_imp_point_dist_3d(a, b, c, d, x, y, z, dist)
 !
 !*******************************************************************************
 !
@@ -9777,19 +9777,19 @@ subroutine plane_imp_point_dist_3d ( a, b, c, d, x, y, z, dist )
 !
 !    Output, real DIST, the distance from the point to the plane.
 !
-  real a
-  real b
-  real c
-  real d
-  real dist
-  real x
-  real y
-  real z
-! 
-  dist = abs ( ( a * x + b * y + c * z + d ) ) /  sqrt ( a * a + b * b + c * c )
- 
-  return
-end subroutine
+      real a
+      real b
+      real c
+      real d
+      real dist
+      real x
+      real y
+      real z
+!
+      dist = abs((a*x + b*y + c*z + d))/sqrt(a*a + b*b + c*c)
+
+      return
+   end subroutine
 ! subroutine plane_imp_point_dist_signed_3d ( a, b, c, d, x, y, z, dist_signed )
 ! !
 ! !*******************************************************************************
@@ -9819,7 +9819,7 @@ end subroutine
 ! !
 ! !    Input, real X, Y, Z, the coordinates of the point.
 ! !
-! !    Output, real DIST_SIGNED, the signed distance from the point to 
+! !    Output, real DIST_SIGNED, the signed distance from the point to
 ! !    the plane.
 ! !
 !   real a
@@ -9833,7 +9833,7 @@ end subroutine
 ! !
 !   dist_signed = ( a * x + b * y + c * z + d ) / &
 !     ( - sign ( 1.0E+00, d ) * sqrt ( a * a + b * b + c * c ) )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine plane_imp_point_near_3d ( a, b, c, d, x, y, z, xn, yn, zn )
@@ -9866,7 +9866,7 @@ end subroutine
 ! !
 ! !    Output, real XN, YN, ZN, the coordinates of the nearest point on
 ! !    the plane.
-! ! 
+! !
 !   real a
 !   real b
 !   real c
@@ -9906,11 +9906,11 @@ end subroutine
 ! !    T = (-A*X-B*Y-C*Z-D) / (A * A + B * B + C * C )
 ! !
 !   t = - ( a * x + b * y + c * z + d ) / ( a * a + b * b + c * c )
-!  
+!
 !   xn = x + a * t
 !   yn = y + b * t
 !   zn = z + c * t
-!  
+!
 !   return
 ! end subroutine
 ! subroutine plane_imp_triangle_int_3d ( x1, y1, z1, x2, y2, z2, &
@@ -9931,12 +9931,12 @@ end subroutine
 ! !
 ! !    There may be 0, 1, 2 or 3 points of intersection returned.
 ! !
-! !    If two intersection points are returned, then the entire line 
+! !    If two intersection points are returned, then the entire line
 ! !    between them comprises points of intersection.
 ! !
-! !    If three intersection points are returned, then all points of 
+! !    If three intersection points are returned, then all points of
 ! !    the triangle intersect the plane.
-! ! 
+! !
 ! !  Modified:
 ! !
 ! !    02 June 1999
@@ -9988,30 +9988,30 @@ end subroutine
 ! !  Consider any zero distances.
 ! !
 !   if ( dist1 == 0.0E+00 ) then
-! 
+!
 !     num_int = num_int + 1
 !     x(num_int) = x1
 !     y(num_int) = y1
 !     z(num_int) = z1
-! 
+!
 !   end if
-! 
+!
 !   if ( dist2 == 0.0E+00 ) then
-! 
+!
 !     num_int = num_int + 1
 !     x(num_int) = x2
 !     y(num_int) = y2
 !     z(num_int) = z2
-! 
+!
 !   end if
-! 
+!
 !   if ( dist3 == 0.0E+00 ) then
-! 
+!
 !     num_int = num_int + 1
 !     x(num_int) = x3
 !     y(num_int) = y3
 !     z(num_int) = z3
-! 
+!
 !   end if
 ! !
 ! !  If 2 or 3 of the nodes intersect, we're already done.
@@ -10024,57 +10024,57 @@ end subroutine
 ! !  are of opposite signs.
 ! !
 !   if ( num_int == 1 ) then
-! 
+!
 !     if ( dist1 == 0.0E+00 ) then
-! 
+!
 !       call plane_triangle_int_add_3d ( x2, y2, z2, x3, y3, z3, &
 !         dist2, dist3, num_int, x, y, z )
-! 
+!
 !     else if ( dist2 == 0.0E+00 ) then
-! 
+!
 !       call plane_triangle_int_add_3d ( x1, y1, z1, x3, y3, z3, &
 !         dist1, dist3, num_int, x, y, z )
-! 
+!
 !     else if ( dist3 == 0.0E+00 ) then
-! 
+!
 !       call plane_triangle_int_add_3d ( x1, y1, z1, x2, y2, z2, &
 !         dist1, dist2, num_int, x, y, z )
-! 
+!
 !     end if
-! 
+!
 !     return
-! 
+!
 !   end if
 ! !
 ! !  All nodal distances are nonzero, and there is at least one
 ! !  positive and one negative.
 ! !
 !   if ( dist1 * dist2 < 0.0E+00 .and. dist1 * dist3 < 0.0E+00 ) then
-! 
+!
 !     call plane_triangle_int_add_3d ( x1, y1, z1, x2, y2, z2, &
 !       dist1, dist2, num_int, x, y, z )
-! 
+!
 !     call plane_triangle_int_add_3d ( x1, y1, z1, x3, y3, z3, &
 !       dist1, dist3, num_int, x, y, z )
-! 
+!
 !   else if ( dist2 * dist1 < 0.0E+00 .and.  dist2 * dist3 < 0.0E+00 ) then
-! 
+!
 !     call plane_triangle_int_add_3d ( x2, y2, z2, x1, y1, z1, &
 !       dist2, dist1, num_int, x, y, z )
-! 
+!
 !     call plane_triangle_int_add_3d ( x2, y2, z2, x3, y3, z3, &
 !       dist2, dist3, num_int, x, y, z )
-! 
+!
 !   else if ( dist3 * dist1 < 0.0E+00 .and. dist3 * dist2 < 0.0E+00 ) then
-! 
+!
 !     call plane_triangle_int_add_3d ( x3, y3, z3, x1, y1, z1, &
 !       dist3, dist1, num_int, x, y, z )
-! 
+!
 !     call plane_triangle_int_add_3d ( x3, y3, z3, x2, y2, z2, &
 !       dist3, dist2, num_int, x, y, z )
-! 
+!
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine plane_imp_triangle_near_3d ( x1, y1, z1, x2, y2, z2, &
@@ -10158,14 +10158,14 @@ end subroutine
 ! !
 !   call plane_imp_line_seg_near_3d ( x1, y1, z1, x2, y2, z2, &
 !     a, b, c, d, dist12, xp, yp, zp, xt, yt, zt )
-! 
+!
 !   dist = dist12
-! 
+!
 !   num_near = num_near + 1
 !   x(num_near) = xt
 !   y(num_near) = yt
 !   z(num_near) = zt
-!  
+!
 !   if ( dist12 > 0.0E+00 ) then
 !     num_near = num_near + 1
 !     x(num_near) = xp
@@ -10177,78 +10177,78 @@ end subroutine
 ! !
 !   call plane_imp_line_seg_near_3d ( x2, y2, z2, x3, y3, z3, &
 !     a, b, c, d, dist23, xp, yp, zp, xt, yt, zt )
-! 
+!
 !   if ( dist23 < dist ) then
-! 
+!
 !     num_near = 0
 !     dist = dist23
-! 
+!
 !     num_near = num_near + 1
 !     x(num_near) = xt
 !     y(num_near) = yt
 !     z(num_near) = zt
-!  
+!
 !     if ( dist23 > 0.0E+00 ) then
 !       num_near = num_near + 1
 !       x(num_near) = xp
 !       y(num_near) = yp
 !       z(num_near) = zp
 !     end if
-! 
+!
 !   else if ( dist23 == dist ) then
-! 
+!
 !     num_near = num_near + 1
 !     x(num_near) = xt
 !     y(num_near) = yt
 !     z(num_near) = zt
-!  
+!
 !     if ( dist23 > 0.0E+00 ) then
 !       num_near = num_near + 1
 !       x(num_near) = xp
 !       y(num_near) = yp
 !       z(num_near) = zp
 !     end if
-! 
+!
 !   end if
 ! !
 ! !  Consider the line segment P3 - P1.
 ! !
 !   call plane_imp_line_seg_near_3d ( x3, y3, z3, x1, y1, z1, &
 !     a, b, c, d, dist31, xp, yp, zp, xt, yt, zt )
-! 
+!
 !   if ( dist31 < dist ) then
-! 
+!
 !     num_near = 0
 !     dist = dist31
-! 
+!
 !     num_near = num_near + 1
 !     x(num_near) = xt
 !     y(num_near) = yt
 !     z(num_near) = zt
-!  
+!
 !     if ( dist31 > 0.0E+00 ) then
 !       num_near = num_near + 1
 !       x(num_near) = xp
 !       y(num_near) = yp
 !       z(num_near) = zp
 !     end if
-! 
+!
 !   else if ( dist31 == dist ) then
-! 
+!
 !     num_near = num_near + 1
 !     x(num_near) = xt
 !     y(num_near) = yt
 !     z(num_near) = zt
-!  
+!
 !     if ( dist31 > 0.0E+00 ) then
 !       num_near = num_near + 1
 !       x(num_near) = xp
 !       y(num_near) = yp
 !       z(num_near) = zp
 !     end if
-! 
+!
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine plane_imp2exp_3d ( a, b, c, d, x1, y1, z1, x2, y2, z2, x3, y3, z3 )
@@ -10304,10 +10304,10 @@ end subroutine
 !   real zp
 ! !
 !   call plane_imp2norm_3d ( a, b, c, d, xp, yp, zp, xn, yn, zn )
-! 
+!
 !   call plane_norm2exp_3d ( xp, yp, zp, xn, yn, zn, x1, y1, z1, &
 !     x2, y2, z2, x3, y3, z3 )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine plane_imp2norm_3d ( a, b, c, d, xp, yp, zp, xn, yn, zn )
@@ -10357,18 +10357,18 @@ end subroutine
 !   real zp
 ! !
 !   norm = sqrt ( a * a + b * b + c * c )
-! 
+!
 !   if ( norm == 0.0E+00 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'PLANE_IMP2NORM_3D - Fatal error!'
 !     write ( *, * ) '  The (A,B,C) has zero norm.'
 !     stop
 !   end if
-! 
+!
 !   xn = a / norm
 !   yn = b / norm
 !   zn = c / norm
-! 
+!
 !   if ( a /= 0.0E+00 ) then
 !     xp = - d / a
 !     yp = 0.0E+00
@@ -10387,7 +10387,7 @@ end subroutine
 !     write ( *, * ) '  The (A,B,C) vector is null.'
 !     stop
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine plane_norm_basis_3d ( xp, yp, zp, xn, yn, zn, xq, yq, zq, &
@@ -10422,7 +10422,7 @@ end subroutine
 ! !    Input, real XP, YP, ZP, a point on the plane.  (Actually, we never
 ! !    need to know these values to do the calculation!)
 ! !
-! !    Input, real XN, YN, ZN, a normal vector N to the plane.  The 
+! !    Input, real XN, YN, ZN, a normal vector N to the plane.  The
 ! !    vector must not have zero length, but it is not necessary for N
 ! !    to have unit length.
 ! !
@@ -10452,7 +10452,7 @@ end subroutine
 ! !  Compute the length of N = (XN,YN,ZN).
 ! !
 !   norm_n = sqrt ( xn * xn + yn * yn + zn * zn )
-! 
+!
 !   if ( norm_n == 0.0E+00 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'PLANE_NORM_BASIS_3D - Fatal error!'
@@ -10467,20 +10467,20 @@ end subroutine
 !   xq = 0.0E+00
 !   yq = 0.0E+00
 !   zq = 0.0E+00
-! 
+!
 !   min_com = abs ( xn )
-! 
+!
 !   if ( abs ( yn ) < min_com ) then
 !     min_com = abs ( yn )
 !   end if
-! 
+!
 !   if ( abs ( zn ) < min_com ) then
 !     min_com = abs ( zn )
 !   end if
-! 
+!
 !   if ( min_com == abs ( xn ) ) then
 !     xq = 1.0E+00
-!  
+!
 !   else if ( min_com == abs ( yn ) ) then
 !     yq = 1.0E+00
 !   else if ( min_com == abs ( zn ) ) then
@@ -10492,13 +10492,13 @@ end subroutine
 ! !  and then normalize.
 ! !
 !   dot = ( xq * xn + yq * yn + zq * zn ) / norm_n
-! 
+!
 !   xq = xq - dot * xn / norm_n
 !   yq = yq - dot * yn / norm_n
 !   zq = zq - dot * zn / norm_n
-! 
+!
 !   norm_q = sqrt ( xq * xq + yq * yq + zq * zq )
-! 
+!
 !   xq = xq / norm_q
 !   yq = yq / norm_q
 !   zq = zq / norm_q
@@ -10509,7 +10509,7 @@ end subroutine
 !   xr = ( yn * zq - zn * yq ) / norm_n
 !   yr = ( zn * xq - xn * zq ) / norm_n
 !   zr = ( xn * yq - yn * xq ) / norm_n
-! 
+!
 !   return
 ! end subroutine
 ! subroutine plane_norm_triangle_int_3d ( x1, y1, z1, x2, y2, z2, &
@@ -10531,12 +10531,12 @@ end subroutine
 ! !
 ! !    There may be 0, 1, 2 or 3 points of intersection returned.
 ! !
-! !    If two intersection points are returned, then the entire line 
+! !    If two intersection points are returned, then the entire line
 ! !    between them comprises points of intersection.
 ! !
-! !    If three intersection points are returned, then all points of 
+! !    If three intersection points are returned, then all points of
 ! !    the triangle intersect the plane.
-! ! 
+! !
 ! !  Modified:
 ! !
 ! !    03 June 1999
@@ -10594,30 +10594,30 @@ end subroutine
 ! !  Consider any zero distances.
 ! !
 !   if ( dist1 == 0.0E+00 ) then
-! 
+!
 !     num_int = num_int + 1
 !     x(num_int) = x1
 !     y(num_int) = y1
 !     z(num_int) = z1
-! 
+!
 !   end if
-! 
+!
 !   if ( dist2 == 0.0E+00 ) then
-! 
+!
 !     num_int = num_int + 1
 !     x(num_int) = x2
 !     y(num_int) = y2
 !     z(num_int) = z2
-! 
+!
 !   end if
-! 
+!
 !   if ( dist3 == 0.0E+00 ) then
-! 
+!
 !     num_int = num_int + 1
 !     x(num_int) = x3
 !     y(num_int) = y3
 !     z(num_int) = z3
-! 
+!
 !   end if
 ! !
 ! !  If 2 or 3 of the nodes intersect, we're already done.
@@ -10630,57 +10630,57 @@ end subroutine
 ! !  are of opposite signs.
 ! !
 !   if ( num_int == 1 ) then
-! 
+!
 !     if ( dist1 == 0.0E+00 ) then
-! 
+!
 !       call plane_triangle_int_add_3d ( x2, y2, z2, x3, y3, z3, &
 !         dist2, dist3, num_int, x, y, z )
-! 
+!
 !     else if ( dist2 == 0.0E+00 ) then
-! 
+!
 !       call plane_triangle_int_add_3d ( x1, y1, z1, x3, y3, z3, &
 !         dist1, dist3, num_int, x, y, z )
-! 
+!
 !     else if ( dist3 == 0.0E+00 ) then
-! 
+!
 !       call plane_triangle_int_add_3d ( x1, y1, z1, x2, y2, z2, &
 !         dist1, dist2, num_int, x, y, z )
-! 
+!
 !     end if
-! 
+!
 !     return
-! 
+!
 !   end if
 ! !
 ! !  All nodal distances are nonzero, and there is at least one
 ! !  positive and one negative.
 ! !
 !   if ( dist1 * dist2 < 0.0E+00 .and. dist1 * dist3 < 0.0E+00 ) then
-! 
+!
 !     call plane_triangle_int_add_3d ( x1, y1, z1, x2, y2, z2, &
 !       dist1, dist2, num_int, x, y, z )
-! 
+!
 !     call plane_triangle_int_add_3d ( x1, y1, z1, x3, y3, z3, &
 !       dist1, dist3, num_int, x, y, z )
-! 
+!
 !   else if ( dist2 * dist1 < 0.0E+00 .and. dist2 * dist3 < 0.0E+00 ) then
-! 
+!
 !     call plane_triangle_int_add_3d ( x2, y2, z2, x1, y1, z1, &
 !       dist2, dist1, num_int, x, y, z )
-! 
+!
 !     call plane_triangle_int_add_3d ( x2, y2, z2, x3, y3, z3, &
 !       dist2, dist3, num_int, x, y, z )
-! 
+!
 !   else if ( dist3 * dist1 < 0.0E+00 .and. dist3 * dist2 < 0.0E+00 ) then
-! 
+!
 !     call plane_triangle_int_add_3d ( x3, y3, z3, x1, y1, z1, &
 !       dist3, dist1, num_int, x, y, z )
-! 
+!
 !     call plane_triangle_int_add_3d ( x3, y3, z3, x2, y2, z2, &
 !       dist3, dist2, num_int, x, y, z )
-! 
+!
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine plane_norm2exp_3d ( xp, yp, zp, xn, yn, zn, x1, y1, z1, &
@@ -10743,21 +10743,21 @@ end subroutine
 !   real zp
 !   real zq
 !   real zr
-! 
+!
 !   call plane_norm_basis_3d ( xp, yp, zp, xn, yn, zn, xq, yq, zq, xr, yr, zr )
-! 
+!
 !   x1 = xp
 !   y1 = yp
 !   z1 = zp
-! 
+!
 !   x2 = xp + xq
 !   y2 = yp + yq
 !   z2 = zp + zq
-! 
+!
 !   x3 = xp + xr
 !   y3 = yp + yr
 !   z3 = zp + zr
-! 
+!
 !   return
 ! end subroutine
 ! subroutine plane_norm2imp_3d ( xp, yp, zp, xn, yn, zn, a, b, c, d )
@@ -10804,12 +10804,12 @@ end subroutine
 !   real yp
 !   real zn
 !   real zp
-! 
+!
 !   a = xn
 !   b = yn
 !   c = zn
 !   d = - a * xp - b * yp - c * zp
-! 
+!
 !   return
 ! end subroutine
 ! subroutine plane_triangle_int_add_3d ( x1, y1, z1, x2, y2, z2, dist1, dist2, &
@@ -10841,7 +10841,7 @@ end subroutine
 ! !    of two vertices of a triangle.
 ! !
 ! !    Input, real DIST1, DIST2, the signed distances of the two vertices
-! !    from a plane.  
+! !    from a plane.
 ! !
 ! !    Input/output, integer NUM_INT, the number of intersection points.
 ! !
@@ -10879,7 +10879,7 @@ end subroutine
 !     y(num_int) = alpha * y1 + ( 1.0E+00 - alpha ) * y2
 !     z(num_int) = alpha * z1 + ( 1.0E+00 - alpha ) * z2
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! function points_avoid_point_naive_2d ( n, xy_set, xy_test )
@@ -10929,18 +10929,18 @@ end subroutine
 !   real xy_test(ndim)
 ! !
 !   tol = 100.0E+00 * epsilon ( tol )
-! 
+!
 !   points_avoid_point_naive_2d = .true.
-! 
+!
 !   do j = 1, n
-! 
+!
 !     if ( sqrt ( sum ( ( xy_set(1:ndim,j) - xy_test(1:ndim) )**2 ) ) < tol ) then
 !       points_avoid_point_naive_2d = .false.
 !       return
 !     end if
-! 
+!
 !   end do
-! 
+!
 !   return
 ! end function
 ! subroutine points_bisect_line_imp_2d ( x1, y1, x2, y2, a, b, c )
@@ -10988,7 +10988,7 @@ end subroutine
 !   a = x1 - x2
 !   b = y1 - y2
 !   c = - 0.5E+00 * ( ( x1 * x1 + y1 * y1 ) - ( x2 * x2 + y2 * y2 ) )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine points_bisect_line_par_2d ( x1, y1, x2, y2, f, g, x, y )
@@ -11039,7 +11039,7 @@ end subroutine
 !   g = 0.5E+00 * ( y1 + y2 )
 !   x = - ( y2 - y1 )
 !   y = + ( x2 - x1 )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine points_centroid_2d ( n, x, y, cent )
@@ -11053,15 +11053,15 @@ end subroutine
 ! !
 ! !    Given a discrete set of points S, the discrete centroid z is defined by
 ! !
-! !                           Sum ( x in S ) ( x - z )**2 
+! !                           Sum ( x in S ) ( x - z )**2
 ! !        = min ( y in S ) { Sum ( x in S ) ( x - y )**2
 ! !
 ! !    In other words, the discrete centroid is a point in the set whose distance
-! !    to the other points is minimized.  The discrete centroid of a point set 
+! !    to the other points is minimized.  The discrete centroid of a point set
 ! !    need not be unique.  Consider a point set that comprises the
-! !    vertices of an equilateral triangle.  
+! !    vertices of an equilateral triangle.
 ! !
-! !    This discrete centroid may also be referred to as the K-means cluster.  
+! !    This discrete centroid may also be referred to as the K-means cluster.
 ! !
 ! !  Modified:
 ! !
@@ -11091,14 +11091,14 @@ end subroutine
 ! !
 !   dist_min = 0.0E+00
 !   cent = 0
-! 
+!
 !   do i = 1, n
-! 
+!
 !     dist = 0.0E+00
 !     do j = 1, n
 !       dist = dist + ( x(i) - x(j) )**2 + ( y(i) - y(j) )**2
 !     end do
-! 
+!
 !     if ( i == 1 ) then
 !       dist_min = dist
 !       cent = i
@@ -11106,9 +11106,9 @@ end subroutine
 !       dist_min = dist
 !       cent = i
 !     end if
-! 
+!
 !   end do
-! 
+!
 !   return
 ! end subroutine
 ! subroutine points_colin_2d ( x1, y1, x2, y2, x3, y3, colin )
@@ -11150,25 +11150,25 @@ end subroutine
 !   real y3
 ! !
 !   call triangle_area_2d ( x1, y1, x2, y2, x3, y3, area )
-! 
+!
 !   if ( area == 0.0E+00 ) then
-! 
+!
 !     colin = 0.0E+00
-! 
+!
 !   else
-! 
+!
 !     perim =   enorm0_2d ( x1, y1, x2, y2 ) &
 !             + enorm0_2d ( x2, y2, x3, y3 ) &
 !             + enorm0_2d ( x3, y3, x1, y1 )
-! 
+!
 !     side = perim / 3.0E+00
-! 
+!
 !     area2 = 0.25E+00 * sqrt ( 3.0E+00 ) * side * side
-! 
+!
 !     colin = area / area2
-! 
+!
 !   end if
-!  
+!
 !   return
 ! end subroutine
 ! subroutine points_colin_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, colin )
@@ -11188,7 +11188,7 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, the coordinates of 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, the coordinates of
 ! !    the points.
 ! !
 ! !    Output, real COLIN, an estimate of colinearity, namely, the ratio
@@ -11214,27 +11214,27 @@ end subroutine
 !   real z3
 ! !
 !   call triangle_area_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, area )
-! 
+!
 !   area = abs ( area )
-! 
+!
 !   if ( area == 0.0E+00 ) then
-! 
+!
 !     colin = 0.0E+00
-! 
+!
 !   else
-! 
+!
 !     perim = enorm0_3d ( x1, y1, z1, x2, y2, z2 ) &
 !           + enorm0_3d ( x2, y2, z2, x3, y3, z3 ) &
 !           + enorm0_3d ( x3, y3, z3, x1, y1, z1 )
-! 
+!
 !     side = perim / 3.0E+00
-! 
+!
 !     area2 = 0.25E+00 * sqrt ( 3.0E+00 ) * side * side
-! 
+!
 !     colin = area / area2
-! 
+!
 !   end if
-!  
+!
 !   return
 ! end subroutine
 ! subroutine points_delaunay_naive_2d ( n, x, y, maxtri, ntri, tri )
@@ -11247,7 +11247,7 @@ end subroutine
 ! !  Discussion:
 ! !
 ! !    This routine is only suitable as a demonstration code for small
-! !    problems.  Its running time is of order N**4.  Much faster 
+! !    problems.  Its running time is of order N**4.  Much faster
 ! !    algorithms are available.
 ! !
 ! !    Given a set of nodes in the plane, a triangulation is set of
@@ -11263,7 +11263,7 @@ end subroutine
 ! !
 ! !    Joseph O'Rourke,
 ! !    Computational Geometry,
-! !    Cambridge University Press, 
+! !    Cambridge University Press,
 ! !    Second Edition, 1998, page 187.
 ! !
 ! !  Modified:
@@ -11301,7 +11301,7 @@ end subroutine
 !   real zn
 ! !
 !   ntri = 0
-! 
+!
 !   if ( n < 3 ) then
 !     return
 !   end if
@@ -11315,20 +11315,20 @@ end subroutine
 !   do i = 1, n-2
 !     do j = i+1, n
 !       do k = i+1, n
-! 
+!
 !         if ( j /= k ) then
-! 
+!
 !           xn = ( y(j) - y(i) ) * ( z(k) - z(i) ) &
 !              - ( y(k) - y(i) ) * ( z(j) - z(i) )
-! 
+!
 !           yn = ( x(k) - x(i) ) * ( z(j) - z(i) ) &
 !              - ( x(j) - x(i) ) * ( z(k) - z(i) )
-! 
+!
 !           zn = ( x(j) - x(i) ) * ( y(k) - y(i) ) &
 !              - ( x(k) - x(i) ) * ( y(j) - y(i) )
-! 
+!
 !           flag = ( zn < 0.0E+00 )
-! 
+!
 !           if ( flag ) then
 !             do m = 1, n
 !               flag = flag .and. &
@@ -11336,7 +11336,7 @@ end subroutine
 !                   + ( z(m) - z(i) ) * zn <= 0.0E+00 )
 !             end do
 !           end if
-! 
+!
 !           if ( flag ) then
 !             if ( ntri < maxtri ) then
 !               ntri = ntri + 1
@@ -11345,13 +11345,13 @@ end subroutine
 !               tri(3,ntri) = k
 !             end if
 !           end if
-! 
+!
 !         end if
-! 
+!
 !       end do
 !     end do
 !   end do
-! 
+!
 !   return
 ! end subroutine
 ! subroutine points_dist_2d ( x1, y1, x2, y2, dist )
@@ -11383,7 +11383,7 @@ end subroutine
 !   real y2
 ! !
 !   dist = sqrt ( ( x1 - x2 )**2 + ( y1 - y2 )**2 )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine points_dist_3d ( x1, y1, z1, x2, y2, z2, dist )
@@ -11417,7 +11417,7 @@ end subroutine
 !   real z2
 ! !
 !   dist = sqrt ( ( x1 - x2 )**2 + ( y1 - y2 )**2 + ( z1 - z2 )**2 )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine points_dist_nd ( x1, x2, n, dist )
@@ -11450,7 +11450,7 @@ end subroutine
 !   real x2(n)
 ! !
 !   dist = sqrt ( sum ( ( x1(1:n) - x2(1:n) )**2 ) )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine points_hull_2d ( ival, n, nval, x, y )
@@ -11471,14 +11471,14 @@ end subroutine
 ! !  Parameters:
 ! !
 ! !    Output, integer IVAL(N).  Entries 1 through NVAL of IVAL contain
-! !    the indices of the nodes that form the convex hull, in order.  
-! !  
+! !    the indices of the nodes that form the convex hull, in order.
+! !
 ! !    Input, integer N, the number of nodes.
 ! !
 ! !    Output, integer NVAL, the number of nodes that lie on the convex hull.
 ! !
 ! !    Input, real X(N), Y(N), the X and Y coordinates of the nodes.
-! ! 
+! !
 !   integer n
 ! !
 !   real ai
@@ -11517,7 +11517,7 @@ end subroutine
 ! !  or possibly a single (repeated) point.
 ! !
 !   if ( n == 2 ) then
-! 
+!
 !     if ( x(1) /= x(2) .or. y(1) /= y(2) ) then
 !       nval = 2
 !       ival(1) = 1
@@ -11526,9 +11526,9 @@ end subroutine
 !       nval = 1
 !       ival(1) = 1
 !     end if
-! 
+!
 !     return
-! 
+!
 !   end if
 ! !
 ! !  Find the leftmost point, and take the bottom-most in a tie.
@@ -11540,7 +11540,7 @@ end subroutine
 !       iq = i
 !     end if
 !   end do
-! 
+!
 !   xq = x(iq)
 !   yq = y(iq)
 ! !
@@ -11556,24 +11556,24 @@ end subroutine
 !   xp = xq
 !   yp = yq - 1.0E+00
 ! !
-! !  Now, having old point P, and current point Q, find the new point R 
+! !  Now, having old point P, and current point Q, find the new point R
 ! !  so the angle PQR is maximal.
 ! !
 ! !  Watch out for the possibility that the two nodes are identical.
 ! !
 !   do
-! 
+!
 !     ir = 0
 !     angmax = 0.0E+00
-! 
+!
 !     do i = 1, n
-! 
+!
 !       if ( i /= iq .and. ( x(i) /= xq .or. y(i) /= yq ) ) then
-! 
+!
 !         ai = angle_deg_2d ( xp, yp, xq, yq, x(i), y(i) )
-! 
+!
 !         if ( ir == 0 .or. ai > angmax ) then
-! 
+!
 !           ir = i
 !           xr = x(ir)
 !           yr = y(ir)
@@ -11582,21 +11582,21 @@ end subroutine
 ! !  In case of ties, choose the nearer point.
 ! !
 !         else if ( ir /= 0 .and. ai == angmax ) then
-! 
+!
 !           di = enorm0_2d ( xq, yq, x(i), y(i) )
 !           dr = enorm0_2d ( xq, yq, xr, yr )
-! 
+!
 !           if ( di < dr ) then
 !             ir = i
 !             xr = x(ir)
 !             yr = y(ir)
 !             angmax = ai
 !           end if
-! 
-!         end if 
-! 
-!       end if 
-! 
+!
+!         end if
+!
+!       end if
+!
 !     end do
 ! !
 ! !  If we've returned to our starting point, exit.
@@ -11604,9 +11604,9 @@ end subroutine
 !     if ( ir == istart ) then
 !       exit
 !     end if
-! 
+!
 !     nval = nval + 1
-! 
+!
 !     if ( nval > n ) then
 !       write ( *, * ) ' '
 !       write ( *, * ) 'POINTS_HULL_2D - Fatal error!'
@@ -11622,9 +11622,9 @@ end subroutine
 !     iq = ir
 !     xq = xr
 !     yq = yr
-! 
+!
 !   end do
-! 
+!
 !   return
 ! end subroutine
 ! subroutine points_nearest_point_naive_nd ( ndim, n, pset, p, i_min, d_min )
@@ -11636,7 +11636,7 @@ end subroutine
 ! !
 ! !  Discussion:
 ! !
-! !    A naive algorithm is used.  No attempt is made to optimize the 
+! !    A naive algorithm is used.  No attempt is made to optimize the
 ! !    calculation, so there will be N distance calculations done.
 ! !
 ! !    For a large dataset, it would be better to group the points into
@@ -11676,22 +11676,22 @@ end subroutine
 ! !
 !   d_min = huge ( d_min )
 !   i_min = 0
-! 
+!
 !   do i = 1, n
-! 
+!
 !     d = sum ( ( p(1:ndim) - pset(1:ndim,i) )**2 )
-! 
+!
 !     if ( d < d_min ) then
 !       d_min = d
 !       i_min = i
 !     end if
-! 
+!
 !   end do
 ! !
 ! !  We save a little work by waiting til the end to take the square root.
 ! !
 !   d_min = sqrt ( d_min )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine polygon_1_2d ( result, n, x, y )
@@ -11703,7 +11703,7 @@ end subroutine
 ! !
 ! !  Formula:
 ! !
-! !    INTEGRAL = 0.5 * SUM ( I = 1 to N ) 
+! !    INTEGRAL = 0.5 * SUM ( I = 1 to N )
 ! !      ( X(I) + X(I-1) ) * ( Y(I) - Y(I-1) )
 ! !
 ! !    where X(0) and Y(0) should be replaced by X(N) and Y(N).
@@ -11734,7 +11734,7 @@ end subroutine
 ! !    Input, integer N, the number of vertices of the polygon.
 ! !    N should be at least 3 for a nonzero result.
 ! !
-! !    Input, real X(N), Y(N), the coordinates of the vertices of the polygon.  
+! !    Input, real X(N), Y(N), the coordinates of the vertices of the polygon.
 ! !    These vertices should be given in counter-clockwise order.
 ! !
 !   integer n
@@ -11746,7 +11746,7 @@ end subroutine
 !   real y(n)
 ! !
 !   result = 0.0E+00
-!  
+!
 !   if ( n < 3 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'POLYGON_1_2D - Warning!'
@@ -11754,19 +11754,19 @@ end subroutine
 !     write ( *, * ) '  The input value of N = ', n
 !     return
 !   end if
-!  
+!
 !   do i = 1, n
-!  
+!
 !     if ( i == 1 ) then
 !       im1 = n
 !     else
 !       im1 = i - 1
 !     end if
-!  
+!
 !     result = result + 0.5E+00 * ( x(i) + x(im1) ) * ( y(i) - y(im1) )
-!  
+!
 !   end do
-!  
+!
 !   return
 ! end subroutine
 ! subroutine polygon_x_2d ( result, n, x, y )
@@ -11805,7 +11805,7 @@ end subroutine
 ! !    Input, integer N, the number of vertices of the polygon.
 ! !    N should be at least 3 for a nonzero result.
 ! !
-! !    Input, real X(N), Y(N), the coordinates of the vertices of the polygon.  
+! !    Input, real X(N), Y(N), the coordinates of the vertices of the polygon.
 ! !    These vertices should be given in counter-clockwise order.
 ! !
 !   integer n
@@ -11817,7 +11817,7 @@ end subroutine
 !   real y(n)
 ! !
 !   result = 0.0E+00
-!  
+!
 !   if ( n < 3 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'POLYGON_X_2D - Warning!'
@@ -11825,21 +11825,21 @@ end subroutine
 !     write ( *, * ) '  The input value of N = ', n
 !     return
 !   end if
-!  
+!
 !   do i = 1, n
-!  
+!
 !     if ( i == 1 ) then
 !       im1 = n
 !     else
 !       im1 = i - 1
 !     end if
-!  
+!
 !     result = result + ( x(i)**2 + x(i) * x(im1) + x(im1)**2 ) * ( y(i) - y(im1) )
-!  
+!
 !   end do
-!  
+!
 !   result = result / 6.0E+00
-!  
+!
 !   return
 ! end subroutine
 ! subroutine polygon_y_2d ( result, n, x, y )
@@ -11891,7 +11891,7 @@ end subroutine
 !   real y(n)
 ! !
 !   result = 0.0E+00
-!  
+!
 !   if ( n < 3 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'POLYGON_Y_2D - Warning!'
@@ -11899,21 +11899,21 @@ end subroutine
 !     write ( *, * ) '  The input value of N = ', n
 !     return
 !   end if
-!  
+!
 !   do i = 1, n
-!  
+!
 !     if ( i == 1 ) then
 !       im1 = n
 !     else
 !       im1 = i - 1
 !     end if
-!  
+!
 !     result = result - ( y(i)**2 + y(i) * y(im1) + y(im1)**2 ) * ( x(i) - x(im1) )
-!  
+!
 !   end do
-!  
+!
 !   result = result / 6.0E+00
-!  
+!
 !   return
 ! end subroutine
 ! subroutine polygon_xx_2d ( result, n, x, y )
@@ -11966,7 +11966,7 @@ end subroutine
 !   real y(n)
 ! !
 !   result = 0.0E+00
-!  
+!
 !   if ( n < 3 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'POLYGON_XX_2D - Warning!'
@@ -11974,22 +11974,22 @@ end subroutine
 !     write ( *, * ) '  The input value of N = ', n
 !     return
 !   end if
-!  
+!
 !   do i = 1, n
-!  
+!
 !     if ( i == 1 ) then
 !       im1 = n
 !     else
 !       im1 = i - 1
 !     end if
-!  
+!
 !     result = result + ( x(i)**3 + x(i)**2 * x(im1) &
 !       + x(i) * x(im1)**2 + x(im1)**3 ) * ( y(i) - y(im1) )
-!  
+!
 !   end do
-!  
+!
 !   result = result / 12.0E+00
-!  
+!
 !   return
 ! end subroutine
 ! subroutine polygon_xy_2d ( result, n, x, y )
@@ -12003,7 +12003,7 @@ end subroutine
 ! !
 ! !    INTEGRAL = (1/24) * SUM ( I = 1 to N )
 ! !      ( Y(I)   * ( 3 * X(I)**2 + 2 * X(I) * X(I-1) +     X(I-1)**2 )
-! !      + Y(I-1) * (     X(I)**2 + 2 * X(I) * X(I-1) + 3 * X(I-1)**2 ) ) 
+! !      + Y(I-1) * (     X(I)**2 + 2 * X(I) * X(I-1) + 3 * X(I-1)**2 ) )
 ! !      * ( Y(I) - Y(I-1) )
 ! !
 ! !    where X(0) and Y(0) should be replaced by X(N) and Y(N).
@@ -12043,7 +12043,7 @@ end subroutine
 !   real y(n)
 ! !
 !   result = 0.0E+00
-!  
+!
 !   if ( n < 3 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'POLYGON_XY_2D - Warning!'
@@ -12051,24 +12051,24 @@ end subroutine
 !     write ( *, * ) '  The input value of N = ', n
 !     return
 !   end if
-!  
+!
 !   do i = 1, n
-!  
+!
 !     if ( i == 1 ) then
 !       im1 = n
 !     else
 !       im1 = i - 1
 !     end if
-!  
+!
 !     result = result + ( &
 !       y(i) * ( 3.0E+00 * x(i)**2 + 2.0E+00 * x(i) * x(im1) + x(im1)**2 ) &
 !       + y(im1) * ( x(i)**2 + 2.0E+00 * x(i) * x(im1) + 3.0E+00 * x(im1)**2 ) &
 !       ) * ( y(i) - y(im1) )
-!  
+!
 !   end do
-!  
+!
 !   result = result / 24.0E+00
-!  
+!
 !   return
 ! end subroutine
 ! subroutine polygon_yy_2d ( result, n, x, y )
@@ -12121,7 +12121,7 @@ end subroutine
 !   real y(n)
 ! !
 !   result = 0.0E+00
-!  
+!
 !   if ( n < 3 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'POLYGON_YY_2D - Warning!'
@@ -12129,22 +12129,22 @@ end subroutine
 !     write ( *, * ) '  at least 3, but the input polygon has N = ', n
 !     return
 !   end if
-!  
+!
 !   do i = 1, n
-!  
+!
 !     if ( i == 1 ) then
 !       im1 = n
 !     else
 !       im1 = i - 1
 !     end if
-!  
+!
 !     result = result - ( y(i)**3 + y(i)**2 * y(im1) + y(i) * y(im1)**2 &
 !       + y(im1)**3 ) * ( x(i) - x(im1) )
-!  
+!
 !   end do
-!  
+!
 !   result = result / 12.0E+00
-!  
+!
 !   return
 ! end subroutine
 ! subroutine polygon_area_2d ( n, x, y, area )
@@ -12185,27 +12185,27 @@ end subroutine
 !   real y(n)
 ! !
 !   area = 0.0E+00
-!  
+!
 !   do i = 1, n
-!  
+!
 !     if ( i > 1 ) then
 !       im1 = i - 1
 !     else
 !       im1 = n
 !     end if
-!  
+!
 !     if ( i < n ) then
 !       ip1 = i + 1
 !     else
 !       ip1 = 1
 !     end if
-!  
+!
 !     area = area + x(i) * ( y(ip1) - y(im1) )
-!  
+!
 !   end do
-!  
+!
 !   area = 0.5E+00 * abs ( area )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine polygon_area_2_2d ( n, x, y, area )
@@ -12251,15 +12251,15 @@ end subroutine
 !   real y(n)
 ! !
 !   area = 0.0E+00
-!  
+!
 !   do i = 1, n - 2
-!  
+!
 !     call triangle_area_2d ( x(i), y(i), x(i+1), y(i+1), x(n), y(n), areat )
-! 
+!
 !     area = area + areat
-!  
+!
 !   end do
-!   
+!
 !   return
 ! end subroutine
 ! subroutine polygon_area_3d ( n, x, y, z, area, normal )
@@ -12273,7 +12273,7 @@ end subroutine
 ! !
 ! !    The computation is not valid unless the vertices really do lie
 ! !    in a plane, so that the polygon that is defined is "flat".
-! !    The polygon does not have to be "regular", that is, neither its 
+! !    The polygon does not have to be "regular", that is, neither its
 ! !    sides nor its angles need to be equal.
 ! !
 ! !  Reference:
@@ -12300,7 +12300,7 @@ end subroutine
 ! !
 ! !    Output, real AREA, the area of the polygon.
 ! !
-! !    Output, real NORMAL(3), the unit normal vector to the polygon.  
+! !    Output, real NORMAL(3), the unit normal vector to the polygon.
 ! !
 !   integer n
 ! !
@@ -12324,33 +12324,33 @@ end subroutine
 !   normal(1) = 0.0E+00
 !   normal(2) = 0.0E+00
 !   normal(3) = 0.0E+00
-! 
+!
 !   do i = 1, n
-! 
+!
 !     x1 = x(i)
 !     y1 = y(i)
 !     z1 = z(i)
-! 
+!
 !     if ( i < n ) then
 !       ip1 = i + 1
 !     else
 !       ip1 = 1
 !     end if
-! 
+!
 !     x2 = x(ip1)
 !     y2 = y(ip1)
 !     z2 = z(ip1)
-! 
+!
 !     call cross_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3 )
-! 
+!
 !     normal(1) = normal(1) + x3
 !     normal(2) = normal(2) + y3
 !     normal(3) = normal(3) + z3
-! 
+!
 !   end do
-! 
+!
 !   area = sqrt ( normal(1)**2 + normal(2)**2 + normal(3)**2 )
-! 
+!
 !   if ( area /= 0.0E+00 ) then
 !     normal(1) = normal(1) / area
 !     normal(2) = normal(2) / area
@@ -12360,9 +12360,9 @@ end subroutine
 !     normal(2) = 0.0E+00
 !     normal(3) = 0.0E+00
 !   end if
-! 
+!
 !   area = 0.5E+00 * area
-! 
+!
 !   return
 ! end subroutine
 ! subroutine polygon_area_2_3d ( n, x, y, z, area )
@@ -12409,16 +12409,16 @@ end subroutine
 !   real z(n)
 ! !
 !   area = 0.0E+00
-!  
+!
 !   do i = 1, n - 2
-!  
+!
 !     call triangle_area_3d ( x(i), y(i), z(i), x(i+1), y(i+1), z(i+1), &
 !       x(n), y(n), z(n), areat )
-! 
+!
 !     area = area + areat
-!  
+!
 !   end do
-!   
+!
 !   return
 ! end subroutine
 ! subroutine polygon_centroid_2d ( n, x, y, cx, cy )
@@ -12446,7 +12446,7 @@ end subroutine
 ! !
 ! !    which becomes
 ! !
-! !      CX = 1/6 SUM ( I = 1 to N ) 
+! !      CX = 1/6 SUM ( I = 1 to N )
 ! !        ( X(I+1) + X(I) ) * ( X(I) * Y(I+1) - X(I+1) * Y(I))
 ! !
 ! !    where, when I = N, the index "I+1" is replaced by 1.
@@ -12490,28 +12490,28 @@ end subroutine
 !   area = 0.0E+00
 !   cx = 0.0E+00
 !   cy = 0.0E+00
-! 
+!
 !   do i = 1, n
-! 
+!
 !     if ( i < n ) then
 !       ip1 = i + 1
 !     else
 !       ip1 = 1
 !     end if
-! 
+!
 !     temp = ( x(i) * y(ip1) - x(ip1) * y(i) )
-! 
+!
 !     area = area + temp
 !     cx = cx + ( x(ip1) + x(i) ) * temp
 !     cy = cy + ( y(ip1) + y(i) ) * temp
-! 
+!
 !   end do
-! 
+!
 !   area = area / 2.0E+00
-! 
+!
 !   cx = cx / ( 6.0E+00 * area )
 !   cy = cy / ( 6.0E+00 * area )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine polygon_centroid_2_2d ( n, x, y, cx, cy )
@@ -12525,7 +12525,7 @@ end subroutine
 ! !
 ! !    The centroid is the area-weighted sum of the centroids of
 ! !    disjoint triangles that make up the polygon.
-! ! 
+! !
 ! !  Reference:
 ! !
 ! !    Adrian Bowyer and John Woodwark,
@@ -12544,7 +12544,7 @@ end subroutine
 ! !
 ! !    Input, integer N, the number of vertices of the polygon.
 ! !
-! !    Input, real X(N), Y(N), the coordinates of the vertices. 
+! !    Input, real X(N), Y(N), the coordinates of the vertices.
 ! !
 ! !    Output, real CX, CY, the coordinates of the centroid.
 ! !
@@ -12561,20 +12561,20 @@ end subroutine
 !   area = 0.0E+00
 !   cx = 0.0E+00
 !   cy = 0.0E+00
-!  
+!
 !   do i = 1, n - 2
-!  
+!
 !     call triangle_area_2d ( x(i), y(i), x(i+1), y(i+1), x(n), y(n), areat )
-! 
+!
 !     area = area + areat
 !     cx = cx + areat * ( x(i) + x(i+1) + x(n) ) / 3.0E+00
 !     cy = cy + areat * ( y(i) + y(i+1) + y(n) ) / 3.0E+00
-!  
+!
 !   end do
-! 
+!
 !   cx = cx / area
 !   cy = cy / area
-!   
+!
 !   return
 ! end subroutine
 ! subroutine polygon_centroid_3d ( n, x, y, z, cx, cy, cz )
@@ -12588,7 +12588,7 @@ end subroutine
 ! !
 ! !    The centroid is the area-weighted sum of the centroids of
 ! !    disjoint triangles that make up the polygon.
-! ! 
+! !
 ! !  Reference:
 ! !
 ! !    Adrian Bowyer and John Woodwark,
@@ -12627,26 +12627,26 @@ end subroutine
 !   cx = 0.0E+00
 !   cy = 0.0E+00
 !   cz = 0.0E+00
-!  
+!
 !   do i = 1, n - 2
-!  
+!
 !     call triangle_area_3d ( x(i), y(i), z(i), x(i+1), &
 !       y(i+1), z(i+1), x(n), y(n), z(n), areat )
-! 
+!
 !     area = area + areat
 !     cx = cx + areat * ( x(i) + x(i+1) + x(n) ) / 3.0E+00
 !     cy = cy + areat * ( y(i) + y(i+1) + y(n) ) / 3.0E+00
 !     cz = cz + areat * ( z(i) + z(i+1) + z(n) ) / 3.0E+00
-!  
+!
 !   end do
-! 
+!
 !   cx = cx / area
 !   cy = cy / area
 !   cz = cz / area
-!   
+!
 !   return
 ! end subroutine
-! 
+!
 ! subroutine polygon_contains_point_2d ( n, xn, xval, yn, yval, inside )
 ! !
 ! !*******************************************************************************
@@ -12700,12 +12700,12 @@ end subroutine
 !   real yval
 ! !
 !   inside = .false.
-! 
+!
 !   do i = 1, n
-!  
+!
 !     x1 = xn(i)
 !     y1 = yn(i)
-!  
+!
 !     if ( i < n ) then
 !       x2 = xn(i+1)
 !       y2 = yn(i+1)
@@ -12713,19 +12713,19 @@ end subroutine
 !       x2 = xn(1)
 !       y2 = yn(1)
 !     end if
-!  
+!
 !     if ( ( y1 < yval .eqv. yval <= y2 ) .and. &
 !       ( xval - x1 ) * abs ( y2 - y1 ) < ( x2 - x1 ) * ( yval - y1 ) ) then
-! 
+!
 !       inside = .not. inside
-! 
+!
 !     end if
-!  
+!
 !   end do
-!  
+!
 !   return
 ! end subroutine
-! 
+!
 ! subroutine polygon_contains_point_2_2d ( n, xn, xval, yn, yval, inside )
 ! !
 ! !*******************************************************************************
@@ -12780,23 +12780,23 @@ end subroutine
 ! !
 !   x1 = xn(1)
 !   y1 = yn(1)
-!  
+!
 !   do i = 2, n-1
-!  
+!
 !     x2 = xn(i)
 !     y2 = yn(i)
 !     x3 = xn(i+1)
 !     y3 = yn(i+1)
-!  
+!
 !     call triangle_contains_point_2d ( x1, y1, x2, y2, x3, y3, xval, yval, &
 !       inside )
-! 
+!
 !     if ( inside ) then
 !       return
 !     end if
-!  
+!
 !   end do
-!  
+!
 !   return
 ! end subroutine
 ! function polygon_convex ( n, x, y )
@@ -12808,11 +12808,11 @@ end subroutine
 ! !
 ! !  Discussion:
 ! !
-! !    If the polygon has less than 3 distinct vertices, it is 
+! !    If the polygon has less than 3 distinct vertices, it is
 ! !    classified as convex degenerate.
 ! !
 ! !    If the polygon "goes around" more than once, it is classified
-! !    as NOT convex.  
+! !    as NOT convex.
 ! !
 ! !  Reference:
 ! !
@@ -12832,7 +12832,7 @@ end subroutine
 ! !
 ! !    Input, integer N, the number of vertices.
 ! !
-! !    Input/output, X(N), Y(N), the coordinates of the vertices of the 
+! !    Input/output, X(N), Y(N), the coordinates of the vertices of the
 ! !    polygon.  On output, duplicate consecutive points have been deleted,
 ! !    and the vertices have been reordered so that the lexicographically
 ! !    least point comes first.
@@ -12873,29 +12873,29 @@ end subroutine
 !     polygon_convex = DEGENERATE_CONVEX
 !     return
 !   end if
-! 
+!
 !   sense = 0.0E+00
 ! !
 ! !  Consider each polygonal vertex I.
 ! !
 !   do i = 1, n
-! 
+!
 !     ip1 = i + 1
 !     if ( ip1 > n ) then
 !       ip1 = ip1 - n
 !     end if
-! 
+!
 !     ip2 = i + 2
 !     if ( ip2 > n ) then
 !       ip2 = ip2 - n
 !     end if
-! 
+!
 !     dot =   ( x(ip2) - x(ip1) ) * ( x(i) - x(ip1) ) &
 !           + ( y(ip2) - y(ip1) ) * ( y(i) - y(ip1) )
-! 
+!
 !     cross =   ( x(ip2) - x(ip1) ) * ( y(i) - y(ip1) ) &
 !             - ( x(i) - x(ip1) ) * ( y(ip2) - y(ip1) )
-! 
+!
 !     angle = atan2 ( cross, dot )
 ! !
 ! !  See if the turn defined by this vertex is our first indication of
@@ -12903,49 +12903,49 @@ end subroutine
 ! !  defined sense.
 ! !
 !     if ( sense == 0.0E+00 ) then
-! 
+!
 !       if ( angle < 0.0E+00 ) then
 !         sense = -1.0E+00
 !       else if ( angle > 0.0E+00 ) then
 !         sense = +1.0E+00
 !       end if
-!  
+!
 !    else if ( sense == 1.0E+00 ) then
-! 
+!
 !       if ( angle < 0.0E+00 ) then
 !         polygon_convex = NOT_CONVEX
 !         return
 !       end if
-! 
+!
 !     else if ( sense == -1.0E+00 ) then
-! 
+!
 !       if ( angle > 0.0E+00 ) then
 !         polygon_convex = NOT_CONVEX
 !         return
 !       end if
-! 
+!
 !     end if
 ! !
 ! !  If the exterior total is greater than 360, then the polygon is
 ! !  going around again.
 ! !
 !     angle = atan2 ( -cross, -dot )
-! 
+!
 !     exterior_total = exterior_total + angle
-! 
+!
 !     if ( abs ( exterior_total ) * RAD_TO_DEG > 360.0E+00 + TOL ) then
 !       polygon_convex = NOT_CONVEX
 !       return
 !     end if
-! 
+!
 !   end do
-! 
+!
 !   if ( sense == +1.0E+00 ) then
 !     polygon_convex = CONVEX_CCW
 !   else if ( sense == -1.0E+00 ) then
 !     polygon_convex = CONVEX_CW
 !   end if
-! 
+!
 !   return
 ! end function
 ! subroutine polygon_inrad_data_2d ( area, n, radin, radout, side )
@@ -12994,12 +12994,12 @@ end subroutine
 !     write ( *, * ) '  but your input value was N = ', n
 !     stop
 !   end if
-!  
+!
 !   angle = pi / real ( n )
 !   area = n * radin * radin * tan ( angle )
 !   side = 2.0E+00 * radin * tan ( angle )
 !   radout = 0.5E+00 * side / sin ( angle )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine polygon_outrad_data_2d ( area, n, radin, radout, side )
@@ -13048,12 +13048,12 @@ end subroutine
 !     write ( *, * ) '  but your input value was N = ', n
 !     stop
 !   end if
-!  
+!
 !   angle = pi / real ( n )
 !   area = 0.5E+00 * n * radout * radout * sin ( 2.0E+00 * angle )
 !   side = 2.0E+00 * radout * sin ( angle )
 !   radin = 0.5E+00 * side / tan ( angle )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine polygon_side_data_2d ( area, n, radin, radout, side )
@@ -13102,12 +13102,12 @@ end subroutine
 !     write ( *, * ) '  but your input value was N = ', n
 !     stop
 !   end if
-!  
+!
 !   angle = pi / real ( n )
 !   area = 0.5E+00 * n * side * side / tan ( angle )
 !   radin = 0.5E+00 * side / tan ( angle )
 !   radout = 0.5E+00 * side / sin ( angle )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine polyhedron_surface_3d ( coord, maxorder, nface, node, &
@@ -13184,9 +13184,9 @@ end subroutine
 !   real z4
 ! !
 !   area = 0.0E+00
-! 
+!
 !   do i = 1, nface
-! 
+!
 !     x4 = 0.0E+00
 !     y4 = 0.0E+00
 !     z4 = 0.0E+00
@@ -13194,39 +13194,39 @@ end subroutine
 ! !  Compute the area vector for this face.
 ! !
 !     do j = 1, order(i)
-! 
+!
 !       k = node(i,j)
 !       x1 = coord(1,k)
 !       y1 = coord(2,k)
 !       z1 = coord(3,k)
-! 
+!
 !       if ( j < order(i) ) then
 !         k = node(i,j+1)
 !       else
 !         k = node(i,1)
 !       end if
-! 
+!
 !       x2 = coord(1,k)
 !       y2 = coord(2,k)
 !       z2 = coord(3,k)
-! 
+!
 !       call cross_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3 )
-! 
+!
 !       x4 = x4 + x3
 !       y4 = y4 + y3
 !       z4 = z4 + z3
-! 
+!
 !     end do
 ! !
 ! !  Add the magnitude of the area vector to the sum.
 ! !
 !     ainc = sqrt ( x4 * x4 + y4 * y4 + z4 * z4 )
 !     area = area + ainc
-! 
+!
 !   end do
-! 
+!
 !   area = 0.5E+00 * area
-! 
+!
 !   return
 ! end subroutine
 ! subroutine polyhedron_volume_3d ( coord, maxorder, nface, node, &
@@ -13273,7 +13273,7 @@ end subroutine
 ! !
 ! !    Input, integer N, the number of points stored in COORD.
 ! !
-! !    Input, integer ORDER(NFACE), the number of vertices making up 
+! !    Input, integer ORDER(NFACE), the number of vertices making up
 ! !    each face.
 ! !
 ! !    Output, real VOLUME, the volume of the polyhedron.
@@ -13303,9 +13303,9 @@ end subroutine
 !   real z4
 ! !
 !   volume = 0.0E+00
-! 
+!
 !   do i = 1, nface
-! 
+!
 !     x4 = 0.0E+00
 !     y4 = 0.0E+00
 !     z4 = 0.0E+00
@@ -13313,39 +13313,39 @@ end subroutine
 ! !  Compute the area vector for this face.
 ! !
 !     do j = 1, order(i)
-! 
+!
 !       k = node(i,j)
 !       x1 = coord(1,k)
 !       y1 = coord(2,k)
 !       z1 = coord(3,k)
-! 
+!
 !       if ( j < order(i) ) then
 !         k = node(i,j+1)
 !       else
 !         k = node(i,1)
 !       end if
-! 
+!
 !       x2 = coord(1,k)
 !       y2 = coord(2,k)
 !       z2 = coord(3,k)
-! 
+!
 !       call cross_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3 )
-! 
+!
 !       x4 = x4 + x3
 !       y4 = y4 + y3
 !       z4 = z4 + z3
-! 
+!
 !     end do
 ! !
 ! !  Area vector dot any vertex.
 ! !
 !     k = node(i,1)
 !     volume = volume + x4 * coord(1,k) + y4 * coord(2,k) + z4 * coord(3,k)
-! 
+!
 !   end do
-! 
+!
 !   volume = volume / 6.0E+00
-! 
+!
 !   return
 ! end subroutine
 ! subroutine polyline_index_point_nd ( maxpts, ndim, npts, t, xpts, x )
@@ -13364,7 +13364,7 @@ end subroutine
 ! !    specifying its arclength.
 ! !
 ! !    If the given arclength coordinate is less than 0, or greater
-! !    than the arclength coordinate of the last given point, then 
+! !    than the arclength coordinate of the last given point, then
 ! !    extrapolation is used, that is, the first and last line segments
 ! !    are extended as necessary.
 ! !
@@ -13420,7 +13420,7 @@ end subroutine
 !     write ( *, * ) '  MAXPTS = ', maxpts
 !     stop
 !   end if
-!  
+!
 !   if ( npts <= 0 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'POLYLINE_INDEX_POINT_ND - Fatal error!'
@@ -13428,7 +13428,7 @@ end subroutine
 !     write ( *, * ) '  NPTS = ', npts
 !     stop
 !   end if
-!  
+!
 !   if ( maxpts < npts ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'POLYLINE_INDEX_POINT_ND - Fatal error!'
@@ -13436,13 +13436,13 @@ end subroutine
 !     write ( *, * ) '  MAXPTS = ', maxpts, ' NPTS = ', npts
 !     stop
 !   end if
-!  
+!
 !   if ( npts == 1 ) then
-!  
+!
 !     x(1:ndim) = xpts(1,1:ndim)
-!  
+!
 !   else
-!  
+!
 !     trite = 0.0E+00
 !     do i = 1, npts - 1
 ! !
@@ -13452,38 +13452,38 @@ end subroutine
 !       do j = 1, ndim
 !         sum = sum + ( xpts(i+1,j) - xpts(i,j) )**2
 !       end do
-!  
+!
 !       tleft = trite
 !       trite = trite + sqrt ( sum )
 ! !
 ! !  Interpolate or extrapolate in an interval.
 ! !
 !       if ( t <= trite .or. i == npts - 1 ) then
-!  
+!
 !         s = ( t - tleft ) / ( trite - tleft )
 !         x(1:ndim) = ( 1.0E+00 - s ) * xpts(i,1:ndim) + s * xpts(i+1,1:ndim)
-!  
+!
 !         return
 !       end if
 !     end do
 !   end if
-!  
+!
 !   return
 ! end subroutine
 ! subroutine polyline_length_nd ( maxpts, ndim, npoint, spoint, length, xpoint )
 ! !
 ! !*******************************************************************************
 ! !
-! !! POLYLINE_LENGTH_ND computes the length of a polyline in ND. 
+! !! POLYLINE_LENGTH_ND computes the length of a polyline in ND.
 ! !
 ! !
 ! !  Definition:
 ! !
-! !    A polyline of order M is the geometric structure consisting of  
+! !    A polyline of order M is the geometric structure consisting of
 ! !    the M-1 line segments that lie between successive elements of a list
 ! !    of M points.
 ! !
-! !    An ordinary line segment is a polyline of order 2.  
+! !    An ordinary line segment is a polyline of order 2.
 ! !    The letter "V" is a polyline of order 3.
 ! !    The letter "N" is a polyline of order 4, and so on.
 ! !
@@ -13530,22 +13530,22 @@ end subroutine
 ! !
 !   length = 0.0E+00
 !   spoint(1) = 0.0E+00
-!  
+!
 !   do i = 2, npoint
-!  
+!
 !     temp = 0.0E+00
-!  
+!
 !     do j = 1, ndim
 !       temp = temp + ( xpoint(i,j) - xpoint(i-1,j) )**2
 !     end do
-!  
+!
 !     temp = sqrt ( temp )
-!  
+!
 !     length = length + temp
 !     spoint(i) = length
-!  
+!
 !   end do
-!  
+!
 !   return
 ! end subroutine
 ! subroutine proplane2 ( x1, y1, z1, x2, y2, z2, x3, y3, z3, npnt, xp, yp, zp, &
@@ -13561,8 +13561,8 @@ end subroutine
 ! !    The plane is specified by three non-colinear points, which we will
 ! !    call P1, P2 and P3.
 ! !
-! !    The first thing to do is to compute two orthonormal vectors V1 and 
-! !    V2, so that any point P that lies in the plane may be written as 
+! !    The first thing to do is to compute two orthonormal vectors V1 and
+! !    V2, so that any point P that lies in the plane may be written as
 ! !
 ! !      P = P1 + alpha * V1 + beta * V2
 ! !
@@ -13576,19 +13576,19 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, are the 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, are the
 ! !    coordinates of three points on the plane.  These three points
 ! !    should not lie in a straight line, but this condition is not
 ! !    checked.
 ! !
 ! !    Input, integer NPNT, the number of points to project.
 ! !
-! !    Input, real XP(NPNT), YP(NPNT), ZP(NPNT), are the Cartesian 
-! !    coordinates of points which lie on the plane spanned by the 
+! !    Input, real XP(NPNT), YP(NPNT), ZP(NPNT), are the Cartesian
+! !    coordinates of points which lie on the plane spanned by the
 ! !    three points.  These points are not checked to ensure that
 ! !    they lie on the plane.
 ! !
-! !    Output, real ALPHA(NPNT), BETA(NPNT), the "in-plane" coordinates of 
+! !    Output, real ALPHA(NPNT), BETA(NPNT), the "in-plane" coordinates of
 ! !    the points.
 ! !
 !   integer npnt
@@ -13617,31 +13617,31 @@ end subroutine
 !   v1(1) = x2 - x1
 !   v1(2) = y2 - y1
 !   v1(3) = z2 - z1
-! 
+!
 !   call vector_unit_nd ( 3, v1 )
-! 
+!
 !   v2(1) = x3 - x1
 !   v2(2) = y3 - y1
 !   v2(3) = z3 - z1
-! 
+!
 !   dot = v1(1) * v2(1) + v1(2) * v2(2) + v1(3) * v2(3)
-! 
+!
 !   v2(1:3) = v2(1:3) - dot * v1(1:3)
-! 
+!
 !   call vector_unit_nd ( 3, v2 )
 ! !
 ! !  Now decompose each (X,Y,Z).
 ! !
 !   do i = 1, npnt
-! 
+!
 !     alpha(i) = ( xp(i) - x1 ) * v1(1) +  ( yp(i) - y1 ) * v1(2) + &
 !                ( zp(i) - z1 ) * v1(3)
-! 
+!
 !     beta(i) =  ( xp(i) - x1 ) * v2(1) + ( yp(i) - y1 ) * v2(2) + &
 !                ( zp(i) - z1 ) * v2(3)
-! 
+!
 !   end do
-! 
+!
 !   return
 ! end subroutine
 ! subroutine proplane3 ( x1, y1, z1, x2, y2, z2, x3, y3, z3, &
@@ -13662,19 +13662,19 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, are the 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, are the
 ! !    coordinates of three points on the plane.
 ! !
 ! !    Input, integer NPNT, the number of points to project.
 ! !
-! !    Input, real XO(NPNT), YO(NPNT), ZO(NPNT), are the coordinates of 
+! !    Input, real XO(NPNT), YO(NPNT), ZO(NPNT), are the coordinates of
 ! !    the object points.
 ! !
-! !    Output, real XP(NPNT), YP(NPNT), ZP(NPNT), are the coordinates of 
-! !    the projections of the object points through the focus point onto 
+! !    Output, real XP(NPNT), YP(NPNT), ZP(NPNT), are the coordinates of
+! !    the projections of the object points through the focus point onto
 ! !    the plane.
 ! !
-! !    XP, YP, and ZP may share the same memory as XO, YO, and ZO, in 
+! !    XP, YP, and ZP may share the same memory as XO, YO, and ZO, in
 ! !    which case the projections will overwrite the original data.
 ! !
 !   integer npnt
@@ -13704,16 +13704,16 @@ end subroutine
 ! !
 !   call plane_exp2imp_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, a, b, c, d )
 ! !
-! !  For each point, its aimage in the plane is the nearest point 
+! !  For each point, its aimage in the plane is the nearest point
 ! !  in the plane.
 ! !
 !   do i = 1, npnt
-!  
+!
 !     call plane_imp_point_near_3d ( a, b, c, d, xo(i), yo(i), &
 !       zo(i), xp(i), yp(i), zp(i) )
-!  
+!
 !   end do
-!  
+!
 !   return
 ! end subroutine
 ! subroutine provec ( base, m, n, vecm, vecn, vecnm )
@@ -13768,28 +13768,28 @@ end subroutine
 ! !  whose columns are orthonormal.
 ! !
 !   do j = 1, n
-!  
+!
 !     do i = 1, j-1
-!  
+!
 !       temp = 0.0E+00
 !       do k = 1, m
 !         temp = temp + base(k,i) * base(k,j)
 !       end do
-!  
+!
 !       base(1:m,j) = base(1:m,j) - temp * base(1:m,i)
-!  
+!
 !     end do
-!  
+!
 !     temp = 0.0E+00
 !     do i = 1, m
 !       temp = temp + base(i,j)**2
 !     end do
 !     temp = sqrt ( temp )
-!  
+!
 !     if ( temp > 0.0E+00 ) then
 !       base(1:m,j) = base(1:m,j) / temp
 !     end if
-!  
+!
 !   end do
 ! !
 ! !  Compute the coordinates of the projection of the vector
@@ -13812,7 +13812,7 @@ end subroutine
 !       vecnm(i) = vecnm(i) + base(i,j) * vecn(j)
 !     end do
 !   end do
-!  
+!
 !   return
 ! end subroutine
 ! subroutine pyramid_volume_3d ( h, s, volume )
@@ -13842,7 +13842,7 @@ end subroutine
 !   real volume
 ! !
 !   volume = s * s * h / 3.0E+00
-! 
+!
 !   return
 ! end subroutine
 ! subroutine quad_area_2d ( x1, y1, x2, y2, x3, y3, x4, y4, area )
@@ -13885,11 +13885,11 @@ end subroutine
 !   real y4
 !  !
 !   call triangle_area_2d ( x1, y1, x2, y2, x3, y3, area1 )
-! 
+!
 !   call triangle_area_2d ( x3, y3, x4, y4, x1, y1, area2 )
-!   
+!
 !   area = area1 + area2
-!  
+!
 !   return
 ! end subroutine
 ! subroutine quad_contains_point_2d ( x1, y1, x2, y2, x3, y3, x4, y4, x, y, &
@@ -13910,7 +13910,7 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, X2, Y2, X3, Y3, X4, Y4, the X and Y coordinates 
+! !    Input, real X1, Y1, X2, Y2, X3, Y3, X4, Y4, the X and Y coordinates
 ! !    of the quadrilateral.
 ! !
 ! !    Input, real X, Y, the point to be checked.
@@ -13941,37 +13941,37 @@ end subroutine
 ! !  This will only handle convex quadrilaterals.
 ! !
 !   inside = .false.
-!  
+!
 !   angle_12x = anglei_rad_2d ( x1, y1, x2, y2, x, y )
 !   angle_123 = anglei_rad_2d ( x1, y1, x2, y2, x3, y3 )
-!  
+!
 !   if ( angle_12x > angle_123 ) then
 !     return
 !   end if
-!  
+!
 !   angle_23x = anglei_rad_2d ( x2, y2, x3, y3, x, y )
 !   angle_234 = anglei_rad_2d ( x2, y2, x3, y3, x4, y4 )
-!  
+!
 !   if ( angle_23x > angle_234 ) then
 !     return
 !   end if
-!  
+!
 !   angle_34x = anglei_rad_2d ( x3, y3, x4, y4, x, y )
 !   angle_341 = anglei_rad_2d ( x3, y3, x4, y4, x1, y1 )
-!  
+!
 !   if ( angle_34x > angle_341 ) then
 !     return
 !   end if
-!  
+!
 !   angle_41x = anglei_rad_2d ( x4, y4, x1, y1, x, y )
 !   angle_412 = anglei_rad_2d ( x4, y4, x1, y1, x2, y2 )
-!  
+!
 !   if ( angle_41x > angle_412 ) then
 !     return
 !   end if
-! 
+!
 !   inside = .true.
-!  
+!
 !   return
 ! end subroutine
 ! subroutine quad_point_dist_2d ( x1, y1, x2, y2, x3, y3, x4, y4, x, y, dist )
@@ -13991,7 +13991,7 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, X2, Y2, X3, Y3, X4, Y4, the corners of the 
+! !    Input, real X1, Y1, X2, Y2, X3, Y3, X4, Y4, the corners of the
 ! !    quadrilateral.
 ! !
 ! !    Input, real X, Y, the point which is to be checked.
@@ -14016,19 +14016,19 @@ end subroutine
 !   dist = min ( dist, enorm0_2d ( x, y, x2, y2 ) )
 !   dist = min ( dist, enorm0_2d ( x, y, x3, y3 ) )
 !   dist = min ( dist, enorm0_2d ( x, y, x4, y4 ) )
-! 
+!
 !   call line_seg_point_dist_2d ( x1, y1, x2, y2, x, y, dist2 )
 !   dist = min ( dist, dist2 )
-! 
+!
 !   call line_seg_point_dist_2d ( x2, y2, x3, y3, x, y, dist2 )
 !   dist = min ( dist, dist2 )
-! 
+!
 !   call line_seg_point_dist_2d ( x3, y3, x4, y4, x, y, dist2 )
 !   dist = min ( dist, dist2 )
-! 
+!
 !   call line_seg_point_dist_2d ( x4, y4, x1, y1, x, y, dist2 )
 !   dist = min ( dist, dist2 )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine quad_point_dist_signed_2d ( x1, y1, x2, y2, x3, y3, &
@@ -14053,26 +14053,26 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, X2, Y2, X3, Y3, X4, Y4, the corners of the 
+! !    Input, real X1, Y1, X2, Y2, X3, Y3, X4, Y4, the corners of the
 ! !    quadrilateral, given in order.  It is possible to list the points
-! !    in such an order that the quadrilateral is not convex.  This 
-! !    routine does not check for convexity, and will produce erroneous 
+! !    in such an order that the quadrilateral is not convex.  This
+! !    routine does not check for convexity, and will produce erroneous
 ! !    results in such a case.
 ! !
 ! !    Input, real X, Y, the point which is to be checked.
 ! !
-! !    Output, real DIST_SIGNED, the signed distance from the point to the 
-! !    convex quadrilateral.  DIST_SIGNED is actually the maximum of the 
-! !    signed distances from the point to each of the four lines that make 
-! !    up the quadrilateral.  
+! !    Output, real DIST_SIGNED, the signed distance from the point to the
+! !    convex quadrilateral.  DIST_SIGNED is actually the maximum of the
+! !    signed distances from the point to each of the four lines that make
+! !    up the quadrilateral.
 ! !
-! !    (Essentially, if the point is outside the convex quadrilateral, 
-! !    only one of the signed distances can be positive, or two can 
+! !    (Essentially, if the point is outside the convex quadrilateral,
+! !    only one of the signed distances can be positive, or two can
 ! !    be positive and equal.)
 ! !
-! !    If DIST_SIGNED is 
+! !    If DIST_SIGNED is
 ! !    0, the point is on the boundary;
-! !    negative, the point is in the interior; 
+! !    negative, the point is in the interior;
 ! !    positive, the point is in the exterior.
 ! !
 !   real dis
@@ -14097,59 +14097,59 @@ end subroutine
 ! !  Compare the signed distance from each line segment to the point,
 ! !  with the signed distance to the midpoint of the opposite line.
 ! !
-! !  The signed distances should all be negative if the point is inside 
+! !  The signed distances should all be negative if the point is inside
 ! !  the triangle.
 ! !
 !   call line_exp_point_dist_signed_2d ( x1, y1, x2, y2, x, y, dis12 )
-! 
+!
 !   xm = 0.5E+00 * ( x3 + x4 )
 !   ym = 0.5E+00 * ( y3 + y4 )
-! 
+!
 !   call line_exp_point_dist_signed_2d ( x1, y1, x2, y2, xm, ym, dis )
-!  
+!
 !   if ( dis > 0.0E+00 ) then
 !     dis = - dis
 !     dis12 = - dis12
 !   end if
-!  
+!
 !   call line_exp_point_dist_signed_2d ( x2, y2, x3, y3, x, y, dis23 )
-! 
+!
 !   xm = 0.5E+00 * ( x4 + x1 )
 !   ym = 0.5E+00 * ( y4 + y1 )
-! 
+!
 !   call line_exp_point_dist_signed_2d ( x2, y2, x3, y3, xm, ym, dis )
-!  
+!
 !   if ( dis > 0.0E+00 ) then
 !     dis = - dis
 !     dis23 = - dis23
 !   end if
-!  
+!
 !   call line_exp_point_dist_signed_2d ( x3, y3, x4, y4, x, y, dis34 )
-! 
+!
 !   xm = 0.5E+00 * ( x1 + x2 )
 !   ym = 0.5E+00 * ( y1 + y2 )
-! 
+!
 !   call line_exp_point_dist_signed_2d ( x3, y3, x4, y4, xm, ym, dis )
-!  
+!
 !   if ( dis > 0.0E+00 ) then
 !     dis = - dis
 !     dis34 = - dis34
 !   end if
-! 
+!
 !   call line_exp_point_dist_signed_2d ( x4, y4, x1, y1, x, y, dis41 )
-! 
+!
 !   xm = 0.5E+00 * ( x2 + x3 )
 !   ym = 0.5E+00 * ( y2 + y3 )
-! 
+!
 !   call line_exp_point_dist_signed_2d ( x4, y4, x1, y1, xm, ym, dis )
-!  
+!
 !   if ( dis > 0.0E+00 ) then
 !     dis = - dis
 !     dis41 = - dis41
 !   end if
-!  
+!
 !   dist_signed = max ( dis12, dis23, dis34, dis41 )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine quat_conj ( q )
@@ -14188,7 +14188,7 @@ end subroutine
 !   q(2) = - q(2)
 !   q(3) = - q(3)
 !   q(4) = - q(4)
-! 
+!
 !   return
 ! end subroutine
 ! subroutine quat_inv ( q )
@@ -14227,10 +14227,10 @@ end subroutine
 !   real quat_norm
 ! !
 !   normsq = ( quat_norm ( q ) )**2
-! 
+!
 !   q(1:4) = q(1:4) / normsq
 !   q(1:3) = - q(1:3)
-! 
+!
 !   return
 ! end subroutine
 ! subroutine quat_mul ( q1, q2, q3 )
@@ -14276,7 +14276,7 @@ end subroutine
 !   q3(2) = q1(1) * q2(2) + q1(2) * q2(1) + q1(3) * q2(4) - q1(4) * q2(3)
 !   q3(3) = q1(1) * q2(3) - q1(2) * q2(4) + q1(3) * q2(1) + q1(4) * q2(2)
 !   q3(4) = q1(1) * q2(4) + q1(2) * q2(3) - q1(3) * q2(2) + q1(4) * q2(1)
-! 
+!
 !   return
 ! end subroutine
 ! function quat_norm ( q )
@@ -14315,10 +14315,10 @@ end subroutine
 !   real quat_norm
 ! !
 !   quat_norm = sqrt ( q(1) * q(1) + q(2) * q(2) + q(3) * q(3) + q(4) * q(4) )
-! 
+!
 !   return
 ! end function
-! 
+!
 ! function r_modp ( x, y )
 ! !
 ! !*******************************************************************************
@@ -14380,13 +14380,13 @@ end subroutine
 !     write ( *, * ) '  R_MODP ( X, Y ) called with Y = ', y
 !     stop
 !   end if
-! 
+!
 !   r_modp = mod ( x, y )
-! 
+!
 !   if ( r_modp < 0.0E+00 ) then
 !     r_modp = r_modp + abs ( y )
 !   end if
-! 
+!
 !   return
 ! end function
 ! subroutine r_random ( rlo, rhi, r )
@@ -14428,7 +14428,7 @@ end subroutine
 ! !  Set R.
 ! !
 !   r = ( 1.0E+00 - t ) * rlo + t * rhi
-! 
+!
 !   return
 ! end subroutine
 ! subroutine r_swap ( x, y )
@@ -14458,11 +14458,11 @@ end subroutine
 !   z = x
 !   x = y
 !   y = z
-! 
+!
 !   return
 ! end subroutine
-! 
-! 
+!
+!
 ! subroutine radec_separation ( ra1, dec1, ra2, dec2, theta )
 ! !
 ! !*******************************************************************************
@@ -14511,31 +14511,31 @@ end subroutine
 ! !
 !   theta1 = degrees_to_radians ( 15.0E+00 * ra1 )
 !   phi1 = degrees_to_radians ( dec1 )
-! 
+!
 !   v1(1:3) = (/ cos ( theta1 ) * cos ( phi1 ), &
 !                sin ( theta1 ) * cos ( phi1 ), &
 !                                 sin ( phi1 ) /)
-! 
+!
 !   norm_v1 = sqrt ( sum ( v1(1:3)**2 ) )
-! 
+!
 !   theta2 = degrees_to_radians ( 15.0E+00 * ra2 )
 !   phi2 = degrees_to_radians ( dec2 )
-! 
+!
 !   v2(1:3) = (/ cos ( theta2 ) * cos ( phi2 ), &
 !                sin ( theta2 ) * cos ( phi2 ), &
 !                                 sin ( phi2 ) /)
-! 
+!
 !   norm_v2 = sqrt ( sum ( v2(1:3)**2 ) )
-! 
+!
 !   cos_theta = dot_product ( v1(1:3), v2(1:3) ) / ( norm_v1 * norm_v2 )
-! 
+!
 !   theta = arc_cosine ( cos_theta )
-! 
+!
 !   return
 ! end subroutine
-! 
-! 
-! 
+!
+!
+!
 ! subroutine radec_to_xyz ( ra, dec, x, y, z )
 ! !
 ! !*******************************************************************************
@@ -14576,14 +14576,14 @@ end subroutine
 ! !
 !   theta = degrees_to_radians ( 15.0E+00 * ra )
 !   phi = degrees_to_radians ( dec )
-! 
+!
 !   x = cos ( theta ) * cos ( phi )
 !   y = sin ( theta ) * cos ( phi )
 !   z = sin ( phi )
-! 
+!
 !   return
 ! end subroutine
-! 
+!
 ! function radians_to_degrees ( angle )
 ! !
 ! !*******************************************************************************
@@ -14605,12 +14605,12 @@ end subroutine
 ! !
 ! !    Output, real RADIANS_TO_DEGREES, the equivalent angle in degrees.
 ! !
-!   real radians_to_degrees,angle 
+!   real radians_to_degrees,angle
 !   radians_to_degrees = ( angle / pi ) * 180.0E+00
-! 
+!
 !   return
 ! end function
-! 
+!
 ! subroutine rmat2_inverse ( a, b, det )
 ! !
 ! !*******************************************************************************
@@ -14652,9 +14652,9 @@ end subroutine
 ! !  If the determinant is zero, bail out.
 ! !
 !   if ( det == 0.0E+00 ) then
-! 
+!
 !     b(1:2,1:2) = 0.0E+00
-! 
+!
 !     return
 !   end if
 ! !
@@ -14664,7 +14664,7 @@ end subroutine
 !   b(1,2) = - a(1,2) / det
 !   b(2,1) = - a(2,1) / det
 !   b(2,2) = + a(1,1) / det
-! 
+!
 !   return
 ! end subroutine
 ! function rmat2_det ( a )
@@ -14701,10 +14701,10 @@ end subroutine
 !   real rmat2_det
 ! !
 !   rmat2_det = a(1,1) * a(2,2) - a(1,2) * a(2,1)
-! 
+!
 !   return
 ! end function
-! 
+!
 ! function rmat3_det ( a )
 ! !
 ! !*******************************************************************************
@@ -14712,7 +14712,7 @@ end subroutine
 ! !! RMAT3_DET computes the determinant of a 3 by 3 matrix.
 ! !
 ! !
-! !  The determinant is the volume of the shape spanned by the vectors 
+! !  The determinant is the volume of the shape spanned by the vectors
 ! !  making up the rows or columns of the matrix.
 ! !
 ! !  Formula:
@@ -14741,7 +14741,7 @@ end subroutine
 !   rmat3_det =   a(1,1) * ( a(2,2) * a(3,3) - a(2,3) * a(3,2) ) &
 !               + a(1,2) * ( a(2,3) * a(3,1) - a(2,1) * a(3,3) ) &
 !               + a(1,3) * ( a(2,1) * a(3,2) - a(2,2) * a(3,1) )
-! 
+!
 !   return
 ! end function
 ! subroutine rmat3_inverse ( a, b, det )
@@ -14789,9 +14789,9 @@ end subroutine
 ! !  If the determinant is zero, bail out.
 ! !
 !   if ( det == 0.0E+00 ) then
-! 
+!
 !     b(1:3,1:3) = 0.0E+00
-! 
+!
 !     return
 !   end if
 ! !
@@ -14801,15 +14801,15 @@ end subroutine
 !   b(1,1) = + ( a(2,2) * a(3,3) - a(2,3) * a(3,2) ) / det
 !   b(1,2) = - ( a(1,2) * a(3,3) - a(1,3) * a(3,2) ) / det
 !   b(1,3) = + ( a(1,2) * a(2,3) - a(1,3) * a(2,2) ) / det
-! 
+!
 !   b(2,1) = - ( a(2,1) * a(3,3) - a(2,3) * a(3,1) ) / det
 !   b(2,2) = + ( a(1,1) * a(3,3) - a(1,3) * a(3,1) ) / det
 !   b(2,3) = - ( a(1,1) * a(2,3) - a(1,3) * a(2,1) ) / det
-! 
+!
 !   b(3,1) = + ( a(2,1) * a(3,2) - a(2,2) * a(3,1) ) / det
 !   b(3,2) = - ( a(1,1) * a(3,2) - a(1,2) * a(3,1) ) / det
 !   b(3,3) = + ( a(1,1) * a(2,2) - a(1,2) * a(2,1) ) / det
-! 
+!
 !   return
 ! end subroutine
 ! function rmat4_det ( a )
@@ -14853,7 +14853,7 @@ end subroutine
 !         a(2,1) * ( a(3,2) * a(4,3) - a(3,3) * a(4,2) ) &
 !       - a(2,2) * ( a(3,1) * a(4,3) - a(3,3) * a(4,1) ) &
 !       + a(2,3) * ( a(3,1) * a(4,2) - a(3,2) * a(4,1) ) )
-! 
+!
 !   return
 ! end function
 ! function rmat5_det ( a )
@@ -14889,27 +14889,27 @@ end subroutine
 ! !  five 4 by 4 matrices created by dropping row 1, and column k.
 ! !
 !   rmat5_det = 0.0E+00
-! 
+!
 !   do k = 1, 5
-! 
+!
 !     do i = 1, 4
 !       do j = 1, 4
-! 
+!
 !         if ( j < k ) then
 !           inc = 0
 !         else
 !           inc = 1
 !         end if
-! 
+!
 !         b(i,j) = a(i+1,j+inc)
-! 
+!
 !       end do
 !     end do
-! 
+!
 !     rmat5_det = rmat5_det + (-1)**( k + 1 ) * a(1,k) * rmat4_det ( b )
-! 
+!
 !   end do
-! 
+!
 !   return
 ! end function
 ! subroutine rmat_print ( lda, m, n, a, title )
@@ -14955,7 +14955,7 @@ end subroutine
 !     write ( *, * ) ' '
 !     write ( *, '(a)' ) trim ( title )
 !   end if
-! 
+!
 !   do jlo = 1, n, 5
 !     jhi = min ( jlo + 4, n )
 !     write ( *, * ) ' '
@@ -14965,7 +14965,7 @@ end subroutine
 !       write ( *, '(i6,5g14.6)' ) i, a(i,jlo:jhi)
 !     end do
 !   end do
-! 
+!
 !   return
 ! end subroutine
 ! subroutine rmat_solve ( a, n, nrhs, info )
@@ -15013,21 +15013,21 @@ end subroutine
 !   real temp
 ! !
 !   info = 0
-! 
+!
 !   do j = 1, n
 ! !
 ! !  Choose a pivot row.
 ! !
 !     ipivot = j
 !     apivot = a(j,j)
-! 
+!
 !     do i = j+1, n
 !       if ( abs ( a(i,j) ) > abs ( apivot ) ) then
 !         apivot = a(i,j)
 !         ipivot = i
 !       end if
 !     end do
-! 
+!
 !     if ( apivot == 0.0E+00 ) then
 !       info = j
 !       return
@@ -15047,19 +15047,19 @@ end subroutine
 ! !  A(I,J) becomes 0.
 ! !
 !     do i = 1, n
-! 
+!
 !       if ( i /= j ) then
-! 
+!
 !         factor = a(i,j)
 !         a(i,j) = 0.0E+00
 !         a(i,j+1:n+nrhs) = a(i,j+1:n+nrhs) - factor * a(j,j+1:n+nrhs)
-! 
+!
 !       end if
-! 
+!
 !     end do
-! 
+!
 !   end do
-! 
+!
 !   return
 ! end subroutine
 ! subroutine rotation_axis_vector_3d ( axis, angle, v, w )
@@ -15113,13 +15113,13 @@ end subroutine
 !   xa = axis(1)
 !   ya = axis(2)
 !   za = axis(3)
-! 
+!
 !   norm = sqrt ( xa * xa + ya * ya + za * za )
-! 
+!
 !   if ( norm == 0.0E+00 ) then
 !     return
 !   end if
-! 
+!
 !   xa = xa / norm
 !   ya = ya / norm
 !   za = za / norm
@@ -15139,14 +15139,14 @@ end subroutine
 !   xn = v(1) - xp
 !   yn = v(2) - yp
 !   zn = v(3) - zp
-! 
+!
 !   norm2 = sqrt ( xn * xn + yn * yn + zn * zn )
-! 
+!
 !   if ( norm2 == 0.0E+00 ) then
 !     w(1:3) = (/ xp, yp, zp /)
 !     return
 !   end if
-! 
+!
 !   xn = xn / norm2
 !   yn = yn / norm2
 !   zn = zn / norm2
@@ -15155,9 +15155,9 @@ end subroutine
 ! !  to V, and forming a right-handed system.
 ! !
 !   call cross_3d ( xa, ya, za, xn, yn, zn, xn2, yn2, zn2 )
-! 
+!
 !   norm = sqrt ( xn2 * xn2 + yn2 * yn2 + zn2 * zn2 )
-! 
+!
 !   xn2 = xn2 / norm
 !   yn2 = yn2 / norm
 !   zn2 = zn2 / norm
@@ -15173,7 +15173,7 @@ end subroutine
 !   w(1) = xp + rot(1)
 !   w(2) = yp + rot(2)
 !   w(3) = zp + rot(3)
-! 
+!
 !   return
 ! end subroutine
 ! subroutine rotation_axis2mat_3d ( axis, angle, a )
@@ -15220,32 +15220,32 @@ end subroutine
 !   v1 = axis(1)
 !   v2 = axis(2)
 !   v3 = axis(3)
-! 
+!
 !   norm = sqrt ( v1 * v1 + v2 * v2 + v3 * v3 )
-! 
+!
 !   if ( norm == 0.0E+00 ) then
 !     return
 !   end if
-! 
+!
 !   v1 = v1 / norm
 !   v2 = v2 / norm
 !   v3 = v3 / norm
-! 
+!
 !   ca = cos ( angle )
 !   sa = sin ( angle )
-! 
+!
 !   a(1,1) =                v1 * v1 + ca * ( 1.0E+00 - v1 * v1 )
 !   a(1,2) = ( 1.0E+00 - ca ) * v1 * v2 - sa * v3
 !   a(1,3) = ( 1.0E+00 - ca ) * v1 * v3 + sa * v2
-! 
+!
 !   a(2,1) = ( 1.0E+00 - ca ) * v2 * v1 + sa * v3
 !   a(2,2) =                v2 * v2 + ca * ( 1.0E+00 - v2 * v2 )
 !   a(2,3) = ( 1.0E+00 - ca ) * v2 * v3 - sa * v1
-! 
+!
 !   a(3,1) = ( 1.0E+00 - ca ) * v3 * v1 - sa * v2
 !   a(3,2) = ( 1.0E+00 - ca ) * v3 * v2 + sa * v1
 !   a(3,3) =                v3 * v3 + ca * ( 1.0E+00 - v3 * v3 )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine rotation_axis2quat_3d ( axis, angle, q )
@@ -15267,7 +15267,7 @@ end subroutine
 ! !
 ! !    A is the cosine of half of the angle of rotation.  (B,C,D) is a
 ! !    unit vector pointing in the direction of the axis of rotation.
-! !    Rotation multiplication and inversion can be carried out using 
+! !    Rotation multiplication and inversion can be carried out using
 ! !    this format and the usual rules for quaternion multiplication
 ! !    and inversion.
 ! !
@@ -15295,19 +15295,19 @@ end subroutine
 !   real q(4)
 ! !
 !   norm = sqrt ( axis(1) * axis(1) + axis(2) * axis(2) + axis(3) * axis(3) )
-! 
+!
 !   if ( norm == 0.0E+00 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'ROTATION_AXIS2QUAT_3D - Fatal error!'
 !     write ( *, * ) '  The axis vector is null.'
 !   end if
-! 
+!
 !   q(1) = cos ( 0.5E+00 * angle )
-! 
+!
 !   q(2) = axis(1) * sin ( 0.5E+00 * angle ) / norm
 !   q(3) = axis(2) * sin ( 0.5E+00 * angle ) / norm
 !   q(4) = axis(3) * sin ( 0.5E+00 * angle ) / norm
-! 
+!
 !   return
 ! end subroutine
 ! subroutine rotation_mat_vector_3d ( a, v, w )
@@ -15338,7 +15338,7 @@ end subroutine
 !   real w(3)
 ! !
 !   w(1:3) = matmul ( a(1:3,1:3), v(1:3) )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine rotation_mat2axis_3d ( a, axis, angle )
@@ -15388,14 +15388,14 @@ end subroutine
 ! !
 !   norm = sqrt ( ( a(3,2) - a(2,3) )**2 + ( a(1,3) - a(3,1) )**2 &
 !               + ( a(2,1) - a(1,2) )**2 )
-! 
+!
 !   if ( norm == 0.0E+00 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'ROTATION_MAT2AXIS_3D - Fatal error!'
 !     write ( *, * ) '  A is not a rotation matrix,'
 !     write ( *, * ) '  or there are multiple axes of rotation.'
 !   end if
-! 
+!
 !   axis(1) = ( a(3,2) - a(2,3) ) / norm
 !   axis(2) = ( a(1,3) - a(3,1) ) / norm
 !   axis(3) = ( a(2,1) - a(1,2) ) / norm
@@ -15403,7 +15403,7 @@ end subroutine
 ! !  Find the angle.
 ! !
 !   angle = arc_cosine ( 0.5E+00 * ( a(1,1) + a(2,2) + a(3,3) - 1.0E+00 ) )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine rotation_mat2quat_3d ( a, q )
@@ -15451,25 +15451,25 @@ end subroutine
 ! !
 !   norm = sqrt ( ( a(3,2) - a(2,3) )**2 + ( a(1,3) - a(3,1) )**2 &
 !               + ( a(2,1) - a(1,2) )**2 )
-! 
+!
 !   if ( norm == 0.0E+00 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'ROTATION_MAT2AXIS_3D - Fatal error!'
 !     write ( *, * ) '  A is not a rotation matrix,'
 !     write ( *, * ) '  or there are multiple axes of rotation.'
 !   end if
-! 
+!
 !   angle = arc_cosine ( 0.5E+00 * ( a(1,1) + a(2,2) + a(3,3) - 1.0E+00 ) )
-!  
+!
 !   cos_phi = cos ( 0.5E+00 * angle )
-! 
+!
 !   sin_phi = sqrt ( 1.0E+00 - cos_phi * cos_phi )
-! 
+!
 !   q(1) = cos_phi
 !   q(2) = sin_phi * ( a(3,2) - a(2,3) ) / norm
 !   q(3) = sin_phi * ( a(1,3) - a(3,1) ) / norm
 !   q(4) = sin_phi * ( a(2,1) - a(1,2) ) / norm
-! 
+!
 !   return
 ! end subroutine
 ! subroutine rotation_quat_vector_3d ( q, v, w )
@@ -15511,17 +15511,17 @@ end subroutine
 !          ( 2.0E+00 * ( q(1) * q(1) + q(2) * q(2) ) - 1.0E+00 ) * v(1) &
 !        +   2.0E+00 * ( q(2) * q(3) - q(1) * q(4) )             * v(2) &
 !        +   2.0E+00 * ( q(2) * q(4) + q(1) * q(3) )             * v(3)
-! 
+!
 !   w(2) = &
 !            2.0E+00 * ( q(2) * q(3) + q(1) * q(4) )             * v(1) &
 !        + ( 2.0E+00 * ( q(1) * q(1) + q(3) * q(3) ) - 1.0E+00 ) * v(2) &
 !        +   2.0E+00 * ( q(3) * q(4) - q(1) * q(2) )             * v(3)
-! 
+!
 !   w(3) = &
 !            2.0E+00 * ( q(2) * q(4) - q(1) * q(3) )             * v(1) &
 !        +   2.0E+00 * ( q(3) * q(4) + q(1) * q(2) )             * v(2) &
 !        + ( 2.0E+00 * ( q(1) * q(1) + q(4) * q(4) ) - 1.0E+00 ) * v(3)
-!  
+!
 !   return
 ! end subroutine
 ! subroutine rotation_quat2axis_3d ( q, axis, angle )
@@ -15543,7 +15543,7 @@ end subroutine
 ! !
 ! !    A is the cosine of half of the angle of rotation.  (B,C,D) is a
 ! !    vector pointing in the direction of the axis of rotation.
-! !    Rotation multiplication and inversion can be carried out using 
+! !    Rotation multiplication and inversion can be carried out using
 ! !    this format and the usual rules for quaternion multiplication
 ! !    and inversion.
 ! !
@@ -15572,21 +15572,21 @@ end subroutine
 !   real sin_phi
 ! !
 !   sin_phi = sqrt ( q(2) * q(2) + q(3) * q(3) + q(4) * q(4) )
-! 
+!
 !   cos_phi = q(1)
-! 
+!
 !   angle = 2.0E+00 * atan2 ( sin_phi, cos_phi )
-! 
+!
 !   if ( sin_phi == 0.0E+00 ) then
 !     axis(1:3) = (/ 1.0E+00, 0.0E+00, 0.0E+00 /)
 !   else
 !     axis(1:3) = (/ q(2), q(3), q(4) /) / sin_phi
 !   end if
-! 
+!
 !   return
 ! end subroutine
-! 
-! 
+!
+!
 ! subroutine rotation_quat2mat_3d ( q, a )
 ! !
 ! !*******************************************************************************
@@ -15630,11 +15630,11 @@ end subroutine
 !   real v3
 ! !
 !   sin_phi = sqrt ( q(2) * q(2) + q(3) * q(3) + q(4) * q(4) )
-! 
+!
 !   cos_phi = q(1)
-! 
+!
 !   angle = 2.0E+00 * atan2 ( sin_phi, cos_phi )
-! 
+!
 !   if ( sin_phi == 0.0E+00 ) then
 !     v1 = 1.0E+00
 !     v2 = 0.0E+00
@@ -15644,22 +15644,22 @@ end subroutine
 !     v2 = q(3) / sin_phi
 !     v3 = q(4) / sin_phi
 !   end if
-! 
+!
 !   ca = cos ( angle )
 !   sa = sin ( angle )
-! 
+!
 !   a(1,1) =                    v1 * v1 + ca * ( 1.0E+00 - v1 * v1 )
 !   a(1,2) = ( 1.0E+00 - ca ) * v1 * v2 - sa * v3
 !   a(1,3) = ( 1.0E+00 - ca ) * v1 * v3 + sa * v2
-! 
+!
 !   a(2,1) = ( 1.0E+00 - ca ) * v2 * v1 + sa * v3
 !   a(2,2) =                    v2 * v2 + ca * ( 1.0E+00 - v2 * v2 )
 !   a(2,3) = ( 1.0E+00 - ca ) * v2 * v3 - sa * v1
-! 
+!
 !   a(3,1) = ( 1.0E+00 - ca ) * v3 * v1 - sa * v2
 !   a(3,2) = ( 1.0E+00 - ca ) * v3 * v2 + sa * v1
 !   a(3,3) =                    v3 * v3 + ca * ( 1.0E+00 - v3 * v3 )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine rvec_print_2d ( x, y )
@@ -15691,9 +15691,9 @@ end subroutine
 ! !
 !   real x
 !   real y
-! 
+!
 !   write ( *, '( a1, g14.6, a1, g14.6, a1 )' ) '(', x, ',', y, ')'
-! 
+!
 !   return
 ! end subroutine
 ! subroutine rvec_print_3d ( x, y, z )
@@ -15726,10 +15726,10 @@ end subroutine
 !   real x
 !   real y
 !   real z
-! 
+!
 !   write ( *, '( a1, g14.6, a1, g14.6, a1, g14.6, a1 )' ) &
 !     '(', x, ',', y, ',', z, ')'
-! 
+!
 !   return
 ! end subroutine
 ! subroutine rvec2_print ( n, a1, a2, title )
@@ -15767,12 +15767,12 @@ end subroutine
 !     write ( *, * ) ' '
 !     write ( *, '(a)' ) trim ( title )
 !   end if
-! 
+!
 !   write ( *, * ) ' '
 !   do i = 1, n
 !     write ( *, '(i6,2g14.6)' ) i, a1(i), a2(i)
 !   end do
-! 
+!
 !   return
 ! end subroutine
 ! subroutine rvec3_print ( n, a1, a2, a3, title )
@@ -15811,12 +15811,12 @@ end subroutine
 !     write ( *, * ) ' '
 !     write ( *, '(a)' ) trim ( title )
 !   end if
-! 
+!
 !   write ( *, * ) ' '
 !   do i = 1, n
 !     write ( *, '(i6,3g14.6)' ) i, a1(i), a2(i), a3(i)
 !   end do
-! 
+!
 !   return
 ! end subroutine
 ! subroutine shape_point_dist_2d ( xc, yc, x1, y1, nside, x, y, dist )
@@ -15830,7 +15830,7 @@ end subroutine
 ! !
 ! !    The "regular shape" is assumed to be an equilateral and equiangular
 ! !    polygon, such as the standard square, pentagon, hexagon, and so on.
-! ! 
+! !
 ! !  Modified:
 ! !
 ! !    14 March 2000
@@ -15888,7 +15888,7 @@ end subroutine
 ! !  If the test point is at the center, the computation is easy.
 ! !
 !   dist2 = enorm0_2d ( x, y, xc, yc )
-! 
+!
 !   if ( dist2 == 0.0E+00 ) then
 !     dist = radius
 !     return
@@ -15907,19 +15907,19 @@ end subroutine
 ! !
 !   angle2 = real ( sector_index - 1 ) * sector_angle
 !   angle2 = degrees_to_radians ( angle2 )
-! 
+!
 !   call vector_rotate_base_2d ( x1, y1, xc, yc, angle2, xa, ya )
-! 
+!
 !   angle2 = real ( sector_index ) * sector_angle
 !   angle2 = degrees_to_radians ( angle2 )
-! 
+!
 !   call vector_rotate_base_2d ( x1, y1, xc, yc, angle2, xb, yb )
 ! !
 ! !  Determine the distance from the test point to the line segment that
 ! !  is the SECTOR-th side.
 ! !
 !   call line_seg_point_dist_2d ( xa, ya, xb, yb, x, y, dist )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine shape_point_near_2d ( xc, yc, x1, y1, nside, x, y, xn, yn, dist )
@@ -15933,7 +15933,7 @@ end subroutine
 ! !
 ! !    The "regular shape" is assumed to be an equilateral and equiangular
 ! !    polygon, such as the standard square, pentagon, hexagon, and so on.
-! ! 
+! !
 ! !  Modified:
 ! !
 ! !    17 March 2000
@@ -15997,7 +15997,7 @@ end subroutine
 ! !  If the test point is at the center, the computation is easy.
 ! !
 !   dist2 = enorm0_2d ( x, y, xc, yc )
-! 
+!
 !   if ( dist2 == 0.0E+00 ) then
 !     dist = radius
 !     return
@@ -16016,19 +16016,19 @@ end subroutine
 ! !
 !   angle2 = real ( sector_index - 1 ) * sector_angle
 !   angle2 = degrees_to_radians ( angle2 )
-! 
+!
 !   call vector_rotate_base_2d ( x1, y1, xc, yc, angle2, xa, ya )
-! 
+!
 !   angle2 = real ( sector_index ) * sector_angle
 !   angle2 = degrees_to_radians ( angle2 )
-! 
+!
 !   call vector_rotate_base_2d ( x1, y1, xc, yc, angle2, xb, yb )
 ! !
 ! !  Determine the point on the SECTOR-th side of the shape which is
 ! !  nearest.
 ! !
 !   call line_seg_point_near_2d ( xa, ya, xb, yb, x, y, xn, yn, dist, t )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine shape_print_3d ( max_num, max_order, point_num, &
@@ -16090,18 +16090,18 @@ end subroutine
 !   do i = 1, point_num
 !     write ( *, '(i4,2x,3f10.4)' ) i, point_coord(1:3,i)
 !   end do
-! 
+!
 !   write ( *, * ) ' '
 !   write ( *, * ) '  The number of faces is ', face_num
 !   write ( *, * ) '  The order of each face is ', face_order
 !   write ( *, * ) ' '
 !   write ( *, * ) '  The vertices in each face are:'
 !   write ( *, * ) ' '
-! 
+!
 !   do i = 1, face_num
 !     write ( *, '(i5,3x,10i5)' ) i, face_point(1:face_order,i)
 !   end do
-! 
+!
 !   return
 ! end subroutine
 ! subroutine shape_ray_int_2d ( xc, yc, x1, y1, nside, xa, ya, xb, yb, xi, yi )
@@ -16118,7 +16118,7 @@ end subroutine
 ! !
 ! !    The origin of the ray is assumed to be inside the shape.  This
 ! !    guarantees that the ray will intersect the shape in exactly one point.
-! ! 
+! !
 ! !  Modified:
 ! !
 ! !    17 March 2000
@@ -16188,28 +16188,28 @@ end subroutine
 ! !
 !   xv2 = 0.0E+00
 !   yv2 = 0.0E+00
-! 
+!
 !   do sector_index = 1, nside
 ! !
 ! !  Determine the two vertices that define this sector.
 ! !
 !     if ( sector_index == 1 ) then
-! 
+!
 !       angle2 = real ( sector_index - 1 ) * sector_angle
 !       angle2 = degrees_to_radians ( angle2 )
-! 
+!
 !       call vector_rotate_base_2d ( x1, y1, xc, yc, angle2, xv1, yv1 )
-! 
+!
 !     else
-! 
+!
 !       xv1 = xv2
 !       yv1 = yv2
-! 
+!
 !     end if
-! 
+!
 !     angle2 = real ( sector_index ) * sector_angle
 !     angle2 = degrees_to_radians ( angle2 )
-! 
+!
 !     call vector_rotate_base_2d ( x1, y1, xc, yc, angle2, xv2, yv2 )
 ! !
 ! !  Draw the angle from one vertex to the ray origin to the next vertex,
@@ -16217,20 +16217,20 @@ end subroutine
 ! !  must intersect the shape side of that sector.
 ! !
 !     call angle_contains_ray_2d ( inside, xv1, yv1, xa, ya, xv2, yv2, xb, yb )
-! 
-!     if ( inside ) then 
+!
+!     if ( inside ) then
 ! !
-! !  Determine the intersection of the lines defined by the ray and the 
+! !  Determine the intersection of the lines defined by the ray and the
 ! !  sector side.  (We're already convinced that the ray and sector line
 ! !  segment intersect, so we can use the simpler code that treats them
 ! !  as full lines).
 ! !
 !       call lines_exp_int_2d ( ival, xi, yi, xa, ya, xb, yb, xv1, yv1, xv2, yv2 )
-! 
+!
 !       return
-! 
+!
 !     end if
-! 
+!
 !   end do
 ! !
 ! !  If the calculation fell through the loop, then something's wrong.
@@ -16311,7 +16311,7 @@ end subroutine
 ! !  INDX = 0: This is the first call.
 ! !
 !   if ( indx == 0 ) then
-! 
+!
 !     n1 = n
 !     k = n / 2
 !     k1 = k
@@ -16319,27 +16319,27 @@ end subroutine
 ! !  INDX < 0: The user is returning the results of a comparison.
 ! !
 !   else if ( indx < 0 ) then
-! 
+!
 !     if ( indx == -2 ) then
-! 
+!
 !       if ( isgn < 0 ) then
 !         i = i + 1
 !       end if
-! 
+!
 !       j = k1
 !       k1 = i
 !       indx = - 1
 !       return
-! 
+!
 !     end if
-! 
+!
 !     if ( isgn > 0 ) then
 !       indx = 2
 !       return
 !     end if
-! 
+!
 !     if ( k <= 1 ) then
-! 
+!
 !       if ( n1 == 1 ) then
 !         indx = 0
 !       else
@@ -16348,26 +16348,26 @@ end subroutine
 !         j = 1
 !         indx = 1
 !       end if
-! 
+!
 !       return
-! 
+!
 !     end if
-! 
+!
 !     k = k - 1
 !     k1 = k
 ! !
 ! !  INDX > 0, the user was asked to make an interchange.
 ! !
 !   else if ( indx == 1 ) then
-! 
+!
 !     k1 = k
-! 
+!
 !   end if
-! 
+!
 !   do
-! 
+!
 !     i = 2 * k1
-! 
+!
 !     if ( i == n1 ) then
 !       j = k1
 !       k1 = i
@@ -16378,16 +16378,16 @@ end subroutine
 !       indx = - 2
 !       return
 !     end if
-! 
+!
 !     if ( k <= 1 ) then
 !       exit
 !     end if
-! 
+!
 !     k = k - 1
 !     k1 = k
-! 
+!
 !   end do
-! 
+!
 !   if ( n1 == 1 ) then
 !     indx = 0
 !   else
@@ -16396,7 +16396,7 @@ end subroutine
 !     j = 1
 !     indx = 1
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine sphere_dia2imp_3d ( x1, y1, z1, x2, y2, z2, r, xc, yc, zc )
@@ -16441,11 +16441,11 @@ end subroutine
 !   real zc
 ! !
 !   r = 0.5E+00 * enorm0_3d ( x1, y1, z1, x2, y2, z2 )
-! 
+!
 !   xc = 0.5E+00 * ( x1 + x2 )
 !   yc = 0.5E+00 * ( y1 + y2 )
 !   zc = 0.5E+00 * ( z1 + z2 )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine sphere_exp_contains_point_3d ( x1, y1, z1, x2, y2, z2, &
@@ -16481,10 +16481,10 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4, the 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4, the
 ! !    (X,Y,Z) coordinates of four points that lie on a circle.
 ! !
-! !    Input, real X, Y, Z, the (X,Y,Z) coordinates of a point, whose 
+! !    Input, real X, Y, Z, the (X,Y,Z) coordinates of a point, whose
 ! !    position relative to the sphere is desired.
 ! !
 ! !    Output, logical INSIDE, is TRUE if the point is in the sphere,
@@ -16516,39 +16516,39 @@ end subroutine
 !   a(1,3) = z1
 !   a(1,4) = x1 * x1 + y1 * y1 + z1 * z1
 !   a(1,5) = 1.0E+00
-! 
+!
 !   a(2,1) = x2
 !   a(2,2) = y2
 !   a(2,3) = z2
 !   a(2,4) = x2 * x2 + y2 * y2 + z2 * z2
 !   a(2,5) = 1.0E+00
-! 
+!
 !   a(3,1) = x3
 !   a(3,2) = y3
 !   a(3,3) = z3
 !   a(3,4) = x3 * x3 + y3 * y3 + z3 * z3
 !   a(3,5) = 1.0E+00
-! 
+!
 !   a(4,1) = x4
 !   a(4,2) = y4
 !   a(4,3) = z4
 !   a(4,4) = x4 * x4 + y4 * y4 + z4 * z4
 !   a(4,5) = 1.0E+00
-! 
+!
 !   a(5,1) = x
 !   a(5,2) = y
 !   a(5,3) = z
 !   a(5,4) = x * x + y * y + z * z
 !   a(5,5) = 1.0E+00
-! 
+!
 !   det = rmat5_det ( a )
-! 
+!
 !   if ( det < 0.0E+00 ) then
 !     inside = .false.
 !   else if ( det >= 0.0E+00 ) then
 !     inside = .true.
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine sphere_exp_near_point_3d ( x1, y1, z1, x2, y2, z2, &
@@ -16580,10 +16580,10 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4, the 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4, the
 ! !    (X,Y,Z) coordinates of four points that lie on a circle.
 ! !
-! !    Input, real X, Y, Z, the (X,Y,Z) coordinates of a point, whose 
+! !    Input, real X, Y, Z, the (X,Y,Z) coordinates of a point, whose
 ! !    nearest point on the sphere is desired.
 ! !
 ! !    Output, real XN, YN, ZN, the nearest point on the sphere.
@@ -16620,7 +16620,7 @@ end subroutine
 ! !  If (X,Y,Z) = (XC,YC,ZC), bail out now.
 ! !
 !   norm = enorm0_3d ( x, y, z, xc, yc, zc )
-! 
+!
 !   if ( norm == 0.0E+00 ) then
 !     xn = xc + r
 !     yn = yc
@@ -16633,7 +16633,7 @@ end subroutine
 !   xn = xc + r * ( x - xc ) / norm
 !   yn = yc + r * ( y - yc ) / norm
 !   zn = zc + r * ( z - zc ) / norm
-! 
+!
 !   return
 ! end subroutine
 ! subroutine sphere_exp2imp_3d ( x1, y1, z1, x2, y2, z2, x3, y3, &
@@ -16669,7 +16669,7 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4, 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4,
 ! !    the coordinates of four distinct noncoplanar points on the sphere.
 ! !
 ! !    Output, real R, XC, YC, ZC, the radius and coordinates of the center
@@ -16695,7 +16695,7 @@ end subroutine
 ! !
 !   call tetra_outsphere_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, &
 !     r, xc, yc, zc )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine sphere_imp_area_3d ( r, area )
@@ -16729,7 +16729,7 @@ end subroutine
 !   real r
 ! !
 !   area = 4.0E+00 * pi * r * r
-! 
+!
 !   return
 ! end subroutine
 ! subroutine sphere_imp_area_nd ( n, r, area )
@@ -16771,9 +16771,9 @@ end subroutine
 !   real r
 ! !
 !   call sphere_imp_unit_area_nd ( n, area )
-! 
+!
 !   area = area * r**(n-1)
-! 
+!
 !   return
 ! end subroutine
 ! subroutine sphere_imp_contains_point_3d ( r, xc, yc, zc, x, y, z, inside )
@@ -16822,7 +16822,7 @@ end subroutine
 !   else
 !     inside = .false.
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine sphere_imp_gridfaces_3d ( maxtri, nlat, nlong, ntri, tri )
@@ -16886,112 +16886,112 @@ end subroutine
 ! !
 !   ntri = 0
 ! !
-! !  The first row.  
+! !  The first row.
 ! !
 !   n = 1
-! 
+!
 !   sw = 2
 !   se = sw + 1
-! 
+!
 !   s_min = 2
 !   s_max = nlong + 1
-! 
+!
 !   do j = 0, nlong - 1
-! 
+!
 !     if ( ntri < maxtri ) then
 !       ntri = ntri + 1
 !       tri(1,ntri) = sw
 !       tri(2,ntri) = se
 !       tri(3,ntri) = n
 !     end if
-! 
+!
 !     sw = se
-! 
+!
 !     if ( se == s_max ) then
 !       se = s_min
 !     else
-!       se = se + 1 
+!       se = se + 1
 !     end if
-!     
+!
 !   end do
 ! !
 ! !  The intermediate rows.
 ! !
 !   do i = 1, nlat
-! 
+!
 !     n_max = s_max
 !     n_min = s_min
-! 
+!
 !     s_max = s_max + nlong
 !     s_min = s_min + nlong
-! 
+!
 !     nw = n_min
 !     ne = nw + 1
 !     sw = s_min
 !     se = sw + 1
-! 
+!
 !     do j = 0, nlong - 1
-! 
+!
 !       if ( ntri < maxtri ) then
 !         ntri = ntri + 1
 !         tri(1,ntri) = sw
 !         tri(2,ntri) = se
 !         tri(3,ntri) = nw
 !       end if
-! 
+!
 !       if ( ntri < maxtri ) then
 !         ntri = ntri + 1
 !         tri(1,ntri) = ne
 !         tri(2,ntri) = nw
 !         tri(3,ntri) = se
 !       end if
-! 
+!
 !       sw = se
 !       nw = ne
-! 
+!
 !       if ( se == s_max ) then
 !         se = s_min
 !       else
-!         se = se + 1 
+!         se = se + 1
 !       end if
-! 
+!
 !       if ( ne == n_max ) then
 !         ne = n_min
 !       else
-!         ne = ne + 1 
+!         ne = ne + 1
 !       end if
-! 
+!
 !     end do
-!     
+!
 !   end do
 ! !
 ! !  The last row.
 ! !
 !   n_max = s_max
 !   n_min = s_min
-! 
+!
 !   s = n_max + 1
-! 
+!
 !   nw = n_min
 !   ne = nw + 1
-! 
+!
 !   do j = 0, nlong - 1
-! 
+!
 !     if ( ntri < maxtri ) then
 !       ntri = ntri + 1
 !       tri(1,ntri) = ne
 !       tri(2,ntri) = nw
 !       tri(3,ntri) = s
 !     end if
-! 
+!
 !     nw = ne
-! 
+!
 !     if ( ne == n_max ) then
 !       ne = n_min
 !     else
-!       ne = ne + 1 
+!       ne = ne + 1
 !     end if
-!     
+!
 !   end do
 !   return
 ! end subroutine
@@ -17030,7 +17030,7 @@ end subroutine
 ! !    poles, which will be included automatically, so NLAT = 5, for instance,
 ! !    will result in points along 7 lines of latitude.
 ! !
-! !    Output, integer NLINE, the number of grid lines.  
+! !    Output, integer NLINE, the number of grid lines.
 ! !
 ! !    Output, integer LINE(2,MAXLINE), contains pairs of point indices for
 ! !    line segments that make up the grid.
@@ -17052,45 +17052,45 @@ end subroutine
 ! !  "Vertical" lines.
 ! !
 !   do j = 0, nlong - 1
-! 
+!
 !     old = 1
 !     new = j + 2
-! 
+!
 !     if ( nline < maxline ) then
 !       nline = nline + 1
 !       line(1,nline) = old
 !       line(2,nline) = new
 !     end if
-! 
+!
 !     do i = 1, nlat - 1
-! 
+!
 !       old = new
 !       new = old + nlong
-! 
+!
 !       if ( nline < maxline ) then
 !         nline = nline + 1
 !         line(1,nline) = old
 !         line(2,nline) = new
 !       end if
-! 
+!
 !     end do
-! 
+!
 !     old = new
-! 
+!
 !     if ( nline < maxline ) then
 !       nline = nline + 1
 !       line(1,nline) = old
 !       line(2,nline) = 1 + nlat * nlong + 1
 !     end if
-! 
+!
 !   end do
 ! !
 ! !  "Horizontal" lines.
 ! !
 !   do i = 1, nlat
-!     
+!
 !     new = 1 + ( i - 1 ) * nlong + 1
-! 
+!
 !     do j = 0, nlong - 2
 !       old = new
 !       new = old + 1
@@ -17100,45 +17100,45 @@ end subroutine
 !         line(2,nline) = new
 !       end if
 !     end do
-! 
+!
 !     old = new
 !     new = 1 + ( i - 1 ) * nlong + 1
 !     if ( nline < maxline ) then
 !       line(1,nline) = old
 !       line(2,nline) = new
 !     end if
-! 
+!
 !   end do
 ! !
 ! !  "Diagonal" lines.
 ! !
 !   do j = 0, nlong - 1
-! 
+!
 !     old = 1
 !     new = j + 2
 !     newcol = j
-! 
+!
 !     do i = 1, nlat - 1
-! 
+!
 !       old = new
 !       new = old + nlong + 1
-! 
+!
 !       newcol = newcol + 1
 !       if ( newcol > nlong - 1 ) then
 !         newcol = 0
 !         new = new - nlong
 !       end if
-! 
+!
 !       if ( nline < maxline ) then
 !         nline = nline + 1
 !         line(1,nline) = old
 !         line(2,nline) = new
 !       end if
-! 
+!
 !     end do
-! 
+!
 !   end do
-! 
+!
 !   return
 ! end subroutine
 ! subroutine sphere_imp_gridpoints_3d ( r, xc, yc, zc, maxpoint, nlat, nlong, &
@@ -17219,21 +17219,21 @@ end subroutine
 ! !  Do each intermediate ring of latitude.
 ! !
 !   do i = 1, nlat
-! 
+!
 !     phi = pi_const * real ( i ) / real ( nlat + 1 )
 ! !
 ! !  Along that ring of latitude, compute points at various longitudes.
 ! !
 !     do j = 0, nlong-1
-! 
+!
 !       theta = 2.0E+00 * pi_const * real ( j ) / real ( nlong )
-! 
+!
 !       npoint = npoint + 1
 !       if ( npoint <= maxpoint ) then
 !         call sphere_imp_local2xyz_3d ( r, xc, yc, zc, theta, phi, &
 !           x(npoint), y(npoint), z(npoint) )
 !       end if
-! 
+!
 !     end do
 !   end do
 ! !
@@ -17246,7 +17246,7 @@ end subroutine
 !     call sphere_imp_local2xyz_3d ( r, xc, yc, zc, theta, phi, &
 !       x(npoint), y(npoint), z(npoint) )
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine sphere_imp_line_project_3d ( r, xc, yc, zc, npnt, &
@@ -17281,31 +17281,31 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real R, the radius of the sphere.  If R is 
+! !    Input, real R, the radius of the sphere.  If R is
 ! !    zero, (XP,YP,ZP) will be returned as (XC,YC,ZC), and if R is
 ! !    negative, points will end up diametrically opposite from where
 ! !    you would expect them for a positive R.
 ! !
 ! !    Input, real XC, YC, ZC, the coordinates of the center of the sphere.
 ! !
-! !    Input, integer NPNT, the number of points on the line that is 
+! !    Input, integer NPNT, the number of points on the line that is
 ! !    to be projected.
 ! !
-! !    Input, real X(NPNT), Y(NPNT), Z(NPNT), the coordinates of the points 
+! !    Input, real X(NPNT), Y(NPNT), Z(NPNT), the coordinates of the points
 ! !    on the line that is to be projected.
 ! !    Note: if any (X,Y,Z) coincides with the center of the sphere, then
 ! !    its projection is mathematically undefined.  (XP,YP,ZP) will
 ! !    be returned as (XC,YC,ZC).
 ! !
 ! !    Input, integer MAXPNT2, the maximum number of points on the projected
-! !    line.  Even if the routine thinks that more points are needed, 
+! !    line.  Even if the routine thinks that more points are needed,
 ! !    no more than MAXPNT2 will be generated.
 ! !
 ! !    Output, integer NPNT2, the number of points on the projected line.
 ! !    NPNT2 can be zero, if the line has an angular projection of less
 ! !    than THETAMIN radians.
 ! !
-! !    Output, real XP(NPNT2), YP(NPNT2), ZP(NPNT2), the coordinates of the 
+! !    Output, real XP(NPNT2), YP(NPNT2), ZP(NPNT2), the coordinates of the
 ! !    points representing the projected line.  These points lie on the
 ! !    sphere.  Successive points are separated by at least THETAMIN
 ! !    radians, and by no more than THETAMAX radians.
@@ -17351,7 +17351,7 @@ end subroutine
 !   real zi
 !   real zp(maxpnt2)
 !   real dot
-! 
+!
 ! !
 ! !  Check the input.
 ! !
@@ -17359,29 +17359,29 @@ end subroutine
 !     npnt2 = 0
 !     return
 !   end if
-! 
+!
 !   x1 = xc
 !   y1 = yc
 !   z1 = zc
-!  
+!
 !   x2 = xc
 !   y2 = yc
 !   z2 = zc
-!  
+!
 !   npnt2 = 0
-!  
+!
 !   do i = 1, npnt
-!  
+!
 !     if ( x(i) == xc .and. y(i) == yc .and. z(i) == zc ) then
-!  
+!
 !     else
-! 
+!
 !       x1 = x2
 !       y1 = y2
 !       z1 = z2
-!  
+!
 !       alpha = enorm0_3d ( xc, yc, zc, x(i), y(i), z(i) )
-! 
+!
 !       x2 = xc + r * ( x(i) - xc ) / alpha
 !       y2 = yc + r * ( y(i) - yc ) / alpha
 !       z2 = zc + r * ( z(i) - zc ) / alpha
@@ -17389,7 +17389,7 @@ end subroutine
 ! !  If we haven't gotten any points yet, take this point as our start.
 ! !
 !       if ( npnt2 == 0 ) then
-!  
+!
 !         npnt2 = npnt2 + 1
 !         xp(npnt2) = x2
 !         yp(npnt2) = y2
@@ -17398,29 +17398,29 @@ end subroutine
 ! !  Compute the angular projection of (X1,Y1,Z1) to (X2,Y2,Z2).
 ! !
 !     else if ( npnt2 >= 1 ) then
-!  
+!
 !       dot = ( x1 - xc ) * ( x2 - xc ) + ( y1 - yc ) * ( y2 - yc ) + &
-!             ( z1 - zc ) * ( z2 - zc ) 
+!             ( z1 - zc ) * ( z2 - zc )
 !       ang3d = arc_cosine (  dot / r**2 )
 ! !
 ! !  If the angle is at least THETAMIN, (or it's the last point),
-! !  then we will draw a line segment.  
+! !  then we will draw a line segment.
 ! !
 !       if ( abs ( ang3d ) > thetamin .or. i == npnt ) then
 ! !
 ! !  Now we check to see if the line segment is too long.
 ! !
 !         if ( abs ( ang3d ) > thetamax ) then
-! 
-!           nfill = int ( abs ( ang3d ) / thetamax ) 
-! 
+!
+!           nfill = int ( abs ( ang3d ) / thetamax )
+!
 !           do j = 1, nfill-1
-! 
+!
 !             xi = ( ( nfill - j ) * ( x1 - xc ) + j * ( x2 - xc ) )
 !             yi = ( ( nfill - j ) * ( y1 - yc ) + j * ( y2 - yc ) )
 !             zi = ( ( nfill - j ) * ( z1 - zc ) + j * ( z2 - zc ) )
 !             tnorm = sqrt ( xi * xi + yi * yi + zi * zi )
-! 
+!
 !             if ( tnorm /= 0.0E+00 ) then
 !               xi = xc + r * xi / tnorm
 !               yi = yc + r * yi / tnorm
@@ -17430,9 +17430,9 @@ end subroutine
 !               yp(npnt2) = yi
 !               zp(npnt2) = zi
 !             end if
-! 
+!
 !           end do
-! 
+!
 !         end if
 ! !
 ! !  Now tack on the projection of point 2.
@@ -17441,15 +17441,15 @@ end subroutine
 !         xp(npnt2) = x2
 !         yp(npnt2) = y2
 !         zp(npnt2) = z2
-!  
+!
 !       end if
-! 
+!
 !     end if
-!  
+!
 !     end if
-!  
+!
 !   end do
-! 
+!
 !   return
 ! end subroutine
 ! subroutine sphere_imp_local2xyz_3d ( r, xc, yc, zc, theta, phi, x, y, z )
@@ -17467,7 +17467,7 @@ end subroutine
 ! !
 ! !    The "local" spherical coordinates of a point are two angles, THETA and PHI.
 ! !    PHI measures the angle that the vector from the origin to the point
-! !    makes with the positive Z axis.  THETA measures the angle that the 
+! !    makes with the positive Z axis.  THETA measures the angle that the
 ! !    projection of the vector onto the XY plane makes with the positive X axis.
 ! !
 ! !  Modified:
@@ -17503,7 +17503,7 @@ end subroutine
 !   x = xc + r * sin ( phi ) * cos ( theta )
 !   y = yc + r * sin ( phi ) * sin ( theta )
 !   z = zc + r * cos ( phi )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine sphere_imp_near_point_3d ( r, xc, yc, zc, x, y, z, xn, yn, zn )
@@ -17539,7 +17539,7 @@ end subroutine
 ! !
 ! !    Input, real XC, YC, ZC, the coordinates of the center of the sphere.
 ! !
-! !    Input, real X, Y, Z, the (X,Y,Z) coordinates of a point, whose 
+! !    Input, real X, Y, Z, the (X,Y,Z) coordinates of a point, whose
 ! !    nearest point on the sphere is desired.
 ! !
 ! !    Output, real XN, YN, ZN, the nearest point on the sphere.
@@ -17559,7 +17559,7 @@ end subroutine
 ! !  If (X,Y,Z) = (XC,YC,ZC), bail out now.
 ! !
 !   norm = enorm0_3d ( x, y, z, xc, yc, zc )
-! 
+!
 !   if ( norm == 0.0E+00 ) then
 !     xn = xc + r
 !     yn = yc
@@ -17572,7 +17572,7 @@ end subroutine
 !   xn = xc + r * ( x - xc ) / norm
 !   yn = yc + r * ( y - yc ) / norm
 !   zn = zc + r * ( z - zc ) / norm
-! 
+!
 !   return
 ! end subroutine
 ! subroutine sphere_imp_point_project_3d ( r, xc, yc, zc, x, y, z, xp, yp, zp )
@@ -17602,9 +17602,9 @@ end subroutine
 ! !
 ! !    Input, real XC, YC, ZC, the coordinates of the center of the sphere.
 ! !
-! !    Input, real X, Y, Z, the coordinates of a point. 
+! !    Input, real X, Y, Z, the coordinates of a point.
 ! !
-! !    Output, real X, Y, Z, the coordinates of the point as projected 
+! !    Output, real X, Y, Z, the coordinates of the point as projected
 ! !    onto the sphere from the center.
 ! !
 !   real norm
@@ -17620,27 +17620,27 @@ end subroutine
 !   real zp
 ! !
 !   if ( r == 0.0E+00 ) then
-! 
+!
 !     xp = xc
 !     yp = yc
 !     zp = zc
-! 
+!
 !   else if ( x == xc .and. y == yc .and. z == zc ) then
-! 
+!
 !     xp = xc
 !     yp = yc
 !     zp = zc + r
-!     
+!
 !   else
-! 
+!
 !     norm = enorm0_3d ( x, y, z, xc, yc, zc )
-! 
+!
 !     xp = xc + r * ( x - xc ) / norm
 !     yp = yc + r * ( y - yc ) / norm
 !     zp = zc + r * ( z - zc ) / norm
-! 
+!
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine sphere_imp_unit_area_nd ( n, area )
@@ -17693,7 +17693,7 @@ end subroutine
 !       area = area / real ( i )
 !     end do
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine sphere_imp_unit_volume_nd ( n, volume )
@@ -17746,7 +17746,7 @@ end subroutine
 !       volume = volume / real ( i )
 !     end do
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine sphere_imp_volume_3d ( r, volume )
@@ -17780,7 +17780,7 @@ end subroutine
 !   real volume
 ! !
 !   volume = ( 4.0E+00 / 3.0E+00 ) * pi * r**3
-! 
+!
 !   return
 ! end subroutine
 ! subroutine sphere_imp_volume_nd ( n, r, volume )
@@ -17828,9 +17828,9 @@ end subroutine
 !   real volume
 ! !
 !   call sphere_imp_unit_volume_nd ( n, volume )
-! 
+!
 !   volume = volume * r**n
-! 
+!
 !   return
 ! end subroutine
 ! subroutine string_2d ( iorder, istrng, nstrng, nvec, x1vec, x2vec, y1vec, y2vec)
@@ -17870,7 +17870,7 @@ end subroutine
 ! !    The segment with IORDER(I) = 0 is the initial segment from which
 ! !    the entire string was "grown".
 ! !
-! !    Output, integer ISTRNG(NVEC), ISTRNG(I) is the number of the string 
+! !    Output, integer ISTRNG(NVEC), ISTRNG(I) is the number of the string
 ! !    to which line segment I belongs, between 1 and NVEC.
 ! !
 ! !    Output, integer NSTRNG, the number of strings created.
@@ -17928,71 +17928,71 @@ end subroutine
 !   iseed = 1
 !   nstrng = 1
 !   istrng(iseed) = nstrng
-!  
+!
 !   do
-!  
+!
 !     x1val = x1vec(iseed)
 !     x2val = x2vec(iseed)
 !     y1val = y1vec(iseed)
 !     y2val = y2vec(iseed)
-!  
+!
 !     jval = iorder(iseed)
 !     kval = iorder(iseed)
-!  
+!
 !     do
-!  
+!
 !       match = 0
-!  
+!
 !       do j = 1, nvec
-!  
+!
 !         if ( istrng(j) > nstrng ) then
-!  
+!
 !           if ( x1val == x1vec(j) .and. y1val == y1vec(j) ) then
-! 
+!
 !             jval = jval - 1
 !             iorder(j) = jval
 !             istrng(j) = nstrng
 !             x1val = x2vec(j)
 !             y1val = y2vec(j)
 !             match = match + 1
-! 
+!
 !             call r_swap ( x1vec(j), x2vec(j) )
 !             call r_swap ( y1vec(j), y2vec(j) )
-!  
+!
 !           else if ( x1val == x2vec(j) .and. y1val == y2vec(j) ) then
-! 
+!
 !             jval = jval - 1
 !             iorder(j) = jval
 !             istrng(j) = nstrng
 !             x1val = x1vec(j)
 !             y1val = y1vec(j)
 !             match = match + 1
-! 
+!
 !           else if ( x2val == x1vec(j) .and. y2val == y1vec(j) ) then
-! 
+!
 !             kval = kval + 1
 !             iorder(j) = kval
 !             istrng(j) = nstrng
 !             x2val = x2vec(j)
 !             y2val = y2vec(j)
 !             match = match + 1
-! 
+!
 !           else if ( x2val == x2vec(j) .and. y2val == y2vec(j) ) then
-! 
+!
 !             kval = kval + 1
 !             iorder(j) = kval
 !             istrng(j) = nstrng
 !             x2val = x1vec(j)
 !             y2val = y1vec(j)
 !             match = match + 1
-!  
+!
 !             call r_swap ( x1vec(j), x2vec(j) )
 !             call r_swap ( y1vec(j), y2vec(j) )
-!    
+!
 !           end if
-!  
+!
 !         end if
-!  
+!
 !       end do
 ! !
 ! !  If the string has closed on itself, then we don't want to
@@ -18007,14 +18007,14 @@ end subroutine
 !       if ( match <= 0 ) then
 !         exit
 !       end if
-! 
+!
 !     end do
 ! !
 ! !  This string is "exhausted".  Are there any line segments we
 ! !  haven't looked at yet?
-! ! 
+! !
 !     iseed = 0
-! 
+!
 !     do i = 1, nvec
 !       if ( istrng(i) > nstrng ) then
 !         iseed = i
@@ -18023,11 +18023,11 @@ end subroutine
 !         exit
 !       end if
 !     end do
-! 
+!
 !     if ( iseed == 0 ) then
 !       exit
 !     end if
-! 
+!
 !   end do
 ! !
 ! !  There are no more line segments to look at.  Renumber the
@@ -18047,47 +18047,47 @@ end subroutine
 !   i = 0
 !   isgn = 0
 !   j = 0
-!  
+!
 !   indx = 0
-!  
+!
 !   do
-!  
+!
 !     call sort_heap_external ( nvec, indx, i, j, isgn )
-!  
+!
 !     if ( indx > 0 ) then
-! 
-!       call i_swap ( iorder(i), iorder(j) ) 
+!
+!       call i_swap ( iorder(i), iorder(j) )
 !       call i_swap ( istrng(i), istrng(j) )
 !       call r_swap ( x1vec(i), x1vec(j) )
 !       call r_swap ( y1vec(i), y1vec(j) )
 !       call r_swap ( x2vec(i), x2vec(j) )
 !       call r_swap ( y2vec(i), y2vec(j) )
-! 
+!
 !     else if ( indx < 0 ) then
-! 
+!
 !       if ( ( istrng(i) < istrng(j) ) .or. &
 !            ( istrng(i) == istrng(j) .and. iorder(i) < iorder(j) ) ) then
-! 
+!
 !         isgn = - 1
-! 
+!
 !       else
-! 
+!
 !         isgn = + 1
-! 
+!
 !       end if
-! 
+!
 !     else if ( indx == 0 ) then
-! 
+!
 !       exit
-! 
+!
 !     end if
-! 
+!
 !   end do
-!  
+!
 !   return
 ! end subroutine
-! 
-! 
+!
+!
 ! function tand ( angle )
 ! !
 ! !*******************************************************************************
@@ -18115,11 +18115,11 @@ end subroutine
 ! !
 !   angle_rad = degrees_to_radians ( angle )
 !   tand  = sin ( angle_rad ) / cos ( angle_rad )
-! 
+!
 !   return
 ! end function
-! 
-! 
+!
+!
 ! subroutine tetra_centroid_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, &
 !   x4, y4, z4, xc, yc, zc )
 ! !
@@ -18138,7 +18138,7 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4, the 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4, the
 ! !    coordinates of the vertices.
 ! !
 ! !    Output, real XC, YC, ZC, the coordinates of the centroid.
@@ -18162,10 +18162,10 @@ end subroutine
 !   xc = 0.25E+00 * ( x1 + x2 + x3 + x4 )
 !   yc = 0.25E+00 * ( y1 + y2 + y3 + y4 )
 !   zc = 0.25E+00 * ( z1 + z2 + z3 + z4 )
-! 
+!
 !   return
 ! end subroutine
-! 
+!
 ! subroutine tetra_contains_point_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, &
 !   x4, y4, z4, x, y, z, inside )
 ! !
@@ -18229,12 +18229,12 @@ end subroutine
 !   a(1,2) = x3 - x1
 !   a(1,3) = x4 - x1
 !   a(1,4) = x - x1
-! 
+!
 !   a(2,1) = y2 - y1
 !   a(2,2) = y3 - y1
 !   a(2,3) = y4 - y1
 !   a(2,4) = y - y1
-! 
+!
 !   a(3,1) = z2 - z1
 !   a(3,2) = z3 - z1
 !   a(3,3) = z4 - z1
@@ -18243,12 +18243,12 @@ end subroutine
 ! !  Solve the linear system.
 ! !
 !   call rmat_solve ( a, N, NRHS, info )
-! 
+!
 !   if ( info /= 0 ) then
 !     inside = .false.
 !     return
 !   end if
-! 
+!
 !   c1 = a(1,4)
 !   c2 = a(2,4)
 !   c3 = a(3,4)
@@ -18263,7 +18263,7 @@ end subroutine
 !   else
 !     inside = .true.
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine tetra_outsphere_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, &
@@ -18276,16 +18276,16 @@ end subroutine
 ! !
 ! !  Discussion:
 ! !
-! !    The exscribed sphere of a tetrahedron is the smallest sphere that 
-! !    can be drawn around the tetrahedron.  It passes through the four 
+! !    The exscribed sphere of a tetrahedron is the smallest sphere that
+! !    can be drawn around the tetrahedron.  It passes through the four
 ! !    vertices.
 ! !
 ! !    Surprisingly, the diameter of the sphere can be found by solving
 ! !    a 3 by 3 linear system.  This is because the vectors P2 - P1,
-! !    P3 - P1 and P4 - P1 are secants of the sphere, and each forms a 
+! !    P3 - P1 and P4 - P1 are secants of the sphere, and each forms a
 ! !    right triangle with the diameter.  Hence, the dot product of
 ! !    P2 - P1 with the diameter is equal to the square of the length
-! !    of P2 - P1, and similarly for P3 - P1 and P4 - P1.  This determines 
+! !    of P2 - P1, and similarly for P3 - P1 and P4 - P1.  This determines
 ! !    the diameter vector originating at P1.
 ! !
 ! !  Reference:
@@ -18304,7 +18304,7 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4, 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4,
 ! !    the coordinates of the vertices.
 ! !
 ! !    Output, real R, XC, YC, ZC, the coordinates of the center of the
@@ -18339,12 +18339,12 @@ end subroutine
 !   a(1,2) = y2 - y1
 !   a(1,3) = z2 - z1
 !   a(1,4) = enormsq0_3d ( x1, y1, z1, x2, y2, z2 )
-! 
+!
 !   a(2,1) = x3 - x1
 !   a(2,2) = y3 - y1
 !   a(2,3) = z3 - z1
 !   a(2,4) = enormsq0_3d ( x1, y1, z1, x3, y3, z3 )
-! 
+!
 !   a(3,1) = x4 - x1
 !   a(3,2) = y4 - y1
 !   a(3,3) = z4 - z1
@@ -18367,7 +18367,7 @@ end subroutine
 !     yc = y1 + 0.5E+00 * a(2,N+1)
 !     zc = z1 + 0.5E+00 * a(3,N+1)
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine tetra_shape_3d ( max_num, max_order, point_num, face_num, &
@@ -18437,14 +18437,14 @@ end subroutine
 !     write ( *, * ) '  Number of vertices exceeds MAX_NUM.'
 !     return
 !   end if
-! 
+!
 !   if ( face_num > max_num ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'TETRA_SHAPE_3D - Fatal error!'
 !     write ( *, * ) '  Number of faces exceeds MAX_NUM.'
 !     return
 !   end if
-! 
+!
 !   if ( face_order > max_order ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'TETRA_SHAPE_3D - Fatal error!'
@@ -18457,15 +18457,15 @@ end subroutine
 !   point_coord(1,1) =   0.0E+00
 !   point_coord(2,1) =   2.0E+00 * sqrt ( 2.0E+00 ) / 3.0E+00
 !   point_coord(3,1) = - 1.0E+00 / 3.0E+00
-! 
+!
 !   point_coord(1,2) = - sqrt ( 2.0E+00 / 3.0E+00 )
 !   point_coord(2,2) = - sqrt ( 2.0E+00 ) / 3.0E+00
 !   point_coord(3,2) = - 1.0E+00 / 3.0E+00
-! 
+!
 !   point_coord(1,3) =   sqrt ( 2.0E+00 / 3.0E+00 )
 !   point_coord(2,3) = - sqrt ( 2.0E+00 ) / 3.0E+00
 !   point_coord(3,3) = - 1.0E+00 / 3.0E+00
-! 
+!
 !   point_coord(1,4) = 0.0E+00
 !   point_coord(2,4) = 0.0E+00
 !   point_coord(3,4) = 1.0E+00
@@ -18475,19 +18475,19 @@ end subroutine
 !   face_point(1,1) = 1
 !   face_point(2,1) = 3
 !   face_point(3,1) = 2
-! 
+!
 !   face_point(1,2) = 1
 !   face_point(2,2) = 2
 !   face_point(3,2) = 4
-! 
+!
 !   face_point(1,3) = 1
 !   face_point(2,3) = 4
 !   face_point(3,3) = 3
-! 
+!
 !   face_point(1,4) = 2
 !   face_point(2,4) = 3
 !   face_point(3,4) = 4
-! 
+!
 !   return
 ! end subroutine
 ! subroutine tetra_volume_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, &
@@ -18508,7 +18508,7 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4, the 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4, the
 ! !    coordinates of the corners of the tetrahedron.
 ! !
 ! !    Output, real VOLUME, the volume of the tetrahedron.
@@ -18529,15 +18529,15 @@ end subroutine
 !   real z4
 ! !
 !   a(1:4,1) = (/ x1, x2, x3, x4 /)
-! 
+!
 !   a(1:4,2) = (/ y1, y2, y3, y4 /)
-! 
+!
 !   a(1:4,3) = (/ z1, z2, z3, z4 /)
-! 
+!
 !   a(1:4,4) = (/ 1.0E+00, 1.0E+00, 1.0E+00, 1.0E+00 /)
-! 
+!
 !   volume = abs ( rmat4_det ( a ) ) / 6.0E+00
-! 
+!
 !   return
 ! end subroutine
 ! subroutine tmat_init ( a )
@@ -18560,13 +18560,13 @@ end subroutine
 ! !    This matrix encodes the rotations, scalings and translations that
 ! !    are applied to graphical objects.
 ! !
-! !    A point P = (x,y,z) is rewritten in "homogeneous coordinates" as 
-! !    PH = (x,y,z,1).  Then to apply the transformations encoded in A to 
+! !    A point P = (x,y,z) is rewritten in "homogeneous coordinates" as
+! !    PH = (x,y,z,1).  Then to apply the transformations encoded in A to
 ! !    the point P, we simply compute A * PH.
 ! !
 ! !    Individual transformations, such as a scaling, can be represented
 ! !    by simple versions of the transformation matrix.  If the matrix
-! !    A represents the current set of transformations, and we wish to 
+! !    A represents the current set of transformations, and we wish to
 ! !    apply a new transformation B, then the original points are
 ! !    transformed twice:  B * ( A * PH ).  The new transformation B can
 ! !    be combined with the original one A, to give a single matrix C that
@@ -18603,7 +18603,7 @@ end subroutine
 !       end if
 !     end do
 !   end do
-! 
+!
 !   return
 ! end subroutine
 ! subroutine tmat_mxm ( a, b, c )
@@ -18646,7 +18646,7 @@ end subroutine
 !   real c(4,4)
 ! !
 !   c(1:4,1:4) = matmul ( a(1:4,1:4), b(1:4,1:4) )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine tmat_mxp ( a, x, y )
@@ -18655,7 +18655,7 @@ end subroutine
 ! !
 ! !! TMAT_MXP multiplies a geometric transformation matrix times a point.
 ! !
-! !   
+! !
 ! !  Modified:
 ! !
 ! !    02 December 2000
@@ -18677,8 +18677,8 @@ end subroutine
 ! !    Input, real X(3), the point to be multiplied.  The fourth component
 ! !    of X is implicitly assigned the value of 1.
 ! !
-! !    Output, real Y(3), the result of A*X.  The product is accumulated in 
-! !    a temporary vector, and then assigned to the result.  Therefore, it 
+! !    Output, real Y(3), the result of A*X.  The product is accumulated in
+! !    a temporary vector, and then assigned to the result.  Therefore, it
 ! !    is legal for X and Y to share memory.
 ! !
 !   real a(4,4)
@@ -18687,9 +18687,9 @@ end subroutine
 !   real z(4)
 ! !
 !   z(1:4) = (/ x(1:3), 1.0E+00 /)
-! 
+!
 !   y(1:3) = matmul ( a(1:3,1:4), z(1:4) )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine tmat_mxp2 ( a, x, y, n )
@@ -18717,9 +18717,9 @@ end subroutine
 ! !
 ! !    Input, real A(4,4), the geometric transformation matrix.
 ! !
-! !    Input, real X(3,N), the points to be multiplied.  
+! !    Input, real X(3,N), the points to be multiplied.
 ! !
-! !    Output, real Y(3,N), the transformed points.  Each product is 
+! !    Output, real Y(3,N), the transformed points.  Each product is
 ! !    accumulated in a temporary vector, and then assigned to the
 ! !    result.  Therefore, it is legal for X and Y to share memory.
 ! !
@@ -18734,18 +18734,18 @@ end subroutine
 !   real z(3)
 ! !
 !   do k = 1, n
-! 
+!
 !     do i = 1, 3
 !       z(i) = a(i,4)
 !       do j = 1, 3
 !         z(i) = z(i) + a(i,j) * x(j,k)
 !       end do
 !     end do
-! 
+!
 !     y(1:3,k) = z(1:3)
-! 
+!
 !   end do
-! 
+!
 !   return
 ! end subroutine
 ! subroutine tmat_mxv ( a, x, y )
@@ -18776,8 +18776,8 @@ end subroutine
 ! !    Input, real X(3), the vector to be multiplied.  The fourth component
 ! !    of X is implicitly assigned the value of 1.
 ! !
-! !    Output, real Y(3), the result of A*X.  The product is accumulated in 
-! !    a temporary vector, and then assigned to the result.  Therefore, it 
+! !    Output, real Y(3), the result of A*X.  The product is accumulated in
+! !    a temporary vector, and then assigned to the result.  Therefore, it
 ! !    is legal for X and Y to share memory.
 ! !
 !   real a(4,4)
@@ -18794,13 +18794,13 @@ end subroutine
 !     end do
 !     z(i) = z(i) + a(i,4)
 !   end do
-! 
+!
 !   y(1:3) = z(1:3)
-! 
+!
 !   return
 ! end subroutine
-! 
-! 
+!
+!
 ! subroutine tmat_rot_axis ( a, b, angle, axis )
 ! !
 ! !*******************************************************************************
@@ -18844,9 +18844,9 @@ end subroutine
 !   integer j
 ! !
 !   angle_rad = degrees_to_radians ( angle )
-! 
+!
 !   call tmat_init ( c )
-! 
+!
 !   if ( axis == 'X' .or. axis == 'x' ) then
 !     c(2,2) =   cos ( angle_rad )
 !     c(2,3) = - sin ( angle_rad )
@@ -18869,9 +18869,9 @@ end subroutine
 !     write ( *, * ) '  Legal choices are ''X'', ''Y'', or ''Z''.'
 !     return
 !   end if
-! 
+!
 !   b(1:4,1:4) = matmul ( c(1:4,1:4), a(1:4,1:4) )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine tmat_rot_vector ( a, b, angle, axis )
@@ -18925,37 +18925,37 @@ end subroutine
 !   v1 = axis(1)
 !   v2 = axis(2)
 !   v3 = axis(3)
-! 
+!
 !   norm = sqrt ( v1 * v1 + v2 * v2 + v3 * v3 )
-! 
+!
 !   if ( norm == 0.0E+00 ) then
 !     return
 !   end if
-! 
+!
 !   v1 = v1 / norm
 !   v2 = v2 / norm
 !   v3 = v3 / norm
-! 
+!
 !   angle_rad = degrees_to_radians ( angle )
 !   ca = cos ( angle_rad )
 !   sa = sin ( angle_rad )
-! 
+!
 !   call tmat_init ( c )
-! 
+!
 !   c(1,1) =                    v1 * v1 + ca * ( 1.0E+00 - v1 * v1 )
 !   c(1,2) = ( 1.0E+00 - ca ) * v1 * v2 - sa * v3
 !   c(1,3) = ( 1.0E+00 - ca ) * v1 * v3 + sa * v2
-! 
+!
 !   c(2,1) = ( 1.0E+00 - ca ) * v2 * v1 + sa * v3
 !   c(2,2) =                    v2 * v2 + ca * ( 1.0E+00 - v2 * v2 )
 !   c(2,3) = ( 1.0E+00 - ca ) * v2 * v3 - sa * v1
-! 
+!
 !   c(3,1) = ( 1.0E+00 - ca ) * v3 * v1 - sa * v2
 !   c(3,2) = ( 1.0E+00 - ca ) * v3 * v2 + sa * v1
 !   c(3,3) =                    v3 * v3 + ca * ( 1.0E+00 - v3 * v3 )
-! 
+!
 !   b(1:4,1:4) = matmul ( c(1:4,1:4), a(1:4,1:4) )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine tmat_scale ( a, b, sx, sy, sz )
@@ -18999,13 +18999,13 @@ end subroutine
 !   real sz
 ! !
 !   call tmat_init ( c )
-! 
+!
 !   c(1,1) = sx
 !   c(2,2) = sy
 !   c(3,3) = sz
-! 
+!
 !   b(1:4,1:4) = matmul ( c(1:4,1:4), a(1:4,1:4) )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine tmat_shear ( a, b, axis, s )
@@ -19057,7 +19057,7 @@ end subroutine
 !   real s
 ! !
 !   call tmat_init ( c )
-! 
+!
 !   if ( axis == 'XY' .or. axis == 'xy' ) then
 !     c(1,2) = s
 !   else if ( axis == 'XZ' .or. axis == 'xz' ) then
@@ -19077,9 +19077,9 @@ end subroutine
 !     write ( *, * ) '  Legal choices are XY, XZ, YX, YZ, ZX, or ZY.'
 !     return
 !   end if
-! 
+!
 !   b(1:4,1:4) = matmul ( c(1:4,1:4), a(1:4,1:4) )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine tmat_trans ( a, b, x, y, z )
@@ -19120,9 +19120,9 @@ end subroutine
 !   real z
 ! !
 !   b(1:4,1:4) = a(1:4,1:4)
-! 
+!
 !   b(1:3,4) = b(1:3,4) + (/ x, y, z /)
-! 
+!
 !   return
 ! end subroutine
 ! function torus_area_3d ( r1, r2 )
@@ -19157,7 +19157,7 @@ end subroutine
 !   real torus_area_3d
 ! !
 !   torus_area_3d = 4.0E+00 * pi**2 * r1 * r2
-! 
+!
 !   return
 ! end function
 ! subroutine torus_volume_3d ( r1, r2, volume )
@@ -19169,7 +19169,7 @@ end subroutine
 ! !
 ! !  Definition:
 ! !
-! !    A torus with radii R1 and R2 is the set of points (X,Y,Z) 
+! !    A torus with radii R1 and R2 is the set of points (X,Y,Z)
 ! !    satisfying:
 ! !
 ! !    ( sqrt ( X**2 + Y**2 ) - R1 )**2 + Z**2 <= R2**2
@@ -19193,7 +19193,7 @@ end subroutine
 !   real volume
 ! !
 !   volume = 2.0E+00 * ( pi )**2 * r1 * r2**2
-! 
+!
 !   return
 ! end subroutine
 ! subroutine triangle_angles_2d ( x1, y1, x2, y2, x3, y3, angle1, angle2, angle3 )
@@ -19252,25 +19252,25 @@ end subroutine
 !     angle3 = 2.0E+00 * pi / 3.0E+00
 !     return
 !   end if
-! 
+!
 !   if ( c == 0.0E+00 .or. a == 0.0E+00 ) then
 !     angle1= pi
 !   else
 !     angle1 = arc_cosine ( ( c * c + a * a - b * b ) / ( 2.0E+00 * c * a ) )
 !   end if
-! 
+!
 !   if ( a == 0.0E+00 .or. b == 0.0E+00 ) then
 !     angle2 = pi
 !   else
 !     angle2 = arc_cosine ( ( a * a + b * b - c * c ) / ( 2.0E+00 * a * b ) )
 !   end if
-! 
+!
 !   if ( b == 0.0E+00 .or. c == 0.0E+00 ) then
 !     angle3 = pi
 !   else
 !     angle3 = arc_cosine ( ( b * b + c * c - a * a ) / ( 2.0E+00 * b * c ) )
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine triangle_angles_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, angle1, &
@@ -19333,25 +19333,25 @@ end subroutine
 !     angle3 = 2.0E+00 * pi / 3.0E+00
 !     return
 !   end if
-! 
+!
 !   if ( c == 0.0E+00 .or. a == 0.0E+00 ) then
 !     angle1= pi
 !   else
 !     angle1 = arc_cosine ( ( c * c + a * a - b * b ) / ( 2.0E+00 * c * a ) )
 !   end if
-! 
+!
 !   if ( a == 0.0E+00 .or. b == 0.0E+00 ) then
 !     angle2 = pi
 !   else
 !     angle2 = arc_cosine ( ( a * a + b * b - c * c ) / ( 2.0E+00 * a * b ) )
 !   end if
-! 
+!
 !   if ( b == 0.0E+00 .or. c == 0.0E+00 ) then
 !     angle3 = pi
 !   else
 !     angle3 = arc_cosine ( ( b * b + c * c - a * a ) / ( 2.0E+00 * b * c ) )
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine triangle_area_2d ( x1, y1, x2, y2, x3, y3, area )
@@ -19374,7 +19374,7 @@ end subroutine
 ! !    Input, real X1, Y1, X2, Y2, X3, Y3, the X and Y coordinates
 ! !    of the corners of the triangle.
 ! !
-! !    Output, real AREA, the absolute area of the triangle.  
+! !    Output, real AREA, the absolute area of the triangle.
 ! !
 !   real area
 !   real x1
@@ -19386,7 +19386,7 @@ end subroutine
 ! !
 !   area = abs ( 0.5E+00 * ( x1 * ( y3 - y2 ) + x2 * ( y1 - y3 ) + &
 !                        x3 * ( y2 - y1 ) ) )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine triangle_area_signed_2d ( x1, y1, x2, y2, x3, y3, area_signed )
@@ -19424,7 +19424,7 @@ end subroutine
 ! !
 !   area_signed = 0.5E+00 * ( x1 * ( y3 - y2 ) + x2 * ( y1 - y3 ) + &
 !                         x3 * ( y2 - y1 ) )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine triangle_area_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, area )
@@ -19456,7 +19456,7 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, the (X,Y,Z) 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, the (X,Y,Z)
 ! !    coordinates of the corners of the triangle.
 ! !
 ! !    Output, real AREA, the area of the triangle.
@@ -19478,11 +19478,11 @@ end subroutine
 ! !
 !   call cross_3d ( x2 - x1, y2 - y1, z2 - z1, x3 - x1, y3 - y1, z3 - z1, &
 !                   x4,      y4,      z4 )
-! 
+!
 !   norm = enorm_3d ( x4, y4, z4 )
-! 
+!
 !   area = 0.5E+00 * norm
-! 
+!
 !   return
 ! end subroutine
 ! subroutine triangle_area_2_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, area )
@@ -19506,7 +19506,7 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, the (X,Y,Z) 
+! !    Input, real X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, the (X,Y,Z)
 ! !    coordinates of the corners of the triangle.
 ! !
 ! !    Output, real AREA, the area of the triangle.
@@ -19530,27 +19530,27 @@ end subroutine
 ! !
 !   dot = ( x2 - x1 ) * ( x3 - x1 ) + ( y2 - y1 ) * ( y3 - y1 ) + &
 !         ( z2 - z1 ) * ( z3 - z1 )
-! 
+!
 !   base = enorm0_3d ( x1, y1, z1, x2, y2, z2 )
 ! !
 ! !  The height of the triangle is the length of (P3-P1) after its
 ! !  projection onto (P2-P1) has been subtracted.
 ! !
 !   if ( base == 0.0E+00 ) then
-! 
+!
 !     height = 0.0E+00
-! 
-!   else 
-! 
+!
+!   else
+!
 !     alpha = dot / ( base * base )
-!   
+!
 !     height = enorm0_3d ( x1 + alpha * ( x2 - x1 ), y1 + alpha * ( y2 - y1 ), &
 !                          z1 + alpha * ( z2 - z1 ), x3, y3, z3 )
-! 
+!
 !   end if
-! 
+!
 !   area = 0.5E+00 * base * height
-!  
+!
 !   return
 ! end subroutine
 ! subroutine triangle_centroid_2d ( x1, y1, x2, y2, x3, y3, x, y )
@@ -19598,7 +19598,7 @@ end subroutine
 ! !
 !   x = ( x1 + x2 + x3 ) / 3.0E+00
 !   y = ( y1 + y2 + y3 ) / 3.0E+00
-!  
+!
 !   return
 ! end subroutine
 ! subroutine triangle_centroid_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, x, y, z )
@@ -19645,11 +19645,11 @@ end subroutine
 !   x = ( x1 + x2 + x3 ) / 3.0E+00
 !   y = ( y1 + y2 + y3 ) / 3.0E+00
 !   z = ( z1 + z2 + z3 ) / 3.0E+00
-! 
+!
 !   return
 ! end subroutine
-! 
-! 
+!
+!
 ! subroutine triangle_contains_point_2d ( x1, y1, x2, y2, x3, y3, x, y, inside )
 ! !
 ! !*******************************************************************************
@@ -19692,7 +19692,7 @@ end subroutine
 !   real y2
 !   real y3
 ! !
-! 
+!
 ! !  Set up the linear system
 ! !
 ! !    ( X2-X1  X3-X1 ) C1  = X-X1
@@ -19703,7 +19703,7 @@ end subroutine
 !   a(1,1) = x2 - x1
 !   a(1,2) = x3 - x1
 !   a(1,3) = x - x1
-! 
+!
 !   a(2,1) = y2 - y1
 !   a(2,2) = y3 - y1
 !   a(2,3) = y - y1
@@ -19711,7 +19711,7 @@ end subroutine
 ! !  Solve the linear system.
 ! !
 !   call rmat_solve ( a, N, NRHS, info )
-! 
+!
 !   if ( info /= 0 ) then
 !     write ( *, * ) ' '
 !     write ( *, * ) 'TRIANGLE_CONTAINS_POINT - Fatal error!'
@@ -19719,7 +19719,7 @@ end subroutine
 !     write ( *, * ) '  The input data does not form a proper triangle.'
 !     stop
 !   end if
-! 
+!
 !   c1 = a(1,3)
 !   c2 = a(2,3)
 ! !
@@ -19733,7 +19733,7 @@ end subroutine
 !   else
 !     inside = .true.
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine triangle_diameter_2d ( x1, y1, x2, y2, x3, y3, diam )
@@ -19747,7 +19747,7 @@ end subroutine
 ! !
 ! !    The diameter of a triangle is the diameter of the smallest circle
 ! !    that can be drawn around the triangle.  At least two of the vertices
-! !    of the triangle will intersect the circle, but not necessarily 
+! !    of the triangle will intersect the circle, but not necessarily
 ! !    all three!
 ! !
 ! !  Modified:
@@ -19790,7 +19790,7 @@ end subroutine
 !     diam = sqrt ( b )
 !     return
 !   else if ( b == 0.0E+00 ) then
-!     diam = sqrt ( c ) 
+!     diam = sqrt ( c )
 !     return
 !   else if ( c == 0.0E+00 ) then
 !     diam = sqrt ( a )
@@ -19802,7 +19802,7 @@ end subroutine
 !   if ( a < b ) then
 !     call r_swap ( a, b )
 !   end if
-! 
+!
 !   if ( a < c ) then
 !     call r_swap ( a, c )
 !   end if
@@ -19818,7 +19818,7 @@ end subroutine
 !     diam = 2.0E+00 * a * b * c / sqrt ( ( a + b + c ) * ( - a + b + c ) &
 !       * ( a - b + c ) * ( a + b - c ) )
 !   end if
-!   
+!
 !   return
 ! end subroutine
 ! subroutine triangle_gridpoints_2d ( x1, y1, x2, y2, x3, y3, nsub, maxgrid, &
@@ -19863,7 +19863,7 @@ end subroutine
 ! !    Input, real X1, Y1, X2, Y2, X3, Y3, the X and Y coordinates
 ! !    of the corners P1, P2 and P3 of the triangle.
 ! !
-! !    Input, integer NSUB, the number of subdivisions. 
+! !    Input, integer NSUB, the number of subdivisions.
 ! !
 ! !    Input, integer MAXGRID, the maximum number of grid points.
 ! !
@@ -19902,28 +19902,28 @@ end subroutine
 !     end if
 !     return
 !   end if
-! 
+!
 !   do i = 0, nsub
-! 
+!
 !     a = real ( i ) / real ( nsub )
-! 
+!
 !     do j = 0, nsub - i
-! 
+!
 !       b = real ( j ) / real ( nsub )
 !       k = nsub - i - j
 !       c = real ( k ) / real ( nsub )
-! 
+!
 !       if ( ngrid < maxgrid ) then
-! 
+!
 !         ngrid = ngrid + 1
-!         x(ngrid) = ( a * x1 + b * x2 + c * x3 ) 
+!         x(ngrid) = ( a * x1 + b * x2 + c * x3 )
 !         y(ngrid) = ( a * y1 + b * y2 + c * y3 )
-! 
+!
 !       end if
-! 
+!
 !     end do
 !   end do
-! 
+!
 !   return
 ! end subroutine
 ! subroutine triangle_incircle_2d ( x1, y1, x2, y2, x3, y3, r, xc, yc )
@@ -19980,13 +19980,13 @@ end subroutine
 !   s23 = enorm0_2d ( x2, y2, x3, y3 )
 !   s31 = enorm0_2d ( x3, y3, x1, y1 )
 !   perim = s12 + s23 + s31
-! 
+!
 !   xc = ( s23 * x1 + s31 * x2 + s12 * x3 ) / perim
 !   yc = ( s23 * y1 + s31 * y2 + s12 * y3 ) / perim
-!  
+!
 !   r = 0.5E+00 * sqrt ( ( - s12 + s23 + s31 ) * ( + s12 - s23 + s31 ) &
 !                  * ( + s12 + s23 - s31 ) / perim )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine triangle_line_imp_int_2d ( a, b, c, trix, triy, nin, xint, yint )
@@ -20064,16 +20064,16 @@ end subroutine
 ! !  Determine if the intersection is inside the triangle.
 ! !
 !   if ( ival == 1 ) then
-!  
+!
 !     call triangle_contains_point_2d ( trix(1), triy(1), &
 !       trix(2), triy(2), trix(3), triy(3), x, y, inside )
-!  
+!
 !     if ( inside ) then
 !       nin = nin + 1
 !       xint(nin) = x
 !       yint(nin) = y
 !     end if
-!  
+!
 !   end if
 ! !
 ! !  Get the implicit form of the line through vertices 2 and 3.
@@ -20087,16 +20087,16 @@ end subroutine
 ! !  Determine if the intersection is inside the triangle.
 ! !
 !   if ( ival == 1 ) then
-!  
+!
 !     call triangle_contains_point_2d ( trix(1), triy(1), &
-!       trix(2), triy(2), trix(3), triy(3), x, y, inside ) 
-!  
+!       trix(2), triy(2), trix(3), triy(3), x, y, inside )
+!
 !     if ( inside ) then
 !       nin = nin + 1
 !       xint(nin) = x
 !       yint(nin) = y
 !     end if
-!  
+!
 !   end if
 ! !
 ! !  Get the implicit form of the line through vertices 3 and 1.
@@ -20110,21 +20110,21 @@ end subroutine
 ! !  Determine if the intersection is inside the triangle.
 ! !
 !   if ( ival == 1 ) then
-!  
+!
 !     call triangle_contains_point_2d ( trix(1), triy(1), &
 !       trix(2), triy(2), trix(3), triy(3), x, y, inside )
-!  
+!
 !     if ( inside ) then
 !       nin = nin + 1
 !       xint(nin) = x
 !       yint(nin) = y
 !     end if
-!  
+!
 !   end if
-!  
+!
 !   return
 ! end subroutine
-! 
+!
 ! function triangle_orientation_2d ( x1, y1, x2, y2, x3, y3 )
 ! !
 ! !*******************************************************************************
@@ -20137,8 +20137,8 @@ end subroutine
 ! !    Three distinct non-colinear points in the plane define a circle.
 ! !    If the points are visited in the order (x1,y1), (x2,y2), and then
 ! !    (x3,y3), this motion defines a clockwise or counterclockwise
-! !    rotation along the circle. 
-! !  
+! !    rotation along the circle.
+! !
 ! !  Modified:
 ! !
 ! !    23 April 1999
@@ -20152,8 +20152,8 @@ end subroutine
 ! !    Input, real X1, Y1, X2, Y2, X3, Y3, the X and Y coordinates of
 ! !    three points, given in order.
 ! !
-! !    Output, integer TRIANGLE_ORIENTATION_2D, reports if the three points lie 
-! !    clockwise on the circle that passes through them.  The possible 
+! !    Output, integer TRIANGLE_ORIENTATION_2D, reports if the three points lie
+! !    clockwise on the circle that passes through them.  The possible
 ! !    return values are:
 ! !
 ! !    0, the points are distinct, noncolinear, and lie counterclockwise
@@ -20162,8 +20162,8 @@ end subroutine
 ! !    1, the points are distinct, noncolinear, and lie clockwise
 ! !    on their circle.
 ! !
-! !    2, the points are distinct and colinear.  
-! !  
+! !    2, the points are distinct and colinear.
+! !
 ! !    3, at least two of the points are identical.
 ! !
 !   real det
@@ -20180,9 +20180,9 @@ end subroutine
 !     triangle_orientation_2d = 3
 !     return
 !   end if
-! 
+!
 !   det = ( x1 - x3 ) * (y2 - y3 ) - ( x2 - x3 ) * ( y1 - y3 )
-! 
+!
 !   if ( det == 0.0E+00 ) then
 !     triangle_orientation_2d = 2
 !   else if ( det < 0.0E+00 ) then
@@ -20190,10 +20190,10 @@ end subroutine
 !   else if ( det > 0.0E+00 ) then
 !     triangle_orientation_2d = 0
 !   end if
-! 
+!
 !   return
 ! end function
-! 
+!
 ! subroutine triangle_outcircle_2d ( x1, y1, x2, y2, x3, y3, r, x, y )
 ! !
 ! !*******************************************************************************
@@ -20203,7 +20203,7 @@ end subroutine
 ! !
 ! !  Discussion:
 ! !
-! !    The exscribed circle of a triangle is the circle that passes through 
+! !    The exscribed circle of a triangle is the circle that passes through
 ! !    the three vertices of the triangle.  The exscribed circle contains
 ! !    the triangle, but it is not necessarily the smallest triangle to do so.
 ! !
@@ -20257,7 +20257,7 @@ end subroutine
 !   a(1,1) = x2 - x1
 !   a(1,2) = y2 - y1
 !   a(1,3) = enormsq0_2d ( x1, y1, x2, y2 )
-! 
+!
 !   a(2,1) = x3 - x1
 !   a(2,2) = y3 - y1
 !   a(2,3) = enormsq0_2d ( x1, y1, x3, y3 )
@@ -20277,7 +20277,7 @@ end subroutine
 !     x = x1 + 0.5E+00 * a(1,N+1)
 !     y = y1 + 0.5E+00 * a(2,N+1)
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine triangle_point_dist_2d ( x1, y1, x2, y2, x3, y3, x, y, dist )
@@ -20301,7 +20301,7 @@ end subroutine
 ! !
 ! !    Input, real X, Y, the point which is to be checked.
 ! !
-! !    Output, real DIST, the distance from the point to the triangle.  
+! !    Output, real DIST, the distance from the point to the triangle.
 ! !    DIST is zero if the point lies exactly on the triangle.
 ! !
 !   real dist
@@ -20317,13 +20317,13 @@ end subroutine
 ! !
 !   call line_seg_point_dist_2d ( x1, y1, x2, y2, x, y, dist2 )
 !   dist = dist2
-! 
+!
 !   call line_seg_point_dist_2d ( x2, y2, x3, y3, x, y, dist2 )
 !   dist = min ( dist, dist2 )
-! 
+!
 !   call line_seg_point_dist_2d ( x3, y3, x1, y1, x, y, dist2 )
 !   dist = min ( dist, dist2 )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine triangle_point_dist_3d ( x1, y1, z1, x2, y2, z2, x3, y3, z3, &
@@ -20348,7 +20348,7 @@ end subroutine
 ! !
 ! !    Input, real X, Y, Z, the point which is to be checked.
 ! !
-! !    Output, real DIST, the distance from the point to the triangle.  
+! !    Output, real DIST, the distance from the point to the triangle.
 ! !    DIST is zero if the point lies exactly on the triangle.
 ! !
 !   real dist
@@ -20370,13 +20370,13 @@ end subroutine
 ! !
 !   call line_seg_point_dist_3d ( x1, y1, z1, x2, y2, z2, x, y, z, dist2 )
 !   dist = dist2
-! 
+!
 !   call line_seg_point_dist_3d ( x2, y2, z2, x3, y3, z3, x, y, z, dist2 )
 !   dist = min ( dist, dist2 )
-! 
+!
 !   call line_seg_point_dist_3d ( x3, y3, z3, x1, y1, z1, x, y, z, dist2 )
 !   dist = min ( dist, dist2 )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine triangle_point_dist_signed_2d ( x1, y1, x2, y2, x3, y3, x, y, &
@@ -20401,13 +20401,13 @@ end subroutine
 ! !
 ! !    Input, real X, Y, the point which is to be checked.
 ! !
-! !    Output, real DIST_SIGNED, the signed distance from the point to the 
-! !    triangle.  DIST_SIGNED is the maximum of the signeded distances from the 
+! !    Output, real DIST_SIGNED, the signed distance from the point to the
+! !    triangle.  DIST_SIGNED is the maximum of the signeded distances from the
 ! !    point to each of the three lines that make up the triangle.
 ! !
 ! !    If DIST_SIGNED is:
 ! !    0, the point is on the boundary of the triangle;
-! !    negative, the point is in the triangle; 
+! !    negative, the point is in the triangle;
 ! !    positive, the point is outside the triangle.
 ! !
 !   real dis
@@ -20427,37 +20427,37 @@ end subroutine
 ! !  Compare the signed distance from each line segment to the point,
 ! !  with the signed distance to the opposite vertex.
 ! !
-! !  The signed distances should all be negative if the point is inside 
+! !  The signed distances should all be negative if the point is inside
 ! !  the triangle.
 ! !
 !   call line_exp_point_dist_signed_2d ( x1, y1, x2, y2, x, y, dis12 )
 !   call line_exp_point_dist_signed_2d ( x1, y1, x2, y2, x3, y3, dis )
-!  
+!
 !   if ( dis > 0.0E+00 ) then
 !     dis = - dis
 !     dis12 = - dis12
 !   end if
-!  
+!
 !   call line_exp_point_dist_signed_2d ( x2, y2, x3, y3, x, y, dis23 )
-! 
+!
 !   call line_exp_point_dist_signed_2d ( x2, y2, x3, y3, x1, y1, dis )
-!  
+!
 !   if ( dis > 0.0E+00 ) then
 !     dis = - dis
 !     dis23 = - dis23
 !   end if
-!  
+!
 !   call line_exp_point_dist_signed_2d ( x3, y3, x1, y1, x, y, dis31 )
-! 
+!
 !   call line_exp_point_dist_signed_2d ( x3, y3, x1, y1, x2, y2, dis )
-!  
+!
 !   if ( dis > 0.0E+00 ) then
 !     dis = - dis
 !     dis31 = - dis31
 !   end if
-! 
+!
 !   dist_signed = max ( dis12, dis23, dis31 )
-!  
+!
 !   return
 ! end subroutine
 ! subroutine triangle_point_near_2d ( x1, y1, x2, y2, x3, y3, x, y, xn, yn, &
@@ -20513,11 +20513,11 @@ end subroutine
 ! !  of the triangle.
 ! !
 !   call line_seg_point_near_2d ( x1, y1, x2, y2, x, y, xn12, yn12, dist12, t )
-! 
+!
 !   call line_seg_point_near_2d ( x2, y2, x3, y3, x, y, xn23, yn23, dist23, t )
-! 
+!
 !   call line_seg_point_near_2d ( x3, y3, x1, y1, x, y, xn31, yn31, dist31, t )
-!  
+!
 !   if ( dist12 <= dist23 .and. dist12 <= dist31 ) then
 !     dist = dist12
 !     xn = xn12
@@ -20531,7 +20531,7 @@ end subroutine
 !     xn = xn31
 !     yn = yn31
 !   end if
-!  
+!
 !   return
 ! end subroutine
 ! subroutine tube_2d ( dist, n, x, y, x1, y1, x2, y2 )
@@ -20569,7 +20569,7 @@ end subroutine
 ! !    not be immediately repeated, that is, it should never be
 ! !    the case that
 ! !      X(I) = X(I+1) and Y(I) = Y(I+1).
-! !  
+! !
 ! !    Output, real X1(N), Y1(N), X2(N), Y2(N), the points ( X1(I), Y1(N) )
 ! !    form one side of the tube, and ( X2(I), Y2(I) ) the other.
 ! !
@@ -20617,9 +20617,9 @@ end subroutine
 !       stop
 !     end if
 !   end do
-!  
+!
 !   do i = 1, n
-!  
+!
 !     if ( i == 1 ) then
 !       xim1 = x(i)
 !       yim1 = y(i)
@@ -20627,10 +20627,10 @@ end subroutine
 !       xim1 = x(i-1)
 !       yim1 = y(i-1)
 !     end if
-!  
+!
 !     xi = x(i)
 !     yi = y(i)
-!  
+!
 !     if ( i < n ) then
 !       xip1 = x(i+1)
 !       yip1 = y(i+1)
@@ -20638,7 +20638,7 @@ end subroutine
 !       xip1 = x(i)
 !       yip1 = y(i)
 !     end if
-!  
+!
 !     call corpl_2d ( dist, xim1, yim1, xi, yi, xip1, yip1, x1(i), &
 !       y1(i), x2(i), y2(i) )
 ! !
@@ -20646,49 +20646,49 @@ end subroutine
 ! !  along the line, to make an extra buffer.
 ! !
 !     if ( i == 1 ) then
-! 
+!
 !       temp = enorm0_2d ( x(1), y(1), x(2), y(2) )
 !       x1(1) = x1(1) - dist * ( x(2) - x(1) ) / temp
 !       y1(1) = y1(1) - dist * ( y(2) - y(1) ) / temp
 !       x2(1) = x2(1) - dist * ( x(2) - x(1) ) / temp
 !       y2(1) = y2(1) - dist * ( y(2) - y(1) ) / temp
-! 
+!
 !     else if ( i == n ) then
-! 
+!
 !       temp = enorm0_2d ( x(n-1), y(n-1), x(n), y(n) )
 !       x1(n) = x1(n) + dist * ( x(n) - x(n-1) ) / temp
 !       y1(n) = y1(n) + dist * ( y(n) - y(n-1) ) / temp
 !       x2(n) = x2(n) + dist * ( x(n) - x(n-1) ) / temp
 !       y2(n) = y2(n) + dist * ( y(n) - y(n-1) ) / temp
-! 
+!
 !     end if
 ! !
-! !  The new points ( X1(I), Y1(I) ) and ( X2(I), Y2(I) ) may need to be 
+! !  The new points ( X1(I), Y1(I) ) and ( X2(I), Y2(I) ) may need to be
 ! !  swapped.
 ! !
 ! !  Compute the signed distance from the points to the line.
 ! !
 !     if ( i > 1 ) then
-!  
+!
 !       a = y(i-1) - y(i)
 !       b = x(i) - x(i-1)
 !       c = x(i-1) * y(i) - x(i) * y(i-1)
-!  
+!
 !       dis1 = ( a * x1(i-1) + b * y1(i-1) + c ) / sqrt ( a * a + b * b )
-!  
+!
 !       dis2 = ( a * x1(i) + b * y1(i) + c ) / sqrt ( a * a + b * b )
-!  
+!
 !       if ( sign ( 1.0E+00, dis1 ) /= sign ( 1.0E+00, dis2 ) ) then
-! 
+!
 !         call r_swap ( x1(i), x2(i) )
 !         call r_swap ( y1(i), y2(i) )
-!  
+!
 !       end if
-!  
+!
 !     end if
-!  
+!
 !   end do
-!  
+!
 !   return
 ! end subroutine
 ! subroutine vector_directions_2d ( x1, y1, ax, ay )
@@ -20733,11 +20733,11 @@ end subroutine
 ! !
 !   ax = atan2 ( y1, x1 )
 !   ay = atan2 ( x1, y1 )
-! 
+!
 !   return
 ! end subroutine
-! 
-! 
+!
+!
 ! subroutine vector_directions_3d ( x1, y1, z1, ax, ay, az )
 ! !
 ! !*******************************************************************************
@@ -20770,7 +20770,7 @@ end subroutine
 ! !    Input, real X1, Y1, Z1, the coordinates of the endpoint of the vector V
 ! !    (which is presumed to begin at the origin).
 ! !
-! !    Output, real AX, AY, AZ, the direction angles, in radians, that the 
+! !    Output, real AX, AY, AZ, the direction angles, in radians, that the
 ! !    vector V makes with the X, Y and Z axes.
 ! !
 !   real ax
@@ -20788,14 +20788,14 @@ end subroutine
 ! !  Get the norm of the vector.
 ! !
 !   v1norm = sqrt ( x1 * x1 + y1 * y1 + z1 * z1 )
-! 
+!
 !   if ( v1norm == 0.0E+00 ) then
 !     ax = 0.0E+00
 !     ay = 0.0E+00
 !     az = 0.0E+00
 !     return
 !   end if
-! 
+!
 !   v2norm = 1.0E+00
 ! !
 ! !  Get the direction cosines.
@@ -20809,7 +20809,7 @@ end subroutine
 !   ax = arc_cosine ( cos_x )
 !   ay = arc_cosine ( cos_y )
 !   az = arc_cosine ( cos_z )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine vector_rotate_2d ( x1, y1, angle, x2, y2 )
@@ -20856,7 +20856,7 @@ end subroutine
 ! !
 !   x2 = cos ( angle ) * x1 - sin ( angle ) * y1
 !   y2 = sin ( angle ) * x1 + cos ( angle ) * y1
-! 
+!
 !   return
 ! end subroutine
 ! subroutine vector_rotate_base_2d ( x1, y1, xb, yb, angle, x2, y2 )
@@ -20901,7 +20901,7 @@ end subroutine
 ! !
 !   x2 = xb + cos ( angle ) * ( x1 - xb ) - sin ( angle ) * ( y1 - yb )
 !   y2 = yb + sin ( angle ) * ( x1 - xb ) + cos ( angle ) * ( y1 - yb )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine vector_separation_3d ( v1, v2, theta )
@@ -20939,13 +20939,13 @@ end subroutine
 !   real v2_norm
 ! !
 !   v1_norm = sqrt ( sum ( v1(1:n)**2 ) )
-! 
+!
 !   v2_norm = sqrt ( sum ( v2(1:n)**2 ) )
-! 
+!
 !   cos_theta = dot_product ( v1(1:n), v2(1:n) ) / ( v1_norm * v2_norm )
-! 
+!
 !   theta = arc_cosine ( cos_theta )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine vector_separation_nd ( n, v1, v2, theta )
@@ -20985,13 +20985,13 @@ end subroutine
 !   real v2_norm
 ! !
 !   v1_norm = sqrt ( sum ( v1(1:n)**2 ) )
-! 
+!
 !   v2_norm = sqrt ( sum ( v2(1:n)**2 ) )
-! 
+!
 !   cos_theta = dot_product ( v1(1:n), v2(1:n) ) / ( v1_norm * v2_norm )
-! 
+!
 !   theta = arc_cosine ( cos_theta )
-! 
+!
 !   return
 ! end subroutine
 ! subroutine vector_unit_2d ( x1, y1 )
@@ -21011,9 +21011,9 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input/output, real X1, Y1, the components of a 2D vector to be 
-! !    normalized.  On output, V should have unit Euclidean norm.   
-! !    However, if the input vector has zero Euclidean norm, it is 
+! !    Input/output, real X1, Y1, the components of a 2D vector to be
+! !    normalized.  On output, V should have unit Euclidean norm.
+! !    However, if the input vector has zero Euclidean norm, it is
 ! !    not altered.
 ! !
 !   real temp
@@ -21021,12 +21021,12 @@ end subroutine
 !   real y1
 ! !
 !   temp = sqrt ( x1 * x1 + y1 * y1 )
-!  
+!
 !   if ( temp /= 0.0E+00 ) then
 !     x1 = x1 / temp
 !     y1 = y1 / temp
 !   end if
-!  
+!
 !   return
 ! end subroutine
 ! subroutine vector_unit_3d ( x1, y1, z1 )
@@ -21046,9 +21046,9 @@ end subroutine
 ! !
 ! !  Parameters:
 ! !
-! !    Input/output, real X1, Y1, Z1, the components of a 3D vector to be 
-! !    normalized.  On output, V should have unit Euclidean norm.   
-! !    However, if the input vector has zero Euclidean norm, it is 
+! !    Input/output, real X1, Y1, Z1, the components of a 3D vector to be
+! !    normalized.  On output, V should have unit Euclidean norm.
+! !    However, if the input vector has zero Euclidean norm, it is
 ! !    not altered.
 ! !
 !   real temp
@@ -21057,13 +21057,13 @@ end subroutine
 !   real z1
 ! !
 !   temp = sqrt ( x1 * x1 + y1 * y1 + z1 * z1 )
-!  
+!
 !   if ( temp /= 0.0E+00 ) then
 !     x1 = x1 / temp
 !     y1 = y1 / temp
 !     z1 = z1 / temp
 !   end if
-!  
+!
 !   return
 ! end subroutine
 ! subroutine vector_unit_nd ( n, v )
@@ -21096,11 +21096,11 @@ end subroutine
 !   real v(n)
 ! !
 !   temp = enorm_nd ( n, v )
-!  
+!
 !   if ( temp /= 0.0E+00 ) then
 !     v(1:n) = v(1:n) / temp
 !   end if
-!  
+!
 !   return
 ! end subroutine
 ! subroutine voxel_line_3d ( x1, y1, z1, x2, y2, z2 )
@@ -21155,27 +21155,27 @@ end subroutine
 !   sx = sign ( 1, x2 - x1 )
 !   sy = sign ( 1, y2 - y1 )
 !   sz = sign ( 1, z2 - z1 )
-! 
+!
 !   ax = abs ( x2 - x1 )
 !   ay = abs ( y2 - y1 )
 !   az = abs ( z2 - z1 )
-! 
+!
 !   exy = ay - ax
 !   exz = az - ax
 !   ezy = ay - az
-! 
+!
 !   n = ax + ay + az
-! 
+!
 !   x = x1
 !   y = y1
 !   z = z1
-! 
+!
 !   do i = 0, n
-! 
+!
 !     write ( *, '(4i6)' ) i, x, y, z
-! 
+!
 !     if ( exy < 0 ) then
-! 
+!
 !       if ( exz < 0 ) then
 !         x = x + sx
 !         exy = exy + 2 * ay
@@ -21185,7 +21185,7 @@ end subroutine
 !         exz = exz - 2 * ax
 !         exy = exy + 2 * ay
 !       end if
-! 
+!
 !     else if ( ezy < 0 ) then
 !        z = z + sz
 !        exz = exz - 2 * ax
@@ -21195,9 +21195,9 @@ end subroutine
 !       exy = exy - 2 * ax
 !       ezy = ezy - 2 * az
 !     end if
-! 
+!
 !   end do
-! 
+!
 !   return
 ! end subroutine
 ! subroutine voxel_region_3d ( ishow, list, maxlist, nlist, nregion, nx, ny, nz )
@@ -21289,11 +21289,11 @@ end subroutine
 !   do i = 1, nx
 !     do j = 1, ny
 !       do k = 1, nz
-! 
+!
 !         if ( ishow(i,j,k) /= 0 ) then
 !           ishow(i,j,k) = - 1
 !         end if
-! 
+!
 !       end do
 !     end do
 !   end do
@@ -21333,27 +21333,27 @@ end subroutine
 !           if ( nstack + 4 > maxstack ) then
 !             go to 20
 !           end if
-! 
+!
 !           stack(nstack+1) = i
 !           stack(nstack+2) = j
 !           stack(nstack+3) = k
-! 
+!
 !           stack(nstack+4) = 1
-! 
+!
 !           nstack = nstack + 4
 ! !
 ! !  Add this voxel to the description of the region.
 ! !
 !           nelements = 1
-! 
+!
 !           if ( nlist + 3 <= maxlist ) then
 !             list(nlist+1) = i
 !             list(nlist+2) = j
 !             list(nlist+3) = k
 !           end if
-! 
+!
 !           nlist = nlist + 3
-! 
+!
 ! 10            continue
 ! !
 ! !  Find all neighbors of BASE that are "ON" but unused.
@@ -21362,16 +21362,16 @@ end subroutine
 !           ibase = stack(nstack-3)
 !           jbase = stack(nstack-2)
 !           kbase = stack(nstack-1)
-! 
+!
 !           ilo = max ( ibase-1, 1 )
 !           ihi = min ( ibase+1, nx )
 !           jlo = max ( jbase-1, 1 )
 !           jhi = min ( jbase+1, ny )
 !           klo = max ( kbase-1, 1 )
 !           khi = min ( kbase+1, nz )
-! 
+!
 !           nabes = 0
-! 
+!
 !           do i2 = ilo, ihi
 !             do j2 = jlo, jhi
 !               do k2 = klo, khi
@@ -21393,27 +21393,27 @@ end subroutine
 !                   if ( nstack+3 > maxstack ) then
 !                     go to 20
 !                   end if
-! 
+!
 !                   stack(nstack+1) = i2
 !                   stack(nstack+2) = j2
 !                   stack(nstack+3) = k2
-! 
+!
 !                   nstack = nstack+3
 ! !
 ! !  Add the neighbor to the description of the region.
 ! !
 !                   nelements = nelements + 1
-! 
+!
 !                   if ( nlist+3 <= maxlist ) then
 !                     list(nlist+1) = i2
 !                     list(nlist+2) = j2
 !                     list(nlist+3) = k2
 !                   end if
-! 
+!
 !                   nlist = nlist + 3
-! 
+!
 !                 end if
-! 
+!
 !               end do
 !             end do
 !           end do
@@ -21422,15 +21422,15 @@ end subroutine
 ! !  for a deeper search.
 ! !
 !           if ( nabes > 0 ) then
-! 
+!
 !             if ( nstack+1 > maxstack ) then
 !               go to 20
 !             end if
-! 
+!
 !             stack(nstack+1) = nabes
 !             nstack = nstack + 1
 !             go to 10
-! 
+!
 !           end if
 ! !
 ! !  If the current search point had no new neighbors, drop it from the stack.
@@ -21451,7 +21451,7 @@ end subroutine
 ! !  that earlier level, then we can still do more searching.
 ! !
 !           nstack = nstack - 1
-! 
+!
 !           if ( nstack > 0 ) then
 !             go to 10
 !           end if
@@ -21463,9 +21463,9 @@ end subroutine
 !           if ( nlist <= maxlist ) then
 !             list(nlist) = nelements
 !           end if
-! 
+!
 !         end if
-! 
+!
 !       end do
 !     end do
 !   end do
@@ -21479,18 +21479,18 @@ end subroutine
 !     write ( *, * ) '  Do not try to use the LIST array!'
 !     write ( *, * ) '  The ISHOW data is OK, however.'
 !   end if
-! 
+!
 !   return
 ! !
 ! !  Stack overflow.
 ! !
 ! 20    continue
-! 
+!
 !   write ( *, * ) ' '
 !   write ( *, * ) 'VOXEL_REGION - Fatal error!'
 !   write ( *, * ) '  The internal stack overflowed.'
 !   write ( *, * ) '  The algorithm has failed.'
-! 
+!
 !   stop
 ! end subroutine
 ! subroutine voxel_step_3d ( i1, j1, k1, i2, j2, k2, inc, jnc, knc )
@@ -21554,7 +21554,7 @@ end subroutine
 !   if ( inc == 0 .and. jnc == 0 .and. knc == 0 ) then
 !     return
 !   end if
-! 
+!
 !   alpha = 0.0E+00
 ! !
 ! !  Compute the smallest ALPHA that will change I2, J2 or K2 by +-0.5.
@@ -21566,7 +21566,7 @@ end subroutine
 !   else
 !     alphai = huge ( alphai )
 !   end if
-! 
+!
 !   if ( jnc > 0 ) then
 !     alphaj = ( real ( j2 - j1 ) + 0.5E+00 ) / real ( jnc )
 !   else if ( jnc < 0 ) then
@@ -21574,7 +21574,7 @@ end subroutine
 !   else
 !     alphaj = huge ( alphaj )
 !   end if
-! 
+!
 !   if ( knc > 0 ) then
 !     alphak = ( real ( k2 - k1 ) + 0.5E+00 ) / real ( knc )
 !   else if ( knc < 0 ) then
@@ -21586,15 +21586,15 @@ end subroutine
 ! !  The ALPHA of smallest positive magnitude represents the closest next voxel.
 ! !
 !   alpha = huge ( alpha )
-! 
+!
 !   if ( alphai > 0.0E+00 ) then
 !     alpha = min ( alpha, alphai )
 !   end if
-! 
+!
 !   if ( alphaj > 0.0E+00 ) then
 !     alpha = min ( alpha, alphaj )
 !   end if
-! 
+!
 !   if ( alphak > 0.0E+00 ) then
 !     alpha = min ( alpha, alphak )
 !   end if
@@ -21615,7 +21615,7 @@ end subroutine
 !     j2 = j1 + nint ( alpha * jnc )
 !     k2 = k2 + sign ( 1, knc )
 !   end if
-! 
+!
 !   return
 ! end subroutine
 ! subroutine xyz_to_radec ( x, y, z, ra, dec )
@@ -21662,22 +21662,20 @@ end subroutine
 !   real z
 ! !
 !   norm_v = sqrt ( x**2 + y**2 + z**2 )
-! 
+!
 !   phi = asin ( z / norm_v )
-! 
+!
 !   if ( cos ( phi ) == 0.0E+00 ) then
 !     theta = 0.0E+00
 !   else
 !     theta = atan4 ( y, x )
 !   end if
-! 
+!
 !   dec = radians_to_degrees ( phi )
 !   ra = radians_to_degrees ( theta ) / 15.0E+00
-! 
+!
 !   return
 ! end subroutine
 
 end module
-
-
 
