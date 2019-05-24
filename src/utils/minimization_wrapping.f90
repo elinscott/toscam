@@ -1,7 +1,7 @@
 module minimization_wrapping
 
    use genvar
-   use mpirout
+   use mpi_mod
    use conj_grad, only: minimize
    use StringManip, only: tostring
 

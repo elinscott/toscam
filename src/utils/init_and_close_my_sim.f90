@@ -7,9 +7,10 @@ module init_and_close_my_sim
    ! use fortran_cuda
    use random
 
-   REAL(DBL), PARAMETER, private :: zero = 0.0_DBL, one = 1.0_DBL, two = 2.0_DBL, three = 3.0_DBL
+   private
 
-   PRIVATE
+   REAL(DBL), PARAMETER :: zero = 0.0_DBL, one = 1.0_DBL, two = 2.0_DBL, three = 3.0_DBL
+
    PUBLIC          :: initialize_my_simulation, finalize_my_simulation
 
 contains
@@ -61,7 +62,7 @@ contains
 
    !-------------------!
 
-   SUBROUTINE finalize_MPI
+   SUBROUTINE finalize_mpi
       write (*, *) ' --- MPI TERMINATED --- '
       if (allocated(all_log_unit)) DEALLOCATE (all_log_unit)
       if (allocated(ramp_proc)) DEALLOCATE (ramp_proc)
@@ -83,6 +84,7 @@ contains
          size2 = 1
          rank = 0
       endif
+
       myid = rank
       numprocs = size2
       nproc = size2
@@ -112,7 +114,7 @@ contains
       write (*, *) 'init MPI : '
       call initialize_MPI
       write (*, *) 'INIT OPENMP : '
-      call init_openmp
+      call init_openmp(silent = (iproc /= 1))
       ! ebl: Removing GPU functionality
       ! write(*,*) 'INIT GPU : '
       ! if(use_cuda_routines) call init_gpu_device

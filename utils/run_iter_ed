@@ -13,6 +13,7 @@ export OMP_NUM_THREADS=$2
 echo "#######################################"
 echo "with number of mpi cpus         : " $3
 echo "and [x] openmp cores            : " $2
+echo "OMP_NUM_THREADS                 : " $OMP_NUM_THREADS
 echo "for argument/atom               : " $1
 echo "mpi command line                : " ${DMFT_ONETEP_MPI_EXEC}
 echo "run_iter_ed in dir              : " `pwd`

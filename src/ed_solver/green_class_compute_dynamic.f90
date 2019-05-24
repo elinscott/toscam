@@ -66,7 +66,7 @@ contains
       use genvar, only: bosonic, fermionic, rank, size2
       use globalvar_ed_solver, only: cutoff_dynamic
       use h_class, only: dimen_H
-      use mpirout, only: mpi_dot_product, mpibarrier, mpisum
+      use mpi_mod, only: mpi_dot_product, mpibarrier, mpisum
       use rcvector_class, only: norm_rcvector
 
       implicit none
@@ -172,7 +172,7 @@ contains
       use h_class, only: dimen_H, sector_H
       use lanczos_fast, only: one_step_lanczos_fast
       use linalg, only: norme, MPLX
-      use mpirout, only: mpibarrier, mpisum
+      use mpi_mod, only: mpibarrier, mpisum
       use rcvector_class, only: delete_rcvector, new_rcvector, norm_rcvector, &
          rcvector_type
       use tridiag_class, only: delete_tridiag, diagonalize_tridiag, &

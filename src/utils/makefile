@@ -57,7 +57,7 @@ ROUTINES= common_def.f90 \
           matrix.f90 \
           mesh.f90 \
           minimization_wrapping.f90 \
-          mpirout.f90 \
+          mpi_mod.f90 \
           namelistf90.mod \
           openmpf90.mod \
           random.f90 \
@@ -155,9 +155,9 @@ mesh.mod: mesh.f90 genvar.mod geometry.mod linalg.mod sorting.mod splines.mod \
  
 minimization_wrapping.mod: minimization_wrapping.f90 \
                            conj_grad.mod genvar.mod linalg.mod \
-                           mpirout.mod random.mod stringmanip.mod
+                           mpi_mod.mod random.mod stringmanip.mod
 
-mpirout.mod: mpirout.f90 genvar.mod linalg.mod random.mod
+mpi_mod.mod: mpi_mod.f90 genvar.mod linalg.mod random.mod
  
 namelistmod.mod: namelistmod.f90 common_def.mod genvar.mod string4.mod \
                  string5.mod
@@ -173,7 +173,7 @@ sorting.mod: sorting.f90 linalg.mod random.mod
 specialfunction.mod: specialfunction.f90 genvar.mod linalg.mod
  
 splines.mod: splines.f90 derivative_noise.mod genvar.mod geometry.mod \
-             mpirout.mod random.mod smooth_data.mod sorting.mod splines2.mod
+             mpi_mod.mod random.mod smooth_data.mod sorting.mod splines2.mod
 
 splines2.mod: splines2.f90
 

@@ -22,7 +22,7 @@ contains
          USE_TRANSPOSE_TRICK_MPI
       use green_class, only: green_type
       use mask_class, only: mask_type
-      use mpirout, only: mpisum
+      use mpi_mod, only: mpisum
       use sector_class, only: sector_type
       use green_class_compute_symmetric, only: reshuffle_vecAB
 

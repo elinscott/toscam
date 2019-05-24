@@ -2,8 +2,6 @@
 
  ONETEP_DMFT_TEMP_DIR=$4
 
- echo ${ONETEP_DMFT_TEMP_DIR}
-
  if [ "${ONETEP_DMFT_TEMP_DIR}" == "  " ]
  then
    export ONETEP_DMFT_TEMP_DIR=`pwd`
@@ -33,6 +31,7 @@ echo "MY DMFT ITERATION                  : " $3
 echo "MY LOCAL DIR INPUT                 : " $4
 echo "TEMP DIR FOR WORKING WITH ATOM DIR : " ${ONETEP_DMFT_TEMP_DIR}
 echo "MY DIRECTORY IS NOW                : " ${mydirnow}
+echo "OMP NUM THREADS:                   : " $OMP_NUM_THREADS
 
 ################ SYMLINKS ##############
 if [ "${ONETEP_DMFT_TEMP_DIR}" != "${mydirnow}" ]

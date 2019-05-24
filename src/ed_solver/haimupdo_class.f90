@@ -154,7 +154,7 @@ contains
       use linalg, only: long_sum
       use lockmod, only: MAXT
       use mpi
-      use mpirout, only: mpibcast, split
+      use mpi_mod, only: mpibcast, split
       use openmpmod, only: omp_get_num_threads, &
          omp_get_thread_num, openmp_split_array
 
@@ -807,7 +807,7 @@ contains
          use linalg, only: long_sum
          use lockmod, only: MAXT
          use mpi
-         use mpirout, only: mpibcast, split
+         use mpi_mod, only: mpibcast, split
          use openmpmod, only: omp_get_num_threads, &
             omp_get_thread_num, openmp_split_array
 
@@ -1455,7 +1455,7 @@ contains
             use haim2_class, only: diagdo, diagup, noffup, noffdo, &
                offdiagdo, offdiagup, rankoffdo, rankoffup
             use lockmod, only: MAXT
-            use mpirout, only: distributed_memory_transpose_mat, split
+            use mpi_mod, only: distributed_memory_transpose_mat, split
 
             implicit none
 
@@ -1604,7 +1604,7 @@ contains
             use haim2_class, only: diagdo, diagup, noffup, noffdo, &
                offdiagdo, offdiagup, rankoffdo, rankoffup
             use lockmod, only: MAXT
-            use mpirout, only: distributed_memory_transpose_mat
+            use mpi_mod, only: distributed_memory_transpose_mat
 
             implicit none
 

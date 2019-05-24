@@ -194,7 +194,7 @@ contains
    subroutine split_frequency(FREQ)
 
       use genvar, only: nproc
-      use mpirout, only: split
+      use mpi_mod, only: split
 
       implicit none
 

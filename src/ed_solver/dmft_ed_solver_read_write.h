@@ -88,7 +88,7 @@
       use genvar
       use globalvar_ed_solver
       use lockmod, only: MAXT
-      use mpirout, only: mpibarrier
+      use mpi_mod, only: mpibarrier
       use namelistmod, only: look_for_command_line_argument, &
          look_for_namelist_in_file, namelist_init, namelist_set, &
          putel_in_namelist

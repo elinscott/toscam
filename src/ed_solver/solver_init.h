@@ -12,7 +12,7 @@
          delete_eigensector, delete_eigensectorlist, eigensector_type, &
          new_eigensector, rank_sector_in_list, read_raw_eigensectorlist
       use sector_class, only: delete_sector, sector_type
-      use mpirout, only: mpibarrier
+      use mpi_mod, only: mpibarrier
       use fermion_hilbert_class, only: new_fermion_sector
       use aim_class, only: aim_type
       use fermion_sector2_class, only: new_fermion_sector2

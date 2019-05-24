@@ -7,7 +7,7 @@
       use h_class, only: delete_h, new_h
       use lanczos_fast, only: lanczos_get_gs_sector
       use eigen_class, only: eigenlist_type
-      use mpirout, only: split
+      use mpi_mod, only: split
 
       implicit none
 
@@ -97,7 +97,7 @@
       use block_lanczos, only: block_lanczos_diagonalize
       use vertex, only: four_leg_vertex_matrices_routine
       use lanczos_fast, only: lanczos_fast_diagonalize
-      use mpirout, only: split
+      use mpi_mod, only: split
 
       implicit none
 
@@ -238,7 +238,7 @@
    subroutine sync_eigen_vectors()
 
       use genvar, only: size2
-      use mpirout, only: mpibarrier, mpibcast
+      use mpi_mod, only: mpibarrier, mpibcast
       use rcvector_class, only: new_rcvector
 
       implicit none
@@ -287,7 +287,7 @@
 
       use genvar, only: size2
       use eigen_class, only: add_eigen, delete_eigen, eigen_type, new_eigen
-      use mpirout, only: mpibarrier, mpibcast
+      use mpi_mod, only: mpibarrier, mpibcast
       use globalvar_ed_solver, only: flag_mpi_greens
       use rcvector_class, only: rcvector_type
 
@@ -424,7 +424,7 @@
 
       use eigen_sector_class, only: not_commensurate_sector
       use globalvar_ed_solver, only: use_transpose_trick_mpi
-      use mpirout, only: split
+      use mpi_mod, only: split
 
       implicit none
 

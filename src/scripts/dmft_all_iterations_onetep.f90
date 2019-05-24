@@ -10,6 +10,7 @@
  program onetep_normal_mode
     use StringManip, only: toString
     use mpi
+    use common_def, only: utils_system_call
     implicit none
     integer          :: jj, k, i, rank, size2, ierr
     integer          :: nproc_onetep
@@ -46,8 +47,7 @@
           endif
           command_line=TRIM(ADJUSTL(command_line))//" > onetep_output_iter"//TRIM(ADJUSTL(toString(iter_dmft)))//"_rank__"//TRIM(ADJUSTL(toString(i)))
           write (*, *) ' command line for proc [x], total : ', i, nproc_onetep
-          write (*, *) TRIM(ADJUSTL(command_line))
-          call system(command_line)
+          call utils_system_call(command_line, abort = .true.)
           write (*, *) ' ... done ... rank : ', rank
        endif
     enddo

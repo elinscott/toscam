@@ -281,7 +281,6 @@
        write (*, *) 'imposing paramagnet'
     command_line="onetep_dmft_one_iter_script_pm.out "//TRIM(ADJUSTL(toString(jj)))//" "//TRIM(ADJUSTL(list_of_greens(i,1)))//" "//TRIM(ADJUSTL(toString(iter_dmft)))
     command_line=trim(adjustl(command_line))//" "//trim(adjustl(input_temp_dir))//" > onetep_dmft_part_solver_"//TRIM(ADJUSTL(toString(iter_dmft)))//"_atom_"//TRIM(ADJUSTL(toString(jj)))
-       write (*, *) 'calling command line : ', TRIM(ADJUSTL(command_line))
        call utils_system_call(command_line, abort=.true.)
     else
        write (*, *) 'no paramagnetic constraint'
@@ -289,7 +288,6 @@
     command_line="onetep_dmft_one_iter_script_polarized.out "//TRIM(ADJUSTL(toString(jj)))//" "//TRIM(ADJUSTL(list_of_greens(i,1)))//" "//TRIM(ADJUSTL(list_of_greens(i,2)))&
                    &//" "//TRIM(ADJUSTL(toString(iter_dmft)))
     command_line=trim(adjustl(command_line))//" "//trim(adjustl(input_temp_dir))//" > onetep_dmft_part_solver_"//TRIM(ADJUSTL(toString(iter_dmft)))//"_atom_"//TRIM(ADJUSTL(toString(jj)))
-       write (*, *) 'calling command line : ', TRIM(ADJUSTL(command_line))
        call utils_system_call(command_line, abort=.true.)
     endif
 

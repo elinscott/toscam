@@ -23,6 +23,15 @@
     !----------------------------------------------------!
 
     private
+
+    ! ebl: these allow us to know the OpenMP scheme outside
+    !      of a OpenMP parallel region. Initialise them by 
+    !      calling init_openmp
+    integer, protected, public :: omp_num_threads
+    integer, protected, public :: omp_thread_num
+    integer, protected, public :: omp_num_procs
+    integer, protected, public :: omp_max_threads
+
     public :: init_openmp
     public :: omp_get_num_threads
     public :: omp_get_thread_num
@@ -189,8 +198,16 @@
 !**************************************************************************
 !**************************************************************************
 
-    subroutine init_openmp
+    subroutine init_openmp(silent)
+
        implicit none
+
+       logical, optional, intent(in) :: silent
+
+       logical :: silent_loc
+
+       silent_loc = .true.
+       if (present(silent)) silent_loc = silent
 
 !$OMP      PARALLEL PRIVATE(NTHREADS, TID)
        TID = OMP_GET_THREAD_NUM()
@@ -202,15 +219,19 @@
        NESTED = OMP_GET_NESTED()
 !$OMP      END PARALLEL
 
-       IF (TID == 0) THEN
+       omp_num_threads = NTHREADS
+       omp_thread_num = TID
+       omp_num_procs = PROCS
+       omp_max_threads = MAXT
+
+       IF (TID == 0 .and. .not. silent_loc) THEN
           write (*, *) '========================================================'
           write (*, *)
-          write (*, *) '  .............. INITIALIZE OPEN MP ..................  '
+          write (*, *) '  .............. OpenMP PARALLELISATION...............  '
           write (*, *)
           write (*, *) 'Number of processors          = ', PROCS
           write (*, *) 'Number of threads             = ', NTHREADS
           write (*, *) 'Max threads                   = ', MAXT
-          write (*, *) 'In parallel?                  = ', INPAR
           write (*, *) 'Dynamic threads enabled?      = ', DYNAMIC
           write (*, *) 'Nested parallelism supported? = ', NESTED
           write (*, *) '========================================================'

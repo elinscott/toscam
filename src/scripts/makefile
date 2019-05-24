@@ -139,7 +139,7 @@ check_convergence.out: check_convergence.f90 aim2_class.o aim_class.o apply_c.o 
     green_class_compute_symmetric.o green_class_computeaa.o green_class_computeab.o h_class.o \
     haim2_class.o haimsz_class.o haimupdo_class.o impurity_class.o init_and_close_my_sim.o \
     lanczos_fast.o linalg.o lockmod.o mask_class.o masked_matrix_class.o masked_matrix_class_mod.o \
-    matrix.o mesh.o minimization_wrapping.o mpirout.o namelistmod.o openmpmod.o overlap_module.o \
+    matrix.o mesh.o minimization_wrapping.o mpi_mod.o namelistmod.o openmpmod.o overlap_module.o \
     quantum_algebra.o random.o rcmatrix_class.o rcvector_class.o readable_vec_class.o \
     sector_class.o smooth_data.o solver.o sorting.o specialfunction.o splines.o splines2.o \
     string4.o string5.o stringmanip.o strings.o tools_algebra.o tridiag_class.o \
@@ -155,7 +155,7 @@ check_convergence_full.out: check_convergence_full.f90 aim2_class.o aim_class.o 
     green_class_computeab.o h_class.o haim2_class.o haimsz_class.o haimupdo_class.o \
     impurity_class.o init_and_close_my_sim.o lanczos_fast.o linalg.o lockmod.o mask_class.o \
     masked_matrix_class.o masked_matrix_class_mod.o matrix.o mesh.o minimization_wrapping.o \
-    mpirout.o namelistmod.o openmpmod.o overlap_module.o quantum_algebra.o random.o \
+    mpi_mod.o namelistmod.o openmpmod.o overlap_module.o quantum_algebra.o random.o \
     rcmatrix_class.o rcvector_class.o readable_vec_class.o sector_class.o smooth_data.o solver.o \
     sorting.o specialfunction.o splines.o splines2.o string4.o string5.o stringmanip.o strings.o \
     tools_algebra.o tridiag_class.o vertex.o
@@ -170,7 +170,7 @@ check_convergence_renorm.out: check_convergence_renorm.f90 aim2_class.o aim_clas
     green_class_computeab.o h_class.o haim2_class.o haimsz_class.o haimupdo_class.o \
     impurity_class.o init_and_close_my_sim.o lanczos_fast.o linalg.o lockmod.o mask_class.o \
     masked_matrix_class.o masked_matrix_class_mod.o matrix.o mesh.o minimization_wrapping.o \
-    mpirout.o namelistmod.o openmpmod.o overlap_module.o quantum_algebra.o random.o \
+    mpi_mod.o namelistmod.o openmpmod.o overlap_module.o quantum_algebra.o random.o \
     rcmatrix_class.o rcvector_class.o readable_vec_class.o sector_class.o smooth_data.o solver.o \
     sorting.o specialfunction.o splines.o splines2.o string4.o string5.o stringmanip.o strings.o \
     tools_algebra.o tridiag_class.o vertex.o
@@ -185,12 +185,12 @@ check_convergence_single_renorm.out: check_convergence_single_renorm.f90 aim2_cl
     green_class_computeaa.o green_class_computeab.o h_class.o haim2_class.o haimsz_class.o \
     haimupdo_class.o impurity_class.o init_and_close_my_sim.o lanczos_fast.o linalg.o lockmod.o \
     mask_class.o masked_matrix_class.o masked_matrix_class_mod.o matrix.o mesh.o \
-    minimization_wrapping.o mpirout.o namelistmod.o openmpmod.o overlap_module.o quantum_algebra.o \
+    minimization_wrapping.o mpi_mod.o namelistmod.o openmpmod.o overlap_module.o quantum_algebra.o \
     random.o rcmatrix_class.o rcvector_class.o readable_vec_class.o sector_class.o smooth_data.o \
     solver.o sorting.o specialfunction.o splines.o splines2.o string4.o string5.o stringmanip.o \
     strings.o tools_algebra.o tridiag_class.o vertex.o
 
-dmft_all_iterations_onetep.out: dmft_all_iterations_onetep.f90 stringmanip.o
+dmft_all_iterations_onetep.out: dmft_all_iterations_onetep.f90 common_def.o genvar.o stringmanip.o
 
 dmft_check_cluster_convergence.out: dmft_check_cluster_convergence.f90 aim2_class.o aim_class.o \
     apply_c.o apply_ns.o apply_p.o bath_class.o bath_class_hybrid.o bath_class_vec.o \
@@ -202,7 +202,7 @@ dmft_check_cluster_convergence.out: dmft_check_cluster_convergence.f90 aim2_clas
     green_class_computeaa.o green_class_computeab.o h_class.o haim2_class.o haimsz_class.o \
     haimupdo_class.o impurity_class.o init_and_close_my_sim.o lanczos_fast.o linalg.o lockmod.o \
     mask_class.o masked_matrix_class.o masked_matrix_class_mod.o matrix.o mesh.o \
-    minimization_wrapping.o mpirout.o namelistmod.o openmpmod.o overlap_module.o quantum_algebra.o \
+    minimization_wrapping.o mpi_mod.o namelistmod.o openmpmod.o overlap_module.o quantum_algebra.o \
     random.o rcmatrix_class.o rcvector_class.o readable_vec_class.o sector_class.o smooth_data.o \
     solver.o sorting.o specialfunction.o splines.o splines2.o string4.o string5.o stringmanip.o \
     strings.o tools_algebra.o tridiag_class.o vertex.o
@@ -241,7 +241,7 @@ ed_solver.out: ed_solver.f90 aim2_class.o aim_class.o apply_c.o apply_ns.o apply
     green_class_compute_symmetric.o green_class_computeaa.o green_class_computeab.o h_class.o \
     haim2_class.o haimsz_class.o haimupdo_class.o impurity_class.o init_and_close_my_sim.o \
     lanczos_fast.o linalg.o lockmod.o mask_class.o masked_matrix_class.o masked_matrix_class_mod.o \
-    matrix.o mesh.o minimization_wrapping.o mpirout.o namelistmod.o openmpmod.o overlap_module.o \
+    matrix.o mesh.o minimization_wrapping.o mpi_mod.o namelistmod.o openmpmod.o overlap_module.o \
     quantum_algebra.o random.o rcmatrix_class.o rcvector_class.o readable_vec_class.o \
     sector_class.o smooth_data.o solver.o sorting.o specialfunction.o splines.o splines2.o \
     string4.o string5.o stringmanip.o strings.o tools_algebra.o tridiag_class.o \
@@ -256,7 +256,7 @@ ed_solver_complex.out: ed_solver_complex.f90 aim2_class.o aim_class.o apply_c.o 
     green_class_compute_symmetric.o green_class_computeaa.o green_class_computeab.o h_class.o \
     haim2_class.o haimsz_class.o haimupdo_class.o impurity_class.o init_and_close_my_sim.o \
     lanczos_fast.o linalg.o lockmod.o mask_class.o masked_matrix_class.o masked_matrix_class_mod.o \
-    matrix.o mesh.o minimization_wrapping.o mpirout.o namelistmod.o openmpmod.o overlap_module.o \
+    matrix.o mesh.o minimization_wrapping.o mpi_mod.o namelistmod.o openmpmod.o overlap_module.o \
     quantum_algebra.o random.o rcmatrix_class.o rcvector_class.o readable_vec_class.o \
     sector_class.o smooth_data.o solver.o sorting.o specialfunction.o splines.o splines2.o \
     string4.o string5.o stringmanip.o strings.o tools_algebra.o tridiag_class.o \
@@ -271,7 +271,7 @@ ed_solver_serial.out: ed_solver_serial.f90 aim2_class.o aim_class.o apply_c.o ap
     green_class_compute_symmetric.o green_class_computeaa.o green_class_computeab.o h_class.o \
     haim2_class.o haimsz_class.o haimupdo_class.o impurity_class.o init_and_close_my_sim.o \
     lanczos_fast.o linalg.o lockmod.o mask_class.o masked_matrix_class.o masked_matrix_class_mod.o \
-    matrix.o mesh.o minimization_wrapping.o mpirout.o namelistmod.o openmpmod.o overlap_module.o \
+    matrix.o mesh.o minimization_wrapping.o mpi_mod.o namelistmod.o openmpmod.o overlap_module.o \
     quantum_algebra.o random.o rcmatrix_class.o rcvector_class.o readable_vec_class.o \
     sector_class.o smooth_data.o solver.o sorting.o specialfunction.o splines.o splines2.o \
     string4.o string5.o stringmanip.o strings.o tools_algebra.o tridiag_class.o \
@@ -287,7 +287,7 @@ onetep_dmft_build_heterostructure.out: onetep_dmft_build_heterostructure.f90 com
 
 onetep_dmft_build_optical_tensor.out: onetep_dmft_build_optical_tensor.f90 common_def.o \
     derivative_noise.o fourier_transform_mod.o genvar.o geometry.o geomlib.o \
-    init_and_close_my_sim.o linalg.o lockmod.o matrix.o mesh.o mpirout.o namelistmod.o openmpmod.o \
+    init_and_close_my_sim.o linalg.o lockmod.o matrix.o mesh.o mpi_mod.o namelistmod.o openmpmod.o \
     random.o smooth_data.o sorting.o splines.o splines2.o string4.o string5.o stringmanip.o \
     tools_algebra.o
 
@@ -295,7 +295,7 @@ onetep_dmft_calculate_average_e.out: onetep_dmft_calculate_average_e.f90
 
 onetep_dmft_compute_optics.out: onetep_dmft_compute_optics.f90 common_def.o derivative_noise.o \
     fourier_transform_mod.o genvar.o geometry.o geomlib.o linalg.o lockmod.o matrix.o mesh.o \
-    mpirout.o openmpmod.o random.o smooth_data.o sorting.o splines.o splines2.o stringmanip.o \
+    mpi_mod.o openmpmod.o random.o smooth_data.o sorting.o splines.o splines2.o stringmanip.o \
     tools_algebra.o
 
 onetep_dmft_density_matsu.out: onetep_dmft_density_matsu.f90 genvar.o geomlib.o linalg.o lockmod.o \
@@ -321,7 +321,7 @@ onetep_dmft_local_rotation.out: onetep_dmft_local_rotation.f90 genvar.o geometry
 
 onetep_dmft_local_rotation_find.out: onetep_dmft_local_rotation_find.f90 common_def.o \
     conj_grad.o genvar.o geomlib.o init_and_close_my_sim.o linalg.o lockmod.o \
-    minimization_wrapping.o mpirout.o namelistmod.o openmpmod.o random.o string4.o string5.o \
+    minimization_wrapping.o mpi_mod.o namelistmod.o openmpmod.o random.o string4.o string5.o \
     stringmanip.o
 
 onetep_dmft_local_rotation_one_atom.out: onetep_dmft_local_rotation_one_atom.f90 genvar.o \
@@ -339,7 +339,7 @@ onetep_dmft_one_iter.out: onetep_dmft_one_iter.f90 common_def.o genvar.o geomlib
 
 onetep_dmft_proj_green_func_matrix.out: onetep_dmft_proj_green_func_matrix.f90 common_def.o \
     derivative_noise.o fourier_transform_mod.o genvar.o geometry.o geomlib.o linalg.o lockmod.o \
-    matrix.o mesh.o mpirout.o openmpmod.o random.o smooth_data.o sorting.o splines.o splines2.o \
+    matrix.o mesh.o mpi_mod.o openmpmod.o random.o smooth_data.o sorting.o splines.o splines2.o \
     stringmanip.o tools_algebra.o
 
 onetep_dmft_read_n.out: onetep_dmft_read_n.f90 common_def.o genvar.o geomlib.o linalg.o lockmod.o \
@@ -359,17 +359,17 @@ onetep_dmft_stitch.out: onetep_dmft_stitch.f90 common_def.o genvar.o geomlib.o l
 
 onetep_dmft_summarize_sim.out: onetep_dmft_summarize_sim.f90 common_def.o derivative_noise.o \
     fourier_transform_mod.o genvar.o geometry.o geomlib.o init_and_close_my_sim.o linalg.o \
-    lockmod.o matrix.o mesh.o mpirout.o namelistmod.o openmpmod.o random.o smooth_data.o sorting.o \
+    lockmod.o matrix.o mesh.o mpi_mod.o namelistmod.o openmpmod.o random.o smooth_data.o sorting.o \
     splines.o splines2.o string4.o string5.o stringmanip.o tools_algebra.o
 
 onetep_dmft_trace_energy.out: onetep_dmft_trace_energy.f90
 
 onetep_split.out: onetep_split.f90 common_def.o genvar.o geomlib.o init_and_close_my_sim.o \
-    linalg.o lockmod.o mpirout.o namelistmod.o openmpmod.o random.o string4.o string5.o \
+    linalg.o lockmod.o mpi_mod.o namelistmod.o openmpmod.o random.o string4.o string5.o \
     stringmanip.o strings.o
 
 onetep_split_serial.out: onetep_split_serial.f90 common_def.o genvar.o geomlib.o \
-    init_and_close_my_sim.o linalg.o lockmod.o mpirout.o namelistmod.o openmpmod.o random.o \
+    init_and_close_my_sim.o linalg.o lockmod.o mpi_mod.o namelistmod.o openmpmod.o random.o \
     string4.o string5.o stringmanip.o strings.o
 
 optical_conductivity_units.out: optical_conductivity_units.f90

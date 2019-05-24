@@ -555,7 +555,7 @@ contains
       use genvar, only: DBL, iproc, size2
       use globalvar_ed_solver, only: use_transpose_trick_mpi
       use linalg, only: ramp
-      use mpirout, only: mpibarrier, scatter_it
+      use mpi_mod, only: mpibarrier, scatter_it
       use sector_class, only: dimen_func
 
       implicit none
@@ -681,7 +681,7 @@ contains
 
       subroutine collect_on_rank0(eigen)
 
-         use mpirout, only: mpibarrier, mpigather_on_masternode
+         use mpi_mod, only: mpibarrier, mpigather_on_masternode
          use globalvar_ed_solver, only: use_transpose_trick_mpi
          use genvar, only: iproc
          use eigen_class, only: eigen_type
@@ -711,7 +711,7 @@ contains
 
          use globalvar_ed_solver, only: use_transpose_trick_mpi
          use genvar, only: iproc
-         use mpirout, only: mpibarrier, scatter_it
+         use mpi_mod, only: mpibarrier, scatter_it
          use eigen_class, only: eigen_type
 
          implicit none

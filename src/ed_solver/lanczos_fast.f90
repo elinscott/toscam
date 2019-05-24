@@ -271,7 +271,7 @@ contains
       use common_def, only: c2s, dump_message, i2c
       use genvar, only: log_unit
       use globalvar_ed_solver, only: USE_TRANSPOSE_TRICK_MPI, DO_NOT_USE_OPT_LANCZOS
-      use mpirout, only: mpi_dot_product, split
+      use mpi_mod, only: mpi_dot_product, split
       use tridiag_class, only: tridiag_type
 
       implicit none

@@ -34,7 +34,7 @@ contains
       use genvar, only: dbl, iproc, log_unit, no_mpi, rank, size2
       use globalvar_ed_solver, only: ALL_FIRST_CALL, dump_ground_state, &
          dEmax, FLAG_FULL_ED_GREEN, which_lanczos
-      use mpirout, only: mpibarrier
+      use mpi_mod, only: mpibarrier
       use aim_class, only: aim_type
 
       implicit none

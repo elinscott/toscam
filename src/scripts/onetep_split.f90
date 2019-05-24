@@ -16,6 +16,8 @@ include 'dmft_one_iteration_split_module.h'
 
 program dmftonetepsplit
    use dmft_split_variables
+   use openmpmod, only: init_openmp
+   use genvar,    only: iproc
    implicit none
    integer                    :: i, j, k, ww
    character(200)             :: files, filename_sigma_source, filename_sigma
@@ -27,6 +29,7 @@ program dmftonetepsplit
    !-------------------------------!
    call init_my_input_variables
    call initialize_my_simulation_
+   call init_openmp(silent = (iproc /= 1))
    !-------------------------------!
 
    write (*, *) 'RUNNING THE DMFT CALCULATIONS WITH [x] cpus : ', size2

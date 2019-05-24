@@ -138,7 +138,7 @@ contains
    function norm_rcvector(vec)
 
       use globalvar_ed_solver, only: USE_TRANSPOSE_TRICK_MPI
-      use mpirout, only: mpi_dot_product
+      use mpi_mod, only: mpi_dot_product
 
       implicit none
 

@@ -63,7 +63,7 @@ contains
       use correl_class, only: average_correlations
       use matrix, only: average_vec, diag, write_array
       use bath_class_hybrid, only: bath2hybrid, hybrid2bath
-      use mpirout, only: mpibarrier
+      use mpi_mod, only: mpibarrier
       use solver, only: solve_aim
       use correlations, only: compute_correlations, G, GF, GNAMBU, &
          GNAMBUN, GNAMBUret, SNAMBU, SNAMBUret, Spm
@@ -546,7 +546,7 @@ contains
       use globalvar_ed_solver, only: jhund, jjmatrix, Jhund_Slater_type, uumatrix
       use mesh, only: build1dmesh
       use matrix, only: diag, write_array
-      use mpirout, only: mpibarrier
+      use mpi_mod, only: mpibarrier
       use solver, only: remove_filef
 
       implicit none
@@ -1204,7 +1204,9 @@ contains
       use genvar, only: fermionic, log_unit, rank, size2
       use aim_class, only: new_aim, update_aim_pointer
       use bath_class_hybrid, only: bath2hybrid
+      use common_def, only: utils_assert
       use correl_class, only: new_correl
+      use stringmanip, only: tostring
       use strings, only: remove
       use bath_class, only: read_bath
       use matrix, only: write_array
@@ -1307,9 +1309,9 @@ contains
          allocate (UUmatrix(UUmatrix_in_size, UUmatrix_in_size))
          UUmatrix = UUmatrix_in
          use_input_Eimp_matrices = .true.
-         write (*, *) ' size of cluster problem is : ', impurity_%N
-         write (*, *) ' size of correlation matrix is (those two should be the &
-              &same) : ', UUmatrix_in_size
+         call utils_assert(impurity_%N == UUmatrix_in_size, 'Error in dmft_solver_ed: &
+               & size-mismatch between cluster problem (' // trim(adjustl(tostring(impurity_%N))) &
+               & // ') and correlation matrix (' // trim(adjustl(tostring(UUmatrix_in_size))) // ')')
          if (flag_slater_int) UUmatrix = 0.d0
          call write_array(UUmatrix, ' repulsion matrix input, please check and &
               &comment out ', short=.true., unit=6)

@@ -191,7 +191,7 @@ contains
       ! DISTRIBUTE THE SECTOR OVER nproc >= 1 PROCESSORS
 
       use genvar, only: iproc, log_unit, messages3, no_mpi, nproc, size2
-      use mpirout, only: split
+      use mpi_mod, only: split
 
       implicit none
 

@@ -378,6 +378,7 @@ end module
 
 program dmftonetep
    use dmft_variables_sc
+   use common_def, only: utils_system_call
    implicit none
    integer                    :: i, j, k, ww, iter_dmft_sc, iji
    character(200)             :: files, filename_sigma_source, filename_sigma
@@ -786,10 +787,8 @@ program dmftonetep
                                           & mach_arg=mach_arg_, args=args_, exe=exec_onetep,&
                                           & outputin=output_, hide_errors=.false., localhost='F')
 
-         write (*, *) 'command line : '
-         write (*, *) TRIM(ADJUSTL(command_line))
          call system("ls machines_onetep_dft || fill_machine_file machines_onetep_dft "//TRIM(ADJUSTL(toString(nproc_store))))
-         call system(command_line)
+         call utils_system_call(command_line, abort=.true.)
 
          if (iter_dmft_sc == 1) then
             call system("mkdir backup_dft_run")
@@ -1227,10 +1226,8 @@ program dmftonetep
                                           & mach_arg=mach_arg_, args=args_, exe=exec_onetep,&
                                           & outputin=output_, hide_errors=.false., localhost='F')
 
-         write (*, *) 'command line : '
-         write (*, *) TRIM(ADJUSTL(command_line))
          call system("ls machines_onetep_dft || fill_machine_file machines_onetep_dft "//TRIM(ADJUSTL(toString(nproc_store))))
-         call system(command_line)
+         call utils_system_call(command_line, abort=.true.)
 
          !-------------------------!
          !-------------------------!

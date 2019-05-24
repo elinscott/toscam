@@ -471,6 +471,8 @@ end module
 program onestep_dmft_iteration
    !---------------!
    use onetep_variables
+   use openmpmod, only: init_openmp
+   use genvar, only: iproc
    !---------------!
    implicit none
    logical                :: checkujmat
@@ -506,6 +508,8 @@ real(8),allocatable    :: eimp_ed(:,:,:),Zimp_ren_p(:,:,:),Zimp_ren_m(:,:,:),Sim
    call init_my_input_variables
    write (*, *) 'init data'
    call init_run
+
+   call init_openmp(silent = (iproc /= 1))
 
    if (iter_dmft == niter_dmft) ed_real_frequ = ed_real_frequ_last
 

@@ -11,7 +11,7 @@ module dmft_split_variables
    use StringManip, only: toString, StrInt2
    use genvar, only: size2, rank, ierr
    use init_and_close_my_sim, only: initialize_my_simulation, finalize_my_simulation
-   use mpirout, only: mpibarrier
+   use mpi_mod, only: mpibarrier
    use strings, only: replace_in_string, string, assignment(=)
    implicit none
    integer        ::  paramagnetic, iter_dmft, niter_dmft, rankin, size2in

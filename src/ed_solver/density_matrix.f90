@@ -24,7 +24,7 @@ contains
       use common_def, only: dump_message, reset_timer, timer_fortran
       use sector_class, only: is_in_sector, rank_func
       use aim_class, only: aim_type, impbath2aimstate
-      use mpirout, only: split
+      use mpi_mod, only: split
       use rcmatrix_class, only: rcmatrix_type
       use eigen_class, only: eigen_type
 

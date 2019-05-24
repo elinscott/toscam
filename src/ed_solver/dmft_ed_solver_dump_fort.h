@@ -1,7 +1,7 @@
 
    subroutine dump_to_fort()
 
-      use mpirout, only: mpi_stop
+      use mpi_mod, only: mpi_stop
 
       implicit none
 
@@ -165,7 +165,7 @@
 
    subroutine dump_to_fortb()
 
-      use mpirout, only: mpi_stop
+      use mpi_mod, only: mpi_stop
 
       implicit none
 

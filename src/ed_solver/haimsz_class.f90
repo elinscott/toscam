@@ -188,7 +188,7 @@ contains
       use linalg, only: long_sum
       use lockmod, only: MAXT
       use mpi
-      use mpirout, only: mpibcast, split
+      use mpi_mod, only: mpibcast, split
 
       implicit none
 
@@ -493,7 +493,7 @@ contains
          use linalg, only: long_sum
          use lockmod, only: MAXT
          use mpi
-         use mpirout, only: mpibcast, split
+         use mpi_mod, only: mpibcast, split
          use openmpmod, only: omp_get_num_threads, omp_get_thread_num, &
             openmp_split_array
 
@@ -656,7 +656,7 @@ contains
             use openmpmod, only: omp_get_num_threads, omp_get_thread_num, &
                openmp_split_array
             use mpi
-            use mpirout, only: mpibcast, split
+            use mpi_mod, only: mpibcast, split
             use globalvar_ed_solver, only: flag_mpi_greens, jhund, open_mp, use_cc
 
             implicit none
@@ -915,7 +915,7 @@ contains
             use openmpmod, only: omp_get_num_threads, omp_get_thread_num, &
                openmp_split_array
             use mpi
-            use mpirout, only: mpibcast, split
+            use mpi_mod, only: mpibcast, split
             use globalvar_ed_solver, only: flag_mpi_greens, jhund, open_mp, use_cc
 
             implicit none

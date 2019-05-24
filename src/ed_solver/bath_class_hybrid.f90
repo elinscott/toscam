@@ -465,7 +465,7 @@ contains
          param_input, param_output, search_step, skip_fit_, tolerance, &
          use_specific_set_parameters, verbose_graph
       use impurity_class, only: Eccc
-      use mpirout, only: mpibarrier, mpibcast
+      use mpi_mod, only: mpibarrier, mpibcast
       use matrix, only: invmat, write_array
       use minimization_wrapping, only: minimize_func_wrapper
       use random, only: dran_tab

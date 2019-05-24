@@ -262,7 +262,7 @@
       use common_def, only: reset_timer, timer_fortran
       use eigen_class, only: delete_eigenlist, rank_eigen_in_list
       use genvar, only: pm, rank
-      use mpirout, only: MPI_DOT_PRODUCT
+      use mpi_mod, only: MPI_DOT_PRODUCT
       use sector_class, only: equal_sector
 
       implicit none

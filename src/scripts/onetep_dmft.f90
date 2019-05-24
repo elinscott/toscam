@@ -12,7 +12,8 @@ module dmft_variables
    use StringManip, only: toString
    use init_and_close_my_sim, only: initialize_my_simulation, finalize_my_simulation
 
-integer            ::  mpi_onetep_type,restart_from_iteration_number,ed_real_frequ_last,niter_dmft,nproc,nproc_onetep,nproc_mpi_solver
+   integer            ::  mpi_onetep_type, restart_from_iteration_number, ed_real_frequ_last, niter_dmft, &
+                          nproc, nproc_onetep, nproc_mpi_solver, openmp_solver
    character(2000)    ::  CASE_ONETEP, dir_onetep, exec_onetep, dir_onetep_mpi
    character(60)      ::  mach_onetep
    real(8)            ::  ed_frequ_min, ed_frequ_max
@@ -179,6 +180,7 @@ contains
    call putel_in_namelist(nm,nproc_mpi_solver,'nproc_mpi_solver',1,'Definition:=number of processors (MPI type) used for DMFT solver')
    call putel_in_namelist(nm,nproc_onetep_openmp_,'nproc_onetep_openmp_',1,'Definition: will run mpi for the onetep dmft interface, but each mpi job will run with nproc_onetep_openmp openmp threads')
       call putel_in_namelist(nm, nproc_onetep, 'nproc_onetep', 1, 'Definition:=number of processors (MPI type) for onetep')
+     call putel_in_namelist(nm, openmp_solver, 'openmp_solver', 8, 'Definition:Number of open-mp cores running for the dmft-solver')
       call putel_in_namelist(nm, split_onetep, 'split_onetep', .false., 'Definition:=asynchronous calls to onetep')
    call putel_in_namelist(nm,start_from_an_old_sim,'start_from_an_old_sim',.false.,'Definition:=if true start from an old calculation, sigma files must be present')
     call putel_in_namelist(nm, all_local_host, 'all_local_host', .false., 'Definition:=if true will send all the job on local host')
@@ -304,6 +306,7 @@ end module
 
 program dmftonetep
    use dmft_variables
+   use openmpmod, only: init_openmp, omp_num_threads
    implicit none
    integer                    :: i, j, k, ww, iter_dmft
    character(200)             :: files, filename_sigma_source, filename_sigma
@@ -541,7 +544,6 @@ contains
                                                    & outputin=output, hide_errors=hide_errors, localhost=lochost, ampersand=.true.)
 
                   write (*, *) ' command line for proc [x], total : ', i, nproc_onetep
-                  write (*, *) TRIM(ADJUSTL(command_line))
                   call utils_system_call(command_line, abort=.true.)
 
                enddo
@@ -595,8 +597,6 @@ contains
                         " > "//trim(adjustl(case_onetep))//"_"// &
                         trim(adjustl(toString(iter_dmft)))//".onetep"
 
-         write (*, *) 'command line : '
-         write (*, *) trim(adjustl(command_line))
          call utils_system_call(command_line, abort=.true.)
 
       endif
@@ -616,6 +616,8 @@ contains
       integer         :: nprocess
       character(2000) :: prefix, args, output, mach_arg, mach_file
       integer         :: ierr
+      integer         :: omp_threads
+
 
       if (nproc > 1) then
          call system("ls machines_dmft || fill_machine_file machines_dmft "//TRIM(ADJUSTL(toString(nproc))))
@@ -625,14 +627,16 @@ contains
          nprocess = nproc
          args = "  iter_dmft="//TRIM(ADJUSTL(toString(iter_dmft)))
          output = "  onetep_dmft_part_"//TRIM(ADJUSTL(toString(iter_dmft)))
-         command_line = build_mpi_command_line(prefix=prefix, np=nprocess, p=1, omp=1, mach=mach_file,&
+         ! ebl: make sure OMP threads get inherited by onetep_split.out
+         command_line = build_mpi_command_line(prefix=prefix, np=nprocess, p=1, omp=openmp_solver, mach=mach_file,&
                                           & mach_arg=mach_arg, args=args, exe="onetep_split.out",&
                                           & outputin=output, hide_errors=.false., localhost='F')
       else
-       command_line=" onetep_split_serial.out iter_dmft="//TRIM(ADJUSTL(toString(iter_dmft)))//" > onetep_dmft_part_"//TRIM(ADJUSTL(toString(iter_dmft)))
+         ! ebl: make sure OMP threads get inherited by onetep_split_serial.out
+         call utils_system_call("export OMP_NUM_THREADS=" // trim(adjustl(tostring(openmp_solver))), abort=.true.)
+         command_line=" onetep_split_serial.out iter_dmft=" // TRIM(ADJUSTL(toString(iter_dmft))) // &
+               " > onetep_dmft_part_"//TRIM(ADJUSTL(toString(iter_dmft)))
       endif
-
-      write (*, *) 'command line: '//trim(adjustl(command_line))
 
       call utils_system_call(command_line, abort=.true.)
 

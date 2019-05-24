@@ -184,7 +184,7 @@ contains
       use common_def, only: create_seg_fault
       use genvar, only: messages4, nproc
       use quantum_algebra, only: fermion
-      use mpirout, only: split
+      use mpi_mod, only: split
 
       implicit none
 

@@ -4,7 +4,7 @@ module splines
    use genvar
    use random
    use geometry
-   use mpirout
+   use mpi_mod
    use derivative_noise
    use splines2, only: spline_overhauser_val
    use sorting, only: qsort_array, qsort_adj_array, group_data_rrr
