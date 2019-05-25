@@ -171,6 +171,9 @@ contains
    !-------------------------!
 
    subroutine init_my_input_variables
+
+      use common_def, only: utils_system_call
+
       implicit none
       integer :: numb_dat
 
@@ -242,7 +245,8 @@ contains
 
       call my_dmft_exe
 
-      if (.not. just_onetep) call system(TRIM(ADJUSTL(dir_onetep))//"/disable_write ")
+      if (.not. just_onetep) call utils_system_call(TRIM(ADJUSTL(dir_onetep)) &
+            // "utils/disable_write", abort=.true.)
 
    end subroutine
 
