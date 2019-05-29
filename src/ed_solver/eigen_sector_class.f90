@@ -112,21 +112,20 @@ contains
 
    subroutine remove_eigensector(sector, list)
 
+      use common_def,   only: utils_assert
       use sector_class, only: sector_type, title_sector
 
       implicit none
 
-      TYPE(eigensectorlist_type) :: list
-      TYPE(sector_type)          :: sector
+      TYPE(eigensectorlist_type), intent(inout) :: list
+      TYPE(sector_type),          intent(inout) :: sector
+
       INTEGER                    :: isector, jsector, truerank
       TYPE(eigensectorlist_type) :: tmp
 
       truerank = rank_sector_in_list(sector, list)
-      IF (truerank == 0) then
-         write (*, *) "ERROR IN remove_eigensector: SECTOR "// &
-            TRIM(title_sector(sector))//" ISNT IN LIST!"
-         stop
-      endif
+      call utils_assert(truerank /= 0, "Error in remove_eigensector: sector "// &
+            TRIM(title_sector(sector))//" isn't in list")
       CALL copy_eigensectorlist(tmp, list)
       CALL new_eigensectorlist(list, list%nsector - 1)
       jsector = 0
@@ -269,9 +268,9 @@ contains
 
       implicit none
 
-      TYPE(eigensectorlist_type), INTENT(IN) :: list
-      REAL(DBL), INTENT(IN)                  :: window(2)
-      INTEGER :: isector, nn
+      type(eigensectorlist_type), intent(inout) :: list
+      real(dbl),                  intent(in   ) :: window(2)
+      integer :: isector, nn
 
       isector = 1
       nn = size(list%es(:))
