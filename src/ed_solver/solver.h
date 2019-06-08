@@ -1,5 +1,6 @@
    subroutine get_GS()
 
+      use common_def, only: utils_assert, utils_abort
       use globalvar_ed_solver, only: block_size, flag_mpi_greens, iterdmft, &
          iwindow, ndnmax, ndnmin, nupmax, nupmin, restarted, szmax, szmin, &
          track_sectors, use_transpose_trick_mpi, which_lanczos

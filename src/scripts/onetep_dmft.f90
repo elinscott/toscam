@@ -259,6 +259,8 @@ contains
 
    subroutine check_flag_consistency
 
+      use common_def, only: utils_assert
+
       if (dmft_splitkdmftall) then
          if (dmft_splitk_batch < 1) dmft_splitk_batch = 1
          dmft_split = .true.
@@ -372,7 +374,7 @@ program dmftonetep
 
       call onetep_normal_mode
 
-      if (just_onetep) utils_abort("Calculation complete (only running ONETEP since &
+      if (just_onetep) call utils_abort("Calculation complete (only running ONETEP since &
             &just_onetep = T)")
 
       call system(" dmft_collect_script_dimer.out > onetep_dimer_splitting"//TRIM(ADJUSTL(toString(iter_dmft)))//" 2>&1  ")

@@ -46,7 +46,7 @@
                         c2s(i2c(iproc))//" OF "//c2s(i2c(nproc))//" RUNNING ON "// &
                         TRIM(ADJUSTL(procname)))
       else
-         call dump_message(unit=unit, text="# Running in serial mode"
+         call dump_message(unit=unit, text="# Running in serial mode")
       end if
 
 #ifdef _complex
