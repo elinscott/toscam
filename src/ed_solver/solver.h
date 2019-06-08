@@ -53,22 +53,22 @@
                         !   write(*, *) '---start GPU Lanczos---'
                         !   call Lanczos_get_GS_sector_GPU(lowest)
                      CASE DEFAULT
-                        stop 'error solver not defined in get GS'
+                        call utils_abort('Error in get_GS: solver not defined')
                      END SELECT
 
                      CALL delete_H()
 
                   ELSE
 
-                     if (USE_TRANSPOSE_TRICK_MPI) stop 'error block lanczos and &
-                          &lanczos vector split among nodes'
+                     call utils_assert(.not. USE_TRANSPOSE_TRICK_MPI, 'Error &
+                          &in get_GS: block Lanczos is not possible when the &
+                          &Lanczos vector is split across nodes')
 
 #ifdef _complex
 #else
                      IF (Block_size < 0) THEN
-                        write (log_unit, *) 'Cullum library not installed - to &
-                             &be added in the future'
-                        stop
+                        call utils_abort("Error in get_GS: Cullum library not &
+                             &yet installed (to be added in the future)")
                      ELSE
                         write (log_unit, *) 'Eigenvectors already computed by &
                              &Block Lanczos during the first Lanczos pass'

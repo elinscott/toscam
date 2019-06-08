@@ -22,7 +22,7 @@ echo `pwd`
 
 if [ $3 == 1 ]
 then
-   ed_solver_serial.out EDfile=ed.in BATHfile=ed.hybrid CORRELfile=ed.correl OLDGSFILE=GS.raw &> run_iter_ed.out
+   ed_solver_serial.out EDfile=ed.in BATHfile=ed.hybrid CORRELfile=ed.correl OLDGSFILE=GS.raw &> ed_solver_serial.log
 else
    ls machines_ed || fill_machine_file machines_ed $3
    

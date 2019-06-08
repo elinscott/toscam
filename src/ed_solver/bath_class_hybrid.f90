@@ -556,9 +556,9 @@ contains
       endif
 
       if (use_specific_set_parameters .and. (ncpt_tot == 0 .or. &
-                                             .not. ncpt_flag_two_step_fit)) test(1:bath%nparam + &
-                                                                                 ncpt_para*ncpt_tot) = param_input(1:bath%nparam + &
-                                                                                                                 ncpt_para*ncpt_tot)
+            .not. ncpt_flag_two_step_fit)) then
+         test(1:bath%nparam + ncpt_para*ncpt_tot) = param_input(1:bath%nparam + ncpt_para*ncpt_tot)
+      end if
 
       if (.not. skip_fit_) then
          if (iterdmft == 1) then

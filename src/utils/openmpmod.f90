@@ -209,7 +209,7 @@
        silent_loc = .true.
        if (present(silent)) silent_loc = silent
 
-!$OMP      PARALLEL PRIVATE(NTHREADS, TID)
+!$OMP      PARALLEL PRIVATE(TID)
        TID = OMP_GET_THREAD_NUM()
        PROCS = OMP_GET_NUM_PROCS()
        NTHREADS = OMP_GET_NUM_THREADS()

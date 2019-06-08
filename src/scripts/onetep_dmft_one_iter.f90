@@ -2370,7 +2370,13 @@ call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorb
       logical                :: check
       integer                :: funit
 
+      inquire(file=trim(adjustl(value(kk_))), exist=check)
+
+      call utils_assert(check, 'Error in collect_greens: ' &
+            // trim(adjustl(value(kk_))) // ' file not found')
+
       funit = utils_unit()
+
       open (unit=funit, file=trim(adjustl(value(kk_))), form='unformatted')
       j = 0
       do

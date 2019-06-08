@@ -57,6 +57,7 @@ cp LOCAL_DOS_atom* FULL_DOS* atom$1/   > /dev/null 2>&1
 cp input_onetep_dmft.txt atom$1/       > /dev/null 2>&1
 
 ls i_am_dimer$1     > /dev/null 2>&1  && echo "dmft_for_dimer=.true."                 >> ./atom$1/input_onetep_dmft.txt
+ls mask_ndc         > /dev/null 2>&1  && cat mask_ndc         | head -n $1 | tail -1  >> ./atom$1/input_onetep_dmft.txt
 ls mask_norb        > /dev/null 2>&1  && cat mask_norb        | head -n $1 | tail -1  >> ./atom$1/input_onetep_dmft.txt
 ls mask_u           > /dev/null 2>&1  && cat mask_u           | head -n $1 | tail -1  >> ./atom$1/input_onetep_dmft.txt
 ls mask_j           > /dev/null 2>&1  && cat mask_j           | head -n $1 | tail -1  >> ./atom$1/input_onetep_dmft.txt
@@ -78,9 +79,8 @@ rm atom$1/sigma_output*_*                                  > /dev/null 2>&1
 cp sigma_output*_* atom$1/                                 > /dev/null 2>&1             
 mv $2 atom$1/
 cd atom$1
-echo "calling ONE ITER DMFT in directory " `pwd`
-echo "command line: onetep_dmft_one_iter.out " $2 $3 
-onetep_dmft_one_iter.out $2 $3
+echo "Calling onetep_dmft_one_iter.out " $2 $3 " &> onetep_dmft_one_iter"$3".log"
+onetep_dmft_one_iter.out $2 $3 &> "onetep_dmft_one_iter"$3".log"
 if [[ $? -ne 0 ]]; then
    echo "ERROR: onetep_dmft_one_iter.out returned a non-zero exit code"
    echo "Exiting onetep_dmft_one_iter_script_pm.out"

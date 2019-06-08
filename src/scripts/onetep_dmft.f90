@@ -172,56 +172,58 @@ contains
 
    subroutine init_my_input_variables
 
-      use common_def, only: utils_system_call
+      use common_def, only: utils_system_call, utils_assert, utils_unit
 
       implicit none
-      integer :: numb_dat
+      integer :: numb_dat, funit
 
       call namelist_init(nm, 200, name_of_namelist='dmftonetep_variables')
       call putel_in_namelist(nm, niter_dmft, 'niter_dmft', 5, 'Definition:Number of DMFT iteration')
       call putel_in_namelist(nm, nproc, 'nproc', 1, 'Definition:=number of processors for dmft')
-   call putel_in_namelist(nm,nproc_mpi_solver,'nproc_mpi_solver',1,'Definition:=number of processors (MPI type) used for DMFT solver')
-   call putel_in_namelist(nm,nproc_onetep_openmp_,'nproc_onetep_openmp_',1,'Definition: will run mpi for the onetep dmft interface, but each mpi job will run with nproc_onetep_openmp openmp threads')
+      call putel_in_namelist(nm,nproc_mpi_solver,'nproc_mpi_solver',1,'Definition:=number of processors (MPI type) used for DMFT solver')
+      call putel_in_namelist(nm,nproc_onetep_openmp_,'nproc_onetep_openmp_',1,'Definition: will run mpi for the onetep dmft interface, but each mpi job will run with nproc_onetep_openmp openmp threads')
       call putel_in_namelist(nm, nproc_onetep, 'nproc_onetep', 1, 'Definition:=number of processors (MPI type) for onetep')
-     call putel_in_namelist(nm, openmp_solver, 'openmp_solver', 8, 'Definition:Number of open-mp cores running for the dmft-solver')
+      call putel_in_namelist(nm, openmp_solver, 'openmp_solver', 8, 'Definition:Number of open-mp cores running for the dmft-solver')
       call putel_in_namelist(nm, split_onetep, 'split_onetep', .false., 'Definition:=asynchronous calls to onetep')
-   call putel_in_namelist(nm,start_from_an_old_sim,'start_from_an_old_sim',.false.,'Definition:=if true start from an old calculation, sigma files must be present')
-    call putel_in_namelist(nm, all_local_host, 'all_local_host', .false., 'Definition:=if true will send all the job on local host')
-   call putel_in_namelist(nm,just_onetep,'just_onetep',.false.,'Definition:=if true it will only compute the onetep part, no dmft at all, usefull to compute the DOS after a converged DMFT with a matsubara solver')
-   call putel_in_namelist(nm,compute_dos,'compute_dos',.false.,'Definition:=if true will run onetep only (1 iteration) to compute the density of states from a real frequency Solver, or from ED if the run reached the last iteration and if last_iter_real=.true. was set during the DMFT calculation. There is no need to adapt the number of dmft points or the dmft temperature ih the onetep file')
-   call putel_in_namelist(nm,ed_real_frequ_last ,'ed_real_frequ_last', 100  , 'Definition:ed number of frequencies for last DMFT iter, going back to onetep for FULL_DOS')
+      call putel_in_namelist(nm,start_from_an_old_sim,'start_from_an_old_sim',.false.,'Definition:=if true start from an old calculation, sigma files must be present')
+      call putel_in_namelist(nm, all_local_host, 'all_local_host', .false., 'Definition:=if true will send all the job on local host')
+      call putel_in_namelist(nm,just_onetep,'just_onetep',.false.,'Definition:=if true it will only compute the onetep part, no dmft at all, usefull to compute the DOS after a converged DMFT with a matsubara solver')
+      call putel_in_namelist(nm,compute_dos,'compute_dos',.false.,'Definition:=if true will run onetep only (1 iteration) to compute the density of states from a real frequency Solver, or from ED if the run reached the last iteration and if last_iter_real=.true. was set during the DMFT calculation. There is no need to adapt the number of dmft points or the dmft temperature ih the onetep file')
+      call putel_in_namelist(nm,ed_real_frequ_last ,'ed_real_frequ_last', 100  , 'Definition:ed number of frequencies for last DMFT iter, going back to onetep for FULL_DOS')
       call putel_in_namelist(nm, ed_frequ_min, 'ed_frequ_min ', -10.d0, 'Definition: min ED real frequ')
       call putel_in_namelist(nm, ed_frequ_max, 'ed_frequ_max ', +10.d0, 'Definition: max ED real frequ')
-   call putel_in_namelist(nm,restart_from_iteration_number,'restart_from_iteration_number',0,'Definition:restart from iteration number given here instead of starting from first iteration, note that you might need to feed in the right sigma_output files in the present directory, just copy files from dir_onetepX before_onetep/ to present directory')
-   call putel_in_namelist(nm, mpi_onetep_type, 'mpi_onetep_type', 1, 'Definition: if 1 will run a home made mpi, if 2 will run a more regular mpi, hand made is to use in difficult situations when clusters are giving some connection troubles')
-     call putel_in_namelist(nm, numa, 'numa', .false., 'Definition: numa avoids remote memory access in multi-socket architectures')
-   call putel_in_namelist(nm,dmft_split,'dmft_split',.false.,'Definition: if true splits the mpi onetep dmft interface and each cpus computes a frequency, instead of running together and inverting matrices by SCALAPACK')
-   call putel_in_namelist(nm,dmft_splitkdmftall,'dmft_splitkdmftall',.false.,'Definition: if true splits the mpi onetep dmft interface in several batches each of them running different K points')
-   call putel_in_namelist(nm,dmft_splitk_batch,'dmft_splitk_batch',1,'Definition: number of cpus in each of the batch when splitting k points')
-   call putel_in_namelist(nm,hide_errors,'hide_errors',.true.,'Definition: this iterface will not show the list of minor errors occuring when for instance the mpi aborts')
-   call putel_in_namelist(nm,mach_onetep,'mach_onetep','machines_onetep','Definition: name of the machine file for the GF calculation')
- call putel_in_namelist(nm, nomachinefile, 'nomachinefile', .false., 'Definition: if true removes -machinefile from the mpi syntax')
+      call putel_in_namelist(nm,restart_from_iteration_number,'restart_from_iteration_number',0,'Definition:restart from iteration number given here instead of starting from first iteration, note that you might need to feed in the right sigma_output files in the present directory, just copy files from dir_onetepX before_onetep/ to present directory')
+      call putel_in_namelist(nm, mpi_onetep_type, 'mpi_onetep_type', 1, 'Definition: if 1 will run a home made mpi, if 2 will run a more regular mpi, hand made is to use in difficult situations when clusters are giving some connection troubles')
+      call putel_in_namelist(nm, numa, 'numa', .false., 'Definition: numa avoids remote memory access in multi-socket architectures')
+      call putel_in_namelist(nm,dmft_split,'dmft_split',.false.,'Definition: if true splits the mpi onetep dmft interface and each cpus computes a frequency, instead of running together and inverting matrices by SCALAPACK')
+      call putel_in_namelist(nm,dmft_splitkdmftall,'dmft_splitkdmftall',.false.,'Definition: if true splits the mpi onetep dmft interface in several batches each of them running different K points')
+      call putel_in_namelist(nm,dmft_splitk_batch,'dmft_splitk_batch',1,'Definition: number of cpus in each of the batch when splitting k points')
+      call putel_in_namelist(nm,hide_errors,'hide_errors',.true.,'Definition: this iterface will not show the list of minor errors occuring when for instance the mpi aborts')
+      call putel_in_namelist(nm,mach_onetep,'mach_onetep','machines_onetep','Definition: name of the machine file for the GF calculation')
+      call putel_in_namelist(nm, nomachinefile, 'nomachinefile', .false., 'Definition: if true removes -machinefile from the mpi syntax')
 
       call look_for_namelist_in_file(nm, './input_onetep_dmft.txt')
       call look_for_command_line_argument(nm)
 
       call system("get_onetep_case")
 
-      open (unit=10002, file='case_onetep')
-      read (10002, *) CASE_ONETEP
-      close (10002)
+      funit = utils_unit()
+
+      open (unit=funit, file='case_onetep')
+      read (funit, *) CASE_ONETEP
+      close (funit)
+
       write (*, *) 'my ONETEP CASE is : ', trim(adjustl(CASE_ONETEP))
 
       call system(" ls *.dat | wc -l >> other_dat_file_  ")
-      open (unit=118229, file='other_dat_file_')
-      read (118229, *) numb_dat
-      close (118229)
+
+      open (unit=funit, file='other_dat_file_')
+      read (funit, *) numb_dat
+      close (funit)
+
       call system(" rm other_dat_file_ > /dev/null 2>&1 ")
-      if (numb_dat > 1) then
-         write (*, *) 'PLEASE ONLY KEEP ONE *.dat FILE IN THE RUNNING DIRECTORY'
-         write (*, *) 'ERROR,CRITICAL'
-         stop
-      endif
+
+      call utils_assert(numb_dat == 1, 'Error in init_my_input_variables: multiple *.dat files found')
 
       call check_flag_consistency
 
@@ -277,16 +279,18 @@ contains
          just_onetep = .true.
          restart_from_iteration_number = 0
       endif
-      if (nproc > 1 .and. nproc_mpi_solver > 1) then
-         write (*, *) 'cannot use MPI for CTQMC and for ONETEP+DMFT interface (where mpi sends one job for each atoms)'
-         write (*, *) 'please choose (nproc,nproc_mpi_solver) with (>1,1) or (1,>1) choices'
-         stop
-      endif
+
+      call utils_assert(nproc == 1 .or. nproc_mpi_solver == 1, 'Error &
+            &in check_flag_consistency: cannot have both nproc and &
+            &nproc_mpi_solver > 1')
+
       if (restart_from_iteration_number > 0) then
+
          write (*, *) 'RESTARTING FROM ITERATION NUMBER [x] = ', restart_from_iteration_number
          write (*, *) 'switching on flag start_from_an_old_sim'
          start_from_an_old_sim = .true.
       endif
+
       if (all_local_host) mpi_onetep_type = 1
 
 #ifdef debug
@@ -311,6 +315,7 @@ end module
 program dmftonetep
    use dmft_variables
    use openmpmod, only: init_openmp, omp_num_threads
+   use common_def, only: utils_abort
    implicit none
    integer                    :: i, j, k, ww, iter_dmft
    character(200)             :: files, filename_sigma_source, filename_sigma
@@ -367,7 +372,8 @@ program dmftonetep
 
       call onetep_normal_mode
 
-      if (just_onetep) stop
+      if (just_onetep) utils_abort("Calculation complete (only running ONETEP since &
+            &just_onetep = T)")
 
       call system(" dmft_collect_script_dimer.out > onetep_dimer_splitting"//TRIM(ADJUSTL(toString(iter_dmft)))//" 2>&1  ")
 

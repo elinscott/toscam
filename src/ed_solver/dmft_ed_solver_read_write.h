@@ -26,7 +26,7 @@
       use aim_class, only: aim_type
       use common_def, only: c2s, dump_message, i2c
       use correlations, only: write_info_correlations
-      use genvar, only: iproc, nproc, procname
+      use genvar, only: iproc, nproc, procname, no_mpi
       use impurity_class, only: write_impurity
       use solver, only: write_info_solver
 
@@ -41,9 +41,13 @@
       CALL dump_message(UNIT=UNIT, TEXT="############")
       CALL dump_message(UNIT=UNIT, TEXT="############")
 
-      CALL dump_message(UNIT=UNIT, TEXT="# THIS IS PROCESS "// &
+      if (.not. no_mpi) then
+         CALL dump_message(UNIT=UNIT, TEXT="# THIS IS PROCESS "// &
                         c2s(i2c(iproc))//" OF "//c2s(i2c(nproc))//" RUNNING ON "// &
                         TRIM(ADJUSTL(procname)))
+      else
+         call dump_message(unit=unit, text="# Running in serial mode"
+      end if
 
 #ifdef _complex
       CALL dump_message(UNIT=UNIT, TEXT="# FLAG: COMPLEX HAMILTONIAN")
