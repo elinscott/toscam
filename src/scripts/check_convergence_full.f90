@@ -4,10 +4,10 @@
 
 program dmft_check_convergence
 !---------------!
-   use DMFT_SOLVER_ED
+   ! use DMFT_SOLVER_ED
    !use dmftmod
    use genvar
-   use init_and_close_my_sim
+   use init_and_close_my_sim, only: initialize_my_simulation, finalize_my_simulation
    ! use fortran_cuda
    use matrix
    use StringManip

@@ -130,65 +130,17 @@ objdir:
 # Dependencies
 #
 
-check_convergence.out: check_convergence.f90 aim2_class.o aim_class.o apply_c.o apply_ns.o \
-    apply_p.o bath_class.o bath_class_hybrid.o bath_class_vec.o block_lanczos.o common_def.o \
-    conj_grad.o correl_class.o correlations.o density_matrix.o derivative_noise.o \
-    dmft_solver_ed.o ed_arpack.o eigen_class.o eigen_sector_class.o fermion_hilbert_class.o \
-    fermion_ket_class.o fermion_sector2_class.o fourier_transform_mod.o frequency_class.o genvar.o \
-    geometry.o geomlib.o globalvar_ed_solver.o green_class.o green_class_compute_dynamic.o \
-    green_class_compute_symmetric.o green_class_computeaa.o green_class_computeab.o h_class.o \
-    haim2_class.o haimsz_class.o haimupdo_class.o impurity_class.o init_and_close_my_sim.o \
-    lanczos_fast.o linalg.o lockmod.o mask_class.o masked_matrix_class.o masked_matrix_class_mod.o \
-    matrix.o mesh.o minimization_wrapping.o mpi_mod.o namelistmod.o openmpmod.o overlap_module.o \
-    quantum_algebra.o random.o rcmatrix_class.o rcvector_class.o readable_vec_class.o \
-    sector_class.o smooth_data.o solver.o sorting.o specialfunction.o splines.o splines2.o \
-    string4.o string5.o stringmanip.o strings.o tools_algebra.o tridiag_class.o \
-    vertex.o
+check_convergence.out: check_convergence.f90 common_def.o genvar.o init_and_close_my_sim.o \
+      linalg.o lockmod.o matrix.o openmpmod.o random.o stringmanip.o 
 
-check_convergence_full.out: check_convergence_full.f90 aim2_class.o aim_class.o apply_c.o \
-    apply_ns.o apply_p.o bath_class.o bath_class_hybrid.o bath_class_vec.o block_lanczos.o \
-    common_def.o conj_grad.o correl_class.o correlations.o density_matrix.o \
-    derivative_noise.o dmft_solver_ed.o ed_arpack.o eigen_class.o eigen_sector_class.o \
-    fermion_hilbert_class.o fermion_ket_class.o fermion_sector2_class.o fourier_transform_mod.o \
-    frequency_class.o genvar.o geometry.o geomlib.o globalvar_ed_solver.o green_class.o \
-    green_class_compute_dynamic.o green_class_compute_symmetric.o green_class_computeaa.o \
-    green_class_computeab.o h_class.o haim2_class.o haimsz_class.o haimupdo_class.o \
-    impurity_class.o init_and_close_my_sim.o lanczos_fast.o linalg.o lockmod.o mask_class.o \
-    masked_matrix_class.o masked_matrix_class_mod.o matrix.o mesh.o minimization_wrapping.o \
-    mpi_mod.o namelistmod.o openmpmod.o overlap_module.o quantum_algebra.o random.o \
-    rcmatrix_class.o rcvector_class.o readable_vec_class.o sector_class.o smooth_data.o solver.o \
-    sorting.o specialfunction.o splines.o splines2.o string4.o string5.o stringmanip.o strings.o \
-    tools_algebra.o tridiag_class.o vertex.o
+check_convergence_full.out: check_convergence_full.f90 common_def.o genvar.o init_and_close_my_sim.o \
+      linalg.o lockmod.o matrix.o openmpmod.o random.o stringmanip.o 
 
-check_convergence_renorm.out: check_convergence_renorm.f90 aim2_class.o aim_class.o apply_c.o \
-    apply_ns.o apply_p.o bath_class.o bath_class_hybrid.o bath_class_vec.o block_lanczos.o \
-    common_def.o conj_grad.o correl_class.o correlations.o density_matrix.o \
-    derivative_noise.o dmft_solver_ed.o ed_arpack.o eigen_class.o eigen_sector_class.o \
-    fermion_hilbert_class.o fermion_ket_class.o fermion_sector2_class.o fourier_transform_mod.o \
-    frequency_class.o genvar.o geometry.o geomlib.o globalvar_ed_solver.o green_class.o \
-    green_class_compute_dynamic.o green_class_compute_symmetric.o green_class_computeaa.o \
-    green_class_computeab.o h_class.o haim2_class.o haimsz_class.o haimupdo_class.o \
-    impurity_class.o init_and_close_my_sim.o lanczos_fast.o linalg.o lockmod.o mask_class.o \
-    masked_matrix_class.o masked_matrix_class_mod.o matrix.o mesh.o minimization_wrapping.o \
-    mpi_mod.o namelistmod.o openmpmod.o overlap_module.o quantum_algebra.o random.o \
-    rcmatrix_class.o rcvector_class.o readable_vec_class.o sector_class.o smooth_data.o solver.o \
-    sorting.o specialfunction.o splines.o splines2.o string4.o string5.o stringmanip.o strings.o \
-    tools_algebra.o tridiag_class.o vertex.o
+check_convergence_renorm.out: check_convergence_renorm.f90 common_def.o genvar.o init_and_close_my_sim.o \
+      linalg.o lockmod.o matrix.o openmpmod.o random.o stringmanip.o 
 
-check_convergence_single_renorm.out: check_convergence_single_renorm.f90 aim2_class.o aim_class.o \
-    apply_c.o apply_ns.o apply_p.o bath_class.o bath_class_hybrid.o bath_class_vec.o \
-    block_lanczos.o common_def.o conj_grad.o correl_class.o correlations.o \
-    density_matrix.o derivative_noise.o dmft_solver_ed.o ed_arpack.o eigen_class.o \
-    eigen_sector_class.o fermion_hilbert_class.o fermion_ket_class.o fermion_sector2_class.o \
-    fourier_transform_mod.o frequency_class.o genvar.o geometry.o geomlib.o globalvar_ed_solver.o \
-    green_class.o green_class_compute_dynamic.o green_class_compute_symmetric.o \
-    green_class_computeaa.o green_class_computeab.o h_class.o haim2_class.o haimsz_class.o \
-    haimupdo_class.o impurity_class.o init_and_close_my_sim.o lanczos_fast.o linalg.o lockmod.o \
-    mask_class.o masked_matrix_class.o masked_matrix_class_mod.o matrix.o mesh.o \
-    minimization_wrapping.o mpi_mod.o namelistmod.o openmpmod.o overlap_module.o quantum_algebra.o \
-    random.o rcmatrix_class.o rcvector_class.o readable_vec_class.o sector_class.o smooth_data.o \
-    solver.o sorting.o specialfunction.o splines.o splines2.o string4.o string5.o stringmanip.o \
-    strings.o tools_algebra.o tridiag_class.o vertex.o
+check_convergence_single_renorm.out: check_convergence_single_renorm.f90 common_def.o genvar.o \
+      init_and_close_my_sim.o linalg.o lockmod.o matrix.o openmpmod.o random.o stringmanip.o 
 
 dmft_all_iterations_onetep.out: dmft_all_iterations_onetep.f90 common_def.o genvar.o stringmanip.o
 
@@ -244,7 +196,7 @@ ed_solver.out: ed_solver.f90 aim2_class.o aim_class.o apply_c.o apply_ns.o apply
     matrix.o mesh.o minimization_wrapping.o mpi_mod.o namelistmod.o openmpmod.o overlap_module.o \
     quantum_algebra.o random.o rcmatrix_class.o rcvector_class.o readable_vec_class.o \
     sector_class.o smooth_data.o solver.o sorting.o specialfunction.o splines.o splines2.o \
-    string4.o string5.o stringmanip.o strings.o tools_algebra.o tridiag_class.o \
+    string4.o string5.o stringmanip.o strings.o timer_mod.o tools_algebra.o tridiag_class.o \
     vertex.o
 
 ed_solver_complex.out: ed_solver_complex.f90 aim2_class.o aim_class.o apply_c.o apply_ns.o \
@@ -274,13 +226,14 @@ ed_solver_serial.out: ed_solver_serial.f90 aim2_class.o aim_class.o apply_c.o ap
     matrix.o mesh.o minimization_wrapping.o mpi_mod.o namelistmod.o openmpmod.o overlap_module.o \
     quantum_algebra.o random.o rcmatrix_class.o rcvector_class.o readable_vec_class.o \
     sector_class.o smooth_data.o solver.o sorting.o specialfunction.o splines.o splines2.o \
-    string4.o string5.o stringmanip.o strings.o tools_algebra.o tridiag_class.o \
+    string4.o string5.o stringmanip.o strings.o timer_mod.o tools_algebra.o tridiag_class.o \
     vertex.o
 
 gensig.out: gensig.f90
 
 onetep_dmft.out: onetep_dmft.f90 common_def.o genvar.o geomlib.o init_and_close_my_sim.o linalg.o \
-    lockmod.o namelistmod.o openmpmod.o random.o string4.o string5.o stringmanip.o strings.o
+    lockmod.o namelistmod.o openmpmod.o random.o string4.o string5.o stringmanip.o strings.o \
+    timer_mod.o
 
 onetep_dmft_build_heterostructure.out: onetep_dmft_build_heterostructure.f90 common_def.o genvar.o \
     lockmod.o namelistmod.o openmpmod.o string4.o string5.o stringmanip.o

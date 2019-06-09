@@ -18,6 +18,8 @@ module timer_mod
       logical                       :: running
    end type timing_info
 
+   integer :: num_entries = 0
+
    type(timing_info) :: routines(max_number_of_timed_routines)
 
    public :: start_timer
@@ -40,14 +42,15 @@ contains
 
       if (i == 0) then
          ! We have not called this routine before; initialise it
-         i = free_routine_index()
+         i = num_entries + 1
 
-         if (i == 1) then
+         if (num_entries == 0) then
             ! This is the first timer we've ever called; initialise the routines object
             routines(:)%num_calls = 0
             routines(:)%cum_time = 0.0_DP
          end if
-            
+         
+         num_entries = i
          routines(i)%name = trim(adjustl(name))
       else
          call utils_assert(.not. routines(i)%running, 'Error in timer_mod: '&
@@ -80,7 +83,9 @@ contains
 
       ! ebl: stop the timer and record the elapsed time
       final_time = elapsed_time()
-      routines(i)%cum_time = final_time - routines(i)%start_time
+      write(*,*) routines(i)%start_time
+      write(*,*) final_time
+      routines(i)%cum_time = routines(i)%cum_time + (final_time - routines(i)%start_time)
       routines(i)%running = .false.
 
    end subroutine stop_timer
@@ -97,31 +102,13 @@ contains
 
       routine_index = 0
 
-      do i = 1, max_number_of_timed_routines
+      do i = 1, num_entries
          if (trim(adjustl(routines(i)%name)) == trim(adjustl(name))) routine_index = i
       end do
 
       return
 
    end function routine_index
-
-   function free_routine_index()
-      ! Finds the first routine index that has not been assigned
-
-      use common_def, only: utils_abort
-
-      implicit none
-      
-      integer           :: free_routine_index
-      integer           :: i
-
-      do free_routine_index = 1, max_number_of_timed_routines
-         if (routines(i)%num_calls == 0) return
-      end do
-
-      call utils_abort("Error in timer_mod: no free routine indices available")
-
-   end function free_routine_index
 
    subroutine timing_summary(logfile)
 
@@ -132,22 +119,27 @@ contains
       integer, optional :: logfile
 
       integer :: i
+      integer :: loc_logfile
+      character(len=52) :: name_string
+      character(len=9) :: calls_string
+      character(len=9) :: time_string
+
+      name_string = "Routine"
+      calls_string = "Calls"
+      time_string = "Walltime"
+
+      ! By default, write to screen
+      loc_logfile = 6
+      if (present(logfile)) loc_logfile = logfile
 
       ! ebl: header
-      if (present(logfile)) then
-         write(logfile, '(a)') repeat("=", 80)
-         write(logfile, '(a50,a10,a10)') "Routine", "Calls", "Walltime"
-      else
-         write(*, '(a)') repeat("=", 80)
-         write(*, '(a50,a10,a10)') "Routine", "Calls", "Walltime"
-      end if
+      write(loc_logfile, '(a)') " " // repeat("=", 31) // " TIMING SUMMARY " &
+            // repeat("=", 31) // " "
+      write(loc_logfile, '(a2,a53,a3,a9,a3,a9)') "  ", adjustl(name_string), " | ", adjustl(calls_string), &
+            " | ", adjustl(time_string)
 
       ! ebl: loop over routines
-      do i = 1, max_number_of_timed_routines
-
-         ! ebl: break out of loop if we reach the end of the stored number of
-         ! routines
-         if (routines(i)%num_calls > 1) exit
+      do i = 1, num_entries
 
          ! ebl: check all timers have been stopped
          call utils_assert(.not. routines(i)%running, 'Error in timer_mod: '&
@@ -155,33 +147,26 @@ contains
                &attempting to print summary')
 
          ! ebl: print summary
-         if (present(logfile)) then
-            write(logfile, '(a50,i10,f10.3)') trim(adjustl(routines(i)%name)), &
-                  routines(i)%num_calls, routines(i)%cum_time
-         else
-            write(*, '(a50,i10,f10.3)') trim(adjustl(routines(i)%name)), &
-                  routines(i)%num_calls, routines(i)%cum_time
-         end if
+         write(loc_logfile, '(a2,a52,a3,i9,a3,f9.3)') "  ", adjustl(routines(i)%name), &
+               " | ", routines(i)%num_calls, " | ", routines(i)%cum_time
 
       end do
 
       ! ebl: footer
-      if (present(logfile)) then
-         write(logfile, '(a60,f10.3)') 'TOTAL', elapsed_time()
-         write(logfile, '(a)') repeat("=", 80)
-      else
-         write(*, '(a60,f10.3)') 'TOTAL', elapsed_time()
-         write(*, '(a)') repeat("=", 80)
-      end if
+      write(loc_logfile, '(a66,a3,f9.3)') 'TOTAL', " | ", elapsed_time()
+      write(loc_logfile, '(a,a78)') " ", repeat("=", 78)
 
    end subroutine timing_summary
 
    function elapsed_time()
       ! Fetch the time elapsed since the start of the calculation
+      ! Currently written as a function so that we will be able to wrap MPI_WTIME etc
+      ! when parallelism is implemented
+
       integer, parameter :: SP = kind(1.0)
       real(kind=SP)      :: delta, time_array(2), etime
       real(kind=DP)      :: elapsed_time
-      
+
       delta = etime(time_array)
 
       elapsed_time = real(delta, DP)

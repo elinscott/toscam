@@ -36,6 +36,7 @@ contains
          dEmax, FLAG_FULL_ED_GREEN, which_lanczos
       use mpi_mod, only: mpibarrier
       use aim_class, only: aim_type
+      use timer_mod, only: start_timer, stop_timer
 
       implicit none
 
@@ -49,6 +50,8 @@ contains
       LOGICAL           :: NOT_COMMENSURATE
       LOGICAL, OPTIONAL :: COMPUTE_ALL_CORREL
       LOGICAL, OPTIONAL :: skip_vector, skip_filter
+
+      call start_timer("solve_aim")
 
       itot = AIM%bath%Nb + AIM%impurity%Nc
 
@@ -96,6 +99,8 @@ contains
          CALL write_raw_eigensectorlist(GS, OLDGSFILE)
       endif
       IF (first_call .and. .not. ALL_FIRST_CALL) first_call = .false.
+
+      call stop_timer("solve_aim")
    contains
 
 #include "solver.h"

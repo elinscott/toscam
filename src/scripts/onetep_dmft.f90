@@ -318,6 +318,7 @@ program dmftonetep
    use dmft_variables
    use openmpmod, only: init_openmp, omp_num_threads
    use common_def, only: utils_abort
+   use timer_mod, only: timing_summary
    implicit none
    integer                    :: i, j, k, ww, iter_dmft
    character(200)             :: files, filename_sigma_source, filename_sigma
@@ -390,6 +391,8 @@ program dmftonetep
       call system(" cp sigma_output* after_onetep ")
       call system(" mv after_onetep dir_onetep_iter"//TRIM(ADJUSTL(toString(iter_dmft))))
    enddo
+
+   call timing_summary()
    !=========================================================================!
    !=========================================================================!
 
@@ -451,6 +454,7 @@ contains
    subroutine onetep_normal_mode
 
       use common_def, only: utils_system_call
+      use timer_mod,  only: start_timer, stop_timer
 
       implicit none
 
@@ -459,6 +463,7 @@ contains
       character(3)    :: lochost
       integer         :: ierr
 
+      call start_timer("onetep")
       call system("rm ./onetep_confirmation*  > /dev/null 2>&1 ")
       call system("rm ./green_output*         > /dev/null 2>&1 ")
 
@@ -612,6 +617,7 @@ contains
          call utils_system_call(command_line, abort=.true.)
 
       endif
+      call stop_timer("onetep")
 
       call system(" dmft_collect_script.out 2>&1 ")
 
@@ -623,12 +629,12 @@ contains
    subroutine onetepdmft
 
       use common_def, only: utils_system_call
+      use timer_mod,  only: start_timer, stop_timer
 
       implicit none
       integer         :: nprocess
-      character(2000) :: prefix, args, output, mach_arg, mach_file
+      character(2000) :: prefix, args, output, mach_arg, mach_file, executable
       integer         :: ierr
-      integer         :: omp_threads
 
 
       if (nproc > 1) then
@@ -637,20 +643,24 @@ contains
          mach_arg = ' -machinefile '
          mach_file = " machines_dmft "
          nprocess = nproc
+         executable = "onetep_spilt.out"
          args = "  iter_dmft="//TRIM(ADJUSTL(toString(iter_dmft)))
          output = "  onetep_dmft_part_"//TRIM(ADJUSTL(toString(iter_dmft)))
          ! ebl: make sure OMP threads get inherited by onetep_split.out
          command_line = build_mpi_command_line(prefix=prefix, np=nprocess, p=1, omp=openmp_solver, mach=mach_file,&
-                                          & mach_arg=mach_arg, args=args, exe="onetep_split.out",&
+                                          & mach_arg=mach_arg, args=args, exe=executable,&
                                           & outputin=output, hide_errors=.false., localhost='F')
       else
          ! ebl: make sure OMP threads get inherited by onetep_split_serial.out
+         executable = "onetep_split_serial.out"
          call utils_system_call("export OMP_NUM_THREADS=" // trim(adjustl(tostring(openmp_solver))), abort=.true.)
-         command_line=" onetep_split_serial.out iter_dmft=" // TRIM(ADJUSTL(toString(iter_dmft))) // &
+         command_line=trim(adjustl(executable)) // " iter_dmft=" // TRIM(ADJUSTL(toString(iter_dmft))) // &
                " > onetep_dmft_part_"//TRIM(ADJUSTL(toString(iter_dmft)))
       endif
 
+      call start_timer(executable)
       call utils_system_call(command_line, abort=.true.)
+      call stop_timer(executable)
 
    end subroutine
 

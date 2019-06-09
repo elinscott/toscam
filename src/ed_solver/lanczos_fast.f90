@@ -170,6 +170,7 @@ contains
       use rcvector_class, only: create_fix_initial_vector, delete_rcvector, &
          new_rcvector, norm_rcvector, rcvector_type
       use tridiag_class, only: delete_tridiag, new_tridiag, tridiag_type
+      use timer_mod, only: start_timer, stop_timer
 
       implicit none
 
@@ -183,6 +184,8 @@ contains
       INTEGER                   :: dimenvec
 
       if (lowest%neigen == 0) return
+
+      call start_timer("lanczos_get_gs_sector")
 
       write (log_unit, *) '====================================================='
       write (log_unit, *) '  GETTING THE GROUD STATE                            '
@@ -262,6 +265,8 @@ contains
       CALL delete_rcvector(lastvec)
       CALL delete_rcvector(tmp)
       CALL delete_tridiag(Lmatrix)
+
+      call stop_timer("lanczos_get_gs_sector")
 
    end subroutine
 
