@@ -473,6 +473,7 @@ program onestep_dmft_iteration
    use onetep_variables
    use openmpmod, only: init_openmp
    use genvar, only: iproc
+   use timer_mod, only: timing_summary
    !---------------!
    implicit none
    logical                :: checkujmat
@@ -570,6 +571,8 @@ real(8),allocatable    :: eimp_ed(:,:,:),Zimp_ren_p(:,:,:),Zimp_ren_m(:,:,:),Sim
    endif
 
    if (.not. verysilent) call system(" echo 'sigma files after paramagnetic copy' `ls sigma_output* 2> /dev/null` ")
+
+   call timing_summary()
 
 contains
 
@@ -915,6 +918,7 @@ contains
    subroutine dmft_run
 
       use common_def, only: utils_assert, utils_abort, utils_system_call
+      use timer_mod,  only: start_timer, stop_timer
 
       implicit none
       complex(8)   ::  mat_tmp0(2*LL + 1, 2*LL + 1), mat_tmp20(2*(2*LL + 1), 2*(2*LL + 1))
@@ -1507,17 +1511,21 @@ call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorb
       call system("mv delta_input* out.cix actqmc.cix "//TRIM(ADJUSTL(filename)))
       call system("cp PARAMS PARAMS.oca ")
       call system("mv PARAMS* "//TRIM(ADJUSTL(filename)))
+
       if (.not. ctqmc_erase_status) call system("cp status* "//TRIM(ADJUSTL(filename)))
+
       if (solver == 1) then
- call utils_system_call("run_iter_ctqmc "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))), abort=.true.) 
+         call utils_system_call("run_iter_ctqmc "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))), abort=.true.) 
       elseif (solver == 2) then
- call utils_system_call("run_iter_nca "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))), abort=.true.)
+         call utils_system_call("run_iter_nca "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))), abort=.true.)
       elseif (solver == 3) then
- call utils_system_call("run_iter_oca "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))), abort=.true.)
+         call utils_system_call("run_iter_oca "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))), abort=.true.)
       elseif (solver == 4) then
- call utils_system_call("run_iter_ed "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))), abort=.true.)
+         call start_timer("run_iter_ed")
+         call utils_system_call("run_iter_ed "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))), abort=.true.)
+         call stop_timer("run_iter_ed")
       elseif (solver == 5) then
- call utils_system_call("run_iter_hf "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))), abort=.true.)
+         call utils_system_call("run_iter_hf "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))), abort=.true.)
       else
          call utils_abort('Solver not defined')
       endif

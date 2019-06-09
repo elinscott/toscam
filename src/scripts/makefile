@@ -335,7 +335,7 @@ onetep_dmft_movie.out: onetep_dmft_movie.f90 genvar.o geomlib.o linalg.o lockmod
 
 onetep_dmft_one_iter.out: onetep_dmft_one_iter.f90 common_def.o genvar.o geomlib.o linalg.o \
     lockmod.o matrix.o namelistmod.o openmpmod.o random.o sorting.o specialfunction.o string4.o \
-    string5.o stringmanip.o strings.o tools_algebra.o
+    string5.o stringmanip.o strings.o timer_mod.o tools_algebra.o
 
 onetep_dmft_proj_green_func_matrix.out: onetep_dmft_proj_green_func_matrix.f90 common_def.o \
     derivative_noise.o fourier_transform_mod.o genvar.o geometry.o geomlib.o linalg.o lockmod.o \

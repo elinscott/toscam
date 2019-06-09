@@ -70,6 +70,7 @@ ROUTINES= common_def.f90 \
           strings.f90 \
           string4.f90 \
           string5.f90 \
+	  timer_mod.f90 \
           tools_algebra.f90 \
           tridiag_class.f90
 ROUTINESC=IEEE.c
@@ -186,7 +187,9 @@ strings.mod: strings.f90
 string4.mod: string4.f90 string5.mod
 
 string5.mod: string5.f90 stringmanip.mod
- 
+
+timer.mod: timer_mod.f90 common_def.mod genvar.mod
+
 tools_algebra.mod: tools_algebra.f90 genvar.mod
  
 IEEE.o: IEEE.c 
