@@ -60,14 +60,20 @@ contains
    subroutine compute_dynamic_full_ed(iph, dyn, freq, Opm, stat, title, &
                                       normvec, iisector, GS)
 
-      use eigen_class, only: eigen_type
-      use eigen_sector_class, only: eigensectorlist_type
-      use frequency_class, only: freq_type
-      use genvar, only: bosonic, fermionic, rank, size2
+      ! Compute dynamic correlations of operators O, O^+ 
+      !    i.e. < psi_(N-1) | O^+ | psi_N >
+
+      use common_def,          only: utils_assert
+      use eigen_class,         only: eigen_type
+      use eigen_sector_class,  only: eigensectorlist_type
+      use frequency_class,     only: freq_type
+      use genvar,              only: bosonic, fermionic, rank, size2
       use globalvar_ed_solver, only: cutoff_dynamic
-      use h_class, only: dimen_H
-      use mpi_mod, only: mpi_dot_product, mpibarrier, mpisum
-      use rcvector_class, only: norm_rcvector
+      use h_class,             only: dimen_H
+      use mpi_mod,             only: mpi_dot_product, mpibarrier, mpisum
+      use rcvector_class,      only: norm_rcvector
+      use stringmanip,         only: tostring
+      use timer_mod,           only: start_timer, stop_timer
 
       implicit none
 
@@ -84,11 +90,11 @@ contains
       TYPE(eigensectorlist_type) :: GS
       LOGICAL                    :: conv_one_step
 
-      IF (SIZE(dyn) /= freq%Nw) STOP "ERROR IN compute_dynamic: INCONSISTENT &
-           &DIMENSIONS!"
+      call start_timer("compute_dynamic_full_ed")
 
-      ! COMPUTE DYNAMIC CORRELATIONS OF OPERATORS O, O^ + I.E. < psi_(N-1)| O^
-      ! + |psi_N > !
+      call utils_assert(size(dyn) == freq%Nw, "Error in green_class_compute_dynamic: &
+            & inconsistent dimensions (" // tostring(size(dyn)) // " /= " &
+            // tostring(freq%Nw) // ")")
 
       IF (iph == 1) ph_sign = 1.0_DBL
       IF (iph == 2) ph_sign = -1.0_DBL
@@ -157,6 +163,8 @@ contains
       endif
 
 44    continue
+   
+      call stop_timer("compute_dynamic_full_ed")
 
    end subroutine
 

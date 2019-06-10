@@ -7,8 +7,11 @@ program dmft_standalone
    use DMFT_SOLVER_ED
    use genvar
    use init_and_close_my_sim
+   use timer_mod, only: initialize_timing, finalize_timing
 !---------------!
    implicit none
+
+   call initialize_timing
 
    no_mpi = .true.
 
@@ -27,6 +30,8 @@ program dmft_standalone
 
    call stand_alone_ed
    call finalize_my_simulation
+
+   call finalize_timing()
 
    write (*, *) 'ED_SOLVER_STANDALONE_FINISHED'
 

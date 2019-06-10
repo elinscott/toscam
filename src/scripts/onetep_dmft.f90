@@ -318,13 +318,15 @@ program dmftonetep
    use dmft_variables
    use openmpmod, only: init_openmp, omp_num_threads
    use common_def, only: utils_abort
-   use timer_mod, only: timing_summary
+   use timer_mod, only: initialize_timing, finalize_timing
    implicit none
    integer                    :: i, j, k, ww, iter_dmft
    character(200)             :: files, filename_sigma_source, filename_sigma
    character(8000)            :: command_line
    logical                    :: flag_onetep_producing_only_up_spin
    type(string)               :: cc_
+
+   call initialize_timing()
 
    call init_my_input_variables
 
@@ -392,7 +394,7 @@ program dmftonetep
       call system(" mv after_onetep dir_onetep_iter"//TRIM(ADJUSTL(toString(iter_dmft))))
    enddo
 
-   call timing_summary()
+   call finalize_timing()
    !=========================================================================!
    !=========================================================================!
 

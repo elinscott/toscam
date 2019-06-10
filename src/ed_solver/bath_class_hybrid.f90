@@ -469,6 +469,7 @@ contains
       use matrix, only: invmat, write_array
       use minimization_wrapping, only: minimize_func_wrapper
       use random, only: dran_tab
+      use timer_mod, only: start_timer, stop_timer
 
       implicit none
 
@@ -477,6 +478,8 @@ contains
       INTEGER                :: start_hybrid2bath, istep
       REAL(DBL)              :: dist_min, dist_test
       REAL(DBL), ALLOCATABLE :: test(:)
+
+      call start_timer("hybrid2bath")
 
       IF (.NOT. ASSOCIATED(bath%Eb)) STOP "ERROR IN hybrid2bath : INPUT ISNT &
            &ASSOCIATED!"
@@ -660,6 +663,8 @@ contains
       WRITE (log_unit, '(2(a, f0.12), a)') "# END of conjugate gradient: &
            &dist_min = ", dist_min, " (tolerance = ", bath%dist_max, ")"
       CALL timer_fortran(start_hybrid2bath, "### HYBRID => BATH TOOK ")
+
+      call stop_timer("hybrid2bath")
 
    contains
 

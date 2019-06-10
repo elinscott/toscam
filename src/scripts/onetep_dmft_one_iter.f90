@@ -473,7 +473,7 @@ program onestep_dmft_iteration
    use onetep_variables
    use openmpmod, only: init_openmp
    use genvar, only: iproc
-   use timer_mod, only: timing_summary
+   use timer_mod, only: initialize_timing, finalize_timing
    !---------------!
    implicit none
    logical                :: checkujmat
@@ -506,6 +506,8 @@ real(8),allocatable    :: eimp_ed(:,:,:),Zimp_ren_p(:,:,:),Zimp_ren_m(:,:,:),Sim
    integer, allocatable    :: UCC(:, :, :, :)
    complex(8), allocatable :: UCCr(:, :, :)
 
+   call initialize_timing()
+   
    call init_my_input_variables
    write (*, *) 'init data'
    call init_run
@@ -572,7 +574,7 @@ real(8),allocatable    :: eimp_ed(:,:,:),Zimp_ren_p(:,:,:),Zimp_ren_m(:,:,:),Sim
 
    if (.not. verysilent) call system(" echo 'sigma files after paramagnetic copy' `ls sigma_output* 2> /dev/null` ")
 
-   call timing_summary()
+   call finalize_timing()
 
 contains
 

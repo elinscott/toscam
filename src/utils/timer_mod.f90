@@ -19,14 +19,28 @@ module timer_mod
    end type timing_info
 
    integer :: num_entries = 0
+   logical :: timer_mod_initialized = .false.
+   integer :: program_start_time
+   integer :: clock_rate
 
    type(timing_info) :: routines(max_number_of_timed_routines)
 
    public :: start_timer
    public :: stop_timer
-   public :: timing_summary
+   public :: initialize_timing
+   public :: finalize_timing
 
 contains
+
+   subroutine initialize_timing()
+      ! Call this at the start of a program
+      
+      implicit none
+
+      call system_clock(count=program_start_time, count_rate=clock_rate)
+      timer_mod_initialized = .true.
+
+   end subroutine initialize_timing
 
    subroutine start_timer(name)
       ! Starts the timer corresponding to the routine "name"
@@ -83,8 +97,6 @@ contains
 
       ! ebl: stop the timer and record the elapsed time
       final_time = elapsed_time()
-      write(*,*) routines(i)%start_time
-      write(*,*) final_time
       routines(i)%cum_time = routines(i)%cum_time + (final_time - routines(i)%start_time)
       routines(i)%running = .false.
 
@@ -110,7 +122,7 @@ contains
 
    end function routine_index
 
-   subroutine timing_summary(logfile)
+   subroutine finalize_timing(logfile)
 
       use common_def, only: utils_assert
 
@@ -120,9 +132,13 @@ contains
 
       integer :: i
       integer :: loc_logfile
-      character(len=52) :: name_string
-      character(len=9) :: calls_string
-      character(len=9) :: time_string
+      character(len=42) :: name_string
+      character(len=14) :: calls_string
+      character(len=14) :: time_string
+
+      ! Make sure timing was initialised
+      call utils_assert(timer_mod_initialized, "Error in timer_mod: initialize_timing &
+            &needs to be called at the start of the program")
 
       name_string = "Routine"
       calls_string = "Calls"
@@ -135,8 +151,8 @@ contains
       ! ebl: header
       write(loc_logfile, '(a)') " " // repeat("=", 31) // " TIMING SUMMARY " &
             // repeat("=", 31) // " "
-      write(loc_logfile, '(a2,a53,a3,a9,a3,a9)') "  ", adjustl(name_string), " | ", adjustl(calls_string), &
-            " | ", adjustl(time_string)
+      write(loc_logfile, '(a2,a42,a3,a14,a3,a14)') "  ", adjustl(name_string), " | ", &
+            adjustl(calls_string), " | ", adjustl(time_string)
 
       ! ebl: loop over routines
       do i = 1, num_entries
@@ -146,30 +162,33 @@ contains
                // trim(adjustl(routines(i)%name)) // ' timer is still running when &
                &attempting to print summary')
 
-         ! ebl: print summary
-         write(loc_logfile, '(a2,a52,a3,i9,a3,f9.3)') "  ", adjustl(routines(i)%name), &
+         ! ebl: print summary; by using "name_string", the names will be left-aligned
+         name_string = routines(i)%name
+         write(loc_logfile, '(a2,a42,a3,i14,a3,f14.2)') "  ", adjustl(name_string), &
                " | ", routines(i)%num_calls, " | ", routines(i)%cum_time
 
       end do
 
       ! ebl: footer
-      write(loc_logfile, '(a66,a3,f9.3)') 'TOTAL', " | ", elapsed_time()
+      write(loc_logfile, '(a61,a3,f14.2)') 'TOTAL', " | ", elapsed_time()
       write(loc_logfile, '(a,a78)') " ", repeat("=", 78)
 
-   end subroutine timing_summary
+   end subroutine finalize_timing
 
-   function elapsed_time()
+   real(kind = DP) function elapsed_time()
+
       ! Fetch the time elapsed since the start of the calculation
       ! Currently written as a function so that we will be able to wrap MPI_WTIME etc
       ! when parallelism is implemented
 
-      integer, parameter :: SP = kind(1.0)
-      real(kind=SP)      :: delta, time_array(2), etime
-      real(kind=DP)      :: elapsed_time
+      implicit none
 
-      delta = etime(time_array)
+      integer :: current_time
+      integer :: count_rate
 
-      elapsed_time = real(delta, DP)
+      call system_clock(count = current_time, count_rate = count_rate)
+
+      elapsed_time = real(current_time - program_start_time, DP)/real(count_rate, DP)
 
    end function elapsed_time
 

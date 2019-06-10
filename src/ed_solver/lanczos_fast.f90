@@ -19,7 +19,8 @@ contains
 
    subroutine Lanczos_fast_diagonalize(lowest)
 
-      use common_def, only: c2s, dump_message, i2c, reset_timer, timer_fortran
+      use common_def, only: c2s, dump_message, i2c, reset_timer, timer_fortran, &
+         utils_assert
       use eigen_class, only: add_eigen, delete_eigen, eigen_type, &
          eigenlist_type, is_eigen_in_window, new_eigen
       use genvar, only: huge_, iproc, log_unit, messages3, testing
@@ -28,6 +29,7 @@ contains
       use h_class, only: dimen_H, sector_H, title_H_
       use rcvector_class, only: create_fix_initial_vector, delete_rcvector, &
          new_rcvector, norm_rcvector, rcvector_type
+      use timer_mod, only: start_timer, stop_timer
       use tridiag_class, only: delete_tridiag, diagonalize_tridiag, &
          new_tridiag, submatrix_tridiag, tridiag_type
 
@@ -46,6 +48,8 @@ contains
       REAL(DBL)                      :: coeff
       INTEGER                        :: dimenvec
 
+      call start_timer("lanczos_fast_diagonalize")
+
       Niter = MIN(dimen_H(), Nitermax)
       Neigen_ = min(Neigen, dimen_H())
       Neigen_ = min(Neigen_, Niter)
@@ -57,7 +61,7 @@ contains
 
       CALL new_tridiag(Lmatrix, Niter) ! Lanczos matrix
 
-      if (dimen_H() == 0) stop 'error Hilbert space has 0 dimension'
+      call utils_assert(dimen_H() > 0, "Error in lanzos_fast: Hilbert space has 0 dimension")
 
       if (.not. USE_TRANSPOSE_TRICK_MPI) then
          dimenvec = dimen_H()
@@ -136,6 +140,7 @@ contains
             lasteigenval(1:min(Neigen_, iter)) = VALP(1:min(Neigen_, iter))
          ENDIF
 
+
       ENDDO
 
       IF (ALLOCATED(VALP)) DEALLOCATE (VALP)
@@ -157,6 +162,8 @@ contains
       CALL timer_fortran(start_diagH, "# DIAGONALIZATION OF "// &
            TRIM(ADJUSTL(title_H_()))//" TOOK "//c2s(i2c(iter))//" &
            &ITERATIONS AND ")
+
+      call stop_timer("lanczos_fast_diagonalize")
 
    end subroutine
 

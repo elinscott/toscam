@@ -117,13 +117,14 @@ contains
    subroutine ED_diago(lowest)
 
       use rcvector_class, only: delete_rcvector, new_rcvector, rcvector_type
-      use common_def, only: reset_timer, timer_fortran
+      use common_def, only: reset_timer, timer_fortran, utils_assert
       use eigen_class, only: add_eigen, eigenlist_type, &
          is_eigen_in_window
       use genvar, only: rank
       use h_class, only: dimen_H, hmult__, title_h_
       use matrix, only: eigenvector_matrix
       use globalvar_ed_solver, only: dEmax, FLAG_FULL_ED_GREEN
+      use timer_mod, only: start_timer, stop_timer
 
       implicit none
 
@@ -143,7 +144,9 @@ contains
 
       CALL reset_timer(start_diagH)
       ALLOCATE (VECP(dimen_H(), dimen_H()), VALP(dimen_H()))
-      if (dimen_H() == 0) stop 'error Hilbert space has 0 dimension'
+
+      call utils_assert(dimen_H() > 0, "Error in ed_arpack: Hilbert space has 0 dimension")
+
       dimenvec = dimen_H()
       CALL new_rcvector(invec, dimenvec)
       CALL new_rcvector(outvec, dimenvec)
@@ -158,14 +161,16 @@ contains
          invec%rc(ii) = 0.d0
       ENDDO
 
-      CALL timer_fortran(start_diagH, "# BUILDING OF "// &
-                         TRIM(ADJUSTL(title_H_()))//" TOOK ")
-      CALL reset_timer(start_diagH)
+      ! CALL timer_fortran(start_diagH, "# BUILDING OF "// &
+      !                    TRIM(ADJUSTL(title_H_()))//" TOOK ")
+      ! CALL reset_timer(start_diagH)
+      call start_timer("ed_diago_mp_eigenvector_matrix")
       call eigenvector_matrix(lsize=dimenvec, mat=VECP, vaps=VALP, &
                               eigenvec=VECP)
-      CALL timer_fortran(start_diagH, "# DIAGONALIZATION OF "// &
-                         TRIM(ADJUSTL(title_H_()))//" TOOK ")
-      CALL reset_timer(start_diagH)
+      call stop_timer("ed_diago_mp_eigenvector_matrix")
+      ! CALL timer_fortran(start_diagH, "# DIAGONALIZATION OF "// &
+      !                    TRIM(ADJUSTL(title_H_()))//" TOOK ")
+      ! CALL reset_timer(start_diagH)
 
       if (.not. FLAG_FULL_ED_GREEN) then
          j = 1
