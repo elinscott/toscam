@@ -645,7 +645,7 @@ contains
          mach_arg = ' -machinefile '
          mach_file = " machines_dmft "
          nprocess = nproc
-         executable = "onetep_spilt.out"
+         executable = "onetep_split.out"
          args = "  iter_dmft="//TRIM(ADJUSTL(toString(iter_dmft)))
          output = "  onetep_dmft_part_"//TRIM(ADJUSTL(toString(iter_dmft)))
          ! ebl: make sure OMP threads get inherited by onetep_split.out

@@ -1,0 +1,10 @@
+# Default config file
+F90       = mpiifort
+FFLAGS    = -qopenmp -g -traceback -DDEBUG
+MKL       = -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_scalapack_lp64 -lmkl_blacs_intelmpi_lp64
+CCOMPL    = mpicc
+CFLAGS    =
+C++       = mpicxx
+CXXFLAGS  =
+RANLIB    = ranlib
+COMPILER  = intel

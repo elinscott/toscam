@@ -261,7 +261,7 @@ contains
             END SELECT
          END IF
       END DO
-      cket = cket(1:Nc + 1)//' > '
+      cket = cket(1:Nc + 1)//'>'
    end function
 
    function state_from_cket(cket, iorb, NAMBU) RESULT(state)
