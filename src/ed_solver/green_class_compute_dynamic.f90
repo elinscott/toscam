@@ -171,6 +171,7 @@ contains
    subroutine compute_dynamic_cpu(iph, dyn, freq, Opm, stat, title, normvec, &
                                   keldysh_level)
 
+      use common_def, only: utils_assert
       use eigen_class, only: eigen_type
       use frequency_class, only: freq_type
       use genvar, only: bosonic, fermionic, iproc, log_unit, messages3, &
@@ -185,6 +186,7 @@ contains
          rcvector_type
       use tridiag_class, only: delete_tridiag, diagonalize_tridiag, &
          invert_zmtridiag, new_tridiag, submatrix_tridiag, tridiag_type
+      use timer_mod, only: start_timer, stop_timer
 
       implicit none
 
@@ -206,8 +208,10 @@ contains
       REAL(DBL), ALLOCATABLE    :: VECP(:, :), VALP(:)
       COMPLEX(DBL), ALLOCATABLE :: DD(:, :), full_mat(:, :)
 
-      IF (SIZE(dyn) /= freq%Nw) STOP "ERROR IN compute_dynamic: INCONSISTENT &
-           &DIMENSIONS!"
+      call start_timer("compute_dynamic_full")
+
+      call utils_assert(SIZE(dyn) == freq%Nw, "Error in compute_dynamic: &
+           & inconsistent dimensions ofr dyn and freq%Nw")
 
       ! COMPUTE DYNAMIC CORRELATIONS OF OPERATORS O, O^+ I.E. <0| O(z) * O^+ |0>
 
@@ -387,6 +391,8 @@ contains
       CALL delete_rcvector(lastvec)
       CALL delete_rcvector(initvec)
       CALL delete_rcvector(tmp)
+
+      call stop_timer("compute_dynamic_full")
 
    contains
 

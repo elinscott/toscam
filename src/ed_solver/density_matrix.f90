@@ -27,6 +27,7 @@ contains
       use mpi_mod, only: split
       use rcmatrix_class, only: rcmatrix_type
       use eigen_class, only: eigen_type
+      use timer_mod, only: start_timer, stop_timer
 
       implicit none
 
@@ -53,6 +54,8 @@ contains
       INTEGER                         :: thisrank, isector, ieigen
       TYPE(eigensector_type), POINTER :: es => NULL()
       TYPE(eigen_type), POINTER       :: eigen => NULL()
+
+      call start_timer("compute_density_matrix")
 
       CALL dump_message(TEXT="# START COMPUTING THE REDUCED DENSITY &
            &MATRIX... ")
@@ -140,6 +143,8 @@ contains
       dmat%rc = dmat%rc/Zpart
 
       CALL timer_fortran(start_compute, "# ... TOOK ")
+
+      call stop_timer("compute_density_matrix")
 
    contains
 

@@ -65,6 +65,7 @@ contains
       use globalvar_ed_solver, only: ALL_FIRST_CALL
       use rcmatrix_class, only: rcmatrix_type
       use rcvector_class, only: rcvector_type
+      use timer_mod, only: start_timer, stop_timer
 
       implicit none
 

@@ -190,6 +190,7 @@ contains
          new_masked_matrix
       use openmpmod, only: omp_get_num_threads, omp_get_thread_num, &
          openmp_split_array
+      use timer_mod, only: start_timer, stop_timer
 
       implicit none
 
@@ -217,6 +218,8 @@ contains
       INTEGER, ALLOCATABLE     :: imin_(:), imax_(:)
       INTEGER(8)               :: noffdiagi, check_sum, noffdiag_save
       LOGICAL                  :: go_for_omp
+
+      call start_timer("tab_haim2")
 
       CALL reset_timer(start_tabH)
 
@@ -576,6 +579,8 @@ contains
               &SECTOR "//TRIM(sector%title)//" TOOK")
 
          if (allocated(imin_)) deallocate (imin_, imax_)
+
+         call stop_timer("tab_haim2")
 
       contains
 
