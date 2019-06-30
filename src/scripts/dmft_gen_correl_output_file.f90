@@ -57,9 +57,9 @@ program generateedcorrel
    write (140, *) '###########################################'
    write (140, *) '### MASKS FOR SPIN/DENSITY CORRELATIONS ###'
    write (140, *) '###########################################'
-   write (140, *) 'F'
-   write (140, *) 'F'
-   write (140, *) 'F'
+   write (140, *) 'T'
+   write (140, *) 'T'
+   write (140, *) 'T'
 
    dd = 0
    if (k == 1 .or. spins == 0) then

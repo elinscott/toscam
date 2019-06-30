@@ -207,7 +207,7 @@ contains
          endif
       enddo
       if (diag) then
-         dens = dens + 0.5*alpha
+         dens = dens + 0.5*alpha + GlocRe(jj)*frequ/pi
       endif
       get_dens = dens
 
