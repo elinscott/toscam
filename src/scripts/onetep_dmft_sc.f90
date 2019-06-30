@@ -21,7 +21,7 @@ integer            ::  iter_restart_sc,niter_dft_dmft_sc,niter_sc_dmft,niter_sc_
    real(8)            ::  spin_breaking_amp
    character(2000)    ::  CASE_ONETEP, dir_onetep, exec_onetep, dir_onetep_mpi
    type(namelist_set) ::  nm
-logical            :: sandwitch_embedding,erase_chem,monitor_gpu_temperature,copy_kernel,protect_projectors,onlygammakernel,calculate_E_all_step
+   logical            :: sandwitch_embedding, erase_chem, monitor_gpu_temperature, copy_kernel, protect_projectors,onlygammakernel
    logical            :: sc_start_from_previous_run, flag_turn_off_dmft, flag_turn_off_store
    logical            :: use_previous_dmft_files, use_same_self_energy, debug_mode_erase_sigma, fully_sc_h
    real(8)            :: hydrogenic_projectors
@@ -237,7 +237,6 @@ contains
    call putel_in_namelist(nm,sc_start_from_previous_run,'sc_start_from_previous_run',.false.,'Definition: if true starts from a previous run and reads tightbox and dkn files')
    call putel_in_namelist(nm,nproc_gpu,'nproc_gpu',1,'Definition: number of processor for the projection of the green function part in onetep, starting from the store files for the DMFT iterations')
    call putel_in_namelist(nm, nproc_store, 'nproc_store', 8, 'Definition: number of cpu used to obtain the store files with onetep')
-   call putel_in_namelist(nm,calculate_E_all_step,'calculate_E_all_step',.false.,'if true computes the total DFT+DMFT energy at every DFT-DMFT step, which might be expensive. if true will only compute the total energy at the last step (the forelast one actually)')
    call putel_in_namelist(nm,flag_turn_off_dmft,'flag_turn_off_dmft',.false.,'Definition: if true will not copy the DMFT kernel for the next ONETEP iteration')
    call putel_in_namelist(nm,flag_turn_off_store,'flag_turn_off_store',.false.,'Definition: if true does not use the store file system to speed up calculations')
    call putel_in_namelist(nm,niter_sc_dft_first,'niter_sc_dft_first',4,'Definition: number of DFT iterations for the first DFT set')
@@ -916,21 +915,6 @@ program dmftonetep
       !-------------------------!
 
       write (*, *) '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
-      write (*, *) 'TO PREPARE PROCESSING (DENS KER)'
-      write (*, *) '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
-
-      if (iter_dmft_sc == niter_dft_dmft_sc - 1) then
-         call system("echo 'ed_compute_all=.true.' >> input_onetep_dmft.txt ")
-      else
-         call system("echo 'ed_compute_all=.false.' >> input_onetep_dmft.txt ")
-      endif
-
-      !-------------------------!
-      !-------------------------!
-      !-------------------------!
-      !-------------------------!
-
-      write (*, *) '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
       write (*, *) 'STEP4: DMFT ITERATION'
       write (*, *) '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
 
@@ -1052,23 +1036,6 @@ program dmftonetep
       !-------------------------!
       !-------------------------!
       !-------------------------!
-      !-------------------------!
-      !-------------------------!
-
-      write (*, *) '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
-      write (*, *) 'TO PREPARE PROCESSING (Etot)'
-      write (*, *) '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
-
-      if (iter_dmft_sc == niter_dft_dmft_sc - 1 .or. calculate_E_all_step) then
-         call system(" update_case_file 'dmft_skip_energy ' F")
-      else
-         call system(" update_case_file 'dmft_skip_energy ' T")
-      endif
-
-      !-------------------------!
-      !-------------------------!
-      !-------------------------!
-      !-------------------------!
 
       if (iter_dmft_sc < niter_dft_dmft_sc .or. matsu_solver) then ! last iter SIGMA is in real frequency
          write (*, *) '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
@@ -1131,7 +1098,6 @@ program dmftonetep
       write (*, *) 'STEP5: CLEAN AFTER DMFT ITERATION AND COPY KERNEL'
       write (*, *) '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
 
-      call system(" update_case_file 'dmft_skip_energy ' T")
 
       if (iter_dmft_sc == niter_dft_dmft_sc) then
          call system("      mkdir _store_last_iter  ")

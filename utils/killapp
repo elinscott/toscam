@@ -6,13 +6,12 @@ killall -9 run_iter_ed                               > /dev/null 2>&1
 killall -9 ed.biggie.cpu                             > /dev/null 2>&1 
 killall -9 ed.biggie.cpu.serial                      > /dev/null 2>&1 
 killall -9 ctqmc                                     > /dev/null 2>&1 
-killall -9 onetep.tcm                                > /dev/null 2>&1 
+killall -9 $ONETEP                                   > /dev/null 2>&1 
 killall -9 dmft_all_iterations.onetep.out            > /dev/null 2>&1 
 killall -9 onetep_dmft_one_iter.out                  > /dev/null 2>&1 
 killall -9 onetep_split_serial.out                   > /dev/null 2>&1 
 killall -9 onetep_dmft_one_iter_script_polarized.out > /dev/null 2>&1 
 killall -9 onetep_dmft_one_iter_script_pm.out        > /dev/null 2>&1 
 killall -9 ed_solver_serial.out                      > /dev/null 2>&1 
-killall -9 onetep.`hostname`                         > /dev/null 2>&1 
 killall -9 hf_solver.out                             > /dev/null 2>&1 
 killall -9 monitor_temp.out                          > /dev/null 2>&1 

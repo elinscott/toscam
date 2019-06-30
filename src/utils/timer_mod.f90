@@ -23,6 +23,8 @@ module timer_mod
    integer :: program_start_time
    integer :: clock_rate
 
+   integer :: timer_log_unit
+
    type(timing_info) :: routines(max_number_of_timed_routines)
 
    public :: start_timer
@@ -34,13 +36,50 @@ contains
 
    subroutine initialize_timing()
       ! Call this at the start of a program
+   
+      use common_def, only: utils_unit
       
       implicit none
 
+      timer_log_unit = utils_unit()
+      open(unit = timer_log_unit, file = "timing_calls.log", status = "replace")
+      
       call system_clock(count=program_start_time, count_rate=clock_rate)
       timer_mod_initialized = .true.
 
    end subroutine initialize_timing
+
+   function percentage_accounted_for()
+      implicit none
+
+      real(kind=DP) :: percentage_accounted_for
+
+      integer :: i
+
+      percentage_accounted_for = 0
+
+      do i = 1, num_entries
+         percentage_accounted_for = percentage_accounted_for + routines(i)%cum_time
+      end do
+
+      percentage_accounted_for = percentage_accounted_for/elapsed_time()*100
+
+   end function
+
+   integer function num_running()
+      implicit none
+
+      integer :: i
+
+      num_running = 0
+
+      do i = 1, num_entries
+         if (routines(i)%running) num_running = num_running + 1
+      end do
+
+      return
+
+   end function num_running
 
    subroutine start_timer(name)
       ! Starts the timer corresponding to the routine "name"
@@ -75,6 +114,8 @@ contains
       routines(i)%num_calls = routines(i)%num_calls + 1
       routines(i)%start_time = elapsed_time()
       routines(i)%running = .true.
+
+      write(timer_log_unit, '(3a,f9.2)') repeat(" ", num_running()), "Starting ", name, percentage_accounted_for()
 
    end subroutine start_timer
 
@@ -172,6 +213,8 @@ contains
       ! ebl: footer
       write(loc_logfile, '(a61,a3,f14.2)') 'TOTAL', " | ", elapsed_time()
       write(loc_logfile, '(a,a78)') " ", repeat("=", 78)
+
+      close(timer_log_unit)
 
    end subroutine finalize_timing
 
