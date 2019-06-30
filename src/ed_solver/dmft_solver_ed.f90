@@ -539,6 +539,7 @@ contains
 
    subroutine stand_alone_ed()
 
+      use common_def, only: utils_system_call
       use random, only: init_rantab, rand_init
       use genvar, only: imi, matsubara, no_mpi, pi, ran_tab, rank, size2
       use stringmanip, only: tostring
@@ -740,11 +741,11 @@ contains
 
       my_seed = 4781
 #ifndef NO_SYS_CALL
-      call system("rm -r ED_out")
-      call system("rm -r AGR")
-      call system("mkdir AGR")
-      call system("mkdir ED_out")
-      call system("rm ./seed")
+      call utils_system_call("rm -r ED_out")
+      call utils_system_call("rm -r AGR")
+      call utils_system_call("mkdir AGR")
+      call utils_system_call("mkdir ED_out")
+      call utils_system_call("rm ./seed")
 #else
       write (*, *) 'WARNING not erasing directories AGR and ED_out'
       write (*, *) '        because NO_SYS_CALL was set'
@@ -919,7 +920,7 @@ contains
             close (1212)
 #ifndef NO_SYS_CALL
             if (rank == 0 .or. no_mpi) then
-               call system("rm ed.fit.param")
+               call utils_system_call("rm ed.fit.param")
             endif
 #else
             if (rank == 0 .or. no_mpi) then
@@ -975,7 +976,7 @@ contains
 
 #ifndef NO_SYS_CALL
       if (rank == 0 .or. no_mpi) then
-         call system("rm ed.fit.param")
+         call utils_system_call("rm ed.fit.param")
       endif
 #else
       if (rank == 0 .or. no_mpi) then

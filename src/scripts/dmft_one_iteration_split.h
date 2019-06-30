@@ -64,6 +64,8 @@
 
  subroutine copy_files
 
+    use common_def, only: utils_system_call
+
     if (uniform_sigma) then
        write (*, *) 'copying sigmas...WW=', ww
        if (ww >= 2 .and. rank == 0) then
@@ -77,7 +79,7 @@
     endif
 
     if (rank == 0) then
-       call system("dmft_dimer_to_orbitals_script.out > onetep_projecting_back"//TRIM(ADJUSTL(toString(iter_dmft))))
+       call utils_system_call("dmft_dimer_to_orbitals_script.out > onetep_projecting_back"//TRIM(ADJUSTL(toString(iter_dmft))), abort=.true.)
     endif
 
  end subroutine

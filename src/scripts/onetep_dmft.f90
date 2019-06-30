@@ -6,6 +6,7 @@
 !==============================================================!
 
 module dmft_variables
+   use common_def, only: utils_system_call
    use namelistmod, only: namelist_set, namelist_init, putel_in_namelist, &
                                     & look_for_namelist_in_file, look_for_command_line_argument
    use strings, only: replace_in_string, string, assignment(=)
@@ -56,7 +57,7 @@ contains
                                          & //trim(adjustl(localhost))
 
       build_mpi_command_line = " "
-      call system('  get_mpi_command_line '//trim(adjustl(exe))//' "     '&
+      call utils_system_call('  get_mpi_command_line '//trim(adjustl(exe))//' "     '&
                                          & //trim(adjustl(args))//' "     '&
                                          & //trim(adjustl(tostring(np)))//'       '&
                                          & //trim(adjustl(tostring(p)))//'       '&
@@ -73,7 +74,7 @@ contains
          build_mpi_command_line = trim(adjustl(build_mpi_command_line))//"  &   "
       endif
 
-      call system(" rm __mpi_cmd__ ")
+      call utils_system_call(" rm __mpi_cmd__ ")
 
    end function
 
@@ -85,8 +86,8 @@ contains
    subroutine replace_it(string1, string2)
       implicit none
       character*(*) :: string1, string2
-      call system(" sed 's/"//string1//"/"//string2//"/' *.dat > scratch ")
-      call system(" mv scratch "//TRIM(ADJUSTL(CASE_ONETEP))//".dat")
+      call utils_system_call(" sed 's/"//string1//"/"//string2//"/' *.dat > scratch ")
+      call utils_system_call(" mv scratch "//TRIM(ADJUSTL(CASE_ONETEP))//".dat")
    end subroutine
 
    !-------------------------!
@@ -101,7 +102,7 @@ contains
       logical        :: true_to_false
       type(string)   :: cc_
       write (*, *) 'looking for strings with : ', sstring
-      call system("grep_in_dat "//TRIM(ADJUSTL(sstring)))
+      call utils_system_call("grep_in_dat "//TRIM(ADJUSTL(sstring)))
       write (*, *) 'opening file scratch'
       open (unit=10002, file='scratch')
       do
@@ -117,13 +118,13 @@ contains
          endif
          match2 = cc_
          write (*, *) 'modified string : ', TRIM(ADJUSTL(match2))
-         call system(" sed 's/"//TRIM(ADJUSTL(match1))//"/"//TRIM(ADJUSTL(match2))//"/' *.dat > scratch2 ")
-         call system(" mv scratch2 "//TRIM(ADJUSTL(CASE_ONETEP))//".dat")
+         call utils_system_call(" sed 's/"//TRIM(ADJUSTL(match1))//"/"//TRIM(ADJUSTL(match2))//"/' *.dat > scratch2 ")
+         call utils_system_call(" mv scratch2 "//TRIM(ADJUSTL(CASE_ONETEP))//".dat")
       enddo
 66    continue
       close (10002); 
-      call system("rm scratch  > /dev/null 2>&1")
-      call system("rm scratch2 > /dev/null 2>&1 ")
+      call utils_system_call("rm scratch  > /dev/null 2>&1")
+      call utils_system_call("rm scratch2 > /dev/null 2>&1 ")
    end subroutine
 
    !-------------------------!
@@ -133,26 +134,26 @@ contains
 
    subroutine my_dmft_exe
       implicit none
-      call system("get_onetep_env")
+      call utils_system_call("get_onetep_env")
       open (unit=10001, file='dir_onetep')
       read (10001, '(a)') dir_onetep
       write (*, *) 'My TOSCAM base directory is ', TRIM(ADJUSTL(dir_onetep))
       close (10001)
-      call system("rm dir_onetep > /dev/null 2>&1")
+      call utils_system_call("rm dir_onetep > /dev/null 2>&1")
 
-      call system("get_mpi_env")
+      call utils_system_call("get_mpi_env")
       open (unit=10001, file='dir_onetep_mpi')
       read (10001, '(a)') dir_onetep_mpi
       write (*, *) 'My MPI executable is ', TRIM(ADJUSTL(dir_onetep_mpi))
       close (10001)
-      call system("rm dir_onetep_mpi > /dev/null 2>&1")
+      call utils_system_call("rm dir_onetep_mpi > /dev/null 2>&1")
 
-      call system("get_onetep_exec")
+      call utils_system_call("get_onetep_exec")
       open (unit=10001, file='exec_onetep')
       read (10001, '(a)') exec_onetep
       write (*, *) 'My ONETEP executable is ', TRIM(ADJUSTL(exec_onetep))
       close (10001)
-      call system("rm exec_onetep > /dev/null 2>&1")
+      call utils_system_call("rm exec_onetep > /dev/null 2>&1")
    end subroutine
 
    !-------------------------!
@@ -205,7 +206,7 @@ contains
       call look_for_namelist_in_file(nm, './input_onetep_dmft.txt')
       call look_for_command_line_argument(nm)
 
-      call system("get_onetep_case")
+      call utils_system_call("get_onetep_case")
 
       funit = utils_unit()
 
@@ -215,13 +216,13 @@ contains
 
       write (*, *) 'my ONETEP CASE is : ', trim(adjustl(CASE_ONETEP))
 
-      call system(" ls *.dat | wc -l >> other_dat_file_  ")
+      call utils_system_call(" ls *.dat | wc -l >> other_dat_file_  ")
 
       open (unit=funit, file='other_dat_file_')
       read (funit, *) numb_dat
       close (funit)
 
-      call system(" rm other_dat_file_ > /dev/null 2>&1 ")
+      call utils_system_call(" rm other_dat_file_ > /dev/null 2>&1 ")
 
       call utils_assert(numb_dat == 1, 'Error in init_my_input_variables: multiple *.dat files found')
 
@@ -229,9 +230,9 @@ contains
 
       if (.not. just_onetep) then
          if (.not. start_from_an_old_sim) then
-            call system("rm i_am_dimer*         > /dev/null 2>&1")
-            call system("rm sigma_output*       > /dev/null 2>&1")
-            call system("rm mask_loc_rot_atom_* > /dev/null 2>&1 ")
+            call utils_system_call("rm i_am_dimer*         > /dev/null 2>&1")
+            call utils_system_call("rm sigma_output*       > /dev/null 2>&1")
+            call utils_system_call("rm mask_loc_rot_atom_* > /dev/null 2>&1 ")
             write (*, *) ' setting ONETEP in PROPERTIES mode : '
             call replace_it("SINGLEPOINT", "PROPERTIES")
             call replace_it("singlepoint", "PROPERTIES")
@@ -325,6 +326,7 @@ program dmftonetep
    character(8000)            :: command_line
    logical                    :: flag_onetep_producing_only_up_spin
    type(string)               :: cc_
+   logical                    :: file_exists
 
    call initialize_timing()
 
@@ -334,7 +336,7 @@ program dmftonetep
    write (*, *) 'RUNNING THE ONETEP CALCULATIONS WITH [x] cpus             : ', nproc_onetep
    write (*, *) 'RUNNING THE ONETEP CALCULATIONS WITH [x] threads (openmp) : ', nproc_onetep_openmp_
 
-   if (.not. just_onetep) call system("rm -r dir_onetep_iter* > /dev/null 2>&1 ")
+   if (.not. just_onetep) call utils_system_call("rm -r dir_onetep_iter* > /dev/null 2>&1 ")
 
    !=========================================================================!
    !=========================================================================!
@@ -365,33 +367,34 @@ program dmftonetep
       write (*, *) 'running onetep for case : ', trim(adjustl(CASE_ONETEP))
 
       if (.not. just_onetep) then
-         call system(" mkdir dir_onetep_iter"//TRIM(ADJUSTL(toString(iter_dmft))))
-         call system(" mkdir            before_onetep ")
-         call system(" mv green_output* before_onetep > /dev/null 2>&1 ")
-         call system(" cp edc_output*   before_onetep > /dev/null 2>&1 ")
-         call system(" cp sigma_output* before_onetep > /dev/null 2>&1 ")
-         call system(" mv before_onetep dir_onetep_iter"//TRIM(ADJUSTL(toString(iter_dmft))))
+         call utils_system_call(" mkdir dir_onetep_iter"//TRIM(ADJUSTL(toString(iter_dmft))))
+         call utils_system_call(" mkdir            before_onetep ")
+         call utils_system_call(" mv green_output* before_onetep > /dev/null 2>&1 ")
+         call utils_system_call(" cp edc_output*   before_onetep > /dev/null 2>&1 ")
+         call utils_system_call(" cp sigma_output* before_onetep > /dev/null 2>&1 ")
+         call utils_system_call(" mv before_onetep dir_onetep_iter"//TRIM(ADJUSTL(toString(iter_dmft))))
       endif
 
-      call system(" onetep.dmft.collect.edc ")
+      call utils_system_call("onetep.dmft.collect.edc")
 
       call onetep_normal_mode
 
       if (just_onetep) call utils_abort("Calculation complete (only running ONETEP since &
             &just_onetep = T)")
 
-      call system(" dmft_collect_script_dimer.out > onetep_dimer_splitting"//TRIM(ADJUSTL(toString(iter_dmft)))//" 2>&1  ")
+      inquire(file="mask_dimer", exist=file_exists)
+      if (file_exists) call utils_system_call("dmft_group_dimers.out", abort=.true.)
 
-      call system(" mkdir after_onetep ")
-      call system(" cp green_output* after_onetep ")
+      call utils_system_call(" mkdir after_onetep ")
+      call utils_system_call(" cp green_output* after_onetep ")
       write (*, *) 'did we get the green functions ?'
-      call system(" ls green_output* && echo 'yes there are [x] green functions : ' && ls green_output* |wc -l  ")
-      call system(" ls green_output* | wc -l > list_of_greens ")
-      call system(" ls green_output* >> list_of_greens ")
-      call system(" order_list_of_greens.out ")
+      call utils_system_call(" ls green_output* && echo 'yes there are [x] green functions : ' && ls green_output* |wc -l  ")
+      call utils_system_call(" ls green_output* | wc -l > list_of_greens ")
+      call utils_system_call(" ls green_output* >> list_of_greens ")
+      call utils_system_call(" order_list_of_greens.out ", abort=.true.)
       call onetepdmft
-      call system(" cp sigma_output* after_onetep ")
-      call system(" mv after_onetep dir_onetep_iter"//TRIM(ADJUSTL(toString(iter_dmft))))
+      call utils_system_call(" cp sigma_output* after_onetep ")
+      call utils_system_call(" mv after_onetep dir_onetep_iter"//TRIM(ADJUSTL(toString(iter_dmft))))
    enddo
 
    call finalize_timing()
@@ -418,10 +421,10 @@ contains
             write (*, *) 'ERROR file machines containing hosts does not exist or does not contain all nodes, error'
             write (*, *) 'nproc for onetep : ', nproc_onetep*dmft_splitk_batch
             write (*, *) 'nodes in file machines : '
-            call system(" cat "//trim(adjustl(mach_onetep)))
+            call utils_system_call(" cat "//trim(adjustl(mach_onetep)))
             if (all_local_host) then
                close (123)
-               call system(" rm "//trim(adjustl(mach_onetep)))
+               call utils_system_call(" rm "//trim(adjustl(mach_onetep)))
                call fill_onetep_machine_files_rout
                goto 877
             else
@@ -441,11 +444,11 @@ contains
    subroutine fill_onetep_machine_files_rout
       implicit none
 
-   call system( "ls "//trim(adjustl(mach_onetep))//" || fill_machine_file "//trim(adjustl(mach_onetep))//" "//TRIM(ADJUSTL(toString(nproc_onetep*dmft_splitk_batch))) )
+   call utils_system_call( "ls "//trim(adjustl(mach_onetep))//" || fill_machine_file "//trim(adjustl(mach_onetep))//" "//TRIM(ADJUSTL(toString(nproc_onetep*dmft_splitk_batch))) )
 
       if (nproc_onetep_openmp_ > 1) then !generate machines_onetep
-    call system("duplicate_machine_file "//trim(adjustl(mach_onetep))//" "//TRIM(ADJUSTL(toString(nproc_onetep*dmft_splitk_batch))))
-         call system("mv "//trim(adjustl(mach_onetep))//".dup "//trim(adjustl(mach_onetep)))
+    call utils_system_call("duplicate_machine_file "//trim(adjustl(mach_onetep))//" "//TRIM(ADJUSTL(toString(nproc_onetep*dmft_splitk_batch))))
+         call utils_system_call("mv "//trim(adjustl(mach_onetep))//".dup "//trim(adjustl(mach_onetep)))
       endif
 
    end subroutine
@@ -466,8 +469,8 @@ contains
       integer         :: ierr
 
       call start_timer("onetep")
-      call system("rm ./onetep_confirmation*  > /dev/null 2>&1 ")
-      call system("rm ./green_output*         > /dev/null 2>&1 ")
+      call utils_system_call("rm ./onetep_confirmation*  > /dev/null 2>&1 ")
+      call utils_system_call("rm ./green_output*         > /dev/null 2>&1 ")
 
       if (nproc_onetep > 1 .or. compute_dos .or. dmft_splitkdmftall) then
 
@@ -487,7 +490,7 @@ contains
             !------------------------------------------------!
             !------------------------------------------------!
             if (mpi_onetep_type == 1) then
-               call system("rm ./onetep_confirmation* > /dev/null 2>&1 ")
+               call utils_system_call("rm ./onetep_confirmation* > /dev/null 2>&1 ")
 
                open (unit=123, file=trim(adjustl(mach_onetep)))
                if (dmft_splitkdmftall) then
@@ -523,7 +526,7 @@ contains
                      write (*, *) 'using splik nodes ?    : ', dmft_splitkdmftall
                      write (*, *) 'using openmp      ?    : ', nproc_onetep_openmp_ > 1
                      write (*, *) 'nodes in file machines : '
-                     call system(" cat "//trim(adjustl(mach_onetep)))
+                     call utils_system_call(" cat "//trim(adjustl(mach_onetep)))
                      stop
                   endif
 
@@ -568,8 +571,8 @@ contains
                enddo
 
                do
-                  call system("sleep 3")
-                  call system("ls -l onetep_confirmation_* 2>&1 | grep -v 'No such' | wc -l > onetep_confirmation ")
+                  call utils_system_call("sleep 3")
+                  call utils_system_call("ls -l onetep_confirmation_* 2>&1 | grep -v 'No such' | wc -l > onetep_confirmation ")
                   open (unit=10, file='onetep_confirmation')
                   jj = 0
                   do k = 1, 1
@@ -598,10 +601,10 @@ contains
                nprocess = nproc_onetep
                args = "  "
                output = " dmft_all_iterations_output "
-               command_line = build_mpi_command_line(prefix=prefix, np=nprocess, p=1, omp=nproc_onetep_openmp_, mach=mach_file,&
-                                                & mach_arg=mach_arg, args=args, exe="dmft_all_iterations.onetep.out",&
-                                                & outputin=output, hide_errors=.false., localhost='F')
-
+               command_line = build_mpi_command_line(prefix=prefix, np=nprocess, p=1, &
+                     omp=nproc_onetep_openmp_, mach=mach_file, mach_arg=mach_arg, args=args, &
+                     exe="dmft_all_iterations.onetep.out", outputin=output, hide_errors=.false., &
+                     localhost='F')
                write (*, *) 'running onetep in mpi-2 mode : ', TRIM(ADJUSTL(command_line))
                call utils_system_call(command_line, abort=.true.)
                write (*, *) 'onetep part done'
@@ -621,7 +624,7 @@ contains
       endif
       call stop_timer("onetep")
 
-      call system(" dmft_collect_script.out 2>&1 ")
+      call utils_system_call("dmft_collect_script.out", abort=.true.)
 
    end subroutine
 
@@ -640,7 +643,7 @@ contains
 
 
       if (nproc > 1) then
-         call system("ls machines_dmft || fill_machine_file machines_dmft "//TRIM(ADJUSTL(toString(nproc))))
+         call utils_system_call("ls machines_dmft || fill_machine_file machines_dmft "//TRIM(ADJUSTL(toString(nproc))))
          prefix = " "
          mach_arg = ' -machinefile '
          mach_file = " machines_dmft "

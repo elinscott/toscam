@@ -470,6 +470,7 @@ end module
 
 program onestep_dmft_iteration
    !---------------!
+   use common_def, only: utils_system_call
    use onetep_variables
    use openmpmod, only: init_openmp
    use genvar, only: iproc
@@ -531,15 +532,15 @@ real(8),allocatable    :: eimp_ed(:,:,:),Zimp_ren_p(:,:,:),Zimp_ren_m(:,:,:),Sim
    if (paramagnetic /= 1) then
       call get_hybridizations(2)
       if (solver == 2 .or. solver == 3) then
-         call system("merge_ac Ac.inp "//TRIM(ADJUSTL(toString(channels))))
+         call utils_system_call("merge_ac Ac.inp "//TRIM(ADJUSTL(toString(channels))))
       endif
-      call system("merge_delta delta_input "//TRIM(ADJUSTL(toString(channels))))
+      call utils_system_call("merge_delta delta_input "//TRIM(ADJUSTL(toString(channels))))
    endif
 
    write (*, *) 'start DMFT run'
    call dmft_run
 
-   if (.not. verysilent) call system(" echo 'sigma files after dmft run' `ls sigma_output* 2> /dev/null` ")
+   if (.not. verysilent) call utils_system_call(" echo 'sigma files after dmft run' `ls sigma_output* 2> /dev/null` ")
 
    write (*, *) 'plug back double counting in self energy'
 
@@ -556,7 +557,7 @@ real(8),allocatable    :: eimp_ed(:,:,:),Zimp_ren_p(:,:,:),Zimp_ren_m(:,:,:),Sim
 
    write (*, *) 'now cleanup'
 
-   if (.not. verysilent) call system(" echo 'sigma files after double counting correction' `ls sigma_output* 2> /dev/null` ")
+   if (.not. verysilent) call utils_system_call(" echo 'sigma files after double counting correction' `ls sigma_output* 2> /dev/null` ")
 
    call cleanup
 
@@ -568,11 +569,11 @@ real(8),allocatable    :: eimp_ed(:,:,:),Zimp_ren_p(:,:,:),Zimp_ren_m(:,:,:),Sim
       chartemp = cc_
       write (*, *) 'copy : ', TRIM(ADJUSTL(filename_sigma(1)))
       write (*, *) 'to   : ', TRIM(ADJUSTL(chartemp))
-      call system("cp "//TRIM(ADJUSTL(filename_sigma(1)))//" "//TRIM(ADJUSTL(chartemp)))
+      call utils_system_call("cp "//TRIM(ADJUSTL(filename_sigma(1)))//" "//TRIM(ADJUSTL(chartemp)))
       write (*, *) 'done'
    endif
 
-   if (.not. verysilent) call system(" echo 'sigma files after paramagnetic copy' `ls sigma_output* 2> /dev/null` ")
+   if (.not. verysilent) call utils_system_call(" echo 'sigma files after paramagnetic copy' `ls sigma_output* 2> /dev/null` ")
 
    call finalize_timing()
 
@@ -630,11 +631,11 @@ contains
          close (10004); 
          write (*, *) 'number of frequencies, frequmin, frequmax : ', ed_real_frequ, ed_frequ_min, ed_frequ_max
 
-         if (kk_ == 1) call system("rm _sigma_output_full_real_1")
-         if (kk_ == 2) call system("rm _sigma_output_full_real_2")
+         if (kk_ == 1) call utils_system_call("rm _sigma_output_full_real_1")
+         if (kk_ == 2) call utils_system_call("rm _sigma_output_full_real_2")
          if (.not. present(keepboth)) then
-            if (kk_ == 1) call system("rm _sigma_output_full_1")
-            if (kk_ == 2) call system("rm _sigma_output_full_2")
+            if (kk_ == 1) call utils_system_call("rm _sigma_output_full_1")
+            if (kk_ == 2) call utils_system_call("rm _sigma_output_full_2")
          endif
       enddo
       !===================================================================================!
@@ -702,9 +703,9 @@ contains
          enddo
          close (10003)
          if (.not. present(keepboth)) then
-            call system("mv sigma_real_scratch "//trim(adjustl(filename_sigma(kk_))))
+            call utils_system_call("mv sigma_real_scratch "//trim(adjustl(filename_sigma(kk_))))
          else
-            call system("mv sigma_real_scratch real_"//trim(adjustl(filename_sigma(kk_))))
+            call utils_system_call("mv sigma_real_scratch real_"//trim(adjustl(filename_sigma(kk_))))
          endif
       enddo
 
@@ -826,11 +827,11 @@ contains
 
          if (full_) then
             close (10004)
-            if (kk_ == 1) call system("rm _sigma_output_full_1")
-            if (kk_ == 2) call system("rm _sigma_output_full_2")
+            if (kk_ == 1) call utils_system_call("rm _sigma_output_full_1")
+            if (kk_ == 2) call utils_system_call("rm _sigma_output_full_2")
             if (.not. present(keepboth)) then
-               if (kk_ == 1) call system("rm _sigma_output_full_real_1")
-               if (kk_ == 2) call system("rm _sigma_output_full_real_2")
+               if (kk_ == 1) call utils_system_call("rm _sigma_output_full_real_1")
+               if (kk_ == 2) call utils_system_call("rm _sigma_output_full_real_2")
             endif
          endif
 
@@ -896,7 +897,7 @@ contains
             write (10003) sigout(kk_, i, :, :)
          enddo
          close (10003)
-         call system("mv sigma_scratch "//trim(adjustl(filename_sigma(kk_))))
+         call utils_system_call("mv sigma_scratch "//trim(adjustl(filename_sigma(kk_))))
       enddo
 
    end subroutine
@@ -964,9 +965,9 @@ contains
          allocate (T2C(2*LL + 1, channels), T2Cp(channels, 2*LL + 1))
          nheaders = 3 + 2*LL + 1
          if (cubic == 1) then
-        call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubicL"//TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
+        call utils_system_call("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubicL"//TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
          else
-    call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_sphericalL"//TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
+    call utils_system_call("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_sphericalL"//TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
          endif
 
          inquire (file='Trans.loc.pm.dat', exist=check)
@@ -1012,8 +1013,8 @@ contains
          if (rotate_int_after_earlier_transfo) mat_tmp = matmul(transpose(rot_trans_pm), mat_tmp)
 
          close (1745)
-         call system(" head -n "//trim(adjustl(toString(nheaders)))//" Trans.dat > tmp_trans ")
-         call system(" mv tmp_trans Trans.dat ")
+         call utils_system_call(" head -n "//trim(adjustl(toString(nheaders)))//" Trans.dat > tmp_trans ")
+         call utils_system_call(" mv tmp_trans Trans.dat ")
 
          open (unit=1745, file='Trans.dat', ACCESS='append')
          i_ = 0
@@ -1047,9 +1048,11 @@ contains
 
          nheaders = 3 + 2*(2*LL + 1)
          if (cubic == 1) then
-call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorbL"//TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
+            call utils_system_call("cp " // TRIM(ADJUSTL(dir_onetep)) // "/utils/INPUTS/Trans_cubic_spinorbL" &
+                  // TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
          else
-      call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_spherical_spinorbL"//TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
+            call utils_system_call("cp " // TRIM(ADJUSTL(dir_onetep)) // "/utils/INPUTS/Trans_spherical_spinorbL" &
+                  // TRIM(ADJUSTL(toString(LL)))//".dat ./Trans.dat")
          endif
          inquire (file='Trans.loc.spin.dat', exist=check)
 
@@ -1098,8 +1101,8 @@ call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorb
 
          close (1745)
 
-         call system(" head -n "//trim(adjustl(toString(nheaders)))//" Trans.dat > tmp_trans ")
-         call system(" mv tmp_trans Trans.dat ")
+         call utils_system_call(" head -n "//trim(adjustl(toString(nheaders)))//" Trans.dat > tmp_trans ")
+         call utils_system_call(" mv tmp_trans Trans.dat ")
 
          open (unit=1745, file='Trans.dat', ACCESS='append')
 
@@ -1223,26 +1226,26 @@ call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorb
          write (*, *) TRIM(ADJUSTL(stringdat))
 
          if ((LL == 1 .or. LL == 2) .and. use_custom_command_for_atomd) then
-            call system(" rm atomic_diag_script.out")
-            call system(" echo '#!/bin/bash' >> atomic_diag_script.out")
-            call system(" echo 'j=`pwd`' >> atomic_diag_script.out")
-            call system(" echo 'k=`basename $j`' >> atomic_diag_script.out")
-            call system(" ls ~/tmp || mkdir ~/tmp")
-            call system(" echo 'cd ~/tmp'  >> atomic_diag_script.out")
-            call system(" echo 'mkdir tmp_atomd$k' >> atomic_diag_script.out")
-            call system(" echo 'cd tmp_atomd$k' >> atomic_diag_script.out")
-            call system(" echo 'cp $j/Trans* ./ ' >> atomic_diag_script.out")
-            call system(" echo 'cp $j/Uc.* ./ ' >> atomic_diag_script.out")
-            call system(" echo ' "//TRIM(ADJUSTL(stringdat))//" ' >> atomic_diag_script.out")
-            call system(" echo 'cd ..' >> atomic_diag_script.out")
-            call system(" echo 'cp -r tmp_atomd$k/* $j' >> atomic_diag_script.out")
-            call system(" echo 'rm -r tmp_atomd$k' >> atomic_diag_script.out")
-            call system(" echo 'cd $j' >> atomic_diag_script.out")
-            call system(" chmod +x atomic_diag_script.out")
-            call system(" ./atomic_diag_script.out")
-            call system(" rm ./atomic_diag_script.out")
+            call utils_system_call(" rm atomic_diag_script.out")
+            call utils_system_call(" echo '#!/bin/bash' >> atomic_diag_script.out")
+            call utils_system_call(" echo 'j=`pwd`' >> atomic_diag_script.out")
+            call utils_system_call(" echo 'k=`basename $j`' >> atomic_diag_script.out")
+            call utils_system_call(" ls ~/tmp || mkdir ~/tmp")
+            call utils_system_call(" echo 'cd ~/tmp'  >> atomic_diag_script.out")
+            call utils_system_call(" echo 'mkdir tmp_atomd$k' >> atomic_diag_script.out")
+            call utils_system_call(" echo 'cd tmp_atomd$k' >> atomic_diag_script.out")
+            call utils_system_call(" echo 'cp $j/Trans* ./ ' >> atomic_diag_script.out")
+            call utils_system_call(" echo 'cp $j/Uc.* ./ ' >> atomic_diag_script.out")
+            call utils_system_call(" echo ' "//TRIM(ADJUSTL(stringdat))//" ' >> atomic_diag_script.out")
+            call utils_system_call(" echo 'cd ..' >> atomic_diag_script.out")
+            call utils_system_call(" echo 'cp -r tmp_atomd$k/* $j' >> atomic_diag_script.out")
+            call utils_system_call(" echo 'rm -r tmp_atomd$k' >> atomic_diag_script.out")
+            call utils_system_call(" echo 'cd $j' >> atomic_diag_script.out")
+            call utils_system_call(" chmod +x atomic_diag_script.out")
+            call utils_system_call(" ./atomic_diag_script.out")
+            call utils_system_call(" rm ./atomic_diag_script.out")
          else
-            call system(TRIM(ADJUSTL(stringdat)))
+            call utils_system_call(TRIM(ADJUSTL(stringdat)))
          endif
 
       endif
@@ -1252,134 +1255,134 @@ call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorb
 !######################CALLING ATOMIC SOLVER##########################!
 !######################CALLING ATOMIC SOLVER##########################!
 
-      call system("mv LOCAL_DOS* FULL_DOS* "//TRIM(ADJUSTL(filename))//"  > /dev/null 2>&1 ")
+      call utils_system_call("mv LOCAL_DOS* FULL_DOS* "//TRIM(ADJUSTL(filename))//"  > /dev/null 2>&1 ")
 
       if (solver == 1) then
-         call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/PARAMS.ctqmc ./PARAMS")
+         call utils_system_call("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/PARAMS.ctqmc ./PARAMS")
       elseif (solver == 4 .or. solver == 5) then
          write (*, *) 'DO NOT COPY ED PARAM, GENERATE THEM ON THE FLY'
       elseif (solver == 2 .or. solver == 3) then
-         call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/PARAMS.oca ./PARAMS")
+         call utils_system_call("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/PARAMS.oca ./PARAMS")
       else
          call utils_abort('solver not implemented')
       endif
 
-      call system(" echo 'sweep_exact='"//trim(adjustl(toString(1000)))//"     > hf.in ")
-      call system(" echo 'spline_numb=10000'                                  >> hf.in ")
-      call system(" echo 'fourier_smoothing=0.00001'                          >> hf.in ")
+      call utils_system_call(" echo 'sweep_exact='"//trim(adjustl(toString(1000)))//"     > hf.in ")
+      call utils_system_call(" echo 'spline_numb=10000'                                  >> hf.in ")
+      call utils_system_call(" echo 'fourier_smoothing=0.00001'                          >> hf.in ")
       if (hf_hartree) then
-         call system(" echo 'impose_hartree=.true.'                              >> hf.in ")
+         call utils_system_call(" echo 'impose_hartree=.true.'                              >> hf.in ")
       else
-         call system(" echo 'impose_hartree=.false.'                             >> hf.in ")
+         call utils_system_call(" echo 'impose_hartree=.false.'                             >> hf.in ")
       endif
       if (hf_average) then
-         call system(" echo 'average_over_time_slices=.true.'                    >> hf.in ")
+         call utils_system_call(" echo 'average_over_time_slices=.true.'                    >> hf.in ")
       else
-         call system(" echo 'average_over_time_slices=.false.'                   >> hf.in ")
+         call utils_system_call(" echo 'average_over_time_slices=.false.'                   >> hf.in ")
       endif
       if (hf_krauth) then
-         call system(" echo 'use_krauth_splining=.true.'                         >> hf.in ")
+         call utils_system_call(" echo 'use_krauth_splining=.true.'                         >> hf.in ")
       else
-         call system(" echo 'use_krauth_splining=.false.'                        >> hf.in ")
+         call utils_system_call(" echo 'use_krauth_splining=.false.'                        >> hf.in ")
       endif
-      call system(" echo 'shift_tau_of_boundary=0.0'                          >> hf.in ")
-      call system(" echo 'U_coul_param=1.'                                    >> hf.in ")
-      call system(" echo 'enforce_boundary=.true.'                            >> hf.in ")
-      call system(" echo 'substract_hf=.true.'                                >> hf.in ")
-      call system(" echo 'substract_hf_im=.true.'                             >> hf.in ")
-      call system(" echo 'pole_self=0.1'                                      >> hf.in ")
-      call system(" echo 'impose_causality=.true.'                            >> hf.in ")
-      call system(" echo 'nsweep='"//trim(adjustl(toString(mcs_ctqmc)))//"    >> hf.in ")
-      call system(" echo 'ntau='"//trim(adjustl(toString(ntauhf)))//"         >> hf.in ")
-      call system(" echo 'tail_energy='"//trim(adjustl(toString(3.5d0)))//"   >> hf.in ")
-      call system(" echo 'warmup='"//trim(adjustl(toString(mcs_ctqmc/20)))//" >> hf.in ")
-      call system(" echo 'measure_cycle='"//trim(adjustl(toString(100)))//"    >> hf.in ")
+      call utils_system_call(" echo 'shift_tau_of_boundary=0.0'                          >> hf.in ")
+      call utils_system_call(" echo 'U_coul_param=1.'                                    >> hf.in ")
+      call utils_system_call(" echo 'enforce_boundary=.true.'                            >> hf.in ")
+      call utils_system_call(" echo 'substract_hf=.true.'                                >> hf.in ")
+      call utils_system_call(" echo 'substract_hf_im=.true.'                             >> hf.in ")
+      call utils_system_call(" echo 'pole_self=0.1'                                      >> hf.in ")
+      call utils_system_call(" echo 'impose_causality=.true.'                            >> hf.in ")
+      call utils_system_call(" echo 'nsweep='"//trim(adjustl(toString(mcs_ctqmc)))//"    >> hf.in ")
+      call utils_system_call(" echo 'ntau='"//trim(adjustl(toString(ntauhf)))//"         >> hf.in ")
+      call utils_system_call(" echo 'tail_energy='"//trim(adjustl(toString(3.5d0)))//"   >> hf.in ")
+      call utils_system_call(" echo 'warmup='"//trim(adjustl(toString(mcs_ctqmc/20)))//" >> hf.in ")
+      call utils_system_call(" echo 'measure_cycle='"//trim(adjustl(toString(100)))//"    >> hf.in ")
       if (paramagnetic_ed == 1) then
-         call system("echo paramagnetic=.true. >> hf.in")
+         call utils_system_call("echo paramagnetic=.true. >> hf.in")
       else
-         call system("echo paramagnetic=.false. >> hf.in")
+         call utils_system_call("echo paramagnetic=.false. >> hf.in")
       endif
 
-      call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/ed.* .")
+      call utils_system_call("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/ed.* .")
 
       if (average_green_ed) then
-         call system("echo 1 > ed.average ")
+         call utils_system_call("echo 1 > ed.average ")
       endif
 
       if (flag_use_broadening_two_scales_ed <= 0) then
-         call system("echo flag_idelta_two_scales_ed=0 >> ed.in ")
+         call utils_system_call("echo flag_idelta_two_scales_ed=0 >> ed.in ")
       else
-         call system("echo flag_idelta_two_scales_ed="//trim(adjustl(toString(flag_use_broadening_two_scales_ed)))//"  >> ed.in ")
+         call utils_system_call("echo flag_idelta_two_scales_ed="//trim(adjustl(toString(flag_use_broadening_two_scales_ed)))//"  >> ed.in ")
       endif
-      call system("echo dist_max="//trim(adjustl(toString(dist_max)))//" >> ed.in")
-      call system("echo nsec="//trim(adjustl(toString(nsec)))//" >> ed.in")
-      call system("echo nsec0="//trim(adjustl(toString(nsec0)))//" >> ed.in")
-      call system("echo which_lanczos="//trim(adjustl(which_lanczos))//" >> ed.in")
-      call system("echo Neigen="//trim(adjustl(toString(Neigen)))//" >> ed.in")
-      call system("echo Block_size="//trim(adjustl(toString(Block_size)))//" >> ed.in")
-      call system("echo ncpt_approx="//trim(adjustl(toString(ncpt_approx)))//" >> ed.in")
-      call system("echo cpt_upper_bound="//trim(adjustl(toString(cpt_upper_bound)))//" >> ed.in")
-      call system("echo cpt_lagrange="//trim(adjustl(toString(cpt_lagrange)))//" >> ed.in")
-      call system("echo iwindow="//trim(adjustl(toString(iwindow)))//" >> ed.in")
-      call system("echo fmos_iter="//trim(adjustl(toString(fmos_iter)))//" >> ed.in")
-      call system("echo  fmos_mix="//trim(adjustl(toString(fmos_mix)))//" >> ed.in")
+      call utils_system_call("echo dist_max="//trim(adjustl(toString(dist_max)))//" >> ed.in")
+      call utils_system_call("echo nsec="//trim(adjustl(toString(nsec)))//" >> ed.in")
+      call utils_system_call("echo nsec0="//trim(adjustl(toString(nsec0)))//" >> ed.in")
+      call utils_system_call("echo which_lanczos="//trim(adjustl(which_lanczos))//" >> ed.in")
+      call utils_system_call("echo Neigen="//trim(adjustl(toString(Neigen)))//" >> ed.in")
+      call utils_system_call("echo Block_size="//trim(adjustl(toString(Block_size)))//" >> ed.in")
+      call utils_system_call("echo ncpt_approx="//trim(adjustl(toString(ncpt_approx)))//" >> ed.in")
+      call utils_system_call("echo cpt_upper_bound="//trim(adjustl(toString(cpt_upper_bound)))//" >> ed.in")
+      call utils_system_call("echo cpt_lagrange="//trim(adjustl(toString(cpt_lagrange)))//" >> ed.in")
+      call utils_system_call("echo iwindow="//trim(adjustl(toString(iwindow)))//" >> ed.in")
+      call utils_system_call("echo fmos_iter="//trim(adjustl(toString(fmos_iter)))//" >> ed.in")
+      call utils_system_call("echo  fmos_mix="//trim(adjustl(toString(fmos_mix)))//" >> ed.in")
       if (fmos_use) then
-         call system("echo fmos=.true.       >> ed.in")
+         call utils_system_call("echo fmos=.true.       >> ed.in")
       else
-         call system("echo fmos=.false.      >> ed.in")
+         call utils_system_call("echo fmos=.false.      >> ed.in")
       endif
       if (fmos_fluc) then
-         call system("echo fmos_fluc=.true.  >> ed.in")
+         call utils_system_call("echo fmos_fluc=.true.  >> ed.in")
       else
-         call system("echo fmos_fluc=.false. >> ed.in")
+         call utils_system_call("echo fmos_fluc=.false. >> ed.in")
       endif
       if (fmos_hub1) then
-         call system("echo fmos_hub1=.true.  >> ed.in")
+         call utils_system_call("echo fmos_hub1=.true.  >> ed.in")
       else
-         call system("echo fmos_hub1=.false. >> ed.in")
+         call utils_system_call("echo fmos_hub1=.false. >> ed.in")
       endif
       if (((ed_do_not_keep_previous_fit_param .or. iter_dmft == 1) .and. ncpt_two_step) .or. ncpt_two_step_all_iter) then
-         call system("echo ncpt_flag_two_step_fit=.true. >> ed.in")
+         call utils_system_call("echo ncpt_flag_two_step_fit=.true. >> ed.in")
       else
-         call system("echo ncpt_flag_two_step_fit=.false. >> ed.in")
+         call utils_system_call("echo ncpt_flag_two_step_fit=.false. >> ed.in")
       endif
 
       if (nproc_mpi_solver > 1) then
-         call system("echo FLAG_MPI_GREENS=1 >> ed.in")
+         call utils_system_call("echo FLAG_MPI_GREENS=1 >> ed.in")
       endif
       if (ed_star_geom) then
-         call system("echo diag_bath=.true. >> ed.in")
+         call utils_system_call("echo diag_bath=.true. >> ed.in")
       endif
-      call system("echo Niter_search_max_0="//trim(adjustl(tostring(ed_nsearch)))//" >> ed.in ")
+      call utils_system_call("echo Niter_search_max_0="//trim(adjustl(tostring(ed_nsearch)))//" >> ed.in ")
       if (cluster_dmft_green_for_self_consistence .and. ed_solver_compute_all_green_functions) then
-         call system("echo FLAG_ALL_GREEN_FUNC_COMPUTED=.true. >> ed.in")
+         call utils_system_call("echo FLAG_ALL_GREEN_FUNC_COMPUTED=.true. >> ed.in")
       endif
       if (compute_ed_spin_correlation) then
-         call system(" dmft_gen_correl.out  "//TRIM(ADJUSTL(toString(channels)))//" 1")
+         call utils_system_call(" dmft_gen_correl.out  "//TRIM(ADJUSTL(toString(channels)))//" 1", abort=.true.)
       else
-         call system(" dmft_gen_correl.out  "//TRIM(ADJUSTL(toString(channels)))//" 0")
+         call utils_system_call(" dmft_gen_correl.out  "//TRIM(ADJUSTL(toString(channels)))//" 0", abort=.true.)
       endif
-      call system("echo fit_weight_power="//trim(adjustl(tostring(fit_weight_power)))//" >> ed.in")
+      call utils_system_call("echo fit_weight_power="//trim(adjustl(tostring(fit_weight_power)))//" >> ed.in")
       if (paramagnetic_ed == 1) then
-         call system("echo force_para_state=.true. >> ed.in")
-         call system("echo FLAG_GUP_IS_GDN=.true. >> ed.in")
+         call utils_system_call("echo force_para_state=.true. >> ed.in")
+         call utils_system_call("echo FLAG_GUP_IS_GDN=.true. >> ed.in")
       endif
       if (fit_nw == 0) then
          call utils_assert(n_frequ >= 4, 'Not enough matsubara frequencies')
-         call system("echo fit_nw="//TRIM(ADJUSTL(toString(n_frequ - nspec_frequ)))//" >> ed.in")
+         call utils_system_call("echo fit_nw="//TRIM(ADJUSTL(toString(n_frequ - nspec_frequ)))//" >> ed.in")
       else
-         call system("echo fit_nw="//TRIM(ADJUSTL(toString(fit_nw)))//" >> ed.in")
+         call utils_system_call("echo fit_nw="//TRIM(ADJUSTL(toString(fit_nw)))//" >> ed.in")
       endif
 
-      call system("echo min_all_bath_param="//TRIM(ADJUSTL(toString(sites_ed)))//" >> ed.in")
+      call utils_system_call("echo min_all_bath_param="//TRIM(ADJUSTL(toString(sites_ed)))//" >> ed.in")
       if (ed_do_not_keep_previous_fit_param) then
-         call system(" rm ed.fit.param ed.fmos ")
+         call utils_system_call(" rm ed.fit.param ed.fmos ")
       endif
 
-      call system("mv hf.in "//TRIM(ADJUSTL(filename)))
-      call system("mv ed.* "//TRIM(ADJUSTL(filename)))
-      call system("ls ./Sigma.000 || cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Sigma.000 .")
-      call system("mv Sigma.000 Trans.dat Uc.dat.* gen_atom.log info_atom_d.dat "//TRIM(ADJUSTL(filename)))
+      call utils_system_call("mv hf.in "//TRIM(ADJUSTL(filename)))
+      call utils_system_call("mv ed.* "//TRIM(ADJUSTL(filename)))
+      call utils_system_call("ls ./Sigma.000 || cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Sigma.000 .")
+      call utils_system_call("mv Sigma.000 Trans.dat Uc.dat.* gen_atom.log info_atom_d.dat "//TRIM(ADJUSTL(filename)))
 
 !-----------------------------------------------------------------!
       open (unit=10001, file="PARAMS", ACCESS='append')
@@ -1506,15 +1509,15 @@ call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorb
 !-----------------------------------------------------------------!
 
       if (.not. read_cix_file) then
-         call system("cp actqmc.cix _actqmc.cix_")
+         call utils_system_call("cp actqmc.cix _actqmc.cix_")
       endif
 
-      call system("mv green_onetep_spin* Ac.inp* "//TRIM(ADJUSTL(filename))//" || echo error_no_green_onetep_spin_files ")
-      call system("mv delta_input* out.cix actqmc.cix "//TRIM(ADJUSTL(filename)))
-      call system("cp PARAMS PARAMS.oca ")
-      call system("mv PARAMS* "//TRIM(ADJUSTL(filename)))
+      call utils_system_call("mv green_onetep_spin* Ac.inp* "//TRIM(ADJUSTL(filename))//" || echo error_no_green_onetep_spin_files ")
+      call utils_system_call("mv delta_input* out.cix actqmc.cix "//TRIM(ADJUSTL(filename)))
+      call utils_system_call("cp PARAMS PARAMS.oca ")
+      call utils_system_call("mv PARAMS* "//TRIM(ADJUSTL(filename)))
 
-      if (.not. ctqmc_erase_status) call system("cp status* "//TRIM(ADJUSTL(filename)))
+      if (.not. ctqmc_erase_status) call utils_system_call("cp status* "//TRIM(ADJUSTL(filename)))
 
       if (solver == 1) then
          call utils_system_call("run_iter_ctqmc "//TRIM(ADJUSTL(filename))//" "//TRIM(ADJUSTL(toString(openmp_solver)))//" "//TRIM(ADJUSTL(toString(nproc_mpi_solver))), abort=.true.) 
@@ -1537,11 +1540,13 @@ call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorb
       if (paramagnetic /= 1) then
          write (*, *) 'need to split sigma tot in sigma up and dn'
          write (*, *) 'in onetep need to read sigma up and down separately'
-         call system("split_sigma_1 "//trim(adjustl(filename_sigma(1)))//" "//TRIM(ADJUSTL(toString(channels))))
-         call system("split_sigma_2 "//trim(adjustl(filename_sigma(2)))//" "//TRIM(ADJUSTL(toString(channels))))
-         call system(" rm sigma_output ")
+         call utils_system_call("split_sigma_1 " // trim(adjustl(filename_sigma(1))) // " " &
+               // TRIM(ADJUSTL(toString(channels))), abort=.true.)
+         call utils_system_call("split_sigma_2 " // trim(adjustl(filename_sigma(2))) // " " &
+               // TRIM(ADJUSTL(toString(channels))), abort=.true.)
+         call utils_system_call(" rm sigma_output ")
       else
-         call system("mv sigma_output "//trim(adjustl(filename_sigma(1))))
+         call utils_system_call("mv sigma_output "//trim(adjustl(filename_sigma(1))))
       endif
 
    end subroutine
@@ -2130,7 +2135,7 @@ call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorb
       close (10001)
 
       if ((solver == 1 .or. solver == 2 .or. solver == 3) .and. nmatsu_long > 0) then
-         call system("cp "//trim(adjustl(delta_filename))//" "//trim(adjustl(delta_filename))//"_backup")
+         call utils_system_call("cp "//trim(adjustl(delta_filename))//" "//trim(adjustl(delta_filename))//"_backup")
          open (unit=10001, file=trim(adjustl(delta_filename)))
          do i = 1, channels
             call extract_Eimp_from_tail_of_hybridization(frequ_(kk_, :), green_diag(kk_, :, i), tmp1, ah(i), bh(i))
@@ -2211,7 +2216,8 @@ call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorb
          enddo
          close (10002)
          write (*, *) 'moving sigma file to : ', TRIM(ADJUSTL(filename))//"/"//trim(adjustl(filename_sigma(kk_)))//".backup"
-    call system("mv "//trim(adjustl(filename_sigma(kk_)))//" "//TRIM(ADJUSTL(filename))//"/"//trim(adjustl(filename_sigma(kk_)))//".backup")
+         call utils_system_call("mv " // trim(adjustl(filename_sigma(kk_))) // " " // TRIM(ADJUSTL(filename)) &
+               // "/" // trim(adjustl(filename_sigma(kk_))) // ".backup")
       else
          write (*, *) '======== SIGMA FILE DOES NOT EXISTS ========='
          sigma_mat(kk_, :, :, :) = 0.d0
@@ -2242,12 +2248,11 @@ call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorb
       type(string) :: cc_
       integer      :: kk_, kkk
 
-      call system("get_onetep_env")
+      call utils_system_call("get_onetep_env", abort=.true.)
       open (unit=10001, file='dir_onetep')
       read (10001, '(a)') dir_onetep
       write (*, *) 'My TOSCAM base directory is ', TRIM(ADJUSTL(dir_onetep))
       close (10001, status='delete')
-! call system("rm dir_onetep")
 
       num = COMMAND_ARGUMENT_COUNT()
       if (num == 2) then
@@ -2293,7 +2298,7 @@ call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorb
          value(2) = TRIM(ADJUSTL(value(100)))
          num = 3
          write (*, *) 'ARGUMENTS : ', TRIM(ADJUSTL(value(1))), " ", TRIM(ADJUSTL(value(2))), " ", TRIM(ADJUSTL(value(3)))
-         call system(" cp  "//TRIM(ADJUSTL(value(1)))//" "//TRIM(ADJUSTL(value(100))))
+         call utils_system_call(" cp  "//TRIM(ADJUSTL(value(1)))//" "//TRIM(ADJUSTL(value(100))))
          !copy SIGMAS
          write (*, *) 'copy sigmas ...'
          cc_ = TRIM(ADJUSTL(value(1)))
@@ -2302,7 +2307,7 @@ call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorb
          call replace_in_string(cc_, '_1', '_2', 'last')
          value(99) = cc_
          write (*, *) 'copying sigmas, line : ', " cp  "//TRIM(ADJUSTL(value(100)))//" "//TRIM(ADJUSTL(value(99)))
-         call system(" cp  "//TRIM(ADJUSTL(value(100)))//" "//TRIM(ADJUSTL(value(99))))
+         call utils_system_call(" cp  "//TRIM(ADJUSTL(value(100)))//" "//TRIM(ADJUSTL(value(99))))
       endif
 
       kkk = 1; if (paramagnetic /= 1) kkk = 2
@@ -2324,9 +2329,9 @@ call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorb
       write (*, *) 'getting rid of other sigmas present in dir'
       if (.not. verysilent) then
       if (kkk == 1) then
-         call system(" get_rid_other_sigmas.out "//TRIM(ADJUSTL(filename_sigma(1))))
+         call utils_system_call(" get_rid_other_sigmas.out "//TRIM(ADJUSTL(filename_sigma(1))), abort=.true.)
       elseif (kkk == 2) then
-         call system(" get_rid_other_sigmas.out "//TRIM(ADJUSTL(filename_sigma(1)))//"  "//TRIM(ADJUSTL(filename_sigma(2))))
+         call utils_system_call(" get_rid_other_sigmas.out "//TRIM(ADJUSTL(filename_sigma(1)))//"  "//TRIM(ADJUSTL(filename_sigma(2))), abort=.true.)
       else
          call utils_abort('Error when getting rid of sigmas; this case should not arise')
       endif
@@ -2335,14 +2340,14 @@ call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorb
 
       iter_dmft = StrInt2(value(num))
       filename = "dir_"//TRIM(ADJUSTL(value(1)))//'_iter'//TRIM(ADJUSTL(toString(iter_dmft)))
-      call system("ls -F "//TRIM(ADJUSTL(filename))//" && rm -r "//TRIM(ADJUSTL(filename)))
-      call system("mkdir "//TRIM(ADJUSTL(filename)))
-      call system("mkdir "//TRIM(ADJUSTL(filename))//"/ED_out    ")
-      call system("mkdir "//TRIM(ADJUSTL(filename))//"/CTQMC_out ")
-      call system("mkdir "//TRIM(ADJUSTL(filename))//"/NCA_out   ")
-      call system("mkdir "//TRIM(ADJUSTL(filename))//"/OCA_out   ")
-      call system("mkdir "//TRIM(ADJUSTL(filename))//"/AGR       ")
-      call system("mkdir "//TRIM(ADJUSTL(filename))//"/PNG       ")
+      call utils_system_call("ls -F "//TRIM(ADJUSTL(filename))//" && rm -r "//TRIM(ADJUSTL(filename)))
+      call utils_system_call("mkdir "//TRIM(ADJUSTL(filename)))
+      call utils_system_call("mkdir "//TRIM(ADJUSTL(filename))//"/ED_out    ")
+      call utils_system_call("mkdir "//TRIM(ADJUSTL(filename))//"/CTQMC_out ")
+      call utils_system_call("mkdir "//TRIM(ADJUSTL(filename))//"/NCA_out   ")
+      call utils_system_call("mkdir "//TRIM(ADJUSTL(filename))//"/OCA_out   ")
+      call utils_system_call("mkdir "//TRIM(ADJUSTL(filename))//"/AGR       ")
+      call utils_system_call("mkdir "//TRIM(ADJUSTL(filename))//"/PNG       ")
 
       write (*, *) 'converted to char-to-integer dmft iteration is : ', iter_dmft
       write (*, *) 'PARAMAGNETIC                                   : ', paramagnetic
@@ -3120,7 +3125,7 @@ call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorb
       close (funit)
 
       funit = utils_unit()
-      call system(" rm "//trim(adjustl(filenamesig)))
+      call utils_system_call(" rm "//trim(adjustl(filenamesig)))
       open (unit=funit, file=trim(adjustl(filenamesig)))
       write (funit, *)
       do i = 1, n_frequ
@@ -3383,7 +3388,7 @@ call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorb
       do kk_ = 1, j_
          do i = 1, n_frequ
             if (.not. double_counting_zero_self .and. maxval(abs(double_counting(kk_, :))) < 1.d-5 .and. abs(UU) > 1.d-5) then
-               write (*, *) ' ERROR double counting is undefined : '
+               write (*, '(a)') ' WARNING: double counting is undefined : '
                write (*, *) ' UU,double counting                 : ', UU, double_counting(kk_, :)
                call utils_abort('Double counting is undefined')
             endif
@@ -3669,7 +3674,13 @@ call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorb
          else
             occup = occup + occupation_orbital
             do i_ = 1, channels
-               if (checkujmat) then; Utmp = UU_ren0(i_, i_); Jtmp = JJ_ren0(i_, i_); else; Utmp = Uaverage; Jtmp = Jhund; endif; 
+               if (checkujmat) then
+                  Utmp = UU_ren0(i_, i_)
+                  Jtmp = JJ_ren0(i_, i_)
+               else
+                  Utmp = Uaverage
+                  Jtmp = Jhund
+               endif 
                double_counting(:, i_) = Utmp*(occupation_orbital - 0.5d0) - Jtmp*(densupdn(:) - 0.5d0)
             enddo
          endif
@@ -3920,11 +3931,11 @@ call system("cp "//TRIM(ADJUSTL(dir_onetep))//"/utils/INPUTS/Trans_cubic_spinorb
       integer :: i, j, k, checkit
 
       if (solver < 4) then
-         call system("cat `which atom_d.py` |grep onetep |head -n 1  | wc -l >> check_script ")
+         call utils_system_call("cat `which atom_d.py` |grep onetep |head -n 1  | wc -l >> check_script ")
          open (unit=30112, file='check_script')
          read (30112, *) checkit
          close (30112)
-         call system("rm check_script")
+         call utils_system_call("rm check_script")
          call utils_assert(checkit /= 0, 'Your CTQMC code (in particular the atom_d.py script) was not updated for onetep')
          open (unit=30112, file='Uc.dat.onetep')
          write (30112, *) U

@@ -42,7 +42,7 @@ if [ "${ONETEP_DMFT_TEMP_DIR}" != "${mydirnow}" ]
   echo "no symlink will be used, running into shared nfs volume"
  fi
 
-mkdir ${ONETEP_DMFT_TEMP_DIR}/atom$1 || echo "atom directory already exists"
+mkdir ${ONETEP_DMFT_TEMP_DIR}/atom$1 &>/dev/null
 
 if [ "${ONETEP_DMFT_TEMP_DIR}" != "${mydirnow}" ]
  then

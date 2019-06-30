@@ -367,6 +367,7 @@
 
    subroutine get_new_bounds()
 
+      use common_def, only: utils_system_call
       use globalvar_ed_solver, only: ndnmax, ndnmin, nupmax, nupmin, szmax, &
          szmin
       use genvar, only: log_unit
@@ -398,7 +399,7 @@
       INQUIRE (file='ed.sector_bound_file', EXIST=sector_bound_file_present)
       if (rank == 0 .and. sector_bound_file_present) then
 #ifndef NO_SYS_CALL
-         call system("rm ed.sector_bound_file")
+         call utils_system_call("rm ed.sector_bound_file")
 #else
          call remove_filef("ed.sector_bound_file")
 #endif
