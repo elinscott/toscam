@@ -3664,7 +3664,7 @@ contains
                tt2_(2) = (tt2_(2) + sum(diag(occupation_matrixdn(1:klm, 1:klm))))/2.d0
             endif
             tt1_ = sum(tt2_)
-            occup2 = t1_
+            occup2 = tt1_
             do i_ = 1, 2
                do ii1 = 1, klm
                   if (checkujmat) then; Utmp = UU_ren0(klm + ii1, klm + ii1); Jtmp = JJ_ren0(klm + ii1, klm + ii1); else; Utmp = Uaverage; Jtmp = Jhund; endif; 
