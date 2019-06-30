@@ -39,3 +39,9 @@
  flag_introduce_noise_in_minimization=.false.
 
 
+ Nitermax=420
+ Nitergreenmax=100
+ dEmax0=5.5d0
+ FIT_METH=CIVELLI
+
+
