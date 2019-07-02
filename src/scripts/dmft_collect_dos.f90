@@ -1,13 +1,14 @@
 program collect
+   use genvar, only: DP
    use strings, only: replace_in_string, string, assignment(=)
    implicit none
    integer                :: i, j, jj, ien, pub_dmft_points, channels, atom, channelsb, atomb
-   real(8)                :: mmu
+   real(kind=DP)                :: mmu
    integer                :: num, len__, status__, LL, paramagnetic
    character(200)         :: value(2000)
    character(200)         :: filename
-   real(8)                :: frequ
-   real(8), allocatable    :: green_(:, :), green_temp(:), frequ_(:)
+   real(kind=DP)                :: frequ
+   real(kind=DP), allocatable    :: green_(:, :), green_temp(:), frequ_(:)
    type(string)           :: cc_
 
    num = COMMAND_ARGUMENT_COUNT()

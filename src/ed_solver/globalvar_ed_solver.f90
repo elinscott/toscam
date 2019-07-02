@@ -14,34 +14,34 @@ module globalvar_ed_solver
 #endif
    logical                 :: fmos, fmos_fluc, fmos_hub1
    integer                 :: fmos_iter, nvecout
-   real(8)                 :: fmos_mix
+   real(kind=DP)                 :: fmos_mix
    integer                 :: flag_idelta_two_scales_ed
-   real(8), allocatable     :: UCCr(:, :, :)
-   complex(8), allocatable :: UCCc(:, :, :)
+   real(kind=DP), allocatable     :: UCCr(:, :, :)
+   complex(kind=DP), allocatable :: UCCc(:, :, :)
    integer, allocatable    :: UCC(:, :, :, :)
    integer                 :: ncpt_chain_coup
-   real(8)                 :: quench_mag, quench_U
+   real(kind=DP)                 :: quench_mag, quench_U
    logical                 :: keldysh_pert_ground_sector, flag_slater_int, &
                               use_precomputed_slater_matrix, &
                               cpt_correct_green_out, ncpt_flag_two_step_fit, &
                               gen_cpt
-   complex(8), allocatable :: Slater_Coulomb_c(:, :, :, :)
-   real(8), allocatable    :: Slater_Coulomb_r(:, :, :, :)
+   complex(kind=DP), allocatable :: Slater_Coulomb_c(:, :, :, :)
+   real(kind=DP), allocatable    :: Slater_Coulomb_r(:, :, :, :)
    integer                 :: do_quench, do_quench_, quench_orb, ncpt_approx, &
                               ncpt_tot, ncpt_approx_tot, ncpt_para
-   real(8)                 :: cpt_upper_bound, cpt_lagrange
-   complex(8), allocatable :: epsilon_cpt(:, :), T_cpt(:, :)
+   real(kind=DP)                 :: cpt_upper_bound, cpt_lagrange
+   complex(kind=DP), allocatable :: epsilon_cpt(:, :), T_cpt(:, :)
    logical                 :: DO_NOT_USE_OPT_LANCZOS, do_keldysh_gbigger, &
                               quench_cancel_statistics
    logical                 :: donot_compute_holepart_spm
    integer                 :: keldysh_ortho
-   real(8)                 :: keldysh_t0, keldysh_tmax, keldysh_delta
+   real(kind=DP)                 :: keldysh_t0, keldysh_tmax, keldysh_delta
    integer                 :: keldysh_n
    integer                 :: freeze_poles_delta_iter, &
                               freeze_poles_delta_niter, Niter_search_max_0
-   real(8)                 :: rdelta_frequ_eta1, rdelta_frequ_T, &
+   real(kind=DP)                 :: rdelta_frequ_eta1, rdelta_frequ_T, &
                               rdelta_frequ_w0, Jhund, rdelta_frequ_eta2
-   real(8), allocatable    :: UUmatrix(:, :), JJmatrix(:, :)
+   real(kind=DP), allocatable    :: UUmatrix(:, :), JJmatrix(:, :)
    logical                 :: use_input_Eimp_matrices, &
                               fit_all_elements_show_graphs
    logical                 :: do_keldysh, FLAG_DUMP_INFO_FOR_GAMMA_VERTEX

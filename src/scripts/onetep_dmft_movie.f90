@@ -1,11 +1,11 @@
 program keldysh
-   use genvar, only: imi
+   use genvar, only: imi, DP
    use linalg
    use StringManip, only: StrInt2, toString
    implicit none
    integer                :: i, j, k, l, ispin, ntime, Nc
-   real(8), allocatable    :: n_v_t_matrix(:, :, :, :)
-   complex(8), allocatable :: sigma(:, :, :, :)
+   real(kind=DP), allocatable    :: n_v_t_matrix(:, :, :, :)
+   complex(kind=DP), allocatable :: sigma(:, :, :, :)
    integer                :: hat, species, cpus
    character(60)          :: mpiline
 

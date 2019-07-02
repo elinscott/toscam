@@ -9,28 +9,29 @@ module variables
 
    use namelistmod
    use StringManip, only: tostring
+   use genvar, only: DP
    integer, parameter         :: nmaxentry = 10
-   real(8), parameter         :: hartreeunits = 27.2113839
-   real(8)                   :: separation, cutoff, same_atom_distance, planeshift
-   real(8)                   :: cell1shiftd1, cell1shiftd2, cell1shiftd3
-   real(8)                   :: cell2shiftd1, cell2shiftd2, cell2shiftd3, dist_neigh, cutoff_rot, radius_atom
+   real(kind=DP), parameter         :: hartreeunits = 27.2113839
+   real(kind=DP)                   :: separation, cutoff, same_atom_distance, planeshift
+   real(kind=DP)                   :: cell1shiftd1, cell1shiftd2, cell1shiftd3
+   real(kind=DP)                   :: cell2shiftd1, cell2shiftd2, cell2shiftd3, dist_neigh, cutoff_rot, radius_atom
    character(20)             :: filename1, filename2
    logical                   :: remove_duplicate_unitcell, dmft_case, round_down_planes, symmetrize_structure, brokensym, check1
-   real(8)                   :: onlycorplanes
+   real(kind=DP)                   :: onlycorplanes
    integer                   :: sandwitch, jj, jjj, nfrequ
-   real(8)                   :: open_boundary, fac, myaxis(3, 3), cutoff_boundary_shifted
+   real(kind=DP)                   :: open_boundary, fac, myaxis(3, 3), cutoff_boundary_shifted
    integer(4)                :: nplane1, nplane2, width
    integer                   :: d3, d1, d2, planes_in_cell1, planes_in_cell2, rutile_dir
    integer                   :: nbasis
    integer                   :: ncor, firstplane, lastplane, obtainedplanes
-   real(8), allocatable       :: corU1(:), corU2(:), corJ1(:), corJ2(:)
+   real(kind=DP), allocatable       :: corU1(:), corU2(:), corJ1(:), corJ2(:)
    character(20), allocatable :: atomsymbol(:)
    character(40), allocatable :: atomConf(:)
    character(20), allocatable :: corsymbol1(:), corsymbol2(:)
    logical, allocatable       :: isitcor(:)
    integer, allocatable       :: basistot(:), basisZ(:)
    integer                   :: kkk, duplicatecellchoice
-   real(8)                   :: planer1, planer2
+   real(kind=DP)                   :: planer1, planer2
    logical                   :: periodic_plane
 
 contains
@@ -160,15 +161,15 @@ PROGRAM oxides
    IMPLICIT NONE
    integer                   :: natom
    integer                   :: i, j, k, ii
- real(8),allocatable       :: coordfull(:,:),coordfullcopy(:,:),coordhub(:,:),cell1(:,:),cell2(:,:),cell1copy(:,:),cell2copy(:,:)
+ real(kind=DP),allocatable       :: coordfull(:,:),coordfullcopy(:,:),coordhub(:,:),cell1(:,:),cell2(:,:),cell1copy(:,:),cell2copy(:,:)
    integer                   :: nhub, hubcounter, ncell1, ncell2, at
    character(3), allocatable  :: labelfullcopy(:), labelfull(:), labelcell1(:), labelcell2(:), labelcell1copy(:), labelcell2copy(:)
  integer,allocatable       :: planecell1(:),planecell2(:),planefullcopy(:,:),nentries(:),planefull(:,:),myatoms(:),hubequivalent(:)
    integer, allocatable       :: planeloc(:), planeloccopy(:), belongscell(:), belongscellcopy(:)
    integer, allocatable       :: symcell1(:), symcell2(:), symcell1copy(:), symcell2copy(:), symfullcopy(:), symfull(:)
-   real(8)                   :: shift(3), trans1(3, 3), trans2(3, 3), tota(3), totb(3), totc(3), vecd3(3)
+   real(kind=DP)                   :: shift(3), trans1(3, 3), trans2(3, 3), tota(3), totb(3), totc(3), vecd3(3)
    logical                   :: duplicate
-   real(8)                   :: shift1_sand(3), shift2_sand(3)
+   real(kind=DP)                   :: shift1_sand(3), shift2_sand(3)
    character(6)              :: tempa
 
    call set_var
@@ -1046,8 +1047,8 @@ PROGRAM oxides
 
 contains
 
-   real(8) function norm(x)
-      real(8) x(3)
+   real(kind=DP) function norm(x)
+      real(kind=DP) x(3)
       norm = dsqrt(sum(x**2))
    end function
 

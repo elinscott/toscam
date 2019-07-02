@@ -485,7 +485,7 @@
 
       implicit none
 
-      real(8) :: normvec
+      real(kind=DP) :: normvec
       integer :: iisector, i_, v(2), start, step
 
       write (log_unit, *) '---------------------------------'
@@ -566,7 +566,7 @@
 
       implicit none
 
-      real(8) :: normvec
+      real(kind=DP) :: normvec
       integer :: iisector, i_, v(2), start, step
 
       ! THEN WE FORM THEIR SYMMETRIC COMBINATIONS & COMPUTE CORRELATIONS FIRST

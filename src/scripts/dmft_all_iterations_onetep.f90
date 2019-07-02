@@ -8,9 +8,10 @@
 !==============================================================!
 
  program onetep_normal_mode
-    use StringManip, only: toString
-    use mpi
     use common_def, only: utils_system_call
+    use genvar, only: DP
+    use mpi
+    use StringManip, only: toString
     implicit none
     integer          :: jj, k, i, rank, size2, ierr
     integer          :: nproc_onetep
@@ -18,8 +19,8 @@
     character(2000)  :: exec_onetep
     character(2000)  :: CASE_ONETEP
     logical          :: compute_dos
-    real(8)          :: ed_frequ_min
-    real(8)          :: ed_frequ_max
+    real(kind=DP)          :: ed_frequ_min
+    real(kind=DP)          :: ed_frequ_max
     integer          :: ed_real_frequ_last
     character(2000)  :: command_line
     character(200)   :: myhost

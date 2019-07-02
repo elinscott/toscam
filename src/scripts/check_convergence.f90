@@ -18,15 +18,15 @@ program dmft_check_convergence
    implicit none
 
    integer                :: kk_, i, j, k, l, channels, n_frequ, n_frequ_long
-   real(8), allocatable    :: temp(:), vvv(:, :), ddens(:)
-   complex(8), allocatable :: COEF(:, :), frequ_(:), green_lat(:, :, :), green_matsu(:, :, :), sigma_lat(:, :, :)
+   real(kind=DP), allocatable    :: temp(:), vvv(:, :), ddens(:)
+   complex(kind=DP), allocatable :: COEF(:, :), frequ_(:), green_lat(:, :, :), green_matsu(:, :, :), sigma_lat(:, :, :)
    logical                :: check
-   real(8)                :: mmu, vv, aa_matsu, aa
-   complex(8)             :: ttt
-   complex(8), allocatable :: tt(:, :)
+   real(kind=DP)                :: mmu, vv, aa_matsu, aa
+   complex(kind=DP)             :: ttt
+   complex(kind=DP), allocatable :: tt(:, :)
    integer                :: paramagnet, fac, mmax
    logical                :: checkfile
-   real(8)                :: beta
+   real(kind=DP)                :: beta
 
    call initialize_my_simulation
    testing = .false.
@@ -179,15 +179,15 @@ contains
 !------------------------!
 !------------------------!
 
-   real(8) function get_dens(GlocRe, GlocIm, diag)
+   real(kind=DP) function get_dens(GlocRe, GlocIm, diag)
       use linalg, only: mplx
       implicit none
       integer    :: k1, k2, i, j, k, jj
-      complex(8) :: dens
-      real(8)    :: frequ, pi, tau0, omega, df, GlocRe(:), GlocIm(:)
-      complex(8) :: temp
+      complex(kind=DP) :: dens
+      real(kind=DP)    :: frequ, pi, tau0, omega, df, GlocRe(:), GlocIm(:)
+      complex(kind=DP) :: temp
       logical    :: diag
-      real(8)    :: alpha
+      real(kind=DP)    :: alpha
 
       pi = dacos(-1.d0)
       jj = size(GlocIm) - 7

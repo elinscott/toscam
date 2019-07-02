@@ -1,4 +1,5 @@
 program dens_script
+   use genvar, only: DP
    use linalg
    use StringManip, only: StrInt2
 
@@ -6,7 +7,7 @@ program dens_script
 
    integer                  :: i, j, k, l, kk
    character*100            :: filename, filename2
-   real(8)                  :: beta, df
+   real(kind=DP)                  :: beta, df
    real*8, allocatable       :: mat(:, :), sigmat(:, :), dens(:), rho(:), scattering(:), ZZ(:), ZZ_b(:), slope(:)
    integer                  :: num, len__, status__, ll
    character(300)           :: value(100)
@@ -153,14 +154,14 @@ contains
 !------------------------!
 !------------------------!
 
-   real(8) function get_dens(frequ, GlocRe, GlocIm, diag)
+   real(kind=DP) function get_dens(frequ, GlocRe, GlocIm, diag)
       use genvar, only: imi
       use linalg, only: mplx
       implicit none
       integer    :: k1, k2, i, j, k, nmatsu_frequ
-      complex(8) :: dens
-      real(8)    :: tau0, omega, df, frequ(:), GlocRe(:), GlocIm(:)
-      complex(8) :: temp
+      complex(kind=DP) :: dens
+      real(kind=DP)    :: tau0, omega, df, frequ(:), GlocRe(:), GlocIm(:)
+      complex(kind=DP) :: temp
       logical    :: diag
       nmatsu_frequ = size(frequ)
       tau0 = 1.d-8; dens = 0.d0

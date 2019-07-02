@@ -8,7 +8,7 @@
 
     type node
        type(node), pointer :: next, prev
-       real(8)             :: a
+       real(kind=DP)             :: a
        integer             :: info
        integer             :: istart = 1
        integer             :: itot
@@ -74,7 +74,7 @@
 !**************************************************************************
 
     subroutine add_to_list(aa, info)
-       real(8) :: aa
+       real(kind=DP) :: aa
        integer :: info
        allocate (cur%next)
        cur%next%a = aa
@@ -180,7 +180,7 @@
 !
 !  subroutine test_list3
 !  integer :: i
-!  real(8) :: final_vec(20)
+!  real(kind=DP) :: final_vec(20)
 !
 !  call initialize_list
 !

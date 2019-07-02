@@ -26,12 +26,12 @@ module geometry
 ! !**********************************************************************************
 ! !**********************************************************************************
 !
-!   real(8) FUNCTION Distance(v0, v1, indim)
+!   real(kind=DP) FUNCTION Distance(v0, v1, indim)
 !     IMPLICIT NONE
-!     complex(8), intent(in) :: v0(indim), v1(indim)
+!     complex(kind=DP), intent(in) :: v0(indim), v1(indim)
 !     INTEGER, intent(in)    :: indim
 !     INTEGER                :: i, j
-!     real(8)                :: ds
+!     real(kind=DP)                :: ds
 !     ds = 0.0
 !     DO i=1,indim
 !        ds = ds + abs(v0(i)-v1(i))
@@ -51,8 +51,8 @@ module geometry
 ! implicit none
 ! integer :: i,j,ii,jj,i_
 ! integer :: m,k,l
-! real(8)  :: x(3),y(3),yy(3),T1(3),T2(3),T3(3)
-! real(8)  :: min,minb,periodist_vec_open_bc
+! real(kind=DP)  :: x(3),y(3),yy(3),T1(3),T2(3),T3(3)
+! real(kind=DP)  :: min,minb,periodist_vec_open_bc
 ! logical :: open
 !
 !  min=100000.
@@ -90,8 +90,8 @@ module geometry
 ! implicit none
 ! integer :: i,j,ii,jj,i_
 ! integer :: m,k,l
-! real(8) :: x(3),y(3),yy(3),T1(3),T2(3),T3(3)
-! real(8) :: min,minb,periodist_vec
+! real(kind=DP) :: x(3),y(3),yy(3),T1(3),T2(3),T3(3)
+! real(kind=DP) :: min,minb,periodist_vec
 !
 !  min=100000.
 !  do i=-1,1
@@ -121,7 +121,7 @@ module geometry
 !
 !  subroutine rapproche_point(A,B,scale)
 !  implicit none
-!  real(8)   :: A(:),B(:),scale,V(size(A)),W(size(A)),C(size(A)),D(size(A))
+!  real(kind=DP)   :: A(:),B(:),scale,V(size(A)),W(size(A)),C(size(A)),D(size(A))
 !   V=B-A
 !   C=A+V*(1.-scale)/2.
 !   D=B-V*(1.-scale)/2.
@@ -140,7 +140,7 @@ module geometry
 !
 !  subroutine dist_point_to_polygon(dx,T1,T2,disto)
 !  implicit none
-!  real(8) :: T1(2),T2(2),disto(4),dx(2)
+!  real(kind=DP) :: T1(2),T2(2),disto(4),dx(2)
 !  real :: dist(4)
 !   call line_seg_point_dist_2d(0.,0.,real(T1(1)),real(T1(2)),real(dx(1)),real(dx(2)),dist(1))
 !   call line_seg_point_dist_2d(0.,0.,real(T2(1)),real(T2(2)),real(dx(1)),real(dx(2)),dist(2))
@@ -163,8 +163,8 @@ module geometry
 !   ! length of a polygon from point 1 to NN<=nb points !
 !   !---------------------------------------------------!
 !
-!  real(8) function lengthpoly(curvein,NN)
-!  real(8) :: curvein(NN,3)
+!  real(kind=DP) function lengthpoly(curvein,NN)
+!  real(kind=DP) :: curvein(NN,3)
 !  integer :: i,j,k,l,NN
 !   lengthpoly=0
 !   do i=1,NN
@@ -196,12 +196,12 @@ module geometry
 !   ! on the line V3-V2                                                                  !
 !   !------------------------------------------------------------------------------------!
 !
-!  real(8) function generaltriangle(V1,V2,V3,B)
+!  real(kind=DP) function generaltriangle(V1,V2,V3,B)
 !  implicit none
-!   real(8) :: V1(3),V2(3),V3(3),B
+!   real(kind=DP) :: V1(3),V2(3),V3(3),B
 !   real    :: vV1(3),vV2(3),vV3(3),vA
-!   real(8) :: chi,A,t1(3),t2(3),C,D
-!   real(8) :: theta
+!   real(kind=DP) :: chi,A,t1(3),t2(3),C,D
+!   real(kind=DP) :: theta
 !   C=norme(V3-V1)
 !   t1=V3-V1
 !   t2=V3-V2
@@ -232,8 +232,8 @@ module geometry
 !
 !       subroutine dir1(costh,sinth,cospsi,sinpsi,rot)
 !       implicit none
-!       real(8) costh,sinth,cospsi,sinpsi,cosom,sinom
-!       real(8) rot(3,3)
+!       real(kind=DP) costh,sinth,cospsi,sinpsi,cosom,sinom
+!       real(kind=DP) rot(3,3)
 !       rot(1,1)=costh*cospsi
 !       rot(1,2)=costh*sinpsi
 !       rot(1,3)=-sinth
@@ -257,8 +257,8 @@ module geometry
 !
 !       subroutine dir2(cosom,sinom,rot)
 !       implicit none
-!        real(8) :: cosom,sinom
-!        real(8) :: rot(3,3)
+!        real(kind=DP) :: cosom,sinom
+!        real(kind=DP) :: rot(3,3)
 !        rot(1,1)=cosom
 !        rot(1,2)=-sinom
 !        rot(1,3)=0.0d0
@@ -296,13 +296,13 @@ module geometry
 !    implicit none
 !
 !       integer              :: nn,idum,nocrossing,i,j,k,k1,nf2,error
-!       real(8),intent(in)   :: z1(nn,3)
-!       real(8),intent(out)  :: zn1(nn,3)
-!       real(8)              :: po(0:nn-1,3),po1(0:nn-1,3),ro(3,3)
-!       real(8)              :: cos_the,sin_the,cos_psi,sin_psi,cos_ome,sin_ome
-!       real(8)              :: ome, rd, som(3),check
-!       real(8)              :: xx,yy,zz,dx,dy,dz,uu,vv,ww, du,dv,dw,xi,yi
-!       real(8)              :: aa,bb,cc,a,b,s,t, so,co,coe,delta,coi,soi
+!       real(kind=DP),intent(in)   :: z1(nn,3)
+!       real(kind=DP),intent(out)  :: zn1(nn,3)
+!       real(kind=DP)              :: po(0:nn-1,3),po1(0:nn-1,3),ro(3,3)
+!       real(kind=DP)              :: cos_the,sin_the,cos_psi,sin_psi,cos_ome,sin_ome
+!       real(kind=DP)              :: ome, rd, som(3),check
+!       real(kind=DP)              :: xx,yy,zz,dx,dy,dz,uu,vv,ww, du,dv,dw,xi,yi
+!       real(kind=DP)              :: aa,bb,cc,a,b,s,t, so,co,coe,delta,coi,soi
 !       integer              :: nm,nf, fa1, fa2, cross,cross1
 !
 !       error=0
@@ -537,8 +537,8 @@ module geometry
 !
 !   function PointInTriangle2(p,a,b,c,eps2)
 !   implicit none
-!    real(8),dimension(3),intent(in) :: p,a,b,c
-!    real(8),intent(in)              :: eps2
+!    real(kind=DP),dimension(3),intent(in) :: p,a,b,c
+!    real(kind=DP),intent(in)              :: eps2
 !    logical                         :: PointInTriangle2
 !
 !     if(SameSide(p,a,b,c,eps2).and.  &
@@ -567,8 +567,8 @@ module geometry
 !
 !   function PointInTriangle(kk,ll,mm,p,a,b,c,eps2)
 !   implicit none
-!   real(8),dimension(3),intent(in) :: p,a,b,c
-!   real(8),intent(in)              :: eps2
+!   real(kind=DP),dimension(3),intent(in) :: p,a,b,c
+!   real(kind=DP),intent(in)              :: eps2
 !   integer                         :: kk,ll,mm
 !   logical                         :: PointInTriangle
 !
@@ -591,8 +591,8 @@ module geometry
 !
 !   function perp(v)
 !   implicit none
-!   real(8),intent(in) :: v(3)
-!   real(8)            :: perp(3)
+!   real(kind=DP),intent(in) :: v(3)
+!   real(kind=DP)            :: perp(3)
 !     perp(1)= v(2)
 !     perp(2)=-v(1)
 !     perp(3)= 0.d0
@@ -610,9 +610,9 @@ module geometry
 !
 !     function SameSide(p1,p2,a,b,eps2)
 !     implicit none
-!     real(8),dimension(3),intent(in) :: p1,p2,a,b
-!     real(8),intent(in)              :: eps2
-!     real(8)                         :: cp1(3),cp2(3)
+!     real(kind=DP),dimension(3),intent(in) :: p1,p2,a,b
+!     real(kind=DP),intent(in)              :: eps2
+!     real(kind=DP)                         :: cp1(3),cp2(3)
 !     logical                        :: SameSide
 !
 !     cp1 = vecprod(b-a, p1-a)
@@ -646,11 +646,11 @@ module geometry
 !    logical, intent(out)                      :: ok
 !    integer, dimension(6)                     :: direc
 !    integer, dimension (n_pas,3),intent(out)  :: tab_knot
-!    real(8),dimension(:,:), allocatable       :: deplacement,deplacement_temp,deplacement_temp_temp
-!    real(8), intent(in)                       :: chaos
-!    real(8), dimension (3)                    :: vect_temp, pos_temp,tab_mov,A,B
-!    real(8), dimension (nInter,3), intent(in) ::  points
-!    real(8)                                   :: z,sum,norm,prod,hasard,long, normebefore,normeafter
+!    real(kind=DP),dimension(:,:), allocatable       :: deplacement,deplacement_temp,deplacement_temp_temp
+!    real(kind=DP), intent(in)                       :: chaos
+!    real(kind=DP), dimension (3)                    :: vect_temp, pos_temp,tab_mov,A,B
+!    real(kind=DP), dimension (nInter,3), intent(in) ::  points
+!    real(kind=DP)                                   :: z,sum,norm,prod,hasard,long, normebefore,normeafter
 !
 !    total=0
 !    l=0
@@ -842,15 +842,15 @@ module geometry
 !    subroutine cross2d(n_pas,tabx,taby,tabtot_x,tabtot_y,nInter,err,Alexander,signes,Inter)
 !    implicit none
 !    integer,intent(in)                            ::  n_pas,nInter
-!    real(8), dimension(3)                         ::  v1,v2,v3
-!    real(8), dimension(n_pas,2,2)                 ::  segmentproj
-!    real(8), dimension(n_pas)  ,intent(in)        ::  tabx,taby
-!    real(8), dimension(:,:),allocatable           ::  Idisorder,Iorder
-!    real(8)                                       ::  x,y
-!    real(8), dimension(2)                         ::  A
-!    real(8), dimension(nInter,2),intent(out)      ::  Inter
-!    real(8), intent(in)                           ::  err
-!    real(8), dimension (n_pas+nInter),intent(out) ::  tabtot_x,tabtot_y
+!    real(kind=DP), dimension(3)                         ::  v1,v2,v3
+!    real(kind=DP), dimension(n_pas,2,2)                 ::  segmentproj
+!    real(kind=DP), dimension(n_pas)  ,intent(in)        ::  tabx,taby
+!    real(kind=DP), dimension(:,:),allocatable           ::  Idisorder,Iorder
+!    real(kind=DP)                                       ::  x,y
+!    real(kind=DP), dimension(2)                         ::  A
+!    real(kind=DP), dimension(nInter,2),intent(out)      ::  Inter
+!    real(kind=DP), intent(in)                           ::  err
+!    real(kind=DP), dimension (n_pas+nInter),intent(out) ::  tabtot_x,tabtot_y
 !    integer  , dimension(nInter),intent(in)       ::  signes
 !    integer  , dimension(nInter)                  ::  internum
 !    integer  , dimension(nInter,2)                ::  Inter2
@@ -1112,19 +1112,19 @@ module geometry
 !    implicit none
 !
 !    integer,intent(in)                                           ::  n_pas,nInter
-!    real(8), dimension (3,3)                                     ::  P
-!    real(8), dimension (3),intent(in)                            ::  vect_2,vect_3,vect_1
-!    real(8), dimension (3)                                       ::  v1,v2,v3
-!    real(8), dimension (n_pas,2,3)                               ::  segment
-!    real(8), dimension (n_pas,2,2)                               ::  segmentproj
+!    real(kind=DP), dimension (3,3)                                     ::  P
+!    real(kind=DP), dimension (3),intent(in)                            ::  vect_2,vect_3,vect_1
+!    real(kind=DP), dimension (3)                                       ::  v1,v2,v3
+!    real(kind=DP), dimension (n_pas,2,3)                               ::  segment
+!    real(kind=DP), dimension (n_pas,2,2)                               ::  segmentproj
 !    integer, dimension (n_pas,3),intent(in)                      ::  tab_knot
-!    real(8), dimension (n_pas)  ,intent(in)                      ::  tab_knot_2d_x,tab_knot_2d_y
-!    real(8), dimension (n_pas+nInter),intent(out)                ::  tabtot_x,tabtot_y
-!    real(8), dimension (:,:),allocatable                         ::  Idisorder,Iorder
-!    real(8)                                                      ::  x,y
-!    real(8), dimension(3)                                        ::  A,Iplan
-!    real(8), dimension(nInter,3)                                 ::  Inter
-!    real(8), intent(in)                                          ::  err
+!    real(kind=DP), dimension (n_pas)  ,intent(in)                      ::  tab_knot_2d_x,tab_knot_2d_y
+!    real(kind=DP), dimension (n_pas+nInter),intent(out)                ::  tabtot_x,tabtot_y
+!    real(kind=DP), dimension (:,:),allocatable                         ::  Idisorder,Iorder
+!    real(kind=DP)                                                      ::  x,y
+!    real(kind=DP), dimension(3)                                        ::  A,Iplan
+!    real(kind=DP), dimension(nInter,3)                                 ::  Inter
+!    real(kind=DP), intent(in)                                          ::  err
 !    integer  , dimension(nInter)                                 ::  signes
 !    integer  , dimension(nInter)                                 ::  internum
 !    integer  , dimension(nInter,2)                               ::  Inter2
@@ -1383,17 +1383,17 @@ module geometry
 !    subroutine updown(sgm1, sgm2, Iplan, e3, err, sign)
 !    implicit none
 !    integer, intent(out)                 ::  sign
-!    real(8), dimension(2,3), intent(in)  ::  sgm1,sgm2
-!    real(8), dimension(3), intent(in)    ::  Iplan,e3
-!    real(8), intent(in)                  ::  err
-!    real(8)                              ::  k1,k2,temp
+!    real(kind=DP), dimension(2,3), intent(in)  ::  sgm1,sgm2
+!    real(kind=DP), dimension(3), intent(in)    ::  Iplan,e3
+!    real(kind=DP), intent(in)                  ::  err
+!    real(kind=DP)                              ::  k1,k2,temp
 !    integer                              ::  k
 !    integer,dimension(2)                 ::  notnullv
 !    integer,dimension(2,2)               ::  nullv
-!    real(8), dimension(3)                ::  vec,test
-!    real(8), dimension(2,3)              ::  Itab,vect,Itabverify
-!    real(8), dimension(2,2,3)            ::  sgm
-!    real(8), dimension(2)                ::  Icompare
+!    real(kind=DP), dimension(3)                ::  vec,test
+!    real(kind=DP), dimension(2,3)              ::  Itab,vect,Itabverify
+!    real(kind=DP), dimension(2,2,3)            ::  sgm
+!    real(kind=DP), dimension(2)                ::  Icompare
 !    integer                              ::  i,j
 !
 !    sgm(1,:,:)=sgm1
@@ -1496,14 +1496,14 @@ module geometry
 !
 ! subroutine intersect(sgm1,sgm2,crossing,x,y,err)
 ! implicit none
-!   real(8), intent(out)               ::  x, y
-!   real(8), intent(in)                ::  err
-!   real(8), dimension(2)              ::  vect_dir
+!   real(kind=DP), intent(out)               ::  x, y
+!   real(kind=DP), intent(in)                ::  err
+!   real(kind=DP), dimension(2)              ::  vect_dir
 !   integer                           ::  c,d,z,e,f,vec,up1,up2
-!   real(8), dimension(2)              ::  a,b
-!   real(8)                            ::  k
-!   real(8), dimension(2,2),intent(in) ::  sgm1,sgm2
-!   real(8), dimension(2,2,2)          ::  sgm
+!   real(kind=DP), dimension(2)              ::  a,b
+!   real(kind=DP)                            ::  k
+!   real(kind=DP), dimension(2,2),intent(in) ::  sgm1,sgm2
+!   real(kind=DP), dimension(2,2,2)          ::  sgm
 !   logical,intent(out)               ::  crossing
 !
 !     c=0.; x=0.; y=0.
@@ -1656,11 +1656,11 @@ module geometry
 ! subroutine crosscount(n_pas,nInter,tab_knot_2d_x,tab_knot_2d_y,err)
 ! implicit none
 ! integer, intent(in)                 ::  n_pas
-! real(8),intent(in)                  ::  err
-! real(8)                             ::  x,y
-! real(8),dimension(n_pas,2,3)        ::  segment
-! real(8),dimension(n_pas,2,2)        ::  segmentproj
-! real(8),dimension(n_pas),intent(in) ::  tab_knot_2d_x,tab_knot_2d_y
+! real(kind=DP),intent(in)                  ::  err
+! real(kind=DP)                             ::  x,y
+! real(kind=DP),dimension(n_pas,2,3)        ::  segment
+! real(kind=DP),dimension(n_pas,2,2)        ::  segmentproj
+! real(kind=DP),dimension(n_pas),intent(in) ::  tab_knot_2d_x,tab_knot_2d_y
 ! integer                             ::  i,j
 ! logical                             ::  crossing
 ! integer,intent(out)                 ::  nInter
@@ -1704,10 +1704,10 @@ module geometry
 !
 ! subroutine basegen(mat_plan, vect_1,vect_2,vect_3 )
 ! implicit none
-!  real(8),dimension(3,2),intent(in) :: mat_plan
-!  real(8)                           :: sign
-!  real(8),dimension(3),intent(out)  :: vect_1,vect_2,vect_3
-!  real(8),dimension(3)              :: temp
+!  real(kind=DP),dimension(3,2),intent(in) :: mat_plan
+!  real(kind=DP)                           :: sign
+!  real(kind=DP),dimension(3),intent(out)  :: vect_1,vect_2,vect_3
+!  real(kind=DP),dimension(3)              :: temp
 !
 !  temp(:)=vnull(:)
 !  call vecnorm(mat_plan(:,1),vect_1)
@@ -1740,16 +1740,16 @@ module geometry
 ! implicit none
 ! integer, intent(in)                     ::  n_pas
 ! integer                                 ::  i
-! real(8), dimension(n_pas),intent(out)   ::  x,y
-! real(8), dimension(n_pas,3),intent(in)  ::  tab_knot
-! real(8), dimension (2,2)                ::  mat_temp1,mat_temp2
-! real(8), dimension (2,3)                ::  mat_plan_trans,mat_temp3
-! real(8), dimension (n_pas,3)            ::  knot_proj
-! real(8)                                 ::  det,temp,sign
-! real(8), dimension(3)                   ::  temp2
-! real(8), dimension(3),intent(in)        ::  vect_1,vect_2,vect_3
-! real(8), dimension(3,3)                 ::  mat_proj
-! real(8), dimension(3,2)                 ::  mat_plan
+! real(kind=DP), dimension(n_pas),intent(out)   ::  x,y
+! real(kind=DP), dimension(n_pas,3),intent(in)  ::  tab_knot
+! real(kind=DP), dimension (2,2)                ::  mat_temp1,mat_temp2
+! real(kind=DP), dimension (2,3)                ::  mat_plan_trans,mat_temp3
+! real(kind=DP), dimension (n_pas,3)            ::  knot_proj
+! real(kind=DP)                                 ::  det,temp,sign
+! real(kind=DP), dimension(3)                   ::  temp2
+! real(kind=DP), dimension(3),intent(in)        ::  vect_1,vect_2,vect_3
+! real(kind=DP), dimension(3,3)                 ::  mat_proj
+! real(kind=DP), dimension(3,2)                 ::  mat_plan
 !
 !  mat_plan(:,1)  = vect_1(:)
 !  mat_plan(:,2)  = vect_2(:)
@@ -1798,9 +1798,9 @@ module geometry
 !
 !   subroutine rotateTRI(face,A,B,vect_1,vect_2,vect_3,faceout,Aout,Bout)
 !     implicit none
-!     real(8) :: A(3),B(3),face(3,3),veca(3),vecb(3),vecc(3),vect_1(3),vect_2(3),vect_3(3)
-!     real(8) :: faceout(3,3),Aout(3),Bout(3),mat(3,3),det
-!     complex(8) :: det2
+!     real(kind=DP) :: A(3),B(3),face(3,3),veca(3),vecb(3),vecc(3),vect_1(3),vect_2(3),vect_3(3)
+!     real(kind=DP) :: faceout(3,3),Aout(3),Bout(3),mat(3,3),det
+!     complex(kind=DP) :: det2
 !     integer :: colin,pdet
 !     colin=0
 !     mat(:,1)=vect_1(:)
@@ -1837,7 +1837,7 @@ module geometry
 !   subroutine test_inout_3d
 !   implicit none
 !   integer,parameter :: nn=10000
-!   real(8) :: x(nn,3),b1(3),b2(3),b3(3)
+!   real(kind=DP) :: x(nn,3),b1(3),b2(3),b3(3)
 !   logical :: out
 !   integer :: ii
 !
@@ -1890,11 +1890,11 @@ module geometry
 !
 !    subroutine inout__(dx,dy,dz,bbound1,bbound2,bbound3,out,err)
 !    implicit none
-!    real(8)          :: aa(3),bb(3),cc(3),pp(3),v1(3),v2(3),v3(3),v4(3),v_(3),dx,dy,dz
-!    real(8)          :: bbound1(3),bbound2(3),bbound3(3),corner(8,3)
+!    real(kind=DP)          :: aa(3),bb(3),cc(3),pp(3),v1(3),v2(3),v3(3),v4(3),v_(3),dx,dy,dz
+!    real(kind=DP)          :: bbound1(3),bbound2(3),bbound3(3),corner(8,3)
 !    integer          :: kk,ll,mm,i1,i2,i3,i4
 !    logical          :: out,inside
-!    real(8),optional :: err
+!    real(kind=DP),optional :: err
 !
 !         pp(1)=dx; pp(2)=dy; pp(3)=dz
 !         v1=0.d0; v2=bbound1; v3=bbound2; v4=bbound3; v_=v2+v3+v4; v_=v_/norme(v_)*1.d-3
@@ -1940,7 +1940,7 @@ module geometry
 !
 !     logical function tetra(v1,v2,v3,v4,pp)
 !     implicit none
-!      real(8) :: v1(3),v2(3),v3(3),v4(3),pp(3)
+!      real(kind=DP) :: v1(3),v2(3),v3(3),v4(3),pp(3)
 !      real    :: x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, x, y, z
 !       x1=v1(1); y1=v1(2); z1=v1(3);
 !       x2=v2(1); y2=v2(2); z2=v2(3);
@@ -1968,13 +1968,13 @@ module geometry
 !
 !     subroutine inout_(dx,dy,bbound1,bbound2,out,err,shift)
 !     implicit none
-!     real(8)          :: aa(3),bb(3),cc(3),gg(3),pp(3),bound1(2),bound2(2),dx,dy
-!     real(8)          :: bbound1(2),bbound2(2)
+!     real(kind=DP)          :: aa(3),bb(3),cc(3),gg(3),pp(3),bound1(2),bound2(2),dx,dy
+!     real(kind=DP)          :: bbound1(2),bbound2(2)
 !     integer          :: kk,ll,mm
 !     logical          :: triang1,triang2
 !     logical          :: out
-!     real(8),optional :: err
-!     real(8),optional :: shift(3)
+!     real(kind=DP),optional :: err
+!     real(kind=DP),optional :: shift(3)
 !
 !         gg=0.d0; pp=0.d0; pp(1)=dx; pp(2)=dy
 !
@@ -2187,9 +2187,9 @@ module geometry
 !      implicit none
 !      integer,intent(in)::longueur
 !      integer::d,e
-!      real(8),dimension(:,:),intent(in)::a
-!      real(8)::compt,rgs
-!      real(8),intent(out)::radius
+!      real(kind=DP),dimension(:,:),intent(in)::a
+!      real(kind=DP)::compt,rgs
+!      real(kind=DP),intent(out)::radius
 !      compt=0.d0
 !      do d=1,longueur-1
 !        do e=d+1,longueur
@@ -2214,10 +2214,10 @@ module geometry
 ! function intersection(pt_a1,pt_a2,pt_b1,pt_b2)
 ! implicit none
 !
-! real(8),dimension(2),intent(in)::pt_a1,pt_a2,pt_b1,pt_b2
-! real(8),dimension(2)::intersection,vect
-! real(8),dimension(2,2)::matrice
-! real(8)::det_2
+! real(kind=DP),dimension(2),intent(in)::pt_a1,pt_a2,pt_b1,pt_b2
+! real(kind=DP),dimension(2)::intersection,vect
+! real(kind=DP),dimension(2,2)::matrice
+! real(kind=DP)::det_2
 !
 !
 ! matrice=reshape((/ pt_a2(2)-pt_a1(2),pt_b2(2)-pt_b1(2), &
@@ -2255,15 +2255,15 @@ module geometry
 ! function writheLB(r,long)
 ! implicit none
 ! integer,intent(in)::long
-! real(8),dimension(long,3),intent(in)::r
-! real(8),dimension(3,long)::p_vect,u
-! real(8),dimension(3,long,long)::rseg
-! real(8),dimension(long,long)::norm
-! real(8)::writheLB,dir_writhe,writhe,norm_temp,normp,normi,normj,tes1
+! real(kind=DP),dimension(long,3),intent(in)::r
+! real(kind=DP),dimension(3,long)::p_vect,u
+! real(kind=DP),dimension(3,long,long)::rseg
+! real(kind=DP),dimension(long,long)::norm
+! real(kind=DP)::writheLB,dir_writhe,writhe,norm_temp,normp,normi,normj,tes1
 ! integer::i,j
-! real(8),dimension(long)::phi,khi,eta
-! real(8),dimension(3)::vect_temp
-! real(8),dimension(2)::pt_inter
+! real(kind=DP),dimension(long)::phi,khi,eta
+! real(kind=DP),dimension(3)::vect_temp
+! real(kind=DP),dimension(2)::pt_inter
 !
 ! dir_writhe=0.d0
 ! writhe=0.d0
@@ -2384,12 +2384,12 @@ module geometry
 ! implicit none
 ! integer::i,j,k,l,m,long,number_cross,ii,ij,ik,in
 ! integer,intent(in)::sample_rate
-! real(8),intent(inout)::acn_value
-! real(8),dimension(long,3),intent(in)::a
-! real(8),dimension(long,3)::noeud,b,backb
-! real(8),dimension(3,3)::matrice_pi
-! real(8)::theta,phi,func,vv(3)
-! real(8)::xi1,xi2,yi1,yi2,xj1,xj2,yj1,yj2,x1,x2,y1,y2,x11,x22,y11,y22,droitex,droitey
+! real(kind=DP),intent(inout)::acn_value
+! real(kind=DP),dimension(long,3),intent(in)::a
+! real(kind=DP),dimension(long,3)::noeud,b,backb
+! real(kind=DP),dimension(3,3)::matrice_pi
+! real(kind=DP)::theta,phi,func,vv(3)
+! real(kind=DP)::xi1,xi2,yi1,yi2,xj1,xj2,yj1,yj2,x1,x2,y1,y2,x11,x22,y11,y22,droitex,droitey
 !
 !
 ! number_cross=0
@@ -2542,10 +2542,10 @@ module geometry
 ! implicit none
 ! integer::i,j,k,l,m,long,number_cross,ii,ij,ik,in,NN,count
 ! integer,intent(in)::sample_rate
-! real(8) :: vv(3),vperp(3),plan(3,2),vv2(3),vect_1(3),vect_2(3),vect_3(3)
-! real(8),dimension(:),allocatable ::acx,acy
-! real(8),intent(inout)::acn_value
-! real(8),dimension(long,3),intent(in)::a
+! real(kind=DP) :: vv(3),vperp(3),plan(3,2),vv2(3),vect_1(3),vect_2(3),vect_3(3)
+! real(kind=DP),dimension(:),allocatable ::acx,acy
+! real(kind=DP),intent(inout)::acn_value
+! real(kind=DP),dimension(long,3),intent(in)::a
 !
 ! !CALCUL DE L'ACN
 !
@@ -2589,8 +2589,8 @@ module geometry
 !
 ! function acospi(vect1,vect2)
 ! implicit none
-! real(8)::acospi,temp,temp1,norm1,norm2,res
-! real(8),intent(in),dimension(2)::vect1,vect2
+! real(kind=DP)::acospi,temp,temp1,norm1,norm2,res
+! real(kind=DP),intent(in),dimension(2)::vect1,vect2
 !  temp=vect1(1)*vect2(2)-vect1(2)*vect2(1)
 !  norm1=sqrt(scalprod(vect1,vect1))
 !  norm2=sqrt(scalprod(vect2,vect2))
@@ -2629,8 +2629,8 @@ module geometry
 !
 !     subroutine azimutangle(vv,theta,phi)
 !     implicit none
-!     real(8),intent(in)::vv(3)
-!     real(8),intent(out)::theta,phi
+!     real(kind=DP),intent(in)::vv(3)
+!     real(kind=DP),intent(out)::theta,phi
 !     phi=0.
 !     theta=0.
 !     if(vv(1)/=0.) phi=ATAN(vv(2)/vv(1))
@@ -2692,7 +2692,7 @@ module geometry
 !
 !   subroutine pointdist(rayon,rr,start,point,nclose)
 !    implicit none
-!    real(8)           :: rr(:,:),rayon,dtemp
+!    real(kind=DP)           :: rr(:,:),rayon,dtemp
 !    integer          :: start,point,a1,i,j,k,l
 !    integer          :: tab(size(rr(:,1))*size(rr(:,1)),2)
 !    integer          :: count,kk,jj
@@ -2760,8 +2760,8 @@ module geometry
 !
 !   function rotatevtoez(vv)
 !   implicit none
-!   real(8)  :: vv(3),d1,d2,d3
-!   real(8)  :: A(3,3),norm,norm2,rotatevtoez(3,3)
+!   real(kind=DP)  :: vv(3),d1,d2,d3
+!   real(kind=DP)  :: A(3,3),norm,norm2,rotatevtoez(3,3)
 !   integer  :: i
 !
 !   d1=vv(1)
@@ -2812,9 +2812,9 @@ module geometry
 ! subroutine writhesub(n_pas,knot2,writhe)
 ! implicit none
 ! integer                      ::  n_pas
-! real(8), dimension (3)       :: v1,v11,v2,v22,r12,r34,n1,n2,n3,n4,r23,r13,r24,r14
-! real(8), dimension (n_pas,3) ::  knot2
-! real(8)                      ::  x,y,writhe,omega,d1,d2,d3,d4
+! real(kind=DP), dimension (3)       :: v1,v11,v2,v22,r12,r34,n1,n2,n3,n4,r23,r13,r24,r14
+! real(kind=DP), dimension (n_pas,3) ::  knot2
+! real(kind=DP)                      ::  x,y,writhe,omega,d1,d2,d3,d4
 ! integer                      ::  i,j,l,k,t,u,v,sign,b
 !
 !     writhe=0.d0

@@ -48,8 +48,8 @@ contains
 
       implicit none
 
-      real(8)           :: rdelta_frequ_eta1_, rdelta_frequ_w0_, rdelta_frequ_T_
-      real(8), optional :: rdelta_frequ_eta2_
+      real(kind=DP)           :: rdelta_frequ_eta1_, rdelta_frequ_w0_, rdelta_frequ_T_
+      real(kind=DP), optional :: rdelta_frequ_eta2_
 
       rdelta_frequ_eta1 = rdelta_frequ_eta1_
       rdelta_frequ_w0 = rdelta_frequ_w0_

@@ -18,16 +18,16 @@ program dmft_check_convergence
    implicit none
 
    integer                :: fac, paramagnet
-   real(8), allocatable    :: temp(:), vvv(:, :)
+   real(kind=DP), allocatable    :: temp(:), vvv(:, :)
    integer                :: n_frequ_long, i1, i2, kk_, i, j, k, l, channels, n_frequ
-   real(8), allocatable    :: rotmat(:, :, :), Smat(:, :, :)
-   complex(8), allocatable :: frequ_(:), green_lat(:, :, :, :), green_matsu(:, :, :, :)
+   real(kind=DP), allocatable    :: rotmat(:, :, :), Smat(:, :, :)
+   complex(kind=DP), allocatable :: frequ_(:), green_lat(:, :, :, :), green_matsu(:, :, :, :)
    logical                :: check, check2, checkfile
-   real(8)                :: mmu, vv, mmax
-   complex(8)             :: tt, ttt
-   complex(8), allocatable :: t1(:), t2(:), t3(:), dummy(:, :), dummy2(:, :), t_trace1(:, :), t_trace2(:, :)
-   real(8), allocatable    :: dens(:, :)
-   real(8)                :: beta, totdens
+   real(kind=DP)                :: mmu, vv, mmax
+   complex(kind=DP)             :: tt, ttt
+   complex(kind=DP), allocatable :: t1(:), t2(:), t3(:), dummy(:, :), dummy2(:, :), t_trace1(:, :), t_trace2(:, :)
+   real(kind=DP), allocatable    :: dens(:, :)
+   real(kind=DP)                :: beta, totdens
 
    call initialize_my_simulation
    testing = .false.
@@ -259,7 +259,7 @@ contains
 
    function rotit(mat, j)
       implicit none
-      complex(8) :: mat(:, :), rotit(size(mat, 1), size(mat, 2))
+      complex(kind=DP) :: mat(:, :), rotit(size(mat, 1), size(mat, 2))
       integer    :: j
       rotit = MATMUL(MATMUL(transpose(rotmat(:, :, j)), mat), rotmat(:, :, j))
    end function
@@ -270,15 +270,15 @@ contains
 !------------------------!
 !------------------------!
 
-   real(8) function get_dens(GlocRe, GlocIm, diag)
+   real(kind=DP) function get_dens(GlocRe, GlocIm, diag)
       use linalg, only: mplx
       implicit none
       integer    :: k1, k2, i, j, k, jj
-      complex(8) :: dens
-      real(8)    :: frequ, pi, tau0, omega, df, GlocRe(:), GlocIm(:)
-      complex(8) :: temp
+      complex(kind=DP) :: dens
+      real(kind=DP)    :: frequ, pi, tau0, omega, df, GlocRe(:), GlocIm(:)
+      complex(kind=DP) :: temp
       logical    :: diag
-      real(8)    :: alpha
+      real(kind=DP)    :: alpha
 
       pi = dacos(-1.d0)
       jj = size(GlocIm) - 7

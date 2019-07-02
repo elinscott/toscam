@@ -169,7 +169,7 @@ random.mod: random.f90 common_def.mod genvar.mod linalg.mod
  
 smooth_data.mod: smooth_data.f90 fourier_transform_mod.mod genvar.mod
  
-sorting.mod: sorting.f90 linalg.mod random.mod
+sorting.mod: sorting.f90 genvar.mod linalg.mod random.mod
  
 specialfunction.mod: specialfunction.f90 genvar.mod linalg.mod
  
@@ -180,11 +180,11 @@ splines2.mod: splines2.f90
 
 tridiag_class.mod: tridiag_class.f90 common_def.mod genvar.mod matrix.mod
  
-stringmanip.mod: stringmanip.f90 
+stringmanip.mod: stringmanip.f90 genvar.mod
  
 strings.mod: strings.f90 
  
-string4.mod: string4.f90 string5.mod
+string4.mod: string4.f90 string5.mod genvar.mod
 
 string5.mod: string5.f90 stringmanip.mod
 

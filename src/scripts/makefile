@@ -163,7 +163,7 @@ dmft_collect.out: dmft_collect.f90 strings.o
 
 dmft_collect_dos.out: dmft_collect_dos.f90 strings.o
 
-dmft_collect_sigma_embed.out: dmft_collect_sigma_embed.f90 strings.o
+dmft_collect_sigma_embed.out: dmft_collect_sigma_embed.f90 genvar.o strings.o
 
 dmft_gen_correl.out: dmft_gen_correl.f90 stringmanip.o
 
@@ -244,7 +244,7 @@ onetep_dmft_build_optical_tensor.out: onetep_dmft_build_optical_tensor.f90 commo
     random.o smooth_data.o sorting.o splines.o splines2.o string4.o string5.o stringmanip.o \
     tools_algebra.o
 
-onetep_dmft_calculate_average_e.out: onetep_dmft_calculate_average_e.f90
+onetep_dmft_calculate_average_e.out: onetep_dmft_calculate_average_e.f90 genvar.o
 
 onetep_dmft_compute_optics.out: onetep_dmft_compute_optics.f90 common_def.o derivative_noise.o \
     fourier_transform_mod.o genvar.o geometry.o geomlib.o linalg.o lockmod.o matrix.o mesh.o \
@@ -301,7 +301,7 @@ onetep_dmft_read_n.out: onetep_dmft_read_n.f90 common_def.o genvar.o geomlib.o l
 onetep_dmft_read_overlap_matrices.out: onetep_dmft_read_overlap_matrices.f90 common_def.o genvar.o \
     geomlib.o linalg.o lockmod.o matrix.o openmpmod.o random.o sorting.o tools_algebra.o
 
-onetep_dmft_read_spin.out: onetep_dmft_read_spin.f90
+onetep_dmft_read_spin.out: onetep_dmft_read_spin.f90 genvar.o
 
 onetep_dmft_sc.out: onetep_dmft_sc.f90 common_def.o genvar.o geomlib.o init_and_close_my_sim.o \
     linalg.o lockmod.o namelistmod.o openmpmod.o random.o string4.o string5.o stringmanip.o \
@@ -315,7 +315,7 @@ onetep_dmft_summarize_sim.out: onetep_dmft_summarize_sim.f90 common_def.o deriva
     lockmod.o matrix.o mesh.o mpi_mod.o namelistmod.o openmpmod.o random.o smooth_data.o sorting.o \
     splines.o splines2.o string4.o string5.o stringmanip.o tools_algebra.o
 
-onetep_dmft_trace_energy.out: onetep_dmft_trace_energy.f90
+onetep_dmft_trace_energy.out: onetep_dmft_trace_energy.f90 genvar.o
 
 onetep_split.out: onetep_split.f90 common_def.o genvar.o geomlib.o init_and_close_my_sim.o \
     linalg.o lockmod.o mpi_mod.o namelistmod.o openmpmod.o random.o string4.o string5.o \

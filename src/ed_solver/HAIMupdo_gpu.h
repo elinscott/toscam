@@ -11,11 +11,11 @@
   subroutine Lanczos_GPU_get_GS_updo(Niter, sizvec, vecp, GS)
 
      integer    :: Niter, sizvec, start_diagH, n1, n2, n3, n4, n5, n6, n7
-     real(8)    :: vecp(Niter)
+     real(kind=DP)    :: vecp(Niter)
 #ifndef _complex
-     real(8)    :: GS(sizvec)
+     real(kind=DP)    :: GS(sizvec)
 #else
-     complex(8) :: GS(sizvec)
+     complex(kind=DP) :: GS(sizvec)
 #endif
      interface
 #ifndef _complex
@@ -25,8 +25,8 @@ subroutine lanczos_real_updo_gs_cuda(norbs, block, Niter, ioffdiagup, ioffdiagdn
            implicit none
   integer :: block, Niter, sizup, sizdn, ioffdiagup, ioffdiagdn, irankoffup, irankoffdn, sizvec, noffup(sizup), noffdn(sizdn), norbs
          integer :: rank, rankoffup(irankoffup), rankoffdn(irankoffdn), stateup(sizup), statedn(sizdn), iorbup(norbs), iorbdn(norbs)
-           real(8) :: U(norbs*norbs), diagup(sizdn), diagdn(sizup), offdiagup(ioffdiagup), offdiagdn(ioffdiagdn)
-           real(8) :: vecp(Niter), gs(sizvec)
+           real(kind=DP) :: U(norbs*norbs), diagup(sizdn), diagdn(sizup), offdiagup(ioffdiagup), offdiagdn(ioffdiagdn)
+           real(kind=DP) :: vecp(Niter), gs(sizvec)
            logical :: UMASK(norbs*norbs)
         end subroutine
 #else
@@ -36,10 +36,10 @@ subroutine lanczos_real_updo_gs_cuda(norbs, block, Niter, ioffdiagup, ioffdiagdn
            implicit none
        integer    :: block,Niter,sizup,sizdn,ioffdiagup,ioffdiagdn,irankoffup,irankoffdn,sizvec,noffup(sizup),noffdn(sizdn),norbs
       integer    :: rank, rankoffup(irankoffup), rankoffdn(irankoffdn), stateup(sizup), statedn(sizdn), iorbup(norbs), iorbdn(norbs)
-           real(8)    :: U(norbs*norbs), diagup(sizdn), diagdn(sizup)
-           complex(8) :: offdiagup(ioffdiagup), offdiagdn(ioffdiagdn)
-           real(8)    :: vecp(Niter)
-           complex(8) :: gs(sizvec)
+           real(kind=DP)    :: U(norbs*norbs), diagup(sizdn), diagdn(sizup)
+           complex(kind=DP) :: offdiagup(ioffdiagup), offdiagdn(ioffdiagdn)
+           real(kind=DP)    :: vecp(Niter)
+           complex(kind=DP) :: gs(sizvec)
            logical    :: UMASK(norbs*norbs)
         end subroutine
 #endif
@@ -91,11 +91,11 @@ subroutine lanczos_real_updo_gs_cuda(norbs, block, Niter, ioffdiagup, ioffdiagdn
   subroutine Lanczos_dynamic_GPU_updo(Niter, sizvec, diag, subdiag, inputvec)
      implicit none
      integer          :: Niter, sizvec, start_diagH, n1, n2, n3, n4, n5, n6, n7
-     real(8)          :: diag(Niter), subdiag(Niter)
+     real(kind=DP)          :: diag(Niter), subdiag(Niter)
 #ifndef _complex
-     real(8)          :: inputvec(sizvec)
+     real(kind=DP)          :: inputvec(sizvec)
 #else
-     complex(8)       :: inputvec(sizvec)
+     complex(kind=DP)       :: inputvec(sizvec)
 #endif
      !---------------------------------------------------------------------------------!
      interface
@@ -106,8 +106,8 @@ subroutine lanczos_real_updo_gs_cuda(norbs, block, Niter, ioffdiagup, ioffdiagdn
            implicit none
   integer :: block, Niter, sizup, sizdn, ioffdiagup, ioffdiagdn, irankoffup, irankoffdn, sizvec, noffup(sizup), noffdn(sizdn), norbs
          integer :: rank, rankoffup(irankoffup), rankoffdn(irankoffdn), stateup(sizup), statedn(sizdn), iorbup(norbs), iorbdn(norbs)
-  real(8) :: U(norbs*norbs), diagup(sizdn), diagdn(sizup), diag(Niter), subdiag(Niter), offdiagup(ioffdiagup), offdiagdn(ioffdiagdn)
-           real(8) :: vecinit(sizvec)
+  real(kind=DP) :: U(norbs*norbs), diagup(sizdn), diagdn(sizup), diag(Niter), subdiag(Niter), offdiagup(ioffdiagup), offdiagdn(ioffdiagdn)
+           real(kind=DP) :: vecinit(sizvec)
            logical :: UMASK(norbs*norbs)
         end subroutine
 #else
@@ -117,9 +117,9 @@ subroutine lanczos_real_updo_gs_cuda(norbs, block, Niter, ioffdiagup, ioffdiagdn
            implicit none
        integer    :: rank,block,Niter,sizup,sizdn,ioffdiagup,ioffdiagdn,irankoffup,irankoffdn,sizvec,noffup(sizup),noffdn(sizdn),norbs
            integer    :: rankoffup(irankoffup), rankoffdn(irankoffdn), stateup(sizup), statedn(sizdn), iorbup(norbs), iorbdn(norbs)
-           real(8)    :: U(norbs*norbs), diagup(sizdn), diagdn(sizup), diag(Niter), subdiag(Niter)
-           complex(8) :: offdiagup(ioffdiagup), offdiagdn(ioffdiagdn)
-           complex(8) :: vecinit(sizvec)
+           real(kind=DP)    :: U(norbs*norbs), diagup(sizdn), diagdn(sizup), diag(Niter), subdiag(Niter)
+           complex(kind=DP) :: offdiagup(ioffdiagup), offdiagdn(ioffdiagdn)
+           complex(kind=DP) :: vecinit(sizvec)
            logical    :: UMASK(norbs*norbs)
         end subroutine
 #endif
@@ -166,7 +166,7 @@ subroutine lanczos_real_updo_gs_cuda(norbs, block, Niter, ioffdiagup, ioffdiagdn
   subroutine Lanczos_GPU_updo(Niter, sizvec, diag, subdiag)
      implicit none
      integer          :: Niter, sizvec, start_diagH, n1, n2, n3, n4, n5, n6, n7
-     real(8)          :: diag(Niter), subdiag(Niter)
+     real(kind=DP)          :: diag(Niter), subdiag(Niter)
      !---------------------------------------------------------------------------------!
      interface
 #ifndef _complex
@@ -176,7 +176,7 @@ subroutine lanczos_real_updo_gs_cuda(norbs, block, Niter, ioffdiagup, ioffdiagdn
            implicit none
        integer :: rank,block,Niter,sizup,sizdn,ioffdiagup,ioffdiagdn,irankoffup,irankoffdn,sizvec,noffup(sizup),noffdn(sizdn),norbs
            integer :: rankoffup(irankoffup), rankoffdn(irankoffdn), stateup(sizup), statedn(sizdn), iorbup(norbs), iorbdn(norbs)
-  real(8) :: U(norbs*norbs), diagup(sizdn), diagdn(sizup), diag(Niter), subdiag(Niter), offdiagup(ioffdiagup), offdiagdn(ioffdiagdn)
+  real(kind=DP) :: U(norbs*norbs), diagup(sizdn), diagdn(sizup), diag(Niter), subdiag(Niter), offdiagup(ioffdiagup), offdiagdn(ioffdiagdn)
            logical :: UMASK(norbs*norbs)
         end subroutine
 #else
@@ -186,8 +186,8 @@ subroutine lanczos_complex_updo_cuda(norbs, block, Niter, ioffdiagup, ioffdiagdn
            implicit none
        integer    :: block,Niter,sizup,sizdn,ioffdiagup,ioffdiagdn,irankoffup,irankoffdn,sizvec,noffup(sizup),noffdn(sizdn),norbs
       integer    :: rank, rankoffup(irankoffup), rankoffdn(irankoffdn), stateup(sizup), statedn(sizdn), iorbup(norbs), iorbdn(norbs)
-           real(8)    :: U(norbs*norbs), diagup(sizdn), diagdn(sizup), diag(Niter), subdiag(Niter)
-           complex(8) :: offdiagup(ioffdiagup), offdiagdn(ioffdiagdn)
+           real(kind=DP)    :: U(norbs*norbs), diagup(sizdn), diagdn(sizup), diag(Niter), subdiag(Niter)
+           complex(kind=DP) :: offdiagup(ioffdiagup), offdiagdn(ioffdiagdn)
            logical    :: UMASK(norbs*norbs)
         end subroutine
 #endif

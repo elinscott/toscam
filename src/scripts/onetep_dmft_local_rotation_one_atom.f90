@@ -1,5 +1,5 @@
 program one_atom
-   use genvar, only dp
+   use genvar, only: dp
    use linalg
    implicit none
    real(dp) :: v1(3), v2(3), v3(3), site1(3), site2a(3), site2b(3), site3a(3), site3b(3), mat(3, 3), coord(3)

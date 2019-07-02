@@ -183,8 +183,8 @@ module matrix
 ! END INTERFACE
 
 !--------------------------------------------------------------------------------!
-!  real(8),parameter,private :: rerror=1.d-12,invmat_error=1.d-13,rrerror=1.d-28
-!  real(8),parameter,private :: smallest_pivot=1.d-12,zero=0.d0,one=1.d0
+!  real(kind=DP),parameter,private :: rerror=1.d-12,invmat_error=1.d-13,rrerror=1.d-28
+!  real(kind=DP),parameter,private :: smallest_pivot=1.d-12,zero=0.d0,one=1.d0
 !  integer,parameter,private :: n_cuda_rout=100,n_openmp_rout=30
 !--------------------------------------------------------------------------------!
 
@@ -195,10 +195,10 @@ contains
       implicit none
 
       integer, intent(in) :: n
-      real(8), intent(inout) :: A(:, :)
+      real(kind=DP), intent(inout) :: A(:, :)
 
       integer, allocatable :: piv(:)
-      real(8), allocatable :: WORK(:)
+      real(kind=DP), allocatable :: WORK(:)
       integer              :: ierr
 
       external :: dgetrf, dgetri
@@ -233,10 +233,10 @@ contains
       implicit none
 
       integer, intent(in) :: n
-      complex(8), intent(inout) :: A(:, :)
+      complex(kind=DP), intent(inout) :: A(:, :)
 
       integer, allocatable    :: piv(:)
-      complex(8), allocatable :: WORK(:)
+      complex(kind=DP), allocatable :: WORK(:)
       integer                 :: ierr
 
       external :: zgetrf, zgetri
@@ -323,10 +323,10 @@ contains
 !   subroutine invmat_sym_r(matrix,num)
 !     implicit none
 !     integer, intent(in) :: num
-!     real(8), intent(inout) :: matrix(num,num) ! inverse on exit
+!     real(kind=DP), intent(inout) :: matrix(num,num) ! inverse on exit
 !     integer :: work_length, info, row, col
 !     integer, allocatable, dimension(:) :: ipiv
-!     real(8), allocatable, dimension(:) :: work_array
+!     real(kind=DP), allocatable, dimension(:) :: work_array
 !     integer :: ierr ! error flag
 !
 !
@@ -378,7 +378,7 @@ contains
 !
 !  subroutine map_vector_permutation(vec,mapping)
 !  implicit none
-!  real(8) :: vec(:),temp(size(vec))
+!  real(kind=DP) :: vec(:),temp(size(vec))
 !  integer :: mapping(:),i,ii
 !     temp=vec;vec=0
 !     do i=1,size(vec,1)
@@ -390,7 +390,7 @@ contains
 !
 !  subroutine map_matrix_permutation(mat,mapping)
 !  implicit none
-!  complex(8) :: mat(:,:),temp(size(mat,1),size(mat,2))
+!  complex(kind=DP) :: mat(:,:),temp(size(mat,1),size(mat,2))
 !  integer    :: mapping(:),i,j,k,l,ii,jj
 !      temp=mat;mat=0
 !      do i=1,size(mat,1); do j=1,size(mat,2)
@@ -432,10 +432,10 @@ contains
 !
    subroutine average_vec(mat, MASK_AVERAGE_)
       implicit none
-      real(8)    :: mat(:)
+      real(kind=DP)    :: mat(:)
       integer    :: MASK_AVERAGE_(:), MASK_AVERAGE(size(mat, 1))
       integer    :: i, l, m, tot, i_
-      real(8)    :: temp
+      real(kind=DP)    :: temp
 
       MASK_AVERAGE = MASK_AVERAGE_
 
@@ -474,7 +474,7 @@ contains
 !
 !  subroutine average_matrix_by_block(mat,M)
 !  implicit none
-!   complex(8) :: mat(:,:)
+!   complex(kind=DP) :: mat(:,:)
 !   integer    :: M(:,:)
 !   integer    :: i,j,siz1,siz2,siz1s,siz2s
 !
@@ -498,11 +498,11 @@ contains
 !
    subroutine average_matrix(mat, MASK_AVERAGE_, offdiag_also)
       implicit none
-      complex(8)        :: mat(:, :)
+      complex(kind=DP)        :: mat(:, :)
       integer, intent(in):: MASK_AVERAGE_(:, :)
       integer           :: MASK_AVERAGE(size(mat, 1), size(mat, 2))
       integer           :: i, j, l, m, tot, i_, j_
-      complex(8)        :: temp
+      complex(kind=DP)        :: temp
       logical, optional  :: offdiag_also
       logical           :: only_diag
 
@@ -561,7 +561,7 @@ contains
 !
 !  subroutine average_diag_by_block(MASK,vec,vec2)
 !  implicit none
-!  real(8) :: vec(:),vec2(:),vectemp(size(vec))
+!  real(kind=DP) :: vec(:),vec2(:),vectemp(size(vec))
 !  integer :: MASK(:)
 !  integer :: siz
 !
@@ -610,7 +610,7 @@ contains
 !  subroutine getrfs__(mat,piv)
 !  implicit none
 !  integer       :: nnn,piv(:),INFO
-!  real(4)       :: mat(:,:)
+!  real(kind=SP)       :: mat(:,:)
 !     nnn=size(mat,1)
 !     ! ebl: Removing GPU functionality
 !     ! if(use_cula_routines)then
@@ -629,7 +629,7 @@ contains
 !  subroutine getrfcs__(mat,piv)
 !  implicit none
 !  integer       :: nnn,piv(:),INFO
-!  complex(4)    :: mat(:,:)
+!  complex(kind=SP)    :: mat(:,:)
 !     nnn=size(mat,1)
 !     ! ebl: Removing GPU functionality
 !     ! if(use_cula_routines)then
@@ -648,7 +648,7 @@ contains
 !  subroutine getrfc__(mat,piv)
 !  implicit none
 !  integer       :: nnn,piv(:),INFO
-!  complex(8)    :: mat(:,:)
+!  complex(kind=DP)    :: mat(:,:)
 !     nnn=size(mat,1)
 !     ! ebl: Removing GPU functionality
 !     ! if(use_cula_routines)then
@@ -668,7 +668,7 @@ contains
 !  subroutine getrfr__(mat,piv)
 !  implicit none
 !  integer    :: nnn,piv(:),INFO
-!  real(8)    :: mat(:,:)
+!  real(kind=DP)    :: mat(:,:)
 !     nnn=size(mat,1)
 !     ! ebl: Removing GPU functionality
 !     ! if(use_cula_routines)then
@@ -688,7 +688,7 @@ contains
 !  subroutine getrirs__(mat,piv)
 !  implicit none
 !  integer    :: nnn,piv(:),INFO
-!  real(4)    :: mat(:,:),WORK(size(mat,1))
+!  real(kind=SP)    :: mat(:,:),WORK(size(mat,1))
 !     nnn=size(mat,1)
 !     ! ebl: Removing GPU functionality
 !     ! if(use_cula_routines)then
@@ -707,7 +707,7 @@ contains
 !  subroutine getrir__(mat,piv)
 !  implicit none
 !  integer    :: nnn,piv(:),INFO
-!  real(8)    :: mat(:,:),WORK(size(mat,1))
+!  real(kind=DP)    :: mat(:,:),WORK(size(mat,1))
 !     nnn=size(mat,1)
 !     ! ebl: Removing GPU functionality
 !     ! if(use_cula_routines)then
@@ -727,7 +727,7 @@ contains
 !  subroutine getrics__(mat,piv)
 !  implicit none
 !  integer    :: nnn,piv(:),INFO
-!  complex(4) :: mat(:,:),WORK(size(mat,1))
+!  complex(kind=SP) :: mat(:,:),WORK(size(mat,1))
 !     nnn=size(mat,1)
 !     ! ebl: Removing GPU functionality
 !     ! if(use_cula_routines)then
@@ -746,7 +746,7 @@ contains
 !  subroutine getric__(mat,piv)
 !  implicit none
 !  integer    :: nnn,piv(:),INFO
-!  complex(8) :: mat(:,:),WORK(size(mat,1))
+!  complex(kind=DP) :: mat(:,:),WORK(size(mat,1))
 !     nnn=size(mat,1)
 !     ! ebl: Removing GPU functionality
 !     ! if(use_cula_routines)then
@@ -766,9 +766,9 @@ contains
 !  subroutine gecoc__(nnn,mat,piv)
 !  implicit none
 !  integer      :: nnn
-!  real(8)      :: rcond
+!  real(kind=DP)      :: rcond
 !  integer      :: piv(nnn)
-!  complex(8)   :: mat(nnn,nnn),WORK2(size(mat,1))
+!  complex(kind=DP)   :: mat(nnn,nnn),WORK2(size(mat,1))
 !    if(.not.fast_invmat)then
 !      call zgeco(mat,nnn,nnn,piv,rcond,WORK2)
 !     else
@@ -781,9 +781,9 @@ contains
 !  subroutine gedic__(nnn,mat,piv,deti)
 !  implicit none
 !  integer      :: nnn
-!  real(8)      :: rcond
+!  real(kind=DP)      :: rcond
 !  integer      :: piv(nnn)
-!  complex(8)   :: mat(nnn,nnn),WORK(2*size(mat,1)),deti(2)
+!  complex(kind=DP)   :: mat(nnn,nnn),WORK(2*size(mat,1)),deti(2)
 !    if(.not.fast_invmat)then
 !      call zgedi(mat,nnn,nnn,piv,deti,WORK,11)
 !     else
@@ -796,9 +796,9 @@ contains
 !  subroutine gecocs__(nnn,mat,piv)
 !  implicit none
 !  integer      :: nnn
-!  real(4)      :: rcond
+!  real(kind=SP)      :: rcond
 !  integer      :: piv(nnn)
-!  complex(4)   :: mat(nnn,nnn),WORK2(size(mat,1))
+!  complex(kind=SP)   :: mat(nnn,nnn),WORK2(size(mat,1))
 !    call cgeco(mat,nnn,nnn,piv,rcond,WORK2)
 !  end subroutine
 !
@@ -807,9 +807,9 @@ contains
 !  subroutine gedics__(nnn,mat,piv,deti)
 !  implicit none
 !  integer      :: nnn
-!  real(4)      :: rcond
+!  real(kind=SP)      :: rcond
 !  integer      :: piv(nnn)
-!  complex(4)   :: mat(nnn,nnn),WORK(2*size(mat,1)),deti(2)
+!  complex(kind=SP)   :: mat(nnn,nnn),WORK(2*size(mat,1)),deti(2)
 !    call cgedi(mat,nnn,nnn,piv,deti,WORK,11)
 !  end subroutine
 !
@@ -868,8 +868,8 @@ contains
 ! subroutine svd_wrapper_cs(A,values,V,M,N,method)
 ! implicit none
 ! integer :: M,N
-! complex(4) :: A(M,N),A_BACK(M,N),U(M,M),V(N,N)
-! real(4)    :: values(N),E(N),work(M)
+! complex(kind=SP) :: A(M,N),A_BACK(M,N),U(M,M),V(N,N)
+! real(kind=SP)    :: values(N),E(N),work(M)
 ! integer    :: method,ierr
 !   A_BACK=A
 !   if(M<N) then
@@ -889,8 +889,8 @@ contains
 ! subroutine svd_wrapper_c(A,values,V,M,N,method)
 ! implicit none
 ! integer :: M,N
-! complex(8) :: A(M,N),A_BACK(M,N),U(M,M),V(N,N)
-! real(8)    :: values(N),E(N),work(M)
+! complex(kind=DP) :: A(M,N),A_BACK(M,N),U(M,M),V(N,N)
+! real(kind=DP)    :: values(N),E(N),work(M)
 ! integer    :: method,ierr
 !   A_BACK=A
 !   if(M<N) then
@@ -910,8 +910,8 @@ contains
 ! subroutine svd_wrapper_r(A,values,V,M,N,method)
 ! implicit none
 ! integer :: M,N
-! real(8) :: A(M,N),A_BACK(M,N),U(M,M),V(N,N)
-! real(8) :: values(N),E(N),work(M)
+! real(kind=DP) :: A(M,N),A_BACK(M,N),U(M,M),V(N,N)
+! real(kind=DP) :: values(N),E(N),work(M)
 ! integer :: method,ierr
 !   A_BACK=A
 !   if(M<N) then
@@ -944,8 +944,8 @@ contains
 ! subroutine svd_wrapper_rs(A,values,V,M,N,method)
 ! implicit none
 ! integer :: M,N
-! real(4) :: A(M,N),A_BACK(M,N),U(M,M),V(N,N)
-! real(4) :: values(N),E(N),work(M)
+! real(kind=SP) :: A(M,N),A_BACK(M,N),U(M,M),V(N,N)
+! real(kind=SP) :: values(N),E(N),work(M)
 ! integer :: method,ierr
 !   A_BACK=A
 !   if(M<N) then
@@ -1038,7 +1038,7 @@ contains
 ! subroutine testit(nnn)
 ! implicit none
 ! integer              :: nnn
-! real(8)              :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),vec(nnn),vec2(nnn)
+! real(kind=DP)              :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),vec(nnn),vec2(nnn)
 ! integer              :: i,j,n,jjj,jj
 ! use_cuda_routines=.false.
 ! A=0.d0
@@ -1078,7 +1078,7 @@ contains
 ! subroutine testit_(nnn)
 ! implicit none
 ! integer              :: nnn
-! real(4)              :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),vec(nnn),vec2(nnn)
+! real(kind=SP)              :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),vec(nnn),vec2(nnn)
 ! integer              :: i,j,n,jjj,jj
 ! A=0.d0
 ! do i=1,nnn
@@ -1130,8 +1130,8 @@ contains
 ! subroutine test_invmat_array_matrix_collect
 ! implicit none
 ! integer,parameter    :: nnn=20,nf=2000
-! complex(8)           :: A(nnn,nnn),B(nnn,nnn,nf),C(nnn,nnn),vec(nf)
-! real(8)              :: c1(nnn,nnn,nf),c2(nnn,nnn,nf)
+! complex(kind=DP)           :: A(nnn,nnn),B(nnn,nnn,nf),C(nnn,nnn),vec(nf)
+! real(kind=DP)              :: c1(nnn,nnn,nf),c2(nnn,nnn,nf)
 ! integer              :: i,j,n,jjj,jj
 !
 ! do i=1,nnn
@@ -1185,7 +1185,7 @@ contains
 ! subroutine test_invmat_array_matrix
 ! implicit none
 ! integer,parameter    :: nnn=20,nf=2000
-! complex(8)           :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),vec(nf)
+! complex(kind=DP)           :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),vec(nf)
 ! integer              :: i,j,n,jjj,jj
 !
 !
@@ -1252,22 +1252,22 @@ contains
 ! subroutine test_invmat_gpu
 ! implicit none
 !
-! complex(8),allocatable  :: A(:,:),B(:,:)
-! complex(8),allocatable  :: AAA(:,:),BBB(:,:),CCC(:,:)
-! real(8),allocatable     :: Ar(:,:),Br(:,:)
+! complex(kind=DP),allocatable  :: A(:,:),B(:,:)
+! complex(kind=DP),allocatable  :: AAA(:,:),BBB(:,:),CCC(:,:)
+! real(kind=DP),allocatable     :: Ar(:,:),Br(:,:)
 ! integer                 :: nnn,nnnn
 ! integer                 :: ii,i,j,k,l,m1,n1,q1
 !
-! complex(8) :: Ac(8,8),Acinv(8,8),Bc_(8,8),Cc_(8,8),Dc_(8,8)
-! real(8)    :: AA(16,24),BB(24,32),CC(16,32),DD(16,32)
+! complex(kind=DP) :: Ac(8,8),Acinv(8,8),Bc_(8,8),Cc_(8,8),Dc_(8,8)
+! real(kind=DP)    :: AA(16,24),BB(24,32),CC(16,32),DD(16,32)
 ! interface
 !  subroutine invert_ge(nn,a,inva)
 !    integer :: nnn
-!    real(8) :: a(nn,nn),inva(nn,nn)
+!    real(kind=DP) :: a(nn,nn),inva(nn,nn)
 !  end subroutine
 !  subroutine invert_spd(nn,a,inva)
 !    integer :: nnn
-!    real(8) :: a(nn,nn),inva(nn,nn)
+!    real(kind=DP) :: a(nn,nn),inva(nn,nn)
 !  end subroutine
 ! end interface
 !
@@ -1472,10 +1472,10 @@ contains
 ! implicit none
 ! complex(16),allocatable :: Aqc(:,:),Bqc(:,:)
 ! real(16),allocatable    :: Aq(:,:),Bq(:,:)
-! complex(8),allocatable  :: A(:,:),B(:,:)
-! real(8),allocatable     :: Ar(:,:),Br(:,:)
-! real(4),allocatable     :: As(:,:),Bs(:,:)
-! complex(4),allocatable  :: Acs(:,:),Bcs(:,:)
+! complex(kind=DP),allocatable  :: A(:,:),B(:,:)
+! real(kind=DP),allocatable     :: Ar(:,:),Br(:,:)
+! real(kind=SP),allocatable     :: As(:,:),Bs(:,:)
+! complex(kind=SP),allocatable  :: Acs(:,:),Bcs(:,:)
 ! integer                 :: i,j,nnn,jjj,ii
 !
 !  do ii=0,6
@@ -1545,11 +1545,11 @@ contains
 !  implicit none
 !  logical :: block
 !  integer :: n
-!  real(4) :: detr
-!  complex(4)::det2r
-!  real(8) :: det
+!  real(kind=SP) :: detr
+!  complex(kind=SP)::det2r
+!  real(kind=DP) :: det
 !  real(16):: detq
-!  complex(8) :: det2
+!  complex(kind=DP) :: det2
 !  complex(16) :: det2q
 !  integer     :: pdet
 !
@@ -1707,10 +1707,10 @@ contains
 !
 ! subroutine invert_pivot_complexs_(matrix)
 !  implicit none
-!    complex(4) :: matrix(:,:)
+!    complex(kind=SP) :: matrix(:,:)
 !    integer    :: size_
 !    integer    :: switch(size(matrix,1),2),k,jj,kp1,i,j,l,krow,irow
-!    complex(4) :: pivot,temp,dkk
+!    complex(kind=SP) :: pivot,temp,dkk
 !
 !     size_=size(matrix,1)
 !
@@ -1840,10 +1840,10 @@ contains
 
 ! subroutine invert_pivot_single_(matrix)
 !  implicit none
-!    real(4) :: matrix(:,:)
+!    real(kind=SP) :: matrix(:,:)
 !    integer :: size_
 !    integer :: switch(size(matrix,1),2),k,jj,kp1,i,j,l,krow,irow
-!    real(4) :: pivot,temp,dkk
+!    real(kind=SP) :: pivot,temp,dkk
 !
 !     size_=size(matrix,1)
 !
@@ -1973,10 +1973,10 @@ contains
 
 ! subroutine invert_pivot_double_(matrix)
 !  implicit none
-!    real(8) :: matrix(:,:)
+!    real(kind=DP) :: matrix(:,:)
 !    integer :: size_
 !    integer :: switch(size(matrix,1),2),k,jj,kp1,i,j,l,krow,irow
-!    real(8) :: pivot,temp,dkk
+!    real(kind=DP) :: pivot,temp,dkk
 !
 !     size_=size(matrix,1)
 !
@@ -2094,10 +2094,10 @@ contains
 
 ! subroutine invert_pivot_complex_(matrix)
 !  implicit none
-!    complex(8) :: matrix(:,:)
+!    complex(kind=DP) :: matrix(:,:)
 !    integer    :: size_
 !    integer    :: switch(size(matrix,1),2),k,jj,kp1,i,j,l,krow,irow
-!    complex(8) :: pivot,temp,dkk
+!    complex(kind=DP) :: pivot,temp,dkk
 !
 !     size_=size(matrix,1)
 !
@@ -2216,7 +2216,7 @@ contains
 
    function MATMULr(AA, BB)
       implicit none
-      real(8) :: AA(:, :), BB(:, :), MATMULr(size(AA, 1), size(BB, 2))
+      real(kind=DP) :: AA(:, :), BB(:, :), MATMULr(size(AA, 1), size(BB, 2))
       integer :: i, j, k, ii
       i = size(AA, 1); j = size(AA, 2); k = size(BB, 2)
       ii = max(max(i, j), k)
@@ -2232,7 +2232,7 @@ contains
 
    function MATMULc(AA, BB)
       implicit none
-      complex(8) :: AA(:, :), BB(:, :), MATMULc(size(AA, 1), size(BB, 2))
+      complex(kind=DP) :: AA(:, :), BB(:, :), MATMULc(size(AA, 1), size(BB, 2))
       integer    :: i, j, k, ii
       i = size(AA, 1); j = size(AA, 2); k = size(BB, 2)
       ii = max(max(i, j), k)
@@ -2433,8 +2433,8 @@ contains
 !
 !     subroutine get_det_from_zgeco___(deti,det,det2,pdet)
 !     implicit none
-!     complex(4) :: deti(2),det2
-!     real(4)    :: det
+!     complex(kind=SP) :: deti(2),det2
+!     real(kind=SP)    :: det
 !     integer    :: pdet
 !      ! convert it to the form 2**pdet * abs(=det) * phase(=det2)
 !         pdet=NINT(real(deti(2))/LOG10(2.d0))
@@ -2471,8 +2471,8 @@ contains
 !
 !     subroutine get_det_from_zgeco_(deti,det,det2,pdet)
 !     implicit none
-!     complex(8) :: deti(2),det2
-!     real(8)    :: det
+!     complex(kind=DP) :: deti(2),det2
+!     real(kind=DP)    :: det
 !     integer    :: pdet
 !      ! convert it to the form 2**pdet * abs(=det) * phase(=det2)
 !         pdet=NINT(real(deti(2))/LOG10(2.d0))
@@ -2503,9 +2503,9 @@ contains
 !
 !       !------------------------------------!
 !
-!  real(8) function trace_rp(mat)
+!  real(kind=DP) function trace_rp(mat)
 !  implicit none
-!  complex(8)::mat(:,:)
+!  complex(kind=DP)::mat(:,:)
 !  integer::k
 !  trace_rp=0.d0
 !  do k=1,size(mat,1)
@@ -2513,9 +2513,9 @@ contains
 !  enddo
 !  end function
 !
-!  real(8) function trace_ip(mat)
+!  real(kind=DP) function trace_ip(mat)
 !  implicit none
-!  complex(8)::mat(:,:)
+!  complex(kind=DP)::mat(:,:)
 !  integer::k
 !  trace_ip=0.d0
 !  do k=1,size(mat,1)
@@ -2527,8 +2527,8 @@ contains
 
    function diagr(mat)
       implicit none
-      real(8)::mat(:, :)
-      real(8)::diagr(size(mat(1, :)))
+      real(kind=DP)::mat(:, :)
+      real(kind=DP)::diagr(size(mat(1, :)))
       integer::k
       diagr = (/(mat(k, k), k=1, size(mat(1, :)))/)
    end function
@@ -2537,8 +2537,8 @@ contains
 
    function diagr_(mat)
       implicit none
-      real(8) :: mat(:, :, :)
-      real(8) :: diagr_(size(mat(:, 1, 1)), size(mat(1, 1, :)))
+      real(kind=DP) :: mat(:, :, :)
+      real(kind=DP) :: diagr_(size(mat(:, 1, 1)), size(mat(1, 1, :)))
       integer :: k, i
       do i = 1, size(mat(1, 1, :))
          diagr_(:, i) = (/(mat(k, k, i), k=1, size(mat(:, 1, 1)))/)
@@ -2549,8 +2549,8 @@ contains
 
    function diagc_(mat, i1, i2)
       implicit none
-      complex(8) :: mat(:, :, :)
-      complex(8) :: diagc_(size(mat(:, 1, 1)), size(mat(1, 1, :)))
+      complex(kind=DP) :: mat(:, :, :)
+      complex(kind=DP) :: diagc_(size(mat(:, 1, 1)), size(mat(1, 1, :)))
       integer    :: k, i, i1, i2
       do i = 1, size(mat(1, 1, :))
          diagc_(:, i) = (/(mat(k, k, i), k=1, size(mat(:, 1, 1)))/)
@@ -2561,8 +2561,8 @@ contains
 
    function offdiagr(mat)
       implicit none
-      real(8) :: mat(:, :)
-      real(8) :: offdiagr(size(mat(:, 1)), size(mat(1, :)))
+      real(kind=DP) :: mat(:, :)
+      real(kind=DP) :: offdiagr(size(mat(:, 1)), size(mat(1, :)))
       integer :: i
       offdiagr = mat
       do i = 1, size(mat(1, :))
@@ -2574,8 +2574,8 @@ contains
 
    function offdiagc(mat)
       implicit none
-      complex(8) :: mat(:, :)
-      complex(8) :: offdiagc(size(mat(:, 1)), size(mat(1, :)))
+      complex(kind=DP) :: mat(:, :)
+      complex(kind=DP) :: offdiagc(size(mat(:, 1)), size(mat(1, :)))
       integer    :: i
       offdiagc = mat
       do i = 1, size(mat(1, :))
@@ -2587,8 +2587,8 @@ contains
 
    function diagr__(mat)
       implicit none
-      real(8)::mat(:, :, :, :)
-      real(8)::diagr__(size(mat(:, 1, 1, 1)), size(mat(1, :, 1, 1)), size(mat(1, 1, 1, :)))
+      real(kind=DP)::mat(:, :, :, :)
+      real(kind=DP)::diagr__(size(mat(:, 1, 1, 1)), size(mat(1, :, 1, 1)), size(mat(1, 1, 1, :)))
       integer::k, i, j
       do j = 1, size(mat(:, 1, 1, 1))
          do i = 1, size(mat(1, 1, 1, :))
@@ -2601,8 +2601,8 @@ contains
 
    function diagc__(mat)
       implicit none
-      complex(8)::mat(:, :, :, :)
-      complex(8)::diagc__(size(mat(:, 1, 1, 1)), size(mat(1, :, 1, 1)), size(mat(1, 1, 1, :)))
+      complex(kind=DP)::mat(:, :, :, :)
+      complex(kind=DP)::diagc__(size(mat(:, 1, 1, 1)), size(mat(1, :, 1, 1)), size(mat(1, 1, 1, :)))
       integer::k, i, j
       do j = 1, size(mat(:, 1, 1, 1))
          do i = 1, size(mat(1, 1, 1, :))
@@ -2615,8 +2615,8 @@ contains
 
    function diagrr(mat)
       implicit none
-      real(4)::mat(:, :)
-      real(4)::diagrr(size(mat(1, :)))
+      real(kind=SP)::mat(:, :)
+      real(kind=SP)::diagrr(size(mat(1, :)))
       integer::k
       diagrr = (/(mat(k, k), k=1, size(mat(1, :)))/)
    end function
@@ -2625,8 +2625,8 @@ contains
 
    function diagc(mat)
       implicit none
-      complex(8)::mat(:, :)
-      complex(8)::diagc(size(mat(1, :)))
+      complex(kind=DP)::mat(:, :)
+      complex(kind=DP)::diagc(size(mat(1, :)))
       integer::k
       diagc = (/(mat(k, k), k=1, size(mat(1, :)))/)
    end function
@@ -2653,7 +2653,7 @@ contains
 !  pure integer function linear_size_hermitian_matrix_for_vec(siz)
 !  implicit none
 !  integer,intent(in) :: siz
-!  real(8)            :: tt
+!  real(kind=DP)            :: tt
 !
 !    !le vecteur d entree contient la diagonale + les elements superieures
 !    tt=(-1.d0+sqrt(1.d0+8.d0*dble(siz)))/2.d0
@@ -2690,8 +2690,8 @@ contains
 !
 !     subroutine test_invmat_tri
 !     implicit none
-!     real(8)    :: mat(10,10),mat_backup(10,10)
-!     complex(8) :: mat_(10,10),mat_backup_(10,10)
+!     real(kind=DP)    :: mat(10,10),mat_backup(10,10)
+!     complex(kind=DP) :: mat_(10,10),mat_backup_(10,10)
 !     integer    :: i,j
 !
 !      mat=0.d0
@@ -2732,8 +2732,8 @@ contains
 !     subroutine invmat_tridiag_complex(siz,mat_,iw_)
 !     implicit none
 !     integer    :: siz
-!     real(8)    :: mat(siz,siz),eigenvalues(siz)
-!     complex(8) :: iw_,mat_(siz,siz)
+!     real(kind=DP)    :: mat(siz,siz),eigenvalues(siz)
+!     complex(kind=DP) :: iw_,mat_(siz,siz)
 !       mat=real(mat_)
 !       call eigenvector_tridiag(siz,eigenvalues,mat)
 !       where(abs(eigenvalues)<1.d-13) eigenvalues=1.d-13
@@ -2745,7 +2745,7 @@ contains
 !     subroutine invmat_tridiag(siz,mat)
 !     implicit none
 !     integer :: siz
-!     real(8) :: mat(siz,siz),eigenvalues(siz)
+!     real(kind=DP) :: mat(siz,siz),eigenvalues(siz)
 !       call eigenvector_tridiag(siz,eigenvalues,mat)
 !       where(abs(eigenvalues)<1.d-13) eigenvalues=1.d-13
 !       mat= MATMUL ( mat, MATMUL(bande_mat(siz,1.d0/eigenvalues),transpose(mat)) )
@@ -2756,7 +2756,7 @@ contains
 !     subroutine eigenvector_tridiag(siz,eigenvalues,mat)
 !     implicit none
 !     integer :: siz
-!     real(8) :: mat(siz,siz),eigenvalues(siz)
+!     real(kind=DP) :: mat(siz,siz),eigenvalues(siz)
 !     INTEGER :: INFO,i
 !     REAL(8) :: sdiag(siz-1),work(2*siz-2)
 !      eigenvalues =      diag(mat)
@@ -2769,8 +2769,8 @@ contains
 !     subroutine eigenvector_matrixa_(sizin,mat,covd)
 !     implicit none
 !     integer :: sizin
-!     real(8) :: cove(sizin),covd(sizin)
-!     real(8) :: mat(sizin,sizin)
+!     real(kind=DP) :: cove(sizin),covd(sizin)
+!     real(kind=DP) :: mat(sizin,sizin)
 !       call tred(mat,sizin,sizin,covd,cove)
 !       call tqli(covd,cove,sizin,sizin,mat)
 !     return
@@ -2781,8 +2781,8 @@ contains
 !     subroutine eigenvector_matrixb_(sizin,mat,covd)
 !     implicit none
 !     integer  :: sizin
-!     real(8)  :: cove(sizin),covd(sizin)
-!     real(8)  :: mat(sizin,sizin)
+!     real(kind=DP)  :: cove(sizin),covd(sizin)
+!     real(kind=DP)  :: mat(sizin,sizin)
 !     real(16) :: matq(sizin,sizin),coveq(sizin),covdq(sizin)
 !       matq=mat
 !       call tredq(matq,sizin,sizin,covdq,coveq)
@@ -2811,7 +2811,7 @@ contains
 ! !**************************************************************************
 !
 !       SUBROUTINE TQLI_(D,E,N,NP,Z)
-!       implicit real(8)(a-h,o-z)
+!       implicit real(kind=DP)(a-h,o-z)
 !       DIMENSION D(NP),E(NP),Z(NP,NP)
 !       DIMENSION WKSP(Np),IWKSP(Np)
 !       IF (N.GT.1) THEN
@@ -2956,7 +2956,7 @@ contains
 !
 !       ! Nom : TRED
 !       SUBROUTINE TRED(A,N,NP,D,E)
-!       implicit real(8)(a-h,o-z)
+!       implicit real(kind=DP)(a-h,o-z)
 !       DIMENSION A(NP,NP),D(NP),E(NP)
 !       IF(N.GT.1)THEN
 !       DO 18 I=N,2,-1
@@ -3146,12 +3146,12 @@ contains
 !
 !      SUBROUTINE D_INVMG(NP,NM,A)
 !      IMPLICIT NONE
-!      real(8)                                     :: D          ! Var. locale
+!      real(kind=DP)                                     :: D          ! Var. locale
 !      INTEGER                                     :: I,J        ! var. locale
 !      INTEGER,INTENT(IN)                          :: NP,NM
 !      INTEGER,DIMENSION (NP)                      :: INDX       ! Var. locale
-!      real(8),DIMENSION (NP,NP)                   :: Y          ! Var. locale
-!      real(8),DIMENSION (NP,NP),INTENT(INOUT)     :: A
+!      real(kind=DP),DIMENSION (NP,NP)                   :: Y          ! Var. locale
+!      real(kind=DP),DIMENSION (NP,NP),INTENT(INOUT)     :: A
 !
 !      DO I=1,NM
 !         DO J=1,NM
@@ -3188,7 +3188,7 @@ contains
 ! Notes          : Provient entierement de Numerical Recipes
 !
 !    SUBROUTINE LUDCMPd(A,N,NP,INDX,D)
-!    IMPLICIT real(8) (A-H,O-Z)
+!    IMPLICIT real(kind=DP) (A-H,O-Z)
 !    PARAMETER (TINY=1.0D-20)
 !    DIMENSION A(NP,NP),INDX(N),VV(N)
 !
@@ -3355,9 +3355,9 @@ contains
 !
 !       SUBROUTINE LUBKSBd(A,N,NP,INDX,B)
 !       INTEGER N,NP,INDX(N)
-!       real(8) A(NP,NP),B(N)
+!       real(kind=DP) A(NP,NP),B(N)
 !       INTEGER I,II,J,LL
-!       real(8) SUM
+!       real(kind=DP) SUM
 !       II=0
 !       DO I=1,N
 !          LL=INDX(I)
@@ -3450,9 +3450,9 @@ contains
 !
 !       SUBROUTINE SVDCMP(A,M,N,MP,NP,W,V)
 !       integer,intent(in)    :: M,N
-!       real(8),intent(inout) :: A(MP,NP),W(NP),V(NP,NP)
-!       real(8)               :: RV1(N)
-!       real(8)               :: S,G,H,F,SCALE,ANORM
+!       real(kind=DP),intent(inout) :: A(MP,NP),W(NP),V(NP,NP)
+!       real(kind=DP)               :: RV1(N)
+!       real(kind=DP)               :: S,G,H,F,SCALE,ANORM
 !       INTEGER               :: I,J,L,K
 !
 !       G=0.0
@@ -3735,7 +3735,7 @@ contains
 ! subroutine fix_degeneracies(n,val,ordertab,err)
 ! implicit none
 ! integer :: n,i,j,k,l
-! real(8)  :: err,val(n)
+! real(kind=DP)  :: err,val(n)
 ! integer :: ordertab(n)
 !
 ! !---> ordertab(i)=k : state number i degenerate with the k-1 following state
@@ -3797,19 +3797,19 @@ contains
 !        & use_nelson,V_not_deg,use_lishu,first_order,permut,permut_typ,half_only)
 ! implicit none
 ! integer                     :: n,i,j,k,l,m,nnn,iloop
-! complex(8)                  :: temp1,temp2,temp3
-! real(8)                     :: valin(n)
-! real(8)                     :: eigenval(n)
-! complex(8)                  :: vecin(n,n),vec_back(n,n),perturb(n,n),unitary(n,n)
-! complex(8)                  :: Vin(n,n),Hin(n,n)
-! complex(8)                  :: eigenvec(n,n),ak
+! complex(kind=DP)                  :: temp1,temp2,temp3
+! real(kind=DP)                     :: valin(n)
+! real(kind=DP)                     :: eigenval(n)
+! complex(kind=DP)                  :: vecin(n,n),vec_back(n,n),perturb(n,n),unitary(n,n)
+! complex(kind=DP)                  :: Vin(n,n),Hin(n,n)
+! complex(kind=DP)                  :: eigenvec(n,n),ak
 ! integer                     :: ordertab(n)
 ! integer                     :: nstate,n_in
 ! logical                     :: cancel_second_term,degenerate
 ! logical                     :: use_permut
 !
 !  !=================================================================!
-!     complex(8),optional         :: permut_typ(n,2)
+!     complex(kind=DP),optional         :: permut_typ(n,2)
 !     logical,optional            :: use_nelson,V_not_deg,deg,use_lishu
 !     integer,optional            :: permut(n,2)
 !     logical,optional            :: first_order
@@ -3922,7 +3922,7 @@ contains
 !    subroutine build_V_matrix_sparse
 !    implicit none
 !    integer :: i,j,k,l
-!    complex(8) :: tempv
+!    complex(kind=DP) :: tempv
 !     do i=1,n
 !      do j=1,n
 !        perturb(i,j)=0.d0
@@ -3963,9 +3963,9 @@ contains
 !  subroutine first_order_LiShu(j1,j2)
 !  implicit none
 !  integer    :: j1,j2
-!  complex(8) :: dtemp,phi1(n,j2-j1+1),phi2(n,n-(j2-j1+1))
-!  complex(8) :: diag(n-(j2-j1+1),n-(j2-j1+1))
-!  real(8)     :: norm
+!  complex(kind=DP) :: dtemp,phi1(n,j2-j1+1),phi2(n,n-(j2-j1+1))
+!  complex(kind=DP) :: diag(n-(j2-j1+1),n-(j2-j1+1))
+!  real(kind=DP)     :: norm
 !  integer    :: i,j,k,r,kk
 !
 !  r=j2-j1+1; k=0; diag=0.d0
@@ -4035,8 +4035,8 @@ contains
 !   !-----------------!
 !
 ! subroutine first_order_NELSON
-! complex(8) :: h(n,n),f(n),d(n,n),v(n)
-! complex(8) :: ci,dtemp
+! complex(kind=DP) :: h(n,n),f(n),d(n,n),v(n)
+! complex(kind=DP) :: ci,dtemp
 ! integer    :: i,j,ii,k,jjj
 !
 !  do jjj=1,n
@@ -4131,7 +4131,7 @@ contains
 ! subroutine first_order_deg(j1,j2)
 ! integer    :: jj,j1,j2,ii,j,k,l,m
 ! integer    :: q,qm,qj,nn,nnp,Beta
-! complex(8) :: Cq,norm,normb
+! complex(kind=DP) :: Cq,norm,normb
 !
 !  do q=j1,j2
 !
@@ -4217,7 +4217,7 @@ contains
 !
 ! function MATMUL_line(a,b,s2)
 ! implicit none
-! complex(8) :: a(:),b(:,:),MATMUL_line(size(a(:)))
+! complex(kind=DP) :: a(:),b(:,:),MATMUL_line(size(a(:)))
 ! integer    :: i,j,k,s2,siz
 ! siz=size(a(:))
 ! MATMUL_line=0.
@@ -4237,7 +4237,7 @@ contains
 !
 ! function MATMUL_keep_diag_(aa,bb)
 ! implicit none
-! complex(8) :: aa(:,:),bb(:,:),MATMUL_keep_diag_(size(aa(:,1)))
+! complex(kind=DP) :: aa(:,:),bb(:,:),MATMUL_keep_diag_(size(aa(:,1)))
 ! integer    :: i,j,k,l,siz1,siz2
 ! siz1=size(aa(:,1))
 ! siz2=size(bb(1,:))
@@ -4253,7 +4253,7 @@ contains
 !
 ! function MATMUL_keep_diag__(aa,bb)
 ! implicit none
-! real(8)    :: aa(:,:),bb(:,:),MATMUL_keep_diag__(size(aa(:,1)))
+! real(kind=DP)    :: aa(:,:),bb(:,:),MATMUL_keep_diag__(size(aa(:,1)))
 ! integer    :: i,j,k,l,siz1,siz2
 ! siz1=size(aa(:,1))
 ! siz2=size(bb(1,:))
@@ -4269,7 +4269,7 @@ contains
 !
 ! function MATMUL_sum_diag_(aa,bb)
 ! implicit none
-! complex(8) :: aa(:,:),bb(:,:),MATMUL_sum_diag_
+! complex(kind=DP) :: aa(:,:),bb(:,:),MATMUL_sum_diag_
 ! integer    :: i,j,k,l,siz1,siz2
 ! siz1=size(aa(:,1))
 ! siz2=size(bb(1,:))
@@ -4285,7 +4285,7 @@ contains
 !
 ! function MATMUL_sum_diag__(aa,bb)
 ! implicit none
-! real(8)    :: aa(:,:),bb(:,:),MATMUL_sum_diag__
+! real(kind=DP)    :: aa(:,:),bb(:,:),MATMUL_sum_diag__
 ! integer    :: i,j,k,l,siz1,siz2
 ! siz1=size(aa(:,1))
 ! siz2=size(bb(1,:))
@@ -4308,8 +4308,8 @@ contains
    function MATMUL_x_c(aa, bb, ind, n, IdL, IdR, byblock, a_by_block)
       implicit none
       integer                :: ii, i, j, k, s1, s2, smiddle
-      complex(8), intent(in)  :: aa(:, :), bb(:, :)
-      complex(8)             :: MATMUL_x_c(size(aa(:, 1)), size(bb(1, :)))
+      complex(kind=DP), intent(in)  :: aa(:, :), bb(:, :)
+      complex(kind=DP)             :: MATMUL_x_c(size(aa(:, 1)), size(bb(1, :)))
       integer, optional       :: n, ind(:)
       logical, optional       :: IdL, IdR, byblock, a_by_block
 
@@ -4418,8 +4418,8 @@ contains
    function MATMUL_x_r(aa, bb, ind, n, IdL, IdR, byblock, a_by_block)
       implicit none
       integer             :: ii, i, j, k, s1, s2, smiddle
-      real(8), intent(in)  :: aa(:, :), bb(:, :)
-      real(8)             :: MATMUL_x_r(size(aa(:, 1)), size(bb(1, :)))
+      real(kind=DP), intent(in)  :: aa(:, :), bb(:, :)
+      real(kind=DP)             :: MATMUL_x_r(size(aa(:, 1)), size(bb(1, :)))
       integer, optional    :: n, ind(:)
       logical, optional    :: IdL, IdR, byblock, a_by_block
 
@@ -4532,11 +4532,11 @@ contains
 !    subroutine inv_mat_small_numb_of_lines(mat,n,nind,ind,vind,test,messages)
 !    implicit none
 !     integer           :: nind,n,kk,kkk(nind+1),ii,jj
-!     complex(8)        :: Diag(n,n),mat(n,n),vind(nind,n)
-!     complex(8)        :: small(nind,nind),vectors(nind,nind),smallinv(nind,nind),vn(nind)
+!     complex(kind=DP)        :: Diag(n,n),mat(n,n),vind(nind,n)
+!     complex(kind=DP)        :: small(nind,nind),vectors(nind,nind),smallinv(nind,nind),vn(nind)
 !     integer           :: ind(nind),i,j,k,l,m
-!     real(8)           :: RWORK(3*nind),dnorm
-!     complex(8)        :: WORK(3*nind),W(nind),mattest(n,n),DUMMY(1,1),matinv(n,n)
+!     real(kind=DP)           :: RWORK(3*nind),dnorm
+!     complex(kind=DP)        :: WORK(3*nind),W(nind),mattest(n,n),DUMMY(1,1),matinv(n,n)
 !     integer(4)        :: INFO
 !     logical,optional  :: test,messages
 !
@@ -4674,13 +4674,13 @@ contains
 ! subroutine unitary_matrix(lsize,mat,unitary,vaps)
 ! implicit none
 ! integer                   :: lsize,i
-! real(8)                   :: RWORK(3*lsize),W(lsize)
-! complex(8)                :: WORK(3*lsize)
-! complex(8),intent(inout)  :: mat(lsize,lsize)
-! complex(8),optional       :: unitary(lsize,lsize)
-! complex(8)                :: rrr
+! real(kind=DP)                   :: RWORK(3*lsize),W(lsize)
+! complex(kind=DP)                :: WORK(3*lsize)
+! complex(kind=DP),intent(inout)  :: mat(lsize,lsize)
+! complex(kind=DP),optional       :: unitary(lsize,lsize)
+! complex(kind=DP)                :: rrr
 ! integer(4)                :: INFO
-! real(8),optional          :: vaps(lsize)
+! real(kind=DP),optional          :: vaps(lsize)
 !
 !   if(testing) call check_hermitian('unitary_matrix, mat not hermitian',mat)
 !
@@ -4728,8 +4728,8 @@ contains
 !
 ! subroutine print_eigenvalue__(mat)
 ! implicit none
-! complex(8) :: mat(:,:)
-! real(8)    :: vap(size(mat,1))
+! complex(kind=DP) :: mat(:,:)
+! real(kind=DP)    :: vap(size(mat,1))
 !  call eigenvalue_matrix(size(mat,1),mat,vap)
 !  write(*,*) 'eigenvalues are : '
 !  write(*,'(1000f10.4)') vap
@@ -4755,12 +4755,12 @@ contains
 ! subroutine eigenvalue_matrix__(lsize,mat,vaps)
 ! implicit none
 ! integer                   :: lsize,i
-! real(8)                   :: RWORK(3*lsize)
-! complex(8)                :: WORK(3*lsize)
-! complex(8)                :: mat(lsize,lsize),temp(lsize,1),temp2(lsize,1)
-! complex(8)                :: rrr
+! real(kind=DP)                   :: RWORK(3*lsize)
+! complex(kind=DP)                :: WORK(3*lsize)
+! complex(kind=DP)                :: mat(lsize,lsize),temp(lsize,1),temp2(lsize,1)
+! complex(kind=DP)                :: rrr
 ! integer                   :: INFO
-! complex(8)                :: vaps(lsize)
+! complex(kind=DP)                :: vaps(lsize)
 !    call ZGEEV('N','N', lsize, mat, lsize, vaps, temp, 1, temp2, 1, WORK, 3*lsize, RWORK, INFO )
 ! end subroutine
 !
@@ -4782,12 +4782,12 @@ contains
 ! subroutine eigenvalue_matrix_(lsize,mat,vap)
 ! implicit none
 ! integer                   :: lsize,i
-! real(8)                   :: RWORK(3*lsize)
-! complex(8)                :: WORK(3*lsize)
-! complex(8)                :: mat(lsize,lsize)
-! complex(8)                :: rrr
+! real(kind=DP)                   :: RWORK(3*lsize)
+! complex(kind=DP)                :: WORK(3*lsize)
+! complex(kind=DP)                :: mat(lsize,lsize)
+! complex(kind=DP)                :: rrr
 ! integer(4)                :: INFO
-! real(8)                   :: vap(lsize),rr
+! real(kind=DP)                   :: vap(lsize),rr
 !
 !    if(testing) then
 !      rr=maxval(abs( mat - transpose(conjg(mat)) ))
@@ -4810,12 +4810,12 @@ contains
 ! subroutine eigenvalue_matrixr_(lsize,mat,vap)
 ! implicit none
 ! integer                   :: lsize,i
-! real(8)                   :: RWORK(3*lsize)
-! real(8)                   :: WORK(3*lsize)
-! real(8)                   :: mat(lsize,lsize)
-! real(8)                   :: rrr
+! real(kind=DP)                   :: RWORK(3*lsize)
+! real(kind=DP)                   :: WORK(3*lsize)
+! real(kind=DP)                   :: mat(lsize,lsize)
+! real(kind=DP)                   :: rrr
 ! integer(4)                :: INFO
-! real(8)                   :: vap(lsize),rr
+! real(kind=DP)                   :: vap(lsize),rr
 !
 !    if(testing) then
 !      rr=maxval(abs( mat - transpose(mat) ))
@@ -4859,13 +4859,13 @@ contains
    subroutine eigenvector_matrix_c(lsize, mat, vaps, eigenvec)
       implicit none
       integer     :: lsize
-      real(8)     :: RWORK(3*lsize)
-      complex(8)  :: WORK(3*lsize)
-      complex(8)  :: mat(lsize, lsize)
-      complex(8)  :: eigenvec(lsize, lsize)
+      real(kind=DP)     :: RWORK(3*lsize)
+      complex(kind=DP)  :: WORK(3*lsize)
+      complex(kind=DP)  :: mat(lsize, lsize)
+      complex(kind=DP)  :: eigenvec(lsize, lsize)
       integer     :: INFO
 ! integer     :: order(lsize)
-      real(8)     :: vaps(lsize)
+      real(kind=DP)     :: vaps(lsize)
 
       if (testing) then
          if (maxval(abs(mat - transpose(conjg(mat)))) > 1.d-4) then
@@ -4902,8 +4902,8 @@ contains
       !-----------------------!
 
       subroutine go_for_single_prec
-         complex(4) :: mat_(lsize, lsize), eigenvec_(lsize, lsize)
-         real(4)    :: vaps_(lsize)
+         complex(kind=SP) :: mat_(lsize, lsize), eigenvec_(lsize, lsize)
+         real(kind=SP)    :: vaps_(lsize)
          mat_ = cmplx(mat, kind=4)
          call eigenvector_matrix(lsize, mat_, vaps_, eigenvec_)
          eigenvec = eigenvec_
@@ -4919,7 +4919,7 @@ contains
    subroutine rearrange_columns_to_identity_c(lsize, mat, diagdens)
       implicit none
       integer                   :: lsize
-      complex(8)                :: diagdenstemp(lsize), diagdens(lsize), mat(lsize, lsize), mat_temp(lsize, lsize)
+      complex(kind=DP)                :: diagdenstemp(lsize), diagdens(lsize), mat(lsize, lsize), mat_temp(lsize, lsize)
       integer                   :: i
       integer                   :: uu(1), uuu(lsize), uuu_not_placed(lsize), j, k
 
@@ -4961,7 +4961,7 @@ contains
    subroutine rearrange_columns_to_identity_r(lsize, mat, diagdens)
       implicit none
       integer                   :: lsize
-      real(8)                   :: diagdenstemp(lsize), diagdens(lsize), mat(lsize, lsize), mat_temp(lsize, lsize)
+      real(kind=DP)                   :: diagdenstemp(lsize), diagdens(lsize), mat(lsize, lsize), mat_temp(lsize, lsize)
       integer                   :: i
       integer                   :: uu(1), uuu(lsize), uuu_not_placed(lsize), j, k
 
@@ -5003,13 +5003,13 @@ contains
    subroutine eigenvector_matrix_c_(lsize, mat, vaps, eigenvec, symmetric)
       implicit none
       integer                   :: lsize
-      real(8)                   :: RWORK(3*lsize)
-      complex(8)                :: WORK(3*lsize)
-      complex(8)                :: mat(lsize, lsize)
-      complex(8)                :: mat_temp(lsize, lsize)
-      complex(8)                :: eigenvec(lsize, lsize), temp(lsize, 1)
+      real(kind=DP)                   :: RWORK(3*lsize)
+      complex(kind=DP)                :: WORK(3*lsize)
+      complex(kind=DP)                :: mat(lsize, lsize)
+      complex(kind=DP)                :: mat_temp(lsize, lsize)
+      complex(kind=DP)                :: eigenvec(lsize, lsize), temp(lsize, 1)
       integer                   :: INFO, n
-      complex(8)                :: vaps(lsize)
+      complex(kind=DP)                :: vaps(lsize)
       logical, optional          :: symmetric
 
       if (.not. present(symmetric)) Then
@@ -5040,13 +5040,13 @@ contains
    subroutine eigenvector_matrix_cc(lsize, mat, vaps, eigenvec)
       implicit none
       integer                   :: lsize
-      real(4)                   :: RWORK(3*lsize), W(lsize)
-      complex(4)                :: WORK(3*lsize)
-      complex(4)                :: mat(lsize, lsize)
-      complex(4)                :: eigenvec(lsize, lsize)
+      real(kind=SP)                   :: RWORK(3*lsize), W(lsize)
+      complex(kind=SP)                :: WORK(3*lsize)
+      complex(kind=SP)                :: mat(lsize, lsize)
+      complex(kind=SP)                :: eigenvec(lsize, lsize)
       integer                   :: INFO
 ! integer     :: order(lsize)
-      real(4)                   :: vaps(lsize)
+      real(kind=SP)                   :: vaps(lsize)
 
       if (testing) then
          if (maxval(abs(mat - transpose(conjg(mat)))) > 1.d-4) then
@@ -5080,12 +5080,12 @@ contains
    subroutine eigenvector_matrix_cc_(lsize, mat, vaps, eigenvec)
       implicit none
       integer                   :: lsize
-      real(4)                   :: RWORK(3*lsize)
-      complex(4)                :: WORK(3*lsize)
-      complex(4)                :: mat_temp(lsize, lsize), mat(lsize, lsize), temp(lsize, 1)
-      complex(4)                :: eigenvec(lsize, lsize)
+      real(kind=SP)                   :: RWORK(3*lsize)
+      complex(kind=SP)                :: WORK(3*lsize)
+      complex(kind=SP)                :: mat_temp(lsize, lsize), mat(lsize, lsize), temp(lsize, 1)
+      complex(kind=SP)                :: eigenvec(lsize, lsize)
       integer                   :: INFO
-      complex(4)                :: vaps(lsize)
+      complex(kind=SP)                :: vaps(lsize)
       mat_temp = mat
       call CGEEV('N', 'V', lsize, mat_temp, lsize, vaps, temp, 1, eigenvec, lsize, WORK, 3*lsize, RWORK, INFO)
    end subroutine
@@ -5095,12 +5095,12 @@ contains
    subroutine eigenvector_matrix_r(lsize, mat, vaps, eigenvec)
       implicit none
       integer                   :: lsize
-      real(8)                   :: WORK(3*lsize)
-      real(8)                   :: mat(lsize, lsize)
-      real(8)                   :: eigenvec(lsize, lsize)
+      real(kind=DP)                   :: WORK(3*lsize)
+      real(kind=DP)                   :: mat(lsize, lsize)
+      real(kind=DP)                   :: eigenvec(lsize, lsize)
       integer                   :: INFO
 ! integer                   :: order(lsize)
-      real(8)                   :: vaps(lsize)
+      real(kind=DP)                   :: vaps(lsize)
 
       if (lsize < 1) stop 'error eigenvector_matrix, 0 dim'
 
@@ -5139,8 +5139,8 @@ contains
       !-----------------------!
 
       subroutine go_for_single_prec
-         real(4)    :: mat_(lsize, lsize), eigenvec_(lsize, lsize)
-         real(4)    :: vaps_(lsize)
+         real(kind=SP)    :: mat_(lsize, lsize), eigenvec_(lsize, lsize)
+         real(kind=SP)    :: vaps_(lsize)
          mat_ = real(mat, kind=4)
          call eigenvector_matrix(lsize, mat_, vaps_, eigenvec_)
          eigenvec = eigenvec_
@@ -5156,12 +5156,12 @@ contains
    subroutine eigenvector_matrix_rc(lsize, mat, vaps, eigenvec)
       implicit none
       integer                   :: lsize
-      real(8)                   :: WORK(3*lsize), RWORK(3*lsize)
-      real(8)                   :: mat(lsize, lsize)
-      real(8)                   :: eigenvec(lsize, lsize)
+      real(kind=DP)                   :: WORK(3*lsize), RWORK(3*lsize)
+      real(kind=DP)                   :: mat(lsize, lsize)
+      real(kind=DP)                   :: eigenvec(lsize, lsize)
       integer                   :: INFO
-      complex(8)                :: vaps(lsize)
-      real(8)                   :: temp(1, lsize), vl(lsize), vr(lsize)
+      complex(kind=DP)                :: vaps(lsize)
+      real(kind=DP)                   :: temp(1, lsize), vl(lsize), vr(lsize)
 
       if (.not. same_array(mat, eigenvec)) eigenvec = mat
       call DGEEV('N', 'V', lsize, mat, lsize, vl, vr, temp, 1, eigenvec, lsize, WORK, 3*lsize, RWORK, INFO)
@@ -5174,12 +5174,12 @@ contains
    subroutine eigenvector_matrix_rr(lsize, mat, vaps, eigenvec)
       implicit none
       integer                   :: lsize
-      real(4)                   :: WORK(3*lsize)
-      real(4)                   :: mat(lsize, lsize)
-      real(4)                   :: eigenvec(lsize, lsize)
+      real(kind=SP)                   :: WORK(3*lsize)
+      real(kind=SP)                   :: mat(lsize, lsize)
+      real(kind=SP)                   :: eigenvec(lsize, lsize)
       integer                   :: INFO
 ! integer                   :: order(lsize)
-      real(4)                   :: vaps(lsize)
+      real(kind=SP)                   :: vaps(lsize)
 
       if (lsize < 1) stop 'error eigenvector_matrix, 0 dim'
 
@@ -5212,12 +5212,12 @@ contains
    subroutine eigenvector_matrix_rrc(lsize, mat, vaps, eigenvec)
       implicit none
       integer                   :: lsize
-      real(4)                   :: WORK(3*lsize), RWORK(3*lsize)
-      real(4)                   :: mat(lsize, lsize)
-      real(4)                   :: eigenvec(lsize, lsize)
+      real(kind=SP)                   :: WORK(3*lsize), RWORK(3*lsize)
+      real(kind=SP)                   :: mat(lsize, lsize)
+      real(kind=SP)                   :: eigenvec(lsize, lsize)
       integer                   :: INFO
-      complex(4)                :: vaps(lsize)
-      real(4)                   :: temp(lsize, 1), vl(lsize), vr(lsize)
+      complex(kind=SP)                :: vaps(lsize)
+      real(kind=SP)                   :: temp(lsize, 1), vl(lsize), vr(lsize)
       if (.not. same_array(mat, eigenvec)) eigenvec = mat
       call SGEEV('N', 'V', lsize, mat, lsize, vl, vr, temp, 1, eigenvec, lsize, WORK, 3*lsize, RWORK, INFO)
       vaps = cmplx(vl + imi*vr, kind=4)
@@ -5245,10 +5245,10 @@ contains
 ! function expMat(lsize,mat,test)
 ! implicit none
 ! integer(4)                :: i,j,k,l,m,lsize
-! real(8)                   :: RWORK(3*lsize),W(lsize),ddnorm
-! complex(8)                :: WORK(3*lsize),BB(lsize,lsize)
-! complex(8),intent(in)     :: mat(:,:)
-! complex(8)                :: expMat(lsize,lsize),dnorm
+! real(kind=DP)                   :: RWORK(3*lsize),W(lsize),ddnorm
+! complex(kind=DP)                :: WORK(3*lsize),BB(lsize,lsize)
+! complex(kind=DP),intent(in)     :: mat(:,:)
+! complex(kind=DP)                :: expMat(lsize,lsize),dnorm
 ! integer(4)                :: INFO
 ! logical,optional          :: test
 !
@@ -5308,10 +5308,10 @@ contains
 ! subroutine inverse_sym_mat(mat,lsize,test,c)
 ! implicit none
 ! integer                   :: i,j,k,l,m,lsize
-! real(8)                   :: RWORK(3*lsize),W(lsize),ddnorm
-! complex(8)                :: WORK(3*lsize),BB(lsize,lsize)
-! complex(8),intent(inout)  :: mat(lsize,lsize)
-! complex(8)                :: mat_back(lsize,lsize),dnorm
+! real(kind=DP)                   :: RWORK(3*lsize),W(lsize),ddnorm
+! complex(kind=DP)                :: WORK(3*lsize),BB(lsize,lsize)
+! complex(kind=DP),intent(inout)  :: mat(lsize,lsize)
+! complex(kind=DP)                :: mat_back(lsize,lsize),dnorm
 ! integer(4)                :: INFO
 ! logical,optional          :: test
 ! integer,optional          :: c
@@ -5401,13 +5401,13 @@ contains
 !       integer,intent(in)    :: imouv,jmouv,n
 !       integer,intent(out)   :: flagerror
 !       integer               :: k
-!       real(8)               :: error
-!       complex(8)            :: invmat(n,n),tem(n,n),mqj(n),v1(n),vect(n)
-!       complex(8)            :: v2(n)
-!       complex(8)            :: piq(n)
-!       real(8)               :: temdet2,rrr
-!       complex(8)            :: temdet,garb,garba,garbb,garbf
-!       complex(8)            :: tempscal
+!       real(kind=DP)               :: error
+!       complex(kind=DP)            :: invmat(n,n),tem(n,n),mqj(n),v1(n),vect(n)
+!       complex(kind=DP)            :: v2(n)
+!       complex(kind=DP)            :: piq(n)
+!       real(kind=DP)               :: temdet2,rrr
+!       complex(kind=DP)            :: temdet,garb,garba,garbb,garbf
+!       complex(kind=DP)            :: tempscal
 !       logical,optional      :: onlydet
 !       integer,optional      :: only_i_term
 !
@@ -5578,7 +5578,7 @@ contains
 !  subroutine addId(mat,n)
 !  implicit none
 !  integer    :: n
-!  complex(8) :: mat(n,n)
+!  complex(kind=DP) :: mat(n,n)
 !  integer    :: i
 !    do i=1,n
 !     mat(i,i)=mat(i,i)+1.
@@ -5590,7 +5590,7 @@ contains
    function Id(n)
       implicit none
       integer :: n, i
-      real(8)  :: Id(n, n)
+      real(kind=DP)  :: Id(n, n)
       Id = 0.
       do i = 1, n
          Id(i, i) = 1.
@@ -5602,7 +5602,7 @@ contains
 !  function Idc(n)
 !  implicit none
 !  integer    :: n,i
-!  complex(8) :: Idc(n,n)
+!  complex(kind=DP) :: Idc(n,n)
 !    Idc=0.d0
 !    do i=1,n
 !     Idc(i,i)=1.
@@ -5614,7 +5614,7 @@ contains
    function bande_matr(n, bande)
       implicit none
       integer :: n, i
-      real(8) :: bande(n), bande_matr(n, n)
+      real(kind=DP) :: bande(n), bande_matr(n, n)
       bande_matr = 0
       do i = 1, n
          bande_matr(i, i) = bande(i)
@@ -5626,7 +5626,7 @@ contains
    function bande_matc(n, bande)
       implicit none
       integer    :: n, i
-      complex(8) :: bande(n), bande_matc(n, n)
+      complex(kind=DP) :: bande(n), bande_matc(n, n)
       bande_matc = 0
       do i = 1, n
          bande_matc(i, i) = bande(i)
@@ -5650,7 +5650,7 @@ contains
 !
 !     subroutine decomposemat(matrice,base)
 !     implicit none
-!     real(8),intent(inout) :: matrice(:,:),base(:,:)
+!     real(kind=DP),intent(inout) :: matrice(:,:),base(:,:)
 !     integer :: sizemat
 !      sizemat=size(matrice(:,1))
 !      if(sizemat/=size(matrice(1,:))) &
@@ -5674,7 +5674,7 @@ contains
 !
 !     subroutine symmetrize_mat_r(matrice)
 !     implicit none
-!     real(8),intent(inout) :: matrice(:,:)
+!     real(kind=DP),intent(inout) :: matrice(:,:)
 !     integer :: sizemat,i,j
 !      sizemat=size(matrice(:,1))
 !      if(sizemat/=size(matrice(1,:))) &
@@ -5691,7 +5691,7 @@ contains
 !
 !     subroutine symmetrize_mat_c(matrice)
 !     implicit none
-!     complex(8),intent(inout) :: matrice(:,:)
+!     complex(kind=DP),intent(inout) :: matrice(:,:)
 !     integer :: sizemat,i,j
 !      sizemat=size(matrice(:,1))
 !      if(sizemat/=size(matrice(1,:))) &
@@ -5721,8 +5721,8 @@ contains
 
    subroutine decomposevec(coef, vec, base)
       implicit none
-      real(8), intent(inout)   :: vec(:), coef(:)
-      real(8)                 :: matrice(size(vec), size(vec)), base(:, :)
+      real(kind=DP), intent(inout)   :: vec(:), coef(:)
+      real(kind=DP)                 :: matrice(size(vec), size(vec)), base(:, :)
       integer                 :: sizemat
       sizemat = size(vec(:))
       if (sizemat /= size(matrice(1, :))) stop 'error decomposevec : dimensions'
@@ -5746,9 +5746,9 @@ contains
 !       subroutine rescale_c(detphi,detphi2,dpdet)
 !       implicit none
 !        integer,intent(inout)    :: dpdet
-!        real(8),intent(inout)     :: detphi
-!        complex(8),intent(inout) :: detphi2
-!        real(8)                   :: rdet
+!        real(kind=DP),intent(inout)     :: detphi
+!        complex(kind=DP),intent(inout) :: detphi2
+!        real(kind=DP)                   :: rdet
 !
 !         rdet=abs(detphi2)
 !         if(rdet>1.d-8)then
@@ -5781,9 +5781,9 @@ contains
 !       subroutine rescale_c3(detphi,detphi2,dpdet)
 !       implicit none
 !        integer,intent(inout)     :: dpdet
-!        real(4),intent(inout)     :: detphi
-!        complex(4),intent(inout)  :: detphi2
-!        real(4)                   :: rdet
+!        real(kind=SP),intent(inout)     :: detphi
+!        complex(kind=SP),intent(inout)  :: detphi2
+!        real(kind=SP)                   :: rdet
 !         rdet=abs(detphi2)
 !         if(rdet>1.d-8)then
 !          detphi2=detphi2/rdet
@@ -5814,7 +5814,7 @@ contains
 !       subroutine rescale_r3(detphi,dpdet)
 !       implicit none
 !       integer,intent(inout) :: dpdet
-!       real(4),intent(inout)  :: detphi
+!       real(kind=SP),intent(inout)  :: detphi
 !         if(detphi==0.) goto 112
 !   97    continue
 !         if (abs(detphi)<=1.0) goto 102
@@ -5837,7 +5837,7 @@ contains
 !       subroutine rescale_r(detphi,dpdet)
 !       implicit none
 !       integer,intent(inout) :: dpdet
-!       real(8),intent(inout)  :: detphi
+!       real(kind=DP),intent(inout)  :: detphi
 !         if(detphi==0.) goto 112
 !   97    continue
 !         if (abs(detphi)<=1.d0) goto 102
@@ -5928,8 +5928,8 @@ contains
 !
 !       function invmat_(n,mat)
 !       implicit none
-!        complex(8) :: mat(n,n)
-!        complex(8) :: invmat_(n,n)
+!        complex(kind=DP) :: mat(n,n)
+!        complex(kind=DP) :: invmat_(n,n)
 !        integer :: n
 !         invmat_=mat
 !         call invmat(n,invmat_)
@@ -5940,13 +5940,13 @@ contains
 !       subroutine invmat_comp(n,mat,det2b,detb,pdetb,check_nan,c,block_matrix,diagmat)
 !       implicit none
 !       integer                   :: pdet,ppdet,n,nnn,i,j
-!       real(8)                   :: big,det,ddet,rcond
-!       complex(8),intent(inout)  :: mat(:,:)
-!       real(8),optional          :: detb
+!       real(kind=DP)                   :: big,det,ddet,rcond
+!       complex(kind=DP),intent(inout)  :: mat(:,:)
+!       real(kind=DP),optional          :: detb
 !       integer,optional          :: pdetb
-!       complex(8),optional       :: det2b
-!       complex(8)                :: det2,ddet2,deti(2),q
-!       complex(8)                :: WORK(2*size(mat,1)),WORK2(size(mat,1))
+!       complex(kind=DP),optional       :: det2b
+!       complex(kind=DP)                :: det2,ddet2,deti(2),q
+!       complex(kind=DP)                :: WORK(2*size(mat,1)),WORK2(size(mat,1))
 !       integer(4)                :: INFO,INFO2
 !       integer                   :: piv(size(mat,1))
 !       logical,optional          :: check_nan,block_matrix,diagmat
@@ -6041,9 +6041,9 @@ contains
 !     subroutine invit(i1,i2,det,det2,pdet)
 !     implicit none
 !     integer                   :: i1,i2
-!     real(8),optional          :: det
+!     real(kind=DP),optional          :: det
 !     integer,optional          :: pdet
-!     complex(8),optional       :: det2
+!     complex(kind=DP),optional       :: det2
 !     integer                   :: nn
 !
 !        nn = i2-i1+1
@@ -6086,13 +6086,13 @@ contains
 !     !------------------!
 !
 !     subroutine force_sing_prec(mat,det,det2,pdet)
-!      complex(8)                :: mat(:,:)
-!      complex(4)                :: mat_(size(mat,1),size(mat,2))
-!      real(8),optional          :: det
+!      complex(kind=DP)                :: mat(:,:)
+!      complex(kind=SP)                :: mat_(size(mat,1),size(mat,2))
+!      real(kind=DP),optional          :: det
 !      integer,optional          :: pdet
-!      complex(8),optional       :: det2
-!      real(4)                   :: det_
-!      complex(4)                :: det2_
+!      complex(kind=DP),optional       :: det2
+!      real(kind=SP)                   :: det_
+!      complex(kind=SP)                :: det2_
 !      integer                   :: pdet_
 !      if(present(det))then
 !       mat_=mat
@@ -6120,7 +6120,7 @@ contains
 !     !------------------!
 !
 !     subroutine force_real_inv
-!      real(8) :: matr(n,n)
+!      real(kind=DP) :: matr(n,n)
 !      if(testing)then
 !        if(maxval(abs(real(mat)))>1.d-9)then
 !        if(maxval(abs(aimag(mat))/maxval(abs(real(mat))))<1.d-4)then
@@ -6172,12 +6172,12 @@ contains
 !       subroutine invmat_comps(n,mat,det2b,detb,pdetb,check_nan,c,block_matrix,diagmat)
 !       implicit none
 !       integer                   :: pdet,ppdet,n,nnn,i,j
-!       real(4)                   :: big,det,ddet
-!       complex(4),intent(inout)  :: mat(:,:)
-!       real(4),optional          :: detb
+!       real(kind=SP)                   :: big,det,ddet
+!       complex(kind=SP),intent(inout)  :: mat(:,:)
+!       real(kind=SP),optional          :: detb
 !       integer,optional          :: pdetb
-!       complex(4),optional       :: det2b
-!       complex(4)                :: det2,ddet2,deti(2),q
+!       complex(kind=SP),optional       :: det2b
+!       complex(kind=SP)                :: det2,ddet2,deti(2),q
 !       integer(4)                :: INFO,INFO2
 !       integer                   :: piv(size(mat,1))
 !       logical,optional          :: check_nan,block_matrix,diagmat
@@ -6263,9 +6263,9 @@ contains
 !     subroutine invit(i1,i2,det,det2,pdet)
 !     implicit none
 !     integer :: i1,i2
-!     real(4),optional          :: det
+!     real(kind=SP),optional          :: det
 !     integer,optional          :: pdet
-!     complex(4),optional       :: det2
+!     complex(kind=SP),optional       :: det2
 !        if(mat_3_3_cs(mat(i1:i2,i1:i2),det,det2,pdet)) return
 !        if(present(det).or.flag_force_invmat_lapack)then
 !         call zgeco_zgedi(i1,i2)
@@ -6414,11 +6414,11 @@ contains
 !       implicit none
 !       integer                   :: pdet,n,i,j
 !       integer,optional          :: pdetb
-!       real(8)                   :: big,det
-!       real(8),optional          :: detb
-!       complex(8),intent(inout)  :: mat(:,:)
-!       complex(8)                :: det2,q
-!       complex(8),optional       :: detb2
+!       real(kind=DP)                   :: big,det
+!       real(kind=DP),optional          :: detb
+!       complex(kind=DP),intent(inout)  :: mat(:,:)
+!       complex(kind=DP)                :: det2,q
+!       complex(kind=DP),optional       :: detb2
 !       integer(4)                :: INFO,INFO2
 !       integer                   :: piv(size(mat,1))
 !       logical,optional          :: diagmat
@@ -6480,15 +6480,15 @@ contains
 !
 !       subroutine invmat_reals(n,mat,det2b,detb,pdetb,check_nan,c,block_matrix,diagmat)
 !       implicit none
-!       real(4),optional      :: detb
+!       real(kind=SP),optional      :: detb
 !       integer,optional      :: pdetb
-!       complex(4),optional   :: det2b
-!       real(4)               :: det,ddet,q
-!       complex(4)            :: det2
+!       complex(kind=SP),optional   :: det2b
+!       real(kind=SP)               :: det,ddet,q
+!       complex(kind=SP)            :: det2
 !       integer               :: pdet,ppdet,nnn
-!       real(4)               :: big
-!       real(4),intent(inout) :: mat(:,:)
-!       real(4)               :: rtemp
+!       real(kind=SP)               :: big
+!       real(kind=SP),intent(inout) :: mat(:,:)
+!       real(kind=SP)               :: rtemp
 !       logical,optional      :: check_nan,diagmat
 !       integer,optional      :: c
 !       logical,optional      :: block_matrix
@@ -6556,14 +6556,14 @@ contains
 !       implicit none
 !       integer                   :: i1,i2,n
 !       integer                   :: piv(i2-i1+1)
-!       real(4),target            :: mat_in(:,:)
-!       real(4),pointer           :: mat(:,:)
-!       real(4)                   :: stock(i2-i1+1)
-!       real(4)                   :: det_
+!       real(kind=SP),target            :: mat_in(:,:)
+!       real(kind=SP),pointer           :: mat(:,:)
+!       real(kind=SP)                   :: stock(i2-i1+1)
+!       real(kind=SP)                   :: det_
 !       integer                   :: pdet_
-!       real(4),optional          :: det
+!       real(kind=SP),optional          :: det
 !       integer,optional          :: pdet
-!       complex(4),optional       :: det2
+!       complex(kind=SP),optional       :: det2
 !
 !       n=i2-i1+1
 !       mat=>mat_in(i1:i2,i1:i2)
@@ -6670,15 +6670,15 @@ contains
 !
 !       subroutine invmat_real(n,mat,det2b,detb,pdetb,check_nan,c,block_matrix,diagmat)
 !       implicit none
-!       real(8),optional      :: detb
+!       real(kind=DP),optional      :: detb
 !       integer,optional      :: pdetb
-!       complex(8),optional   :: det2b
-!       real(8)               :: det,ddet,q
-!       complex(8)            :: det2
+!       complex(kind=DP),optional   :: det2b
+!       real(kind=DP)               :: det,ddet,q
+!       complex(kind=DP)            :: det2
 !       integer               :: pdet,ppdet,nnn
-!       real(8)               :: big
-!       real(8),intent(inout) :: mat(:,:)
-!       real(8)               :: rtemp
+!       real(kind=DP)               :: big
+!       real(kind=DP),intent(inout) :: mat(:,:)
+!       real(kind=DP)               :: rtemp
 !       logical,optional      :: check_nan,diagmat
 !       integer,optional      :: c
 !       logical,optional      :: block_matrix
@@ -6749,13 +6749,13 @@ contains
 !     !------------------!
 !
 !     subroutine force_sing_prec(mat,det,det2,pdet)
-!      real(8)                   :: mat(:,:)
-!      real(4)                   :: mat_(size(mat,1),size(mat,2))
-!      real(8),optional          :: det
+!      real(kind=DP)                   :: mat(:,:)
+!      real(kind=SP)                   :: mat_(size(mat,1),size(mat,2))
+!      real(kind=DP),optional          :: det
 !      integer,optional          :: pdet
-!      complex(8),optional       :: det2
-!      real(4)                   :: det_
-!      complex(4)                :: det2_
+!      complex(kind=DP),optional       :: det2
+!      real(kind=SP)                   :: det_
+!      complex(kind=SP)                :: det2_
 !      integer                   :: pdet_
 !      if(present(det))then
 !       mat_=mat
@@ -6792,14 +6792,14 @@ contains
 !       implicit none
 !       integer                   :: i1,i2,n
 !       integer                   :: piv(i2-i1+1)
-!       real(8),target            :: mat_in(:,:)
-!       real(8),pointer           :: mat(:,:)
-!       real(8)                   :: stock(i2-i1+1)
-!       real(8)                   :: det_
+!       real(kind=DP),target            :: mat_in(:,:)
+!       real(kind=DP),pointer           :: mat(:,:)
+!       real(kind=DP)                   :: stock(i2-i1+1)
+!       real(kind=DP)                   :: det_
 !       integer                   :: pdet_
-!       real(8),optional          :: det
+!       real(kind=DP),optional          :: det
 !       integer,optional          :: pdet
-!       complex(8),optional       :: det2
+!       complex(kind=DP),optional       :: det2
 !
 !       mat=>mat_in(i1:i2,i1:i2)
 !       n=i2-i1+1
@@ -7076,12 +7076,12 @@ contains
 !      !subroutines of LINPACK
 !       implicit none
 !       integer    :: lda,n,ipvt(1),job
-!       complex(8) :: a(lda,1),det(2),work(1)
-!       complex(8) :: t
-!       real(8)     :: ten
+!       complex(kind=DP) :: a(lda,1),det(2),work(1)
+!       complex(kind=DP) :: t
+!       real(kind=DP)     :: ten
 !       integer    :: i,j,k,kb,kp1,l,nm1
-!       complex(8) :: zdum
-!       complex(8) :: zdumr,zdumi
+!       complex(kind=DP) :: zdum
+!       complex(kind=DP) :: zdumr,zdumi
 !
 !       if (job/10 == 0) go to 70
 !          det(1) = (1.0d0,0.0d0)
@@ -7155,9 +7155,9 @@ contains
 !       !subroutines of LINPACK
 !       implicit none
 !       integer    :: lda,n,ipvt(1),job
-!       complex(8) :: a(lda,1),det(2),work(1)
-!       complex(8) :: t
-!       real(8)    :: ten
+!       complex(kind=DP) :: a(lda,1),det(2),work(1)
+!       complex(kind=DP) :: t
+!       real(kind=DP)    :: ten
 !       integer    :: i,j,k,kb,kp1,l,nm1
 !
 !       if (job/10 == 0) go to 70
@@ -7229,13 +7229,13 @@ contains
 !      subroutine zgeco_(a,lda,n,ipvt,rcond,z)
 !       implicit none
 !       integer    :: lda,n,ipvt(1)
-!       complex(8) :: a(lda,1),z(1)
-!       real(8)    :: rcond
-!       complex(8) :: zdotc,ek,t,wk,wkm
-!       real(8)    :: anorm,s,dzasum,sm,ynorm,ss
+!       complex(kind=DP) :: a(lda,1),z(1)
+!       real(kind=DP)    :: rcond
+!       complex(kind=DP) :: zdotc,ek,t,wk,wkm
+!       real(kind=DP)    :: anorm,s,dzasum,sm,ynorm,ss
 !       integer    :: info,j,k,kb,kp1,l
-!       complex(8) :: zdum,zdum1,zdum2
-!       complex(8) :: zdumr,zdumi
+!       complex(kind=DP) :: zdum,zdum1,zdum2
+!       complex(kind=DP) :: zdumr,zdumi
 !
 !       anorm = 0.0d0
 !       do j=1,n
@@ -7379,12 +7379,12 @@ contains
 !       subroutine zgeco(a,lda,n,ipvt,rcond,z)
 !       implicit none
 !       integer    :: lda,n,ipvt(1)
-!       complex(8) :: a(lda,1),z(1)
-!       real(8)    :: rcond
-!       complex(8) :: ek,t,wk,wkm
-!       real(8)    :: anorm,ss
+!       complex(kind=DP) :: a(lda,1),z(1)
+!       real(kind=DP)    :: rcond
+!       complex(kind=DP) :: ek,t,wk,wkm
+!       real(kind=DP)    :: anorm,ss
 !       real(16)   :: s,sm,ynorm,tt
-!       real(8)    :: ssum
+!       real(kind=DP)    :: ssum
 !       integer    :: info,j,k,kb,kp1,l
 !
 !       anorm = 0.0d0
@@ -7574,8 +7574,8 @@ contains
 !       subroutine zgefa(a,lda,n,ipvt,info)
 !       implicit none
 !       integer    :: lda,n,ipvt(1),info
-!       complex(8) :: a(lda,1)
-!       complex(8) :: t
+!       complex(kind=DP) :: a(lda,1)
+!       complex(kind=DP) :: t
 !       integer    :: izamax,j,k,kp1,l,nm1
 !
 !       info = 0
@@ -7628,10 +7628,10 @@ contains
    subroutine QR_decomp(L, R, matin, Qmat, Rmat)
       implicit none
       integer               :: L, R, INFO, i, j
-      complex(8), intent(in) :: matin(L, R)
-      complex(8), intent(out):: Qmat(L, R), Rmat(R, R)
-      complex(8)            :: mat2(L, R), TAU(R)
-      complex(8)            :: WORK(2*R)
+      complex(kind=DP), intent(in) :: matin(L, R)
+      complex(kind=DP), intent(out):: Qmat(L, R), Rmat(R, R)
+      complex(kind=DP)            :: mat2(L, R), TAU(R)
+      complex(kind=DP)            :: WORK(2*R)
 
       mat2 = matin
       call ZGEQRF(L, R, mat2, L, TAU, WORK, 2*R, INFO)
@@ -8700,8 +8700,8 @@ contains
       INTEGER                            :: LRWORK
       CHARACTER(LEN=1)                   :: FLAG
       INTEGER                            :: LWORK, LIWORK, N, info
-      complex(8), allocatable            :: work(:)
-      real(8), allocatable               :: rwork(:)
+      complex(kind=DP), allocatable            :: work(:)
+      real(kind=DP), allocatable               :: rwork(:)
       INTEGER, allocatable               :: iwork(:)
 
       N = size(VALP)
@@ -8781,7 +8781,7 @@ contains
       LOGICAL, OPTIONAL, INTENT(IN)  :: EIGENVAL_ONLY
       CHARACTER(LEN=1)                :: FLAG
       INTEGER                         :: LWORK, LIWORK, N, info
-      real(8), allocatable            :: work(:)
+      real(kind=DP), allocatable            :: work(:)
       INTEGER, allocatable            :: iwork(:)
 
       N = SIZE(VALP)
@@ -9455,11 +9455,11 @@ contains
 !   logical function mat_3_3_rs(mat,detb,det2b,pdetb)
 !   implicit none
 !      integer               :: i,j,k,n
-!      real(4),optional      :: detb
+!      real(kind=SP),optional      :: detb
 !      integer,optional      :: pdetb
-!      complex(4),optional   :: det2b
-!      real(4)               :: q
-!      real(4),intent(inout) :: mat(:,:)
+!      complex(kind=SP),optional   :: det2b
+!      real(kind=SP)               :: q
+!      real(kind=SP),intent(inout) :: mat(:,:)
 !
 !      n=size(mat,1)
 !      mat_3_3_rs=n<4
@@ -9521,11 +9521,11 @@ contains
 !   logical function mat_3_3_r(mat,detb,det2b,pdetb)
 !   implicit none
 !      integer               :: i,j,k,n
-!      real(8),optional      :: detb
+!      real(kind=DP),optional      :: detb
 !      integer,optional      :: pdetb
-!      complex(8),optional   :: det2b
-!      real(8)               :: q
-!      real(8),intent(inout) :: mat(:,:)
+!      complex(kind=DP),optional   :: det2b
+!      real(kind=DP)               :: q
+!      real(kind=DP),intent(inout) :: mat(:,:)
 !
 !      n=size(mat,1)
 !      mat_3_3_r=n<4
@@ -9583,10 +9583,10 @@ contains
 !   implicit none
 !     integer                   :: n,i,j
 !     integer,optional          :: pdetb
-!     real(4),optional          :: detb
-!     complex(4),intent(inout)  :: mat(:,:)
-!     complex(4),optional       :: detb2
-!     complex(4)                :: q
+!     real(kind=SP),optional          :: detb
+!     complex(kind=SP),intent(inout)  :: mat(:,:)
+!     complex(kind=SP),optional       :: detb2
+!     complex(kind=SP)                :: q
 !
 !      n=size(mat,1)
 !      mat_3_3_cs=n<4
@@ -9646,10 +9646,10 @@ contains
 !   implicit none
 !     integer                   :: n,i,j
 !     integer,optional          :: pdetb
-!     real(8),optional          :: detb
-!     complex(8),intent(inout)  :: mat(:,:)
-!     complex(8),optional       :: detb2
-!     complex(8)                :: q
+!     real(kind=DP),optional          :: detb
+!     complex(kind=DP),intent(inout)  :: mat(:,:)
+!     complex(kind=DP),optional       :: detb2
+!     complex(kind=DP)                :: q
 !
 !      n=size(mat,1)
 !      mat_3_3_c=n<4
@@ -9839,7 +9839,7 @@ contains
 !       subroutine test_arpack_vector
 !       implicit none
 !       integer,parameter    :: nnn=150
-!       real(8)              :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),vec(nnn),vec2(nnn),v(nnn,nnn)
+!       real(kind=DP)              :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),vec(nnn),vec2(nnn),v(nnn,nnn)
 !       integer              :: i,j,n,jjj,jj,nval,nconv
 !
 !       A=0.d0
@@ -9900,8 +9900,8 @@ contains
 !       subroutine test_arpack_vector_
 !       implicit none
 !       integer,parameter    :: nnn=150
-!       complex(8)           :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),v(nnn,nnn)
-!       real(8)              :: vec2(nnn),vec(nnn)
+!       complex(kind=DP)           :: A(nnn,nnn),B(nnn,nnn),C(nnn,nnn),v(nnn,nnn)
+!       real(kind=DP)              :: vec2(nnn),vec(nnn)
 !       integer              :: i,j,n,jjj,jj,nval,nconv
 !
 !       A=0.d0
@@ -9944,8 +9944,8 @@ contains
 !
 !        subroutine mat_(n,w,v)
 !         integer n
-!         complex(8),intent(in)   ::  v(n)
-!         complex(8),intent(inout)::  w(n)
+!         complex(kind=DP),intent(in)   ::  v(n)
+!         complex(kind=DP),intent(inout)::  w(n)
 !          w=MATMUL(A,v)
 !        return
 !        end subroutine
@@ -9989,7 +9989,7 @@ contains
 !       parameter        (zero = 0.0D+0)
 !       character(2)         :: amode
 !       logical              :: verbose
-!       real(8),optional     :: sigma_
+!       real(kind=DP),optional     :: sigma_
 !       integer,optional     :: mode_
 !      !----------------------------------!
 !      ! amode : SM around 0              !
@@ -10237,12 +10237,12 @@ contains
 !       interface
 !        subroutine av(n,w,v)
 !         integer                  :: n
-!         complex(8),intent(in)    :: v(n)
-!         complex(8),intent(inout) :: w(n)
+!         complex(kind=DP),intent(in)    :: v(n)
+!         complex(kind=DP),intent(inout) :: w(n)
 !        end subroutine
 !       end interface
 !
-!       complex(8),optional :: sigma_
+!       complex(kind=DP),optional :: sigma_
 !       integer,optional    :: mode_
 !
 !
@@ -10430,7 +10430,7 @@ contains
 !
 !       SUBROUTINE EHOBKS (A, N, M1, M2, Z, IZ)
 !       DIMENSION A ( * ), Z (IZ, * )
-!       real(8) A, Z, H, S
+!       real(kind=DP) A, Z, H, S
 !       IF (N.EQ.1) GOTO 30
 !       DO 25 I = 2, N
 !          L = I - 1
@@ -10469,7 +10469,7 @@ contains
 !
 !       SUBROUTINE EHOUSS (A, N, D, E, E2)
 !       DIMENSION A ( * ), D (N), E (N), E2 (N)
-!       real(8) A, D, E, E2, ZERO, H, SCALE, F, G, HH
+!       real(kind=DP) A, D, E, E2, ZERO, H, SCALE, F, G, HH
 !       DATA ZERO / 0.0D0 /
 ! !                                  FIRST EXECUTABLE STATEMENT
 !       NP1 = N + 1
@@ -10567,10 +10567,10 @@ contains
 !       SUBROUTINE EIGRS (A, N, JOBN, D, Z, IZ, WK, IER)
 !       IMPLICIT none
 !       INTEGER N, JOBN, IZ, IER
-!       real(8) A ( * ), D ( * ), WK ( * ), Z (IZ, * )
+!       real(kind=DP) A ( * ), D ( * ), WK ( * ), Z (IZ, * )
 !       INTEGER IJOB, IR, JR, IJ, JI, NP1
 !       INTEGER JER, NA, ND, IIZ, IBEG, IL, KK, LK, I, J, K, L
-!       real(8) ANORM, ASUM, PI, SUMZ, SUMR, AN, S, TEN, RDELP,   &
+!       real(kind=DP) ANORM, ASUM, PI, SUMZ, SUMR, AN, S, TEN, RDELP,   &
 !       ZERO, ONE, THOUS
 !       DATA RDELP / 0.222045D-15 /
 !       DATA ZERO, ONE / 0.0D0, 1.0D0 /, TEN / 10.0D0 /, THOUS / 1000.0D0 &
@@ -10731,7 +10731,7 @@ contains
 !
 !       SUBROUTINE EQRT2S (D, E, N, Z, IZ, IER)
 !       DIMENSION D ( * ), E ( * ), Z (IZ, * )
-!       real(8) D, E, Z, B, C, F, G, H, P, R, S, RDELP, ONE, ZERO
+!       real(kind=DP) D, E, Z, B, C, F, G, H, P, R, S, RDELP, ONE, ZERO
 !       DATA RDELP / 0.222045D-15 /
 !       DATA ZERO, ONE / 0.0D0, 1.0D0 /
 ! !                                  MOVE THE LAST N-1 ELEMENTS
@@ -11125,7 +11125,7 @@ contains
       implicit none
       integer           :: n, ldA, ldU, sort
       Complex(8)        :: A(ldA, ldA), U(ldU, ldU), d(ldA)
-      real(8), parameter :: SYM_EPS = 2.D0**(-52)
+      real(kind=DP), parameter :: SYM_EPS = 2.D0**(-52)
       integer           :: p, q, j
       Real(8)           :: red, off, thresh
       Complex(8)        :: delta, t, invc, s

@@ -29,10 +29,10 @@
       integer, allocatable               :: arr(:)
       REAL(KIND=8)                     :: U(nlm*ns, nlm*ns, nlm*ns, nlm*ns)
       COMPLEX(KIND=8)                  :: zener
-      real(8)                            :: Z, nomin, denom, E_B, tresh, &
+      real(kind=DP)                            :: Z, nomin, denom, E_B, tresh, &
                                             maxexp, norm, ge
-      real(8)                            :: fsign, Eground, Zterm
-      real(8), allocatable               :: E_A(:), ummss(:, :), occ(:), &
+      real(kind=DP)                            :: fsign, Eground, Zterm
+      real(kind=DP), allocatable               :: E_A(:), ummss(:, :), occ(:), &
                                             docc(:), ener(:)
       integer, allocatable               :: nground(:)
       INTEGER, PARAMETER                 :: numexp = 650
@@ -659,11 +659,11 @@
       RETURN
    end subroutine
 
-   real(8) function dot_product__(x, y)
+   real(kind=DP) function dot_product__(x, y)
 
       implicit none
 
-      real(8) :: x(:), y(:)
+      real(kind=DP) :: x(:), y(:)
 
       dot_product__ = sum(x*y)
    end function

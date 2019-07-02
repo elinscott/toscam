@@ -12,14 +12,18 @@ module genvar
 
    CHARACTER(LEN=100)                       :: LOGfile ! LOG FILE NAME
 
+   integer, parameter                       :: SP = kind(1.0)    ! single precision type
+   integer, parameter                       :: DP = kind(1.0d0)  ! double precision type
+   integer, parameter                       :: DDP = 16          ! quad precision type
+
    integer                                  :: alternate_display_count = 0, alternate_display_cycle = 5
    logical                                  :: flag_alternate_display = .false., flag_introduce_only_noise_in_minimization = .false.
-   logical                                  :: force_no_spline_plots = .false.
+   logical                                   :: force_no_spline_plots = .false.
    integer(4), parameter                     :: int1 = 0
    integer(8), parameter                     :: int2 = 0
-   real(8), parameter                        :: real1 = 0.d0
+   real(kind=DP), parameter                  :: real1 = 0.d0
    real(16), parameter                       :: real2 = 0._16
-   complex(8), parameter                     :: comp1 = 0.d0
+   complex(kind=DP), parameter                     :: comp1 = 0.d0
    complex(16), parameter                    :: comp2 = 0._16
 
    integer, parameter                        :: wp = kind(0d0)
@@ -29,13 +33,13 @@ module genvar
    integer, parameter                        :: long_k = kind(1234567891)
 
    integer                                  :: indepLink
-   real(8), parameter                        :: errinout = 0.0001d0
+   real(kind=DP), parameter                        :: errinout = 0.0001d0
 
-   real(4), parameter                        :: pir = 3.14159265358979323846264338327950288419716939937510E+00
-   real(8), parameter                        :: pi = 3.14159265358979323846264338327950288419716939937510d0
+   real(kind=SP), parameter                        :: pir = 3.14159265358979323846264338327950288419716939937510E+00
+   real(kind=DP), parameter                  :: pi = 3.14159265358979323846264338327950288419716939937510d0
    real(16), parameter                       :: piq = 3.14159265358979323846264338327950288419716939937510_16
 
-   real(8), parameter                        :: gamma_euler = 0.57721566490153286060d0  !Euler s constant
+   real(kind=DP), parameter                        :: gamma_euler = 0.57721566490153286060d0  !Euler s constant
    logical                                  :: flag_introduce_noise_in_minimization = .false., no_mpi = .false.
    logical                                  :: messages = .false., messages2 = .false.
    logical                                  :: messages3 = .false., messages4 = .false.
@@ -52,26 +56,26 @@ module genvar
    logical                                  :: flag_use_invmat_jordan = .false., flag_use_invmat_jordan_real = .false.
 
    integer                                  :: MAX_INT = huge(1)
-   real(8), parameter                        :: MAX_REAL = huge(1.d0)
-   real(8), parameter                        :: MAX_EXP = 700.d0
-   real(8), parameter                        :: MIN_EXP = -700.d0
+   real(kind=DP), parameter                        :: MAX_REAL = huge(1.d0)
+   real(kind=DP), parameter                        :: MAX_EXP = 700.d0
+   real(kind=DP), parameter                        :: MIN_EXP = -700.d0
    real(16), parameter                       :: MAX_EXP_QUAD = 11000.d0
    real(16), parameter                       :: MIN_EXP_QUAD = -11000.d0
-   real(8), parameter                        :: MAX_EXP_R = 81.d0
-   real(8), parameter                        :: MIN_EXP_R = -81.d0
-   real(8), parameter                        :: error = epsilon(1.d0)*100.d0
-   real(8), parameter                        :: epsilonr = epsilon(1.d0), epsilonq = 1.d-30
-   real(8), parameter                        :: euler_r = 2.71828182845904523536028747135266249&
+   real(kind=DP), parameter                        :: MAX_EXP_R = 81.d0
+   real(kind=DP), parameter                        :: MIN_EXP_R = -81.d0
+   real(kind=DP), parameter                        :: error = epsilon(1.d0)*100.d0
+   real(kind=DP), parameter                        :: epsilonr = epsilon(1.d0), epsilonq = 1.d-30
+   real(kind=DP), parameter                        :: euler_r = 2.71828182845904523536028747135266249&
                                                    &77572470936999595749669676277240766303535d0
    real(16), parameter                       :: euler_q = 2.71828182845904523536028747135266249&
                                                    &77572470936999595749669676277240766303535_16
    integer, parameter                        :: master = 0
-   real(8)                                  :: ran_tab(0:10000)
+   real(kind=DP)                                  :: ran_tab(0:10000)
    integer                                  :: iseed = 41845213
    logical                                  :: testing = .false.
    logical                                  :: MPIseparate = .false.
-   complex(8), parameter                     :: imi = CMPLX(0.d0, 1.0d0, 8)
-   complex(8), parameter                     :: jimi = CMPLX(-0.5d0, 0.5d0*SQRT(3.d0), 8)
+   complex(kind=DP), parameter                     :: imi = CMPLX(0.d0, 1.0d0, 8)
+   complex(kind=DP), parameter                     :: jimi = CMPLX(-0.5d0, 0.5d0*SQRT(3.d0), 8)
 
    INTEGER, PARAMETER                 :: iwprint = 47         ! arbitrary frequency (to print debug)
    CHARACTER(LEN=1), DIMENSION(2), PARAMETER ::     pm = (/"+", "-"/)
@@ -86,9 +90,6 @@ module genvar
 
 !******************************************************************
 
-   INTEGER, PARAMETER                 :: DP = kind(1.0d0)  ! "double" precision
-   INTEGER, PARAMETER                 :: DDP = 16          ! "quad"   precision
-   INTEGER, PARAMETER                 :: SP = KIND(1.0)    ! "single" precision
 
    REAL(DP), PARAMETER                 :: tiny_ = 1.D-10
    REAL(DP), PARAMETER                 :: huge_ = 1.D+10

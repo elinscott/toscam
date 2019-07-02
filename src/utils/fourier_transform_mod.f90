@@ -61,13 +61,13 @@ module fourier_transform_mod
 !         integer,parameter:: rsize=1024
 !         integer kkkk
 !         integer i,j,k,ijk,isign
-!         real(8),allocatable:: x(:)
+!         real(kind=DP),allocatable:: x(:)
 !         integer, allocatable:: index(:)
-!         complex(8), allocatable:: a(:,:)
-!         complex(8) tmp
-!         complex(8) factor
-!         real(8) gen,fft1,fft2,trans,totf,fact
-!         real(8) t0,t1,t2,t3,t4,t5
+!         complex(kind=DP), allocatable:: a(:,:)
+!         complex(kind=DP) tmp
+!         complex(kind=DP) factor
+!         real(kind=DP) gen,fft1,fft2,trans,totf,fact
+!         real(kind=DP) t0,t1,t2,t3,t4,t5
 !         integer OMP_GET_MAX_THREADS
 !
 !         factor=rsize
@@ -161,8 +161,8 @@ module fourier_transform_mod
 !       subroutine fourier_transform_1__(data,nn,isign)
 !       implicit none
 !       integer    :: j,nn,isign,i
-!       complex(8) :: data(:)
-!       real(8)    :: data_(2*nn)
+!       complex(kind=DP) :: data(:)
+!       real(kind=DP)    :: data_(2*nn)
 !        if(size(data)/=nn) stop 'error fourier transform sizes do not match'
 !        do i=1,nn
 !         data_(2*i-1)=real(data(i))
@@ -179,9 +179,9 @@ module fourier_transform_mod
 !       subroutine fourier_transform_1_(data,nn,isign)
 !       implicit none
 !       integer            :: i,j,isign,nn,n,m,mmax,istep
-!       real(8), parameter :: two_pi = 2.d0*pi
-!       real(8)            :: wr,wi,wpr,wpi,wtemp,theta,tempr,tempi
-!       real(8)            :: data(2*nn)
+!       real(kind=DP), parameter :: two_pi = 2.d0*pi
+!       real(kind=DP)            :: wr,wi,wpr,wpi,wtemp,theta,tempr,tempi
+!       real(kind=DP)            :: data(2*nn)
 !       n=2*nn
 !       j=1
 !       do 11 i=1,n,2

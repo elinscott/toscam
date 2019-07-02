@@ -1,17 +1,18 @@
 program projectorback
 
+   use genvar, only: DP
+   use matrix, only: write_array
    use strings, only: replace_in_string, string, assignment(=)
    use StringManip, only: StrInt2, toString
-   use matrix, only: write_array
 
    implicit none
 
    integer                :: kk_, i, j, k, l, pub_dmft_points
-   real(8)                :: mmu, ttemp
+   real(kind=DP)                :: mmu, ttemp
    integer                :: num, len__, status__, paramagnetic
    character(200)         :: value(2000)
    character(200)         :: filename
-   complex(8), allocatable :: green_2(:, :), green_(:, :, :), green_temp(:, :)
+   complex(kind=DP), allocatable :: green_2(:, :), green_(:, :, :), green_temp(:, :)
    type(string)           :: cc_
    logical, allocatable    :: mask_proj(:)
    integer                :: nproj

@@ -1,8 +1,9 @@
 program readoverlap
+   use genvar, only: DP
    use matrix
    use linalg
    implicit none
-   real(8), allocatable :: overlap(:, :), overlap_inv(:, :)
+   real(kind=DP), allocatable :: overlap(:, :), overlap_inv(:, :)
    integer             :: i1, i2, i, j, k, l, m, n, n1, n2, block, nblock
 
    write (*, *) 'ENTER SIZE OF OVERLAP MATRIX (n1,n2) :'

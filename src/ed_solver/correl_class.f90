@@ -64,7 +64,7 @@ contains
       TYPE(correl_type)             :: CORREL
       TYPE(masked_cplx_matrix_type) :: corr
       INTEGER                       :: iw
-      complex(8), optional          :: extmat(:, :, :), vecext(:, :)
+      complex(kind=DP), optional          :: extmat(:, :, :), vecext(:, :)
 
       IF (.NOT. ASSOCIATED(CORREL%vec)) ALLOCATE (CORREL%vec(CORREL%MM%MASK%nind, &
                                                              CORREL%Nw))
@@ -458,7 +458,7 @@ contains
       implicit none
 
       TYPE(correl_type) :: G
-      real(8)           :: beta
+      real(kind=DP)           :: beta
       INTEGER           :: i1, i2, iw, iw1, iw2, iw_, j, Nw
       COMPLEX(DP)      :: chi0(size(G%freq%vec)), &
                            gg(-size(G%freq%vec):size(G%freq%vec))

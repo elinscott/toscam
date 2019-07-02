@@ -1,4 +1,5 @@
 program summary_script
+   use genvar, only: DP
    use linalg
    use StringManip, only: StrInt2, toString
    use mesh
@@ -7,8 +8,8 @@ program summary_script
    implicit none
 
    integer                   :: i, j, k, l, kk
-   real(8)                   :: beta, dd1, dd2
-   real(8), allocatable       :: Rhomat(:), Zmat(:), Nmat(:), xt(:), err(:)
+   real(kind=DP)                   :: beta, dd1, dd2
+   real(kind=DP), allocatable       :: Rhomat(:), Zmat(:), Nmat(:), xt(:), err(:)
    integer, allocatable       :: histoRho(:), histoZ(:), histoN(:)
    integer                   :: nn, ll, nbin
    character(300)            :: value(100)

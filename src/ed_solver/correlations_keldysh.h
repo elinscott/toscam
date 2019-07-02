@@ -26,15 +26,15 @@
                                                  isector2, ieigen2
       integer                                 :: pmi, up1, do1, up2, do2, sz1, &
                                                  sz2
-      real(8)                                 :: time_mesh(keldysh_n), &
+      real(kind=DP)                                 :: time_mesh(keldysh_n), &
                                                  n_versus_t(keldysh_n, 2)
-      real(8), allocatable                    :: n_v_t_matrix(:, :, :, :)
+      real(kind=DP), allocatable                    :: n_v_t_matrix(:, :, :, :)
       TYPE(eigensectorlist_type), allocatable :: phi(:), psi(:, :, :), tmp(:)
       TYPE(eigensectorlist_type)              :: tmp0
       LOGICAL, allocatable                    :: ORBMASKvec(:)
       TYPE(eigensector_type)                  :: Apm_es
       TYPE(sector_type)                       :: Asec
-      complex(8), allocatable                 :: green_lesser(:, :, :, :, :), &
+      complex(kind=DP), allocatable                 :: green_lesser(:, :, :, :, :), &
                                                  green_bigger(:, :, :, :, :), &
                                                  green_ret(:, :, :, :, :), &
                                                  green_ad(:, :, :, :, :)

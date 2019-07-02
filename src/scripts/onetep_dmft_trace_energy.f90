@@ -1,6 +1,9 @@
 program energies
+   
+   use genvar, only: DP
+
    implicit none
-   real(8) :: tmp, energy(1000), beta
+   real(kind=DP) :: tmp, energy(1000), beta
    integer :: i, j, k
 
    open (unit=30, file='energies.txt')

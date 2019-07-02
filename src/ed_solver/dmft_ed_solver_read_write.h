@@ -103,7 +103,7 @@
       integer            :: ff, ii, nmatsu_frequ, FLAGIMP, nstep, Nc
       type(namelist_set) :: nm
       logical            :: target
-      real(8)            :: targetobs, obserror, paramerror
+      real(kind=DP)            :: targetobs, obserror, paramerror
       character(20)      :: fileb, filec
 
       ii = FLAGIMP

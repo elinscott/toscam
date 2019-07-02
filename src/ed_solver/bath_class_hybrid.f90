@@ -8,7 +8,8 @@ MODULE bath_class_hybrid
    ! USE minimization_wrapping
    ! use stringmanip
    use correl_class, only: correl_type
-   use bath_class, only: bath_type
+   use bath_class,   only: bath_type
+   use genvar,       only: DP
 
    IMPLICIT NONE
 
@@ -26,7 +27,7 @@ contains
       implicit none
 
       integer :: n, i, j, k
-      real(8) :: vec(n*(n + 1)/2), fill_mat_from_vector(n, n)
+      real(kind=DP) :: vec(n*(n + 1)/2), fill_mat_from_vector(n, n)
 
       k = 0
       do i = 1, n

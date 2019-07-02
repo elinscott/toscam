@@ -4,6 +4,7 @@ module dmft_solver_ed
    use bath_class, only: bath_type
    use impurity_class, only: impurity_type
    use eigen_sector_class, only: eigensectorlist_type
+   use genvar, only: DP
 
    implicit none
 
@@ -25,8 +26,8 @@ module dmft_solver_ed
       LOGICAL :: ifdiag, run
       INTEGER :: ndeg
       INTEGER :: n
-      COMPLEX(KIND=8), pointer :: Hn(:, :)
-      REAL(KIND=8), pointer :: En(:)
+      COMPLEX(KIND=DP), pointer :: Hn(:, :)
+      REAL(KIND=DP), pointer :: En(:)
       INTEGER, pointer  :: st_n(:)
       INTEGER, pointer  :: narr(:)
    ENDTYPE h1occup
@@ -71,19 +72,19 @@ contains
 
       implicit none
 
-      complex(8)        :: g_out(:, :, :), gw(:, :, :), self_out(:, :, :), &
+      complex(kind=DP)        :: g_out(:, :, :), gw(:, :, :), self_out(:, :, :), &
                            hybrid_in(:, :, :), sigw(:, :, :), sigww(size(sigw, 1), &
                                                                     size(sigw, 2), size(sigw, 3))
-      complex(8)        :: gw_(size(gw, 1), size(gw, 2), size(gw, 3)), &
+      complex(kind=DP)        :: gw_(size(gw, 1), size(gw, 2), size(gw, 3)), &
                            sigw_(size(sigw, 1), size(sigw, 2), size(sigw, 3))
       integer           :: i, j, a1, a2, isector, iter_, nbathparam_in, &
                            ncpt_tot_back, ncpt_approx_tot_back
       integer, optional :: nbathparam_
-      real(8), optional :: param_input_(nbathparam_in), &
+      real(kind=DP), optional :: param_input_(nbathparam_in), &
                            param_output_(nbathparam_in), Jhund_
-      complex(8)        :: Eimp(:, :), spm_(:, :, :), corhop_(:, :, :)
-      real(8), optional :: Jhund_matrix(size(Eimp, 1)/2, size(Eimp, 1)/2)
-      real(8)           :: rdens(:), mmu, frequ(:), tot_rep
+      complex(kind=DP)        :: Eimp(:, :), spm_(:, :, :), corhop_(:, :, :)
+      real(kind=DP), optional :: Jhund_matrix(size(Eimp, 1)/2, size(Eimp, 1)/2)
+      real(kind=DP)           :: rdens(:), mmu, frequ(:), tot_rep
       type(hamiltonian) :: Himp
       type(web)         :: impurity_
       logical           :: flip_input_output, para_state_, restarted_, &
@@ -93,7 +94,7 @@ contains
                            imp_causality
       logical, optional :: use_input_delta_instead_of_fit
       integer, optional :: freeze_poles_delta_iter_, freeze_poles_delta_niter_
-      real(8)           :: bandes(size(gw, 1), size(frequ))
+      real(kind=DP)           :: bandes(size(gw, 1), size(frequ))
 
       if (2*impurity_%N /= size(g_out, 1)) then
          write (*, *) 'size of impurity does not match size of impurity green &
@@ -449,9 +450,9 @@ contains
 
       implicit none
 
-      complex(8) :: vec(:), sig(:, :, :), green(size(T_cpt, 1), size(T_cpt, 2)), &
+      complex(kind=DP) :: vec(:), sig(:, :, :), green(size(T_cpt, 1), size(T_cpt, 2)), &
                     gg(size(vec), size(sig, 1), size(sig, 2))
-      complex(8) :: g_out(:, :, :)
+      complex(kind=DP) :: g_out(:, :, :)
       integer    :: i, j, k, l, nn
       logical    :: imaginary
 
@@ -495,7 +496,7 @@ contains
 
       implicit none
 
-      complex(8) :: mat(:, :), flip_matrix(size(mat, 1), size(mat, 2))
+      complex(kind=DP) :: mat(:, :), flip_matrix(size(mat, 1), size(mat, 2))
       integer    :: i, j, a1, a2
       logical    :: flip_input_output
 
@@ -517,7 +518,7 @@ contains
 
       implicit none
 
-      complex(8) :: mat(:, :), flip_matrix_Eimp(size(mat, 1), size(mat, 2))
+      complex(kind=DP) :: mat(:, :), flip_matrix_Eimp(size(mat, 1), size(mat, 2))
       integer    :: i, j, a1, a2, Nc
       logical    :: flip_input_output
 
@@ -552,7 +553,7 @@ contains
 
       implicit none
 
-      real(8)                 :: mmu, bbeta, rdelta_width, wwmin, wmax, &
+      real(kind=DP)                 :: mmu, bbeta, rdelta_width, wwmin, wmax, &
                                  rdelta_frequ_eta1_, rdelta_frequ_T_, &
                                  rdelta_frequ_w0_
       type(hamiltonian)       :: Himp
@@ -562,30 +563,30 @@ contains
                                  FLAG_AVERAGE_G, FLAG_ORDER_TYPE
       logical                 :: retarded, para_state_, supersc_state_, &
                                  compute_all
-      real(8)                 :: tot_rep, frequ_min, frequ_max, dU1, ttemp, &
+      real(kind=DP)                 :: tot_rep, frequ_min, frequ_max, dU1, ttemp, &
                                  JJhund
-      real(8), allocatable    :: UUmatrix_loc(:, :), JJmatrix_loc(:, :), rdens(:)
+      real(kind=DP), allocatable    :: UUmatrix_loc(:, :), JJmatrix_loc(:, :), rdens(:)
       integer                 :: nreal_frequ
       integer                 :: iter_, cluster_problem_size, j, k
-      real(8), allocatable    :: frequr(:), frequi(:)
-      complex(8), allocatable :: tempmat(:, :)
-      complex(8), allocatable :: spm_(:, :, :), corhop_(:, :, :), &
+      real(kind=DP), allocatable    :: frequr(:), frequi(:)
+      complex(kind=DP), allocatable :: tempmat(:, :)
+      complex(kind=DP), allocatable :: spm_(:, :, :), corhop_(:, :, :), &
                                  hybrid_in(:, :, :), Eimp(:, :), &
                                  hybrid_in_long(:, :, :)
-      complex(8), allocatable :: self_out(:, :, :), sigw(:, :, :), gw(:, :, :), &
+      complex(kind=DP), allocatable :: self_out(:, :, :), sigw(:, :, :), gw(:, :, :), &
                                  g_out(:, :, :)
-      real(8), allocatable    :: temp(:), Eimp_(:, :), bathparams(:), &
+      real(kind=DP), allocatable    :: temp(:), Eimp_(:, :), bathparams(:), &
                                  bathparams_output(:)
       integer(4)              :: my_seed, my_iter_dmft, l
-      complex(8)              :: ccc
+      complex(kind=DP)              :: ccc
       logical                 :: nohole, fit_green, checkit, cluster_full, &
                                  check, use_input_delta, no_cdw
-      real(8)                 :: ww, ddd, aa
+      real(kind=DP)                 :: ww, ddd, aa
       integer(4)              :: iw
-      real(8)                 :: reg, a(3), get, sol(2)
+      real(kind=DP)                 :: reg, a(3), get, sol(2)
       logical, parameter      :: init_every_time = .true.
       logical                 :: first_time
-      real(8)                 :: dummy, dummy_tot
+      real(kind=DP)                 :: dummy, dummy_tot
 
       open (unit=10001, file='PARAMS')
       read (10001, *) cluster_problem_size
@@ -1216,17 +1217,17 @@ contains
 
       implicit none
 
-      real(8)           :: mmu, bbeta, rdelta_width, wmin, wmax, wwmin
+      real(kind=DP)           :: mmu, bbeta, rdelta_width, wmin, wmax, wwmin
       type(hamiltonian) :: Himp
       type(web)         :: impurity_
       integer           :: nmatsu_frequ, FLAGIMP, nstep, Nww, bath_param_ed
       logical           :: check, para_state_, supersc_state_
-      real(8)           :: rdelta_frequ_eta1_, rdelta_frequ_T_, rdelta_frequ_w0_
+      real(kind=DP)           :: rdelta_frequ_eta1_, rdelta_frequ_T_, rdelta_frequ_w0_
       logical, optional :: init, fit_green_func_and_not_hybrid_, &
                            donot_compute_holepart_
       integer, optional :: average_G_
       integer, optional :: UUmatrix_in_size
-      real(8), optional :: UUmatrix_in(impurity_%N, impurity_%N)
+      real(kind=DP), optional :: UUmatrix_in(impurity_%N, impurity_%N)
       integer           :: chan, g1, g2, g3, g4
 
       use_precomputed_slater_matrix = .false.

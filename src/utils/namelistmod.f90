@@ -26,11 +26,11 @@ module namelistmod
       character(200)         ::  a, a0
       logical                ::  l, l0
       integer                ::  i, i0
-      real(8)                ::  r, r0
+      real(kind=DP)                ::  r, r0
       integer(4), allocatable ::  ivec(:), ivec0(:)
-      real(8), allocatable    ::  v(:), v0(:)
-      complex(8), allocatable ::  vc(:), vc0(:)
-      complex(8)             ::  c, c0
+      real(kind=DP), allocatable    ::  v(:), v0(:)
+      complex(kind=DP), allocatable ::  vc(:), vc0(:)
+      complex(kind=DP)             ::  c, c0
       character(400)         ::  comment, label
    END TYPE
 
@@ -234,10 +234,10 @@ contains
       character(*)      :: label
       logical            :: lll
       integer            :: iii, jjj, jjj0
-      real(8)            :: rrr
-      complex(8)         :: ccc
-      real(8)            :: vec(1000), ttt
-      complex(8)         :: vecc(1000)
+      real(kind=DP)            :: rrr
+      complex(kind=DP)         :: ccc
+      real(kind=DP)            :: vec(1000), ttt
+      complex(kind=DP)         :: vecc(1000)
       integer(4)         :: ivec(1000), ss, iss, ok, ok2
 
       ok = 0; ok2 = 0
@@ -534,7 +534,7 @@ contains
 !
 ! subroutine get_infor(nm,i)
 !  TYPE(namelist_set) :: nm
-!  real(8)            :: i
+!  real(kind=DP)            :: i
 !  integer            :: ii
 !  integer(8)         :: j
 !  if(rank/=0) return
@@ -561,7 +561,7 @@ contains
 !
 ! subroutine get_infoc(nm,i)
 !  TYPE(namelist_set) :: nm
-!  complex(8)         :: i
+!  complex(kind=DP)         :: i
 !  integer            :: ii
 !  integer(8)         :: j
 !  if(rank/=0) return
@@ -677,7 +677,7 @@ contains
 
    subroutine putel_in_namelist_r(nm, i, label, i0, comment)
       TYPE(namelist_set) :: nm
-      real(8)            :: i, i0
+      real(kind=DP)            :: i, i0
       character(*)      :: comment, label
       if (nm%cc > nm%nel) stop 'error, namelist is full'
       nm%cc = nm%cc + 1
@@ -703,7 +703,7 @@ contains
 
    subroutine putel_in_namelist_rvec(nm, i, label, i0, comment)
       TYPE(namelist_set) :: nm
-      real(8)            :: i(:), i0(:)
+      real(kind=DP)            :: i(:), i0(:)
       character(*)      :: comment, label
       if (nm%cc > nm%nel) stop 'error, namelist is full'
       if (size(i) /= size(i0)) stop 'error in namelist, vectorial elements: size and size of default values are different'
@@ -765,7 +765,7 @@ contains
 
    subroutine putel_in_namelist_cvec(nm, i, label, i0, comment)
       TYPE(namelist_set) :: nm
-      complex(8)         :: i(:), i0(:)
+      complex(kind=DP)         :: i(:), i0(:)
       character(*)      :: comment, label
       if (nm%cc > nm%nel) stop 'error, namelist is full'
       if (size(i) /= size(i0)) stop 'error in namelist, vectorial elements: size and size of default values are different'
@@ -823,7 +823,7 @@ contains
 
    subroutine putel_in_namelist_rr(nm, i, ib, label, labelb, i0, i0b, comment)
       TYPE(namelist_set) :: nm
-      real(8)            :: i, i0, ib, i0b
+      real(kind=DP)            :: i, i0, ib, i0b
       character(*)      :: comment, label, labelb
 
       if (nm%cc > nm%nel) stop 'error, namelist is full'
@@ -861,7 +861,7 @@ contains
 
    subroutine putel_in_namelist_c(nm, i, label, i0, comment)
       TYPE(namelist_set) :: nm
-      complex(8)         :: i, i0
+      complex(kind=DP)         :: i, i0
       character(*)      :: comment, label
       if (nm%cc > nm%nel) stop 'error, namelist is full'
       nm%cc = nm%cc + 1

@@ -1,5 +1,5 @@
 program units
-   real(8) :: dd
+   real(kind=DP) :: dd
 
    dd = 1.d0
 

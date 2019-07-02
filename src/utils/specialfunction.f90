@@ -43,9 +43,9 @@ contains
 ! !********************************************
 ! !********************************************
 !
-!   complex(8) Function Inverse_Hilbert_Transform_Bethe_Lattice(zeta)
+!   complex(kind=DP) Function Inverse_Hilbert_Transform_Bethe_Lattice(zeta)
 !   implicit none
-!   complex(8) :: zeta,s
+!   complex(kind=DP) :: zeta,s
 !    s = sqrt(zeta**2 - 1.0)
 !    Inverse_Hilbert_Transform_Bethe_Lattice = 2.0/(zeta + sign(1.d0,aimag(zeta))*sign(1.d0,aimag(s))*s)
 !   end function
@@ -92,9 +92,9 @@ contains
 !********************************************
 !********************************************
 !
-!       elemental real(8) function delta_chron(rr,rr2)
+!       elemental real(kind=DP) function delta_chron(rr,rr2)
 !       implicit none
-!       real(8),intent(in) :: rr,rr2
+!       real(kind=DP),intent(in) :: rr,rr2
 !        delta_chron=0.d0
 !        if(abs(rr-rr2)<epsilonr)then
 !         delta_chron=1.d0
@@ -110,9 +110,9 @@ contains
 ! !********************************************
 ! !********************************************
 !
-!       elemental real(8) function lorentzien_(rr,a,delta)
+!       elemental real(kind=DP) function lorentzien_(rr,a,delta)
 !       implicit none
-!       real(8),intent(in) :: rr,delta,a
+!       real(kind=DP),intent(in) :: rr,delta,a
 !        lorentzien_= 1.d0 / ( (rr-a)**2 + delta**2 )
 !       end function
 !
@@ -125,9 +125,9 @@ contains
 ! !********************************************
 ! !********************************************
 !
-!       elemental real(8) function theta_func_(rr,rr2)
+!       elemental real(kind=DP) function theta_func_(rr,rr2)
 !       implicit none
-!       real(8),intent(in) :: rr,rr2
+!       real(kind=DP),intent(in) :: rr,rr2
 !        theta_func_=0.d0
 !        if(rr<rr2)then
 !         theta_func_=1.d0
@@ -143,9 +143,9 @@ contains
 !********************************************
 !********************************************
 
-   elemental real(8) function step_func_(rr)
+   elemental real(kind=DP) function step_func_(rr)
       implicit none
-      real(8), intent(in) :: rr
+      real(kind=DP), intent(in) :: rr
       if (rr > 0.d0) then
          step_func_ = 1.d0
       else
@@ -162,10 +162,10 @@ contains
 !********************************************
 !********************************************
 !
-!       elemental real(8) function fermi_dirac_(rr,mu,T)
+!       elemental real(kind=DP) function fermi_dirac_(rr,mu,T)
 !       implicit none
-!       real(8),intent(in) :: rr,T,mu
-!       real(8)            :: aa
+!       real(kind=DP),intent(in) :: rr,T,mu
+!       real(kind=DP)            :: aa
 !         aa=(rr-mu)/T
 !         if(aa<-100.d0) then
 !          fermi_dirac_=1.d0
@@ -188,10 +188,10 @@ contains
 ! !********************************************
 ! !********************************************
 !
-!       elemental real(8) function derivative_fermi_dirac_(rr,mu,T)
+!       elemental real(kind=DP) function derivative_fermi_dirac_(rr,mu,T)
 !       implicit none
-!       real(8),intent(in) :: rr,T,mu
-!       real(8)            :: aa
+!       real(kind=DP),intent(in) :: rr,T,mu
+!       real(kind=DP)            :: aa
 !         aa =(rr-mu)/T/2.d0
 !         if(abs(aa)>200.d0)then
 !          derivative_fermi_dirac_=0.d0
@@ -209,9 +209,9 @@ contains
 ! !********************************************
 ! !********************************************
 !
-!       elemental real(8) function bose_einstein_(rr,mu,T)
+!       elemental real(kind=DP) function bose_einstein_(rr,mu,T)
 !       implicit none
-!       real(8),intent(in) :: rr,T,mu
+!       real(kind=DP),intent(in) :: rr,T,mu
 !         bose_einstein_= 1.d0 / ( DEXPc((rr-mu)/T) -1.d0 )
 !       end function
 !
@@ -224,8 +224,8 @@ contains
 ! !********************************************
 ! !********************************************
 !
-!       real(8) FUNCTION FX(T)
-!       real(8) T
+!       real(kind=DP) FUNCTION FX(T)
+!       real(kind=DP) T
 !       FX = SIN(T*5.0)
 !       RETURN
 !       END function
@@ -239,8 +239,8 @@ contains
 ! !********************************************
 ! !********************************************
 !
-!       real(8) FUNCTION FY(T)
-!       real(8) T
+!       real(kind=DP) FUNCTION FY(T)
+!       real(kind=DP) T
 !       FY = SIN(T*4.0)
 !       RETURN
 !       END function
@@ -455,7 +455,7 @@ contains
 ! !**********************************************
 ! !**********************************************
 !
-!   real(8) FUNCTION POT(X,Y)
+!   real(kind=DP) FUNCTION POT(X,Y)
 !      REAL X,Y
 !      REAL X2,Y2,XX,YY
 !      REAL AA1,AA2,AA3,AA4
@@ -477,11 +477,11 @@ contains
 !**********************************************
 !**********************************************
 
-   real(8) function iFactorial(j)
+   real(kind=DP) function iFactorial(j)
       IMPLICIT NONE
       INTEGER, intent(in) :: j
       INTEGER             :: i
-      real(8)             :: x
+      real(kind=DP)             :: x
       if (j < 0) print *, "iFactorial defined only for non-negative numbers!"
       x = 1
       iFactorial = x
@@ -500,11 +500,11 @@ contains
 !***************************************************
 !***************************************************
 
-   real(8) function dFactorial(x)
+   real(kind=DP) function dFactorial(x)
       IMPLICIT NONE
-      real(8), intent(in) :: x
-      real(8), PARAMETER :: spi2 = 0.8862269254527579
-      real(8) :: y, r
+      real(kind=DP), intent(in) :: x
+      real(kind=DP), PARAMETER :: spi2 = 0.8862269254527579
+      real(kind=DP) :: y, r
       r = 1
       y = x
       DO WHILE (y .gt. 1.0)
@@ -523,7 +523,7 @@ contains
 !***************************************************
 !***************************************************
 
-   real(8) function mone(i)
+   real(kind=DP) function mone(i)
       INTEGER, intent(in) :: i
       mone = 1 - 2*MOD(abs(i), 2)
       return
@@ -536,9 +536,9 @@ contains
 !***************************************************
 !***************************************************
 
-   real(8) function Delta__(j1, j2, j)
+   real(kind=DP) function Delta__(j1, j2, j)
       IMPLICIT NONE
-      real(8), intent(in) :: j1, j2, j
+      real(kind=DP), intent(in) :: j1, j2, j
       Delta__ = sqrt(dFactorial(j1 + j2 - j)*dFactorial(j1 - j2 + j)*dFactorial(-j1 + j2 + j)/dFactorial(j1 + j2 + j + 1))
       return
    END function
@@ -550,11 +550,11 @@ contains
 !***************************************************
 !***************************************************
 !
-! real(8) function ClebschG(j,m,j1,m1,j2,m2)
+! real(kind=DP) function ClebschG(j,m,j1,m1,j2,m2)
 !   IMPLICIT NONE
-!   real(8), intent(in) :: j,m,j1,m1,j2,m2
+!   real(kind=DP), intent(in) :: j,m,j1,m1,j2,m2
 !   INTEGER             :: tmin, tmax, t
-!   real(8)             :: sum, v1, v2
+!   real(kind=DP)             :: sum, v1, v2
 !
 !   ClebschG = 0
 !   IF (m1+m2 .NE. m) return
@@ -583,11 +583,11 @@ contains
 ! !***************************************************
 ! !***************************************************
 !
-! real(8) function f6j(j1, j2, j3, m1, m2, m3)
+! real(kind=DP) function f6j(j1, j2, j3, m1, m2, m3)
 !   IMPLICIT NONE
-!   real(8), intent(in) :: j1, j2, j3, m1, m2, m3
+!   real(kind=DP), intent(in) :: j1, j2, j3, m1, m2, m3
 !   INTEGER             :: tmin, tmax, t
-!   real(8)             :: sum, v1, v2
+!   real(kind=DP)             :: sum, v1, v2
 !   tmin = INT(max(max(max(j1+j2+j3,j1+m2+m3),m1+j2+m3),m1+m2+j3)+1d-14)
 !   tmax = INT(min(min(j1+j2+m1+m2,j1+j3+m1+m3),j2+j3+m2+m3)+1d-14)
 !   sum=0
@@ -613,11 +613,11 @@ contains
 !***************************************************
 !***************************************************
 
-   real(8) function f3j(j1, m1, j2, m2, j3, m3)
+   real(kind=DP) function f3j(j1, m1, j2, m2, j3, m3)
       IMPLICIT NONE
-      real(8), intent(in) :: j1, j2, j3, m1, m2, m3
+      real(kind=DP), intent(in) :: j1, j2, j3, m1, m2, m3
       INTEGER             :: tmin, tmax, t
-      real(8)             :: sum, v1, v2, dn
+      real(kind=DP)             :: sum, v1, v2, dn
       f3j = 0
       IF (abs(m1 + m2 + m3) .GT. 1e-10) return
       IF (abs(j1 - j2) - 1e-14 .GT. j3 .OR. j3 .GT. j1 + j2 + 1e-14) return
@@ -653,8 +653,8 @@ contains
 
    SUBROUTINE SlaterF(Fn, U, J)
       IMPLICIT NONE
-      real(8), intent(in)  :: U, J
-      real(8), intent(out) :: Fn(0:3, 0:3)
+      real(kind=DP), intent(in)  :: U, J
+      real(kind=DP), intent(out) :: Fn(0:3, 0:3)
 
       Fn = 0
       ! F0 for s-electrons
@@ -682,10 +682,10 @@ contains
 
    SUBROUTINE cmp_all_Gaunt(gck)
       IMPLICIT NONE
-      real(8), intent(out) :: gck(0:3, -3:3, -3:3, 0:3)
-      real(8), parameter   :: pi = 3.14159266
+      real(kind=DP), intent(out) :: gck(0:3, -3:3, -3:3, 0:3)
+      real(kind=DP), parameter   :: pi = 3.14159266
       INTEGER              :: m1, m2, k, l
-      real(8)              :: c
+      real(kind=DP)              :: c
       DO l = 0, 3
          DO m1 = -l, l
             DO m2 = -l, l
@@ -704,10 +704,10 @@ contains
 !***************************************************
 !***************************************************
 
-   real(8) function Gaunt(l1, m1, l2, m2, l3, m3)
+   real(kind=DP) function Gaunt(l1, m1, l2, m2, l3, m3)
       IMPLICIT NONE
       INTEGER, intent(in) :: l1, m1, l2, m2, l3, m3
-      real(8) :: l1_, l2_, l3_, mm1_, m2_, m3_, zero
+      real(kind=DP) :: l1_, l2_, l3_, mm1_, m2_, m3_, zero
       l1_ = l1; l2_ = l2; l3_ = l3
       mm1_ = -m1; m2_ = m2; m3_ = m3
       zero = 0
@@ -745,9 +745,9 @@ contains
 !  !*                                F90 Version By J-P Moreau.  *
 !  !**************************************************************
 !
-! real(8) Function FUNC_sincosInt(kind,t)
+! real(kind=DP) Function FUNC_sincosInt(kind,t)
 ! implicit none
-! real(8)  :: t
+! real(kind=DP)  :: t
 ! integer  :: kind
 !   if(kind==1) then
 !     if(dabs(t)<1.d-10) then
@@ -795,7 +795,7 @@ contains
 !
 ! Subroutine Integral_Simpson(kind, a, b, n, res)
 ! implicit none
-!   real(8) :: a,b,res, step,r
+!   real(kind=DP) :: a,b,res, step,r
 !   integer :: kind,n,i,j
 !
 !   step=(b-a)/2/n
@@ -820,11 +820,11 @@ contains
 ! !***************************************************
 ! !***************************************************
 !
-! real(8) Function sinintegral(x)
+! real(kind=DP) Function sinintegral(x)
 ! implicit none
-!   real(8)  :: x0, x
+!   real(kind=DP)  :: x0, x
 !   integer  :: nstep
-!   real(8)  :: res
+!   real(kind=DP)  :: res
 !
 !   x0=0.d0
 !   nstep=800    !this should ensure about 14 exact digits
@@ -847,11 +847,11 @@ contains
 ! !***************************************************
 ! !***************************************************
 !
-! complex(8) Function cosintegral(x)
+! complex(kind=DP) Function cosintegral(x)
 ! implicit none
-!   real(8) :: x0,x
+!   real(kind=DP) :: x0,x
 !   integer :: nstep
-!   real(8) :: res
+!   real(kind=DP) :: res
 !
 !   x0=0.d0
 !   nstep = 800   !this should ensure about 14 exact digits
@@ -1127,9 +1127,9 @@ contains
 ! !***************************************************
 ! !***************************************************
 !
-! complex(8) function expint(x)
+! complex(kind=DP) function expint(x)
 ! implicit none
-! real(8) :: x
+! real(kind=DP) :: x
 !  expint = gamma_euler + log(abs(x)) + x + x**2.d0/4.d0 + x**3.d0/18.d0 + x**4.d0/96.d0 + x**5.d0/600.d0
 ! end function
 !
@@ -1140,9 +1140,9 @@ contains
 ! !***************************************************
 ! !***************************************************
 !
-! complex(8) function ccosint(z)
+! complex(kind=DP) function ccosint(z)
 ! implicit none
-! complex(8) :: z
+! complex(kind=DP) :: z
 !  if(abs(real(z))>1.d-3) stop 'error ccosint only for pure imaginary number'
 !  ccosint = gamma_euler + Sign(1.d0,aimag(z))*imi*pi/2.d0 + log(abs(z)) - &
 !          &  z**2.d0/4.d0 + z**4.d0/96.d0 - z**6.d0/4320.d0 + z**8.d0/322560.d0 - z**10.d0/36288000.d0

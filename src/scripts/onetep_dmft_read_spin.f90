@@ -1,8 +1,10 @@
 program correctspin
 
+   use genvar, only: DP
+
    implicit none
 
-   real(8) :: mat(5, 5, 3), matb(5, 5, 3), a1, a2, a3, sz, mag
+   real(kind=DP) :: mat(5, 5, 3), matb(5, 5, 3), a1, a2, a3, sz, mag
    integer :: i, j
 
    call system(" cat logfile-p1 |grep -a -A 17 'SPIN CORRELATIONS' |tail -15 > spin_temp ")

@@ -17,7 +17,7 @@ module random
    public :: randomize_mat
    public :: randomize_matrix
 
-   real(8), parameter, private :: rerror = 1.d-3
+   real(kind=DP), parameter, private :: rerror = 1.d-3
    INTEGER, PRIVATE :: seedsize
    CHARACTER(LEN=5), private :: csize
    INTEGER, ALLOCATABLE, PRIVATE :: seed(:)
@@ -292,8 +292,8 @@ contains
 !   SUBROUTINE get_random_vec_by_seed_c(randvec,seedd)
 !   implicit none
 !
-!     complex(8),INTENT(INOUT) :: randvec(:)
-!     real(8)                  :: v1(size(randvec)),v2(size(randvec))
+!     complex(kind=DP),INTENT(INOUT) :: randvec(:)
+!     real(kind=DP)                  :: v1(size(randvec)),v2(size(randvec))
 !     INTEGER                  :: seedd,seedsize,i
 !     integer,allocatable      :: seed_(:)
 !
@@ -339,9 +339,9 @@ contains
 !         IMPLICIT NONE
 !         INTEGER,PARAMETER               :: K4B=SELECTED_INT_KIND(9)
 !         INTEGER(K4B),INTENT(INOUT)      :: DSEED
-!         real(8)                          :: GGUBFS
+!         real(kind=DP)                          :: GGUBFS
 !         INTEGER(K4B),PARAMETER          :: IA=16807,IM=2147483647,IQ=127773,IR=2836
-!         real(8),SAVE                     :: AM
+!         real(kind=DP),SAVE                     :: AM
 !         INTEGER(K4B),SAVE               :: IX=-1,IY=-1,K
 !         IF(DSEED<=0.OR.IY<0) THEN
 !            AM=NEAREST(1.0,-1.0)/IM
@@ -370,9 +370,9 @@ contains
 ! subroutine choose_among_c(array,isite)
 ! implicit none
 ! integer               :: isite,i,j,k,l,siz
-! complex(8),intent(in) :: array(:)
-! complex(8)            :: array2(size(array))
-! real(8)                :: tot,subtot,ran
+! complex(kind=DP),intent(in) :: array(:)
+! complex(kind=DP)            :: array2(size(array))
+! real(kind=DP)                :: tot,subtot,ran
 !
 !  siz=size(array)
 !  tot=real(sum(array))
@@ -400,7 +400,7 @@ contains
 ! !********************************************
 !
 ! subroutine random_vec_r(vec)
-! real(8)    :: vec(:)
+! real(kind=DP)    :: vec(:)
 ! integer    :: i,j
 ! do i=1,size(vec)
 !   vec(i)=dran_tab(i)
@@ -408,7 +408,7 @@ contains
 ! end subroutine
 !
 ! subroutine random_vec_c(vec)
-! complex(8) :: vec(:)
+! complex(kind=DP) :: vec(:)
 ! integer    :: i,j
 ! do i=1,size(vec)
 !   vec(i)=dran_tabc(i)
@@ -417,7 +417,7 @@ contains
 !
 ! function random_mat_c(n)
 ! integer    :: n
-! complex(8) :: random_mat_c(n,n)
+! complex(kind=DP) :: random_mat_c(n,n)
 ! integer    :: i,j
 ! do i=1,n
 !  do j=1,n
@@ -427,7 +427,7 @@ contains
 ! end function
 !
    subroutine randomize_mat_c(mat)
-      complex(8) :: mat(:, :)
+      complex(kind=DP) :: mat(:, :)
       integer    :: i, j
       do i = 1, size(mat, 1)
          do j = 1, size(mat, 2)
@@ -437,7 +437,7 @@ contains
    end subroutine
 
    subroutine randomize_mat_r(mat)
-      real(8)    :: mat(:, :)
+      real(kind=DP)    :: mat(:, :)
       integer    :: i, j
       do i = 1, size(mat, 1)
          do j = 1, size(mat, 2)
@@ -484,8 +484,8 @@ contains
 !
    function drand1()
       implicit none
-      real(8) :: drand1
-      real(4) :: r
+      real(kind=DP) :: drand1
+      real(kind=SP) :: r
       call random_number(r)
       drand1 = real(r, kind=DP)
    end function
@@ -494,8 +494,8 @@ contains
 
    function crand1()
       implicit none
-      complex(8) :: crand1
-      real(8)     :: rtemp1, rtemp2
+      complex(kind=DP) :: crand1
+      real(kind=DP)     :: rtemp1, rtemp2
       rtemp1 = (-1.d0 + 2.d0*drand1())
       rtemp2 = (-1.d0 + 2.d0*drand1())
       crand1 = CMPLX(rtemp1, rtemp2, kind=8)
@@ -599,7 +599,7 @@ contains
 !********************************************
 !********************************************
 !
-   real(8) function dran_tab(jjj)
+   real(kind=DP) function dran_tab(jjj)
       implicit none
       integer             :: jj
       integer, intent(in) :: jjj
@@ -610,7 +610,7 @@ contains
 
    !======!
 
-   complex(8) function dran_tabc(jjj)
+   complex(kind=DP) function dran_tabc(jjj)
       implicit none
       integer             :: jj
       integer, intent(in) :: jjj
@@ -674,8 +674,8 @@ contains
 !
 ! function RANVECSPHERE()
 ! implicit none
-! real(8)  :: chi1,chi2,chicarre
-! real(8)  :: RANVECSPHERE(3),r(3),norm
+! real(kind=DP)  :: chi1,chi2,chicarre
+! real(kind=DP)  :: RANVECSPHERE(3),r(3),norm
 ! integer :: j
 !
 !          20 CONTINUE
@@ -721,8 +721,8 @@ contains
 !
 ! function  RANVECCIRCLE()
 ! implicit none
-! real(8) RANVECCIRCLE(2),dr3,x1,x2,dnorm
-! real(8) ddCos,ddSin,v2,v1,dr1,dr2
+! real(kind=DP) RANVECCIRCLE(2),dr3,x1,x2,dnorm
+! real(kind=DP) ddCos,ddSin,v2,v1,dr1,dr2
 !           18 continue
 !           dr1=drand1()
 !           dr2=drand1()
@@ -745,7 +745,7 @@ contains
 !
 ! function gaussian2()
 ! implicit none
-! real(8) :: gaussian2,dr3,x1,x2
+! real(kind=DP) :: gaussian2,dr3,x1,x2
 !      19 continue
 !      x1=-1.d0+2.d0*drand1()
 !      x2=-1.d0+2.d0*drand1()
@@ -763,9 +763,9 @@ contains
 !
 ! function RAN(iseed)
 ! implicit none
-! real(8)           :: RAN
+! real(kind=DP)           :: RAN
 ! integer,optional ::iseed
-! real(4)          :: r
+! real(kind=SP)          :: r
 !   if(.not.(present(iseed)))then
 !     call random_number(r)
 !     RAN=real(r)
@@ -783,7 +783,7 @@ contains
 !********************************************
 !********************************************
 
-   real(8) FUNCTION gaussian()
+   real(kind=DP) FUNCTION gaussian()
       implicit none
 
       !-----------------------------------------------------------------------!
@@ -793,7 +793,7 @@ contains
       ! see Press et al., Numerical Recipes, Sec. 7.2.                        !
       !-----------------------------------------------------------------------!
 
-      real(8) :: R, X, Y
+      real(kind=DP) :: R, X, Y
 10    X = 2.d0*drand1() - 1.d0
       Y = 2.d0*drand1() - 1.d0
       R = X**2 + Y**2
@@ -811,7 +811,7 @@ contains
 ! subroutine randomvec (a,movfig)
 ! implicit none
 ! integer                          ::  j
-! real(8), dimension(3),intent(out) ::  a
+! real(kind=DP), dimension(3),intent(out) ::  a
 ! integer, intent(in)              ::  movfig
 !  a=0
 !  if(movfig==1)a(1) =  1
@@ -837,7 +837,7 @@ contains
 ! function random_gaussian_vec(n)
 ! implicit none
 ! integer :: n,i
-! real(8),dimension(n) :: random_gaussian_vec
+! real(kind=DP),dimension(n) :: random_gaussian_vec
 !  do i=1,n
 !   random_gaussian_vec(i)=gaussian()
 !  enddo
@@ -857,8 +857,8 @@ contains
 ! subroutine randomdir(hasard,a,movfig)
 ! implicit none
 ! integer                          ::  j
-! real(8),dimension(3),intent(out) ::  a
-! real(8),intent(in)               ::  hasard
+! real(kind=DP),dimension(3),intent(out) ::  a
+! real(kind=DP),intent(in)               ::  hasard
 ! integer ,intent(out)             ::  movfig
 !  a=0
 !  movfig=0
@@ -908,9 +908,9 @@ contains
 ! subroutine randomize_vec(A,amp,flag,realfluc,kk2)
 ! implicit none
 ! integer          :: i,j,k,l,m,siz1,siz2
-! complex(8)       :: A(:),ctemp
-! real(8)           :: maxA
-! real(8),optional  :: amp
+! complex(kind=DP)       :: A(:),ctemp
+! real(kind=DP)           :: maxA
+! real(kind=DP),optional  :: amp
 ! logical,optional :: flag,realfluc
 ! integer,optional :: kk2
 ! integer          :: kk
@@ -945,9 +945,9 @@ contains
    subroutine randomize_matrix_c(A, amp, flag, kk2)
       implicit none
       integer          :: i, j, siz1
-      complex(8)       :: A(:, :), ctemp
-      real(8)          :: maxA
-      real(8), optional :: amp
+      complex(kind=DP)       :: A(:, :), ctemp
+      real(kind=DP)          :: maxA
+      real(kind=DP), optional :: amp
       logical, optional :: flag
       integer          :: kk
       integer, optional :: kk2
@@ -985,8 +985,8 @@ contains
    subroutine randomize_matrix_r(A, amp, flag, kk2)
       implicit none
       integer          :: i, j, siz1
-      real(8)           :: A(:, :), rtemp, maxA
-      real(8), optional  :: amp
+      real(kind=DP)           :: A(:, :), rtemp, maxA
+      real(kind=DP), optional  :: amp
       logical, optional :: flag
       integer          :: kk
       integer, optional :: kk2

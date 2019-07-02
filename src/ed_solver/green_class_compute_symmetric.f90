@@ -43,7 +43,7 @@ contains
       TYPE(eigensector_type), INTENT(IN)     :: Apm_es(2)
       TYPE(eigen_type), POINTER :: Ai => NULL(), Aj => NULL()
       integer                   :: jj, isec_back, iisector, iii, ssz
-      complex(8)                :: csign, csign2, csign3
+      complex(kind=DP)                :: csign, csign2, csign3
 
       ssz = 0
 
@@ -163,7 +163,7 @@ contains
       TYPE(eigensector_type), INTENT(IN)    :: Apm_es(2), Bpm_es(2)
       LOGICAL, INTENT(IN)                   :: BA
       TYPE(eigen_type), POINTER :: Ai => NULL(), Bj => NULL()
-      complex(8)                :: csign, csign2, csign3
+      complex(kind=DP)                :: csign, csign2, csign3
       INTEGER                   :: isec_back, iisector, iii, ssz
 
       SELECT CASE (iph)

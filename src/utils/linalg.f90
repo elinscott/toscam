@@ -215,16 +215,18 @@ module linalg
    !---------------------------------------------------!
    interface
 !  logical function disnan(x)
-!   real(8) :: x
+!   real(kind=DP) :: x
 !  end function
       logical function disinf(x)
-         real(8) :: x
+         import :: DP
+         real(kind=DP) :: x
       end function
 !  logical function isnan(x)
-!   real(4) :: x
+!   real(kind=SP) :: x
 !  end function
       logical function isinf(x)
-         real(4) :: x
+         import :: SP
+         real(kind=SP) :: x
       end function
    end interface
    !---------------------------------------------------!
@@ -312,7 +314,7 @@ module linalg
    END INTERFACE
 !  !---------------------------------------------------!
 ! TYPE arrayr
-!  real(8),dimension(:),allocatable :: subarray
+!  real(kind=DP),dimension(:),allocatable :: subarray
 ! END TYPE
    !---------------------------------------------------!
    TYPE arrayi
@@ -320,13 +322,13 @@ module linalg
    END TYPE
    !---------------------------------------------------!
 ! TYPE arrayc
-!  complex(8),dimension(:),allocatable :: subarray
+!  complex(kind=DP),dimension(:),allocatable :: subarray
 ! END TYPE
 !  !---------------------------------------------------!
 !
 !
-!  real(8),  private  :: prec=1.d-5
-!  real(8)            :: vnull(3)=(/0.d0,0.d0,0.d0/)
+!  real(kind=DP),  private  :: prec=1.d-5
+!  real(kind=DP)            :: vnull(3)=(/0.d0,0.d0,0.d0/)
 
 contains
 
@@ -434,7 +436,7 @@ contains
    subroutine write_first_el__(n, v)
       implicit none
       integer    :: n
-      real(8) :: v(:)
+      real(kind=DP) :: v(:)
       write (*, *)
       write (*, *) '####################################'
       write (*, *) v(1:min(n, size(v)))
@@ -444,7 +446,7 @@ contains
    subroutine write_first_el_(n, v)
       implicit none
       integer    :: n
-      complex(8) :: v(:)
+      complex(kind=DP) :: v(:)
       write (*, *) '####################################'
       write (*, *) v(1:min(n, size(v)))
       write (*, *) '####################################'
@@ -560,12 +562,12 @@ contains
 !**************************************************************************
 !**************************************************************************
 
-               pure real(8) function floor_r(rr, i)
+               pure real(kind=DP) function floor_r(rr, i)
                   implicit none
                   integer, intent(in)  :: i
                   integer             :: ii
                   real(16)            :: dd, pp
-                  real(8), intent(in)  :: rr
+                  real(kind=DP), intent(in)  :: rr
                   dd = 1.d0
                   do ii = 1, i
                      dd = 10._16*dd
@@ -576,10 +578,10 @@ contains
 
                !-----------------------------!
 
-               pure complex(8) function floor_c(rr, i)
+               pure complex(kind=DP) function floor_c(rr, i)
                   implicit none
                   integer, intent(in)    :: i
-                  complex(8), intent(in) :: rr
+                  complex(kind=DP), intent(in) :: rr
                   floor_c = floor_r(real(rr), i) + imi*floor_r(aimag(rr), i)
                end function
 
@@ -611,7 +613,7 @@ contains
 !
 !   subroutine nambu_unpack(mat)
 !   implicit none
-!   complex(8) :: mat(:,:)
+!   complex(kind=DP) :: mat(:,:)
 !   integer    :: i,j,k,l,siz,si
 !
 !    siz = size(mat,1)
@@ -626,7 +628,7 @@ contains
 !
 !   subroutine nambu_pack__(mat)
 !   implicit none
-!   complex(8) :: mat(:,:)
+!   complex(kind=DP) :: mat(:,:)
 !   integer    :: i,j,k,l,siz,si
 !
 !    siz = size(mat,1)
@@ -641,7 +643,7 @@ contains
 !
 !   subroutine nambu_pack_(mat)
 !   implicit none
-!   complex(8) :: mat(:)
+!   complex(kind=DP) :: mat(:)
 !   integer    :: i,j,k,l,siz,si
 !    siz = size(mat,1); si  = siz/2
 !    mat(si+1:siz) = -mat(si+1:siz)
@@ -653,7 +655,7 @@ contains
 !**************************************************************************
 !**************************************************************************
 
-               real(8) function qsign(quad)
+               real(kind=DP) function qsign(quad)
                   implicit none
                   real(16) :: quad
                   if (quad > 0.) then
@@ -708,7 +710,7 @@ contains
 
                      subroutine zaxpy_(n, za, zx, incx, zy, incy)
                         implicit none
-                        complex(8)  ::  zx(n), zy(n), za
+                        complex(kind=DP)  ::  zx(n), zy(n), za
                         complex(16) ::  tt
                         integer     :: n, incx, incy, i, ix, iy
 
@@ -775,7 +777,7 @@ contains
                                  COMPLEX(8) FUNCTION ZDOT_(N, ZX, INCX, ZY, INCY)
                                     implicit none
                                     INTEGER        ::  INCX, INCY, N
-                                    complex(8)     ::  ZX(*), ZY(*)
+                                    complex(kind=DP)     ::  ZX(*), ZY(*)
                                     COMPLEX(16)    ::  tt
                                     INTEGER        ::  I, IX, IY
                                     ZDOT_ = 0.0d0
@@ -911,7 +913,7 @@ contains
 
                                        subroutine cells(cadran, aa, bb, cc)
                                           integer   :: cadran
-                                          real(8)   :: aa, bb, cc
+                                          real(kind=DP)   :: aa, bb, cc
 
                                           aa = 0.d0; bb = 0.d0; cc = 0.d0
 
@@ -990,8 +992,8 @@ contains
 !
 !  function realvec_to_complex(vec)
 !  implicit none
-!  real(8)    :: vec(:)
-!  complex(8) :: realvec_to_complex(size(vec)/2)
+!  real(kind=DP)    :: vec(:)
+!  complex(kind=DP) :: realvec_to_complex(size(vec)/2)
 !  integer    :: i
 !   if(mod(size(vec),2)/=0) stop 'error realvec_to_complex :: vec size s odd'
 !   do i=1,size(vec)/2
@@ -1003,8 +1005,8 @@ contains
 !
 !  function complex_to_realvec(vec)
 !  implicit none
-!  complex(8) :: vec(:)
-!  real(8)    :: complex_to_realvec(2*size(vec))
+!  complex(kind=DP) :: vec(:)
+!  real(kind=DP)    :: complex_to_realvec(2*size(vec))
 !  integer    :: i
 !    do i=1,size(vec)
 !      complex_to_realvec(2*i-1) =  real(vec(i))
@@ -1044,7 +1046,7 @@ contains
 !
 !  subroutine put_and_shift___(g,ii,xx)
 !  implicit none
-!  complex(8) :: g(:),xx
+!  complex(kind=DP) :: g(:),xx
 !  integer :: ii,i,j,k,l,siz
 !  siz=size(g)
 !  if(ii+1<=siz)then
@@ -1056,7 +1058,7 @@ contains
 !
 !  subroutine put_and_shift__(g,ii,xx)
 !  implicit none
-!  real(4) :: g(:),xx
+!  real(kind=SP) :: g(:),xx
 !  integer :: ii,i,j,k,l,siz
 !  siz=size(g)
 !  if(ii+1<=siz)then
@@ -1069,7 +1071,7 @@ contains
 !
 !  subroutine put_and_shift_(g,ii,xx)
 !  implicit none
-!  real(8) :: g(:),xx
+!  real(kind=DP) :: g(:),xx
 !  integer :: ii,i,j,k,l,siz
 !  siz=size(g)
 !  if(ii+1<=siz)then
@@ -1095,9 +1097,9 @@ contains
 ! !**************************************************************************
 ! !**************************************************************************
 !
-!  real(8) function minloc_parabola(a)
+!  real(kind=DP) function minloc_parabola(a)
 !  implicit none
-!  real(8) :: a(3)
+!  real(kind=DP) :: a(3)
 !   minloc_parabola=-a(2)/2.d0/a(3)
 !  end function
 !
@@ -1106,9 +1108,9 @@ contains
 ! !**************************************************************************
 ! !**************************************************************************
 !
-!  real(8) function minval_parabola(a)
+!  real(kind=DP) function minval_parabola(a)
 !  implicit none
-!   real(8) :: a(3)
+!   real(kind=DP) :: a(3)
 !   minval_parabola=pol(a,minloc_parabola(a))
 !  end function
 !
@@ -1119,7 +1121,7 @@ contains
 !
 !  subroutine shift_lin_pos_parabola(a)
 !  implicit none
-!  real(8) :: a(3)
+!  real(kind=DP) :: a(3)
 !    a(2) = sqrt(abs(a(1)*a(3)*4))
 !  end subroutine
 !
@@ -1130,8 +1132,8 @@ contains
 
                                        function root_equation(a)
                                           implicit none
-                                          real(8) :: root_equation(2)
-                                          real(8) :: a(3), dd
+                                          real(kind=DP) :: root_equation(2)
+                                          real(kind=DP) :: a(3), dd
 
                                           if (abs(a(1)) > error) then
                                              dd = abs(a(2)**2 - 4.d0*a(1)*a(3))
@@ -1153,109 +1155,109 @@ contains
 !
 !  logical function maxontop_array_d(x)
 !  implicit none
-!  real(8) :: x(:)
+!  real(kind=DP) :: x(:)
 !   maxontop_array_d=abs(maxval(abs(x))-maxval(x))<epsilonr
 !  end function
 !
 !  logical function constantarray_d(x)
 !  implicit none
-!  real(8) :: x(:)
+!  real(kind=DP) :: x(:)
 !   constantarray_d=abs(maxval(x)-minval(x))<1.d-5
 !  end function
 !
 !  logical function nullarray_d(x)
 !  implicit none
-!  real(8) :: x(:)
+!  real(kind=DP) :: x(:)
 !   nullarray_d=maxval(abs(x))<epsilonr
 !  end function
 !
 !  logical function maxontop_array_r(x)
 !  implicit none
-!  real(4) :: x(:)
+!  real(kind=SP) :: x(:)
 !   maxontop_array_r=abs(maxval(abs(x))-maxval(x))<epsilonr
 !  end function
 !
 !  logical function constantarray_r(x)
 !  implicit none
-!  real(4) :: x(:)
+!  real(kind=SP) :: x(:)
 !   constantarray_r=abs(maxval(x)-minval(x))<1.d-5
 !  end function
 !
 !  logical function nullarray_r(x)
 !  implicit none
-!  real(4) :: x(:)
+!  real(kind=SP) :: x(:)
 !   nullarray_r=maxval(abs(x))<epsilonr
 !  end function
 !
 !  logical function maxontop_array_d_(x)
 !  implicit none
-!  real(8) :: x(:,:)
+!  real(kind=DP) :: x(:,:)
 !   maxontop_array_d_=abs(maxval(abs(x))-maxval(x))<epsilonr
 !  end function
 !
 !  logical function constantarray_d_(x)
 !  implicit none
-!  real(8) :: x(:,:)
+!  real(kind=DP) :: x(:,:)
 !   constantarray_d_=abs(maxval(x)-minval(x))<1.d-5
 !  end function
 !
 !  logical function nullarray_d_(x)
 !  implicit none
-!  real(8) :: x(:,:)
+!  real(kind=DP) :: x(:,:)
 !   nullarray_d_=maxval(abs(x))<epsilonr
 !  end function
 !
 !  logical function maxontop_array_r_(x)
 !  implicit none
-!  real(4) :: x(:,:)
+!  real(kind=SP) :: x(:,:)
 !   maxontop_array_r_=abs(maxval(abs(x))-maxval(x))<epsilonr
 !  end function
 !
 !  logical function constantarray_r_(x)
 !  implicit none
-!  real(4) :: x(:,:)
+!  real(kind=SP) :: x(:,:)
 !   constantarray_r_=abs(maxval(x)-minval(x))<1.d-5
 !  end function
 !
 !  logical function nullarray_r_(x)
 !  implicit none
-!  real(4) :: x(:,:)
+!  real(kind=SP) :: x(:,:)
 !   nullarray_r_=maxval(abs(x))<epsilonr
 !  end function
 !
 !  logical function maxontop_array_d__(x)
 !  implicit none
-!  real(8) :: x(:,:,:)
+!  real(kind=DP) :: x(:,:,:)
 !   maxontop_array_d__=abs(maxval(abs(x))-maxval(x))<epsilonr
 !  end function
 !
 !  logical function constantarray_d__(x)
 !  implicit none
-!  real(8) :: x(:,:,:)
+!  real(kind=DP) :: x(:,:,:)
 !   constantarray_d__=abs(maxval(x)-minval(x))<1.d-5
 !  end function
 !
 !  logical function nullarray_d__(x)
 !  implicit none
-!  real(8) :: x(:,:,:)
+!  real(kind=DP) :: x(:,:,:)
 !   nullarray_d__=maxval(abs(x))<epsilonr
 !  end function
 !
 !  logical function maxontop_array_r__(x)
 !  implicit none
-!  real(4) :: x(:,:,:)
+!  real(kind=SP) :: x(:,:,:)
 !   maxontop_array_r__=abs(maxval(abs(x))-maxval(x))<epsilonr
 !  end function
 !
 !  logical function constantarray_r__(x)
 !  implicit none
-!  real(4) :: x(:,:,:)
+!  real(kind=SP) :: x(:,:,:)
 !   constantarray_r__=abs(maxval(x)-minval(x))<1.d-5
 !  end function
 !
 !  logical function nullarray_r__(x)
 !  implicit none
-!  real(4) :: x(:,:,:)
+!  real(kind=SP) :: x(:,:,:)
 !   nullarray_r__=maxval(abs(x))<epsilonr
 !  end function
 !
@@ -1267,88 +1269,92 @@ contains
 !**************************************************************************
 !**************************************************************************
 
-                                       logical function same_array_rr(mat1, mat2)
-                                          implicit none
-                                          real(8)  :: mat1(:, :), mat2(:, :)
-                                          integer  :: i
+   logical function same_array_rr(mat1, mat2)
+      implicit none
+      real(kind=DP)  :: mat1(:, :), mat2(:, :)
+      integer  :: i
 
-                                          interface
-                                             integer function same_address(d1, d2)
-                                                real(8) :: d1, d2
-                                             end function
-                                          end interface
+      interface
+         integer function same_address(d1, d2)
+            import :: DP
+            real(kind=DP) :: d1, d2
+         end function
+      end interface
 
-                                          i = same_address(mat1(1, 1), mat2(1, 1))
-                                          if (i == 1) then
-                                             same_array_rr = .true.
-                                          else
-                                             same_array_rr = .false.
-                                          endif
-                                          return
-                                       end function
+      i = same_address(mat1(1, 1), mat2(1, 1))
+      if (i == 1) then
+         same_array_rr = .true.
+      else
+         same_array_rr = .false.
+      endif
+      return
+   end function
 
-                                       !-----------------------------!
+   !-----------------------------!
 
-                                       logical function same_array_r(mat1, mat2)
-                                          implicit none
-                                          real(4)  :: mat1(:, :), mat2(:, :)
-                                          integer  :: i
-                                          interface
-                                             integer function same_address_r(d1, d2)
-                                                real(4) :: d1, d2
-                                             end function
-                                          end interface
+   logical function same_array_r(mat1, mat2)
+      implicit none
+      real(kind=SP)  :: mat1(:, :), mat2(:, :)
+      integer  :: i
+      interface
+         integer function same_address_r(d1, d2)
+            import :: SP
+            real(kind=SP) :: d1, d2
+         end function
+      end interface
 
-                                          i = same_address_r(mat1(1, 1), mat2(1, 1))
-                                          if (i == 1) then
-                                             same_array_r = .true.
-                                          else
-                                             same_array_r = .false.
-                                          endif
-                                          return
-                                       end function
+      i = same_address_r(mat1(1, 1), mat2(1, 1))
+      if (i == 1) then
+         same_array_r = .true.
+      else
+         same_array_r = .false.
+      endif
+      return
+   end function
 
-                                       !-----------------------------!
+   !-----------------------------!
 
-                                       logical function same_array_cc(mat1, mat2)
-                                          implicit none
-                                          complex(4)  :: mat1(:, :), mat2(:, :)
-                                          integer     :: i
-                                          interface
-                                             integer function same_address_r(d1, d2)
-                                                complex(4) :: d1, d2
-                                             end function
-                                          end interface
+   logical function same_array_cc(mat1, mat2)
+      implicit none
+      complex(kind=SP)  :: mat1(:, :), mat2(:, :)
+      integer     :: i
+      interface
+         integer function same_address_r(d1, d2)
+            import :: SP
+            complex(kind=SP) :: d1, d2
+         end function
+      end interface
 
-                                          i = same_address_r(mat1(1, 1), mat2(1, 1))
-                                          if (i == 1) then
-                                             same_array_cc = .true.
-                                          else
-                                             same_array_cc = .false.
-                                          endif
-                                          return
-                                       end function
+      i = same_address_r(mat1(1, 1), mat2(1, 1))
+      if (i == 1) then
+         same_array_cc = .true.
+      else
+         same_array_cc = .false.
+      endif
+      return
+   end function
 
-                                       !-----------------------------!
+   !-----------------------------!
 
-                                       logical function same_array_c(mat1, mat2)
-                                          implicit none
-                                          complex(8)  :: mat1(:, :), mat2(:, :)
-                                          integer  :: i
-                                          interface
-                                             integer function same_address(d1, d2)
-                                                complex(8) :: d1, d2
-                                             end function
-                                          end interface
+   logical function same_array_c(mat1, mat2)
+      implicit none
+      complex(kind=DP)  :: mat1(:, :), mat2(:, :)
+      integer  :: i
+      interface
+         integer function same_address(d1, d2)
+            import :: DP
+            complex(kind=DP) :: d1, d2
+         end function
+      end interface
 
-                                          i = same_address(mat1(1, 1), mat2(1, 1))
-                                          if (i == 1) then
-                                             same_array_c = .true.
-                                          else
-                                             same_array_c = .false.
-                                          endif
-                                          return
-                                       end function
+      i = same_address(mat1(1, 1), mat2(1, 1))
+      if (i == 1) then
+         same_array_c = .true.
+      else
+         same_array_c = .false.
+      endif
+      return
+   end function
 
 !**************************************************************************
 !**************************************************************************
@@ -1358,69 +1364,69 @@ contains
 !**************************************************************************
 !**************************************************************************
 
-                                       subroutine reverse_array____(vec)
-                                          implicit none
-                                          real(8) :: vec(:)
-                                          integer :: i, mid, k
-                                          k = size(vec)
-                                          if (mod(k, 2) == 0) then
-                                             mid = k/2
-                                          else
-                                             mid = (k + 1)/2
-                                          endif
-                                          do i = 1, mid
-                                             call swap(vec(i), vec(k - i + 1))
-                                          enddo
-                                          return
-                                       end subroutine
+   subroutine reverse_array____(vec)
+      implicit none
+      real(kind=DP) :: vec(:)
+      integer :: i, mid, k
+      k = size(vec)
+      if (mod(k, 2) == 0) then
+         mid = k/2
+      else
+         mid = (k + 1)/2
+      endif
+      do i = 1, mid
+         call swap(vec(i), vec(k - i + 1))
+      enddo
+      return
+   end subroutine
 
-                                       subroutine reverse_array_(vec)
-                                          implicit none
-                                          complex(8) :: vec(:)
-                                          integer    :: i, mid, k
-                                          k = size(vec)
-                                          if (mod(k, 2) == 0) then
-                                             mid = k/2
-                                          else
-                                             mid = (k + 1)/2
-                                          endif
-                                          do i = 1, mid
-                                             call swap(vec(i), vec(k - i + 1))
-                                          enddo
-                                          return
-                                       end subroutine
+   subroutine reverse_array_(vec)
+      implicit none
+      complex(kind=DP) :: vec(:)
+      integer    :: i, mid, k
+      k = size(vec)
+      if (mod(k, 2) == 0) then
+         mid = k/2
+      else
+         mid = (k + 1)/2
+      endif
+      do i = 1, mid
+         call swap(vec(i), vec(k - i + 1))
+      enddo
+      return
+   end subroutine
 
-                                       subroutine reverse_array__(vec)
-                                          implicit none
-                                          real(4)    :: vec(:)
-                                          integer    :: i, mid, k
-                                          k = size(vec)
-                                          if (mod(k, 2) == 0) then
-                                             mid = k/2
-                                          else
-                                             mid = (k + 1)/2
-                                          endif
-                                          do i = 1, mid
-                                             call swap(vec(i), vec(k - i + 1))
-                                          enddo
-                                          return
-                                       end subroutine
+   subroutine reverse_array__(vec)
+      implicit none
+      real(kind=SP)    :: vec(:)
+      integer    :: i, mid, k
+      k = size(vec)
+      if (mod(k, 2) == 0) then
+         mid = k/2
+      else
+         mid = (k + 1)/2
+      endif
+      do i = 1, mid
+         call swap(vec(i), vec(k - i + 1))
+      enddo
+      return
+   end subroutine
 
-                                       subroutine reverse_array___(vec)
-                                          implicit none
-                                          integer(4) :: vec(:)
-                                          integer    :: i, mid, k
-                                          k = size(vec)
-                                          if (mod(k, 2) == 0) then
-                                             mid = k/2
-                                          else
-                                             mid = (k + 1)/2
-                                          endif
-                                          do i = 1, mid
-                                             call swap(vec(i), vec(k - i + 1))
-                                          enddo
-                                          return
-                                       end subroutine
+   subroutine reverse_array___(vec)
+      implicit none
+      integer(4) :: vec(:)
+      integer    :: i, mid, k
+      k = size(vec)
+      if (mod(k, 2) == 0) then
+         mid = k/2
+      else
+         mid = (k + 1)/2
+      endif
+      do i = 1, mid
+         call swap(vec(i), vec(k - i + 1))
+      enddo
+      return
+   end subroutine
 
 !**************************************************************************
 !**************************************************************************
@@ -1432,7 +1438,7 @@ contains
 !
 !  subroutine remove_linear_contribution(x,f)
 !  implicit none
-!  real(8)   ::  x(:),f(:),slope,v(6),off
+!  real(kind=DP)   ::  x(:),f(:),slope,v(6),off
 !  integer   ::  i,j,k,l,m,siz
 !
 !   siz=size(x)
@@ -1479,25 +1485,25 @@ contains
 !
 !  subroutine erase_negd(vec)
 !  implicit none
-!   real(8) :: vec(:)
+!   real(kind=DP) :: vec(:)
 !   where(vec<0.)vec=0.
 !  end subroutine
 !
 !  subroutine erase_negd_(vec)
 !  implicit none
-!   real(8) :: vec(:,:)
+!   real(kind=DP) :: vec(:,:)
 !   where(vec<0.)vec=0.
 !  end subroutine
 !
 !  subroutine erase_negd__(vec)
 !  implicit none
-!   real(8) :: vec(:,:,:)
+!   real(kind=DP) :: vec(:,:,:)
 !   where(vec<0.)vec=0.
 !  end subroutine
 !
 !  subroutine erase_negd___(vec)
 !  implicit none
-!   real(8) :: vec(:,:,:,:)
+!   real(kind=DP) :: vec(:,:,:,:)
 !   where(vec<0.)vec=0.
 !  end subroutine
 !
@@ -1512,9 +1518,9 @@ contains
 !
 !  subroutine erase_noise_(x,f,ferr,aa)
 !  implicit none
-!  real(8)          :: x(:),f(:),ferr(:),aa
-!  real(8)          :: u,v,w,maxerr,thres,ddm,dd2
-!  real(4)          :: ax,ay,bx,by,cx,cy,tempx,tempy,a,b,c
+!  real(kind=DP)          :: x(:),f(:),ferr(:),aa
+!  real(kind=DP)          :: u,v,w,maxerr,thres,ddm,dd2
+!  real(kind=SP)          :: ax,ay,bx,by,cx,cy,tempx,tempy,a,b,c
 !  integer          :: i,j,k,ierror
 !  logical          :: mask(size(f))
 !
@@ -1556,7 +1562,7 @@ contains
 !   !----------!
 !   !----------!
 !
-!  real(8) function dumpi(i)
+!  real(kind=DP) function dumpi(i)
 !  integer :: i
 !    ax=x(i-2)
 !    ay=f(i-2)
@@ -1568,7 +1574,7 @@ contains
 !    dumpi=c + b*x(i) + a*(x(i)**2.d0)
 !  end function
 !
-!  real(8) function dumpi_for(i)
+!  real(kind=DP) function dumpi_for(i)
 !  integer :: i
 !    ax=x(i-1)
 !    ay=f(i-1)
@@ -1611,7 +1617,7 @@ contains
 !
 !  function pold(P,x)
 !  implicit none
-!    real(8) :: pold,P(:),x
+!    real(kind=DP) :: pold,P(:),x
 !    integer :: i
 !   pold=P(1)
 !   do i=2,size(P)
@@ -1631,7 +1637,7 @@ contains
 !
 !  function polc(P,x)
 !  implicit none
-!    complex(8) :: polc,P(:),x
+!    complex(kind=DP) :: polc,P(:),x
 !    integer    :: i
 !   polc=P(1)
 !   do i=2,size(P)
@@ -1666,67 +1672,67 @@ contains
 !**************************************************************************
 !**************************************************************************
 
-                                       integer function maxloci_c(mat)
-                                          complex(8) :: mat(:)
-                                          integer    :: u(1)
-                                          u = maxloc(abs(mat))
-                                          maxloci_c = u(1)
-                                       end function
+   integer function maxloci_c(mat)
+      complex(kind=DP) :: mat(:)
+      integer    :: u(1)
+      u = maxloc(abs(mat))
+      maxloci_c = u(1)
+   end function
 
-                                       integer function maxloci_r(mat)
-                                          real(8)     :: mat(:)
-                                          integer    :: u(1)
-                                          u = maxloc(mat)
-                                          maxloci_r = u(1)
-                                       end function
+   integer function maxloci_r(mat)
+      real(kind=DP)     :: mat(:)
+      integer    :: u(1)
+      u = maxloc(mat)
+      maxloci_r = u(1)
+   end function
 
-                                       integer function maxloci_rr(mat)
-                                          real(4)    :: mat(:)
-                                          integer    :: u(1)
-                                          u = maxloc(mat)
-                                          maxloci_rr = u(1)
-                                       end function
+   integer function maxloci_rr(mat)
+      real(kind=SP)    :: mat(:)
+      integer    :: u(1)
+      u = maxloc(mat)
+      maxloci_rr = u(1)
+   end function
 
-                                       integer function maxloci_i(mat)
-                                          integer(4)  :: mat(:)
-                                          integer    :: u(1)
-                                          u = maxloc(mat)
-                                          maxloci_i = u(1)
-                                       end function
+   integer function maxloci_i(mat)
+      integer(4)  :: mat(:)
+      integer    :: u(1)
+      u = maxloc(mat)
+      maxloci_i = u(1)
+   end function
 
-                                       integer function minloci_c(mat)
-                                          complex(8) :: mat(:)
-                                          integer    :: u(1)
-                                          u = minloc(abs(mat))
-                                          minloci_c = u(1)
-                                       end function
+   integer function minloci_c(mat)
+      complex(kind=DP) :: mat(:)
+      integer    :: u(1)
+      u = minloc(abs(mat))
+      minloci_c = u(1)
+   end function
 
-                                       integer function minloci_r(mat)
-                                          real(8)     :: mat(:)
-                                          integer    :: u(1)
-                                          u = minloc(mat)
-                                          minloci_r = u(1)
-                                       end function
+   integer function minloci_r(mat)
+      real(kind=DP)     :: mat(:)
+      integer    :: u(1)
+      u = minloc(mat)
+      minloci_r = u(1)
+   end function
 
-                                       integer function minloci_rr(mat)
-                                          real(4)    :: mat(:)
-                                          integer    :: u(1)
-                                          u = minloc(mat)
-                                          minloci_rr = u(1)
-                                       end function
+   integer function minloci_rr(mat)
+      real(kind=SP)    :: mat(:)
+      integer    :: u(1)
+      u = minloc(mat)
+      minloci_rr = u(1)
+   end function
 
-                                       integer function minloci_i(mat)
-                                          integer(4)  :: mat(:)
-                                          integer    :: u(1)
-                                          u = minloc(mat)
-                                          minloci_i = u(1)
-                                       end function
+   integer function minloci_i(mat)
+      integer(4)  :: mat(:)
+      integer    :: u(1)
+      u = minloc(mat)
+      minloci_i = u(1)
+   end function
 
-                                       !-------------------------------!
+   !-------------------------------!
 
-! real(8) function maxvalcondrr(YR,XR,a1,a2)
+! real(kind=DP) function maxvalcondrr(YR,XR,a1,a2)
 ! implicit none
-! real(8) :: YR(:),XR(:),a1,a2,minr
+! real(kind=DP) :: YR(:),XR(:),a1,a2,minr
 ! integer :: i,j,k
 ! minr=-1.d20
 ! do i=1,size(XR)
@@ -1741,9 +1747,9 @@ contains
 !
 !      !-------------------------------!
 !
-! real(8) function minvalcondrr(YR,XR,a1,a2)
+! real(kind=DP) function minvalcondrr(YR,XR,a1,a2)
 ! implicit none
-! real(8) :: YR(:),XR(:),a1,a2,minr
+! real(kind=DP) :: YR(:),XR(:),a1,a2,minr
 ! integer :: i,j,k
 ! minr=1.d20
 ! do i=1,size(XR)
@@ -1758,9 +1764,9 @@ contains
 !
 !      !-------------------------------!
 !
-! real(4) function maxvalcondr(YR,XR,a1,a2)
+! real(kind=SP) function maxvalcondr(YR,XR,a1,a2)
 ! implicit none
-! real(4) :: YR(:),XR(:),a1,a2,minr
+! real(kind=SP) :: YR(:),XR(:),a1,a2,minr
 ! integer :: i,j,k
 ! minr=-1.e10
 ! do i=1,size(XR)
@@ -1775,9 +1781,9 @@ contains
 !
 !      !-------------------------------!
 !
-! real(4) function minvalcondr(YR,XR,a1,a2)
+! real(kind=SP) function minvalcondr(YR,XR,a1,a2)
 ! implicit none
-! real(4) :: YR(:),XR(:),a1,a2,minr
+! real(kind=SP) :: YR(:),XR(:),a1,a2,minr
 ! integer :: i,j,k
 ! minr=1.e10
 ! do i=1,size(XR)
@@ -1792,9 +1798,9 @@ contains
 !
 !      !-------------------------------!
 !
-! real(4) function maxvalcondr_(YR,XR,a1,a2)
+! real(kind=SP) function maxvalcondr_(YR,XR,a1,a2)
 ! implicit none
-! real(4) :: YR(:,:),XR(:,:),a1,a2,minr
+! real(kind=SP) :: YR(:,:),XR(:,:),a1,a2,minr
 ! integer :: i,j,k
 ! logical :: test
 !
@@ -1820,9 +1826,9 @@ contains
 !
 !      !-------------------------------!
 !
-! real(4) function minvalcondr_(YR,XR,a1,a2)
+! real(kind=SP) function minvalcondr_(YR,XR,a1,a2)
 ! implicit none
-! real(4) :: YR(:,:),XR(:,:),a1,a2,minr
+! real(kind=SP) :: YR(:,:),XR(:,:),a1,a2,minr
 ! integer :: i,j,k
 ! logical :: test
 !
@@ -1865,7 +1871,7 @@ contains
 ! logical function none_zero_term_in_there_r(tab)
 ! implicit none
 ! integer :: i,j,k,l,m,siz1
-! real(8)  :: tab(:)
+! real(kind=DP)  :: tab(:)
 !  none_zero_term_in_there_r=.false.
 !  do i=1,size(tab)
 !   if(abs(tab(i))>1.d-4)then
@@ -1880,7 +1886,7 @@ contains
 ! logical function none_zero_term_in_there_c(tab)
 ! implicit none
 ! integer     :: i,j,k,l,m,siz1
-! complex(8)  :: tab(:)
+! complex(kind=DP)  :: tab(:)
 !  none_zero_term_in_there_c=.false.
 !  do i=1,size(tab)
 !   if(abs(tab(i))>1.d-4)then
@@ -1905,9 +1911,9 @@ contains
 ! !**************************************************************************
 ! !**************************************************************************
 !
-! elemental complex(8) function csqrt(rin)
+! elemental complex(kind=DP) function csqrt(rin)
 ! implicit none
-! real(8),intent(in)     :: rin
+! real(kind=DP),intent(in)     :: rin
 !      if(rin>-0.000001d0)Then
 !        csqrt=sqrt(abs(rin))
 !      else
@@ -1924,8 +1930,8 @@ contains
 !
 ! subroutine rep_re(xx,aa)
 ! implicit none
-! complex(8) :: xx,yy
-! real(8)     :: aa
+! complex(kind=DP) :: xx,yy
+! real(kind=DP)     :: aa
 !  yy=cmplx(0.d0,1.d0,kind=8)*aimag(xx)
 !  yy=yy + aa
 !  xx=yy
@@ -1935,8 +1941,8 @@ contains
 !
 ! subroutine rep_im(xx,aa)
 ! implicit none
-! complex(8) :: xx,yy
-! real(8)     :: aa
+! complex(kind=DP) :: xx,yy
+! real(kind=DP)     :: aa
 !  yy=real(xx)
 !  yy=yy + aa*cmplx(0.d0,1.d0,kind=8)
 !  xx=yy
@@ -1955,10 +1961,10 @@ contains
 ! !**************************************************************************
 ! !**************************************************************************
 !
-! real(8) function theta_func(rr,a)
+! real(kind=DP) function theta_func(rr,a)
 ! implicit none
-! real(8) :: rr
-! real(8),optional :: a
+! real(kind=DP) :: rr
+! real(kind=DP),optional :: a
 !
 ! if(.not.present(a))then
 ! if(rr<0.)then
@@ -1991,8 +1997,8 @@ contains
 !
 ! function per_c(rr)
 ! implicit none
-! complex(8)  :: rr
-! real(8)      :: per_c,ss,tt
+! complex(kind=DP)  :: rr
+! real(kind=DP)      :: per_c,ss,tt
 !  per_c=0.
 !  ss=abs(aimag(rr))
 !  tt=abs(real(rr))
@@ -2006,9 +2012,9 @@ contains
 !
 ! function per_c_vec(rr)
 ! implicit none
-! complex(8)  :: rr(:)
+! complex(kind=DP)  :: rr(:)
 ! integer     :: i
-! real(8)      :: per_c_vec(size(rr)),ss,tt
+! real(kind=DP)      :: per_c_vec(size(rr)),ss,tt
 !  do i=1,size(rr)
 !   per_c_vec(i)=0.
 !   ss=abs(aimag(rr(i)))
@@ -2024,9 +2030,9 @@ contains
 !
 ! function per_c_mat(rr)
 ! implicit none
-! complex(8)  :: rr(:,:)
+! complex(kind=DP)  :: rr(:,:)
 ! integer     :: i,siz1,siz2,j
-! real(8)      :: per_c_mat(size(rr(:,1)),size(rr(1,:))),ss,tt
+! real(kind=DP)      :: per_c_mat(size(rr(:,1)),size(rr(1,:))),ss,tt
 !
 ! siz1=size(rr(:,1))
 ! siz2=size(rr(1,:))
@@ -2055,8 +2061,8 @@ contains
 !
 ! function prod_r(rr)
 ! implicit none
-! real(8)  :: rr(:,:)
-! real(8)  :: prod_r
+! real(kind=DP)  :: rr(:,:)
+! real(kind=DP)  :: prod_r
 ! integer :: s1,s2,i,j,k,l,m
 !
 ! prod_r=1.
@@ -2099,8 +2105,8 @@ contains
 !
 ! function prod_c(rr)
 ! implicit none
-! complex(8)  :: rr(:,:)
-! complex(8)  :: prod_c
+! complex(kind=DP)  :: rr(:,:)
+! complex(kind=DP)  :: prod_c
 ! integer     :: s1,s2,i,j,k,l,m
 !
 !  prod_c=1.
@@ -2127,7 +2133,7 @@ contains
 !
 ! function minloc_with_test_r(array,arraytest,value)
 ! implicit none
-! real(8)  :: array(:),arraytemp(size(array))
+! real(kind=DP)  :: array(:),arraytemp(size(array))
 ! integer :: arraytest(:),value,minloc_with_test_r
 ! integer :: i,j,k,l,m,n,u(1),siz1
 !  siz1=size(array);arraytemp=array;k=0
@@ -2158,7 +2164,7 @@ contains
 !
 ! function minloc_with_test_c(array,arraytest,value)
 ! implicit none
-! complex(8)  :: array(:),arraytemp(size(array))
+! complex(kind=DP)  :: array(:),arraytemp(size(array))
 ! integer     :: arraytest(:),value,minloc_with_test_c
 ! integer     :: i,j,k,l,m,n,u(1),siz1
 !  siz1=size(array);arraytemp=array;k=0
@@ -2188,7 +2194,7 @@ contains
 ! !**************************************************************************
 !
 ! logical function too_large_r(a)
-! real(8) :: a
+! real(kind=DP) :: a
 ! too_large_r=.false.
 !  if(a>MAX_REAL)then
 !   too_large_r=.true.
@@ -2196,7 +2202,7 @@ contains
 ! end function
 !
 ! logical function too_large_c(a)
-! complex(8) :: a
+! complex(kind=DP) :: a
 ! too_large_c=.false.
 !  if(real(a)>MAX_REAL.or.aimag(a)>MAX_REAL)then
 !   too_large_c=.true.
@@ -2204,7 +2210,7 @@ contains
 ! end function
 !
 ! logical function too_large_c_vec(a)
-! complex(8) :: a(:)
+! complex(kind=DP) :: a(:)
 ! too_large_c_vec=.false.
 !  if(maxval(abs(real(a)))>MAX_REAL.or.maxval(abs(aimag(a)))>MAX_REAL)then
 !   too_large_c_vec=.true.
@@ -2212,7 +2218,7 @@ contains
 ! end function
 !
 ! logical function too_large_c_mat(a)
-! complex(8) :: a(:,:)
+! complex(kind=DP) :: a(:,:)
 !  too_large_c_mat=.false.
 !  if(maxval(abs(real(a)))>MAX_REAL.or.maxval(abs(aimag(a)))>MAX_REAL)then
 !   too_large_c_mat=.true.
@@ -2241,9 +2247,9 @@ contains
 !  !b=observable
 !  !a=error
 !  !threshold : in [percent]
-!  real(8),intent(in) :: a,b
-!  real(8),intent(in) :: threshold
-!  real(8) :: ratio
+!  real(kind=DP),intent(in) :: a,b
+!  real(kind=DP),intent(in) :: threshold
+!  real(kind=DP) :: ratio
 !
 !   error_r=.true.
 !
@@ -2263,9 +2269,9 @@ contains
 !  !b=observable
 !  !a=error
 !  !threshold : in [percent]
-!  complex(8),intent(in) :: a,b
-!  real(8),intent(in) :: threshold
-!  real(8) :: ratio
+!  complex(kind=DP),intent(in) :: a,b
+!  real(kind=DP),intent(in) :: threshold
+!  real(kind=DP) :: ratio
 !
 !   error_c=.true.
 !
@@ -2295,8 +2301,8 @@ contains
 !  !pack matrice ligne par ligne dans vecteur
 !  implicit none
 !  integer            :: siz1,siz2,i,j,k,l,m,count,vv(2)
-!  real(8),intent(in) :: mat(:,:)
-!  real(8)            :: pack_r(size(mat(:,1))*size(mat(1,:)))
+!  real(kind=DP),intent(in) :: mat(:,:)
+!  real(kind=DP)            :: pack_r(size(mat(:,1))*size(mat(1,:)))
 !   siz1=size(mat,1); siz2=size(mat,2)
 !   count=0
 !   do i=1,siz1
@@ -2311,8 +2317,8 @@ contains
 !  !pack matrice ligne par ligne dans vecteur
 !  implicit none
 !  integer            :: siz1,siz2,i,j,k,l,m,count,vv(2)
-!  real(8),intent(in) :: mat(:,:)
-!  real(8),intent(out):: pack(size(mat(:,1))*size(mat(1,:)))
+!  real(kind=DP),intent(in) :: mat(:,:)
+!  real(kind=DP),intent(out):: pack(size(mat(:,1))*size(mat(1,:)))
 !   siz1=size(mat,1); siz2=size(mat,2)
 !   count=0
 !   do i=1,siz1
@@ -2327,8 +2333,8 @@ contains
 !  !pack matrice ligne par ligne dans vecteur
 !  implicit none
 !  integer               :: siz1,siz2,i,j,k,l,m,count,vv(2)
-!  complex(8),intent(in) :: mat(:,:)
-!  complex(8)            :: pack_c(size(mat(:,1))*size(mat(1,:)))
+!  complex(kind=DP),intent(in) :: mat(:,:)
+!  complex(kind=DP)            :: pack_c(size(mat(:,1))*size(mat(1,:)))
 !   siz1=size(mat(:,1))
 !   siz2=size(mat(1,:))
 !   count=0
@@ -2344,8 +2350,8 @@ contains
 !  !pack matrice ligne par ligne dans vecteur
 !  implicit none
 !  integer            :: siz1,siz2,i,j,k,l,m,count,vv(2)
-!  complex(8),intent(in) :: mat(:,:)
-!  complex(8),intent(out):: pack(size(mat(:,1))*size(mat(1,:)))
+!  complex(kind=DP),intent(in) :: mat(:,:)
+!  complex(kind=DP),intent(out):: pack(size(mat(:,1))*size(mat(1,:)))
 !   siz1=size(mat,1); siz2=size(mat,2)
 !   count=0
 !   do i=1,siz1
@@ -2396,7 +2402,7 @@ contains
 !  implicit none
 !  integer         :: siz1,siz2,i,j,k,l,m,count,vv(2)
 !  real,intent(in) :: mat(:,:)
-!  real(4)         :: pack_s(size(mat(:,1))*size(mat(1,:)))
+!  real(kind=SP)         :: pack_s(size(mat(:,1))*size(mat(1,:)))
 !   siz1=size(mat(:,1))
 !   siz2=size(mat(1,:))
 !   count=0
@@ -2412,8 +2418,8 @@ contains
 !  !pack matrice ligne par ligne dans vecteur
 !  implicit none
 !  integer            :: siz1,siz2,i,j,k,l,m,count,vv(2)
-!  real(4),intent(in) :: mat(:,:)
-!  real(4),intent(out):: pack(size(mat(:,1))*size(mat(1,:)))
+!  real(kind=SP),intent(in) :: mat(:,:)
+!  real(kind=SP),intent(out):: pack(size(mat(:,1))*size(mat(1,:)))
 !   siz1=size(mat,1); siz2=size(mat,2)
 !   count=0
 !   do i=1,siz1
@@ -2429,8 +2435,8 @@ contains
 !  !pack matrice ligne par ligne dans vecteur
 !  implicit none
 !  integer            :: siz1,siz2,i,j,k,l,m,count,ligne,vv(2)
-!  real(8),intent(in) :: mat(:)
-!  real(8)            :: unpack_r(size(mat)/ligne,ligne)
+!  real(kind=DP),intent(in) :: mat(:)
+!  real(kind=DP)            :: unpack_r(size(mat)/ligne,ligne)
 !   siz1=size(mat(:))
 !   count=0
 !   do i=1,siz1
@@ -2445,8 +2451,8 @@ contains
 !  !pack matrice ligne par ligne dans vecteur
 !  implicit none
 !  integer            :: siz1,siz2,i,j,k,l,m,count,ligne,vv(2)
-!  real(8),intent(in) :: mat(:)
-!  real(8),intent(out):: unpack(:,:)
+!  real(kind=DP),intent(in) :: mat(:)
+!  real(kind=DP),intent(out):: unpack(:,:)
 !   ligne=size(unpack,2)
 !   if(mod(size(mat),ligne)/=0) stop 'unpack error, size do not match'
 !   if(size(unpack,1)/=size(mat)/ligne) then
@@ -2467,8 +2473,8 @@ contains
 !  !pack matrice ligne par ligne dans vecteur
 !  implicit none
 !  integer               :: siz1,siz2,i,j,k,l,m,count,ligne,vv(2)
-!  complex(8),intent(in) :: mat(:)
-!  complex(8)            :: unpack_c(size(mat)/ligne,ligne)
+!  complex(kind=DP),intent(in) :: mat(:)
+!  complex(kind=DP)            :: unpack_c(size(mat)/ligne,ligne)
 !   siz1=size(mat(:))
 !   count=0
 !   do i=1,siz1
@@ -2482,8 +2488,8 @@ contains
 !  !pack matrice ligne par ligne dans vecteur
 !  implicit none
 !  integer            :: siz1,siz2,i,j,k,l,m,count,ligne,vv(2)
-!  complex(8),intent(in) :: mat(:)
-!  complex(8),intent(out):: unpack(:,:)
+!  complex(kind=DP),intent(in) :: mat(:)
+!  complex(kind=DP),intent(out):: unpack(:,:)
 !   ligne=size(unpack,2)
 !   if(mod(size(mat),ligne)/=0) stop 'unpack error, size do not match'
 !   if(size(unpack,1)/=size(mat)/ligne) then
@@ -2519,8 +2525,8 @@ contains
 !  !pack matrice ligne par ligne dans vecteur
 !  implicit none
 !  integer            :: siz1,siz2,i,j,k,l,m,count,ligne,vv(2)
-!  real(4),intent(in) :: mat(:)
-!  real(4),intent(out):: unpack(:,:)
+!  real(kind=SP),intent(in) :: mat(:)
+!  real(kind=SP),intent(out):: unpack(:,:)
 !   ligne=size(unpack,2)
 !   if(mod(size(mat),ligne)/=0) stop 'unpack error, size do not match'
 !   if(size(unpack,1)/=size(mat)/ligne) then
@@ -2583,39 +2589,39 @@ contains
 ! !**************************************************************************
 ! !**************************************************************************
 !
-                                       logical function ISNANR(x)
-                                          real(8) :: x
-                                          ISNANR = isnan(x)
-                                       end function
+   logical function ISNANR(x)
+      real(kind=DP) :: x
+      ISNANR = isnan(x)
+   end function
 
-                                       logical function ISNANC(x)
-                                          complex(8) :: x
-                                          ISNANC = isnan(REAL(x))
-                                          if (ISNANC) return
-                                          ISNANC = isnan(aimag(x))
-                                       end function
+   logical function ISNANC(x)
+      complex(kind=DP) :: x
+      ISNANC = isnan(REAL(x))
+      if (ISNANC) return
+      ISNANC = isnan(aimag(x))
+   end function
 
-                                       logical function ISINFR(x)
-                                          real(8) :: x
-                                          ISINFR = disinf(x)
-                                       end function
+   logical function ISINFR(x)
+      real(kind=DP) :: x
+      ISINFR = disinf(x)
+   end function
 
-                                       logical function ISINFC(x)
-                                          complex(8) :: x
-                                          ISINFC = disinf(REAL(x))
-                                          if (ISINFC) return
-                                          ISINFC = disinf(aimag(x))
-                                       end function
+   logical function ISINFC(x)
+      complex(kind=DP) :: x
+      ISINFC = disinf(REAL(x))
+      if (ISINFC) return
+      ISINFC = disinf(aimag(x))
+   end function
 
-                                       logical function ISNANS(x)
-                                          real(4) :: x
-                                          ISNANS = isnan(x)
-                                       end function
+   logical function ISNANS(x)
+      real(kind=SP) :: x
+      ISNANS = isnan(x)
+   end function
 
-                                       logical function ISINFS(x)
-                                          real(4) :: x
-                                          ISINFS = isinf(x)
-                                       end function
+   logical function ISINFS(x)
+      real(kind=SP) :: x
+      ISINFS = isinf(x)
+   end function
 
 !**************************************************************************
 !**************************************************************************
@@ -2640,7 +2646,7 @@ contains
 ! implicit none
 ! type(arrayc),intent(in) :: array
 ! logical :: comparearray_s
-! real(8),intent(in) :: rrr
+! real(kind=DP),intent(in) :: rrr
 ! if(real(array%subarray(1))<rrr) then
 !  comparearray_s=.true.
 ! else
@@ -2660,7 +2666,7 @@ contains
 ! implicit none
 ! type(arrayc),intent(in) :: array
 ! logical :: comparearray_g
-! real(8),intent(in) :: rrr
+! real(kind=DP),intent(in) :: rrr
 ! if(real(array%subarray(1))>rrr) then
 !  comparearray_g=.true.
 ! else
@@ -2680,7 +2686,7 @@ contains
 ! implicit none
 ! type(arrayc),intent(in) :: array
 ! logical :: comparearray_sc
-! complex(8),intent(in) :: rrr
+! complex(kind=DP),intent(in) :: rrr
 ! if(real(array%subarray(1))<real(rrr)) then
 !  comparearray_sc=.true.
 ! else
@@ -2700,7 +2706,7 @@ contains
 ! implicit none
 ! type(arrayc),intent(in) :: array
 ! logical :: comparearray_gc
-! complex(8),intent(in) :: rrr
+! complex(kind=DP),intent(in) :: rrr
 ! if(real(array%subarray(1))>real(rrr)) then
 !  comparearray_gc=.true.
 ! else
@@ -2720,7 +2726,7 @@ contains
 ! implicit none
 ! type(arrayc),intent(in) :: array
 ! type(arrayc) :: mult_c
-! complex(8),intent(in) :: rrr
+! complex(kind=DP),intent(in) :: rrr
 !  mult_c%subarray=array%subarray(:)*rrr
 ! return
 ! end function
@@ -2732,7 +2738,7 @@ contains
 ! implicit none
 ! type(arrayc),intent(in) :: array
 ! type(arrayc) :: div_c
-! complex(8),intent(in) :: rrr
+! complex(kind=DP),intent(in) :: rrr
 !  div_c%subarray=array%subarray(:)/rrr
 ! return
 ! end function
@@ -2744,7 +2750,7 @@ contains
 ! implicit none
 ! type(arrayc),intent(in) :: array
 ! type(arrayc) :: add_c
-! complex(8),intent(in) :: rrr
+! complex(kind=DP),intent(in) :: rrr
 !  add_c%subarray=array%subarray(:)+rrr
 ! return
 ! end function
@@ -2756,7 +2762,7 @@ contains
 ! implicit none
 ! type(arrayc),intent(in) :: array
 ! type(arrayc) :: sub_c
-! complex(8),intent(in) :: rrr
+! complex(kind=DP),intent(in) :: rrr
 !  sub_c%subarray=array%subarray(:)-rrr
 ! return
 ! end function
@@ -2768,7 +2774,7 @@ contains
 ! implicit none
 ! type(arrayc),intent(in) :: array
 ! type(arrayc)            :: mult_r
-! real(8),intent(in)      :: rrr
+! real(kind=DP),intent(in)      :: rrr
 !  mult_r%subarray=array%subarray(:)*rrr
 ! return
 ! end function
@@ -2780,7 +2786,7 @@ contains
 ! implicit none
 ! type(arrayc),intent(in) :: array
 ! type(arrayc) :: div_r
-! real(8),intent(in) :: rrr
+! real(kind=DP),intent(in) :: rrr
 !  div_r%subarray=array%subarray(:)/rrr
 ! return
 ! end function
@@ -2792,7 +2798,7 @@ contains
 ! implicit none
 ! type(arrayc),intent(in) :: array
 ! type(arrayc) :: add_r
-! real(8),intent(in) :: rrr
+! real(kind=DP),intent(in) :: rrr
 !  add_r%subarray=array%subarray(:)+rrr
 ! return
 ! end function
@@ -2804,7 +2810,7 @@ contains
 ! implicit none
 ! type(arrayc),intent(in) :: array
 ! type(arrayc) :: sub_r
-! real(8),intent(in) :: rrr
+! real(kind=DP),intent(in) :: rrr
 !  sub_r%subarray=array%subarray(:)-rrr
 ! return
 ! end function
@@ -2816,130 +2822,130 @@ contains
 !**************************************************************************
 !**************************************************************************
 
-                                       SUBROUTINE ZSWAP__(N, ZX, INCX, ZY, INCY)
-                                          INTEGER INCX, INCY, N
-                                          COMPLEX(16) ZX(*), ZY(*)
-                                          COMPLEX(16) ZTEMP
-                                          INTEGER I, IX, IY
-                                          IF (N .LE. 0) RETURN
-                                          IF (INCX .EQ. 1 .AND. INCY .EQ. 1) GO TO 20
-                                          IX = 1
-                                          IY = 1
-                                          IF (INCX .LT. 0) IX = (-N + 1)*INCX + 1
-                                          IF (INCY .LT. 0) IY = (-N + 1)*INCY + 1
-                                          DO 10 I = 1, N
-                                             ZTEMP = ZX(IX)
-                                             ZX(IX) = ZY(IY)
-                                             ZY(IY) = ZTEMP
-                                             IX = IX + INCX
-                                             IY = IY + INCY
-10                                           CONTINUE
-                                             RETURN
-20                                           DO 30 I = 1, N
-                                                ZTEMP = ZX(I)
-                                                ZX(I) = ZY(I)
-                                                ZY(I) = ZTEMP
-30                                              CONTINUE
-                                                RETURN
-                                             END subroutine
+   SUBROUTINE ZSWAP__(N, ZX, INCX, ZY, INCY)
+      INTEGER INCX, INCY, N
+      COMPLEX(16) ZX(*), ZY(*)
+      COMPLEX(16) ZTEMP
+      INTEGER I, IX, IY
+      IF (N .LE. 0) RETURN
+      IF (INCX .EQ. 1 .AND. INCY .EQ. 1) GO TO 20
+      IX = 1
+      IY = 1
+      IF (INCX .LT. 0) IX = (-N + 1)*INCX + 1
+      IF (INCY .LT. 0) IY = (-N + 1)*INCY + 1
+      DO 10 I = 1, N
+         ZTEMP = ZX(IX)
+         ZX(IX) = ZY(IY)
+         ZY(IY) = ZTEMP
+         IX = IX + INCX
+         IY = IY + INCY
+10    CONTINUE
+      RETURN
+20    DO 30 I = 1, N
+         ZTEMP = ZX(I)
+         ZX(I) = ZY(I)
+         ZY(I) = ZTEMP
+30    CONTINUE
+      RETURN
+   END subroutine
 
-!*****************
+!**
 
-                                             SUBROUTINE ZSWAP_(N, ZX, INCX, ZY, INCY)
-                                                INTEGER     :: INCX, INCY, N
-                                                COMPLEX(8)  :: ZX(*), ZY(*)
-                                                COMPLEX(8)  :: ZTEMP
-                                                INTEGER     :: I, IX, IY
+   SUBROUTINE ZSWAP_(N, ZX, INCX, ZY, INCY)
+      INTEGER     :: INCX, INCY, N
+      COMPLEX(8)  :: ZX(*), ZY(*)
+      COMPLEX(8)  :: ZTEMP
+      INTEGER     :: I, IX, IY
 
-                                                IF (N .LE. 0) RETURN
-                                                IF (INCX .EQ. 1 .AND. INCY .EQ. 1) GO TO 20
-                                                IX = 1
-                                                IY = 1
-                                                IF (INCX .LT. 0) IX = (-N + 1)*INCX + 1
-                                                IF (INCY .LT. 0) IY = (-N + 1)*INCY + 1
-                                                DO 10 I = 1, N
-                                                   ZTEMP = ZX(IX)
-                                                   ZX(IX) = ZY(IY)
-                                                   ZY(IY) = ZTEMP
-                                                   IX = IX + INCX
-                                                   IY = IY + INCY
-10                                                 CONTINUE
-                                                   RETURN
-20                                                 DO 30 I = 1, N
-                                                      ZTEMP = ZX(I)
-                                                      ZX(I) = ZY(I)
-                                                      ZY(I) = ZTEMP
-30                                                    CONTINUE
-                                                      RETURN
-                                                   END subroutine
+      IF (N .LE. 0) RETURN
+      IF (INCX .EQ. 1 .AND. INCY .EQ. 1) GO TO 20
+      IX = 1
+      IY = 1
+      IF (INCX .LT. 0) IX = (-N + 1)*INCX + 1
+      IF (INCY .LT. 0) IY = (-N + 1)*INCY + 1
+      DO 10 I = 1, N
+         ZTEMP = ZX(IX)
+         ZX(IX) = ZY(IY)
+         ZY(IY) = ZTEMP
+         IX = IX + INCX
+         IY = IY + INCY
+10    CONTINUE
+      RETURN
+20    DO 30 I = 1, N
+         ZTEMP = ZX(I)
+         ZX(I) = ZY(I)
+         ZY(I) = ZTEMP
+30    CONTINUE
+      RETURN
+   END subroutine
 
-!*****************
-                                                   elemental subroutine swapi(a, b)
-                                                      integer, intent(inout) :: a, b
-                                                      integer :: c
-                                                      c = a
-                                                      a = b
-                                                      b = c
-                                                   end subroutine
-!*****************
-                                                   elemental subroutine swaps(a, b)
-                                                      real(4), intent(inout) :: a, b
-                                                      real(4) :: c
-                                                      c = a
-                                                      a = b
-                                                      b = c
-                                                   end subroutine
-!*****************
-                                                   elemental subroutine swapr(a, b)
-                                                      real(8), intent(inout) :: a, b
-                                                      real(8) :: c
-                                                      c = a
-                                                      a = b
-                                                      b = c
-                                                   end subroutine
-!*****************
-                                                   elemental subroutine swapqr(a, b)
-                                                      real(16), intent(inout) :: a, b
-                                                      real(16) :: c
-                                                      c = a
-                                                      a = b
-                                                      b = c
-                                                   end subroutine
-!*****************
-                                                   elemental subroutine swapqc(a, b)
-                                                      complex(16), intent(inout) :: a, b
-                                                      complex(16) :: c
-                                                      c = a
-                                                      a = b
-                                                      b = c
-                                                   end subroutine
-!*****************
-                                                   subroutine swapa(a, b)
-                                                      character*(*), intent(inout) :: a, b
-                                                      character*20000:: c
-                                                      integer :: maxab
-                                                      maxab = LEN_TRIM(a)
-                                                      if (LEN_TRIM(b) > maxab) maxab = LEN_TRIM(b)
-                                                      c(1:maxab) = a(1:maxab)
-                                                      a(1:maxab) = b(1:maxab)
-                                                      b(1:maxab) = c(1:maxab)
-                                                   end subroutine
-!*****************
-                                                   elemental subroutine swapc(a, b)
-                                                      complex(8), intent(inout) :: a, b
-                                                      complex(8) :: c
-                                                      c = a
-                                                      a = b
-                                                      b = c
-                                                   end subroutine
-!*****************
-                                                   elemental subroutine swapcs(a, b)
-                                                      complex(4), intent(inout) :: a, b
-                                                      complex(4) :: c
-                                                      c = a
-                                                      a = b
-                                                      b = c
-                                                   end subroutine
+!**
+   elemental subroutine swapi(a, b)
+      integer, intent(inout) :: a, b
+      integer :: c
+      c = a
+      a = b
+      b = c
+   end subroutine
+!**
+   elemental subroutine swaps(a, b)
+      real(kind=SP), intent(inout) :: a, b
+      real(kind=SP) :: c
+      c = a
+      a = b
+      b = c
+   end subroutine
+!**
+   elemental subroutine swapr(a, b)
+      real(kind=DP), intent(inout) :: a, b
+      real(kind=DP) :: c
+      c = a
+      a = b
+      b = c
+   end subroutine
+!**
+   elemental subroutine swapqr(a, b)
+      real(16), intent(inout) :: a, b
+      real(16) :: c
+      c = a
+      a = b
+      b = c
+   end subroutine
+!**
+   elemental subroutine swapqc(a, b)
+      complex(16), intent(inout) :: a, b
+      complex(16) :: c
+      c = a
+      a = b
+      b = c
+   end subroutine
+!**
+   subroutine swapa(a, b)
+      character*(*), intent(inout) :: a, b
+      character*20000:: c
+      integer :: maxab
+      maxab = LEN_TRIM(a)
+      if (LEN_TRIM(b) > maxab) maxab = LEN_TRIM(b)
+      c(1:maxab) = a(1:maxab)
+      a(1:maxab) = b(1:maxab)
+      b(1:maxab) = c(1:maxab)
+   end subroutine
+!**
+   elemental subroutine swapc(a, b)
+      complex(kind=DP), intent(inout) :: a, b
+      complex(kind=DP) :: c
+      c = a
+      a = b
+      b = c
+   end subroutine
+!**
+   elemental subroutine swapcs(a, b)
+      complex(kind=SP), intent(inout) :: a, b
+      complex(kind=SP) :: c
+      c = a
+      a = b
+      b = c
+   end subroutine
 !*****************
 !
 !**************************************************************************
@@ -2954,7 +2960,7 @@ contains
 
                                                    subroutine rerase_divergence_scal(vec)
                                                       implicit none
-                                                      real(8)::vec
+                                                      real(kind=DP)::vec
                                                       if (isnan(vec) .or. disinf(vec)) vec = 0
                                                    end subroutine
 
@@ -2972,13 +2978,13 @@ contains
 
                                                    subroutine cerase_divergence_scal(vec)
                                                       implicit none
-                                                      complex(8)::vec
+                                                      complex(kind=DP)::vec
                                  if (isnan(real(vec)) .or. isnan(aimag(vec)) .or. disinf(real(vec)) .or. disinf(aimag(vec))) vec = 0
                                                    end subroutine
 
                                                    subroutine rerase_divergence_vec(vec)
                                                       implicit none
-                                                      real(8)::vec(:)
+                                                      real(kind=DP)::vec(:)
                                                       integer ::i
                                                       do i = 1, size(vec)
                                                          if (isnan(vec(i)) .or. disinf(vec(i))) vec(i) = 0
@@ -2996,7 +3002,7 @@ contains
 
                                                    subroutine rerase_divergence_mat(mat)
                                                       implicit none
-                                                      real(8)::mat(:, :)
+                                                      real(kind=DP)::mat(:, :)
                                                       integer ::i, j
                                                       do i = 1, size(mat(:, 1))
                                                          do j = 1, size(mat(1, :))
@@ -3038,7 +3044,7 @@ contains
 
                                                    subroutine cerase_divergence_vec(vec)
                                                       implicit none
-                                                      complex(8)::vec(:)
+                                                      complex(kind=DP)::vec(:)
                                                       integer ::i
                                                       do i = 1, size(vec)
                  if (isnan(real(vec(i))) .or. isnan(aimag(vec(i))) .or. disinf(real(vec(i))) .or. disinf(aimag(vec(i)))) vec(i) = 0.
@@ -3047,7 +3053,7 @@ contains
 
                                                    subroutine cerase_divergence_mat(mat)
                                                       implicit none
-                                                      complex(8)::mat(:, :)
+                                                      complex(kind=DP)::mat(:, :)
                                                       integer ::i, j
                                                       do i = 1, size(mat(:, 1))
                                                          do j = 1, size(mat(1, :))
@@ -3058,7 +3064,7 @@ contains
 
                                                    subroutine rerase_divergence_mat_(mat)
                                                       implicit none
-                                                      real(8) :: mat(:, :, :)
+                                                      real(kind=DP) :: mat(:, :, :)
                                                       integer :: i1, i2, i3, s(3)
                                                       s = shape(mat)
                                                       do i1 = 1, s(1)
@@ -3073,7 +3079,7 @@ contains
 
                                                    subroutine rerase_divergence_mat__(mat)
                                                       implicit none
-                                                      real(8) :: mat(:, :, :, :)
+                                                      real(kind=DP) :: mat(:, :, :, :)
                                                       integer :: i1, i2, i3, i4, s(4)
                                                       s = shape(mat)
                                                       do i1 = 1, s(1)
@@ -3090,7 +3096,7 @@ contains
 
                                                    subroutine rerase_divergence_mat___(mat)
                                                       implicit none
-                                                      real(8) :: mat(:, :, :, :, :)
+                                                      real(kind=DP) :: mat(:, :, :, :, :)
                                                       integer :: i1, i2, i3, i4, i5, s(5)
                                                       s = shape(mat)
                                                       do i1 = 1, s(1)
@@ -3109,7 +3115,7 @@ contains
 
                                                    subroutine rerase_divergence_mat____(mat)
                                                       implicit none
-                                                      real(8) :: mat(:, :, :, :, :, :)
+                                                      real(kind=DP) :: mat(:, :, :, :, :, :)
                                                       integer :: i1, i2, i3, i4, i5, i6, s(6)
                                                       s = shape(mat)
                                                       do i1 = 1, s(1)
@@ -3130,7 +3136,7 @@ contains
 
                                                    subroutine cerase_divergence_mat_(mat)
                                                       implicit none
-                                                      complex(8) :: mat(:, :, :)
+                                                      complex(kind=DP) :: mat(:, :, :)
                                                       integer :: i1, i2, i3, s(3)
                                                       s = shape(mat)
                                                       do i1 = 1, s(1)
@@ -3145,7 +3151,7 @@ contains
 
                                                    subroutine cerase_divergence_mat__(mat)
                                                       implicit none
-                                                      complex(8) :: mat(:, :, :, :)
+                                                      complex(kind=DP) :: mat(:, :, :, :)
                                                       integer :: i1, i2, i3, i4, s(4)
                                                       s = shape(mat)
                                                       do i1 = 1, s(1)
@@ -3162,7 +3168,7 @@ contains
 
                                                    subroutine cerase_divergence_mat___(mat)
                                                       implicit none
-                                                      complex(8) :: mat(:, :, :, :, :)
+                                                      complex(kind=DP) :: mat(:, :, :, :, :)
                                                       integer :: i1, i2, i3, i4, i5, s(5)
                                                       s = shape(mat)
                                                       do i1 = 1, s(1)
@@ -3181,7 +3187,7 @@ contains
 
 ! subroutine cerase_divergence_mat____(mat)
 ! implicit none
-! complex(8) :: mat(:,:,:,:,:,:)
+! complex(kind=DP) :: mat(:,:,:,:,:,:)
 ! integer :: i1,i2,i3,i4,i5,i6,s(6)
 ! s=shape(mat)
 ! do i1=1,s(1)
@@ -3210,21 +3216,21 @@ contains
 !**************************************************************************
 !**************************************************************************
 
-                                                   pure real(8) function dble_r(zdum)
+                                                   pure real(kind=DP) function dble_r(zdum)
                                                       implicit none
-                                                      complex(8), intent(in) :: zdum
+                                                      complex(kind=DP), intent(in) :: zdum
                                                       dble_r = real(zdum)
                                                    end function
 
-                                                   pure real(8) function aimag_r(zdum)
+                                                   pure real(kind=DP) function aimag_r(zdum)
                                                       implicit none
-                                                      complex(8), intent(in) :: zdum
+                                                      complex(kind=DP), intent(in) :: zdum
                                                       aimag_r = real((0.0d0, -1.0d0)*zdum, kind=8)
                                                    end function
 
-                                                   pure real(8) function cabs1_r(zdum)
+                                                   pure real(kind=DP) function cabs1_r(zdum)
                                                       implicit none
-                                                      complex(8), intent(in) :: zdum
+                                                      complex(kind=DP), intent(in) :: zdum
                                                       real(16) :: tt
                                                       tt = dabs(dble(zdum)) + dabs(aimag(zdum))
                                                       if (abs(tt) > MAX_REAL) then
@@ -3234,15 +3240,15 @@ contains
                                                       cabs1_r = real(tt, kind=8)
                                                    end function
 
-                                                   pure real(8) function csign1_r(zdum1, zdum2)
+                                                   pure real(kind=DP) function csign1_r(zdum1, zdum2)
                                                       implicit none
-                                                      complex(8), intent(in) :: zdum1, zdum2
+                                                      complex(kind=DP), intent(in) :: zdum1, zdum2
                                                       csign1_r = real(cabs1(zdum1)*(zdum2/cabs1(zdum2)), kind=8)
                                                    end function
 
-                                                   pure real(8) function DEXPc_r(rr)
+                                                   pure real(kind=DP) function DEXPc_r(rr)
                                                       implicit none
-                                                      real(8), intent(in) :: rr
+                                                      real(kind=DP), intent(in) :: rr
                                                       if (rr < MAX_EXP) then
                                                          if (rr < MIN_EXP) then
                                                             DEXPc_r = 0.d0
@@ -3254,9 +3260,9 @@ contains
                                                       endif
                                                    end function
 
-                                                   pure real(8) function DEXPc_rr(rr)
+                                                   pure real(kind=DP) function DEXPc_rr(rr)
                                                       implicit none
-                                                      real(4), intent(in) :: rr
+                                                      real(kind=SP), intent(in) :: rr
                                                       if (rr < MAX_EXP_r) then
                                                          if (rr < MIN_EXP_r) then
                                                             DEXPc_rr = 0.d0
@@ -3339,9 +3345,9 @@ contains
 !
 ! elemental function PHASE_rel(dd)
 ! implicit none
-! real(8),intent(in)     :: dd
+! real(kind=DP),intent(in)     :: dd
 ! integer               :: i,s1,s2,j
-! real(8)                :: PHASE_rel
+! real(kind=DP)                :: PHASE_rel
 !   if(abs(dd)>1.d-13) then
 !    PHASE_rel=dd/abs(dd)
 !   else
@@ -3351,9 +3357,9 @@ contains
 !
 ! elemental function PHASE_cel(dd)
 ! implicit none
-! complex(8),intent(in) :: dd
+! complex(kind=DP),intent(in) :: dd
 ! integer               :: i,s1,s2,j
-! complex(8)            :: PHASE_cel
+! complex(kind=DP)            :: PHASE_cel
 !   if(abs(dd)>1.d-13) then
 !    PHASE_cel=dd/abs(dd)
 !   else
@@ -3376,9 +3382,9 @@ contains
 !
 ! function ANGLE_r(dd)
 ! implicit none
-! real(8)     :: dd(2)
+! real(kind=DP)     :: dd(2)
 ! integer    :: i,s1,s2,j
-! real(8)     :: ANGLE_r
+! real(kind=DP)     :: ANGLE_r
 !
 !   ANGLE_r=0.
 !
@@ -3409,9 +3415,9 @@ contains
 !
 ! function ANGLE_rs(dd)
 ! implicit none
-! real(4)     :: dd(2)
+! real(kind=SP)     :: dd(2)
 ! integer    :: i,s1,s2,j
-! real(8)     :: ANGLE_rs
+! real(kind=DP)     :: ANGLE_rs
 !
 !   ANGLE_rs=0.
 !   if(abs(dd(2))>1.d-8) then
@@ -3441,9 +3447,9 @@ contains
 !
 ! function ANGLE_c(dd)
 ! implicit none
-! complex(8) :: dd(:)
+! complex(kind=DP) :: dd(:)
 ! integer    :: i,s1,s2,j
-! real(8)     :: ANGLE_c(size(dd(:))),vv(2)
+! real(kind=DP)     :: ANGLE_c(size(dd(:))),vv(2)
 ! s1=size(dd(:))
 !  ANGLE_c=0.
 !  do i=1,s1
@@ -3457,9 +3463,9 @@ contains
 !
 ! function ANGLE_c2(dd)
 ! implicit none
-! complex(8) :: dd(:,:)
+! complex(kind=DP) :: dd(:,:)
 ! integer    :: i,s1,s2,j
-! real(8)     :: ANGLE_c2(size(dd(:,1)),size(dd(1,:))),vv(2)
+! real(kind=DP)     :: ANGLE_c2(size(dd(:,1)),size(dd(1,:))),vv(2)
 ! s1=size(dd(:,1))
 ! s2=size(dd(1,:))
 !  ANGLE_c2=0.d0
@@ -3476,9 +3482,9 @@ contains
 !
 ! function ANGLE_cb(dd)
 ! implicit none
-! complex(8) :: dd
+! complex(kind=DP) :: dd
 ! integer    :: i,s1,s2,j
-! real(8)     :: ANGLE_cb,vv(2)
+! real(kind=DP)     :: ANGLE_cb,vv(2)
 !  ANGLE_cb=0.
 !  vv(1)=real(dd)
 !  vv(2)=aimag(dd)
@@ -3500,8 +3506,8 @@ contains
 
                                                    elemental function MPLX(dd)
                                                       implicit none
-                                                      complex(8)            :: MPLX
-                                                      real(8), intent(in)    :: dd
+                                                      complex(kind=DP)            :: MPLX
+                                                      real(kind=DP), intent(in)    :: dd
                                                       MPLX = CMPLX(cos(dd), sin(dd), kind=8)
                                                    end function
 !
@@ -3509,8 +3515,8 @@ contains
 !
 ! elemental function MPLXamp(dd)
 ! implicit none
-! complex(8)            :: MPLXamp
-! real(8),intent(in)    :: dd
+! complex(kind=DP)            :: MPLXamp
+! real(kind=DP),intent(in)    :: dd
 !   MPLXamp=CMPLX(1.d0,dd,kind=8)
 ! end function
 !
@@ -3638,7 +3644,7 @@ contains
 !
 ! subroutine printmatrice__(AA,format)
 ! implicit none
-! complex(8) :: AA(:,:)
+! complex(kind=DP) :: AA(:,:)
 ! integer :: i,k,sizea,sizeb
 ! character*(*) :: format
 !  sizeb=size(AA(1,:))
@@ -3654,7 +3660,7 @@ contains
 !
 ! subroutine printmatrice_(AA,format)
 ! implicit none
-! real(8) :: AA(:,:)
+! real(kind=DP) :: AA(:,:)
 ! integer :: i,k,sizea,sizeb
 ! character*(*) :: format
 !  sizeb=size(AA(1,:))
@@ -3670,10 +3676,10 @@ contains
 !
 ! subroutine check_symmetric(errmess,A,nodiag)
 ! implicit none
-! complex(8)       :: A(:,:),B(size(A,1),size(A,2))
+! complex(kind=DP)       :: A(:,:),B(size(A,1),size(A,2))
 ! integer          :: qq,i,j,i1,i2
 ! character*(*)    :: errmess
-! real(8)          :: norm_max
+! real(kind=DP)          :: norm_max
 ! logical,optional :: nodiag
 !
 !  B=A; qq=size(B(:,1)); norm_max=maxval(abs(B))
@@ -3712,9 +3718,9 @@ contains
 !
 ! logical function is_symmetric(A,nodiag)
 ! implicit none
-! complex(8)       :: A(:,:),B(size(A,1),size(A,2))
+! complex(kind=DP)       :: A(:,:),B(size(A,1),size(A,2))
 ! integer          :: qq,i,j,i1,i2
-! real(8)          :: norm_max
+! real(kind=DP)          :: norm_max
 ! logical,optional :: nodiag
 ! B=A; qq=size(B(:,1)); norm_max=maxval(abs(B))
 ! if(present(nodiag))then; do i=1,size(A,1); B(i,i)=0.; enddo; endif
@@ -3725,10 +3731,10 @@ contains
 !
 ! subroutine check_hermitian(errmess,A,nodiag)
 ! implicit none
-! complex(8)       :: A(:,:),B(size(A,1),size(A,2))
+! complex(kind=DP)       :: A(:,:),B(size(A,1),size(A,2))
 ! integer          :: qq,i,j,i1,i2
 ! character*(*)    :: errmess
-! real(8)          :: norm_max
+! real(kind=DP)          :: norm_max
 ! logical,optional :: nodiag
 !
 !  B=A; qq=size(B(:,1)); norm_max=maxval(abs(B))
@@ -3768,8 +3774,8 @@ contains
 !
 ! subroutine check_squew(errmess,B)
 ! implicit none
-! complex(8)    :: B(:,:)
-! real(8)       :: maxvalB
+! complex(kind=DP)    :: B(:,:)
+! real(kind=DP)       :: maxvalB
 ! integer       :: qq,i,j
 ! character*(*) :: errmess
 !
@@ -3801,9 +3807,9 @@ contains
 !
 ! subroutine vecnorm(x,y)
 ! implicit none
-! real(8),dimension(:),intent(in) ::  x
-! real(8),dimension(:),intent(out)::  y
-! real(8) :: norm
+! real(kind=DP),dimension(:),intent(in) ::  x
+! real(kind=DP),dimension(:),intent(out)::  y
+! real(kind=DP) :: norm
 ! integer:: j
 !  norm=norme(x)
 !  y=x/norm
@@ -3818,9 +3824,9 @@ contains
 !
 ! function matrixchange(g,h,i)
 ! implicit none
-! real(8)                          :: o,p
-! real(8),dimension(3),intent(in)  :: g,h,i
-! real(8),dimension(3,3)           :: matrix,matrixchange
+! real(kind=DP)                          :: o,p
+! real(kind=DP),dimension(3),intent(in)  :: g,h,i
+! real(kind=DP),dimension(3,3)           :: matrix,matrixchange
 !
 !  o=-g(3)*h(2)*i(1)+g(2)*h(3)*i(1)+g(3)*h(1)*i(2)&
 !  & -g(1)*h(3)*i(2)-g(2)*h(1)*i(3)+g(1)*h(2)*i(3)
@@ -3854,8 +3860,8 @@ contains
 !
 ! function matrixrotation(f)
 ! implicit none
-! real(8),intent(in)::f
-! real(8),dimension(3,3)::rotation,matrixrotation
+! real(kind=DP),intent(in)::f
+! real(kind=DP),dimension(3,3)::rotation,matrixrotation
 !
 !     rotation(1,1)= 1.
 !     rotation(1,2)= 0.
@@ -3932,9 +3938,9 @@ contains
 
                                                    function matrixinverse_r(j, q)
                                                       implicit none
-                                                      real(8)                           :: q
-                                                      real(8), dimension(3, 3), intent(in) :: j
-                                                      real(8), dimension(3, 3)            :: matrixinverse_r
+                                                      real(kind=DP)                           :: q
+                                                      real(kind=DP), dimension(3, 3), intent(in) :: j
+                                                      real(kind=DP), dimension(3, 3)            :: matrixinverse_r
 
                                                   q = -j(3, 1)*j(2, 2)*j(1, 3) + j(2, 1)*j(3, 2)*j(1, 3) + j(3, 1)*j(1, 2)*j(2, 3) &
                                                      & - j(1, 1)*j(3, 2)*j(2, 3) - j(2, 1)*j(1, 2)*j(3, 3) + j(1, 1)*j(2, 2)*j(3, 3)
@@ -3958,9 +3964,9 @@ contains
 
                                                    function matrixinverse_rs(j, q)
                                                       implicit none
-                                                      real(4)                           :: q
-                                                      real(4), dimension(3, 3), intent(in) :: j
-                                                      real(4), dimension(3, 3)            :: matrixinverse_rs
+                                                      real(kind=SP)                           :: q
+                                                      real(kind=SP), dimension(3, 3), intent(in) :: j
+                                                      real(kind=SP), dimension(3, 3)            :: matrixinverse_rs
 
                                                   q = -j(3, 1)*j(2, 2)*j(1, 3) + j(2, 1)*j(3, 2)*j(1, 3) + j(3, 1)*j(1, 2)*j(2, 3) &
                                                      & - j(1, 1)*j(3, 2)*j(2, 3) - j(2, 1)*j(1, 2)*j(3, 3) + j(1, 1)*j(2, 2)*j(3, 3)
@@ -3984,9 +3990,9 @@ contains
 
                                                    function matrixinverse_c(j, q)
                                                       implicit none
-                                                      complex(8)                           :: q
-                                                      complex(8), dimension(3, 3), intent(in) :: j
-                                                      complex(8), dimension(3, 3)            :: matrixinverse_c
+                                                      complex(kind=DP)                           :: q
+                                                      complex(kind=DP), dimension(3, 3), intent(in) :: j
+                                                      complex(kind=DP), dimension(3, 3)            :: matrixinverse_c
 
                                                   q = -j(3, 1)*j(2, 2)*j(1, 3) + j(2, 1)*j(3, 2)*j(1, 3) + j(3, 1)*j(1, 2)*j(2, 3) &
                                                      & - j(1, 1)*j(3, 2)*j(2, 3) - j(2, 1)*j(1, 2)*j(3, 3) + j(1, 1)*j(2, 2)*j(3, 3)
@@ -4010,9 +4016,9 @@ contains
 
                                                    function matrixinverse_cs(j, q)
                                                       implicit none
-                                                      complex(4)                           :: q
-                                                      complex(4), dimension(3, 3), intent(in) :: j
-                                                      complex(4), dimension(3, 3)            :: matrixinverse_cs
+                                                      complex(kind=SP)                           :: q
+                                                      complex(kind=SP), dimension(3, 3), intent(in) :: j
+                                                      complex(kind=SP), dimension(3, 3)            :: matrixinverse_cs
 
                                                   q = -j(3, 1)*j(2, 2)*j(1, 3) + j(2, 1)*j(3, 2)*j(1, 3) + j(3, 1)*j(1, 2)*j(2, 3) &
                                                      & - j(1, 1)*j(3, 2)*j(2, 3) - j(2, 1)*j(1, 2)*j(3, 3) + j(1, 1)*j(2, 2)*j(3, 3)
@@ -4041,9 +4047,9 @@ contains
 !
 ! function determinant(mat)
 ! implicit none
-! real(8),intent(in)::mat(:,:)
-! real(8),dimension(3)::detc
-! real(8)::determinant
+! real(kind=DP),intent(in)::mat(:,:)
+! real(kind=DP),dimension(3)::detc
+! real(kind=DP)::determinant
 !  if(size(mat(1,:))==3)then
 !    detc(1)=mat(1,1)*mat(2,2)*mat(3,3)-mat(1,1)*mat(3,2)*mat(2,3)
 !    detc(2)=mat(2,1)*mat(3,2)*mat(1,3)-mat(2,1)*mat(1,2)*mat(3,3)
@@ -4089,7 +4095,7 @@ contains
 ! function vecegalr(vv3,vv4)
 !  implicit none
 !  logical :: vecegalr
-!  real(8),intent(in),dimension(:)  ::vv3,vv4
+!  real(kind=DP),intent(in),dimension(:)  ::vv3,vv4
 !  integer ::i
 !  vecegalr=.true.
 !  if(size(vv3)/=size(vv4))then
@@ -4104,7 +4110,7 @@ contains
 ! function vecbigr(v3,v4)
 !  implicit none
 !  logical :: vecbigr
-!  real(8),intent(in),dimension(:) :: v3,v4
+!  real(kind=DP),intent(in),dimension(:) :: v3,v4
 !  vecbigr=.true.
 !  if(size(v3)/=size(v4))then
 !   vecbigr=.false.
@@ -4138,7 +4144,7 @@ contains
 ! function vecsmr(v3,v4)
 !  implicit none
 !  logical :: vecsmr
-!  real(8),intent(in),dimension(:) :: v3,v4
+!  real(kind=DP),intent(in),dimension(:) :: v3,v4
 !  vecsmr=.not.(vecbigr(v3,v4))
 ! end function
 !
@@ -4173,8 +4179,8 @@ contains
 ! function vecegalrs(vv3,vv4)
 ! implicit none
 ! logical :: vecegalrs
-! real(8),intent(in),dimension(:)  :: vv3
-! real(8),intent(in) :: vv4
+! real(kind=DP),intent(in),dimension(:)  :: vv3
+! real(kind=DP),intent(in) :: vv4
 ! integer::i
 !  vecegalrs=.true.
 !  if(norme(vv3-vv4)>prec) vecegalrs=.false.
@@ -4185,8 +4191,8 @@ contains
 ! function vecbigrs(v3,v4)
 ! implicit none
 ! logical :: vecbigrs
-! real(8),intent(in),dimension(:) :: v3
-! real(8),intent(in) :: v4
+! real(kind=DP),intent(in),dimension(:) :: v3
+! real(kind=DP),intent(in) :: v4
 !  vecbigrs=.true.
 !   if(norme(v3)<v4)then
 !    vecbigrs=.false.
@@ -4213,8 +4219,8 @@ contains
 ! function vecsmrs(vv3,vv4)
 ! implicit none
 ! logical vecsmrs
-! real(8),intent(in),dimension(:) :: vv3
-! real(8),intent(in) :: vv4
+! real(kind=DP),intent(in),dimension(:) :: vv3
+! real(kind=DP),intent(in) :: vv4
 !  vecsmrs=.not.(vecbigrs(vv3,vv4))
 ! end function
 !
@@ -4233,8 +4239,8 @@ contains
                                                    function cdot_(x, y)
                                                       implicit none
                                                       integer                            :: j
-                                                      complex(8), dimension(:), intent(in) :: x, y
-                                                      complex(8)                         :: cdot_
+                                                      complex(kind=DP), dimension(:), intent(in) :: x, y
+                                                      complex(kind=DP)                         :: cdot_
                                                       cdot_ = 0.
                                                       do j = 1, size(x)
                                                          cdot_ = cdot_ + conjg(x(j))*y(j)
@@ -4246,8 +4252,8 @@ contains
                                                    function ddot_(xx, yy)
                                                       implicit none
                                                       integer                         ::  j
-                                                      real(8), dimension(:), intent(in) ::  xx, yy
-                                                      real(8)                         ::  ddot_
+                                                      real(kind=DP), dimension(:), intent(in) ::  xx, yy
+                                                      real(kind=DP)                         ::  ddot_
                                                       ddot_ = 0.
                                                       do j = 1, size(xx)
                                                          ddot_ = ddot_ + xx(j)*yy(j)
@@ -4259,8 +4265,8 @@ contains
                                                    function sdot_(x, y)
                                                       implicit none
                                                       integer ::j
-                                                      real(4), dimension(:), intent(in) ::  x, y
-                                                      real(8) :: sdot_
+                                                      real(kind=SP), dimension(:), intent(in) ::  x, y
+                                                      real(kind=DP) :: sdot_
                                                       sdot_ = 0.
                                                       do j = 1, size(x)
                                                          sdot_ = sdot_ + x(j)*y(j)
@@ -4272,7 +4278,7 @@ contains
                                                    function idot_(u, v)
                                                       implicit none
                                                       integer, dimension(:), intent(in) ::u, v
-                                                      real(8) :: idot_
+                                                      real(kind=DP) :: idot_
                                                       integer :: j
                                                       idot_ = 0.
                                                       do j = 1, size(u)
@@ -4285,7 +4291,7 @@ contains
                                                    function icross(x1, y1)
                                                       implicit none
                                                       integer, dimension(3), intent(in) ::  x1, y1
-                                                      real(8), dimension(3)::  icross
+                                                      real(kind=DP), dimension(3)::  icross
                                                       icross(1) = x1(2)*y1(3) - x1(3)*y1(2)
                                                       icross(2) = x1(3)*y1(1) - x1(1)*y1(3)
                                                       icross(3) = x1(1)*y1(2) - x1(2)*y1(1)
@@ -4295,8 +4301,8 @@ contains
 
                                                    function dnorm(xx)
                                                       implicit none
-                                                      real(8), dimension(:), intent(in) :: xx
-                                                      real(8) :: dnorm
+                                                      real(kind=DP), dimension(:), intent(in) :: xx
+                                                      real(kind=DP) :: dnorm
                                                       integer :: j
                                                       dnorm = 0.
                                                       if (enable_mpi_dot) then
@@ -4319,8 +4325,8 @@ contains
 !
 ! function norme_squ(xx)
 ! implicit none
-! real(8), dimension(:),intent(in) :: xx
-! real(8) :: norme_squ
+! real(kind=DP), dimension(:),intent(in) :: xx
+! real(kind=DP) :: norme_squ
 ! integer :: j
 !  norme_squ=0.
 ! if(enable_mpi_dot)then
@@ -4343,7 +4349,7 @@ contains
                                                    function inorm(xx)
                                                       implicit none
                                                       integer, dimension(:), intent(in)::xx
-                                                      real(8) ::  inorm
+                                                      real(kind=DP) ::  inorm
                                                       integer :: j
                                                       inorm = 0.
                                                       do j = 1, size(xx)
@@ -4356,8 +4362,8 @@ contains
 
                                                    function cnorm(xx)
                                                       implicit none
-                                                      complex(8), dimension(:), intent(in)::xx
-                                                      real(8) ::  cnorm
+                                                      complex(kind=DP), dimension(:), intent(in)::xx
+                                                      real(kind=DP) ::  cnorm
                                                       integer ::  j
                                                       cnorm = 0.
                                                       do j = 1, size(xx)
@@ -4370,8 +4376,8 @@ contains
 
                                                    function snorm(x)
                                                       implicit none
-                                                      real(4), dimension(:), intent(in) ::  x
-                                                      real(8):: snorm
+                                                      real(kind=SP), dimension(:), intent(in) ::  x
+                                                      real(kind=DP):: snorm
                                                       integer :: j
                                                       snorm = 0.
                                                       do j = 1, size(x)
@@ -4384,8 +4390,8 @@ contains
 
                                                    function dcross(x, y)
                                                       implicit none
-                                                      real(8), dimension(3), intent(in) ::  x, y
-                                                      real(8), dimension(3)            ::  dcross
+                                                      real(kind=DP), dimension(3), intent(in) ::  x, y
+                                                      real(kind=DP), dimension(3)            ::  dcross
                                                       dcross(1) = x(2)*y(3) - x(3)*y(2)
                                                       dcross(2) = x(3)*y(1) - x(1)*y(3)
                                                       dcross(3) = x(1)*y(2) - x(2)*y(1)
@@ -4395,8 +4401,8 @@ contains
 
                                                    function scross(xx, yy)
                                                       implicit none
-                                                      real(4), dimension(3), intent(in) ::  xx, yy
-                                                      real(8), dimension(3)            ::  scross
+                                                      real(kind=SP), dimension(3), intent(in) ::  xx, yy
+                                                      real(kind=DP), dimension(3)            ::  scross
                                                       scross(1) = xx(2)*yy(3) - xx(3)*yy(2)
                                                       scross(2) = xx(3)*yy(1) - xx(1)*yy(3)
                                                       scross(3) = xx(1)*yy(2) - xx(2)*yy(1)
@@ -4406,8 +4412,8 @@ contains
 
                                                    function ccross(x, y)
                                                       implicit none
-                                                      complex(8), dimension(3), intent(in) ::  x, y
-                                                      complex(8), dimension(3)            :: ccross
+                                                      complex(kind=DP), dimension(3), intent(in) ::  x, y
+                                                      complex(kind=DP), dimension(3)            :: ccross
                                                       ccross(1) = (x(2)*conjg(y(3)) - x(3)*conjg(y(2)))
                                                       ccross(2) = (x(3)*conjg(y(1)) - x(1)*conjg(y(3)))
                                                       ccross(3) = (x(1)*conjg(y(2)) - x(2)*conjg(y(1)))
@@ -4464,13 +4470,13 @@ contains
 !
 !   IMPLICIT NONE
 !
-!   complex(8), INTENT(in)   :: ham(ndim,ndim)   ! Hamiltonian
-!   complex(8), INTENT(in)   :: olm(ndim,ndim)   ! Overlap matrix
-!   complex(8), INTENT(out)  :: zek(ndim)        ! Vector of eigenvalues
-!   complex(8), INTENT(out)  :: evl(ndim,ndim)   ! left eigenvectors
-!   complex(8), INTENT(out)  :: evr(ndim,ndim)   ! right eigenvectors
+!   complex(kind=DP), INTENT(in)   :: ham(ndim,ndim)   ! Hamiltonian
+!   complex(kind=DP), INTENT(in)   :: olm(ndim,ndim)   ! Overlap matrix
+!   complex(kind=DP), INTENT(out)  :: zek(ndim)        ! Vector of eigenvalues
+!   complex(kind=DP), INTENT(out)  :: evl(ndim,ndim)   ! left eigenvectors
+!   complex(kind=DP), INTENT(out)  :: evr(ndim,ndim)   ! right eigenvectors
 !   INTEGER, INTENT(in)      :: ndim             ! Dimension of hamiltonian
-!   real(8), PARAMETER       :: smalleps = 1e-5
+!   real(kind=DP), PARAMETER       :: smalleps = 1e-5
 !   CHARACTER(1), PARAMETER  :: uplo  = "U"      ! Job parameter for zpotrf/ztrtri
 !   CHARACTER(1), PARAMETER  :: diag  = "N"      ! Job parameter for ztrtri
 !   CHARACTER(1), PARAMETER  :: jobvl = "V"      ! Jop parameter for zgeev
@@ -4483,14 +4489,14 @@ contains
 !   INTEGER                  :: irow             ! Loop index for rows
 !   INTEGER                  :: icol             ! Loop index for columns
 !   INTEGER                  :: p,q,r            ! Loop index
-!   complex(8)               :: ctmp             ! Temporary variable
-!   complex(8)               :: alpha_one        ! For ztrmm
-!   complex(8)               :: umat(ndim,ndim)  ! Cholesky factor
-!   complex(8)               :: bmat(ndim,ndim)  ! Inverse Cholesky factor
-!   complex(8)               :: htmp(ndim,ndim)  ! Transformed Hamiltonian
-!   complex(8)               :: scaler(ndim)     ! Array of normalization parameters
-!   complex(8)               :: cworkvec(8*ndim) ! Work array for zgeev
-!   real(8)                  :: rworkvec(8*ndim) ! Work array for zgeev
+!   complex(kind=DP)               :: ctmp             ! Temporary variable
+!   complex(kind=DP)               :: alpha_one        ! For ztrmm
+!   complex(kind=DP)               :: umat(ndim,ndim)  ! Cholesky factor
+!   complex(kind=DP)               :: bmat(ndim,ndim)  ! Inverse Cholesky factor
+!   complex(kind=DP)               :: htmp(ndim,ndim)  ! Transformed Hamiltonian
+!   complex(kind=DP)               :: scaler(ndim)     ! Array of normalization parameters
+!   complex(kind=DP)               :: cworkvec(8*ndim) ! Work array for zgeev
+!   real(kind=DP)                  :: rworkvec(8*ndim) ! Work array for zgeev
 !
 !   !========== Step 1, Cholesky decompose O, O = U^{+}U ==========
 !   umat = olm
@@ -4561,9 +4567,9 @@ contains
 !   RETURN
 !
 ! CONTAINS
-!   complex(8) FUNCTION scalprod(a,b,ndim)
+!   complex(kind=DP) FUNCTION scalprod(a,b,ndim)
 !     IMPLICIT NONE
-!     complex(8) :: a(:), b(:)
+!     complex(kind=DP) :: a(:), b(:)
 !     INTEGER    :: ndim
 !     INTEGER    :: i
 !     scalprod = 0.0
@@ -4626,11 +4632,11 @@ contains
 !
 !   IMPLICIT NONE
 !
-!   complex(8), INTENT(in)  :: ham(ndim,ndim)   ! Hamiltonian
-!   complex(8), INTENT(in)  :: olm(ndim,ndim)   ! Overlap matrix
-!   complex(8), INTENT(out) :: zek(ndim)        ! Vector of eigenvalues
+!   complex(kind=DP), INTENT(in)  :: ham(ndim,ndim)   ! Hamiltonian
+!   complex(kind=DP), INTENT(in)  :: olm(ndim,ndim)   ! Overlap matrix
+!   complex(kind=DP), INTENT(out) :: zek(ndim)        ! Vector of eigenvalues
 !   INTEGER, INTENT(in)     :: ndim             ! Dimension of hamiltonian
-!   real(8), PARAMETER      :: smalleps = 1e-5
+!   real(kind=DP), PARAMETER      :: smalleps = 1e-5
 !   CHARACTER(1),PARAMETER  :: uplo  = "U"      ! Job parameter for zpotrf/ztrtri
 !   CHARACTER(1),PARAMETER  :: diag  = "N"      ! Job parameter for ztrtri
 !   CHARACTER(1),PARAMETER  :: jobvl = "N"      ! Jop parameter for zgeev
@@ -4643,16 +4649,16 @@ contains
 !   INTEGER                 :: irow             ! Loop index for rows
 !   INTEGER                 :: icol             ! Loop index for columns
 !   INTEGER                 :: p,q,r            ! Loop index
-!   complex(8)              :: ctmp             ! Temporary variable
-!   complex(8)              :: alpha_one        ! For ztrmm
-!   complex(8)              :: umat(ndim,ndim)  ! Cholesky factor
-!   complex(8)              :: bmat(ndim,ndim)  ! Inverse Cholesky factor
-!   complex(8)              :: htmp(ndim,ndim)  ! Transformed Hamiltonian
-!   complex(8)              :: scaler(ndim)     ! Array of normalization parameters
-!   complex(8)              :: cworkvec(8*ndim) ! Work array for zgeev
-!   real(8)                 :: rworkvec(8*ndim) ! Work array for zgeev
-!   complex(8)              :: evl(1,1)         ! left eigenvectors
-!   complex(8)              :: evr(1,1)         ! right eigenvectors
+!   complex(kind=DP)              :: ctmp             ! Temporary variable
+!   complex(kind=DP)              :: alpha_one        ! For ztrmm
+!   complex(kind=DP)              :: umat(ndim,ndim)  ! Cholesky factor
+!   complex(kind=DP)              :: bmat(ndim,ndim)  ! Inverse Cholesky factor
+!   complex(kind=DP)              :: htmp(ndim,ndim)  ! Transformed Hamiltonian
+!   complex(kind=DP)              :: scaler(ndim)     ! Array of normalization parameters
+!   complex(kind=DP)              :: cworkvec(8*ndim) ! Work array for zgeev
+!   real(kind=DP)                 :: rworkvec(8*ndim) ! Work array for zgeev
+!   complex(kind=DP)              :: evl(1,1)         ! left eigenvectors
+!   complex(kind=DP)              :: evr(1,1)         ! right eigenvectors
 !
 !   !========== Step 1, Cholesky decompose O, O = U^{+}U ==========
 !   umat = olm
@@ -4709,13 +4715,13 @@ contains
 ! !                 REPLACES A BY ITS INVERSE.
 ! !     ******************************************************************
 !
-!       IMPLICIT real(8) (A-H,O-Z)
-!       complex(8)  A(IDIM,N)
+!       IMPLICIT real(kind=DP) (A-H,O-Z)
+!       complex(kind=DP)  A(IDIM,N)
 !       INTEGER     N, IDIM
 !       INTEGER     IFAIL
 !       integer     R(N)
-!       real(8)     T1,T2,T3
-!       complex(8)  ONE,DET,TEMP,S,C11,C12,C13,C21,C22,C23,C31,C32,C33
+!       real(kind=DP)     T1,T2,T3
+!       complex(kind=DP)  ONE,DET,TEMP,S,C11,C12,C13,C21,C22,C23,C31,C32,C33
 !       CHARACTER*6 NAME
 !
 !       DATA NAME/'CINV'/,KPRNT/0/
@@ -4820,9 +4826,9 @@ contains
 !       SUBROUTINE CFINV (N, A, IDIM, IR)
 !       IMPLICIT REAL (8)(A - H, O - Z)
 !       INTEGER       :: IR (2 * N)
-!       complex(8)    :: A (IDIM, N), X, Y, TI
+!       complex(kind=DP)    :: A (IDIM, N), X, Y, TI
 !       CHARACTER(6)  :: HNAME
-!       complex(8)    ::  ZERO, S31, S32, S33, S34, DC, DOTF
+!       complex(kind=DP)    ::  ZERO, S31, S32, S33, S34, DC, DOTF
 !
 !       DOTF (X, Y, S31) = X * Y + S31
 !       DATA ZERO / (0.D0, 0.D0) /
@@ -4896,11 +4902,11 @@ contains
 !       SUBROUTINE CFACT (N, A, IDIM, IR, IFAIL, DET, JFAIL)
 !       IMPLICIT REAL (8)(A - H, O - Z)
 !       INTEGER      :: IR(2*N), IPAIRF
-!       complex(8)   :: A (IDIM, N), DET, ZERO, ONE, X, Y, TF
-!       real(8)      :: G1, G2
-!       real(8)      :: PIVOTF, P, Q, SIZEF, T
+!       complex(kind=DP)   :: A (IDIM, N), DET, ZERO, ONE, X, Y, TF
+!       real(kind=DP)      :: G1, G2
+!       real(kind=DP)      :: PIVOTF, P, Q, SIZEF, T
 !       CHARACTER(6) :: HNAME
-!       complex(8)   :: S11, S12, DC, DOTF
+!       complex(kind=DP)   :: S11, S12, DC, DOTF
 !
 !       DATA G1, G2 / 1.D-19, 1.D19 /
 !       DATA HNAME / ' CFACT' /
@@ -5002,14 +5008,14 @@ contains
 !
 ! subroutine ZProduct_MM(C,A,B,transa,transb, na1, na2, nb1, nb2, nc1, nc2)
 !   IMPLICIT NONE
-!   complex(8), intent(out) :: C(nc1,nc2)
-!   complex(8), intent(in)  :: A(na1,na2)
-!   complex(8), intent(in)  :: B(nb1,nb2)
+!   complex(kind=DP), intent(out) :: C(nc1,nc2)
+!   complex(kind=DP), intent(in)  :: A(na1,na2)
+!   complex(kind=DP), intent(in)  :: B(nb1,nb2)
 !   CHARACTER,  intent(in)  :: transa
 !   CHARACTER,  intent(in)  :: transb
 !   INTEGER,    intent(in)  :: na1, na2, nb1, nb2, nc1, nc2
 !   ! local variables
-!   complex(8) :: alpha_, beta_
+!   complex(kind=DP) :: alpha_, beta_
 !   INTEGER :: m, n, k, kp
 !   alpha_ = 1.
 !   beta_ = 0
@@ -5052,14 +5058,14 @@ contains
 !
 ! subroutine ZProduct_sum_MM(C,A,B,transa,transb, na1, na2, nb1, nb2, nc1, nc2)
 !   IMPLICIT NONE
-!   complex(8), intent(out) :: C(nc1,nc2)
-!   complex(8), intent(in)  :: A(na1,na2)
-!   complex(8), intent(in)  :: B(nb1,nb2)
+!   complex(kind=DP), intent(out) :: C(nc1,nc2)
+!   complex(kind=DP), intent(in)  :: A(na1,na2)
+!   complex(kind=DP), intent(in)  :: B(nb1,nb2)
 !   CHARACTER,  intent(in)  :: transa
 !   CHARACTER,  intent(in)  :: transb
 !   INTEGER,    intent(in)  :: na1, na2, nb1, nb2, nc1, nc2
 !   ! local variables
-!   complex(8) :: alpha_, beta_
+!   complex(kind=DP) :: alpha_, beta_
 !   INTEGER :: m, n, k, kp
 !   alpha_ = 1.
 !   beta_ = 1.
@@ -5102,11 +5108,11 @@ contains
 !
 ! subroutine ZTransform(A,U,trans,isize)
 !   IMPLICIT NONE
-!   complex(8), intent(inout) :: A(isize,isize)
-!   complex(8), intent(in)    :: U(isize,isize)
+!   complex(kind=DP), intent(inout) :: A(isize,isize)
+!   complex(kind=DP), intent(in)    :: U(isize,isize)
 !   CHARACTER,  intent(in)    :: trans
 !   INTEGER,    intent(in)    :: isize
-!   complex(8) :: temp(isize,isize)
+!   complex(kind=DP) :: temp(isize,isize)
 !   IF (trans.EQ.'N') THEN
 !      CALL Zproduct_MM(temp,A,U,'N','N',isize,isize,isize,isize,isize,isize)
 !      CALL Zproduct_MM(A,U,temp,'C','N',isize,isize,isize,isize,isize,isize)
@@ -5128,12 +5134,12 @@ contains
 !
 ! subroutine ZProduct_NN(C, A, B, na1, na2, nb2)
 !   IMPLICIT NONE
-!   complex(8), intent(in)  :: A(na1,na2)
-!   complex(8), intent(in)  :: B(na2,nb2)
-!   complex(8), intent(out) :: C(na1,nb2)
+!   complex(kind=DP), intent(in)  :: A(na1,na2)
+!   complex(kind=DP), intent(in)  :: B(na2,nb2)
+!   complex(kind=DP), intent(out) :: C(na1,nb2)
 !   INTEGER,    intent(in)  :: na1, na2, nb2
 !   ! local variables
-!   complex(8) :: alpha_, beta_
+!   complex(kind=DP) :: alpha_, beta_
 !   alpha_ = 1.
 !   beta_ = 0
 !   CALL zgemm('N','N',na1,nb2,na2,alpha_,A,na1,B,na2,beta_,C,na1)
@@ -5148,12 +5154,12 @@ contains
 !
 ! subroutine ZProduct_NC(C, A, B, na1, na2, nb1)
 !   IMPLICIT NONE
-!   complex(8), intent(in)  :: A(na1,na2)
-!   complex(8), intent(in)  :: B(nb1,na2)
-!   complex(8), intent(out) :: C(na1,nb1)
+!   complex(kind=DP), intent(in)  :: A(na1,na2)
+!   complex(kind=DP), intent(in)  :: B(nb1,na2)
+!   complex(kind=DP), intent(out) :: C(na1,nb1)
 !   INTEGER,    intent(in)  :: na1, na2, nb1
 !   ! local variables
-!   complex(8) :: alpha_, beta_
+!   complex(kind=DP) :: alpha_, beta_
 !   alpha_ = 1.
 !   beta_ = 0
 !   CALL zgemm('N','C',na1,nb1,na2,alpha_,A,na1,B,nb1,beta_,C,na1)
@@ -5168,12 +5174,12 @@ contains
 !
 ! subroutine ZProduct_CN(C, A, B, na1, na2, nb2)
 !   IMPLICIT NONE
-!   complex(8), intent(in)  :: A(na1,na2)
-!   complex(8), intent(in)  :: B(na1,nb2)
-!   complex(8), intent(out) :: C(na2,nb2)
+!   complex(kind=DP), intent(in)  :: A(na1,na2)
+!   complex(kind=DP), intent(in)  :: B(na1,nb2)
+!   complex(kind=DP), intent(out) :: C(na2,nb2)
 !   INTEGER,    intent(in)  :: na1, na2, nb2
 !   ! local variables
-!   complex(8) :: alpha_, beta_
+!   complex(kind=DP) :: alpha_, beta_
 !   alpha_ = 1.
 !   beta_ = 0
 !   CALL zgemm('C','N',na2,nb2,na1,alpha_,A,na1,B,na1,beta_,C,na2)
@@ -5188,12 +5194,12 @@ contains
 !
 ! subroutine ZProduct_CC(C, A, B, na1, na2, nb1)
 !   IMPLICIT NONE
-!   complex(8), intent(in)  :: A(na1,na2)
-!   complex(8), intent(in)  :: B(nb1,na1)
-!   complex(8), intent(out) :: C(na2,nb1)
+!   complex(kind=DP), intent(in)  :: A(na1,na2)
+!   complex(kind=DP), intent(in)  :: B(nb1,na1)
+!   complex(kind=DP), intent(out) :: C(na2,nb1)
 !   INTEGER,    intent(in)  :: na1, na2, nb1
 !   ! local variables
-!   complex(8) :: alpha_, beta_
+!   complex(kind=DP) :: alpha_, beta_
 !   alpha_ = 1.
 !   beta_ = 0
 !   CALL zgemm('C','C',na2,nb1,na1,alpha_,A,na1,B,nb1,beta_,C,na2)
@@ -5208,12 +5214,12 @@ contains
 !
 ! subroutine seigval(w, vr, A, isize)
 !   IMPLICIT NONE
-!   complex(8), intent(in)  :: A(isize,isize)
-!   real(8), intent(out)    :: w(isize)
-!   complex(8), intent(out) :: vr(isize,isize)
+!   complex(kind=DP), intent(in)  :: A(isize,isize)
+!   real(kind=DP), intent(out)    :: w(isize)
+!   complex(kind=DP), intent(out) :: vr(isize,isize)
 !   INTEGER, intent(in)     :: isize
-!   complex(8), allocatable :: work(:)
-!   real(8), allocatable    :: rwork(:)
+!   complex(kind=DP), allocatable :: work(:)
+!   real(kind=DP), allocatable    :: rwork(:)
 !   INTEGER, allocatable    :: iwork(:)
 !   INTEGER                 :: lwork, lrwork, liwork, info
 !
@@ -5242,14 +5248,14 @@ contains
 !
 ! subroutine zeigval(zek, A, isize)
 !   IMPLICIT NONE
-!   complex(8), intent(in)  :: A(isize,isize)
-!   complex(8), intent(out) :: zek(isize)
+!   complex(kind=DP), intent(in)  :: A(isize,isize)
+!   complex(kind=DP), intent(out) :: zek(isize)
 !   INTEGER, intent(in)     :: isize
-!   complex(8), allocatable :: work(:), At(:,:)
-!   real(8), allocatable    :: rwork(:)
+!   complex(kind=DP), allocatable :: work(:), At(:,:)
+!   real(kind=DP), allocatable    :: rwork(:)
 !   INTEGER                 :: lwork, lrwork, info
-!   real(8), PARAMETER      :: smalleps = 1e-5
-!   complex(8)              :: evl, evr
+!   real(kind=DP), PARAMETER      :: smalleps = 1e-5
+!   complex(kind=DP)              :: evl, evr
 !
 !   lwork  = 3*isize + 1
 !   lrwork = 2*isize
@@ -5274,19 +5280,19 @@ contains
 !
 ! subroutine zeigsys(zek, evl, evr, A, isize)
 !   IMPLICIT NONE
-!   complex(8), intent(in)  :: A(isize,isize)
-!   complex(8), intent(out) :: zek(isize)
-!   complex(8), intent(out) :: evl(isize,isize)
-!   complex(8), intent(out) :: evr(isize,isize)
+!   complex(kind=DP), intent(in)  :: A(isize,isize)
+!   complex(kind=DP), intent(out) :: zek(isize)
+!   complex(kind=DP), intent(out) :: evl(isize,isize)
+!   complex(kind=DP), intent(out) :: evr(isize,isize)
 !   INTEGER, intent(in)     :: isize
 !   ! temporaries
-!   complex(8), allocatable :: work(:), At(:,:)
-!   real(8), allocatable     :: rwork(:)
+!   complex(kind=DP), allocatable :: work(:), At(:,:)
+!   real(kind=DP), allocatable     :: rwork(:)
 !   INTEGER    :: lwork, lrwork, info
-!   real(8), PARAMETER       :: smalleps = 1e-5
-!   complex(8), allocatable :: scaler(:)
+!   real(kind=DP), PARAMETER       :: smalleps = 1e-5
+!   complex(kind=DP), allocatable :: scaler(:)
 !   INTEGER    :: q, p
-!   complex(8) :: ctmp
+!   complex(kind=DP) :: ctmp
 !   lwork  = 3*isize + 1
 !   lrwork = 2*isize
 !
@@ -5337,9 +5343,9 @@ contains
 !
 ! CONTAINS
 !
-!   complex(8) FUNCTION scalprod(a,b,ndim)
+!   complex(kind=DP) FUNCTION scalprod(a,b,ndim)
 !     IMPLICIT NONE
-!     complex(8) :: a(:), b(:)
+!     complex(kind=DP) :: a(:), b(:)
 !     INTEGER    :: ndim
 !     INTEGER    :: i
 !     scalprod = 0.0
@@ -5359,9 +5365,9 @@ contains
 !
 ! subroutine ZProduct_MD(C, A, D, na1, na2)
 !   IMPLICIT NONE
-!   complex(8), intent(out) :: C(na1,na2)
-!   complex(8), intent(in)  :: A(na1,na2)
-!   complex(8), intent(in)  :: D(na2)
+!   complex(kind=DP), intent(out) :: C(na1,na2)
+!   complex(kind=DP), intent(in)  :: A(na1,na2)
+!   complex(kind=DP), intent(in)  :: D(na2)
 !   INTEGER,    intent(in)  :: na1, na2
 !   ! local variables
 !   INTEGER :: i, j
@@ -5381,11 +5387,11 @@ contains
 !
 ! subroutine check_causality(E, small_positive, isize)
 !   IMPLICIT NONE
-!   complex(8), intent(inout) :: E(isize)
-!   real(8), intent(in)        :: small_positive
+!   complex(kind=DP), intent(inout) :: E(isize)
+!   real(kind=DP), intent(in)        :: small_positive
 !   INTEGER, intent(in)       :: isize
 !   INTEGER :: i
-!   real(8)  :: a
+!   real(kind=DP)  :: a
 !   DO i=1,isize
 !      IF (aimag(E(i)).GT.-small_positive) E(i) = cmplx(dble(E(i)),-small_positive,kind=8)
 !   ENDDO
@@ -5400,11 +5406,11 @@ contains
 !
 ! subroutine check_causality2(sig, small_positive, isize)
 !   IMPLICIT NONE
-!   complex(8), intent(inout) :: sig(isize,isize)
-!   real(8), intent(in)        :: small_positive
+!   complex(kind=DP), intent(inout) :: sig(isize,isize)
+!   real(kind=DP), intent(in)        :: small_positive
 !   INTEGER, intent(in)       :: isize
 !   INTEGER :: i, j
-!   real(8)  :: a
+!   real(kind=DP)  :: a
 !   DO i=1,isize
 !      IF (aimag(sig(i,i)).GT.-small_positive) sig(i,i) = cmplx(dble(sig(i,i)),-small_positive,kind=8)
 !   ENDDO
@@ -5419,14 +5425,14 @@ contains
 !
 ! subroutine ZProduct_ADA(C, A, D, B, na1, na2, nb2)
 !   IMPLICIT NONE
-!   complex(8), intent(in)  :: A(na1,na2)
-!   complex(8), intent(in)  :: D(na2)
-!   complex(8), intent(in)  :: B(na2,nb2)
-!   complex(8), intent(out) :: C(na1,nb2)
+!   complex(kind=DP), intent(in)  :: A(na1,na2)
+!   complex(kind=DP), intent(in)  :: D(na2)
+!   complex(kind=DP), intent(in)  :: B(na2,nb2)
+!   complex(kind=DP), intent(out) :: C(na1,nb2)
 !   INTEGER,    intent(in)  :: na1, na2, nb2
 !   ! local variables
 !   INTEGER    :: i, j
-!   complex(8) :: tmp(na1,na2)
+!   complex(kind=DP) :: tmp(na1,na2)
 !
 !   DO j=1,na2
 !      DO i=1,na1
@@ -5447,15 +5453,15 @@ contains
 !
 ! subroutine ZProduct_ADAt(C, A, D, B, na1, na2, nb2, temp)
 !   IMPLICIT NONE
-!   complex(8), intent(in)  :: A(na1,na2)
-!   complex(8), intent(in)  :: D(na2)
-!   complex(8), intent(in)  :: B(na2,nb2)
-!   complex(8), intent(out) :: C(na1,nb2)
+!   complex(kind=DP), intent(in)  :: A(na1,na2)
+!   complex(kind=DP), intent(in)  :: D(na2)
+!   complex(kind=DP), intent(in)  :: B(na2,nb2)
+!   complex(kind=DP), intent(out) :: C(na1,nb2)
 !   INTEGER,    intent(in)  :: na1, na2, nb2
-!   complex(8), intent(inout) :: temp(na1,na2)
+!   complex(kind=DP), intent(inout) :: temp(na1,na2)
 !   ! local variables
 !   INTEGER    :: i, j
-!   complex(8) :: tmp(na1,na2)
+!   complex(kind=DP) :: tmp(na1,na2)
 !
 !   DO j=1,na2
 !      DO i=1,na1

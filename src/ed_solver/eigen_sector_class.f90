@@ -57,7 +57,7 @@ contains
 
       integer           :: unit, istate, jstate, stateup, statedo
       TYPE(sector_type) :: sector
-      real(8)           :: coeff, vec(:)
+      real(kind=DP)           :: coeff, vec(:)
 
       DO istate = 1, size(vec)
          READ (unit, *) stateup, statedo, coeff
@@ -74,7 +74,7 @@ contains
 
       integer           :: unit, istate, jstate, stateup, statedo
       TYPE(sector_type) :: sector
-      complex(8)        :: coeff, vec(:)
+      complex(kind=DP)        :: coeff, vec(:)
 
       DO istate = 1, size(vec)
          READ (unit, *) stateup, statedo, coeff

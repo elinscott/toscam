@@ -7,6 +7,7 @@
 
 module dmft_variables
    use common_def, only: utils_system_call
+   use genvar, only: DP
    use namelistmod, only: namelist_set, namelist_init, putel_in_namelist, &
                                     & look_for_namelist_in_file, look_for_command_line_argument
    use strings, only: replace_in_string, string, assignment(=)
@@ -17,7 +18,7 @@ module dmft_variables
                           nproc, nproc_onetep, nproc_mpi_solver, openmp_solver
    character(2000)    ::  CASE_ONETEP, dir_onetep, exec_onetep, dir_onetep_mpi
    character(60)      ::  mach_onetep
-   real(8)            ::  ed_frequ_min, ed_frequ_max
+   real(kind=DP)            ::  ed_frequ_min, ed_frequ_max
 logical            ::  split_onetep,start_from_an_old_sim,all_local_host,just_onetep,compute_dos,numa,dmft_split,dmft_splitkdmftall,nomachinefile
    integer            ::  dmft_splitk_batch, nproc_onetep_openmp_
    logical            ::  hide_errors

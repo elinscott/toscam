@@ -1,6 +1,6 @@
 MODULE fermion_ket_class
 
-   ! use genvar,     only:
+   use genvar,     only: DP
    ! USE common_def, only:
    ! use matrix,     only: write_array
    ! use linalg,     only:
@@ -30,8 +30,8 @@ MODULE fermion_ket_class
 
    TYPE fermion_ket_vec
       integer              :: dim
-      real(8)              :: energy, total_S, total_Sz, total_N
-      real(8), allocatable :: vec(:)
+      real(kind=DP)              :: energy, total_S, total_Sz, total_N
+      real(kind=DP), allocatable :: vec(:)
    END TYPE
 
    public :: copy_ket
@@ -79,10 +79,10 @@ contains
       integer                :: ii, jj, i, j, k
       integer                :: UU(Nimpurity), hop_up_dest, hop_dn_dest, &
                                 hop_up_sign, hop_dn_sign
-      real(8)                :: hz(Nimpurity)
-      real(8)                :: eps(2*Nimpurity), U(Nimpurity), hund, &
+      real(kind=DP)                :: hz(Nimpurity)
+      real(kind=DP)                :: eps(2*Nimpurity), U(Nimpurity), hund, &
                                 teta_mat(Nimpurity, Nimpurity)
-      real(8)                :: hamilt_(4**Nimpurity, 4**Nimpurity), &
+      real(kind=DP)                :: hamilt_(4**Nimpurity, 4**Nimpurity), &
                                 eigen_(4**Nimpurity)
 
       hamilt_ = 0.d0
@@ -196,7 +196,7 @@ contains
       TYPE(fermion_ket_vec)  :: kets(4**Nimpurity), ket_temp
       integer                :: ii, jj, i, j, k, ii1, up_or_dn, site, &
                                 nconnected, connection(4**Nimpurity)
-      real(8)                :: projection(4**Nimpurity), &
+      real(kind=DP)                :: projection(4**Nimpurity), &
                                 m_element(4**Nimpurity)
 
       call init_ket_vec(ket_temp, 4**Nimpurity)
@@ -226,7 +226,7 @@ contains
       return
    end subroutine
 
-   real(8) function total_spin_S_(basis, ket, Nimpurity)
+   real(kind=DP) function total_spin_S_(basis, ket, Nimpurity)
 
       implicit none
 
@@ -243,7 +243,7 @@ contains
       stop 'error total S'
    end function
 
-   real(8) function total_N_(basis, ket, Nimpurity)
+   real(kind=DP) function total_N_(basis, ket, Nimpurity)
 
       implicit none
 
@@ -260,7 +260,7 @@ contains
       stop 'error total N'
    end function
 
-   real(8) function total_spin_Sz_(basis, ket, Nimpurity)
+   real(kind=DP) function total_spin_Sz_(basis, ket, Nimpurity)
 
       implicit none
 
@@ -277,7 +277,7 @@ contains
       stop 'error total Sz'
    end function
 
-   real(8) function total_spin_S_of_ket(ket, Nimpurity)
+   real(kind=DP) function total_spin_S_of_ket(ket, Nimpurity)
 
       implicit none
 
@@ -290,7 +290,7 @@ contains
       total_spin_S_of_ket = sum((/(abs(v2(jj) - v1(jj))*0.5, jj=1, Nimpurity)/))
    end function
 
-   real(8) function total_N_of_ket(ket, Nimpurity)
+   real(kind=DP) function total_N_of_ket(ket, Nimpurity)
 
       implicit none
 
@@ -303,7 +303,7 @@ contains
       total_N_of_ket = sum((/(v2(jj) + v1(jj), jj=1, Nimpurity)/))
    end function
 
-   real(8) function total_spin_Sz_of_ket(ket, Nimpurity)
+   real(kind=DP) function total_spin_Sz_of_ket(ket, Nimpurity)
 
       implicit none
 
@@ -317,15 +317,15 @@ contains
                                     )/))
    end function
 
-   real(8) function diag_energy_of_ket(ket, Nimpurity, hz, eps, U)
+   real(kind=DP) function diag_energy_of_ket(ket, Nimpurity, hz, eps, U)
 
       implicit none
 
       TYPE(fermion_ket_type) :: ket
       integer                :: Nimpurity, ii, jj, i, j, k
       integer                :: v1(Nimpurity), v2(Nimpurity), UU(Nimpurity)
-      real(8)                :: hz(Nimpurity)
-      real(8)                :: eps(2*Nimpurity), U(Nimpurity)
+      real(kind=DP)                :: hz(Nimpurity)
+      real(kind=DP)                :: eps(2*Nimpurity), U(Nimpurity)
 
       v1 = (/(ni__(jj, ket), jj=1, Nimpurity)/)
       v2 = (/(ni__(jj, ket), jj=Nimpurity + 1, 2*Nimpurity)/)

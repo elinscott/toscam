@@ -1,5 +1,6 @@
 module string4
 
+   use genvar,  only: SP, DP
    use string5, only: ch_cap, ch_eqi
 
    private
@@ -4766,13 +4767,13 @@ contains
       !
       implicit none
 
-      real(kind=4) aval
-      real(kind=4) bval
+      real(kind=SP) aval
+      real(kind=SP) bval
       character c
-      complex(kind=8) cval
-      integer(kind=4) ichr
-      integer(kind=4) ierror
-      integer(kind=4) length
+      complex(kind=DP) cval
+      integer(kind=SP) ichr
+      integer(kind=SP) ierror
+      integer(kind=SP) length
       character(len=*) s
       !
       !  Initialize the return arguments.

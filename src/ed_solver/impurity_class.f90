@@ -23,14 +23,14 @@ MODULE impurity_class
       ! ======= groupe ponctuel ======== !
       integer, dimension(:, :), allocatable    :: rot, trans, alltrans, flip, &
                                                   invtrans
-      real(8), dimension(:, :), allocatable    :: ttrans
+      real(kind=DP), dimension(:, :), allocatable    :: ttrans
       integer                                  :: nmax, nnmax !max numb of sym.
-      real(8)                                  :: BZVEC(3), BZVEC2(3)
-      complex(8), dimension(:), allocatable    :: rotchar, flipchar, transchar
-      complex(8)                               :: chirot, chiflip
+      real(kind=DP)                                  :: BZVEC(3), BZVEC2(3)
+      complex(kind=DP), dimension(:), allocatable    :: rotchar, flipchar, transchar
+      complex(kind=DP)                               :: chirot, chiflip
       integer                                  :: ntrans, nrot, nflip
-      real(8), dimension(:, :, :), allocatable :: rotmat
-      real(8)                                  ::  centerrot(3), diagonale(3)
+      real(kind=DP), dimension(:, :, :), allocatable :: rotmat
+      real(kind=DP)                                  ::  centerrot(3), diagonale(3)
       integer                                  ::  flag(20), flageff(20)
       integer, dimension(:, :, :), allocatable ::  symtab
       integer, dimension(:, :), allocatable    ::  sympoint, whichk
@@ -42,13 +42,13 @@ MODULE impurity_class
 
    TYPE unitcell
       integer                                   :: q1, q1small, q1mag, ncor, npk
-      real(8)                                   :: band_plot_shift
-      real(8), dimension(:, :), allocatable      :: insidepos, pk
-      real(8), dimension(:, :, :), allocatable    :: clock
+      real(kind=DP)                                   :: band_plot_shift
+      real(kind=DP), dimension(:, :), allocatable      :: insidepos, pk
+      real(kind=DP), dimension(:, :, :), allocatable    :: clock
       integer, dimension(:, :), allocatable      :: half
       integer, dimension(:), allocatable        :: nneigh
       integer, dimension(:, :, :), allocatable    :: invlink
-      real(8)                                   :: a(3), b(3), c(3), as(3), &
+      real(kind=DP)                                   :: a(3), b(3), c(3), as(3), &
                                                    bs(3), cs(3), VBZ
       integer, dimension(:), allocatable        :: smallsite, smallsite2, &
                                                    orbitals
@@ -56,18 +56,18 @@ MODULE impurity_class
       integer                                   :: struct_nm, struct_nlink
       integer, dimension(:, :), allocatable      :: struct
       logical                                   :: FLAG_MATRIX_ELEMENTS
-      complex(8), dimension(:, :, :), allocatable :: matkxky, matkxkyshift
-      real(8), dimension(:, :), allocatable      :: dispersion
-      complex(8), dimension(:, :, :), allocatable :: eigenstates
+      complex(kind=DP), dimension(:, :, :), allocatable :: matkxky, matkxkyshift
+      real(kind=DP), dimension(:, :), allocatable      :: dispersion
+      complex(kind=DP), dimension(:, :, :), allocatable :: eigenstates
       integer                                   :: k_zero
-      real(8)                                   :: reciproc_base(3, 3), P(3, 3), &
+      real(kind=DP)                                   :: reciproc_base(3, 3), P(3, 3), &
                                                    T1(3), T2(3), T3(3)
-      real(8)                                   :: reciproc_boundary(3, 3)
-      real(8), dimension(:), allocatable        :: xr, yr, zr, xrpp, yrpp, zrpp
+      real(kind=DP)                                   :: reciproc_boundary(3, 3)
+      real(kind=DP), dimension(:), allocatable        :: xr, yr, zr, xrpp, yrpp, zrpp
       integer                                   :: nL, nLz
       integer                                   :: nfermiNnumb = 2000
-      real(8), dimension(:, :), allocatable      :: nfermiN, Akwfree
-      real(8), dimension(:), allocatable        :: polygonx, polygony
+      real(kind=DP), dimension(:, :), allocatable      :: nfermiN, Akwfree
+      real(kind=DP), dimension(:), allocatable        :: polygonx, polygony
       integer                                   :: Npoly
       integer, dimension(:, :), allocatable      :: site_connected_to_bath
       integer, dimension(:, :, :), allocatable    :: site_connected_to_cor
@@ -87,38 +87,38 @@ MODULE impurity_class
 
       !web:
       logical                                   :: symmetries
-      real(8), dimension(:, :), allocatable      :: nlink_
+      real(kind=DP), dimension(:, :), allocatable      :: nlink_
       integer                                   :: mini, maxi, Ncu, maxconn
       integer, dimension(:, :, :, :), allocatable  :: struct_link
-      real(8), dimension(:, :, :), allocatable    :: struct_pos
+      real(kind=DP), dimension(:, :, :), allocatable    :: struct_pos
       integer                                   :: plaquettecentre(100), plaquetteN
       integer, dimension(:), allocatable        :: latticemapi
-      real(8)                                   :: P(3, 3), teta(2)
-      real(8)                                   :: T1(3), T2(3), T3(3)
+      real(kind=DP)                                   :: P(3, 3), teta(2)
+      real(kind=DP)                                   :: T1(3), T2(3), T3(3)
       logical                                   :: FLAG_NO_SYM_AT_ALL
       logical                                   :: FLAG_OPEN_BC, &
                                                    FLAG_OPEN_BUT_PERIODIC_LINKED, &
                                                    FLAG_UNIT_CELL_INSIDE, &
                                                    FLAG_PLOT_3D
-      real(8), dimension(:, :), allocatable      :: x, xma
-      real(8)                                   :: randvec(3)
+      real(kind=DP), dimension(:, :), allocatable      :: x, xma
+      real(kind=DP)                                   :: randvec(3)
       integer, dimension(:), allocatable        :: site, site2, site3
       integer                                   :: open1, open2, open3, nL, nLz
-      complex(8), dimension(:, :), allocatable   :: phase, phase4
+      complex(kind=DP), dimension(:, :), allocatable   :: phase, phase4
       integer                                   :: centresite
       integer, dimension(:, :), allocatable      :: vecin
-      real(8), dimension(:), allocatable        :: latticemap
-      real(8), dimension(:, :), allocatable      :: distbord, periodist, &
+      real(kind=DP), dimension(:), allocatable        :: latticemap
+      real(kind=DP), dimension(:, :), allocatable      :: distbord, periodist, &
                                                     periodist_open_bc
-      real(8), dimension(:), allocatable        :: distances, angles
-      real(8), dimension(:, :), allocatable      :: distancesp
+      real(kind=DP), dimension(:), allocatable        :: distances, angles
+      real(kind=DP), dimension(:, :), allocatable      :: distancesp
       integer, dimension(:), allocatable        :: bordure, whichbord
       integer, dimension(:, :), allocatable      :: nombrevoisin
       integer                                   :: maxd, maxd_real, maxvoisins, &
                                                    bordcount
       integer, dimension(:, :), allocatable      :: maxdistsite
       integer, dimension(:, :, :), allocatable    :: longvoisin
-      real(8)                                   :: centre(3)
+      real(kind=DP)                                   :: centre(3)
       integer, dimension(:, :), allocatable      :: ineigh, cadran, direc, &
                                                     centerCu, centreangle
       integer, dimension(:, :), allocatable      :: links
@@ -127,23 +127,23 @@ MODULE impurity_class
                                                    centredist, k_inv
       logical, dimension(:), allocatable        :: major_site
       integer                                   :: normalisation, nlink_cell
-      complex(8), dimension(:, :), allocatable   :: unitary_transform
+      complex(kind=DP), dimension(:, :), allocatable   :: unitary_transform
 
       !--------------------------------!
       ! copy of the unitcell variables !
       !--------------------------------!
 
-      real(8), dimension(:, :), allocatable      :: dispersion
-      real(8)                                   :: reciproc_base(3, 3)
-      real(8)                                   :: reciproc_boundary(3, 3)
-      real(8), dimension(:), allocatable        :: xr, yr, zr, xrpp, yrpp, zrpp
-      complex(8), dimension(:, :, :), allocatable :: matkxky, matkxkyshift
+      real(kind=DP), dimension(:, :), allocatable      :: dispersion
+      real(kind=DP)                                   :: reciproc_base(3, 3)
+      real(kind=DP)                                   :: reciproc_boundary(3, 3)
+      real(kind=DP), dimension(:), allocatable        :: xr, yr, zr, xrpp, yrpp, zrpp
+      complex(kind=DP), dimension(:, :, :), allocatable :: matkxky, matkxkyshift
       integer                                   :: q1, q1small, q1mag
-      real(8), dimension(:, :), allocatable      :: insidepos
-      real(8), dimension(:, :, :), allocatable    :: clock
+      real(kind=DP), dimension(:, :), allocatable      :: insidepos
+      real(kind=DP), dimension(:, :, :), allocatable    :: clock
       integer, dimension(:, :), allocatable      :: half
       integer, dimension(:), allocatable        :: nneigh
-      real(8)                                   :: a(3), b(3), c(3)
+      real(kind=DP)                                   :: a(3), b(3), c(3)
       integer, dimension(:), allocatable        :: smallsite, smallsite2
       integer, dimension(:, :), allocatable      :: phase2, phase3
       integer                                   :: struct_nm, struct_nlink
@@ -162,33 +162,33 @@ MODULE impurity_class
                                                        mdata ! 1 = para, 2 =
       ! spinupdn, 3 = bcs, 4 = currents
       character(22)                                 :: orderlabel(100)
-      complex(8), dimension(:, :), allocatable       :: teta, delta, tetadn, &
+      complex(kind=DP), dimension(:, :), allocatable       :: teta, delta, tetadn, &
                                                         deltap, sigma_hf
-      complex(8), dimension(:, :, :, :, :), allocatable :: teta_, tetadn_
-      complex(8), dimension(:, :), allocatable       :: delta_mat, teta_mat, &
+      complex(kind=DP), dimension(:, :, :, :, :), allocatable :: teta_, tetadn_
+      complex(kind=DP), dimension(:, :), allocatable       :: delta_mat, teta_mat, &
                                                         teta_mat_dn, teta_mat0
-      complex(8), dimension(:, :), allocatable       :: delta_mat_p
-      real(8), dimension(:, :), allocatable          :: rrrrsign, rrrrrsign
-      real(8), dimension(:), allocatable            :: rrsign, rsign
-      real(8), dimension(:), allocatable            :: eps_mat
+      complex(kind=DP), dimension(:, :), allocatable       :: delta_mat_p
+      real(kind=DP), dimension(:, :), allocatable          :: rrrrsign, rrrrrsign
+      real(kind=DP), dimension(:), allocatable            :: rrsign, rsign
+      real(kind=DP), dimension(:), allocatable            :: eps_mat
       logical, dimension(:), allocatable            :: full_proj
-      real(8), dimension(:), allocatable            :: eps, dU
-      complex(8), dimension(:, :), allocatable       :: epsk
+      real(kind=DP), dimension(:), allocatable            :: eps, dU
+      complex(kind=DP), dimension(:, :), allocatable       :: epsk
       integer, dimension(:, :), allocatable          :: type
-      real(8), dimension(:, :), allocatable          :: Vrep, Jterm, field, &
+      real(kind=DP), dimension(:, :), allocatable          :: Vrep, Jterm, field, &
                                                         field_cell
       integer                                       :: subE, ntype, subDiag, q1
       logical, dimension(:), allocatable            :: diagornot, forbidden
       character(20), dimension(:), allocatable      :: label
       integer                                       :: nH
       character(22)                                 :: labH(100)
-      real(8)                                       :: min(100), max(100), hund, &
+      real(kind=DP)                                       :: min(100), max(100), hund, &
                                                        disorder, a_Angstrom, &
                                                        b_Angstrom, c_Angstrom, &
                                                        dist_plane
-      real(8)                                       :: cor1, cor2, cor3, cor4, &
+      real(kind=DP)                                       :: cor1, cor2, cor3, cor4, &
                                                        quanta, temperature
-      real(8)                                       :: rrrsign
+      real(kind=DP)                                       :: rrrsign
    end type
 
    TYPE(masked_matrix_type), PUBLIC, SAVE :: Eccc
@@ -231,7 +231,7 @@ contains
 
       type(web)         :: xx
       integer           :: i, j, k, l, m, n1, n2, n3
-      real(8)           :: base(3, 3), Tdecomp(3), vv(3), aa, bb, cc
+      real(kind=DP)           :: base(3, 3), Tdecomp(3), vv(3), aa, bb, cc
       logical, optional :: cadran
 
       if (.not. present(cadran)) then

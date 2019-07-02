@@ -1,5 +1,5 @@
 program local_rotations
-   use genvar, only: pi
+   use genvar, only: pi, DP
    use linalg
    use geometry2, only: plane_exp_point_dist_3d_, angle_rad_3d_
    implicit none
@@ -9,12 +9,12 @@ program local_rotations
    logical, allocatable :: neigh(:, :)
    character(30), allocatable :: atom(:), atom_small(:)
    integer, allocatable :: nneigh(:), label_in_big(:), his_neigh(:, :), inplane(:, :), outofplane(:, :)
-   real(8), allocatable :: normv(:), coord(:, :), coord_small(:, :), mat(:, :, :), mat_small(:, :, :)
-   real(8)                    :: flip, pos_shift, shift(3), a(3, 3), aa(3, 3), v(3)
+   real(kind=DP), allocatable :: normv(:), coord(:, :), coord_small(:, :), mat(:, :, :), mat_small(:, :, :)
+   real(kind=DP)                    :: flip, pos_shift, shift(3), a(3, 3), aa(3, 3), v(3)
    character(30)              :: ref, filename, filename2, filename3, temp, species
    integer                    :: natom, maxneigh, natom_small, k4, itot, dir_reference
-   real(8)                    :: coord_tmp(3), www(3), ex(3), ey(3), ez(3), dist, cutoff, vvv(3), rutile(3)
-   real(8)                    :: min_dist, max_dist, max_dist2, d1, d2, d3
+   real(kind=DP)                    :: coord_tmp(3), www(3), ex(3), ey(3), ez(3), dist, cutoff, vvv(3), rutile(3)
+   real(kind=DP)                    :: min_dist, max_dist, max_dist2, d1, d2, d3
    logical                    :: check, keep_perp_to_rutile, all_planes
    logical                    :: checkaxisfile
    logical, parameter :: testingloc = .false.
@@ -467,9 +467,9 @@ contains
 
    subroutine set_given_axis_compute_all
       implicit none
-      real(8) :: vectors(6, 3), vref1(3), vref2(3), vref3(3)
+      real(kind=DP) :: vectors(6, 3), vref1(3), vref2(3), vref3(3)
       integer :: ijk, aa1, aa2, aa3
-      real(8) :: projs(3, 6)
+      real(kind=DP) :: projs(3, 6)
 
       do ijk = 1, 6
          vectors(ijk, :) = -coord(i, :) + coord(his_neigh(i, ijk), :)
@@ -567,8 +567,8 @@ contains
 
    subroutine choose_my_axis
       implicit none
-      real(8)  ::  tt, in_plane_angles(ninplane)
-      real(8)  ::  www1(3), www2(3)
+      real(kind=DP)  ::  tt, in_plane_angles(ninplane)
+      real(kind=DP)  ::  www1(3), www2(3)
       integer  ::  both_directions(2)
 
       write (*, *) '---------------------------------'

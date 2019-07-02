@@ -62,8 +62,8 @@
 !
 !  subroutine mirror_array_sym(xin,yin)
 !  implicit none
-!  complex(8) :: yin(:),y(size(yin))
-!  real(8)    :: xin(:),x(size(xin))
+!  complex(kind=DP) :: yin(:),y(size(yin))
+!  real(kind=DP)    :: xin(:),x(size(xin))
 !  integer    :: Nw,iw,miw
 !
 !   Nw=size(x)
@@ -91,7 +91,7 @@
 !
 !  subroutine renormalize_scale_color_plot(outk,cutoff,cutoff_plot_ak_slope,LOG_SCALE,DISCONTINUED)
 !  implicit none
-!  real(8)          :: outk(:,:),ar,cutoff,cutoff_plot_ak_slope,cutoff_
+!  real(kind=DP)          :: outk(:,:),ar,cutoff,cutoff_plot_ak_slope,cutoff_
 !  integer          :: i,j,np,nl
 !  logical          :: LOG_SCALE
 !  logical,optional :: DISCONTINUED
@@ -135,7 +135,7 @@
 
     subroutine mirror_arrayb_(x, y, xo, yo)
        implicit none
-       real(8)           :: x(:), y(:), xx(size(x)), yy(size(y)), xo(:), yo(:)
+       real(kind=DP)           :: x(:), y(:), xx(size(x)), yy(size(y)), xo(:), yo(:)
        xx = x
        yy = y
        call mirror_array_(xx, yy)
@@ -144,8 +144,8 @@
 
     subroutine mirror_arrayb__(x, y, xo, yo)
        implicit none
-       complex(8)           :: y(:), yo(:), yy(size(y))
-       real(8)              :: x(:), xo(:), xx(size(x))
+       complex(kind=DP)           :: y(:), yo(:), yy(size(y))
+       real(kind=DP)              :: x(:), xo(:), xx(size(x))
        xx = x
        yy = y
        call mirror_array__(xx, yy)
@@ -156,8 +156,8 @@
 
     subroutine mirror_array_(x, y)
        implicit none
-       real(8)           :: x(:), y(:), xx(size(x)), yy(size(y))
-       real(8), parameter :: epsilonr = 1.d-5
+       real(kind=DP)           :: x(:), y(:), xx(size(x)), yy(size(y))
+       real(kind=DP), parameter :: epsilonr = 1.d-5
        integer           :: i, j, i1, i2, ii1, ii2
 
        xx = x; yy = y
@@ -203,9 +203,9 @@
 
     subroutine mirror_array__(x, y)
        implicit none
-       real(8)           :: x(:), xx(size(x))
-       complex(8)        :: y(:), yy(size(y))
-       real(8), parameter :: epsilonr = 1.d-5
+       real(kind=DP)           :: x(:), xx(size(x))
+       complex(kind=DP)        :: y(:), yy(size(y))
+       real(kind=DP), parameter :: epsilonr = 1.d-5
        integer           :: i, j, i1, i2, ii1, ii2
 
        xx = x; yy = y
@@ -253,7 +253,7 @@
 !  subroutine derivate_mesh_x(m,n,x,arr,derx)
 !  implicit none
 !  integer:: n,m
-!  real(8) :: arr(m,n),derx(m,n),x(n),xx(n)
+!  real(kind=DP) :: arr(m,n),derx(m,n),x(n),xx(n)
 !  integer :: i,j,k,l
 !  do i=1,m
 !   xx=x
@@ -270,7 +270,7 @@
 !  subroutine derivate_mesh_y(m,n,x,arr,derx)
 !  implicit none
 !  integer:: n,m
-!  real(8) :: arr(m,n),derx(m,n),x(m),xx(m)
+!  real(kind=DP) :: arr(m,n),derx(m,n),x(m),xx(m)
 !  integer :: i,j,k,l
 !  do i=1,n
 !   xx=x
@@ -289,8 +289,8 @@
     subroutine bin_function(gg, ii, m, maxpos, dd1, dd2)
        implicit none
        integer          :: m, ii(m)
-       real(8)          :: gg(:), param(m), d2, d1
-       real(8), optional :: maxpos, dd1, dd2
+       real(kind=DP)          :: gg(:), param(m), d2, d1
+       real(kind=DP), optional :: maxpos, dd1, dd2
        integer          :: i, j, k, l, iout
 
        d1 = minval(gg)
@@ -334,7 +334,7 @@
 !
 !  subroutine combinemesh(x1,f1,x2,f2)
 !  implicit none
-!  real(8) :: x1(:),f1(:),x2(:),f2(:)
+!  real(kind=DP) :: x1(:),f1(:),x2(:),f2(:)
 !  integer :: i,j,k,l,m,siz1,siz2,iout
 !   siz1=size(x1)
 !   siz2=size(x2)
@@ -350,8 +350,8 @@
 !
 !  subroutine convert2Dmesh_to_1d(x,y,array,xx,yy,arrayy)
 !  implicit none
-!   real(8)       :: x(:),y(:),array(:,:)
-!   real(8)       :: xx(:),yy(:),arrayy(:)
+!   real(kind=DP)       :: x(:),y(:),array(:,:)
+!   real(kind=DP)       :: xx(:),yy(:),arrayy(:)
 !   integer       :: i,j,nn
 !   nn=0
 !   do i=1,size(x)
@@ -376,8 +376,8 @@
 !
 !  subroutine convert1Dmesh_to_2d(x,y,array,xx,yy,arrayy,nn)
 !  implicit none
-!   real(8)       :: x(:),y(:),array(:),dist(nn,nn)
-!   real(8)       :: xx(nn),yy(nn),arrayy(nn,nn),xxx,yyy,min,max,miny,maxy,step,vratio,xproj,yproj,scalv
+!   real(kind=DP)       :: x(:),y(:),array(:),dist(nn,nn)
+!   real(kind=DP)       :: xx(nn),yy(nn),arrayy(nn,nn),xxx,yyy,min,max,miny,maxy,step,vratio,xproj,yproj,scalv
 !   integer       :: i,j,iout,jout,nn,nnn,np,count(nn,nn),u(2),v(2)
 !
 !       np=size(x)
@@ -449,12 +449,12 @@
 !
 !  subroutine area_contained_inside_max_2d_array(x,y,array,area,nn,fourfoldsym,thres2,polyout,nbordout)
 !  implicit none
-!  real(8)          :: x(:),y(:),array(:),area,xx(nn),yy(nn),arrayy(nn,nn)
+!  real(kind=DP)          :: x(:),y(:),array(:),area,xx(nn),yy(nn),arrayy(nn,nn)
 !  integer          :: nn,nbord,points(nn*nn,2),order(4*nn*nn),i,j,k,l
-!  real(8)          :: slice,threshold,polygon(4*nn*nn,2),angles(4*nn*nn),mat(4,2,2)
+!  real(kind=DP)          :: slice,threshold,polygon(4*nn*nn,2),angles(4*nn*nn),mat(4,2,2)
 !  integer,optional :: fourfoldsym,nbordout
-!  real(4)          :: arear
-!  real(8),optional :: thres2,polyout(4*nn*nn,2)
+!  real(kind=SP)          :: arear
+!  real(kind=DP),optional :: thres2,polyout(4*nn*nn,2)
 !
 !  if(nn==0) then
 !   write(*,*) 'area contain inside max 2d array , error, nn=0'
@@ -530,7 +530,7 @@
 !  subroutine point2d_inside_threshold_mesh(nn,array,slice,threshold,points,nbord)
 !  implicit none
 !  integer :: nn,nbord,i,j
-!  real(8) :: threshold,array(nn,nn),slice
+!  real(kind=DP) :: threshold,array(nn,nn),slice
 !  integer :: points(nn*nn,2)
 !
 !  points=0; nbord=0
@@ -554,9 +554,9 @@
 ! !********************************************************************!
 ! !********************************************************************!
 !
-!  real(8) function weighted_sum(x,weight)
+!  real(kind=DP) function weighted_sum(x,weight)
 !  implicit none
-!  real(8),intent(in) :: x(:),weight(:)
+!  real(kind=DP),intent(in) :: x(:),weight(:)
 !  integer :: i,j,k,l
 !
 !  weighted_sum=0.d0
@@ -569,10 +569,10 @@
 !
 !   !-----------------------------------------!
 !
-!  real(8) function sum_with_error_bars(x,err)
+!  real(kind=DP) function sum_with_error_bars(x,err)
 !  implicit none
-!  real(8),intent(in) :: x(:),err(:)
-!  real(8) :: weight(size(x))
+!  real(kind=DP),intent(in) :: x(:),err(:)
+!  real(kind=DP) :: weight(size(x))
 !  integer :: i,j,k,l
 !  weight=1.d0/1.d-5
 !  where(abs(err)>1.d-5) weight=1.d0/err
@@ -595,7 +595,7 @@
 !      SUBROUTINE SMOOTH(a,ns)
 !      implicit none
 !      INTEGER  :: i,j,i1,i2,ii,ns,nw
-!      real(8)  :: a(:),a1(size(a))
+!      real(kind=DP)  :: a(:),a1(size(a))
 !
 !       nw=size(a)
 !
@@ -626,12 +626,12 @@
 !
 ! subroutine build_random_mesh_in_polygon(polygonx,polygony,nmesh,meshx,meshy,borders)
 ! implicit none
-! real(8)          :: meshx(nmesh),meshy(nmesh),xl,xr,yl,yr,rx,ry,polygonx(:),polygony(:)
-! real(8)          :: xx,yy,largex,largey
+! real(kind=DP)          :: meshx(nmesh),meshy(nmesh),xl,xr,yl,yr,rx,ry,polygonx(:),polygony(:)
+! real(kind=DP)          :: xx,yy,largex,largey
 ! integer          :: nmesh,NN
 ! integer          :: i,j,k,l,m
 ! logical          :: inside
-! real(8)          :: point(2),polygon(2,size(polygonx))
+! real(kind=DP)          :: point(2),polygon(2,size(polygonx))
 ! logical,optional :: borders
 !
 !  NN=size(polygonx)
@@ -679,10 +679,10 @@
 !
 !   SUBROUTINE density_distr_(discr,Elevel,dens)
 !    implicit none
-!    real(8)                 :: Elevel(:)
+!    real(kind=DP)                 :: Elevel(:)
 !    INTEGER                :: i,j,k,l,m,jj,jjj,discr
-!    real(8)                 :: min,max,resolution
-!    real(8)                 :: dens(discr,2),value
+!    real(kind=DP)                 :: min,max,resolution
+!    real(kind=DP)                 :: dens(discr,2),value
 !
 !    min=minval(Elevel)+2.;max=maxval(Elevel)-2.
 !    call build1Dmesh(dens(:,1),discr,min,max)
@@ -709,10 +709,10 @@
 !
 !   SUBROUTINE density_distr__(discr,Elevel,dens)
 !    implicit none
-!    real(8)                 :: Elevel(:,:)
+!    real(kind=DP)                 :: Elevel(:,:)
 !    INTEGER                :: i,j,k,l,m,jj,jjj,discr
-!    real(8)                 :: min,max,resolution
-!    real(8)                 :: dens(discr,2),value
+!    real(kind=DP)                 :: min,max,resolution
+!    real(kind=DP)                 :: dens(discr,2),value
 !
 !    min=minval(Elevel)-2.;max=maxval(Elevel)+2.
 !    call build1Dmesh(dens(:,1),discr,min,max)
@@ -765,8 +765,8 @@
 !
 !  integer function find_threshold___(x,f,seuil)
 !  implicit none
-!  complex(8)  :: f(:)
-!  real(8)  :: seuil,x(:),dist
+!  complex(kind=DP)  :: f(:)
+!  real(kind=DP)  :: seuil,x(:),dist
 !  integer :: i,j,k
 !
 !  dist=-1000.
@@ -796,7 +796,7 @@
 !
 !  integer function find_threshold_(x,f,seuil)
 !  implicit none
-!  real(8)  :: x(:),seuil,f(:),dist
+!  real(kind=DP)  :: x(:),seuil,f(:),dist
 !  integer :: i,j,k
 !
 !  dist=-1000.
@@ -821,7 +821,7 @@
 !
 !   subroutine normalize_non_unif_array(x,f)
 !   implicit none
-!   real(8)  :: x(:),f(:),sum
+!   real(kind=DP)  :: x(:),f(:),sum
 !   integer :: i,n
 !    sum=integrate_non_unif_array(x,f)
 !    f=f/sum
@@ -834,11 +834,11 @@
 ! !********************************************************************!
 ! !********************************************************************!
 !
-!   real(8) function integrate_non_unif_array(x,f,cutoff)
+!   real(kind=DP) function integrate_non_unif_array(x,f,cutoff)
 !   implicit none
-!   real(8)          :: x(:),f(:),sum,cutoff1
+!   real(kind=DP)          :: x(:),f(:),sum,cutoff1
 !   integer          :: i,n
-!   real(8),optional :: cutoff
+!   real(kind=DP),optional :: cutoff
 !
 !      sum=0.d0; n=size(x)
 !      if(size(x)/=size(f)) stop 'error integrate_non_unif_array'
@@ -870,8 +870,8 @@
 ! subroutine create_log_mesh(M1,M2,l,T,omi,oms)
 ! implicit none
 ! integer :: M1,M2,inp,last
-! real(8)  :: omi(M1+M2+1),oms(M1+M2+1)
-! real(8)  :: T,alpha
+! real(kind=DP)  :: omi(M1+M2+1),oms(M1+M2+1)
+! real(kind=DP)  :: T,alpha
 ! integer :: i,j,k,l,m,in
 !
 ! oms=0
@@ -941,13 +941,13 @@
 !
 ! subroutine FILL_MESH(zin)
 ! implicit none
-! real(8),intent(inout)  :: zin(:,:)
-! real(8)                :: back(size(zin(:,1)),size(zin(1,:)))
+! real(kind=DP),intent(inout)  :: zin(:,:)
+! real(kind=DP)                :: back(size(zin(:,1)),size(zin(1,:)))
 ! integer               :: i,j,k,l,m,n,siz1,siz2,u(1)
-! real(8)                :: rr,step
+! real(kind=DP)                :: rr,step
 ! integer               :: rrr(size(zin(:,1))*size(zin(1,:)),2)
-! real(8)                :: v1(2),v2(2)
-! real(8)                :: dist(size(zin(:,1))*size(zin(1,:)))
+! real(kind=DP)                :: v1(2),v2(2)
+! real(kind=DP)                :: dist(size(zin(:,1))*size(zin(1,:)))
 !
 ! !------------------------------------!
 ! back=0.;k=0
@@ -1007,10 +1007,10 @@
 !
 ! subroutine duplicate_mesh(xin,zin,T1,T2,xout,yout,zout)
 ! implicit none
-! real(8)                            :: T1(3),T2(3),g1(3),g2(3)
-! real(8)                            :: xin(:,:),zin(:)
-! real(8),dimension(:),allocatable   :: xout,yout,zinp
-! real(8),dimension(:,:),allocatable :: zout,xinp
+! real(kind=DP)                            :: T1(3),T2(3),g1(3),g2(3)
+! real(kind=DP)                            :: xin(:,:),zin(:)
+! real(kind=DP),dimension(:),allocatable   :: xout,yout,zinp
+! real(kind=DP),dimension(:,:),allocatable :: zout,xinp
 ! integer                            :: Ninp,NX,NY
 !
 !   !--------------------------------------------------------------!
@@ -1055,9 +1055,9 @@
 !
 !  subroutine build2DmeshGEN(param,mesh,g1,g2,base1,base2)
 !  implicit none
-!  real(8)  :: param(:,:),param2(size(param(:,1)),size(param(1,:)))
-!  real(8)  :: base1(:),base2(:)
-!  real(8)  :: min1,max1,min2,max2,g1(2),g2(2)
+!  real(kind=DP)  :: param(:,:),param2(size(param(:,1)),size(param(1,:)))
+!  real(kind=DP)  :: base1(:),base2(:)
+!  real(kind=DP)  :: min1,max1,min2,max2,g1(2),g2(2)
 !  integer :: mesh,i,j,k,count
 !   call build2Dmesh(param2,mesh,0.d0,1.d0,0.d0,1.d0)
 !   count=0
@@ -1092,8 +1092,8 @@
 !   subroutine find2Dmesh_(param,xx,iout)
 !   implicit none
 !   integer  :: iout(2),i,j,k
-!   real(8)  :: dist
-!   real(8)  :: param(:,:),xx(:),temp1(size(param,1)),temp2(size(param,2))
+!   real(kind=DP)  :: dist
+!   real(kind=DP)  :: param(:,:),xx(:),temp1(size(param,1)),temp2(size(param,2))
 !     temp1=param(:,1)
 !     temp2=param(1,:)
 !     iout(1)=fastsearchreal(xx(1),temp1(:))
@@ -1116,7 +1116,7 @@
 !  subroutine find2Dmesh_d(param,xx,iout)
 !  implicit none
 !  integer  :: iout(2),i,j
-!  real(8)  :: param(:,:),xx(:),temp1(size(param,1)),temp2(size(param,2))
+!  real(kind=DP)  :: param(:,:),xx(:),temp1(size(param,1)),temp2(size(param,2))
 !    temp1=param(:,1)
 !    temp2=param(1,:)
 !    iout(1)=fastsearchreal(xx(1),temp1(:))
@@ -1129,7 +1129,7 @@
 !  subroutine find2Dmesh_r(param,xx,iout)
 !  implicit none
 !  integer  ::  iout(2),i,j
-!  real(4)  ::  param(:,:),xx(:),temp1(size(param,1)),temp2(size(param,2))
+!  real(kind=SP)  ::  param(:,:),xx(:),temp1(size(param,1)),temp2(size(param,2))
 !    temp1=param(:,1)
 !    temp2=param(1,:)
 !    iout(1)=fastsearchreal(xx(1),temp1(:))
@@ -1155,7 +1155,7 @@
 !
 !  subroutine build2Dmesh_d(param,mesh,min1,max1,min2,max2)
 !  implicit none
-!  real(8)  :: param(:,:),min1,max1,min2,max2
+!  real(kind=DP)  :: param(:,:),min1,max1,min2,max2
 !  integer :: mesh,i,j,k,count
 !   count=0
 !   do j=1,mesh
@@ -1170,7 +1170,7 @@
 !
 !  subroutine build2Dmesh_r(param,mesh,min1,max1,min2,max2)
 !  implicit none
-!  real(4) :: param(:,:),min1,max1,min2,max2
+!  real(kind=SP) :: param(:,:),min1,max1,min2,max2
 !  integer :: mesh,i,j,k,count
 !   count=0
 !   do j=1,mesh
@@ -1191,7 +1191,7 @@
 ! !********************************************************************!
 !
 !  subroutine build1DmeshLOG(param,mesh,min,max)
-!  real(8) :: param(:),min,max
+!  real(kind=DP) :: param(:),min,max
 !  integer :: mesh
 !  integer :: i
 !   if(mesh<=1.or.abs(min-max)<epsilonr) then
@@ -1200,7 +1200,7 @@
 !   endif
 !   param(1:mesh)=(/( min+ (max-min)*Func(i),i=1,mesh)/)
 !  contains
-!   real(8) function Func(i)
+!   real(kind=DP) function Func(i)
 !   integer :: i
 !     Func = (1.-LOG( dble(mesh+1-i) ) / LOG ( dble(mesh) ))**2.
 !   end function
@@ -1215,13 +1215,13 @@
 !
 !  subroutine build1Dadapt(xin,yin,param,min1,max1,kkk,cutoff,strong)
 !  implicit none
-!  real(8)          :: param(:),xin(:),yin(:),min1,max1,derivative(size(param)),mmax,step
+!  real(kind=DP)          :: param(:),xin(:),yin(:),min1,max1,derivative(size(param)),mmax,step
 !  integer          :: nbin,tot
-!  real(8)          :: dist,xout(size(param)),dd,bounda
+!  real(kind=DP)          :: dist,xout(size(param)),dd,bounda
 !  integer          :: mesh
 !  integer          :: i,j,kkk2,isi
 !  integer,optional :: kkk
-!  real(8),optional :: cutoff
+!  real(kind=DP),optional :: cutoff
 !  logical,optional :: strong
 !
 !   nbin=max(2,size(param)/10)
@@ -1343,8 +1343,8 @@
 !
 !  subroutine build1Dadapt_resample(xin,yin,param,yout,min,max)
 !  implicit none
-!  real(8) :: param(:),xin(:),yin(:),yre(size(param)),min,max,derivative(size(param))
-!  real(8) :: dist,xout(size(param)),param2(size(param)),yout(:),yout2(size(yout))
+!  real(kind=DP) :: param(:),xin(:),yin(:),yre(size(param)),min,max,derivative(size(param))
+!  real(kind=DP) :: dist,xout(size(param)),param2(size(param)),yout(:),yout2(size(yout))
 !  integer :: mesh
 !  integer :: i
 !    call build1Dadapt(xin,yin,param2,min,max)
@@ -1358,9 +1358,9 @@
 !
 !  subroutine build1Dadapt_resampleb(xin,yin,kkk,inp)
 !  implicit none
-!  real(8) :: xin(:),yin(:)
-!  real(8) :: min,max,derivative(size(xin)),param(size(xin))
-!  real(8) :: yout(size(yin)),xtemp(inp),ytemp(inp)
+!  real(kind=DP) :: xin(:),yin(:)
+!  real(kind=DP) :: min,max,derivative(size(xin)),param(size(xin))
+!  real(kind=DP) :: yout(size(yin)),xtemp(inp),ytemp(inp)
 !  integer :: mesh,inp
 !  integer :: i,kkk
 !
@@ -1380,12 +1380,12 @@
 !
 !  subroutine build1Dadapt_resamplec(xin,yin,peakr)
 !  implicit none
-!  real(8) :: xin(:),yin(:),yback(size(yin)),peakr
-!  real(8) :: min1,max1
-!  real(8) :: xtemp(size(xin)),ytemp(size(xin)),xtemp2(size(xin)),ytemp2(size(xin))
+!  real(kind=DP) :: xin(:),yin(:),yback(size(yin)),peakr
+!  real(kind=DP) :: min1,max1
+!  real(kind=DP) :: xtemp(size(xin)),ytemp(size(xin)),xtemp2(size(xin)),ytemp2(size(xin))
 !  integer :: mesh,inp,peak1,peak2
 !  integer :: i,kkk,l1,l2
-!  real(8) :: large,center1,center2,a1,a2,b1,b2
+!  real(kind=DP) :: large,center1,center2,a1,a2,b1,b2
 !
 !    inp=size(xin)
 !    min1=minval(xin); max1=maxval(xin)
@@ -1449,7 +1449,7 @@
 !
 !  subroutine build1DmeshLOGsym(param,meshtot,acenter,min,max)
 !  implicit none
-!  real(8) :: param(:),min,max,acenter
+!  real(kind=DP) :: param(:),min,max,acenter
 !  integer :: mesh,meshtot
 !  integer :: i
 !
@@ -1482,7 +1482,7 @@
        integer :: param(:), min, max
        integer :: mesh
        integer :: i
-       real(8) :: param2(mesh), min2, max2
+       real(kind=DP) :: param2(mesh), min2, max2
        if (mesh <= 1 .or. min == max) then
           param = min
           return
@@ -1494,7 +1494,7 @@
     end subroutine
 
     subroutine build1Dmesh_d(param, mesh, min, max)
-       real(8) :: param(:), min, max
+       real(kind=DP) :: param(:), min, max
        integer :: mesh
        integer :: i
        if (mesh <= 1 .or. abs(min - max) < epsilonr) then
@@ -1516,8 +1516,8 @@
     end subroutine
 
     subroutine build1Dmesh_dr(param, mesh, min, max)
-       real(8)  :: param(:)
-       real(4) :: min, max
+       real(kind=DP)  :: param(:)
+       real(kind=SP) :: min, max
        integer :: mesh
        integer :: i
        if (mesh <= 1 .or. abs(min - max) < 1.e-6) then
@@ -1528,8 +1528,8 @@
     end subroutine
 
     subroutine build1Dmesh_rd(param, mesh, min, max)
-       real(4) :: param(:)
-       real(8)  :: min, max
+       real(kind=SP) :: param(:)
+       real(kind=DP)  :: min, max
        integer :: mesh
        integer :: i
        if (mesh <= 1 .or. abs(min - max) < epsilonr) then
@@ -1548,7 +1548,7 @@
 
     subroutine findin1Dmesh_d(param, mesh, xx, iout)
        integer :: iout, mesh, i
-       real(8) :: param(:), xx
+       real(kind=DP) :: param(:), xx
        iout = fastsearchreal(xx, param)
     end subroutine
 
@@ -1571,14 +1571,14 @@
 !  ! T1,T2 : periodic vectors for translations !
 !  !-------------------------------------------!
 !  integer                         :: Nout
-!  real(8),intent(in)              :: xin(:,:)
-!  real(8)                         :: xinb(size(xin(:,1)),size(xin(1,:)))
-!  real(8),intent(in)              :: zin(:)
-!  real(8),dimension(:,:),optional :: xout
-!  real(8),dimension(:),optional   :: zout
+!  real(kind=DP),intent(in)              :: xin(:,:)
+!  real(kind=DP)                         :: xinb(size(xin(:,1)),size(xin(1,:)))
+!  real(kind=DP),intent(in)              :: zin(:)
+!  real(kind=DP),dimension(:,:),optional :: xout
+!  real(kind=DP),dimension(:),optional   :: zout
 !  integer                         :: siz1,siz2,i,j,k,l,m,jj,count
-!  real(8)                         :: a1,a2,b1,b2,T1(3),T2(3)
-!  real(8)                         :: T1b(2),T2b(2),v(3)
+!  real(kind=DP)                         :: a1,a2,b1,b2,T1(3),T2(3)
+!  real(kind=DP)                         :: T1b(2),T2b(2),v(3)
 !  logical                         :: out
 !    xinb=xin
 !    call shift_to_corner_mesh(xinb,T1b(1:2),T2b(1:2))
@@ -1597,12 +1597,12 @@
 !
 !  subroutine convert_meshvectors_to_matrix(g1,g2,xin,zin,Nx,Ny,xout,yout,zout,fill)
 !  implicit none
-!  real(8)           :: xin(:,:),zin(:),g1(:),g2(:),base(2,2)
+!  real(kind=DP)           :: xin(:,:),zin(:),g1(:),g2(:),base(2,2)
 !  integer           :: Nx,Ny,N1,N2
-!  real(8),optional  :: xout(Nx),yout(Ny),zout(Nx,Ny)
+!  real(kind=DP),optional  :: xout(Nx),yout(Ny),zout(Nx,Ny)
 !  integer           :: i,j,k,l,m,n,siz1
 !  integer           :: decomp(size(xin(:,1)),2)
-!  real(8)           :: decompr(size(xin(:,1)),2)
+!  real(kind=DP)           :: decompr(size(xin(:,1)),2)
 !  integer           :: x1,y1
 !  logical,optional  :: fill
 !
@@ -1690,7 +1690,7 @@
 !
 !  subroutine convert_meshmatrix_to_vectors(xin,yin,zin,Nx,Ny,xout,zout)
 !  implicit none
-!  real(8) :: xin(:),yin(:),zin(:,:)
+!  real(kind=DP) :: xin(:),yin(:),zin(:,:)
 !  integer :: i,j,k,l,m
 !  integer :: x1,y1,Nx,Ny
 !  integer :: xout(Nx*Ny,3),zout(Nx*Ny)
@@ -1715,8 +1715,8 @@
 !
 ! subroutine shift_to_corner_mesh(xin,T1b,T2b)
 ! implicit none
-! real(8),intent(inout) :: xin(:,:)
-! real(8)               :: a1,a2,b1,b2,T1b(2),T2b(2)
+! real(kind=DP),intent(inout) :: xin(:,:)
+! real(kind=DP)               :: a1,a2,b1,b2,T1b(2),T2b(2)
 !  a1=minval(xin(:,1))
 !  a2=maxval(xin(:,1))
 !  b1=minval(xin(:,2))
@@ -1746,13 +1746,13 @@
 !
 ! subroutine findNmesh(xin,T1b,T2b,Nout,T1,T2,zout,zin,xout)
 ! implicit none
-! real(8),optional :: T1(2),T2(2)
-! real(8),optional :: zout(:),zin(:)
-! real(8),optional :: xout(:,:)
-! real(8)          :: xin(:,:)
+! real(kind=DP),optional :: T1(2),T2(2)
+! real(kind=DP),optional :: zout(:),zin(:)
+! real(kind=DP),optional :: xout(:,:)
+! real(kind=DP)          :: xin(:,:)
 ! logical          :: out
 ! integer          :: Nout,i,j,k,l,jj,siz1
-! real(8)          :: T1b(2),T2b(2),TT1(2),TT2(2),v(3)
+! real(kind=DP)          :: T1b(2),T2b(2),TT1(2),TT2(2),v(3)
 ! integer          :: a1,a2
 !  siz1=size(xin(:,1))
 !  if(present(T1)) then
@@ -1796,9 +1796,9 @@
 !
 !  subroutine shift_down_min_of_array(array,percent)
 !  implicit none
-!  real(8) :: percent, array(:,:)
+!  real(kind=DP) :: percent, array(:,:)
 !  integer :: u(2)
-!  real(8) :: amin,amax
+!  real(kind=DP) :: amin,amax
 !    amin=minval(array)
 !    amax=maxval(array)
 !    u=minloc(array)
@@ -1814,9 +1814,9 @@
 !
 ! subroutine rescale_array_moins1_1(array)
 ! implicit none
-! real(8) :: array(:,:)
+! real(kind=DP) :: array(:,:)
 ! integer :: i,j,k,l,m
-! real(8) :: r1,r2,t,u,v,ar,am
+! real(kind=DP) :: r1,r2,t,u,v,ar,am
 !    ar=minval(array)
 !    array=array-ar
 !    am=maxval(array)
@@ -1827,7 +1827,7 @@
 !
 ! subroutine rescale_array_atanh(array)
 ! implicit none
-! real(8) :: array(:,:)
+! real(kind=DP) :: array(:,:)
 !    call rescale_array_moins1_1(array)
 !    array=atanh(array)
 ! end subroutine
@@ -1836,7 +1836,7 @@
 !
 ! subroutine rescale_array_tanh(array)
 ! implicit none
-! real(8) :: array(:,:)
+! real(kind=DP) :: array(:,:)
 !    call rescale_array_moins1_1(array)
 !    array=tanh(array)
 ! end subroutine
@@ -1845,7 +1845,7 @@
 !
 ! subroutine rescale_array_tan(array)
 ! implicit none
-! real(8) :: array(:,:)
+! real(kind=DP) :: array(:,:)
 !    call rescale_array_moins1_1(array)
 !    array=tanh(array*pi)
 ! end subroutine
@@ -1854,7 +1854,7 @@
 !
 ! subroutine rescale_array_cos(array)
 ! implicit none
-! real(8) :: array(:,:)
+! real(kind=DP) :: array(:,:)
 !    call rescale_array_moins1_1(array)
 !    array=tanh((array+1)*pi/2.-pi)
 ! end subroutine
@@ -1863,7 +1863,7 @@
 !
 ! subroutine rescale_array_atan(array)
 ! implicit none
-! real(8) :: array(:,:)
+! real(kind=DP) :: array(:,:)
 ! integer :: i,j,k,l,m
 !    call rescale_array_moins1_1(array)
 !    array=atan(array)

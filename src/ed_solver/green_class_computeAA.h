@@ -155,7 +155,7 @@
 
       implicit none
 
-      real(8) :: normvec
+      real(kind=DP) :: normvec
       integer :: iisector, i_, v(2), iii, start, step
       logical :: do_orb
 

@@ -1,13 +1,14 @@
 program projgreen_software
+   use genvar, only: DP
    use linalg
    use StringManip, only: StrInt2
    use matrix, only: diag
    use mesh
    implicit none
    integer                   :: shapeit(4), i, j, k, l, m, i1, i2, i3
-   real(8)                   :: ii, mat(3, 3)
-   complex(8), allocatable    :: projgreen(:, :, :, :)
-   real(8), allocatable       :: positions(:, :)
+   real(kind=DP)                   :: ii, mat(3, 3)
+   complex(kind=DP), allocatable    :: projgreen(:, :, :, :)
+   real(kind=DP), allocatable       :: positions(:, :)
    logical                   :: check
    character(300)            :: value(100)
    character(22), allocatable :: label(:)
@@ -70,10 +71,10 @@ program projgreen_software
 
 contains
 
-   real(8) function manhattan_distance(v1, v2)
+   real(kind=DP) function manhattan_distance(v1, v2)
       implicit none
       integer :: i1_, i2_, i3_
-      real(8) :: v1(3), v2(3), dd, temp, v1_(3)
+      real(kind=DP) :: v1(3), v2(3), dd, temp, v1_(3)
       dd = 1.d20
       do i1_ = -1, 1
       do i2_ = -1, 1

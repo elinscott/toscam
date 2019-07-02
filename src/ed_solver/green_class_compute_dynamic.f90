@@ -396,12 +396,12 @@ contains
 
    contains
 
-      complex(8) function internal_scalprod_(x1, x2)
+      complex(kind=DP) function internal_scalprod_(x1, x2)
 
          implicit none
 
-         complex(8) :: x1(:)
-         complex(8) :: x2(:)
+         complex(kind=DP) :: x1(:)
+         complex(kind=DP) :: x2(:)
          integer    :: i, j, k
 
          internal_scalprod_ = 0.d0
@@ -410,15 +410,15 @@ contains
          enddo
       end function
 
-      complex(8) function internal_scalprod(x1, x2)
+      complex(kind=DP) function internal_scalprod(x1, x2)
 
          implicit none
 
-         complex(8) :: x1(:)
+         complex(kind=DP) :: x1(:)
 #ifdef _complex
-         complex(8) :: x2(:)
+         complex(kind=DP) :: x2(:)
 #else
-         real(8)    :: x2(:)
+         real(kind=DP)    :: x2(:)
 #endif
          integer    :: i, j, k
 
