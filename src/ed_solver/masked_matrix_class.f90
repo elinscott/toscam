@@ -91,9 +91,9 @@ contains
       TYPE(masked_matrix_type), INTENT(INOUT) :: MM
       INTEGER, INTENT(IN)                     :: iind
 #ifdef _complex
-      COMPLEX(DBL) :: val
+      COMPLEX(DP) :: val
 #else
-      REAL(DBL)    :: val
+      REAL(DP)    :: val
 #endif
 
       CALL fill_masked_matrix_(MM%rc, iind, val)

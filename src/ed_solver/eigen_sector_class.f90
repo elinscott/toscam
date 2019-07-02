@@ -1,7 +1,7 @@
 MODULE eigen_sector_class
 
    use eigen_class, only: eigenlist_type
-   use genvar, only: DBL, DP, log_unit
+   use genvar, only: DP, DP, log_unit
    use sector_class, only: sector_type
 
    implicit none
@@ -269,7 +269,7 @@ contains
       implicit none
 
       type(eigensectorlist_type), intent(inout) :: list
-      real(dbl),                  intent(in   ) :: window(2)
+      real(dp),                   intent(in   ) :: window(2)
       integer :: isector, nn
 
       isector = 1
@@ -362,9 +362,9 @@ contains
       implicit none
 
       TYPE(eigensectorlist_type), INTENT(IN) :: list
-      REAL(DBL) :: GSenergy
+      REAL(DP) :: GSenergy
       INTEGER   :: isector
-      REAL(DBL) :: E0
+      REAL(DP) :: E0
 
       GSenergy = huge_
       DO isector = 1, list%nsector
@@ -430,11 +430,11 @@ contains
 
       implicit none
 
-      REAL(DBL), INTENT(IN)                  :: beta
+      REAL(DP), INTENT(IN)                  :: beta
       TYPE(eigensectorlist_type), INTENT(IN) :: list
-      REAL(DBL) :: Zpart
+      REAL(DP) :: Zpart
       INTEGER   :: isector
-      REAL(DBL) :: E0
+      REAL(DP) :: E0
 
       E0 = GSenergy(list)
       Zpart = 0.0_DP
@@ -450,11 +450,11 @@ contains
 
       implicit none
 
-      REAL(DBL), INTENT(IN)                  :: beta
+      REAL(DP), INTENT(IN)                  :: beta
       TYPE(eigensectorlist_type), INTENT(IN) :: list
-      REAL(DBL) :: Zpart, EE
+      REAL(DP) :: Zpart, EE
       INTEGER   :: isector
-      REAL(DBL) :: E0
+      REAL(DP) :: E0
 
       E0 = GSenergy(list)
       Zpart = 0.0_DP

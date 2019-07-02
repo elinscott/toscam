@@ -3388,9 +3388,9 @@ contains
       do kk_ = 1, j_
          do i = 1, n_frequ
             if (.not. double_counting_zero_self .and. maxval(abs(double_counting(kk_, :))) < 1.d-5 .and. abs(UU) > 1.d-5) then
-               write (*, '(a)') ' WARNING: double counting is undefined : '
-               write (*, *) ' UU,double counting                 : ', UU, double_counting(kk_, :)
-               call utils_abort('Double counting is undefined')
+               write (*, '(a)') ' WARNING: double counting is undefined/zero'
+               ! write (*, *) ' UU,double counting                 : ', UU, double_counting(kk_, :)
+               ! call utils_abort('Double counting is undefined')
             endif
             if (maxval(abs(sigma_mat(kk_, n_frequ, :, :))) > 1.d-5) then
                do k = 1, channels

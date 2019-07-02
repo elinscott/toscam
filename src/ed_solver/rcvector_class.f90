@@ -1,6 +1,6 @@
 MODULE rcvector_class
 
-   use genvar, only: DBL
+   use genvar, only: DP
 
    implicit none
 
@@ -13,9 +13,9 @@ MODULE rcvector_class
    TYPE rcvector_type
       INTEGER :: n = 0
 #ifdef _complex
-      COMPLEX(DBL), POINTER :: rc(:) => NULL()
+      COMPLEX(DP), POINTER :: rc(:) => NULL()
 #else
-      REAL(DBL), POINTER :: rc(:) => NULL()
+      REAL(DP), POINTER :: rc(:) => NULL()
 #endif
    END TYPE
 
@@ -75,7 +75,7 @@ contains
       IF (N > 0) THEN
          ALLOCATE (VEC%rc(N))
       ENDIF
-      VEC%rc = 0.0_DBL
+      VEC%rc = 0.0_DP
 
    end subroutine
 
@@ -143,7 +143,7 @@ contains
       implicit none
 
       TYPE(rcvector_type), INTENT(IN) :: vec
-      REAL(DBL) :: norm_rcvector
+      REAL(DP) :: norm_rcvector
 
       norm_rcvector = SQRT(ABS(MPI_DOT_PRODUCT(vec%rc, vec%rc, split= &
                                                USE_TRANSPOSE_TRICK_MPI)))

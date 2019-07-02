@@ -340,26 +340,26 @@ contains
 !**************************************************************************
 
    FUNCTION norm_cplx_vec(vec) RESULT(norm)
-      REAL(DBL)    :: norm
-      COMPLEX(DBL) :: vec(:)
-      norm = SQRT(DBLE(DOT_PRODUCT(vec, vec)))
+      REAL(DP)    :: norm
+      COMPLEX(DP) :: vec(:)
+      norm = SQRT(real(DOT_PRODUCT(vec, vec), kind=DP))
    END FUNCTION
 
    FUNCTION norm_real_vec(vec) RESULT(norm)
-      REAL(DBL) :: norm
-      REAL(DBL) :: vec(:)
+      REAL(DP) :: norm
+      REAL(DP) :: vec(:)
       norm = SQRT(DOT_PRODUCT(vec, vec))
    END FUNCTION
 
    ELEMENTAL FUNCTION conj_real(r) RESULT(cc)
-      REAL(DBL)             :: cc
-      REAL(DBL), INTENT(IN) :: r
+      REAL(DP)             :: cc
+      REAL(DP), INTENT(IN) :: r
       cc = r
    END FUNCTION
 
    ELEMENTAL FUNCTION conj_cplx(c) RESULT(cc)
-      COMPLEX(DBL)             :: cc
-      COMPLEX(DBL), INTENT(IN) :: c
+      COMPLEX(DP)             :: cc
+      COMPLEX(DP), INTENT(IN) :: c
       cc = CONJG(c)
    END FUNCTION
 
@@ -5475,8 +5475,8 @@ contains
 ! !***************************************************
 !
 !   FUNCTION dirprod(p,q)
-!     REAL(DBL), INTENT(IN) :: p(:,:)
-!     REAL(DBL), INTENT(IN) :: q(:,:)
+!     REAL(DP), INTENT(IN) :: p(:,:)
+!     REAL(DP), INTENT(IN) :: q(:,:)
 !     REAL(DBL)             :: dirprod(SIZE(p,1)*SIZE(q,1),SIZE(p,2)*SIZE(q,2))
 !     INTEGER               :: p1,p2,q1,q2
 !     INTEGER               :: i1,i2
@@ -5499,9 +5499,9 @@ contains
 ! !***************************************************
 !
 !   SUBROUTINE dirp(pq,p,q)
-!     REAL(DBL), INTENT(IN)    :: p(:,:)
-!     REAL(DBL), INTENT(IN)    :: q(:,:)
-!     REAL(DBL), INTENT(INOUT) :: pq(:,:)
+!     REAL(DP), INTENT(IN)    :: p(:,:)
+!     REAL(DP), INTENT(IN)    :: q(:,:)
+!     REAL(DP), INTENT(INOUT) :: pq(:,:)
 !     INTEGER                  :: p1,p2,q1,q2
 !     INTEGER                  :: i1,i2
 !     p1=SIZE(p,1)
@@ -5523,9 +5523,9 @@ contains
 ! !***************************************************
 !
 !   SUBROUTINE dirpsum(pq,p,q)
-!     REAL(DBL), INTENT(IN)    :: p(:,:)
-!     REAL(DBL), INTENT(IN)    :: q(:,:)
-!     REAL(DBL), INTENT(INOUT) :: pq(:,:)
+!     REAL(DP), INTENT(IN)    :: p(:,:)
+!     REAL(DP), INTENT(IN)    :: q(:,:)
+!     REAL(DP), INTENT(INOUT) :: pq(:,:)
 !     INTEGER                  :: p1,p2,q1,q2
 !     INTEGER                  :: i1,i2
 !     p1=SIZE(p,1)

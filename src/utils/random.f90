@@ -128,8 +128,8 @@ contains
 !
 !   SUBROUTINE randomize_rank2r(tab)
 !   implicit none
-!     REAL(DBL),    INTENT(INOUT) :: tab(:,:)
-!     REAL(DBL),    ALLOCATABLE   :: ritab(:,:)
+!     REAL(DP),    INTENT(INOUT) :: tab(:,:)
+!     REAL(DP),    ALLOCATABLE   :: ritab(:,:)
 !     INTEGER                     :: rmin,rmax,cmin,cmax
 !     rmin = LBOUND(tab,1); rmax = UBOUND(tab,1)
 !     cmin = LBOUND(tab,2); cmax = UBOUND(tab,2)
@@ -151,8 +151,8 @@ contains
 !
 !   SUBROUTINE randomize_rank2c(tab)
 !   implicit none
-!     COMPLEX(DBL), INTENT(INOUT)  ::    tab(:,:)
-!     REAL(DBL),    ALLOCATABLE    ::  ritab(:,:)
+!     COMPLEX(DP), INTENT(INOUT)  ::    tab(:,:)
+!     REAL(DP),    ALLOCATABLE    ::  ritab(:,:)
 !     INTEGER                      ::  rmin,rmax,cmin,cmax
 !
 !     rmin = LBOUND(tab,1); rmax = UBOUND(tab,1)
@@ -179,8 +179,8 @@ contains
 !
 !   SUBROUTINE randomize_rank1r(vec)
 !   implicit none
-!     REAL(DBL),    INTENT(INOUT) ::   vec(:)
-!     REAL(DBL),    ALLOCATABLE   :: rivec(:)
+!     REAL(DP),    INTENT(INOUT) ::   vec(:)
+!     REAL(DP),    ALLOCATABLE   :: rivec(:)
 !     INTEGER                     :: rmin,rmax,cmin,cmax
 !     rmin = LBOUND(vec,1); rmax = UBOUND(vec,1)
 !     ALLOCATE(rivec(rmin:rmax))
@@ -202,8 +202,8 @@ contains
 !
 !   SUBROUTINE randomize_rank1c(vec)
 !   implicit none
-!     COMPLEX(DBL), INTENT(INOUT) :: vec(:)
-!     REAL(DBL)                   :: rivec(LBOUND(vec,1):UBOUND(vec,1))
+!     COMPLEX(DP), INTENT(INOUT) :: vec(:)
+!     REAL(DP)                   :: rivec(LBOUND(vec,1):UBOUND(vec,1))
 !     ! REAL PART
 !     CALL RANDOM_NUMBER(rivec)
 !     vec = rivec
@@ -224,7 +224,7 @@ contains
 
    SUBROUTINE GENRAN(seed_, randvec, ncpt)
       implicit none
-      REAL(DBL), INTENT(INOUT) :: randvec(:)
+      REAL(DP), INTENT(INOUT) :: randvec(:)
       INTEGER, INTENT(IN)    :: ncpt
       INTEGER, INTENT(INOUT) :: seed_(:)
       ! GENERATES RANDOM VECTOR WITH seed_
@@ -487,7 +487,7 @@ contains
       real(8) :: drand1
       real(4) :: r
       call random_number(r)
-      drand1 = dble(r)
+      drand1 = real(r, kind=DP)
    end function
 
    !------------!

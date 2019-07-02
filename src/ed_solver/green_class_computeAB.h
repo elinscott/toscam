@@ -280,8 +280,8 @@
                      iind = find_rank(MASKAB(ipm, jpm)%imat(iorb, jorb), &
                                       MASKAB(ipm, jpm)%ivec)
                      if (greenAB%compute(ipm, jpm)) then
-                        greenAB%correlstat(ipm, jpm)%rc%vec(iind) = 0.0_DBL
-                        greenAB%correl(ipm, jpm)%vec(iind, :) = 0.0_DBL
+                        greenAB%correlstat(ipm, jpm)%rc%vec(iind) = 0.0_DP
+                        greenAB%correl(ipm, jpm)%vec(iind, :) = 0.0_DP
                      endif
                   ENDIF
                   if (BA) then
@@ -289,8 +289,8 @@
                         iind = find_rank(MASKBA(ipm, jpm)%imat(iorb, jorb), &
                                          MASKBA(ipm, jpm)%ivec)
                         if (greenBA%compute(ipm, jpm)) then
-                           greenBA%correlstat(ipm, jpm)%rc%vec(iind) = 0.0_DBL
-                           greenBA%correl(ipm, jpm)%vec(iind, :) = 0.0_DBL
+                           greenBA%correlstat(ipm, jpm)%rc%vec(iind) = 0.0_DP
+                           greenBA%correl(ipm, jpm)%vec(iind, :) = 0.0_DP
                         endif
                      ENDIF
 
@@ -304,12 +304,12 @@
 
          IF (ANY(ORBMASKvec(:, :, iorb))) THEN
             if (associated(greenAB%Amean)) then
-               greenAB%Amean(iorb, :) = 0.0_DBL
-               greenAB%Bmean(iorb, :) = 0.0_DBL
+               greenAB%Amean(iorb, :) = 0.0_DP
+               greenAB%Bmean(iorb, :) = 0.0_DP
             endif
             if (associated(greenBA%Amean)) then
-               greenBA%Amean(iorb, :) = 0.0_DBL
-               greenBA%Bmean(iorb, :) = 0.0_DBL
+               greenBA%Amean(iorb, :) = 0.0_DP
+               greenBA%Bmean(iorb, :) = 0.0_DP
             endif
          endif
       ENDDO

@@ -59,7 +59,7 @@ contains
          tot_repulsion, use_specific_set_parameters
       use impurity_class, only: hamiltonian, update_impurity, web
       use genvar, only: fermionic, log_unit, no_mpi, pi, rank, &
-         size2
+         size2, dp
       use correl_class, only: average_correlations
       use matrix, only: average_vec, diag, write_array
       use bath_class_hybrid, only: bath2hybrid, hybrid2bath
@@ -381,10 +381,10 @@ contains
 144   continue
       DO i = 1, size(rdens)
          if (i <= size(rdens)/2) then
-            rdens(i) = DBLE(G(1)%correlstat(1, 2)%rc%mat(i, i))
+            rdens(i) = real(G(1)%correlstat(1, 2)%rc%mat(i, i), kind=DP)
          else
             j = modi(i, size(rdens)/2)
-            rdens(i) = DBLE(G(2)%correlstat(1, 2)%rc%mat(j, j))
+            rdens(i) = real(G(2)%correlstat(1, 2)%rc%mat(j, j), kind=DP)
          endif
       ENDDO
 

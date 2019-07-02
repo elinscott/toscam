@@ -17,7 +17,7 @@ contains
 
       use bath_class, only: bath_type
       use common_def, only: c2s, dump_message, i2c
-      use genvar, only: DBL
+      use genvar, only: DP
       use globalvar_ed_solver, only: all_first_call
 
       implicit none
@@ -30,7 +30,7 @@ contains
            &ASSOCIATED!"
 
       IF (.NOT. ASSOCIATED(BATH%vec)) ALLOCATE (BATH%vec(BATH%nparam))
-      BATH%vec = 0.0_DBL
+      BATH%vec = 0.0_DP
 
       ! GATHER ALL VECTORS OF INDPDT ELEMTS IN A SINGLE VECTOR OF SIZE nparam
 
@@ -124,13 +124,13 @@ contains
       ! APPEND MM%vec TO END OF vec
 
       use masked_matrix_class, only: masked_matrix2vec, masked_matrix_type
-      use genvar, only: dbl
+      use genvar, only: dp
 
       implicit none
 
       INTEGER, INTENT(INOUT)                  :: offset
       TYPE(masked_matrix_type), INTENT(INOUT) :: MM
-      REAL(DBL), INTENT(INOUT)                :: vec(:)
+      REAL(DP), INTENT(INOUT)                :: vec(:)
       INTEGER :: nind, ninddiag, nindoffdiag ! for clarity
 
       IF (.NOT. ASSOCIATED(MM%rc%mat)) STOP "ERROR IN add_mm2vec: INPUT ISNT &
@@ -148,7 +148,7 @@ contains
 
          IF (.NOT. MM%rc%IS_HERM) THEN
             ! EVERYBODY IS COMPLEX
-            vec(offset + 1:offset + nind) = DBLE(MM%rc%vec)
+            vec(offset + 1:offset + nind) = real(MM%rc%vec, kind=DP)
             offset = offset + nind
             vec(offset + 1:offset + nind) = AIMAG(MM%rc%vec)
             offset = offset + nind
@@ -164,7 +164,7 @@ contains
             ENDIF
 
             IF (nindoffdiag /= 0) THEN
-               vec(offset + 1:offset + nindoffdiag) = DBLE(MM%rc%vecoffdiag)
+               vec(offset + 1:offset + nindoffdiag) = real(MM%rc%vecoffdiag, kind=DP)
                offset = offset + nindoffdiag
                vec(offset + 1:offset + nindoffdiag) = AIMAG(MM%rc%vecoffdiag)
                offset = offset + nindoffdiag
@@ -188,13 +188,13 @@ contains
          vec2masked_matrix
       use matrix, only: diag
       use masked_matrix_class_mod, only: gather_diag_offdiag_vec
-      use genvar, only: dbl, error
+      use genvar, only: dp, error
 
       implicit none
 
       INTEGER, INTENT(INOUT)                  :: offset
       TYPE(masked_matrix_type), INTENT(INOUT) :: MM
-      REAL(DBL), INTENT(INOUT)                :: vec(:)
+      REAL(DP), INTENT(INOUT)                :: vec(:)
       INTEGER :: nind, ninddiag, nindoffdiag, i ! for clarity only
 
       IF (.NOT. ASSOCIATED(MM%rc%mat)) STOP "ERROR IN extract_mmvec_from_vec: &

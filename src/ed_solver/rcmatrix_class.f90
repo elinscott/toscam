@@ -1,6 +1,6 @@
 MODULE rcmatrix_class
 
-   use genvar, only: DBL
+   use genvar, only: DP
 
    IMPLICIT NONE
 
@@ -13,9 +13,9 @@ MODULE rcmatrix_class
    TYPE rcmatrix_type
       INTEGER :: n1 = 0, n2 = 0
 #ifdef _complex
-      COMPLEX(DBL), POINTER :: rc(:, :) => NULL()
+      COMPLEX(DP), POINTER :: rc(:, :) => NULL()
 #else
-      REAL(DBL), POINTER :: rc(:, :) => NULL()
+      REAL(DP), POINTER :: rc(:, :) => NULL()
 #endif
    END TYPE
 
@@ -51,7 +51,7 @@ contains
       ENDIF
       IF (MAT%n1 /= 0 .AND. MAT%n2 /= 0) THEN
          ALLOCATE (MAT%rc(MAT%n1, MAT%n2))
-         MAT%rc = 0.0_DBL
+         MAT%rc = 0.0_DP
       ENDIF
    end subroutine
 

@@ -521,10 +521,10 @@
                         stop
                      endif
                      ! EQUAL-TIME
-                     green%correlstat(ipm, jpm)%rc%vec(iind) = 0.0_DBL
+                     green%correlstat(ipm, jpm)%rc%vec(iind) = 0.0_DP
                      ! DYNAMIC
                      IF (compute_dyn_correl .AND. green%compute(ipm, jpm)) &
-                        green%correl(ipm, jpm)%vec(iind, :) = 0.0_DBL
+                        green%correl(ipm, jpm)%vec(iind, :) = 0.0_DP
                   ENDIF
                ENDDO
             ENDDO
@@ -534,7 +534,7 @@
       ! MEAN
       DO iorb = 1, green%N
          IF (ANY(ORBMASKvec(:, :, iorb))) THEN
-            green%Amean(iorb, :) = 0.0_DBL
+            green%Amean(iorb, :) = 0.0_DP
          ENDIF
       ENDDO
 

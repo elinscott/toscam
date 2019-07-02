@@ -9,7 +9,7 @@ module init_and_close_my_sim
 
    private
 
-   REAL(DBL), PARAMETER :: zero = 0.0_DBL, one = 1.0_DBL, two = 2.0_DBL, three = 3.0_DBL
+   REAL(DP), PARAMETER :: zero = 0.0_DP, one = 1.0_DP, two = 2.0_DP, three = 3.0_DP
 
    PUBLIC          :: initialize_my_simulation, finalize_my_simulation
 
@@ -36,7 +36,7 @@ contains
       CALL SYSTEM_CLOCK(COUNT_RATE=clock_rate)
       call initialize_random_numbers(iseed, rank)
       write (*, *) 'system clock rate is : ', clock_rate
-      one_over_clock_rate = one/DBLE(clock_rate)
+      one_over_clock_rate = one/real(clock_rate, kind=DP)
       write (*, *) 'one over clock rate : ', one_over_clock_rate
       LOGfile = 'logfile'
       LOGfile = TRIM(LOGfile)//"-p"//c2s(i2c(iproc))

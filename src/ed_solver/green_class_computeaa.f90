@@ -1,6 +1,6 @@
 module green_class_computeAA
 
-   use genvar, only: DBL
+   use genvar, only: DP
 
    implicit none
 
@@ -32,7 +32,7 @@ contains
 
       TYPE(green_type), INTENT(INOUT) :: green
       TYPE(AIM_type), INTENT(IN)    :: AIM
-      REAL(DBL), INTENT(IN)    :: beta
+      REAL(DP), INTENT(IN)    :: beta
       TYPE(eigensectorlist_type), INTENT(IN)    :: GS
 
       interface
@@ -72,14 +72,14 @@ contains
       TYPE(eigensector_type), POINTER        :: es => NULL()
       TYPE(eigen_type), POINTER        :: eigen => NULL(), OPeigen => &
                                           NULL()
-      REAL(DBL)                              :: E0
+      REAL(DP)                              :: E0
       INTEGER                                :: applyA_timer, &
                                                 compute_dyn_timer, &
                                                 compute_green_timer, i1, j1, &
                                                 isec_back, i
       INTEGER                                :: ipm, jpm, kpm, iph_max, iph, &
                                                 iorb, jorb, iind, jjj1, jjj2, j
-      REAL(DBL)                              :: Zpart, boltz
+      REAL(DP)                              :: Zpart, boltz
       LOGICAL                                :: already_computed_mean(green%N, 2)
       LOGICAL                                :: compute_dyn_correl
       LOGICAL                                :: ORBMASKvec(2, 2, green%N)
@@ -88,7 +88,7 @@ contains
       INTEGER                                :: isector, ieigen, ii, uup, ddn, &
                                                 itot, i_, v(2), issz
       TYPE(eigen_type)                       :: Apmsym
-      COMPLEX(DBL)                           :: dyn(green%Nw)
+      COMPLEX(DP)                           :: dyn(green%Nw)
       TYPE(eigen_type), POINTER              :: Ai => NULL()
       LOGICAL                                :: NOT_COMMENSURATE
       INTEGER, allocatable                   :: indices_state_sector(:, :)

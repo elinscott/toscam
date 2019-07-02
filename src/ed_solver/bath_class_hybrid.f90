@@ -47,7 +47,7 @@ contains
 
       use correl_class, only: glimpse_correl
       use bath_class, only: bath_type, nambu_eb, nambu_vbc
-      use genvar, only: dbl, fermionic, iproc, retarded
+      use genvar, only: dp, fermionic, iproc, retarded
       use globalvar_ed_solver, only: bath_nearest_hop, cpt_upper_bound, &
          cutoff_rvb, diag_bath, diag_v, epsilon_cpt, &
          fit_green_func_and_not_hybrid, fast_fit, fit_nw, fmos, &
@@ -67,16 +67,16 @@ contains
       LOGICAL, OPTIONAL, INTENT(IN)  :: WRITE_HYBRID, short
       TYPE(bath_type)           :: BATH
       TYPE(masked_matrix_type)  :: EbNambu, VbcNambu
-      COMPLEX(DBL)              :: Eb((BATH%Nb + ncpt_approx_tot)*2, (BATH%Nb &
+      COMPLEX(DP)              :: Eb((BATH%Nb + ncpt_approx_tot)*2, (BATH%Nb &
                                                                       + ncpt_approx_tot)*2)
-      COMPLEX(DBL)              :: Ebm1((BATH%Nb + ncpt_approx_tot)*2, &
+      COMPLEX(DP)              :: Ebm1((BATH%Nb + ncpt_approx_tot)*2, &
                                         (BATH%Nb + ncpt_approx_tot)*2)
-      COMPLEX(DBL)              :: Vbc((BATH%Nb + ncpt_approx_tot)*2, &
+      COMPLEX(DP)              :: Vbc((BATH%Nb + ncpt_approx_tot)*2, &
                                        BATH%Nc*2), Vcb(BATH%Nc*2, (BATH%Nb + &
                                                                    ncpt_approx_tot)*2)
-      REAL(DBL)                 :: ratio, eigenvalues(2*(BATH%Nb + &
+      REAL(DP)                 :: ratio, eigenvalues(2*(BATH%Nb + &
                                                          ncpt_approx_tot))
-      COMPLEX(DBL), POINTER     :: hybrid(:, :, :) => NULL(), freq(:) => NULL()
+      COMPLEX(DP), POINTER     :: hybrid(:, :, :) => NULL(), freq(:) => NULL()
       INTEGER                   :: iw, Nw, i, j, k, Nb, Ntot, Nc, bl, mm, ll, &
                                    mmstep
       LOGICAL                   :: write_, block, diagmat
@@ -293,7 +293,7 @@ contains
       ! Delta(iw) = Vcb * ( iw 1 - Ebath )^(-1) * Vbc !
       !-----------------------------------------------!
 
-      hybrid = 0.0_DBL
+      hybrid = 0.0_DP
       block = .not. BATH%SUPER .or. (maxval(abs(BATH%Pb%rc%mat)) < cutoff_rvb &
                                      .and. maxval(abs(BATH%PVbc(1)%rc%mat)) < cutoff_rvb .and. &
                                      maxval(abs(BATH%PVbc(2)%rc%mat)) < cutoff_rvb)
@@ -456,7 +456,7 @@ contains
       use common_def, only: dump_message, reset_timer, timer_fortran
       use correl_class, only: average_correlations, copy_correl, &
          new_correl
-      use genvar, only: dbl, fermionic, log_unit, no_mpi, &
+      use genvar, only: dp, fermionic, log_unit, no_mpi, &
          rank, retarded, size2
       use bath_class, only: bath_type, copy_bath, new_bath
       use globalvar_ed_solver, only: average_g, dist_max, &
@@ -476,8 +476,8 @@ contains
       TYPE(bath_type), INTENT(INOUT) :: bath
       INTEGER                :: spin, iparam, ii, j, Nw, i, iw
       INTEGER                :: start_hybrid2bath, istep
-      REAL(DBL)              :: dist_min, dist_test
-      REAL(DBL), ALLOCATABLE :: test(:)
+      REAL(DP)              :: dist_min, dist_test
+      REAL(DP), ALLOCATABLE :: test(:)
 
       call start_timer("hybrid2bath")
 
@@ -719,7 +719,7 @@ contains
 
       ! EXTRACT THE NEW BATH PARAMETERS OUT OF VECTOR 'vec'
 
-      use genvar, only: dbl, fermionic, log_unit, rank, size2
+      use genvar, only: dp, fermionic, log_unit, rank, size2
       use globalvar_ed_solver, only: cpt_lagrange, ncpt_para, ncpt_tot, &
          verbose_graph
       use bath_class_vec, only: vec2bath
@@ -727,10 +727,10 @@ contains
 
       implicit none
 
-      REAL(DBL), INTENT(OUT) :: dist
+      REAL(DP), INTENT(OUT) :: dist
       INTEGER, INTENT(IN)    :: n
-      REAL(DBL), INTENT(IN)  :: vec(n)
-      REAL(DBL) :: Vweight
+      REAL(DP), INTENT(IN)  :: vec(n)
+      REAL(DP) :: Vweight
 
       if (n < batht%nparam) then
          write (*, *) 'error in routine sent to conjg gradient'

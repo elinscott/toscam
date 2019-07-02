@@ -676,7 +676,7 @@ contains
       CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: TEXT
       INTEGER                                :: clock
       CHARACTER(LEN=100)                     :: fmt_TEXT
-      REAL(DBL)                              :: elapsed_time
+      REAL(DP)                              :: elapsed_time
       integer, optional                       :: unit_
       integer                                :: log_unit_
 
@@ -684,7 +684,7 @@ contains
       if (present(unit_)) log_unit_ = unit_
 
       CALL SYSTEM_CLOCK(COUNT=clock)
-      elapsed_time = DBLE(clock - clock_ref)*one_over_clock_rate
+      elapsed_time = real(clock - clock_ref, kind=DP)*one_over_clock_rate
 
       IF (PRESENT(TEXT)) THEN
          WRITE (fmt_TEXT, *) '(a', LEN(TRIM(ADJUSTL(TEXT))), ',4X,f0.6,a)'

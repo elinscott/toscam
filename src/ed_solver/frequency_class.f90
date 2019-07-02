@@ -1,6 +1,6 @@
 MODULE frequency_class
 
-   use genvar, only: DBL
+   use genvar, only: DP
 
    !$$$$$$$$$$$$$$$$$$$$$
    !$$FREQUENCY CLASS$$
@@ -16,11 +16,11 @@ MODULE frequency_class
       INTEGER               :: Nw = 0
       INTEGER               :: iwprint = 0
       CHARACTER(LEN=9)    :: title = '\0' ! FERMIONIC OR BOSONIC OR RETARDED OR ADVANCED
-      REAL(DBL)             :: beta = 0  ! IF MATSUBARA
-      REAL(DBL)             :: wmax = 0  ! IF REAL FREQ.
-      REAL(DBL)             :: wmin = 0  ! IF REAL FREQ.
-      REAL(DBL)             :: width = 0  ! IF REAL FREQ.
-      COMPLEX(DBL), POINTER :: vec(:) => NULL() ! frequency array
+      REAL(DP)             :: beta = 0  ! IF MATSUBARA
+      REAL(DP)             :: wmax = 0  ! IF REAL FREQ.
+      REAL(DP)             :: wmin = 0  ! IF REAL FREQ.
+      REAL(DP)             :: width = 0  ! IF REAL FREQ.
+      COMPLEX(DP), POINTER :: vec(:) => NULL() ! frequency array
       INTEGER, POINTER :: iwmin(:) => NULL(), iwmax(:) => NULL(), chunk(:) => NULL()
    END TYPE
 
@@ -71,9 +71,9 @@ contains
 
       TYPE(freq_type), INTENT(INOUT) :: FREQ
       INTEGER, INTENT(IN)            :: Nw
-      REAL(DBL), INTENT(IN)          :: width, wmax, wmin
+      REAL(DP), INTENT(IN)          :: width, wmax, wmin
       CHARACTER(LEN=9), INTENT(IN) :: sense
-      REAL(DBL) :: dw
+      REAL(DP) :: dw
       INTEGER   :: iw, ramp_freq(Nw), i
 
       if (Nw == 0) stop 'error new_rfreq_from_scratch: 0 frequency'
@@ -143,7 +143,7 @@ contains
 
       TYPE(freq_type), INTENT(INOUT) :: FREQ
       INTEGER, INTENT(IN)            :: Nw
-      REAL(DBL), INTENT(IN)          :: beta
+      REAL(DP), INTENT(IN)          :: beta
       CHARACTER(LEN=9), INTENT(IN) :: stat
       INTEGER :: iw, ramp_freq(Nw)
 
@@ -295,7 +295,7 @@ contains
       INTEGER, INTENT(IN)            :: UNIT
       CHARACTER(LEN=9) :: title
       INTEGER            :: Nw
-      REAL(DBL)          :: wmin, wmax, width, beta
+      REAL(DP)          :: wmin, wmax, width, beta
 
       CALL delete_frequency(FREQ)
       ! READ RAW CORRELATION FROM INPUT FILE

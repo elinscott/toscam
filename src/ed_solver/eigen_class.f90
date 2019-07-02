@@ -1,6 +1,6 @@
 MODULE eigen_class
 
-   use genvar, only: DBL, log_unit
+   use genvar, only: DP, log_unit
    use rcvector_class, only: rcvector_type
 
    private
@@ -10,9 +10,9 @@ MODULE eigen_class
    TYPE eigen_type
       INTEGER             :: rank = 0 ! NECESSARY TO IDENTIFY THE EIGENPAIR
       LOGICAL             :: converged = .false.            ! TRUE IF CONVERGED
-      REAL(DBL)           :: val = 0.0_DBL ! Hermitian matrix has real eigenvalues
+      REAL(DP)           :: val = 0.0_DP ! Hermitian matrix has real eigenvalues
       TYPE(rcvector_type) :: vec                            ! EIGENVECTOR
-      REAL(DBL)           :: lanczos_vecp(1000), rdist
+      REAL(DP)           :: lanczos_vecp(1000), rdist
       INTEGER             :: lanczos_iter
       INTEGER             :: dim_space
       INTEGER             :: dim_sector
@@ -138,9 +138,9 @@ contains
       TYPE(eigenlist_type) :: tmp
       REAL(8)              :: VALP(:)
 #ifdef _complex
-      COMPLEX(DBL)         :: VECP(:, :)
+      COMPLEX(DP)         :: VECP(:, :)
 #else
-      REAL(DBL)            :: VECP(:, :)
+      REAL(DP)            :: VECP(:, :)
 #endif
 
 #ifdef DEBUG
@@ -210,7 +210,7 @@ contains
       implicit none
 
       TYPE(eigen_type), INTENT(INOUT) :: eigen
-      REAL(DBL), INTENT(IN)           :: val
+      REAL(DP), INTENT(IN)           :: val
       TYPE(rcvector_type), INTENT(IN) :: vec
       LOGICAL, OPTIONAL, INTENT(IN)   :: CONVERGED, no_vector
       INTEGER, OPTIONAL, INTENT(IN)   :: RANK
@@ -273,7 +273,7 @@ contains
       TYPE(eigen_type), INTENT(INOUT) :: eigen
 
       CALL delete_rcvector(eigen%vec)
-      eigen%val = 0.0_DBL
+      eigen%val = 0.0_DP
       eigen%rank = 0
       eigen%converged = .false.
    end subroutine
@@ -305,8 +305,8 @@ contains
 
       implicit none
 
-      REAL(DBL), INTENT(IN) :: window(2)
-      real(DBL) :: E_, E0, E1
+      REAL(DP), INTENT(IN) :: window(2)
+      real(DP) :: E_, E0, E1
 
       E0 = MINVAL(window)
       E1 = MAXVAL(window)
@@ -320,9 +320,9 @@ contains
 
       implicit none
 
-      REAL(DBL), INTENT(IN) :: window(2)
+      REAL(DP), INTENT(IN) :: window(2)
       TYPE(eigenlist_type) :: list
-      REAL(DBL)            :: E0, E1
+      REAL(DP)            :: E0, E1
       INTEGER              :: ieigen, rank
       INTEGER              :: rank2remove(list%neigen), neigen2remove
 
@@ -375,7 +375,7 @@ contains
       implicit none
 
       TYPE(eigenlist_type), INTENT(IN) :: list
-      REAL(DBL) :: min_eigen
+      REAL(DP) :: min_eigen
       INTEGER   :: ieigen
 
       min_eigen = huge_
@@ -395,9 +395,9 @@ contains
 
       implicit none
 
-      REAL(DBL), INTENT(IN)            :: beta, E0
+      REAL(DP), INTENT(IN)            :: beta, E0
       TYPE(eigenlist_type), INTENT(IN) :: list
-      REAL(DBL) :: sum_boltz
+      REAL(DP) :: sum_boltz
       INTEGER   :: ieigen
 
       if (.not. FLAG_FULL_ED_GREEN) then
@@ -423,9 +423,9 @@ contains
 
       implicit none
 
-      REAL(DBL), INTENT(IN)            :: beta, E0
+      REAL(DP), INTENT(IN)            :: beta, E0
       TYPE(eigenlist_type), INTENT(IN) :: list
-      REAL(DBL) :: sum_boltz_times_E
+      REAL(DP) :: sum_boltz_times_E
       INTEGER   :: ieigen
 
       if (.not. FLAG_FULL_ED_GREEN) then

@@ -42,7 +42,7 @@
 
       if (iter > 1) vec_out = vec_out - tri%subdiag(iter)*tmp
       tmp = vec_in
-      tri%diag(iter) = DBLE(MPI_DOT_PRODUCT(vec_out, vec_in, split=USE_TRANSPOSE_TRICK_MPI))
+      tri%diag(iter) = real(MPI_DOT_PRODUCT(vec_out, vec_in, split=USE_TRANSPOSE_TRICK_MPI), kind=DP)
       vec_out = vec_out - tri%diag(iter)*tmp
       normv_out = SQRT(ABS(MPI_DOT_PRODUCT(vec_out, vec_out, split=USE_TRANSPOSE_TRICK_MPI)))
       IF (iter < tri%N) tri%subdiag(iter + 1) = normv_out

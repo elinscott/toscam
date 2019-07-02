@@ -1,12 +1,12 @@
 MODULE Lanczos_fast
 
-   use genvar, only: DBL
+   use genvar, only: DP
 
    IMPLICIT NONE
 
    private
 
-   REAL(DBL), PARAMETER, PRIVATE  ::  zero = 0.0_DBL, one = 1.0_DBL, rerror = 1.d-13
+   REAL(DP), PARAMETER, PRIVATE  ::  zero = 0.0_DP, one = 1.0_DP, rerror = 1.d-13
 
    ! DIAGONALIZATION USING PLAIN LANCZOS ALGORITHM TO GET LOWEST EIGENVALUE
    ! ONLY !
@@ -36,16 +36,16 @@ contains
       implicit none
 
       TYPE(eigenlist_type), INTENT(INOUT) :: lowest
-      REAL(DBL), ALLOCATABLE, TARGET :: VECP(:, :), VALP(:)
+      REAL(DP), ALLOCATABLE, TARGET :: VECP(:, :), VALP(:)
       TYPE(eigen_type)               :: eigen(Neigen)
       TYPE(rcvector_type)            :: initvec, lastvec, tmp
       INTEGER                        :: iter, Niter, iter2, start_diagH
-      REAL(DBL)                      :: rdist(Neigen), lasteigenval(Neigen), aa
+      REAL(DP)                      :: rdist(Neigen), lasteigenval(Neigen), aa
       LOGICAL                        :: converged(Neigen), conv_one_step
       TYPE(tridiag_type)             :: Lmatrix, subLmatrix
       INTEGER                        :: istate, jstate, stateup, statedo, &
                                         Neigen_, jj
-      REAL(DBL)                      :: coeff
+      REAL(DP)                      :: coeff
       INTEGER                        :: dimenvec
 
       call start_timer("lanczos_fast_diagonalize")
@@ -187,7 +187,7 @@ contains
       TYPE(tridiag_type)        :: Lmatrix
       INTEGER                   :: iter, iter2, jj
       LOGICAL                   :: conv_one_step
-      REAL(DBL)                 :: aa
+      REAL(DP)                 :: aa
       INTEGER                   :: dimenvec
 
       if (lowest%neigen == 0) return
@@ -289,24 +289,24 @@ contains
       implicit none
 
 #ifdef _complex
-      COMPLEX(DBL), INTENT(INOUT)       :: vec_out(:), tmp(:), vec_in(:)
+      COMPLEX(DP), INTENT(INOUT)       :: vec_out(:), tmp(:), vec_in(:)
 #else
-      REAL(DBL), INTENT(INOUT)          :: vec_out(:), tmp(:), vec_in(:)
+      REAL(DP), INTENT(INOUT)          :: vec_out(:), tmp(:), vec_in(:)
 #endif
       TYPE(tridiag_type), INTENT(INOUT) :: tri
-      REAL(DBL), SAVE :: normv_in = 0.d0, normv_out = 0.d0
+      REAL(DP), SAVE :: normv_in = 0.d0, normv_out = 0.d0
       INTEGER         :: iter, i
       INTEGER         :: start_Hmult, ist
       LOGICAL         :: verbose
       LOGICAL         :: converged_in_one_step
-      REAL(DBL)       :: aa, ddiag
+      REAL(DP)       :: aa, ddiag
 
       IF (iter == 1) THEN
          normv_in = SQRT(ABS(MPI_DOT_PRODUCT(vec_in, vec_in, split= &
                                              USE_TRANSPOSE_TRICK_MPI)))
          normv_out = 0.d0
-         tri%diag = 0.0_DBL
-         tri%subdiag = 0.0_DBL
+         tri%diag = 0.0_DP
+         tri%subdiag = 0.0_DP
          tri%subdiag(1) = normv_in
       ELSE
          IF (iter > tri%N) THEN

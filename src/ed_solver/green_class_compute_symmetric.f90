@@ -1,12 +1,12 @@
 MODULE green_class_compute_symmetric
 
-   use genvar, only: DBL
+   use genvar, only: DP
 
    IMPLICIT NONE
 
    private
 
-   COMPLEX(DBL), PARAMETER :: coef1 = 1.d0, coef2 = 1.d0
+   COMPLEX(DP), PARAMETER :: coef1 = 1.d0, coef2 = 1.d0
 
    public :: symmetric_combineAA
    public :: symmetric_combineAB

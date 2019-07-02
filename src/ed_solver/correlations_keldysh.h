@@ -5,7 +5,7 @@
          do_quench, do_quench_, keldysh_delta, keldysh_n, &
          keldysh_pert_ground_sector, keldysh_t0, keldysh_tmax, &
          quench_cancel_statistics, quench_orb
-      use genvar, only: dbl, imi, pm
+      use genvar, only: dp, imi, pm
       use stringmanip, only: tostring
       use eigen_sector_class, only: add_eigensector, copy_eigensectorlist, &
          delete_eigensectorlist, eigensector_type, eigensectorlist_type, &
@@ -38,9 +38,9 @@
                                                  green_bigger(:, :, :, :, :), &
                                                  green_ret(:, :, :, :, :), &
                                                  green_ad(:, :, :, :, :)
-      REAL(DBL)                               :: Zpart1, boltz, E01, Zpart2, &
+      REAL(DP)                               :: Zpart1, boltz, E01, Zpart2, &
                                                  E02, e1, e2
-      COMPLEX(DBL)                            :: cscal
+      COMPLEX(DP)                            :: cscal
       INTEGER                                 :: mmmax, ntot
 
       if (.not. do_keldysh) return

@@ -2,7 +2,7 @@ MODULE HAIMupdo_class
 
    ! use HAIMsz_class
    use fermion_sector2_class, only: fermion_sector2_type
-   use genvar, only: DBL
+   use genvar, only: DP
    use masked_matrix_class_mod, only: masked_real_matrix_type
 
    implicit none
@@ -17,7 +17,7 @@ MODULE HAIMupdo_class
                        strideup, stridedo, dimen
    INTEGER, PRIVATE :: Nc, Nb
    INTEGER, ALLOCATABLE, PRIVATE :: IMPiorbup(:), IMPiorbdo(:)
-   REAL(DBL), ALLOCATABLE, PRIVATE :: U(:, :)
+   REAL(DP), ALLOCATABLE, PRIVATE :: U(:, :)
    LOGICAL, ALLOCATABLE, PRIVATE :: UMASK(:, :)
    LOGICAL, PRIVATE :: offdiag_coulomb
 
@@ -70,7 +70,7 @@ contains
 
       CALL new_masked_real_matrix(QUART_INT_UPDO, AIM%impurity%U)
       QUART_INT_UPDO%MASK%mat = .false.
-      WHERE (QUART_INT_UPDO%mat /= 0.0_DBL)
+      WHERE (QUART_INT_UPDO%mat /= 0.0_DP)
       QUART_INT_UPDO%MASK%mat = .true.
       END WHERE
 
@@ -148,7 +148,7 @@ contains
          flag_slater_int, jhund, jhund_slater_type, jjmatrix, open_mp, &
          quench_u, slater_coulomb_c, ucc, uccc, use_cc, &
          use_precomputed_slater_matrix, verboseall
-      use genvar, only: dbl, ierr, iproc, rank, size2
+      use genvar, only: dp, ierr, iproc, rank, size2
       use haim2_class, only: diagdo, diagup, noffup, noffdo, &
          offdiagdo, offdiagup, rankoffdo, rankoffup
       use linalg, only: long_sum
@@ -160,10 +160,10 @@ contains
 
       implicit none
 
-      COMPLEX(DBL), ALLOCATABLE :: vec_tot_out(:)
-      COMPLEX(DBL)              :: vec_out(:)
-      COMPLEX(DBL)              :: vec_in(:)
-      COMPLEX(DBL)              :: hoffdiagup, choffdiagup, hoffdiagdo, &
+      COMPLEX(DP), ALLOCATABLE :: vec_tot_out(:)
+      COMPLEX(DP)              :: vec_out(:)
+      COMPLEX(DP)              :: vec_in(:)
+      COMPLEX(DP)              :: hoffdiagup, choffdiagup, hoffdiagdo, &
                                    choffdiagdo
       INTEGER                   :: site1, site2, n1, n2, j
       INTEGER                   :: istate, istatemin, istatemax
@@ -801,7 +801,7 @@ contains
          use globalvar_ed_solver, only: flag_mpi_greens, flag_slater_int, jhund, &
             jhund_slater_type, jjmatrix, open_mp, slater_coulomb_r, ucc, uccr, &
             use_cc, use_precomputed_slater_matrix, verboseall
-         use genvar, only: dbl, ierr, iproc, size2, rank
+         use genvar, only: dp, ierr, iproc, size2, rank
          use haim2_class, only: diagdo, diagup, noffup, noffdo, &
             offdiagdo, offdiagup, rankoffdo, rankoffup
          use linalg, only: long_sum
@@ -813,10 +813,10 @@ contains
 
          implicit none
 
-         REAL(DBL), ALLOCATABLE  :: vec_tot_out(:)
-         REAL(DBL)               :: vec_in(:)
-         REAL(DBL)               :: vec_out(:)
-         REAL(DBL)               :: hoffdiagup, choffdiagup, hoffdiagdo, &
+         REAL(DP), ALLOCATABLE  :: vec_tot_out(:)
+         REAL(DP)               :: vec_in(:)
+         REAL(DP)               :: vec_out(:)
+         REAL(DP)               :: hoffdiagup, choffdiagup, hoffdiagdo, &
                                     choffdiagdo
          INTEGER                 :: site1, site2, n1, n2, j
          INTEGER                 :: istate, istatemin, istatemax
@@ -1450,7 +1450,7 @@ contains
 
          subroutine HAIMupdo_multr_split(vec_out, vec_in)
 
-            use genvar, only: dbl, size2
+            use genvar, only: dp, size2
             use globalvar_ed_solver, only: jhund
             use haim2_class, only: diagdo, diagup, noffup, noffdo, &
                offdiagdo, offdiagup, rankoffdo, rankoffup
@@ -1459,9 +1459,9 @@ contains
 
             implicit none
 
-            REAL(DBL)  :: vec_in(:)
-            REAL(DBL)  :: vec_out(:)
-            REAL(DBL)  :: hoffdiagup, choffdiagup
+            REAL(DP)  :: vec_in(:)
+            REAL(DP)  :: vec_out(:)
+            REAL(DP)  :: hoffdiagup, choffdiagup
             INTEGER    :: site1, site2, n1, n2, j, nup, ndn, range
             INTEGER    :: istate, istatemin, istatemax
             INTEGER    :: jstate, jstatemin, jstatemax
@@ -1599,7 +1599,7 @@ contains
 
             ! WE COMPUTE THE RELEVANT CHUNK OF vec_out = H * vec_in
 
-            use genvar, only: dbl, size2
+            use genvar, only: dp, size2
             use globalvar_ed_solver, only: jhund
             use haim2_class, only: diagdo, diagup, noffup, noffdo, &
                offdiagdo, offdiagup, rankoffdo, rankoffup
@@ -1608,9 +1608,9 @@ contains
 
             implicit none
 
-            COMPLEX(DBL) :: vec_in(:)
-            COMPLEX(DBL) :: vec_out(:)
-            COMPLEX(DBL) :: hoffdiagup, choffdiagup
+            COMPLEX(DP) :: vec_in(:)
+            COMPLEX(DP) :: vec_out(:)
+            COMPLEX(DP) :: hoffdiagup, choffdiagup
             INTEGER      :: site1, site2, n1, n2, j, nup, ndn, range
             INTEGER      :: istate, istatemin, istatemax
             INTEGER      :: jstate, jstatemin, jstatemax

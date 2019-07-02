@@ -5,7 +5,7 @@ MODULE impurity_class
    !$$$$$$$$$$$$$$$$$$$$
 
    ! use common_def,              only: dump_message
-   use genvar, only: DBL! , cspin, log_unit, rank
+   use genvar, only: DP! , cspin, log_unit, rank
    use globalvar_ed_solver, only: istati
    use linalg, only: arrayi
    ! use matrix,                  only: diag, write_array
@@ -367,13 +367,13 @@ contains
       type(web)              :: impurity_
       type(hamiltonian)      :: Himp
       integer                :: jj, ff, k, i, j, kkk, ijk, ki, kj, kki, kkj, ii
-      REAL(DBL)              :: rval, mmu, val(impurity_%N**2)
+      REAL(DP)               :: rval, mmu, val(impurity_%N**2)
       INTEGER                :: mu, Nc, spin, iind_, iind
       INTEGER, ALLOCATABLE   :: IMASKU(:, :)
 #ifdef _complex
-      COMPLEX(DBL), OPTIONAL :: Eimp(:, :)
+      COMPLEX(DP), OPTIONAL :: Eimp(:, :)
 #else
-      REAL(DBL), OPTIONAL    :: Eimp(:, :)
+      REAL(DP), OPTIONAL    :: Eimp(:, :)
 #endif
 
       CALL delete_impurity(impurity)
@@ -486,13 +486,13 @@ contains
       type(hamiltonian)                  :: Himp
       integer                            :: jj, ff, k, i, j
 #ifdef _complex
-      COMPLEX(DBL)                       :: val(Nc**2*4)
-      COMPLEX(DBL), OPTIONAL             :: Eimp(:, :)
+      COMPLEX(DP)                        :: val(Nc**2*4)
+      COMPLEX(DP), OPTIONAL              :: Eimp(:, :)
 #else
-      REAL(DBL)                          :: val(Nc**2*4)
-      REAL(DBL), OPTIONAL                :: Eimp(:, :)
+      REAL(DP)                           :: val(Nc**2*4)
+      REAL(DP), OPTIONAL                 :: Eimp(:, :)
 #endif
-      REAL(DBL)                          :: rval, mmu
+      REAL(DP)                           :: rval, mmu
       INTEGER                            :: mu, spin, iind_, iind
       INTEGER                            :: IMASKE(Nc, Nc, 2)
 
@@ -655,7 +655,7 @@ contains
       implicit none
 
       TYPE(impurity_type), INTENT(IN) :: impurity
-      REAL(DBL) :: average_chem_pot
+      REAL(DP) :: average_chem_pot
       INTEGER   :: spin, nspin
       LOGICAL   :: is_diag(impurity%Nc, impurity%Nc)
 
@@ -678,9 +678,9 @@ contains
 
       implicit none
 
-      REAL(DBL), INTENT(IN) :: new_chem_pot
+      REAL(DP), INTENT(IN) :: new_chem_pot
       TYPE(impurity_type) :: impurity
-      REAL(DBL)           :: mean_chem_pot
+      REAL(DP)           :: mean_chem_pot
       INTEGER             :: spin, nspin
       LOGICAL             :: is_diag(impurity%Nc, impurity%Nc)
 

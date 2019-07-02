@@ -49,7 +49,7 @@ contains
 
       use aim_class, only: aim_type
       use bath_class, only: nambu_eb, nambu_vbc
-      use genvar, only: DBL
+      use genvar, only: DP
       use impurity_class, only: nambu_ec
       use masked_matrix_class, only: new_masked_matrix
 
@@ -123,15 +123,15 @@ contains
       ! UNNECESSARY TABULATIONS
 
       AIM2%Ec%rc%MASK%mat = .true.
-      WHERE (AIM2%Ec%rc%mat == 0.0_DBL)
+      WHERE (AIM2%Ec%rc%mat == 0.0_DP)
       AIM2%Ec%rc%MASK%mat = .false.
       END WHERE
       AIM2%Eb%rc%MASK%mat = .true.
-      WHERE (AIM2%Eb%rc%mat == 0.0_DBL)
+      WHERE (AIM2%Eb%rc%mat == 0.0_DP)
       AIM2%Eb%rc%MASK%mat = .false.
       END WHERE
       AIM2%Vbc%rc%MASK%mat = .true.
-      WHERE (AIM2%Vbc%rc%mat == 0.0_DBL)
+      WHERE (AIM2%Vbc%rc%mat == 0.0_DP)
       AIM2%Vbc%rc%MASK%mat = .false.
       END WHERE
 

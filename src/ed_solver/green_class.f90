@@ -1,6 +1,6 @@
 MODULE green_class
 
-   use genvar, only: DBL, log_unit
+   use genvar, only: DP, log_unit
    use correl_class, only: correl_type
    use masked_matrix_class, only: masked_matrix_type
 
@@ -22,10 +22,10 @@ MODULE green_class
       ! all channels particle, hole
 #ifdef _complex
       ! mean of part & hole operators
-      COMPLEX(DBL), POINTER    :: Amean(:, :) => NULL(), Bmean(:, :) => NULL()
+      COMPLEX(DP), POINTER    :: Amean(:, :) => NULL(), Bmean(:, :) => NULL()
 #else
       ! mean of part & hole operators
-      REAL(DBL), POINTER    :: Amean(:, :) => NULL(), Bmean(:, :) => NULL()
+      REAL(DP), POINTER    :: Amean(:, :) => NULL(), Bmean(:, :) => NULL()
 #endif
    END TYPE
 
@@ -45,7 +45,7 @@ contains
    subroutine new_green_rfreq(GREEN, compute, title, N, Nw, wmin, wmax, width, &
                               STAT, IMASK, AB, force_compute)
 
-      use genvar, only: dbl, log_unit, messages3, pm
+      use genvar, only: dp, log_unit, messages3, pm
       use correl_class, only: correl2vec, new_correl
       use masked_matrix_class, only: masked_matrix2vec, new_masked_matrix
 
@@ -57,7 +57,7 @@ contains
       INTEGER, INTENT(IN)             :: N
       CHARACTER(LEN=9), INTENT(IN)  :: STAT
       INTEGER, INTENT(IN)             :: Nw
-      REAL(DBL), INTENT(IN)           :: width, wmin, wmax
+      REAL(DP), INTENT(IN)           :: width, wmin, wmax
       INTEGER, OPTIONAL, INTENT(IN)   :: IMASK(N, N)
       LOGICAL, OPTIONAL, INTENT(IN)   :: AB
       INTEGER           :: ipm, jpm
@@ -127,8 +127,8 @@ contains
          if (associated(GREEN%Amean)) deallocate (GREEN%Amean)
          if (associated(GREEN%Bmean)) deallocate (GREEN%Bmean)
          ALLOCATE (GREEN%Amean(N, 2), GREEN%Bmean(N, 2))
-         GREEN%Amean = 0.0_DBL
-         GREEN%Bmean = 0.0_DBL
+         GREEN%Amean = 0.0_DP
+         GREEN%Bmean = 0.0_DP
       ENDIF
       if (messages3) write (log_unit, *) ' .. allocation  done .. '
 
@@ -137,7 +137,7 @@ contains
    subroutine new_green_ifreq(GREEN, compute, title, N, Nw, beta, STAT, IMASK, &
                               AB, force_compute)
 
-      use genvar, only: dbl, log_unit, messages3, pm
+      use genvar, only: dp, log_unit, messages3, pm
       use correl_class, only: correl2vec, new_correl
       use masked_matrix_class, only: masked_matrix2vec, new_masked_matrix
 
@@ -149,7 +149,7 @@ contains
       INTEGER, INTENT(IN)             :: N
       CHARACTER(LEN=9), INTENT(IN)  :: STAT
       INTEGER, INTENT(IN)             :: Nw
-      REAL(DBL), INTENT(IN)           :: beta
+      REAL(DP), INTENT(IN)           :: beta
       INTEGER, OPTIONAL, INTENT(IN)   :: IMASK(N, N)
       LOGICAL, OPTIONAL, INTENT(IN)   :: AB
       INTEGER           :: ipm, jpm
@@ -218,8 +218,8 @@ contains
          if (associated(GREEN%Amean)) deallocate (GREEN%Amean)
          if (associated(GREEN%Bmean)) deallocate (GREEN%Bmean)
          ALLOCATE (GREEN%Amean(N, 2), GREEN%Bmean(N, 2))
-         GREEN%Amean = 0.0_DBL
-         GREEN%Bmean = 0.0_DBL
+         GREEN%Amean = 0.0_DP
+         GREEN%Bmean = 0.0_DP
       ENDIF
       if (messages3) write (log_unit, *) '...allocation done...'
 

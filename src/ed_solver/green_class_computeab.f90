@@ -1,6 +1,6 @@
 MODULE green_class_computeAB
 
-   use genvar, only: DBL
+   use genvar, only: DP
 
    IMPLICIT NONE
 
@@ -33,7 +33,7 @@ contains
       TYPE(green_type), INTENT(IN)    :: greenAA
       TYPE(green_type), INTENT(IN)    :: greenBB
       TYPE(AIM_type), INTENT(IN)    :: AIM
-      REAL(DBL), INTENT(IN)    :: beta
+      REAL(DP), INTENT(IN)    :: beta
       TYPE(eigensectorlist_type), INTENT(IN)    :: GS
       INTEGER                                   :: ii, isec_back
 
@@ -100,15 +100,15 @@ contains
       TYPE(eigensector_type), POINTER           :: es => NULL()
       TYPE(eigen_type), POINTER           :: eigen => NULL(), OPeigen => &
                                              NULL()
-      REAL(DBL)                                 :: E0
+      REAL(DP)                                 :: E0
       INTEGER                                   :: apply_timer, &
                                                    compute_dyn_timer, &
                                                    compute_green_timer, i
       INTEGER                                   :: ipm, jpm, kpm, iph, iorb, &
                                                    jorb, iind, iw, i1, j1, j, &
                                                    i_, v(2), issz
-      REAL(DBL)                                 :: Zpart, boltz
-      COMPLEX(DBL)                              :: dyn(greenAB%Nw)
+      REAL(DP)                                 :: Zpart, boltz
+      COMPLEX(DP)                              :: dyn(greenAB%Nw)
       LOGICAL                                   :: BA, compute_dyn_correl
       LOGICAL                                   :: ORBMASKvec(2, 2, greenAB%N)
       LOGICAL, SAVE                             :: first_call = .true.

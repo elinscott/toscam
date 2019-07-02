@@ -15,7 +15,7 @@
     end type
 
     type(node), pointer, private    :: ll, cur
-    REAL(DBL), ALLOCATABLE, PRIVATE  :: rstates(:)
+    REAL(DP), ALLOCATABLE, PRIVATE  :: rstates(:)
     INTEGER, ALLOCATABLE, PRIVATE  :: states(:)
     logical, private                :: verbose = .true.
 
@@ -114,8 +114,8 @@
 !**************************************************************************
 
     subroutine mpi_reduce_list(vec_tot_out)
-       REAL(DBL)              :: vec_tot_out(:)
-       REAL(DBL), ALLOCATABLE  :: rtmp(:)
+       REAL(DP)              :: vec_tot_out(:)
+       REAL(DP), ALLOCATABLE  :: rtmp(:)
        INTEGER, ALLOCATABLE  :: tmp(:)
        INTEGER                :: counti, i, j, kk
 

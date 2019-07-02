@@ -299,7 +299,7 @@ contains
          eigen_type, new_eigen
       use eigen_sector_class, only: eigensector_type
       use fermion_ket_class, only: create, destroy, fermion_ket_type, new_ket
-      use genvar, only: DBL
+      use genvar, only: DP
       use sector_class, only: dimen_func
 
       implicit none
@@ -328,13 +328,13 @@ contains
             ! FIRST WE CREATE THE OUTPUT VECTOR IN THE RELEVANT SECTOR
 
             eigen_out%rank = iorb
-            eigen_out%vec%rc = 0.0_DBL
+            eigen_out%vec%rc = 0.0_DP
 
             ! THEN PARSE THE INPUT SECTOR TO APPLY RELEVANT
             ! CREATION/ANNIHILATION OPERATOR
 
             DO istate = 1, es%sector%sz%dimen
-               IF (eigen_in%vec%rc(istate) /= 0.0_DBL) THEN
+               IF (eigen_in%vec%rc(istate) /= 0.0_DP) THEN
                   CALL new_ket(ket_in, es%sector%sz%state(istate), &
                                es%sector%sz%norbs)
                   IF (pm == '+') CALL create(ket_out, AIMIMPiorbsz(iorb), &
@@ -368,7 +368,7 @@ contains
          eigen_type, new_eigen
       use fermion_ket_class, only: create, destroy, fermion_ket_type, new_ket
       use eigen_sector_class, only: eigensector_type
-      use genvar, only: DBL
+      use genvar, only: DP
       use sector_class, only: dimen_func
 
       implicit none
@@ -398,13 +398,13 @@ contains
             ! FIRST WE CREATE THE OUTPUT VECTOR IN THE RELEVANT SECTOR
 
             eigen_out%rank = site
-            eigen_out%vec%rc = 0.0_DBL
+            eigen_out%vec%rc = 0.0_DP
 
             ! THEN PARSE THE INPUT SECTOR TO APPLY RELEVANT
             ! CREATION/ANNIHILATION OPERATOR
 
             DO istate = 1, es%sector%sz%dimen
-               IF (eigen_in%vec%rc(istate) /= 0.0_DBL) THEN
+               IF (eigen_in%vec%rc(istate) /= 0.0_DP) THEN
                   CALL new_ket(ket_in, es%sector%sz%state(istate), &
                                es%sector%sz%norbs)
                   SELECT CASE (spin)
@@ -449,7 +449,7 @@ contains
       use fermion_ket_class, only: create, destroy, fermion_ket_type, new_ket, &
          ni__
       use eigen_sector_class, only: eigensector_type
-      use genvar, only: DBL
+      use genvar, only: DP
       use sector_class, only: dimen_func
 
       implicit none
@@ -482,13 +482,13 @@ contains
             ! FIRST WE CREATE THE OUTPUT VECTOR IN THE RELEVANT SECTOR
 
             eigen_out%rank = site
-            eigen_out%vec%rc = 0.0_DBL
+            eigen_out%vec%rc = 0.0_DP
 
             ! THEN PARSE THE INPUT SECTOR TO APPLY RELEVANT
             ! CREATION/ANNIHILATION OPERATOR
 
             DO istate = 1, es%sector%sz%dimen
-               IF (eigen_in%vec%rc(istate) /= 0.0_DBL) THEN
+               IF (eigen_in%vec%rc(istate) /= 0.0_DP) THEN
                   CALL new_ket(ket_in, es%sector%sz%state(istate), &
                                es%sector%sz%norbs)
 
@@ -552,7 +552,7 @@ contains
       use fermion_hilbert_class, only: fermion_sector_type
       use fermion_ket_class, only: create, destroy, fermion_ket_type, new_ket
       use fermion_sector2_class, only: tabrankupdo
-      use genvar, only: DBL, iproc, size2
+      use genvar, only: DP, iproc, size2
       use globalvar_ed_solver, only: use_transpose_trick_mpi
       use linalg, only: ramp
       use mpi_mod, only: mpibarrier, scatter_it
@@ -625,7 +625,7 @@ contains
             ! FIRST WE CREATE THE OUTPUT VECTOR IN THE RELEVANT SECTOR
 
             eigen_out%rank = site
-            eigen_out%vec%rc = 0.0_DBL
+            eigen_out%vec%rc = 0.0_DP
 
             ! THEN PARSE THE RELEVANT SPIN SECTOR TO APPLY RELEVANT
             ! CREATION/ANNIHILATION OPERATOR

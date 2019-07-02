@@ -1,7 +1,7 @@
 MODULE tridiag_class
 
    USE common_def
-   use genvar, only: DBL, strongstop
+   use genvar, only: DP, strongstop
    use matrix, only: eigenvector_matrix
 
    IMPLICIT NONE
@@ -16,15 +16,15 @@ MODULE tridiag_class
    public :: submatrix_tridiag
    public :: tridiag_type
 
-   REAL(DBL), PARAMETER, PRIVATE                 :: zero = 0.0_DBL, one = 1.0_DBL, two = 2.0_DBL, three = 3.0_DBL, four = 4.0_DBL
+   REAL(DP), PARAMETER, PRIVATE                 :: zero = 0.0_DP, one = 1.0_DP, two = 2.0_DP, three = 3.0_DP, four = 4.0_DP
    LOGICAL, PARAMETER, PRIVATE                 :: F = .FALSE., T = .TRUE.
 
    ! ! GENERATE TRIDIAGONAL LANCZOS MATRIX RECURSIVELY
 
    TYPE tridiag_type ! TRI-DIAGONAL LANCZOS MATRIX
       INTEGER            ::          N = 0       ! matrix size
-      REAL(DBL), POINTER ::    diag(:) => NULL() ! diagonal    (1..N)
-      REAL(DBL), POINTER :: subdiag(:) => NULL() ! subdiagonal (1..N)
+      REAL(DP), POINTER ::    diag(:) => NULL() ! diagonal    (1..N)
+      REAL(DP), POINTER :: subdiag(:) => NULL() ! subdiagonal (1..N)
    END TYPE
 
    INTERFACE new_tridiag
@@ -162,11 +162,11 @@ CONTAINS
 !**************************************************************************
 
    FUNCTION invert_zmtridiag(z, tri) RESULT(zmtrim1)
-      COMPLEX(DBL)                   :: zmtrim1
-      COMPLEX(DBL), INTENT(IN) :: z
+      COMPLEX(DP)                   :: zmtrim1
+      COMPLEX(DP), INTENT(IN) :: z
       TYPE(tridiag_type), INTENT(IN) :: tri
       INTEGER                        :: iter
-      COMPLEX(DBL)                   :: det_ratio_i, det_ratio_ip1, aa
+      COMPLEX(DP)                   :: det_ratio_i, det_ratio_ip1, aa
 
       !-------------------------------------------------------------------------------------------------!
       ! COMPUTE <0| 1 / ( z - T ) |0> WHERE T IS A TRIDIAGONAL MATRIX AND |0> IS THE FIRST BASIS VECTOR !
@@ -213,13 +213,13 @@ CONTAINS
       ! OF THE LANCZOS MATRIX
 
       TYPE(tridiag_type), INTENT(INOUT) :: Lmatrix
-      REAL(DBL), INTENT(INOUT) :: VALP(:), VECP(:, :)
+      REAL(DP), INTENT(INOUT) :: VALP(:), VECP(:, :)
       LOGICAL, OPTIONAL, INTENT(IN)    :: EIGENVAL_ONLY
       INTEGER, ALLOCATABLE            :: IWORK(:)
-      REAL(DBL), ALLOCATABLE            :: WORK(:)
+      REAL(DP), ALLOCATABLE            :: WORK(:)
       CHARACTER(LEN=1)                  :: FLAG
       INTEGER                           :: N, info
-      REAL(DBL)                         :: mat(2, 2)
+      REAL(DP)                         :: mat(2, 2)
 
       N = SIZE(VALP)
 

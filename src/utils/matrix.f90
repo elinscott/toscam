@@ -8882,9 +8882,9 @@ contains
       INTEGER :: i, N_
       N_ = SIZE(Id, 1)
       IF (PRESENT(N)) N_ = N
-      Id = 0.0_DBL
+      Id = 0.0_DP
       DO i = 1, N_
-         Id(i, i) = 1.0_DBL
+         Id(i, i) = 1.0_DP
       ENDDO
    END SUBROUTINE
 
@@ -8963,7 +8963,7 @@ contains
          WRITE (fmt_A, *) '(', n1 - 1, '(', n3, '(', n2, '(2(a,f20.16),a,x),2x)/),', n3, '(', n2, '(2(a,f20.16),a,x),2x))'
       ENDIF
 
-      WRITE (unit_, fmt_A) ((('(', DBLE(A(i1, i2, i3)), ',', AIMAG(A(i1, i2, i3)), ')', i2=1, n2), i3=1, n3), i1=1, n1)
+      WRITE (unit_, fmt_A) ((('(', real(A(i1, i2, i3), kind=DP), ',', AIMAG(A(i1, i2, i3)), ')', i2=1, n2), i3=1, n3), i1=1, n1)
 
       CALL flush(unit_)
 
@@ -9132,7 +9132,7 @@ contains
          WRITE (fmt_A, *) '(', n2, '( 2f5.1))'
       endif
 
-      WRITE (unit_, fmt_A, err=10) ((DBLE(A(i1, i2)), AIMAG(A(i1, i2)), i2=1, n2), i1=1, n1)
+      WRITE (unit_, fmt_A, err=10) ((real(A(i1, i2), kind=DP), AIMAG(A(i1, i2)), i2=1, n2), i1=1, n1)
 10    continue
       CALL flush(unit_)
 
@@ -9314,7 +9314,7 @@ contains
          ELSE
             WRITE (fmt_A, *) '(', n1, '(2(a,f20.16),a,x))'
          ENDIF
-         WRITE (unit_, fmt_A) ('(', DBLE(A(i1)), ',', AIMAG(A(i1)), ')', i1=1, n1)
+         WRITE (unit_, fmt_A) ('(', real(A(i1), kind=DP), ',', AIMAG(A(i1)), ')', i1=1, n1)
       endif
 
       CALL flush(unit_)

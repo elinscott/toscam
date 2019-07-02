@@ -86,18 +86,18 @@ module genvar
 
 !******************************************************************
 
-   INTEGER, PARAMETER                 :: DBL = 8, DP = 8        ! "double" precision
-   INTEGER, PARAMETER                 :: DDP = 16            ! "quad"   precision
+   INTEGER, PARAMETER                 :: DP = kind(1.0d0)  ! "double" precision
+   INTEGER, PARAMETER                 :: DDP = 16          ! "quad"   precision
    INTEGER, PARAMETER                 :: SP = KIND(1.0)    ! "single" precision
 
-   REAL(DBL), PARAMETER                 :: tiny_ = 1.D-10
-   REAL(DBL), PARAMETER                 :: huge_ = 1.D+10
-   REAL(DBL), PARAMETER                 :: quarter = 0.25_DBL
-   REAL(DBL), PARAMETER                 :: third = 0.3333333333333_DBL
-   REAL(DBL), PARAMETER                 :: half = 0.5_DBL
+   REAL(DP), PARAMETER                 :: tiny_ = 1.D-10
+   REAL(DP), PARAMETER                 :: huge_ = 1.D+10
+   REAL(DP), PARAMETER                 :: quarter = 0.25_DP
+   REAL(DP), PARAMETER                 :: third = 0.3333333333333_DP
+   REAL(DP), PARAMETER                 :: half = 0.5_DP
 
-   REAL(DBL)                               :: pi2, oneoverpi, s2, s3, s6
-   REAL(DBL)                               :: one_over_clock_rate
+   REAL(DP)                               :: pi2, oneoverpi, s2, s3, s6
+   REAL(DP)                               :: one_over_clock_rate
 
    INTEGER                                 :: log_unit
    INTEGER, ALLOCATABLE                 :: ramp_proc(:), all_log_unit(:)
