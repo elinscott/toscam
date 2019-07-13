@@ -2,7 +2,19 @@
 
 rm scratchdir 2> /dev/null 
 
-ngpu=`cat gpu_max`
+ngpu=`cat gpu_max 2>/dev/null`
+
+if [ $? -eq 1 ]
+then
+   echo "gpu_max file not found; assuming no GPUs"
+   setting=$(grep "nproc_onetep" input*.txt | grep -v "openmp")
+   if [ $? -eq 0 ]
+   then
+      ngpu=${setting#*=}
+   else
+      ngpu=$1
+   fi
+fi
 
 if [ $ngpu -eq 0 ]
 then
@@ -28,12 +40,12 @@ for i in `seq 1 $ngpu`
   mv mask_frequ${i} mask_frequ${i}_ > /dev/null 2>&1
  done
 
- update_case_file 'hubbard_proj_mixing ' 1.0
- update_case_file 'dmft_split '  F  
- update_case_file 'dmft_splitk ' F   
- update_case_file 'dmft_local_scratch ' T
- update_case_file 'dmft_dos_min ' -10
- update_case_file 'dmft_dos_max '  10
+ update_case_file 'hubbard_proj_mixing' 1.0
+ # update_case_file 'dmft_split '  F  
+ # update_case_file 'dmft_splitk ' F   
+ # update_case_file 'dmft_local_scratch ' T
+ update_case_file 'dmft_dos_min' -10
+ update_case_file 'dmft_dos_max'  10
 
  cp _store_last_iter/* .
 

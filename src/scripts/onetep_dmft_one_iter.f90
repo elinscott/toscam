@@ -746,7 +746,7 @@ contains
 
       do kk_ = 1, j_
 
-         write (*, *) 'substracting double counting from Sigma : ', double_counting(kk_, :)
+         write (*, *) 'subtracting double counting from Sigma : ', double_counting(kk_, :)
 
          if ((solver == 1 .or. solver == 2 .or. solver == 3) .and. nmatsu_long > 0) then
             call copy_sigma_position_nlong_to_position_nw_minus_1(filename_sigma(kk_))
