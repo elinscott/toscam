@@ -1,0 +1,34 @@
+#!/bin/bash
+
+function up_matsu {
+echo "SPIN UP SELF ENERGY" `ls sigma_output*1 2> /dev/null`
+for i in `ls sigma_output*1 2> /dev/null` ; do echo $i ; dmft_project_back.out $i ; done ;
+                  }
+
+function do_matsu {
+echo "SPIN DN SELF ENERGY" `ls sigma_output*2 2> /dev/null`
+for i in `ls sigma_output*2 2> /dev/null` ; do echo $i ; dmft_project_back.out $i ; done ;
+                  }
+
+function up_real {
+echo "SPIN UP SELF ENERGY REAL" `ls real_sigma_output*1 2> /dev/null`
+for i in `ls real_sigma_output*1 2> /dev/null` ; do echo $i ; dmft_project_back.out $i ; done ;
+                  }
+
+function do_real {
+echo "SPIN DN SELF ENERGY REAL" `ls real_sigma_output*2 2> /dev/null`
+for i in `ls real_sigma_output*2 2> /dev/null` ; do echo $i ; dmft_project_back.out $i ; done ;
+                  }
+
+if [ ! -f "mask_dimer" ]; then exit 0; fi
+
+echo "RUNNING IN DIMER MODE"
+
+ls      sigma_output*1  &> /dev/null || echo " WARNING NO SELF ENERGY FILES"
+
+ls      sigma_output*1  &> /dev/null && up_matsu
+ls      sigma_output*2  &> /dev/null && do_matsu
+ls real_sigma_output*1  &> /dev/null && up_real
+ls real_sigma_output*2  &> /dev/null && do_real
+
+exit 0

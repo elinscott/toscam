@@ -9,9 +9,10 @@ module variableembed
 
    use namelistmod, only: namelist_set, namelist_init, putel_in_namelist, &
                                & look_for_namelist_in_file, look_for_command_line_argument
+   use genvar, only: DP
 
    integer  ::  remove_unconnected_sites
-   real(8)  ::  cutoff_remove_sites
+   real(kind=DP)  ::  cutoff_remove_sites
 
 contains
 
@@ -33,19 +34,20 @@ end module
 
 program embed_self
    use variableembed
+   use genvar, only: DP
    implicit none
    integer                 ::  i, j, ii, jj, s, t, kkk1, kkk2, jjj, k
-   complex(8), allocatable  :: selfb(:, :, :), self(:, :, :), energy(:), tt(:, :), ttt(:, :), GG(:, :)
-   real(8), allocatable     ::  ovH1(:, :), ovH0(:, :), H0(:, :), H1(:, :)
+   complex(kind=DP), allocatable  :: selfb(:, :, :), self(:, :, :), energy(:), tt(:, :), ttt(:, :), GG(:, :)
+   real(kind=DP), allocatable     ::  ovH1(:, :), ovH0(:, :), H0(:, :), H1(:, :)
    integer, allocatable     ::  index_device(:), orb_num_device(:)
-   real(8)                 ::  mmu_lead
+   real(kind=DP)                 ::  mmu_lead
    integer                 ::  ien, pub_dmft_points, size_mat0
-   real(8)                 ::  pub_dmft_temp, mmu
+   real(kind=DP)                 ::  pub_dmft_temp, mmu
    integer                 :: totsites, iii, totorb
-   real(8)                 :: test_matmul1(10), test_matmul2(10)
-   real(8), allocatable     :: S0b(:, :), S1b(:, :), H0b(:, :), H1b(:, :)
+   real(kind=DP)                 :: test_matmul1(10), test_matmul2(10)
+   real(kind=DP), allocatable     :: S0b(:, :), S1b(:, :), H0b(:, :), H1b(:, :)
    integer, allocatable     :: ib(:), mapatom(:), maporb(:)
-   real(8), allocatable     :: muarray(:)
+   real(kind=DP), allocatable     :: muarray(:)
 
    call define_vars
 

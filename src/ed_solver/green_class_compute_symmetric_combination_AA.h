@@ -7,19 +7,19 @@
 
       TYPE(green_type)      :: green
       LOGICAL               :: reshuffle_dyn
-      COMPLEX(DBL), POINTER :: vec_ii(:) => NULL(), vec_jj(:) => NULL(), &
+      COMPLEX(DP), POINTER :: vec_ii(:) => NULL(), vec_jj(:) => NULL(), &
                                vec_ij(:) => NULL()
-      COMPLEX(DBL), POINTER :: vec_ji(:) => NULL(), tvec_ji(:) => NULL(), &
+      COMPLEX(DP), POINTER :: vec_ji(:) => NULL(), tvec_ji(:) => NULL(), &
                                tvec_ij(:) => NULL()
 #ifdef _complex
-      COMPLEX(DBL), POINTER :: vecstat_ii => NULL(), vecstat_jj => NULL(), &
+      COMPLEX(DP), POINTER :: vecstat_ii => NULL(), vecstat_jj => NULL(), &
                                vecstat_ij => NULL()
-      COMPLEX(DBL), POINTER :: vecstat_ji => NULL(), tvecstat_ji => NULL(), &
+      COMPLEX(DP), POINTER :: vecstat_ji => NULL(), tvecstat_ji => NULL(), &
                                tvecstat_ij => NULL()
 #else
-      REAL(DBL), POINTER :: vecstat_ii => NULL(), vecstat_jj => NULL(), &
+      REAL(DP), POINTER :: vecstat_ii => NULL(), vecstat_jj => NULL(), &
                             vecstat_ij => NULL()
-      REAL(DBL), POINTER :: vecstat_ji => NULL(), tvecstat_ji => NULL(), &
+      REAL(DP), POINTER :: vecstat_ji => NULL(), tvecstat_ji => NULL(), &
                             tvecstat_ij => NULL()
 #endif
       LOGICAL, POINTER :: MASKpp(:, :) => NULL(), MASKmm(:, :) => NULL(), &
@@ -29,7 +29,7 @@
                           => NULL()
       INTEGER, POINTER :: IVECpp(:) => NULL(), IVECmm(:) => NULL(), &
                           IVECpm(:) => NULL(), IVECmp(:) => NULL()
-      COMPLEX(DBL)          :: swap_stat, swapvec(green%Nw)
+      COMPLEX(DP)          :: swap_stat, swapvec(green%Nw)
       TYPE(correl_type)     :: correl(2, 2)
       TYPE(mask_type)       :: MASK(2, 2)
       INTEGER               :: iorb, jorb, ij, ii, jj, ji, tij, tji, ipm, jpm, &
@@ -60,13 +60,13 @@
                   vecstat_ii => green%correlstat(ipm, 3 - ipm)%rc%vec(ii)
                   vecstat_jj => green%correlstat(ipm, 3 - ipm)%rc%vec(jj)
                   vecstat_ij => green%correlstat(ipm, 3 - ipm)%rc%vec(ij)
-                  vecstat_ij = 0.5_DBL*(vecstat_ij - vecstat_ii - vecstat_jj)
+                  vecstat_ij = 0.5_DP*(vecstat_ij - vecstat_ii - vecstat_jj)
 
                   IF (reshuffle_dyn .AND. green%compute(ipm, 3 - ipm)) THEN
                      vec_ii => green%correl(ipm, 3 - ipm)%vec(ii, :)
                      vec_jj => green%correl(ipm, 3 - ipm)%vec(jj, :)
                      vec_ij => green%correl(ipm, 3 - ipm)%vec(ij, :)
-                     vec_ij = 0.5_DBL*(vec_ij - vec_ii - vec_jj)
+                     vec_ij = 0.5_DP*(vec_ij - vec_ii - vec_jj)
                   ENDIF
 
                ENDIF
@@ -143,14 +143,14 @@
                   vecstat_ij => green%correlstat(ipm, ipm)%rc%vec(ij)
                   vecstat_ii => green%correlstat(ipm, 3 - ipm)%rc%vec(ii)
                   vecstat_jj => green%correlstat(3 - ipm, ipm)%rc%vec(jj)
-                  vecstat_ij = 0.5_DBL*(vecstat_ij - vecstat_ii - vecstat_jj)
+                  vecstat_ij = 0.5_DP*(vecstat_ij - vecstat_ii - vecstat_jj)
 
                   ! DYNAMIC
                   IF (reshuffle_dyn .AND. green%compute(ipm, ipm)) THEN
                      vec_ij => green%correl(ipm, ipm)%vec(ij, :)
                      vec_ii => green%correl(ipm, 3 - ipm)%vec(ii, :)
                      vec_jj => green%correl(3 - ipm, ipm)%vec(jj, :)
-                     vec_ij = 0.5_DBL*(vec_ij - vec_ii - vec_jj)
+                     vec_ij = 0.5_DP*(vec_ij - vec_ii - vec_jj)
                   ENDIF
                ENDIF
             ENDDO

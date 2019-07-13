@@ -1,5 +1,7 @@
 module vertex
 
+   use genvar, only: DP
+
    private
 
    INTERFACE ASSIGNMENT(=)
@@ -10,9 +12,9 @@ module vertex
       integer    :: k_p, l_p
       integer    :: k_m, l_m
 #ifdef _complex
-      complex(8), allocatable :: c_p(:, :), c_m(:, :)
+      complex(kind=DP), allocatable :: c_p(:, :), c_m(:, :)
 #else
-      real(8), allocatable :: c_p(:, :), c_m(:, :)
+      real(kind=DP), allocatable :: c_p(:, :), c_m(:, :)
 #endif
    END TYPE
 
@@ -95,7 +97,7 @@ contains
       TYPE(AIM_type)                 :: AIM
       integer                        :: itot, i, j, k, nup, ndn, min_up, &
                                         max_up, min_dn, max_dn
-      real(8)                        :: beta, ZZ
+      real(kind=DP)                        :: beta, ZZ
 
       CALL init_apply_C(AIM)
       itot = AIM%bath%Nb + AIM%impurity%Nc

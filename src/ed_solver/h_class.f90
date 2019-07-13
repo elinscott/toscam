@@ -1,6 +1,6 @@
 MODULE H_class
 
-   use genvar, only: DBL
+   use genvar, only: DP
    use sector_class, only: sector_type
 
    IMPLICIT NONE
@@ -71,13 +71,13 @@ contains
 
       use haimsz_class, only: haimsz_mult, haimsz_mult_fly
       use haimupdo_class, only: haimupdo_mult, haimupdo_mult_split
-      use genvar, only: dbl
+      use genvar, only: dp
       use globalvar_ed_solver, only: ON_FLY, USE_TRANSPOSE_TRICK_MPI
 
       implicit none
 
-      COMPLEX(DBL), INTENT(INOUT) :: vec_out(n)
-      COMPLEX(DBL), INTENT(IN)    :: vec_in(n)
+      COMPLEX(DP), INTENT(INOUT) :: vec_out(n)
+      COMPLEX(DP), INTENT(IN)    :: vec_in(n)
       INTEGER :: n
 
       IF (ASSOCIATED(sector_h%updo)) THEN
@@ -109,15 +109,15 @@ contains
 
    subroutine Hmultr(n, vec_out, vec_in)
 
-      use genvar, only: dbl
+      use genvar, only: dp
       use globalvar_ed_solver, only: ON_FLY, USE_TRANSPOSE_TRICK_MPI
       use haimsz_class, only: haimsz_mult, haimsz_mult_fly
       use haimupdo_class, only: haimupdo_mult, haimupdo_mult_split
 
       implicit none
 
-      REAL(DBL), INTENT(INOUT) :: vec_out(n)
-      REAL(DBL), INTENT(IN)    :: vec_in(n)
+      REAL(DP), INTENT(INOUT) :: vec_out(n)
+      REAL(DP), INTENT(IN)    :: vec_in(n)
       INTEGER :: n
 
       IF (ASSOCIATED(sector_h%updo)) THEN

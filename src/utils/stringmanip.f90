@@ -1,5 +1,7 @@
 module StringManip
 
+   use genvar, only: SP, DP
+
    private
    public :: toString
    public :: strint2
@@ -28,7 +30,7 @@ contains
 !***********************************************
 !
 ! function string_vec(k1,k2,decb,dec)
-! real(8)                   :: k1,k2,dec_
+! real(kind=DP)                   :: k1,k2,dec_
 ! integer                   :: dec,i,decb
 ! character(dec+decb+2)     :: aa1,aa2
 ! character(7+dec*2+decb*2) :: string_vec
@@ -147,7 +149,7 @@ contains
    end function
 
    character*30 function StringToReal(i)
-      real(8) :: i
+      real(kind=DP) :: i
       call initString(StringToReal)
       if (abs(i) >= 1.d-8) then
          write (StringToReal, '(f15.8)') i
@@ -159,14 +161,14 @@ contains
    end function
 
    character*30 function StringToRealr(i)
-      real(4) :: i
+      real(kind=SP) :: i
       call initString(StringToRealr)
       write (StringToRealr, '(f12.4)') i
       StringToRealr = TRIM(ADJUSTL(StringToRealr))
    end function
 
    character*30 function StringToComp(i)
-      complex(8) :: i
+      complex(kind=DP) :: i
       call initString(StringToComp)
       write (StringToComp, '(2f10.3)') real(i), aimag(i)
       StringToComp = TRIM(ADJUSTL(StringToComp))
@@ -298,7 +300,7 @@ contains
 !
 ! subroutine putinStringreal(STRING,numb)
 ! character*(*),intent(inout) :: STRING
-! real(8),intent(in) :: numb
+! real(kind=DP),intent(in) :: numb
 ! character*40  :: sput
 ! write(sput,*) numb
 ! write(STRING,*) STRING(1:LEN_TRIM(STRING))//' '//&
@@ -324,7 +326,7 @@ contains
 !
 ! subroutine putinStringComp(STRING,numb)
 ! character*(*),intent(inout) :: STRING
-! complex(8),intent(in) :: numb
+! complex(kind=DP),intent(in) :: numb
 ! character*40  :: sput
 ! write(sput,'(2f10.3)') numb
 ! write(STRING,*) STRING(1:LEN_TRIM(STRING))//' '//&
@@ -586,12 +588,12 @@ contains
 ! !***************************************
 ! !***************************************
 !
-! !convert string ch to a real(8) (positive only)
+! !convert string ch to a real(kind=DP) (positive only)
 ! Function StrDbl(ch)
-! real(8) :: StrDbl
+! real(kind=DP) :: StrDbl
 ! character*(*) ch
 ! integer i, ipos
-! real(8)  x
+! real(kind=DP)  x
 !
 ! ipos=0
 ! do i=1,LEN_TRIM(ch)

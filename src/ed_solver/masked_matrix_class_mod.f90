@@ -1,7 +1,7 @@
 MODULE masked_matrix_class_mod
 
    use mask_class, only: mask_type
-   use genvar, only: DBL, DP, log_unit, FERMIONIC, BOSONIC
+   use genvar, only: DP, DP, log_unit, FERMIONIC, BOSONIC
 
    IMPLICIT NONE
 
@@ -20,12 +20,12 @@ MODULE masked_matrix_class_mod
       ! FULL 2D MATRIX
       INTEGER                  :: n1 = 0, n2 = 0
       ! REAL MATRIX
-      REAL(DBL), POINTER :: mat(:, :) => NULL()
+      REAL(DP), POINTER :: mat(:, :) => NULL()
       ! MASKS
       TYPE(mask_type)          :: MASK
 
       ! VECTOR OF INDEPENDANT MATRIX ELEMENTS
-      REAL(DBL), POINTER :: vec(:) => NULL()
+      REAL(DP), POINTER :: vec(:) => NULL()
       ! FLAGS
       LOGICAL                  :: IS_HERM = .false.    ! TRUE IF HERMITIC MATRIX
    END TYPE
@@ -41,19 +41,19 @@ MODULE masked_matrix_class_mod
       ! FULL 2D MATRIX
       INTEGER                  :: n1 = 0, n2 = 0
       ! COMPLEX MATRIX
-      COMPLEX(DBL), POINTER :: mat(:, :) => NULL()
+      COMPLEX(DP), POINTER :: mat(:, :) => NULL()
       ! MASKS
       TYPE(mask_type)          :: MASK
 
       ! VECTOR OF INDEPENDANT MATRIX ELEMENTS
-      COMPLEX(DBL), POINTER :: vec(:) => NULL()
+      COMPLEX(DP), POINTER :: vec(:) => NULL()
 
       ! ADDITIONAL MASKS/VECTORS IF HERMITIC
       LOGICAL                  :: IS_HERM = .false.    ! TRUE IF HERMITIC MATRIX
       TYPE(mask_type)          :: MASKdiag
-      REAL(DBL), POINTER ::  vecdiag(:) => NULL()
+      REAL(DP), POINTER ::  vecdiag(:) => NULL()
       TYPE(mask_type)          :: MASKoffdiag
-      COMPLEX(DBL), POINTER ::  vecoffdiag(:) => NULL()
+      COMPLEX(DP), POINTER ::  vecoffdiag(:) => NULL()
    END TYPE
 
    INTERFACE new_masked_cplx_matrix
@@ -406,7 +406,7 @@ contains
 
       TYPE(masked_cplx_matrix_type), INTENT(INOUT) :: MM
       INTEGER, INTENT(IN)                          :: iind
-      COMPLEX(DBL) :: val
+      COMPLEX(DP) :: val
       INTEGER      :: i1, i2
 
       IF (.NOT. ASSOCIATED(MM%mat)) STOP "ERROR IN fill_masked_cplx_matrix: &
@@ -588,7 +588,7 @@ contains
                IF (MM%MASK%mat(i1, i2)) WRITE (unit_, fmt_MM) '('// &
                   c2s(i2c(i1))//', '//c2s(i2c(i2))//') = '// &
                   c2s(i2c(MM%MASK%imat(i1, i2)))//' = ', '(', &
-                  DBLE(MM%mat(i1, i2)), ', ', AIMAG(MM%mat(i1, i2)), ')'
+                  real(MM%mat(i1, i2), kind=DP), ', ', AIMAG(MM%mat(i1, i2)), ')'
             ENDDO
          ENDDO
 
@@ -982,7 +982,7 @@ contains
 
       TYPE(masked_real_matrix_type), INTENT(INOUT) :: MM
       INTEGER, INTENT(IN)                          :: iind
-      REAL(DBL) :: val
+      REAL(DP) :: val
       INTEGER   :: i1, i2
 
       IF (.NOT. ASSOCIATED(MM%mat)) STOP "ERROR IN fill_masked_real_matrix: &

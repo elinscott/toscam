@@ -31,7 +31,7 @@ contains
          delete_eigensectorlist, eigensectorlist_type, filter_eigensector, &
          gsenergy, nambu_energy_shift, print_eigensectorlist, &
          write_raw_eigensectorlist
-      use genvar, only: dbl, iproc, log_unit, no_mpi, rank, size2
+      use genvar, only: dp, iproc, log_unit, no_mpi, rank, size2
       use globalvar_ed_solver, only: ALL_FIRST_CALL, dump_ground_state, &
          dEmax, FLAG_FULL_ED_GREEN, which_lanczos
       use mpi_mod, only: mpibarrier
@@ -44,7 +44,7 @@ contains
       TYPE(AIM_type), INTENT(IN)                :: AIM
       CHARACTER(LEN=*), INTENT(IN), OPTIONAL  :: OLDGSFILE
       INTEGER           :: isector
-      REAL(DBL)         :: E0
+      REAL(DP)         :: E0
       LOGICAL, SAVE     :: first_call = .true.
       INTEGER           :: uup, ddn, nstu, nstd, itot, ssz
       LOGICAL           :: NOT_COMMENSURATE

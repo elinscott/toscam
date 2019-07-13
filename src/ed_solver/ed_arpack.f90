@@ -1,6 +1,6 @@
 module ed_arpack
 
-   use genvar, only: DBL
+   use genvar, only: DP
 
    implicit none
 
@@ -27,15 +27,15 @@ contains
 
       TYPE(eigenlist_type), INTENT(INOUT) :: lowest
 #ifdef _complex
-      COMPLEX(DBL), ALLOCATABLE :: VECP(:, :)
+      COMPLEX(DP), ALLOCATABLE :: VECP(:, :)
 #else
-      REAL(DBL), ALLOCATABLE    :: VECP(:, :)
+      REAL(DP), ALLOCATABLE    :: VECP(:, :)
 #endif
-      REAL(DBL), ALLOCATABLE    :: VALP(:)
+      REAL(DP), ALLOCATABLE    :: VALP(:)
       INTEGER                   :: start_diagH
-      REAL(DBL)                 :: a
+      REAL(DP)                 :: a
       INTEGER                   :: jj, ii, i, j
-      REAL(DBL)                 :: coeff
+      REAL(DP)                 :: coeff
       INTEGER                   :: dimenvec, Neigen_, nconv
 
       CALL reset_timer(start_diagH)
@@ -130,16 +130,16 @@ contains
 
       TYPE(eigenlist_type), INTENT(INOUT) :: lowest
 #ifdef _complex
-      COMPLEX(DBL), ALLOCATABLE :: VECP(:, :)
+      COMPLEX(DP), ALLOCATABLE :: VECP(:, :)
 #else
-      REAL(DBL), ALLOCATABLE    :: VECP(:, :)
+      REAL(DP), ALLOCATABLE    :: VECP(:, :)
 #endif
-      REAL(DBL), ALLOCATABLE    :: VALP(:)
+      REAL(DP), ALLOCATABLE    :: VALP(:)
       TYPE(rcvector_type)       :: invec, outvec
       INTEGER                   :: start_diagH
-      REAL(DBL)                 :: a
+      REAL(DP)                 :: a
       INTEGER                   :: jj, ii, i, j
-      REAL(DBL)                 :: coeff
+      REAL(DP)                 :: coeff
       INTEGER                   :: dimenvec
 
       CALL reset_timer(start_diagH)

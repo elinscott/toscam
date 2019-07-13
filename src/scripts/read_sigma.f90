@@ -1,6 +1,6 @@
 program readsigma
    integer :: chan, i
-   complex(8), allocatable :: mat1(:, :), mat2(:, :)
+   complex(kind=DP), allocatable :: mat1(:, :), mat2(:, :)
    write (*, *) 'ENTER CHANNELS'
    read (*, *) chan
    allocate (mat1(chan, chan), mat2(chan, chan))

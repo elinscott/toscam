@@ -1,19 +1,20 @@
 program projectorsigma
 
-   use strings, only: replace_in_string, string, assignment(=)
+   use genvar, only: DP
    use matrix
+   use strings, only: replace_in_string, string, assignment(=)
    use StringManip, only: toString
    use StringManip, only: StrInt2
 
    implicit none
 
    integer                :: i, j, k, l, ien, pub_dmft_points, channels, atom, channelsb, atomb
-   real(8)                :: mmu, ttemp
+   real(kind=DP)                :: mmu, ttemp
    integer                :: num, len__, status__, paramagnetic
    character(200)         :: value(2000)
    character(200)         :: filename
-   complex(8)             :: frequ
-   complex(8), allocatable :: green_2(:, :), green_(:, :, :, :), green_temp(:, :), frequ_(:)
+   complex(kind=DP)             :: frequ
+   complex(kind=DP), allocatable :: green_2(:, :), green_(:, :, :, :), green_temp(:, :), frequ_(:)
    type(string)           :: cc_
    logical, allocatable    :: mask_proj(:)
    integer                :: nproj

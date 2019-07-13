@@ -1,7 +1,10 @@
 program averageenergy
+
+   use genvar, only: DP
+
    implicit none
 
-   real(8) :: energies(1000), zpart, ee, tt
+   real(kind=DP) :: energies(1000), zpart, ee, tt
    integer :: i, j, countit
 
    call system("grep -a 'E0 = ' logfile-p1 | wc -l > values")

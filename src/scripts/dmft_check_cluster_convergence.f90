@@ -19,15 +19,15 @@ program dmft_check_convergence
 
    integer                :: fac, mmax, paramagnet
    integer                :: n_frequ_long, i1, i2, kk_, i, j, k, l, channels, n_frequ
-   complex(8), allocatable :: Smat(:, :, :), frequ_(:), green_lat(:, :, :, :), green_matsu(:, :, :, :), sigma_lat(:, :, :, :)
+   complex(kind=DP), allocatable :: Smat(:, :, :), frequ_(:), green_lat(:, :, :, :), green_matsu(:, :, :, :), sigma_lat(:, :, :, :)
    logical                :: check, check2, checkfile
-   real(8)                :: mmu, vv, deltafrequ, inifrequ
-   complex(8)             :: tt, ttt
-   complex(8), allocatable :: t1(:), t2(:), t3(:), dummy(:, :), dummy2(:, :), iwplusmu(:, :), t_trace1(:, :), t_trace2(:, :)
-   complex(8), allocatable :: tt1(:, :, :)
-   real(8), allocatable    :: dens(:, :)
-   real(8)                :: beta, total_density
-   real(8), allocatable    :: temp(:), vvv(:, :)
+   real(kind=DP)                :: mmu, vv, deltafrequ, inifrequ
+   complex(kind=DP)             :: tt, ttt
+   complex(kind=DP), allocatable :: t1(:), t2(:), t3(:), dummy(:, :), dummy2(:, :), iwplusmu(:, :), t_trace1(:, :), t_trace2(:, :)
+   complex(kind=DP), allocatable :: tt1(:, :, :)
+   real(kind=DP), allocatable    :: dens(:, :)
+   real(kind=DP)                :: beta, total_density
+   real(kind=DP), allocatable    :: temp(:), vvv(:, :)
 
    call initialize_my_simulation
    testing = .false.
@@ -290,15 +290,15 @@ contains
 !------------------------!
 !------------------------!
 !------------------------!
-   real(8) function get_dens(GlocRe, GlocIm, diag)
+   real(kind=DP) function get_dens(GlocRe, GlocIm, diag)
       use linalg, only: mplx
       implicit none
       integer    :: k1, k2, i, j, k, jj
-      complex(8) :: dens
-      real(8)    :: frequ, pi, tau0, omega, df, GlocRe(:), GlocIm(:)
-      complex(8) :: temp
+      complex(kind=DP) :: dens
+      real(kind=DP)    :: frequ, pi, tau0, omega, df, GlocRe(:), GlocIm(:)
+      complex(kind=DP) :: temp
       logical    :: diag
-      real(8)    :: alpha
+      real(kind=DP)    :: alpha
 
       pi = dacos(-1.d0)
       jj = size(GlocIm) - 7

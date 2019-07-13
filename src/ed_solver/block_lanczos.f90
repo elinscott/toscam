@@ -1,6 +1,6 @@
 MODULE Block_Lanczos
 
-   use genvar, only: DBL
+   use genvar, only: DP
 
    implicit none
 
@@ -34,13 +34,13 @@ contains
       INTEGER                :: Nconverged, Niter, ivp, start_diagH
       INTEGER                :: local_istatemin(nproc), &
                                 local_istatemax(nproc), local_chunk(nproc)
-      REAL(DBL), ALLOCATABLE :: vec_in(:), vec_out(:)
+      REAL(DP), ALLOCATABLE :: vec_in(:), vec_out(:)
       INTEGER                :: LISTOR, LRSTOR
       INTEGER                :: ISTOR_QUERY(17)
-      REAL(DBL)              :: RSTOR_QUERY(5)
+      REAL(DP)              :: RSTOR_QUERY(5)
       INTEGER, ALLOCATABLE   :: ISTOR(:)
-      REAL(DBL), ALLOCATABLE :: RSTOR(:), U(:, :), V(:, :), VALP(:, :), VECP(:, :)
-      REAL(DBL)              :: SIGMA, minv_
+      REAL(DP), ALLOCATABLE :: RSTOR(:), U(:, :), V(:, :), VALP(:, :), VECP(:, :)
+      REAL(DP)              :: SIGMA, minv_
       INTEGER                :: NNEIG, LFLAG, NVOPU, Neigen_
 
       CALL reset_timer(start_diagH)
@@ -78,8 +78,8 @@ contains
       endif
       ISTOR_QUERY(15) = 0 ! let BLZDRD determine the workspace
 
-      RSTOR_QUERY(1) = 0.0_DBL       ! ignored in standard ev case
-      RSTOR_QUERY(2) = 0.0_DBL       ! ignored in standard ev case
+      RSTOR_QUERY(1) = 0.0_DP       ! ignored in standard ev case
+      RSTOR_QUERY(2) = 0.0_DP       ! ignored in standard ev case
       RSTOR_QUERY(3) = tolerance
 
       if (Block_size > 0) then
@@ -93,7 +93,7 @@ contains
       ISTOR_QUERY(15) = LISTOR
       RSTOR_QUERY(4) = LRSTOR
 
-      SIGMA = 0.0_DBL   ! ignored in standard ev case
+      SIGMA = 0.0_DP   ! ignored in standard ev case
       NNEIG = 0      ! ignored in standard ev case
       LFLAG = 0      ! FIRST CALL
       NVOPU = 0      ! FIRST CALL
@@ -209,7 +209,7 @@ contains
          CASE (1)    ! BLDRD REQUIRES V(:, 1:NVOPU) = H * U(:, 1:NVOPU)
 
             DO ivp = 1, NVOPU
-               vec_in = 0.0_DBL
+               vec_in = 0.0_DP
 
                ! Hmult REQUIRES FULL VECTOR => GATHER ALL PARTS FROM LOCAL
                ! U(:, ivp)

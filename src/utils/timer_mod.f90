@@ -23,8 +23,6 @@ module timer_mod
    integer :: program_start_time
    integer :: clock_rate
 
-   integer :: timer_log_unit
-
    type(timing_info) :: routines(max_number_of_timed_routines)
 
    public :: start_timer
@@ -41,9 +39,6 @@ contains
       
       implicit none
 
-      timer_log_unit = utils_unit()
-      open(unit = timer_log_unit, file = "timing_calls.log", status = "replace")
-      
       call system_clock(count=program_start_time, count_rate=clock_rate)
       timer_mod_initialized = .true.
 
@@ -114,8 +109,6 @@ contains
       routines(i)%num_calls = routines(i)%num_calls + 1
       routines(i)%start_time = elapsed_time()
       routines(i)%running = .true.
-
-      write(timer_log_unit, '(3a,f9.2)') repeat(" ", num_running()), "Starting ", name, percentage_accounted_for()
 
    end subroutine start_timer
 
@@ -213,8 +206,6 @@ contains
       ! ebl: footer
       write(loc_logfile, '(a61,a3,f14.2)') 'TOTAL', " | ", elapsed_time()
       write(loc_logfile, '(a,a78)') " ", repeat("=", 78)
-
-      close(timer_log_unit)
 
    end subroutine finalize_timing
 

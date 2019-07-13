@@ -1,8 +1,9 @@
 program correctn
    use matrix
+   use genvar, only: DP
    implicit none
 
-   real(8) :: nn, mat(5, 5, 3), matb(5, 5, 3), a1, a2, a3
+   real(kind=DP) :: nn, mat(5, 5, 3), matb(5, 5, 3), a1, a2, a3
    integer :: i, j
 
    call system(" cat logfile-p1 |grep -a -A 17 'DENSITY CORRELATIONS' |tail -15 > n_var_temp ")

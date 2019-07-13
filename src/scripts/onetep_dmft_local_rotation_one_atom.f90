@@ -1,8 +1,9 @@
 program one_atom
+   use genvar, only: dp
    use linalg
    implicit none
-   real(8) :: v1(3), v2(3), v3(3), site1(3), site2a(3), site2b(3), site3a(3), site3b(3), mat(3, 3), coord(3)
-   integer :: j, i, jj, kk, kkk, jjj, lll_
+   real(dp) :: v1(3), v2(3), v3(3), site1(3), site2a(3), site2b(3), site3a(3), site3b(3), mat(3, 3), coord(3)
+   integer  :: j, i, jj, kk, kkk, jjj, lll_
 
    open (unit=1414, file='mask_local_rotations', form='unformatted')
 

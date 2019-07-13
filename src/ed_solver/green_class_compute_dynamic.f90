@@ -1,6 +1,6 @@
 MODULE green_class_compute_dynamic
 
-   use genvar, only: DBL
+   use genvar, only: DP
 
    IMPLICIT NONE
 
@@ -21,11 +21,11 @@ contains
       implicit none
 
       INTEGER, INTENT(IN)            :: iph
-      COMPLEX(DBL), INTENT(INOUT)    :: dyn(:)
+      COMPLEX(DP), INTENT(INOUT)    :: dyn(:)
       TYPE(freq_type), INTENT(IN)    :: freq
       TYPE(eigen_type), INTENT(IN)   :: Opm
       CHARACTER(LEN=*), INTENT(IN) :: stat, title
-      REAL(DBL)                  :: normvec
+      REAL(DP)                  :: normvec
       TYPE(eigensectorlist_type) :: GS
       integer                    :: iisector
       INTEGER, optional          :: keldysh_level
@@ -78,12 +78,12 @@ contains
       implicit none
 
       INTEGER, INTENT(IN)            :: iph
-      COMPLEX(DBL), INTENT(INOUT)    :: dyn(:)
+      COMPLEX(DP), INTENT(INOUT)    :: dyn(:)
       TYPE(freq_type), INTENT(IN)    :: freq
       TYPE(eigen_type), INTENT(IN)   :: Opm
       CHARACTER(LEN=*), INTENT(IN) :: stat, title
-      COMPLEX(DBL)               :: z
-      REAL(DBL)                  :: fermion_sign, ph_sign, norm_Opmvec2, &
+      COMPLEX(DP)               :: z
+      REAL(DP)                  :: fermion_sign, ph_sign, norm_Opmvec2, &
                                     normvec, norm_
       INTEGER                    :: iw, iter, Niter
       INTEGER                    :: ii, dimenvec, iisector
@@ -96,14 +96,14 @@ contains
             & inconsistent dimensions (" // tostring(size(dyn)) // " /= " &
             // tostring(freq%Nw) // ")")
 
-      IF (iph == 1) ph_sign = 1.0_DBL
-      IF (iph == 2) ph_sign = -1.0_DBL
+      IF (iph == 1) ph_sign = 1.0_DP
+      IF (iph == 2) ph_sign = -1.0_DP
       SELECT CASE (stat)
       CASE (FERMIONIC)
-         fermion_sign = -1.0_DBL
+         fermion_sign = -1.0_DP
       CASE (BOSONIC)
-         fermion_sign = 1.0_DBL
-         if (iph == 1) fermion_sign = -1.0_DBL
+         fermion_sign = 1.0_DP
+         if (iph == 1) fermion_sign = -1.0_DP
       END SELECT
       if (size(Opm%vec%rc) /= dimen_H()) then
          write (*, *) '===================================='
@@ -191,7 +191,7 @@ contains
       implicit none
 
       INTEGER, INTENT(IN)            :: iph
-      COMPLEX(DBL), INTENT(INOUT)    :: dyn(:)
+      COMPLEX(DP), INTENT(INOUT)    :: dyn(:)
       TYPE(freq_type), INTENT(IN)    :: freq
       TYPE(eigen_type), INTENT(IN)   :: Opm
       CHARACTER(LEN=*), INTENT(IN) :: stat, title
@@ -199,14 +199,14 @@ contains
       TYPE(rcvector_type)       :: lastvec, initvec, tmp
       COMPLEX(8), allocatable   :: store_vec(:, :)
       TYPE(tridiag_type)        :: Lanczos_matrix, tri, subLmatrix
-      COMPLEX(DBL)              :: z
-      REAL(DBL)                 :: fermion_sign, ph_sign, norm_Opmvec2, normvec
+      COMPLEX(DP)              :: z
+      REAL(DP)                 :: fermion_sign, ph_sign, norm_Opmvec2, normvec
       INTEGER                   :: iw, iter, Niter
       INTEGER                   :: i, ii, dimenvec
       LOGICAL                   :: conv_one_step
       INTEGER, optional         :: keldysh_level
-      REAL(DBL), ALLOCATABLE    :: VECP(:, :), VALP(:)
-      COMPLEX(DBL), ALLOCATABLE :: DD(:, :), full_mat(:, :)
+      REAL(DP), ALLOCATABLE    :: VECP(:, :), VALP(:)
+      COMPLEX(DP), ALLOCATABLE :: DD(:, :), full_mat(:, :)
 
       call start_timer("compute_dynamic_full")
 
@@ -215,8 +215,8 @@ contains
 
       ! COMPUTE DYNAMIC CORRELATIONS OF OPERATORS O, O^+ I.E. <0| O(z) * O^+ |0>
 
-      IF (iph == 1) ph_sign = 1.0_DBL
-      IF (iph == 2) ph_sign = -1.0_DBL
+      IF (iph == 1) ph_sign = 1.0_DP
+      IF (iph == 2) ph_sign = -1.0_DP
 
       IF (iph == 2 .and. present(keldysh_level)) then
          write (*, *) 'ERROR keldysh in ED and should not compute hole part of &
@@ -226,10 +226,10 @@ contains
 
       SELECT CASE (stat)
       CASE (FERMIONIC)
-         fermion_sign = -1.0_DBL
+         fermion_sign = -1.0_DP
       CASE (BOSONIC)
-         fermion_sign = 1.0_DBL
-         if (iph == 1) fermion_sign = -1.0_DBL
+         fermion_sign = 1.0_DP
+         if (iph == 1) fermion_sign = -1.0_DP
       END SELECT
 
       if (.not. USE_TRANSPOSE_TRICK_MPI) then
@@ -396,12 +396,12 @@ contains
 
    contains
 
-      complex(8) function internal_scalprod_(x1, x2)
+      complex(kind=DP) function internal_scalprod_(x1, x2)
 
          implicit none
 
-         complex(8) :: x1(:)
-         complex(8) :: x2(:)
+         complex(kind=DP) :: x1(:)
+         complex(kind=DP) :: x2(:)
          integer    :: i, j, k
 
          internal_scalprod_ = 0.d0
@@ -410,15 +410,15 @@ contains
          enddo
       end function
 
-      complex(8) function internal_scalprod(x1, x2)
+      complex(kind=DP) function internal_scalprod(x1, x2)
 
          implicit none
 
-         complex(8) :: x1(:)
+         complex(kind=DP) :: x1(:)
 #ifdef _complex
-         complex(8) :: x2(:)
+         complex(kind=DP) :: x2(:)
 #else
-         real(8)    :: x2(:)
+         real(kind=DP)    :: x2(:)
 #endif
          integer    :: i, j, k
 
@@ -435,25 +435,25 @@ contains
 !     implicit none
 !
 !     INTEGER,          INTENT(IN)      ::  iph
-!     COMPLEX(DBL),     INTENT(INOUT)   ::  dyn(:)
+!     COMPLEX(DP),     INTENT(INOUT)   ::  dyn(:)
 !     TYPE(freq_type),  INTENT(IN)      ::  freq
 !     TYPE(eigen_type), INTENT(IN)      ::  Opm
 !     CHARACTER(LEN=*), INTENT(IN)      ::  stat,title
 !     TYPE(tridiag_type)                ::  tri
-!     COMPLEX(DBL)                      ::  z
-!     REAL(DBL)                         ::  fermion_sign,ph_sign,norm_Opmvec2,normvec
+!     COMPLEX(DP)                      ::  z
+!     REAL(DP)                         ::  fermion_sign,ph_sign,norm_Opmvec2,normvec
 !     INTEGER                           ::  iw,iter,Niter
 !     INTEGER                           ::  ii,sizevec
 !
-!     IF(iph==1) ph_sign = 1.0_DBL
-!     IF(iph==2) ph_sign = -1.0_DBL
+!     IF(iph==1) ph_sign = 1.0_DP
+!     IF(iph==2) ph_sign = -1.0_DP
 !
 !     SELECT CASE(stat)
 !       CASE(FERMIONIC)
-!         fermion_sign = -1.0_DBL
+!         fermion_sign = -1.0_DP
 !       CASE(BOSONIC)
-!                    fermion_sign =  1.0_DBL
-!         if(iph==1) fermion_sign = -1.0_DBL
+!                    fermion_sign =  1.0_DP
+!         if(iph==1) fermion_sign = -1.0_DP
 !     END SELECT
 !
 !     Niter = MIN(Nitergreenmax,dimen_H())

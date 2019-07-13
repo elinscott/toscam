@@ -1,17 +1,18 @@
 program projector
+   use genvar, only: DP
    use strings, only: replace_in_string, string, assignment(=)
    use matrix
    use StringManip, only: toString
    implicit none
    integer                :: i, j, k, l, ien, pub_dmft_points, channels, atom, channelsb, atomb
-   real(8)                :: mmu, ttemp
+   real(kind=DP)                :: mmu, ttemp
    integer                :: num, len__, status__, paramagnetic
    character(200)         :: value(2000)
    character(200)         :: filename
-   complex(8)             :: frequ
-   complex(8), allocatable :: green_2(:, :), green_(:, :, :, :), green_temp(:, :), frequ_(:)
-   real(8), allocatable    :: occupation_matrix(:, :, :, :)
-   real(8), allocatable    :: occup_2(:, :, :)
+   complex(kind=DP)             :: frequ
+   complex(kind=DP), allocatable :: green_2(:, :), green_(:, :, :, :), green_temp(:, :), frequ_(:)
+   real(kind=DP), allocatable    :: occupation_matrix(:, :, :, :)
+   real(kind=DP), allocatable    :: occup_2(:, :, :)
    type(string)           :: cc_
    logical, allocatable    :: mask_proj(:)
    integer                :: nproj

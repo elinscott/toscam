@@ -1,7 +1,7 @@
 MODULE bath_class
 
    use correl_class, only: correl_type
-   use genvar, only: DBL
+   use genvar, only: DP
    use masked_matrix_class, only: masked_matrix_type
 
    implicit none
@@ -32,11 +32,11 @@ MODULE bath_class
       TYPE(masked_matrix_type)          :: Pb       ! in (site, site) basis
       ! TOTAL NUMBER OF (REAL) PARAMETERS
       INTEGER   :: nparam = 0
-      REAL(DBL), POINTER :: vec(:) => NULL()
+      REAL(DP), POINTER :: vec(:) => NULL()
       ! HYBRID => BATH PARAMETERS
       INTEGER   :: Niter_search_max = 0 ! max # of iterations in search routine (conj. grad.)
-      REAL(DBL) :: search_step = 0.0_DBL ! small step in initial search direction
-      REAL(DBL) :: dist_max = 0.0_DBL ! max. error on hybridization functions
+      REAL(DP) :: search_step = 0.0_DP ! small step in initial search direction
+      REAL(DP) :: dist_max = 0.0_DP ! max. error on hybridization functions
       ! HYBRIDIZATION FUNCTION
       TYPE(correl_type) :: hybrid, hybridret
    END TYPE
@@ -459,13 +459,13 @@ contains
       INTEGER              :: Nb, index_in, ib, jb, spin, mu, iind_, iind, &
                               fac_cplx
       INTEGER              :: Nitermax, ff
-      REAL(DBL)            :: step, dmax
+      REAL(DP)            :: step, dmax
       CHARACTER(LEN=5)   :: sym_bath
       INTEGER              :: UNIT, UNIT2, k
 #ifdef _complex
-      COMPLEX(DBL)         :: val
+      COMPLEX(DP)         :: val
 #else
-      REAL(DBL)            :: val
+      REAL(DP)            :: val
 #endif
 
       if (min_all_bath_param == 0) then
@@ -951,7 +951,7 @@ contains
 
       Nb = Eb(1)%rc%n1
       CALL new_masked_matrix(EbNambu, "EbNambu", Nb*2, Nb*2, IS_HERM=.true.)
-      EbNambu%rc%mat = 0.0_DBL
+      EbNambu%rc%mat = 0.0_DP
 
       ! DIAGONAL BLOCKS: CONDUCTION ENERGY
       EbNambu%rc%mat(1:Nb, 1:Nb) = Eb(1)%rc%mat
@@ -990,7 +990,7 @@ contains
       Nc = Vbc(1)%rc%n2
 
       CALL new_masked_matrix(VbcNambu, "VbcNambu", Nb*2, Nc*2)
-      VbcNambu%rc%mat = 0.0_DBL
+      VbcNambu%rc%mat = 0.0_DP
       VbcNambu%rc%mat(1:Nb, 1:Nc) = Vbc(1)%rc%mat
 #ifdef _complex
       VbcNambu%rc%mat(Nb + 1:Nb*2, Nc + 1:Nc*2) = -CONJG(Vbc(2)%rc%mat)

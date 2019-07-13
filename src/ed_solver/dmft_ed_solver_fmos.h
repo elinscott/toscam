@@ -13,25 +13,25 @@
 
       integer                 :: Nc, Nb, s1, s2, iter, i, j, k, l, m, kp, mp, &
                                  ip, jp, nw_r, nw_m, Ntot, lp, ii, jj
-      real(8), allocatable    :: Eb(:, :, :), Ei(:, :, :), Ei_(:, :, :)
-      complex(8), allocatable :: Vb(:, :, :), Vbath(:, :, :)
-      real(8), allocatable    :: densav(:, :, :), ueff(:, :), Umma(:, :), &
+      real(kind=DP), allocatable    :: Eb(:, :, :), Ei(:, :, :), Ei_(:, :, :)
+      complex(kind=DP), allocatable :: Vb(:, :, :), Vbath(:, :, :)
+      real(kind=DP), allocatable    :: densav(:, :, :), ueff(:, :), Umma(:, :), &
                                  Ummb(:, :, :), Ummc(:, :, :), UUeff(:, :, :, :)
-      complex(8), allocatable :: SIAM_T(:, :, :)
-      complex(8), allocatable :: I1a(:, :, :), I1b(:, :, :, :), I2a(:, :, :), &
+      complex(kind=DP), allocatable :: SIAM_T(:, :, :)
+      complex(kind=DP), allocatable :: I1a(:, :, :), I1b(:, :, :, :), I2a(:, :, :), &
                                  I2b(:, :, :, :), I1c(:, :, :, :), I2c(:, :, :, :)
-      complex(8), allocatable :: Gdyn_m(:, :, :, :), Gdyn_r(:, :, :, :)
-      complex(8), allocatable :: G_ff_m(:, :, :, :), G_ff_r(:, :, :, :), &
+      complex(kind=DP), allocatable :: Gdyn_m(:, :, :, :), Gdyn_r(:, :, :, :)
+      complex(kind=DP), allocatable :: G_ff_m(:, :, :, :), G_ff_r(:, :, :, :), &
                                  S_ff_m_old(:, :, :, :), S_ff_m(:, :, :, :), &
                                  S_ff_r(:, :, :, :)
-      complex(8), allocatable :: Dmasig(:, :, :), Dmbsig(:, :, :, :), &
+      complex(kind=DP), allocatable :: Dmasig(:, :, :), Dmbsig(:, :, :, :), &
                                  Dmcsig(:, :, :, :), DmasigTild(:, :, :), &
                                  DmbsigTild(:, :, :, :), DmcsigTild(:, :, :, :)
-      real(8), allocatable    :: matsubara(:), UU(:, :, :, :)
+      real(kind=DP), allocatable    :: matsubara(:), UU(:, :, :, :)
       logical                 :: check_previous
-      real(8)                 :: temp, ttt
-      complex(8), allocatable :: Dmsig(:, :, :), frequ__(:)
-      complex(8), allocatable :: AA(:, :, :), BB(:, :, :, :), CC(:, :, :, :), tempvec(:)
+      real(kind=DP)                 :: temp, ttt
+      complex(kind=DP), allocatable :: Dmsig(:, :, :), frequ__(:)
+      complex(kind=DP), allocatable :: AA(:, :, :), BB(:, :, :, :), CC(:, :, :, :), tempvec(:)
       integer                 :: mstep
       logical, parameter      :: use_def_feng = .true. !BUG
       logical                 :: fmos_fluc_
@@ -1317,8 +1317,8 @@
       implicit none
 
       integer    :: nw
-      complex(8) :: Giom(1:nw), temp(1:nw)
-      real(8)    :: iom(1:nw), ah, ahh, drsign, ddd, tail
+      complex(kind=DP) :: Giom(1:nw), temp(1:nw)
+      real(kind=DP)    :: iom(1:nw), ah, ahh, drsign, ddd, tail
       integer    :: t, n, i, j
       logical    :: add
 
@@ -1348,8 +1348,8 @@
 
       integer    :: nw, kk
       logical    :: green
-      complex(8) :: Giom(1:nw)
-      real(8)    :: iom(1:nw), ddd, ahh
+      complex(kind=DP) :: Giom(1:nw)
+      real(kind=DP)    :: iom(1:nw), ddd, ahh
 
       ddd = get_ddd(nw, iom, Giom, green)
       ahh = get_ah(nw, iom, Giom)
@@ -1357,11 +1357,11 @@
       return
    end subroutine
 
-   elemental real(8) function step_func_loc(rr)
+   elemental real(kind=DP) function step_func_loc(rr)
 
       implicit none
 
-      real(8), intent(in) :: rr
+      real(kind=DP), intent(in) :: rr
 
       if (rr > 0.d0) then
          step_func_loc = 1.d0
@@ -1379,12 +1379,12 @@
 
       integer, parameter:: Ntau = 1
       integer           :: nw, kk
-      complex(8)        :: Giom(1:nw), Giomback(1:nw)
-      real(8)           :: iom(1:nw), tau(Ntau), ah, ahh, mm
-      real(8)           :: Gtau_
-      real(8)           :: beta, df, temp
-      complex(8)        :: csum
-      real(8)           :: dww, bb, ddd, ahh2, ddd2, g1, gn, tailmax
+      complex(kind=DP)        :: Giom(1:nw), Giomback(1:nw)
+      real(kind=DP)           :: iom(1:nw), tau(Ntau), ah, ahh, mm
+      real(kind=DP)           :: Gtau_
+      real(kind=DP)           :: beta, df, temp
+      complex(kind=DP)        :: csum
+      real(kind=DP)           :: dww, bb, ddd, ahh2, ddd2, g1, gn, tailmax
       integer           :: t, n, i, j, itail
       real(16)          :: t1, t2, pp1, pp2
       logical           :: green
@@ -1426,14 +1426,14 @@
       return
    end subroutine
 
-   real(8) function get_ddd(nw, iom, Giom, green_)
+   real(kind=DP) function get_ddd(nw, iom, Giom, green_)
 
       implicit none
 
       integer    :: nw
       logical    :: green_
-      real(8)    :: iom(1:nw), ddd
-      complex(8) :: Giom(1:nw)
+      real(kind=DP)    :: iom(1:nw), ddd
+      complex(kind=DP) :: Giom(1:nw)
 
       if (green_) then
          get_ddd = 1.d0
@@ -1442,13 +1442,13 @@
       endif
    end function
 
-   real(8) function get_ah(nw, iom, Giom)
+   real(kind=DP) function get_ah(nw, iom, Giom)
 
       implicit none
 
       integer    :: nw
-      real(8)    :: iom(1:nw), ddd
-      complex(8) :: Giom(1:nw)
+      real(kind=DP)    :: iom(1:nw), ddd
+      complex(kind=DP) :: Giom(1:nw)
       integer    :: i, kk, p, ii, k
 
       get_ah = Real(Giom(nw))*(iom(nw)**2)

@@ -1,4 +1,5 @@
 module sorting
+   use genvar, only: SP, DP
    use linalg
    use random
 
@@ -59,9 +60,9 @@ contains
 ! !***********************************************
 ! !***********************************************
 !
-!  real(8) function maxval_setr(tab,set)
+!  real(kind=DP) function maxval_setr(tab,set)
 !  implicit none
-!  real(8)  :: tab(:,:),r1,r2
+!  real(kind=DP)  :: tab(:,:),r1,r2
 !  integer :: set(:),j
 !   r1=-1.d30
 !   do j=1,size(tab(:,1))
@@ -73,7 +74,7 @@ contains
 !   maxval_setr=r1
 !  end function
 !
-!  real(8) function maxval_setrr(tab,set)
+!  real(kind=DP) function maxval_setrr(tab,set)
 !  implicit none
 !  real  :: tab(:,:),r1,r2
 !  integer :: set(:),j
@@ -87,9 +88,9 @@ contains
 !   maxval_setrr=r1
 !  end function
 !
-!  real(8) function minval_setr(tab,set)
+!  real(kind=DP) function minval_setr(tab,set)
 !  implicit none
-!  real(8)  :: tab(:,:),r1,r2
+!  real(kind=DP)  :: tab(:,:),r1,r2
 !  integer :: set(:),j
 !   r1=1.d30
 !   do j=1,size(tab(:,1))
@@ -101,7 +102,7 @@ contains
 !   minval_setr=r1
 !  end function
 !
-!  real(8) function minval_setrr(tab,set)
+!  real(kind=DP) function minval_setrr(tab,set)
 !  implicit none
 !  real  :: tab(:,:),r1,r2
 !  integer :: set(:),j
@@ -130,7 +131,7 @@ contains
 !
 !       ! Nom : SORT3
 !       SUBROUTINE SORT3(N,np,RA,RB,WKSP,IWKSP)
-!       implicit real(8)(a-h,o-z)
+!       implicit real(kind=DP)(a-h,o-z)
 !       DIMENSION RA(Np),RB(Np,Np),WKSP(Np),IWKSP(Np)
 !       CALL INDEXX(N,np,RA,IWKSP)
 !       DO 11 J=1,N
@@ -159,7 +160,7 @@ contains
 !
 !       ! Nom : INDEXX
 !       SUBROUTINE INDEXX(N,np,ARRIN,INDX)
-!       implicit real(8)(a-h,o-z)
+!       implicit real(kind=DP)(a-h,o-z)
 !       DIMENSION ARRIN(Np),INDX(Np)
 !       DO 11 J=1,N
 !       INDX(J)=J
@@ -384,7 +385,7 @@ contains
 !
 ! logical function askinsets(a,set)
 ! implicit none
-! real(4),intent(in)::a,set(:)
+! real(kind=SP),intent(in)::a,set(:)
 ! integer::sizei,i
 ! sizei=size(set)
 ! askinsets=.false.
@@ -408,7 +409,7 @@ contains
 !
 ! logical function askinsetr(a,set)
 ! implicit none
-! real(8),intent(in)::a,set(:)
+! real(kind=DP),intent(in)::a,set(:)
 ! integer::sizei,i
 ! sizei=size(set)
 ! askinsetr=.false.
@@ -432,7 +433,7 @@ contains
 !
 ! logical function askinsetc(a,set)
 ! implicit none
-! complex(8),intent(in)::a,set(:)
+! complex(kind=DP),intent(in)::a,set(:)
 ! integer::sizei,i
 ! sizei=size(set)
 ! askinsetc=.false.
@@ -480,8 +481,8 @@ contains
 !
 ! integer function find_vec_in_array(vec,table)
 ! implicit none
-! real(8),dimension(:,:),intent(in)::table
-! real(8),dimension(:) :: vec
+! real(kind=DP),dimension(:,:),intent(in)::table
+! real(kind=DP),dimension(:) :: vec
 ! integer :: size1,i,jj
 ! size1=size(table(:,1))
 ! find_vec_in_array=0
@@ -508,8 +509,8 @@ contains
 ! subroutine SSORT__(n,ra)
 !       implicit none
 !       integer          :: n,l,ir,i,j
-!       real(8) :: ra(:)
-!       real(8) :: rra
+!       real(kind=DP) :: ra(:)
+!       real(kind=DP) :: rra
 !       l=n/2+1
 !       ir=n
 ! 10      continue
@@ -570,13 +571,13 @@ contains
 ! integer, intent(in)  ::  numbcross
 ! integer, dimension(numbcross), intent(in)  ::  Jdisorder
 ! integer, dimension(numbcross), intent(out)::  Jorder
-! real(8), dimension(numbcross,dim), intent(in)  ::  Idisorder
-! real(8), dimension(numbcross,dim), intent(out) ::  Iorder
-! real(8), dimension(numbcross) ::  norm
-! real(8)   ::  normeval,max
+! real(kind=DP), dimension(numbcross,dim), intent(in)  ::  Idisorder
+! real(kind=DP), dimension(numbcross,dim), intent(out) ::  Iorder
+! real(kind=DP), dimension(numbcross) ::  norm
+! real(kind=DP)   ::  normeval,max
 ! integer  ::  temp
 ! integer::  i,j
-! real(8), dimension(dim), intent(in)::  A
+! real(kind=DP), dimension(dim), intent(in)::  A
 !
 ! do i=1,numbcross
 ! normeval=norme(Idisorder(i,:) - A(:))
@@ -609,7 +610,7 @@ contains
 !  SUBROUTINE SORT (SIZ, ARR, numb)
 !  implicit none
 !   INTEGER*4   SIZ, i,j,numb(SIZ),TMP2
-!   real(8)      ARR(SIZ), TMP
+!   real(kind=DP)      ARR(SIZ), TMP
 !   do i=1,SIZ
 !    numb(i)=i
 !   enddo
@@ -639,7 +640,7 @@ contains
 
    function compare(f, g)
       implicit none
-      real(8) :: f, g
+      real(kind=DP) :: f, g
       integer :: compare
       if (f < g) then
          compare = -1
@@ -681,7 +682,7 @@ contains
 ! subroutine group_data_c(n1,array,array2,lbin)
 ! implicit none
 ! integer     :: n1
-! real(4)     :: array(n1),dist,temp,good
+! real(kind=SP)     :: array(n1),dist,temp,good
 ! complex     :: array2(n1)
 ! integer     :: lbin,i,j,k,l,m,n,siz,count
 ! complex     :: mean(n1)
@@ -727,10 +728,10 @@ contains
    subroutine group_data_rrr(n1, array, array2, array2b, lbin)
       implicit none
       integer     :: n1
-      real(8)     :: array(n1), dist, temp, good
-      real(8)     :: array2(n1), array2b(n1)
+      real(kind=DP)     :: array(n1), dist, temp, good
+      real(kind=DP)     :: array2(n1), array2b(n1)
       integer     :: lbin, i, siz, count
-      real(8)     :: mean(n1)
+      real(kind=DP)     :: mean(n1)
       integer     :: howmany(n1)
 
       siz = n1; temp = 0.; count = 0; good = 0.d0; howmany = 0; mean = 0.
@@ -774,10 +775,10 @@ contains
 ! subroutine group_data_rr(n1,array,array2,lbin)
 ! implicit none
 ! integer     :: n1
-! real(8)     :: array(n1),dist,temp,good
-! real(8)     :: array2(n1)
+! real(kind=DP)     :: array(n1),dist,temp,good
+! real(kind=DP)     :: array2(n1)
 ! integer     :: lbin,i,j,k,l,m,n,siz,count
-! real(8)     :: mean(n1)
+! real(kind=DP)     :: mean(n1)
 ! integer     :: howmany(n1)
 ! siz=n1; temp=0.;count=0; good=0.d0; howmany=0; mean=0.
 ! do i=1,siz
@@ -819,10 +820,10 @@ contains
 ! subroutine group_data_r(n1,array,array2,lbin)
 ! implicit none
 ! integer     :: n1
-! real(4)     :: array(n1),dist,temp,good
-! real(4)     :: array2(n1)
+! real(kind=SP)     :: array(n1),dist,temp,good
+! real(kind=SP)     :: array2(n1)
 ! integer     :: lbin,i,j,k,l,m,n,siz,count
-! real(4)     :: mean(n1)
+! real(kind=SP)     :: mean(n1)
 ! integer     :: howmany(n1)
 ! siz=n1; temp=0.;count=0; good=0.d0; howmany=0; mean=0.
 ! do i=1,siz
@@ -879,8 +880,8 @@ contains
 
    subroutine qsort_adj_array_veccs(array, order)
       implicit none
-      complex(4), dimension(:, :)                          :: array
-      complex(4), dimension(size(array, 1), size(array, 2))  :: backup
+      complex(kind=SP), dimension(:, :)                          :: array
+      complex(kind=SP), dimension(size(array, 1), size(array, 2))  :: backup
       integer, dimension(size(array, 2))                   :: order
       integer                                             :: j
       backup = array
@@ -893,8 +894,8 @@ contains
 
    subroutine qsort_adj_array_vecrs(array, order)
       implicit none
-      real(4), dimension(:, :)                          :: array
-      real(4), dimension(size(array, 1), size(array, 2))  :: backup
+      real(kind=SP), dimension(:, :)                          :: array
+      real(kind=SP), dimension(size(array, 1), size(array, 2))  :: backup
       integer, dimension(size(array, 2))                :: order
       integer                                          :: j
       backup = array
@@ -907,8 +908,8 @@ contains
 
    subroutine qsort_adj_array_vecc(array, order)
       implicit none
-      complex(8), dimension(:, :)                          :: array
-      complex(8), dimension(size(array, 1), size(array, 2))  :: backup
+      complex(kind=DP), dimension(:, :)                          :: array
+      complex(kind=DP), dimension(size(array, 1), size(array, 2))  :: backup
       integer, dimension(size(array, 2))                :: order
       integer                                          :: j
       backup = array
@@ -921,8 +922,8 @@ contains
 
    subroutine qsort_adj_array_vecr(array, order)
       implicit none
-      real(8), dimension(:, :)                          :: array
-      real(8), dimension(size(array, 1), size(array, 2))  :: backup
+      real(kind=DP), dimension(:, :)                          :: array
+      real(kind=DP), dimension(size(array, 1), size(array, 2))  :: backup
       integer, dimension(size(array, 2))                :: order
       integer                                          :: j
       backup = array
@@ -935,8 +936,8 @@ contains
 
    subroutine qsort_adj_array_r(array, order)
       implicit none
-      real(8), dimension(:)            :: array
-      real(8), dimension(size(array))  :: backup
+      real(kind=DP), dimension(:)            :: array
+      real(kind=DP), dimension(size(array))  :: backup
       integer, dimension(size(array)) :: order
       integer                         :: j
       backup = array
@@ -963,8 +964,8 @@ contains
 
    subroutine qsort_adj_array_c(array, order)
       implicit none
-      complex(8), dimension(:)            :: array
-      complex(8), dimension(size(array))  :: backup
+      complex(kind=DP), dimension(:)            :: array
+      complex(kind=DP), dimension(size(array))  :: backup
       integer, dimension(size(array))     :: order
       integer                             :: j
       backup = array
@@ -999,8 +1000,8 @@ contains
 
    subroutine qsort_array_r(array, order2)
       implicit none
-      real(8), dimension(:)                    :: array
-      real(8), dimension(size(array))          :: backup
+      real(kind=DP), dimension(:)                    :: array
+      real(kind=DP), dimension(size(array))          :: backup
       integer, dimension(size(array))          :: order
       integer, dimension(size(array)), optional :: order2
       integer                                 :: i
@@ -1086,7 +1087,7 @@ contains
 
    recursive subroutine qsort_sort(array, order, left, right)
       implicit none
-      real(8), dimension(:)         :: array
+      real(kind=DP), dimension(:)         :: array
       integer, dimension(:)         :: order
       integer                       :: left
       integer                       :: right
@@ -1172,7 +1173,7 @@ contains
    integer function qsort_rand(lower, upper)
       implicit none
       integer                       :: lower, upper
-      real(4)                       :: r
+      real(kind=SP)                       :: r
       r = real(drand1(), kind=4)
       qsort_rand = lower + nint(r*(upper - lower))
    end function qsort_rand
@@ -1192,10 +1193,10 @@ contains
 !       implicit none
 !       integer(4)                           :: res
 !       integer(4), intent(in)               :: l,r
-!       real(8), intent(in)                   :: b
-!       real(8), dimension(:)                 :: a
+!       real(kind=DP), intent(in)                   :: b
+!       real(kind=DP), dimension(:)                 :: a
 !       integer(4)                           :: i,j,m
-!       real(8)                               :: x
+!       real(kind=DP)                               :: x
 !       i=l
 !       j=r
 !       m=(l+r)/2
@@ -1222,8 +1223,8 @@ contains
 !   subroutine fastsearchrealwithdeg(xx,tab,jmin,jmax,err)
 !   implicit none
 !   integer          :: i,j,k,l,siz,jmin,jmax
-!   real(8)          :: xx,tab(:),err2
-!   real(8),optional :: err
+!   real(kind=DP)          :: xx,tab(:),err2
+!   real(kind=DP),optional :: err
 !
 !   err2=1.d-3
 !   if(present(err)) err2=err
@@ -1265,7 +1266,7 @@ contains
       !bissection non recursive
       !LES BIN COMMENCE A GAUCHE : gauche_bin_i=tab(xi)
       integer :: i1, i2, is, siz
-      real(4) :: xx, tab(:)
+      real(kind=SP) :: xx, tab(:)
       integer :: fastsearchreal_r
       siz = size(tab)
       is = siz/2
@@ -1324,7 +1325,7 @@ contains
       !bissection non recursive
       !LES BIN COMMENCE A GAUCHE : gauche_bin_i=tab(xi)
       integer :: i1, i2, is, siz
-      real(8)  :: xx, tab(:)
+      real(kind=DP)  :: xx, tab(:)
       integer :: fastsearchreal_d
       siz = size(tab)
       is = siz/2
@@ -1384,8 +1385,8 @@ contains
 !    !LES BIN COMMENCE A GAUCHE : gauche_bin_i=tab(xi)
 !
 !    integer                         :: i1,i2,is,siz,jj
-!    real(8),intent(in),dimension(:) :: tab
-!    real(8),intent(in)              :: xx,error
+!    real(kind=DP),intent(in),dimension(:) :: tab
+!    real(kind=DP),intent(in)              :: xx,error
 !    integer                         :: searchwitherror_r
 !    siz=size(tab(:))
 !    is=siz/2
@@ -1449,14 +1450,14 @@ contains
 !    !LES BIN COMMENCE A GAUCHE : gauche_bin_i=tab(xi)
 !
 !    integer                         :: i1,i2,is,siz,jj,calls
-!    real(8),intent(in),dimension(:) :: tab
-!    real(8),intent(in)              :: xx,error
+!    real(kind=DP),intent(in),dimension(:) :: tab
+!    real(kind=DP),intent(in)              :: xx,error
 !    integer                         :: searchwitherror_f
 !
 !    interface
-!     real(8) function func(x,i)
+!     real(kind=DP) function func(x,i)
 !     implicit none
-!     real(8)      :: x
+!     real(kind=DP)      :: x
 !     integer      :: i
 !     end function
 !    end interface
@@ -1534,9 +1535,9 @@ contains
 !     recursive subroutine qsortmm(a,order,l,r)
 !       implicit none
 !       integer*4,dimension(:)                 :: order
-!       real(8), dimension(:)                   :: a
+!       real(kind=DP), dimension(:)                   :: a
 !       integer*4                              :: i,j,l,r,temp
-!       real(8)                                 :: x, y
+!       real(kind=DP)                                 :: x, y
 !       i = l
 !       j = r
 !       x = a((l+r)/2)
@@ -1872,13 +1873,13 @@ contains
 ! !!!----------------------------------------------------------------------!!!
 !   !---------- Passed variables ----------
 !   INTEGER    :: flg,isrt(4)
-!   complex(8) :: e(4)
+!   complex(kind=DP) :: e(4)
 !   !---------- Local parameters ----------
-!   real(8), parameter :: eps = 1.d-6
+!   real(kind=DP), parameter :: eps = 1.d-6
 !   !---------- Local variables ----------
 !   INTEGER    :: p,q,idx
-!   real(8)    :: rez,imz
-!   complex(8) :: z,w,e_new(4)
+!   real(kind=DP)    :: rez,imz
+!   complex(kind=DP) :: z,w,e_new(4)
 !
 !   !---------- Set up prime number matrix ----------
 !   idx = 1
@@ -2005,10 +2006,10 @@ contains
 !
 ! SUBROUTINE Permute_TEV_g(ndim, zp, indx)
 !   IMPLICIT NONE
-!   complex(8), intent(inout) :: zp(ndim,4)
+!   complex(kind=DP), intent(inout) :: zp(ndim,4)
 !   INTEGER, intent(in)       :: ndim
 !   INTEGER, intent(in)       :: indx(ndim,4)
-!   complex(8) :: eval(ndim)
+!   complex(kind=DP) :: eval(ndim)
 !   INTEGER     :: i, p
 !   DO i=1,4
 !      DO p=1,ndim
@@ -2030,10 +2031,10 @@ contains
 !
 ! SUBROUTINE InversePermute_g(ndim, indx, wgh)
 !   IMPLICIT NONE
-!   complex(8), intent(inout) :: wgh(ndim,4)
+!   complex(kind=DP), intent(inout) :: wgh(ndim,4)
 !   INTEGER, intent(in)       :: ndim
 !   INTEGER, intent(in)       :: indx(ndim,4)
-!   complex(8)                :: eval(ndim)
+!   complex(kind=DP)                :: eval(ndim)
 !   INTEGER                   :: i, p
 !   DO i=1,4
 !      DO p=1,ndim
@@ -2062,18 +2063,18 @@ contains
 ! !!! corresponding manner.                                           !!!
 ! !!!-----------------------------------------------------------------!!!
 !   !---------- Passed variables ----------
-!   complex(8), intent(in) :: ev(ndim)         ! Array of eigenvalues
+!   complex(kind=DP), intent(in) :: ev(ndim)         ! Array of eigenvalues
 !   INTEGER, intent(out)   :: idxarr(ndim)     ! Index array which gives proper order
 !   INTEGER :: ndim                            ! Dimension of matrices
 !   !---------- Parameters ----------
-!   real(8), PARAMETER :: maxval = 1000.d0
+!   real(kind=DP), PARAMETER :: maxval = 1000.d0
 !   !---------- Local variables ----------
 !   LOGICAL, ALLOCATABLE :: sorted(:)
-!   real(8),  ALLOCATABLE :: sortonr(:)
+!   real(kind=DP),  ALLOCATABLE :: sortonr(:)
 !   INTEGER :: p
 !   INTEGER :: q
 !   INTEGER :: idx
-!   real(8)  :: min
+!   real(kind=DP)  :: min
 !   !---------- Allocate dynamic memory storage ----------
 !   ALLOCATE(sortonr(ndim), sorted(ndim))
 !   !---------- Initialize arrays ----------
@@ -2111,14 +2112,14 @@ contains
 !   IMPLICIT NONE
 !   !---------- Passed variables ----------
 !   INTEGER, intent(in)       :: idxarr(ndim)     ! Index array which gives proper order
-!   complex(8), intent(inout) :: ev(ndim)         ! Array of eigenvalues
-!   complex(8), intent(inout) :: evl(ndim,ndim)   ! Matrix of left eigenvectors  (row)
-!   complex(8), intent(inout) :: evr(ndim,ndim)   ! Matrix of right eigenvectors (column)
+!   complex(kind=DP), intent(inout) :: ev(ndim)         ! Array of eigenvalues
+!   complex(kind=DP), intent(inout) :: evl(ndim,ndim)   ! Matrix of left eigenvectors  (row)
+!   complex(kind=DP), intent(inout) :: evr(ndim,ndim)   ! Matrix of right eigenvectors (column)
 !   INTEGER :: ndim                               ! Dimension of matrices
 !   !---------- Local variables ------------------
 !   INTEGER :: p
-!   complex(8), ALLOCATABLE :: eval(:)
-!   complex(8), ALLOCATABLE :: evec(:,:)
+!   complex(kind=DP), ALLOCATABLE :: eval(:)
+!   complex(kind=DP), ALLOCATABLE :: evec(:,:)
 !   ALLOCATE(eval(ndim), evec(ndim,ndim))
 !   !---------- Permute the eigenvalues ----------
 !   DO p = 1,ndim
@@ -2150,11 +2151,11 @@ contains
 !   IMPLICIT NONE
 !   !---------- Passed variables ----------
 !   INTEGER, intent(in)       :: idxarr(ndim)     ! Index array which gives proper order
-!   complex(8), intent(inout) :: ev(ndim)         ! Array of eigenvalues
+!   complex(kind=DP), intent(inout) :: ev(ndim)         ! Array of eigenvalues
 !   INTEGER :: ndim                               ! Dimension of matrices
 !   !---------- Local variables ------------------
 !   INTEGER :: p
-!   complex(8), ALLOCATABLE :: eval(:)
+!   complex(kind=DP), ALLOCATABLE :: eval(:)
 !   ALLOCATE(eval(ndim))
 !   !---------- Permute the eigenvalues ----------
 !   DO p = 1,ndim

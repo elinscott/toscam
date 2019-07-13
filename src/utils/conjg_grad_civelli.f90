@@ -12,11 +12,11 @@ contains
 
       INTERFACE
          SUBROUTINE funct(n, x, val)
-            use genvar, only: DBL
+            use genvar, only: DP
             USE common_def
-            REAL(DBL), INTENT(OUT) :: val
+            REAL(DP), INTENT(OUT) :: val
             INTEGER, INTENT(IN)  :: n
-            REAL(DBL), INTENT(IN)  :: x(n)
+            REAL(DP), INTENT(IN)  :: x(n)
          END SUBROUTINE
       END INTERFACE
 

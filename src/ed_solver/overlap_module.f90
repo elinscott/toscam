@@ -19,7 +19,7 @@ contains
       use eigen_sector_class, only: eigensectorlist_type, gsenergy, nlowest, &
          partition
       use linalg, only: conj, dexpc, MPLX
-      use genvar, only: dbl, log_unit, pi
+      use genvar, only: dp, log_unit, pi
       use aim_class, only: aim2impbathstate, aim_type
       use common_def, only: dump_message, find_rank
       use sector_class, only: dimen_func, state_func
@@ -29,16 +29,16 @@ contains
       implicit none
 
       TYPE(AIM_type), INTENT(IN)             :: AIM
-      REAL(DBL), INTENT(IN)                  :: beta
+      REAL(DP), INTENT(IN)                  :: beta
       TYPE(eigensectorlist_type), INTENT(IN) :: GS
       TYPE(readable_vec_type), INTENT(INOUT) :: vec_list(:)
       TYPE(eigen_type), POINTER :: eigen => NULL()
       INTEGER                   :: isector, ieigen, iGS, nGS, ivec, iket, &
                                    AIMrank, IMPstate, BATHstate
-      REAL(DBL)                 :: boltz, Zpart, E0
-      COMPLEX(DBL)              :: coeff
-      COMPLEX(DBL), ALLOCATABLE :: overlap(:, :), roverlap(:, :)
-      REAL(DBL), ALLOCATABLE    :: phase_(:)
+      REAL(DP)                 :: boltz, Zpart, E0
+      COMPLEX(DP)              :: coeff
+      COMPLEX(DP), ALLOCATABLE :: overlap(:, :), roverlap(:, :)
+      REAL(DP), ALLOCATABLE    :: phase_(:)
       INTEGER                   :: nvec, nkets, kets(100)
 
       CALL dump_message(TEXT="######################################")
@@ -71,7 +71,7 @@ contains
       nGS = nlowest(GS)
 
       ALLOCATE (overlap(nvec, nGS))
-      overlap = 0.0_DBL
+      overlap = 0.0_DP
       iGS = 0
 
       DO isector = 1, GS%nsector
@@ -104,7 +104,8 @@ contains
       IF (nvec >= 1) THEN
          ALLOCATE (phase_(nGS), roverlap(nvec, nGS))
          DO iGS = 1, nGS
-            phase_(iGS) = ATAN2(AIMAG(overlap(1, iGS)), DBLE(overlap(1, iGS)))
+            phase_(iGS) = ATAN2(AIMAG(overlap(1, iGS)), &
+               real(overlap(1, iGS), kind=DP))
             roverlap(:, iGS) = overlap(:, iGS)*MPLX(-phase_(iGS))
          ENDDO
       ENDIF
@@ -118,7 +119,7 @@ contains
          write (log_unit, '(1000f8.5)') (abs(overlap(ivec, iGS)), iGS=1, nGS)
          write (log_unit, *) 'phase in each sectors (pi)  : '
          write (log_unit, '(1000f8.5)') (ATAN2(AIMAG(roverlap(ivec, iGS)), &
-                                               DBLE(roverlap(ivec, iGS)))/pi, iGS=1, nGS)
+               real(roverlap(ivec, iGS), kind=DP))/pi, iGS=1, nGS)
          write (log_unit, *) &
             '----------------------------------------------------'
       ENDDO

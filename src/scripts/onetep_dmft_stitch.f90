@@ -7,19 +7,21 @@ module variables
    use namelistmod
    use StringManip, only: tostring
    use linalg, only: norm
+   use genvar, only: DP
+
    character(20), allocatable :: leftsymbol(:), rightsymbol(:), devicesymbol(:)
-   real(8), allocatable       ::  leftcoord(:, :), rightcoord(:, :), devicecoord(:, :)
-   real(8)                   :: leftcarth(3, 3), rightcarth(3, 3), devicecarth(3, 3)
+   real(kind=DP), allocatable       ::  leftcoord(:, :), rightcoord(:, :), devicecoord(:, :)
+   real(kind=DP)                   :: leftcarth(3, 3), rightcarth(3, 3), devicecarth(3, 3)
    character(20), allocatable :: labels(:)
    integer, allocatable       :: orbitals(:)
    integer                   :: nlab
    character(20), allocatable :: leftshiftedsymbol(:), rightshiftedsymbol(:)
-   real(8), allocatable       ::  leftshiftedcoord(:, :), rightshiftedcoord(:, :)
+   real(kind=DP), allocatable       ::  leftshiftedcoord(:, :), rightshiftedcoord(:, :)
 
    integer                   :: d3, t1, t2, s, t
-   real(8)                   :: DDD(3), cutoff_same_site
+   real(kind=DP)                   :: DDD(3), cutoff_same_site
    integer, allocatable       :: device_in_LR_shifted(:), LR_in_LR_shifted(:)
-   real(8)                   :: v1(3), v2(3)
+   real(kind=DP)                   :: v1(3), v2(3)
    integer, allocatable       :: sites_in_device(:), sites_in_lr(:)
 
 contains

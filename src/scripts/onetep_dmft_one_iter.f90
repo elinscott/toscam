@@ -11,12 +11,13 @@ module fourier_transform_dmft_one_iter
 
    use linalg
    use specialFunction
+   use genvar, only: DP
 
    PRIVATE
    PUBLIC :: densfourier
 
    logical :: green_
-   real(8), parameter :: ddsign = -1.0
+   real(kind=DP), parameter :: ddsign = -1.0
 
 contains
 
@@ -29,13 +30,13 @@ contains
 !***********************************************!
 !***********************************************!
 
-   real(8) function densfourier(nw, beta, omi, green)
+   real(kind=DP) function densfourier(nw, beta, omi, green)
       implicit none
       integer           ::  i, j, k, nw
       integer, parameter ::  Ntau = 1
-      real(8)           ::  beta, tau(Ntau), omi(nw)
-      complex(8)        ::  Gtau(Ntau)
-      complex(8)        ::  green(1:nw), greensave(1:nw)
+      real(kind=DP)           ::  beta, tau(Ntau), omi(nw)
+      complex(kind=DP)        ::  Gtau(Ntau)
+      complex(kind=DP)        ::  green(1:nw), greensave(1:nw)
       greensave = green
       tau = (/(ddsign*0.00001d0, i=1, 1)/)
       call Fourier_(Ntau, nw, greensave, omi, Gtau, tau, beta, green=.true.)
@@ -52,8 +53,8 @@ contains
       use genvar, only: imi
       implicit none
       integer          :: nw
-      complex(8)       :: Giom(1:nw), temp(1:nw)
-      real(8)          :: iom(1:nw), ah, ahh, drsign, ddd
+      complex(kind=DP)       :: Giom(1:nw), temp(1:nw)
+      real(kind=DP)          :: iom(1:nw), ah, ahh, drsign, ddd
       integer          :: t, n, i, j
       logical          :: add
 
@@ -87,8 +88,8 @@ contains
    subroutine get_tail_parameters(nw, Giom, iom, ahh, ddd)
       implicit none
       integer          :: nw, kk
-      complex(8)       :: Giom(1:nw)
-      real(8)          :: iom(1:nw), ddd, ahh
+      complex(kind=DP)       :: Giom(1:nw)
+      real(kind=DP)          :: iom(1:nw), ddd, ahh
       ddd = get_ddd(nw, iom, Giom)
       ahh = get_ah(nw, iom, Giom)
       ahh = ahh/ddd
@@ -117,12 +118,12 @@ contains
    subroutine Fourier_(Ntau, nw, Giom, iom, Gtau_, tau, beta, green)
       implicit none
       integer    :: Ntau, nw, kk
-      complex(8) :: Giom(1:nw), Giomback(1:nw)
-      real(8)    :: iom(1:nw), tau(Ntau), ah, ahh, mm
-      complex(8) :: Gtau_(Ntau)
-      real(8)    :: beta, df, temp
-      complex(8) :: csum
-      real(8)    :: bb, ddd, ahh2, ddd2, g1, gn
+      complex(kind=DP) :: Giom(1:nw), Giomback(1:nw)
+      real(kind=DP)    :: iom(1:nw), tau(Ntau), ah, ahh, mm
+      complex(kind=DP) :: Gtau_(Ntau)
+      real(kind=DP)    :: beta, df, temp
+      complex(kind=DP) :: csum
+      real(kind=DP)    :: bb, ddd, ahh2, ddd2, g1, gn
       integer    :: t, n, i, j, itail
       real(16)   :: t1, t2, pp1, pp2
       logical    :: green
@@ -176,11 +177,11 @@ contains
 !************************************************/
 !************************************************/
 
-   real(8) function get_ddd(nw, iom, Giom)
+   real(kind=DP) function get_ddd(nw, iom, Giom)
       implicit none
       integer           :: nw
-      real(8)           :: iom(1:nw), ddd
-      complex(8)        :: Giom(1:nw)
+      real(kind=DP)           :: iom(1:nw), ddd
+      complex(kind=DP)        :: Giom(1:nw)
       if (green_) then
          get_ddd = 1.d0
       else
@@ -199,11 +200,11 @@ contains
 !************************************************/
 !************************************************/
 
-   real(8) function get_ah(nw, iom, Giom)
+   real(kind=DP) function get_ah(nw, iom, Giom)
       implicit none
       integer    :: nw
-      real(8)    :: iom(1:nw), ddd
-      complex(8) :: Giom(1:nw)
+      real(kind=DP)    :: iom(1:nw), ddd
+      complex(kind=DP) :: Giom(1:nw)
       integer    :: i, kk, p, ii, k
       get_ah = Real(Giom(nw))*(iom(nw)**2)
    end function
@@ -245,7 +246,7 @@ module onetep_variables
    use linalg, only: minloci, MPLX
    use namelistmod, only: namelist_set, namelist_init, putel_in_namelist, &
                               & look_for_namelist_in_file, look_for_command_line_argument
-   use genvar, only: imi, pi
+   use genvar, only: imi, pi, DP
    use matrix, only: diag, rearrange_columns_to_identity, QR_decomp, eigenvector_matrix_c_
    use StringManip, only: toString, StrInt2
    use strings, only: replace_in_string, string, assignment(=)
@@ -259,16 +260,16 @@ module onetep_variables
    logical           ::   average_green_ed, verysilent
    integer           ::   fmos_iter, fmos_hub_iter_mu
 logical           ::   fmos_use,fmos_fluc,fmos_hub1,sum_over_k_dft,keep_both_real_and_matsu_last,force_self_infty_real,double_counting_zero_self_from_matsu
-   real(8)           ::   fmos_mix, fmos_hub_range_mu
-   real(8)           ::   cutoff_simp_offdiag
+   real(kind=DP)           ::   fmos_mix, fmos_hub_range_mu
+   real(kind=DP)           ::   cutoff_simp_offdiag
    logical           ::   hf_average, hf_krauth, hf_hartree, ed_no_real_overide
    integer, parameter ::   nspec_frequ = 7   !The last nspec_frequ frequencies are for testing puroposes
    integer           ::   iwindow, nproc_mpi_solver, cubic, im_solver, real_solver, max_steps, followPeak, nsec, nsec0, ntauhf
-real(8)           ::   slater_inter_cutoff,amp_slight_sym_breaking,QQ,spin_orbit,UU,Jhund,StartLambda,EndLambda,alpha,dist_max
+real(kind=DP)           ::   slater_inter_cutoff,amp_slight_sym_breaking,QQ,spin_orbit,UU,Jhund,StartLambda,EndLambda,alpha,dist_max
    logical           ::   real_smat_coef
 logical           ::   ncpt_two_step_all_iter,rotation_scheme_read_write,double_counting_zero_self,double_counting_zero_self_av,ncpt_two_step,assume_proj_overlap_is_diagonal,amp_slight_sym_breaking_all_iter,use_precomputed_slater_matrix
-   real(8)           ::   fit_weight_power, double_counting_nf, mixing, ed_rdelta, ed_frequ_min, ed_frequ_max
-   real(8)           ::   ed_rdelta_frequ_eta1, ed_rdelta_frequ_T, ed_rdelta_frequ_w0
+   real(kind=DP)           ::   fit_weight_power, double_counting_nf, mixing, ed_rdelta, ed_frequ_min, ed_frequ_max
+   real(kind=DP)           ::   ed_rdelta_frequ_eta1, ed_rdelta_frequ_T, ed_rdelta_frequ_w0
    integer           ::   rotation_scheme, nmatsu_ed, nmatsu_ctqmc, nmatsu_long, mcs_ctqmc, openmp_solver
    integer           ::   n_frequ, ed_real_frequ, ed_real_frequ_last, paramagnetic_ed, sites_ed, niter_dmft, fit_nw
 logical           ::   rotation_scheme_pm,dmft_for_dimer,rotation_green_function,cluster_dmft_green_for_self_consistence,last_iter_is_real,ed_solver_compute_all_green_functions
@@ -284,8 +285,8 @@ logical           ::   double_counting_with_no_average,dimer_average_occupation,
    character(30)     ::   which_lanczos
    integer           ::   ed_nsearch, Neigen, Block_size, lowest_occupancy, highest_occupancy
    integer           ::   ncpt_approx
-   real(8)           ::   cpt_upper_bound, cpt_lagrange, tail_linear_scaling
-   complex(8)        ::   ccctemp, ccctemp_av
+   real(kind=DP)           ::   cpt_upper_bound, cpt_lagrange, tail_linear_scaling
+   complex(kind=DP)        ::   ccctemp, ccctemp_av
 
 contains
 
@@ -478,34 +479,34 @@ program onestep_dmft_iteration
    !---------------!
    implicit none
    logical                :: checkujmat
-   complex(8), allocatable :: green_(:, :, :, :), green_diag(:, :, :), green_temp(:, :), frequ_(:, :), sigma_mat(:, :, :, :)
-   real(8)                :: UU0, Jhund0
-   real(8), allocatable    :: UU_ren0(:, :), JJ_ren0(:, :), UU_ren(:, :), JJ_ren(:, :), double_counting(:, :), edcmatsu(:, :, :)
-   real(8), allocatable    :: eimp(:, :), eimp_nca(:, :)
-   real(8), allocatable    :: occupation_matrix(:, :), occupation_matrixup(:, :), occupation_matrixdn(:, :)
-real(8),allocatable    :: eimp_ed(:,:,:),Zimp_ren_p(:,:,:),Zimp_ren_m(:,:,:),Simp_back(:,:,:),Simp_m1(:,:,:),Simp_rot(:,:,:)
-   real(8), allocatable    :: Simp_root_m(:, :, :), Simp_root_p(:, :, :), Simp_root_gm(:, :, :), Simp_root_gp(:, :, :)
-   complex(8), allocatable :: ddiag(:, :), rotation(:, :, :), diagdens(:, :), mmat(:, :)
-   real(8)                :: denstarget(2)
+   complex(kind=DP), allocatable :: green_(:, :, :, :), green_diag(:, :, :), green_temp(:, :), frequ_(:, :), sigma_mat(:, :, :, :)
+   real(kind=DP)                :: UU0, Jhund0
+   real(kind=DP), allocatable    :: UU_ren0(:, :), JJ_ren0(:, :), UU_ren(:, :), JJ_ren(:, :), double_counting(:, :), edcmatsu(:, :, :)
+   real(kind=DP), allocatable    :: eimp(:, :), eimp_nca(:, :)
+   real(kind=DP), allocatable    :: occupation_matrix(:, :), occupation_matrixup(:, :), occupation_matrixdn(:, :)
+real(kind=DP),allocatable    :: eimp_ed(:,:,:),Zimp_ren_p(:,:,:),Zimp_ren_m(:,:,:),Simp_back(:,:,:),Simp_m1(:,:,:),Simp_rot(:,:,:)
+   real(kind=DP), allocatable    :: Simp_root_m(:, :, :), Simp_root_p(:, :, :), Simp_root_gm(:, :, :), Simp_root_gp(:, :, :)
+   complex(kind=DP), allocatable :: ddiag(:, :), rotation(:, :, :), diagdens(:, :), mmat(:, :)
+   real(kind=DP)                :: denstarget(2)
    integer                :: i, j, k, kk, channels, channelsb, atom, atomb
    integer                :: num, len__, status__, LL, paramagnetic
    character(200)         :: value(100), filename, filename_sigma(2), filename_edc
-   complex(8)             :: frequ
+   complex(kind=DP)             :: frequ
    character(3)           :: label
    character(400)         :: stringdat
-   real(8)                :: bbeta, mmu(2), occupation_orbital
+   real(kind=DP)                :: bbeta, mmu(2), occupation_orbital
    integer                :: iter_dmft, solver, real_or_imaginary_solver
    character(200)         :: dir_onetep
    character(200)         :: chartemp
    type(string)           :: cc_
-   real(8)                :: densupdn(2), Uaverage
+   real(kind=DP)                :: densupdn(2), Uaverage
    logical, allocatable    :: list_orb(:)
-   complex(8), allocatable :: UC(:, :, :, :, :)
-   real(8)                :: gck(0:3, -3:3, -3:3, 0:3)
-   real(8)                :: Fn(0:3, 0:3)
-   complex(8), allocatable :: T2C(:, :), T2Cp(:, :)
+   complex(kind=DP), allocatable :: UC(:, :, :, :, :)
+   real(kind=DP)                :: gck(0:3, -3:3, -3:3, 0:3)
+   real(kind=DP)                :: Fn(0:3, 0:3)
+   complex(kind=DP), allocatable :: T2C(:, :), T2Cp(:, :)
    integer, allocatable    :: UCC(:, :, :, :)
-   complex(8), allocatable :: UCCr(:, :, :)
+   complex(kind=DP), allocatable :: UCCr(:, :, :)
 
    call initialize_timing()
    
@@ -597,7 +598,7 @@ contains
       use common_def, only: utils_assert, utils_abort
 
       implicit none
-      complex(8)       ::  mat(channels, channels), sigout(2, ed_real_frequ, channels, channels)
+      complex(kind=DP)       ::  mat(channels, channels), sigout(2, ed_real_frequ, channels, channels)
       integer          ::  k, kk_, tt, j_
       logical          ::  test_
       logical, optional ::  keepboth
@@ -727,8 +728,8 @@ contains
       use common_def, only: utils_assert, utils_abort
 
       implicit none
-      real(8)          ::  temp(1 + 2*channels)
-      complex(8)       ::  mat(channels, channels), sigout(2, n_frequ, channels, channels)
+      real(kind=DP)          ::  temp(1 + 2*channels)
+      complex(kind=DP)       ::  mat(channels, channels), sigout(2, n_frequ, channels, channels)
       integer          ::  k, kk_, tt, ttt, j_
       logical          ::  full_, test_1, test_2
       logical, optional ::  keepboth
@@ -745,7 +746,7 @@ contains
 
       do kk_ = 1, j_
 
-         write (*, *) 'substracting double counting from Sigma : ', double_counting(kk_, :)
+         write (*, *) 'subtracting double counting from Sigma : ', double_counting(kk_, :)
 
          if ((solver == 1 .or. solver == 2 .or. solver == 3) .and. nmatsu_long > 0) then
             call copy_sigma_position_nlong_to_position_nw_minus_1(filename_sigma(kk_))
@@ -924,10 +925,10 @@ contains
       use timer_mod,  only: start_timer, stop_timer
 
       implicit none
-      complex(8)   ::  mat_tmp0(2*LL + 1, 2*LL + 1), mat_tmp20(2*(2*LL + 1), 2*(2*LL + 1))
-      complex(8)   ::   mat_tmp(2*LL + 1, 2*LL + 1), mat_tmp2(2*(2*LL + 1), 2*(2*LL + 1))
-      real(8)      ::  ttmp(4*(2*LL + 1))
-      real(8)      ::  U_(channels, channels), rot_trans_pm(2*LL + 1, 2*LL + 1), rot_trans_af((2*LL + 1)*2, (2*LL + 1)*2)
+      complex(kind=DP)   ::  mat_tmp0(2*LL + 1, 2*LL + 1), mat_tmp20(2*(2*LL + 1), 2*(2*LL + 1))
+      complex(kind=DP)   ::   mat_tmp(2*LL + 1, 2*LL + 1), mat_tmp2(2*(2*LL + 1), 2*(2*LL + 1))
+      real(kind=DP)      ::  ttmp(4*(2*LL + 1))
+      real(kind=DP)      ::  U_(channels, channels), rot_trans_pm(2*LL + 1, 2*LL + 1), rot_trans_af((2*LL + 1)*2, (2*LL + 1)*2)
       integer      ::  i_, i, ii, jj, kk, nheaders, ngwfs_indexes(2*LL + 1)
       logical      ::  check, check_ngwfs, extend
 
@@ -1563,7 +1564,7 @@ contains
    subroutine getting_S_matrix_from_Green(Smat, COEF, channels, kk_, silent, inverse)
       implicit none
       integer          :: kk_, channels, kkk
-      complex(8)       :: COEF(channels), dummy(channels, channels), Smat(channels, channels)
+      complex(kind=DP)       :: COEF(channels), dummy(channels, channels), Smat(channels, channels)
       logical, optional :: silent, inverse
 
       !-------------------------------!
@@ -1629,7 +1630,7 @@ contains
    function s_mat_from_onetep(kk, channels)
       implicit none
       integer          :: channels
-      complex(8)       :: s_mat_from_onetep(channels, channels)
+      complex(kind=DP)       :: s_mat_from_onetep(channels, channels)
       integer          :: kk
       s_mat_from_onetep = green_(kk, n_frequ - 3, :, :)
       if (real_smat_from_onetep) s_mat_from_onetep = real(s_mat_from_onetep)
@@ -1641,7 +1642,7 @@ contains
    function eimp_mat_from_onetep(kk, channels)
       implicit none
       integer          :: channels
-      complex(8)       :: eimp_mat_from_onetep(channels, channels)
+      complex(kind=DP)       :: eimp_mat_from_onetep(channels, channels)
       integer          :: kk
       eimp_mat_from_onetep = green_(kk, n_frequ - 4, :, :)
       if (real_eimp_from_onetep) eimp_mat_from_onetep = real(eimp_mat_from_onetep)
@@ -1653,7 +1654,7 @@ contains
    function eimp_mat_from_tail(kk, channels)
       implicit none
       integer          ::  channels
-      complex(8)       ::  eimp_mat_from_tail(channels, channels)
+      complex(kind=DP)       ::  eimp_mat_from_tail(channels, channels)
       integer          ::  kk
       eimp_mat_from_tail = green_(kk, n_frequ - 1, :, :)
       if (real_eimp_from_tail) eimp_mat_from_tail = real(eimp_mat_from_tail)
@@ -1665,7 +1666,7 @@ contains
    function eimp_diag_from_tail(kk, channels)
       implicit none
       integer          ::  channels
-      complex(8)       ::  eimp_diag_from_tail(channels)
+      complex(kind=DP)       ::  eimp_diag_from_tail(channels)
       integer          ::  kk
       eimp_diag_from_tail = diag(green_(kk, n_frequ - 1, :, :))
       if (real_eimp_from_tail) eimp_diag_from_tail = real(eimp_diag_from_tail)
@@ -1677,7 +1678,7 @@ contains
    function sproj_mat_from_onetep(kk, channels)
       implicit none
       integer          :: channels
-      complex(8)       :: sproj_mat_from_onetep(channels, channels)
+      complex(kind=DP)       :: sproj_mat_from_onetep(channels, channels)
       integer          :: kk
       sproj_mat_from_onetep = green_(kk, n_frequ - 5, :, :)
       if (real_sproj_from_onetep) sproj_mat_from_onetep = real(sproj_mat_from_onetep)
@@ -1695,11 +1696,11 @@ contains
       implicit none
       logical       :: check
       integer       :: kk_, kkk
-      real(8)       :: tt, tmp_read(1 + 2*channels), tmp1, tmp2, ah(channels), bh(channels), vvv(channels), temp(1 + 2*channels)
-      real(8)       :: ahl(channels), bhl(channels), ahlmat(channels, channels), bhlmat(channels, channels)
-      real(8)       :: ahmat(channels, channels), bhmat(channels, channels)
-      complex(8)    :: COEF(channels), dummy(channels, channels), Smat(channels, channels), iwplusmu(channels, channels)
-      complex(8)    :: himp(channels, channels), Simp(channels, channels), sinfty(channels, channels), tmp__(channels, channels)
+      real(kind=DP)       :: tt, tmp_read(1 + 2*channels), tmp1, tmp2, ah(channels), bh(channels), vvv(channels), temp(1 + 2*channels)
+      real(kind=DP)       :: ahl(channels), bhl(channels), ahlmat(channels, channels), bhlmat(channels, channels)
+      real(kind=DP)       :: ahmat(channels, channels), bhmat(channels, channels)
+      complex(kind=DP)    :: COEF(channels), dummy(channels, channels), Smat(channels, channels), iwplusmu(channels, channels)
+      complex(kind=DP)    :: himp(channels, channels), Simp(channels, channels), sinfty(channels, channels), tmp__(channels, channels)
       character(30) :: delta_filename
       integer       :: i1__, j1__
 
@@ -2378,10 +2379,10 @@ contains
       use common_def, only: utils_unit, utils_assert, utils_abort
 
       implicit none
-      real(8)                :: ttemp
+      real(kind=DP)                :: ttemp
       integer                :: klm, ien, pub_dmft_points, uuu(1), kk_
       integer                :: i_, iii, jjj
-      complex(8), allocatable :: Qmat(:, :), Rmat(:, :)
+      complex(kind=DP), allocatable :: Qmat(:, :), Rmat(:, :)
       logical                :: check
       integer                :: funit
 
@@ -2694,7 +2695,7 @@ contains
 
    subroutine rotate_green_sigma(mat, kk_)
       implicit none
-      complex(8) :: mat(:, :)
+      complex(kind=DP) :: mat(:, :)
       integer    :: kk_
       if (.not. rotation_green_function) return
       mat = MATMUL(MATMUL(transpose(rotation(:, :, kk_)), mat), rotation(:, :, kk_))
@@ -2704,7 +2705,7 @@ contains
 
    subroutine rotate_back_sigma(mat, kk_)
       implicit none
-      complex(8) :: mat(:, :)
+      complex(kind=DP) :: mat(:, :)
       integer    :: kk_
       if (.not. rotation_green_function) return
       mat = MATMUL(MATMUL(rotation(:, :, kk_), mat), transpose(rotation(:, :, kk_)))
@@ -2714,14 +2715,14 @@ contains
 
    subroutine rotate_sigma_ortho(mat, kk_)
       implicit none
-      complex(8) :: mat(:, :)
+      complex(kind=DP) :: mat(:, :)
       integer    :: kk_
       mat = MATMUL(MATMUL(transpose(Simp_root_m(kk_, :, :)), mat), Simp_root_m(kk_, :, :))
    end subroutine
 
    subroutine rotate_green_ortho(mat, kk_)
       implicit none
-      complex(8) :: mat(:, :)
+      complex(kind=DP) :: mat(:, :)
       integer    :: kk_
       mat = MATMUL(MATMUL(transpose(Simp_root_gm(kk_, :, :)), mat), Simp_root_gm(kk_, :, :))
    end subroutine
@@ -2730,7 +2731,7 @@ contains
 
    subroutine rotate_back_sigma_ortho(mat, kk_)
       implicit none
-      complex(8) :: mat(:, :)
+      complex(kind=DP) :: mat(:, :)
       integer    :: kk_
       mat = MATMUL(MATMUL(transpose(Simp_root_p(kk_, :, :)), mat), Simp_root_p(kk_, :, :))
    end subroutine
@@ -2757,10 +2758,10 @@ contains
       use common_def, only: utils_abort
 
       implicit none
-      complex(8)       :: delta(:), frequ(:)
+      complex(kind=DP)       :: delta(:), frequ(:)
       integer          :: ii, i, j, k, nn, i1, i2, i3, countit
-      real(8)          :: my_eimp_cor, my_eimp, w1, w2, w3, a, b, c, d1i, d2i, d3i, test, d1r, d2r, d3r
-      real(8)          :: distance(2), temp, a_(2), b_(2), e_(2), t1(2), t2(2), d
+      real(kind=DP)          :: my_eimp_cor, my_eimp, w1, w2, w3, a, b, c, d1i, d2i, d3i, test, d1r, d2r, d3r
+      real(kind=DP)          :: distance(2), temp, a_(2), b_(2), e_(2), t1(2), t2(2), d
       logical, optional :: left
 
       countit = 0
@@ -3009,9 +3010,9 @@ contains
 
    function extended_delta_real_frequ(kk_, ii)
       implicit none
-      real(8)    :: extended_delta_real_frequ
+      real(kind=DP)    :: extended_delta_real_frequ
       integer    :: i, j, k, l, ii, kk_
-      real(8)    :: w0, wf, wstep
+      real(kind=DP)    :: w0, wf, wstep
       w0 = myfrequ(kk_, 1)
       wf = myfrequ(kk_, n_frequ)
       wstep = (wf - w0)/dble(n_frequ - 1)
@@ -3023,10 +3024,10 @@ contains
 
    function extended_delta(kk_, ii, ah, bh)
       implicit none
-      real(8)    :: extended_delta(2*channels + 1), ah(channels), bh(channels)
+      real(kind=DP)    :: extended_delta(2*channels + 1), ah(channels), bh(channels)
       integer    :: i, j, k, l, ii, kk_
-      real(8)    :: w0, wf, wstep
-      complex(8) :: ww, tmp(channels)
+      real(kind=DP)    :: w0, wf, wstep
+      complex(kind=DP) :: ww, tmp(channels)
 
       if (real_or_imaginary_solver == 1) then
          w0 = myfrequ(kk_, 1)
@@ -3059,11 +3060,11 @@ contains
 
    function extended_delta_el(kk_, ii, ah, bh)
       implicit none
-      complex(8) :: extended_delta_el
-      real(8)    :: ah, bh
+      complex(kind=DP) :: extended_delta_el
+      real(kind=DP)    :: ah, bh
       integer    :: i, j, k, l, ii, kk_
-      real(8)    :: w0, wf, wstep, wwext
-      complex(8) :: ww, tmp
+      real(kind=DP)    :: w0, wf, wstep, wwext
+      complex(kind=DP) :: ww, tmp
 
       if (real_or_imaginary_solver == 1) then
          w0 = myfrequ(kk_, 1)
@@ -3106,7 +3107,7 @@ contains
 
       implicit none
       character*(*)  ::  filenamesig
-      real(8)        ::  temp(nmatsu_long, 2*channels + 1)
+      real(kind=DP)        ::  temp(nmatsu_long, 2*channels + 1)
       integer        :: funit
 
       funit = utils_unit()
@@ -3166,7 +3167,7 @@ contains
    !====================!
    !====================!
 
-   real(8) function myfrequ(kk_, ii)
+   real(kind=DP) function myfrequ(kk_, ii)
       implicit none
       integer :: ii, kk_
       if (real_or_imaginary_solver == 2) then
@@ -3191,8 +3192,8 @@ contains
 
    function Rotate_jj_spin_orbit_for_f()
       implicit none
-      real(8)    :: tt(14, 28), ttt(14, 28)
-      complex(8) :: tj(14, 14), tc(14, 14), Rc(14, 14), Rotate_jj_spin_orbit_for_f(14, 14)
+      real(kind=DP)    :: tt(14, 28), ttt(14, 28)
+      complex(kind=DP) :: tj(14, 14), tc(14, 14), Rc(14, 14), Rotate_jj_spin_orbit_for_f(14, 14)
       integer    :: i, k, l, m, ispin
 
        tt(1, 1:28) =  [ 0.92582010d0, 0d0,   0d0, 0d0,   0d0, 0d0,   0d0, 0d0,   0d0, 0d0,   0d0, 0d0,   0d0, 0d0,   0d0, 0d0,  -0.37796447d0, 0d0,   0d0, 0d0,   0d0, 0d0,   0d0, 0d0,   0d0, 0d0,   0d0, 0d0]
@@ -3263,8 +3264,8 @@ contains
       use common_def, only: utils_abort
 
       implicit none
-      complex(8) :: matup(:, :), matdn(:, :), mat(size(matup, 1) + size(matdn, 1), size(matup, 2) + size(matdn, 2))
-      complex(8) :: rotmat(size(matup, 1) + size(matdn, 1), size(matup, 2) + size(matdn, 2))
+      complex(kind=DP) :: matup(:, :), matdn(:, :), mat(size(matup, 1) + size(matdn, 1), size(matup, 2) + size(matdn, 2))
+      complex(kind=DP) :: rotmat(size(matup, 1) + size(matdn, 1), size(matup, 2) + size(matdn, 2))
       integer    :: kk_, i
       if (.not. rotation_green_function) return
       i = size(matup, 1)
@@ -3294,8 +3295,8 @@ contains
       use common_def, only: utils_abort
 
       implicit none
-      complex(8) :: matup(:, :), matdn(:, :), mat(size(matup, 1) + size(matdn, 1), size(matup, 2) + size(matdn, 2))
-      complex(8) :: rotmat(size(matup, 1) + size(matdn, 1), size(matup, 2) + size(matdn, 2))
+      complex(kind=DP) :: matup(:, :), matdn(:, :), mat(size(matup, 1) + size(matdn, 1), size(matup, 2) + size(matdn, 2))
+      complex(kind=DP) :: rotmat(size(matup, 1) + size(matdn, 1), size(matup, 2) + size(matdn, 2))
       integer    :: kk_, i
       if (.not. rotation_green_function) return
       i = size(matup, 1)
@@ -3326,9 +3327,9 @@ contains
 
       implicit none
       integer    :: j_, i, j, k, kk_, iii, jjj
-      real(8)    :: zav, dummy(channels, channels)
-      complex(8) :: temp_mat(channels, channels)
-      complex(8) :: Smatloc(2, channels, channels), COEFloc(2, channels)
+      real(kind=DP)    :: zav, dummy(channels, channels)
+      complex(kind=DP) :: temp_mat(channels, channels)
+      complex(kind=DP) :: Smatloc(2, channels, channels), COEFloc(2, channels)
       logical    :: test
 
       if (paramagnetic == 1) then
@@ -3388,9 +3389,9 @@ contains
       do kk_ = 1, j_
          do i = 1, n_frequ
             if (.not. double_counting_zero_self .and. maxval(abs(double_counting(kk_, :))) < 1.d-5 .and. abs(UU) > 1.d-5) then
-               write (*, '(a)') ' WARNING: double counting is undefined : '
-               write (*, *) ' UU,double counting                 : ', UU, double_counting(kk_, :)
-               call utils_abort('Double counting is undefined')
+               write (*, '(a)') ' WARNING: double counting is undefined/zero'
+               ! write (*, *) ' UU,double counting                 : ', UU, double_counting(kk_, :)
+               ! call utils_abort('Double counting is undefined')
             endif
             if (maxval(abs(sigma_mat(kk_, n_frequ, :, :))) > 1.d-5) then
                do k = 1, channels
@@ -3508,15 +3509,15 @@ contains
    !====================!
 
    subroutine matrix_square_root(matin, root_gp, root_gm, root_p, root_m, ZZ_p, ZZ_m, rot)
-      real(8)  ::  matin(:, :)
-      real(8)  ::  root_p(size(matin, 1), size(matin, 2)), vaps(size(matin, 1))
-      real(8)  ::  root_m(size(matin, 1), size(matin, 2))
-      real(8)  ::  root_gp(size(matin, 1), size(matin, 2))
-      real(8)  ::  root_gm(size(matin, 1), size(matin, 2))
-      real(8)  ::  tmp_mat_offdiag(size(matin, 1), size(matin, 2))
-      real(8)  ::  vec(size(matin, 1), size(matin, 2)), temp(size(matin, 1), size(matin, 2))
-      real(8)  ::  WORK(3*size(matin, 1)), ZZ_p(size(matin, 1), size(matin, 2)), ZZ_m(size(matin, 1), size(matin, 2))
-      real(8)  ::  rot(size(matin, 1), size(matin, 2))
+      real(kind=DP)  ::  matin(:, :)
+      real(kind=DP)  ::  root_p(size(matin, 1), size(matin, 2)), vaps(size(matin, 1))
+      real(kind=DP)  ::  root_m(size(matin, 1), size(matin, 2))
+      real(kind=DP)  ::  root_gp(size(matin, 1), size(matin, 2))
+      real(kind=DP)  ::  root_gm(size(matin, 1), size(matin, 2))
+      real(kind=DP)  ::  tmp_mat_offdiag(size(matin, 1), size(matin, 2))
+      real(kind=DP)  ::  vec(size(matin, 1), size(matin, 2)), temp(size(matin, 1), size(matin, 2))
+      real(kind=DP)  ::  WORK(3*size(matin, 1)), ZZ_p(size(matin, 1), size(matin, 2)), ZZ_m(size(matin, 1), size(matin, 2))
+      real(kind=DP)  ::  rot(size(matin, 1), size(matin, 2))
       integer  ::  i, j, k, l, nn, ierr
 
       nn = size(matin, 1)
@@ -3586,7 +3587,7 @@ contains
       implicit none
       integer                :: klm
       integer                :: i_, ii1, ii2
-      real(8)                :: tt1_, tt2_(2), occup, Utmp, Jtmp, occup1, occup2
+      real(kind=DP)                :: tt1_, tt2_(2), occup, Utmp, Jtmp, occup1, occup2
       logical                :: test
 
       if (dmft_for_dimer) then
@@ -3729,10 +3730,10 @@ contains
 
       use common_def, only: utils_assert
 
-      real(8)    :: A_trans(:, :), rot_dmft(:, :)
+      real(kind=DP)    :: A_trans(:, :), rot_dmft(:, :)
       logical    :: extend, check
-      real(8)    :: matmul_ex(size(A_trans, 1), size(A_trans, 2))
-      real(8)    :: temp(size(A_trans, 1), size(A_trans, 2))
+      real(kind=DP)    :: matmul_ex(size(A_trans, 1), size(A_trans, 2))
+      real(kind=DP)    :: temp(size(A_trans, 1), size(A_trans, 2))
       integer    :: i, j, k, l, i1, i2, j1, j2
 
       i1 = size(A_trans, 1); i2 = size(A_trans, 2)
@@ -3777,9 +3778,9 @@ contains
       use common_def, only: utils_assert
 
       implicit none
-      real(8)    :: ctg, Qp, Rm, Rp, Qm, xb, xa, phi
+      real(kind=DP)    :: ctg, Qp, Rm, Rp, Qm, xb, xa, phi
       integer    :: i, m
-      complex(8) :: T2Cp(:, :), T2C(size(T2Cp, 2), size(T2Cp, 1))
+      complex(kind=DP) :: T2Cp(:, :), T2C(size(T2Cp, 2), size(T2Cp, 1))
 
       write (*, *) 'Updating phases of T2C'
 
@@ -3858,8 +3859,8 @@ contains
       implicit none
       INTEGER                 :: i1, i2, i3, i4, m1, m2, m3, m4, shft
       INTEGER                 :: nw
-      complex(8)              :: dsum
-      real(8)                 :: U, J
+      complex(kind=DP)              :: dsum
+      real(kind=DP)                 :: U, J
       integer                 :: imin, imax, kkk, kkk_max
 
       call cmp_all_Gaunt(gck)
@@ -3937,7 +3938,7 @@ contains
       use common_def, only: utils_assert
 
       implicit none
-      real(8) :: U, Jh
+      real(kind=DP) :: U, Jh
       integer :: i, j, k, checkit
 
       if (solver < 4) then

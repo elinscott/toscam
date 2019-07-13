@@ -7,6 +7,7 @@
 
 module dmft_variables
    use common_def, only: utils_system_call
+   use genvar, only: DP
    use namelistmod, only: namelist_set, namelist_init, putel_in_namelist, &
                                     & look_for_namelist_in_file, look_for_command_line_argument
    use strings, only: replace_in_string, string, assignment(=)
@@ -17,7 +18,7 @@ module dmft_variables
                           nproc, nproc_onetep, nproc_mpi_solver, openmp_solver
    character(2000)    ::  CASE_ONETEP, dir_onetep, exec_onetep, dir_onetep_mpi
    character(60)      ::  mach_onetep
-   real(8)            ::  ed_frequ_min, ed_frequ_max
+   real(kind=DP)            ::  ed_frequ_min, ed_frequ_max
 logical            ::  split_onetep,start_from_an_old_sim,all_local_host,just_onetep,compute_dos,numa,dmft_split,dmft_splitkdmftall,nomachinefile
    integer            ::  dmft_splitk_batch, nproc_onetep_openmp_
    logical            ::  hide_errors
@@ -86,8 +87,7 @@ contains
    subroutine replace_it(string1, string2)
       implicit none
       character*(*) :: string1, string2
-      call utils_system_call(" sed 's/"//string1//"/"//string2//"/' *.dat > scratch ")
-      call utils_system_call(" mv scratch "//TRIM(ADJUSTL(CASE_ONETEP))//".dat")
+      call utils_system_call(" sed -i 's/"//string1//"/"//string2//"/' *.dat")
    end subroutine
 
    !-------------------------!
@@ -260,7 +260,7 @@ contains
 
    subroutine check_flag_consistency
 
-      use common_def, only: utils_assert
+      use common_def, only: utils_assert, utils_system_call
 
       if (dmft_splitkdmftall) then
          if (dmft_splitk_batch < 1) dmft_splitk_batch = 1
@@ -275,12 +275,15 @@ contains
       if (nproc_onetep == 1 .and. .not. dmft_splitkdmftall) split_onetep = .false.
 
       if (compute_dos) then
-         write (*, *) 'compute dos, split onetep set to true'
          call replace_it("SINGLEPOINT", "PROPERTIES")
          call replace_it("singlepoint", "PROPERTIES")
-         split_onetep = .true. ! to receive the right command line arguments in onetep dmft module (to get 5 command line arguments)
+         ! ebl: disabling ONETEP splitting (it has not been thoroughly tested
+         ! in the latest ONETEP version)
+         split_onetep = .false.
          just_onetep = .true.
          restart_from_iteration_number = 0
+         ! ebl: using new syntax for switching to zero-temperature calculation
+         call utils_system_call("update_case_file dmft_complex_freq F")
       endif
 
       call utils_assert(nproc == 1 .or. nproc_mpi_solver == 1, 'Error &
@@ -480,9 +483,12 @@ contains
 
          if (.not. split_onetep) then
             if (.not. nomachinefile) then; mach_arg = ' -machinefile '; else; mach_arg = '     '; endif; 
-            command_line = build_mpi_command_line(prefix=" ", np=nproc_onetep, p=1, omp=nproc_onetep_openmp_, mach=mach_onetep,&
-                                           & mach_arg=mach_arg, args=CASE_ONETEP, exe=exec_onetep,&
-  & outputin=trim(adjustl(case_onetep))//"_"//TRIM(ADJUSTL(toString(iter_dmft)))//".onetep", hide_errors=hide_errors, localhost="F")
+            command_line = build_mpi_command_line(prefix=" ", np=nproc_onetep, p=1, &
+                           omp=nproc_onetep_openmp_, mach=mach_onetep,&
+                           mach_arg=mach_arg, args=CASE_ONETEP, exe=exec_onetep,&
+                           outputin=trim(adjustl(case_onetep)) // "_" // &
+                           TRIM(ADJUSTL(toString(iter_dmft))) // ".onetep", &
+                           hide_errors=.false., localhost="F")
             call utils_system_call(trim(adjustl(command_line)), abort=.true., &
                                    report=.true.)
          else
@@ -563,7 +569,7 @@ contains
 
                   command_line = build_mpi_command_line(prefix=prefix, np=nprocess, p=1, omp=nproc_onetep_openmp_, mach=mach_file,&
                                                    & mach_arg=mach_arg, args=args, exe=exec_onetep,&
-                                                   & outputin=output, hide_errors=hide_errors, localhost=lochost, ampersand=.true.)
+                                                   & outputin=output, hide_errors=.false., localhost=lochost, ampersand=.true.)
 
                   write (*, *) ' command line for proc [x], total : ', i, nproc_onetep
                   call utils_system_call(command_line, abort=.true.)

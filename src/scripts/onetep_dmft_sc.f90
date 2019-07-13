@@ -10,6 +10,7 @@ module dmft_variables_sc
 !  use plotlib, only : plotarray
 ! #endif
 
+   use genvar, only: DP
    use namelistmod, only: namelist_set, namelist_init, putel_in_namelist, &
                                     & look_for_namelist_in_file, look_for_command_line_argument
    use strings, only: replace_in_string, string, assignment(=)
@@ -18,22 +19,22 @@ module dmft_variables_sc
 
 integer            ::  iter_restart_sc,niter_dft_dmft_sc,niter_sc_dmft,niter_sc_dft,nproc_mpi_solver,nproc_gpu,nproc_store,nproc,niter_sc_dft_first,niter_dmft_mu,niter_kernel_mu,kerneliter,kerneliterINIT,NGWF_CGiter,diis_max
    integer            ::  spin_breaking_iter, ncpt_two_step_iter
-   real(8)            ::  spin_breaking_amp
+   real(kind=DP)            ::  spin_breaking_amp
    character(2000)    ::  CASE_ONETEP, dir_onetep, exec_onetep, dir_onetep_mpi
    type(namelist_set) ::  nm
    logical            :: sandwitch_embedding, erase_chem, monitor_gpu_temperature, copy_kernel, protect_projectors,onlygammakernel
    logical            :: sc_start_from_previous_run, flag_turn_off_dmft, flag_turn_off_store
    logical            :: use_previous_dmft_files, use_same_self_energy, debug_mode_erase_sigma, fully_sc_h
-   real(8)            :: hydrogenic_projectors
+   real(kind=DP)            :: hydrogenic_projectors
    logical            :: restart_from_older_dft
    integer            :: dmft_kernel_process, dmft_spin, onetep_spin, nproc_onetep_openmp
 logical            :: KS_shift,purify_sc,tough_converge,kernelfix_only_first_iter,nokernelupdate,fully_sc,numa,store_sig_in_scratch,real_axis_only_last_step
-   real(8)            :: mixing_dft_dmft, kernel_cutoff, cutoff_energy, mu_diff
-   real(8)            :: dpmin, dpmax
+   real(kind=DP)            :: mixing_dft_dmft, kernel_cutoff, cutoff_energy, mu_diff
+   real(kind=DP)            :: dpmin, dpmax
    integer            :: iter_lin, nkpoints
    logical            :: matsu_solver, improve_mu_conv, save_atoms_at_each_steps
    logical            :: lin_scaling, dmft_split, dmft_splitk, no_frequ_split
-   real(8)            :: lin_window
+   real(kind=DP)            :: lin_window
    integer            :: lin_nval, nfrequencies_dmft_dft, dmft_splitk_batch
    integer            :: nprocess_
    character(2000)    :: prefix_, args_, output_, mach_arg_, mach_file_
@@ -384,7 +385,7 @@ program dmftonetep
    character(8000)            :: command_line
    logical                    :: flag_onetep_producing_only_up_spin, check_mu
    type(string)               :: cc_
-   real(8), allocatable        :: chem_pots(:, :)
+   real(kind=DP), allocatable        :: chem_pots(:, :)
    logical                    :: spoil, diis
 
    call header

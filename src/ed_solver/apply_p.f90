@@ -1,6 +1,6 @@
 MODULE apply_P
 
-   use genvar, only: DBL
+   use genvar, only: DP
 
    implicit none
 
@@ -213,7 +213,7 @@ contains
             ! FIRST WE CREATE THE OUTPUT VECTOR IN THE RELEVANT SECTOR
 
             eigen_out%rank = iP
-            eigen_out%vec%rc = 0.0_DBL
+            eigen_out%vec%rc = 0.0_DP
 
             ! THEN WE SELECT RELEVANT MULTIPLET
             ! THEN PARSE THE INPUT SECTOR TO APPLY RELEVANT PERMUTATION OPERATOR
@@ -221,7 +221,7 @@ contains
             IF (ASSOCIATED(es%sector%sz)) THEN ! Sz-SECTOR
                ALLOCATE (Pket(nprod))
                DO istate = 1, es%sector%sz%dimen
-                  IF (eigen_in%vec%rc(istate) /= 0.0_DBL) THEN
+                  IF (eigen_in%vec%rc(istate) /= 0.0_DP) THEN
                      CALL new_ket(ket_in, es%sector%sz%state(istate), Ns2)
                      CALL Psz(Pket, multiplet(iP, :), ket_in)
                      DO iprod = 1, nprod
@@ -242,7 +242,7 @@ contains
                   CALL Pupdo(Pket_do, multiplet(iP, :), 2, ket_in_do)
                   DO iup = 1, es%sector%updo%up%dimen
                      istate = rankupdo(iup, ido, es%sector%updo)
-                     IF (eigen_in%vec%rc(istate) /= 0.0_DBL) THEN
+                     IF (eigen_in%vec%rc(istate) /= 0.0_DP) THEN
                         CALL new_ket(ket_in_up, es%sector%updo%up%state(iup), &
                                      Ns)
                         CALL Pupdo(Pket_up, multiplet(iP, :), 1, ket_in_up)

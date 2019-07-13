@@ -8,7 +8,7 @@ MODULE correl_class
    ! USE impurity_class
    ! USE mesh
    use frequency_class, only: freq_type
-   use genvar, only: DBL
+   use genvar, only: DP
    use globalvar_ed_solver, only: istati
    use masked_matrix_class_mod, only: masked_cplx_matrix_type
 
@@ -22,8 +22,8 @@ MODULE correl_class
       INTEGER                        :: Nw = 0
       CHARACTER(LEN=9)             :: stat = '\0'
       TYPE(masked_cplx_matrix_type)  :: MM
-      COMPLEX(DBL), POINTER       :: fctn(:, :, :) => NULL() ! matrix correlation function
-      COMPLEX(DBL), POINTER       :: vec(:, :) => NULL() ! vector of independant matrix elements
+      COMPLEX(DP), POINTER       :: fctn(:, :, :) => NULL() ! matrix correlation function
+      COMPLEX(DP), POINTER       :: vec(:, :) => NULL() ! vector of independant matrix elements
       TYPE(freq_type)                :: freq ! frequency
    END TYPE
 
@@ -64,7 +64,7 @@ contains
       TYPE(correl_type)             :: CORREL
       TYPE(masked_cplx_matrix_type) :: corr
       INTEGER                       :: iw
-      complex(8), optional          :: extmat(:, :, :), vecext(:, :)
+      complex(kind=DP), optional          :: extmat(:, :, :), vecext(:, :)
 
       IF (.NOT. ASSOCIATED(CORREL%vec)) ALLOCATE (CORREL%vec(CORREL%MM%MASK%nind, &
                                                              CORREL%Nw))
@@ -121,7 +121,7 @@ contains
       INTEGER, INTENT(IN)              :: N
       CHARACTER(LEN=9), INTENT(IN)   :: STAT
       INTEGER, INTENT(IN)              :: Nw
-      REAL(DBL), INTENT(IN)            :: beta
+      REAL(DP), INTENT(IN)            :: beta
       INTEGER, OPTIONAL, INTENT(IN)    :: IMASK(N, N)
       LOGICAL, OPTIONAL, INTENT(IN)    :: AB
 
@@ -149,14 +149,14 @@ contains
       INTEGER, INTENT(IN)              :: N
       CHARACTER(LEN=9), INTENT(IN)   :: STAT
       INTEGER, INTENT(IN)              :: Nw
-      REAL(DBL), INTENT(IN)            :: wmax, width
+      REAL(DP), INTENT(IN)            :: wmax, width
       INTEGER, OPTIONAL, INTENT(IN)    :: IMASK(N, N)
       LOGICAL, OPTIONAL, INTENT(IN)    :: AB
-      REAL(DBL), INTENT(IN)           :: wmin
+      REAL(DP), INTENT(IN)           :: wmin
 
       if (Nw == 0) stop 'new correl from scratch rfrequNw = 0'
       CALL new_correl_from_scratch(CORREL, title, N, Nw, STAT, IMASK, AB=AB)
-      IF (width > 0.0_DBL) THEN
+      IF (width > 0.0_DP) THEN
          CALL new_freq(CORREL%freq, Nw, wmin, wmax, width, RETARDED)
       ELSE
          CALL new_freq(CORREL%freq, Nw, wmin, wmax, width, ADVANCED)
@@ -197,7 +197,7 @@ contains
       CORREL%Nw = Nw
 
       ALLOCATE (CORREL%fctn(N, N, Nw))
-      CORREL%fctn = 0.0_DBL
+      CORREL%fctn = 0.0_DP
 
       AB_ = .false.
       IF (PRESENT(AB)) AB_ = AB
@@ -458,9 +458,9 @@ contains
       implicit none
 
       TYPE(correl_type) :: G
-      real(8)           :: beta
+      real(kind=DP)           :: beta
       INTEGER           :: i1, i2, iw, iw1, iw2, iw_, j, Nw
-      COMPLEX(DBL)      :: chi0(size(G%freq%vec)), &
+      COMPLEX(DP)      :: chi0(size(G%freq%vec)), &
                            gg(-size(G%freq%vec):size(G%freq%vec))
 
       Nw = G%Nw
@@ -556,7 +556,7 @@ contains
          ! 'im_part_matsubara_' // TRIM(ADJUSTL(CORREL%title)))
       CASE (RETARDED, ADVANCED)
          DO iw = 1, CORREL%Nw
-            WRITE (UNIT, fmtcorrel) DBLE(CORREL%freq%vec(iw)), CORREL%vec(:, iw)
+            WRITE (UNIT, fmtcorrel) real(CORREL%freq%vec(iw), kind=DP), CORREL%vec(:, iw)
          ENDDO
          !!call plotarray( DBLE(CORREL%freq%vec), real(CORREL%vec),
          ! 'real_part_retarded_' // TRIM(ADJUSTL(CORREL%title)))
@@ -584,8 +584,8 @@ contains
       TYPE(correl_type), INTENT(INOUT) :: CORREL
       CHARACTER(LEN=*), INTENT(IN)   :: FILEIN
       LOGICAL                :: is_sym_
-      REAL(DBL)              :: width, beta
-      REAL(DBL), ALLOCATABLE :: tmp_freq(:)
+      REAL(DP)              :: width, beta
+      REAL(DP), ALLOCATABLE :: tmp_freq(:)
       INTEGER, ALLOCATABLE   :: IMASK(:, :)
       INTEGER                :: UNIT
       INTEGER                :: mu, nu, iw, N, Nw
@@ -710,16 +710,16 @@ contains
          fit_weight_power, lambda_sym_fit, MASK_AVERAGE_SIGMA, weight_expo, &
          window_hybrid, window_hybrid2, window_weight
 
-      REAL(DBL), INTENT(INOUT) :: diff
+      REAL(DP), INTENT(INOUT) :: diff
       REAL(8)                          :: ww_, fit_shift_, sumr, asym_, w2, w1
       TYPE(correl_type), INTENT(IN)    :: CORREL1, CORREL2
       integer                          :: iw, window1_, window2_, tot, &
                                           boundup, ii, jj, nn, b1, b2
-      COMPLEX(DBL)                     :: CORREL1_AV(CORREL1%N, CORREL1%N, &
+      COMPLEX(DP)                     :: CORREL1_AV(CORREL1%N, CORREL1%N, &
                                                      CORREL1%Nw)
       logical                          :: asym
 
-      diff = 0.0_DBL
+      diff = 0.0_DP
       tot = 0
       asym = abs(lambda_sym_fit) > 1.d-3
 
@@ -892,7 +892,7 @@ contains
       INTEGER, INTENT(IN)              :: rbounds(2), cbounds(2)
       INTEGER              :: n1slice, n2slice
       CHARACTER(LEN=100) :: cslice, title
-      REAL(DBL)            :: beta, width, wmax, wmin
+      REAL(DP)            :: beta, width, wmax, wmin
 
       if (CORRELIN%Nw == 0) stop 'slice correl Nw = 0'
 
@@ -955,8 +955,8 @@ contains
       integer, intent(in):: mask(:, :)
       TYPE(correl_type) :: G
       INTEGER           :: iw, siz, i, j, miw, si
-      COMPLEX(DBL)      :: Gm1(:, :, :)
-      REAL(DBL)         :: rvec(size(Gm1, 3))
+      COMPLEX(DP)      :: Gm1(:, :, :)
+      REAL(DP)         :: rvec(size(Gm1, 3))
       LOGICAL           :: offdiag_also
       integer           :: Nw
       integer, optional :: boundup
@@ -1049,12 +1049,12 @@ contains
       TYPE(correl_type)            :: CORRELOUT
       TYPE(correl_type), INTENT(IN) :: CORRELIN
       INTEGER                      :: iw, i, j, miw
-      COMPLEX(DBL)                 :: vec(size(CORRELOUT%vec, 1), size(CORRELOUT%vec, 2))
-      COMPLEX(DBL)                 :: fctn(size(CORRELOUT%fctn, 1), size(CORRELOUT%fctn, 2), size(CORRELOUT%fctn, 3))
-      REAL(DBL)                    :: rvec(size(CORRELOUT%freq%vec))
-      COMPLEX(DBL)                 :: vecin(size(CORRELIN%vec, 1), size(CORRELIN%vec, 2))
-      COMPLEX(DBL)                 :: fctnin(size(CORRELIN%fctn, 1), size(CORRELIN%fctn, 2), size(CORRELIN%fctn, 3))
-      REAL(DBL)                    :: rvecin(size(CORRELIN%freq%vec))
+      COMPLEX(DP)                 :: vec(size(CORRELOUT%vec, 1), size(CORRELOUT%vec, 2))
+      COMPLEX(DP)                 :: fctn(size(CORRELOUT%fctn, 1), size(CORRELOUT%fctn, 2), size(CORRELOUT%fctn, 3))
+      REAL(DP)                    :: rvec(size(CORRELOUT%freq%vec))
+      COMPLEX(DP)                 :: vecin(size(CORRELIN%vec, 1), size(CORRELIN%vec, 2))
+      COMPLEX(DP)                 :: fctnin(size(CORRELIN%fctn, 1), size(CORRELIN%fctn, 2), size(CORRELIN%fctn, 3))
+      REAL(DP)                    :: rvecin(size(CORRELIN%freq%vec))
 
       if (CORRELIN%Nw == 0) STOP "transform correl Nw=0"
       IF (CORRELIN%freq%title /= CORRELOUT%freq%title) STOP "ERROR IN transform_correl: INCONSISTENT FREQUENCIES!"

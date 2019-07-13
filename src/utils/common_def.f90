@@ -158,7 +158,7 @@ contains
    subroutine create_seg_fault
       implicit none
       integer :: ii
-      real(8) :: x(2)
+      real(kind=DP) :: x(2)
       ii = 2
       write (*, *) x(ii + 3)
    end subroutine
@@ -175,11 +175,12 @@ contains
    subroutine put_addressr(j, d1)
       interface
          integer function putaddress_r(j, d1)
-            real(4)    :: d1
+            import :: SP
+            real(kind=SP)    :: d1
             integer(8) :: j
          end function
       end interface
-      real(4)    :: d1
+      real(kind=SP)    :: d1
       integer(8) :: j
       integer    :: i
       i = putaddress_r(j, d1)
@@ -198,7 +199,7 @@ contains
    end subroutine
 
    subroutine put_addressdvec(j, d1)
-      real(8)    :: d1(:)
+      real(kind=DP)    :: d1(:)
       integer    :: ii
       integer(8) :: j, iii
       iii = j
@@ -209,7 +210,7 @@ contains
    end subroutine
 
    subroutine put_addresscvec(j, d1)
-      complex(8) :: d1(:)
+      complex(kind=DP) :: d1(:)
       integer    :: ii
       integer(8) :: j, iii
       iii = j
@@ -250,11 +251,12 @@ contains
    subroutine put_addressd(j, d1)
       interface
          integer function putaddress(j, d1)
-            real(8)    :: d1
+            import :: DP
+            real(kind=DP)    :: d1
             integer(8) :: j
          end function
       end interface
-      real(8)    :: d1
+      real(kind=DP)    :: d1
       integer    :: i
       integer(8) :: j
       i = putaddress(j, d1)
@@ -263,11 +265,12 @@ contains
    subroutine put_addressc(j, d1)
       interface
          integer function putaddress(j, d1)
-            real(8)    :: d1
+            import :: DP
+            real(kind=DP)    :: d1
             integer(8) :: j
          end function
       end interface
-      complex(8) :: d1
+      complex(kind=DP) :: d1
       integer    :: i
       integer(8) :: j
       i = putaddress(j, real(d1))
@@ -299,10 +302,11 @@ contains
    integer(8) function get_addressr(d1)
       interface
          integer(8) function getaddress_r(d1)
-            real(4) :: d1
+            import :: SP
+            real(kind=SP) :: d1
          end function
       end interface
-      real(4) :: d1
+      real(kind=SP) :: d1
       get_addressr = getaddress_r(d1)
    end function
 
@@ -339,40 +343,44 @@ contains
    integer(8) function get_address_d(d1)
       interface
          integer(8) function getaddress(d1)
-            real(8) :: d1
+            import :: DP
+            real(kind=DP) :: d1
          end function
       end interface
-      real(8) :: d1
+      real(kind=DP) :: d1
       get_address_d = getaddress(d1)
    end function
 
    integer(8) function get_address_dvec(d1)
       interface
          integer(8) function getaddress(d1)
-            real(8) :: d1
+            import :: DP
+            real(kind=DP) :: d1
          end function
       end interface
-      real(8) :: d1(:)
+      real(kind=DP) :: d1(:)
       get_address_dvec = getaddress(d1(1))
    end function
 
    integer(8) function get_address_c(d1)
       interface
          integer(8) function getaddress_vec(d1)
-            complex(8) :: d1
+            import :: DP
+            complex(kind=DP) :: d1
          end function
       end interface
-      complex(8) :: d1
+      complex(kind=DP) :: d1
       get_address_c = getaddress_vec(d1)
    end function
 
    integer(8) function get_address_cvec(d1)
       interface
          integer(8) function getaddress_vec(d1)
-            complex(8) :: d1
+            import :: DP
+            complex(kind=DP) :: d1
          end function
       end interface
-      complex(8) :: d1(:)
+      complex(kind=DP) :: d1(:)
       get_address_cvec = getaddress_vec(d1(1))
    end function
 
@@ -676,7 +684,7 @@ contains
       CHARACTER(LEN=*), INTENT(IN), OPTIONAL :: TEXT
       INTEGER                                :: clock
       CHARACTER(LEN=100)                     :: fmt_TEXT
-      REAL(DBL)                              :: elapsed_time
+      REAL(DP)                              :: elapsed_time
       integer, optional                       :: unit_
       integer                                :: log_unit_
 
@@ -684,7 +692,7 @@ contains
       if (present(unit_)) log_unit_ = unit_
 
       CALL SYSTEM_CLOCK(COUNT=clock)
-      elapsed_time = DBLE(clock - clock_ref)*one_over_clock_rate
+      elapsed_time = real(clock - clock_ref, kind=DP)*one_over_clock_rate
 
       IF (PRESENT(TEXT)) THEN
          WRITE (fmt_TEXT, *) '(a', LEN(TRIM(ADJUSTL(TEXT))), ',4X,f0.6,a)'

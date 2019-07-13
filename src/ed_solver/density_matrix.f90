@@ -19,7 +19,7 @@ contains
 
       use eigen_sector_class, only: eigensector_type, eigensectorlist_type, &
          gsenergy, partition
-      use genvar, only: dbl, iproc, no_mpi, nproc, size2
+      use genvar, only: dp, iproc, no_mpi, nproc, size2
       use linalg, only: conj, dexpc
       use common_def, only: dump_message, reset_timer, timer_fortran
       use sector_class, only: is_in_sector, rank_func
@@ -33,9 +33,9 @@ contains
 
       TYPE(rcmatrix_type), INTENT(INOUT)     :: dmat
       TYPE(AIM_type), INTENT(IN)             :: AIM
-      REAL(DBL), INTENT(IN)                  :: beta
+      REAL(DP), INTENT(IN)                  :: beta
       TYPE(eigensectorlist_type), INTENT(IN) :: GS ! list of lowest eigenstates
-      REAL(DBL)                       :: boltz, Zpart, E0
+      REAL(DP)                       :: boltz, Zpart, E0
       INTEGER                         :: AIMrank1, AIMrank2, IMPrank1, &
                                          IMPrank2, BATHrank
       INTEGER                         :: AIMstate1, AIMstate2
@@ -44,11 +44,11 @@ contains
       INTEGER                         :: IMPchunk(nproc), IMPstatemin(nproc), &
                                          IMPstatemax(nproc)
 #ifdef _complex
-      COMPLEX(DBL)                    :: coeff1, coeff2
-      COMPLEX(DBL), ALLOCATABLE       :: dmat_vec(:), dmat_vec_tot(:)
+      COMPLEX(DP)                    :: coeff1, coeff2
+      COMPLEX(DP), ALLOCATABLE       :: dmat_vec(:), dmat_vec_tot(:)
 #else
-      REAL(DBL)                       :: coeff1, coeff2
-      REAL(DBL), ALLOCATABLE          :: dmat_vec(:), dmat_vec_tot(:)
+      REAL(DP)                       :: coeff1, coeff2
+      REAL(DP), ALLOCATABLE          :: dmat_vec(:), dmat_vec_tot(:)
 #endif
       INTEGER, ALLOCATABLE            :: rankmin(:), rankmax(:), rankchunk(:)
       INTEGER                         :: thisrank, isector, ieigen
@@ -70,7 +70,7 @@ contains
 
       Zpart = partition(beta, GS)
       E0 = GSenergy(GS)
-      dmat%rc = 0.0_DBL
+      dmat%rc = 0.0_DP
 
       DO isector = 1, GS%nsector
 
@@ -106,13 +106,13 @@ contains
                      IF (is_in_sector(AIMstate1, es%sector)) THEN
                         AIMrank1 = rank_func(AIMstate1, es%sector)
                         coeff1 = eigen%vec%rc(AIMrank1)
-                        IF (coeff1 /= 0.0_DBL) THEN
+                        IF (coeff1 /= 0.0_DP) THEN
                            CALL IMPBATH2AIMstate(AIMstate2, IMPrank2 - 1, &
                                                  BATHrank - 1, Nc, Nb)
                            IF (is_in_sector(AIMstate2, es%sector)) THEN
                               AIMrank2 = rank_func(AIMstate2, es%sector)
                               coeff2 = eigen%vec%rc(AIMrank2)
-                              IF (coeff2 /= 0.0_DBL) THEN
+                              IF (coeff2 /= 0.0_DP) THEN
                                  dmat%rc(IMPrank1, IMPrank2) = &
                                     dmat%rc(IMPrank1, IMPrank2) + coeff1* &
                                     conj(coeff2)*boltz
@@ -219,7 +219,7 @@ contains
       ! S = - SUM_i ( lambda_i * log(lambda_i) )
       ! WHERE lambda_i ARE THE EIGENVALUES OF THE DENSITY MATRIX
 
-      use genvar, only: dbl, log_unit
+      use genvar, only: dp, log_unit
       use globalvar_ed_solver, only: ed_num_eigenstates_print
       use common_def, only: c2s, dump_message, i2c
       use matrix, only: diagonalize, write_array
@@ -231,15 +231,15 @@ contains
       INTEGER, INTENT(IN)      :: IMPiorb(:, :)
       LOGICAL, INTENT(IN)      :: NAMBU
 #ifdef _complex
-      COMPLEX(DBL), INTENT(IN) :: dmat(:, :)
-      COMPLEX(DBL)             :: VECP(SIZE(dmat, 1), SIZE(dmat, 1))
+      COMPLEX(DP), INTENT(IN) :: dmat(:, :)
+      COMPLEX(DP)             :: VECP(SIZE(dmat, 1), SIZE(dmat, 1))
 #else
-      REAL(DBL), INTENT(IN)    :: dmat(:, :)
-      REAL(DBL)                :: VECP(SIZE(dmat, 1), SIZE(dmat, 1))
+      REAL(DP), INTENT(IN)    :: dmat(:, :)
+      REAL(DP)                :: VECP(SIZE(dmat, 1), SIZE(dmat, 1))
 #endif
-      REAL(DBL)             :: VALP(SIZE(dmat, 1)), absvec(SIZE(dmat, 1))
+      REAL(DP)             :: VALP(SIZE(dmat, 1)), absvec(SIZE(dmat, 1))
       INTEGER               :: states(size(dmat, 1))
-      REAL(DBL)             :: ENTROPY, TRACE
+      REAL(DP)             :: ENTROPY, TRACE
       INTEGER               :: ivp, nvp, icomp
       CHARACTER(LEN=:), allocatable :: cvec
       character(1000)       :: prefix
@@ -329,8 +329,8 @@ contains
       write (log_unit, '(1000f6.3)') VALP
       write (log_unit, *) '-----------------------------------------'
 
-      ENTROPY = 0.0_DBL
-      TRACE = 0.0_DBL
+      ENTROPY = 0.0_DP
+      TRACE = 0.0_DP
       DO ivp = nvp, 1, -1
          IF (VALP(ivp) > 1.d-16) ENTROPY = ENTROPY - VALP(ivp)*LOG(VALP(ivp))
          TRACE = TRACE + VALP(ivp)

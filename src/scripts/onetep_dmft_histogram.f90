@@ -1,13 +1,14 @@
 program histogram
+   use genvar, only: DP
    use sorting
    use StringManip
 
    implicit none
 
-   real(8), allocatable :: mat(:)
+   real(kind=DP), allocatable :: mat(:)
    integer, allocatable :: order(:)
    integer             :: i, j, u, v, LLL, LL, col
-   real(8)             :: cutoff
+   real(kind=DP)             :: cutoff
 
    write (*, *) 'Please enter cutoff for keeping relevant states'
    read (*, *) cutoff

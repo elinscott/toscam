@@ -7,7 +7,13 @@ set -e
 
 variable="$1"
 value="$2"
-datfile="$(ls *.dat)"
+
+# Optionally provide the name of the .dat file
+if [[ $# -eq 3 ]] ; then
+   datfile=$3
+else
+   datfile="$(ls *.dat)"
+fi
 updated_entry="$variable : $value"
 
 # Find match, being careful to avoid partial matches (e.g. "ldos_smear" matching "dos_smear")

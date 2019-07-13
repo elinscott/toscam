@@ -1,6 +1,6 @@
 MODULE readable_vec_class
 
-   use genvar, only: DBL
+   use genvar, only: DP
 
    IMPLICIT NONE
 
@@ -13,8 +13,8 @@ MODULE readable_vec_class
    TYPE readable_vec_type
       INTEGER                    :: nket = 0 ! number of components
       CHARACTER(LEN=100)         :: title = '\0'
-      REAL(DBL)                  :: weight = 0.0_DBL
-      COMPLEX(DBL), POINTER :: coeff(:) => NULL()
+      REAL(DP)                  :: weight = 0.0_DP
+      COMPLEX(DP), POINTER :: coeff(:) => NULL()
       CHARACTER(LEN=10), POINTER :: cket(:) => NULL()
       INTEGER, POINTER :: state(:) => NULL()
    END TYPE
@@ -44,7 +44,7 @@ contains
       INTEGER                          :: ivec, nvec, shift_, iket, nket, &
                                           imin, imax, jmax
       CHARACTER(LEN=600)             :: cket_list, prefactor
-      COMPLEX(DBL), ALLOCATABLE        :: fac(:)
+      COMPLEX(DP), ALLOCATABLE        :: fac(:)
       LOGICAL                          :: nambu_
       integer                          :: ff, nvecout
 
@@ -77,7 +77,7 @@ contains
             ! ALLOCATE ARRAY OF IRRATIONAL PREFACTORS
             IF (ALLOCATED(fac)) DEALLOCATE (fac)
             ALLOCATE (fac(0:nket))
-            fac = 1.0_DBL
+            fac = 1.0_DP
             shift_ = 1
             DO iket = 0, nket
                ! FIRST WE READ THE BASIS STATE (ENCLOSED IN |... > )
@@ -95,7 +95,7 @@ contains
                                      NAMBU)
                   IF (list(ivec)%state(iket) < 0) THEN
                      list(ivec)%state(iket) = -list(ivec)%state(iket)
-                     fac(iket) = -1.0_DBL
+                     fac(iket) = -1.0_DP
                   END IF
                   write (*, *) 'quantum vector : ', &
                      TRIM(ADJUSTL(list(ivec)%cket(iket))), &

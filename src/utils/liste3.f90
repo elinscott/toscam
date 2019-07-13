@@ -8,14 +8,14 @@
 
     type node
        type(node), pointer :: next, prev
-       real(8)             :: a
+       real(kind=DP)             :: a
        integer             :: info
        integer             :: istart = 1
        integer             :: itot
     end type
 
     type(node), pointer, private    :: ll, cur
-    REAL(DBL), ALLOCATABLE, PRIVATE  :: rstates(:)
+    REAL(DP), ALLOCATABLE, PRIVATE  :: rstates(:)
     INTEGER, ALLOCATABLE, PRIVATE  :: states(:)
     logical, private                :: verbose = .true.
 
@@ -74,7 +74,7 @@
 !**************************************************************************
 
     subroutine add_to_list(aa, info)
-       real(8) :: aa
+       real(kind=DP) :: aa
        integer :: info
        allocate (cur%next)
        cur%next%a = aa
@@ -114,8 +114,8 @@
 !**************************************************************************
 
     subroutine mpi_reduce_list(vec_tot_out)
-       REAL(DBL)              :: vec_tot_out(:)
-       REAL(DBL), ALLOCATABLE  :: rtmp(:)
+       REAL(DP)              :: vec_tot_out(:)
+       REAL(DP), ALLOCATABLE  :: rtmp(:)
        INTEGER, ALLOCATABLE  :: tmp(:)
        INTEGER                :: counti, i, j, kk
 
@@ -180,7 +180,7 @@
 !
 !  subroutine test_list3
 !  integer :: i
-!  real(8) :: final_vec(20)
+!  real(kind=DP) :: final_vec(20)
 !
 !  call initialize_list
 !

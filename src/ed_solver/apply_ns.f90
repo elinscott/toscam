@@ -1,6 +1,6 @@
 MODULE apply_NS
 
-   use genvar, only: DBL
+   use genvar, only: DP
 
    implicit none
 
@@ -122,7 +122,7 @@ contains
       TYPE(eigen_type), POINTER :: eigen_in => NULL()
       TYPE(fermion_ket_type)    :: ket_in, ket_in_up, ket_in_do
       INTEGER                   :: istate, iup, ido, site, nup, ndo
-      REAL(DBL)                 :: sz
+      REAL(DP)                 :: sz
 
       eigen_in => es%lowest%eigen(esrank)
       if (force_reset_list) CALL delete_eigenlist(Ces%lowest)
@@ -143,7 +143,7 @@ contains
             !----------------------------------------------------------!
 
             eigen_out%rank = site
-            eigen_out%vec%rc = 0.0_DBL
+            eigen_out%vec%rc = 0.0_DP
 
             !-------------------------------------------------------------!
             ! THEN PARSE THE INPUT SECTOR TO APPLY RELEVANT SPIN OPERATOR !
@@ -151,11 +151,11 @@ contains
 
             IF (ASSOCIATED(es%sector%sz)) THEN ! Sz-SECTOR
                DO istate = 1, es%sector%sz%dimen
-                  IF (eigen_in%vec%rc(istate) /= 0.0_DBL) THEN
+                  IF (eigen_in%vec%rc(istate) /= 0.0_DP) THEN
                      CALL new_ket(ket_in, es%sector%sz%state(istate), Ns2)
-                     sz = 0.5_DBL*(ni__(IMPiorbsz(site, 1), ket_in) - (1 - &
+                     sz = 0.5_DP*(ni__(IMPiorbsz(site, 1), ket_in) - (1 - &
                                                                        ni__(IMPiorbsz(site, 2), ket_in))) ! NAMBU
-                     IF (sz /= 0.0_DBL) eigen_out%vec%rc(istate) = &
+                     IF (sz /= 0.0_DP) eigen_out%vec%rc(istate) = &
                         eigen_out%vec%rc(istate) + sz* &
                         eigen_in%vec%rc(istate)
                   ENDIF
@@ -166,12 +166,12 @@ contains
                   ndo = ni__(IMPiorbupdo(site, 2), ket_in_do)
                   DO iup = 1, es%sector%updo%up%dimen
                      istate = rankupdo(iup, ido, es%sector%updo)
-                     IF (eigen_in%vec%rc(istate) /= 0.0_DBL) THEN
+                     IF (eigen_in%vec%rc(istate) /= 0.0_DP) THEN
                         CALL new_ket(ket_in_up, es%sector%updo%up%state(iup), &
                                      Ns)
                         nup = ni__(IMPiorbupdo(site, 1), ket_in_up)
                         IF (nup /= ndo) eigen_out%vec%rc(istate) = &
-                           eigen_out%vec%rc(istate) + 0.5_DBL*(nup - ndo)* &
+                           eigen_out%vec%rc(istate) + 0.5_DP*(nup - ndo)* &
                            eigen_in%vec%rc(istate)
                      ENDIF
                   ENDDO
@@ -232,13 +232,13 @@ contains
             ! FIRST WE CREATE THE OUTPUT VECTOR IN THE RELEVANT SECTOR
 
             eigen_out%rank = site
-            eigen_out%vec%rc = 0.0_DBL
+            eigen_out%vec%rc = 0.0_DP
 
             ! THEN PARSE THE INPUT SECTOR TO APPLY RELEVANT SPIN OPERATOR
 
             IF (ASSOCIATED(es%sector%sz)) THEN ! Sz-SECTOR
                DO istate = 1, es%sector%sz%dimen
-                  IF (eigen_in%vec%rc(istate) /= 0.0_DBL) THEN
+                  IF (eigen_in%vec%rc(istate) /= 0.0_DP) THEN
                      CALL new_ket(ket_in, es%sector%sz%state(istate), &
                                   es%sector%sz%norbs)
                      IF (pm == '+') CALL create_pair(ket_out, IMPiorbsz(site, &
@@ -262,7 +262,7 @@ contains
                   IF (.NOT. ket_out_do%is_nil) THEN
                      DO iup = 1, es%sector%updo%up%dimen
                         IF (eigen_in%vec%rc(rankupdo(iup, ido, es%sector%updo)) &
-                            /= 0.0_DBL) THEN
+                            /= 0.0_DP) THEN
                            CALL new_ket(ket_in_up, &
                                         es%sector%updo%up%state(iup), Ns)
                            IF (pm == '+') CALL create(ket_out_up, &
@@ -346,18 +346,18 @@ contains
             ! FIRST WE CREATE THE OUTPUT VECTOR IN THE RELEVANT SECTOR
 
             eigen_out%rank = site
-            eigen_out%vec%rc = 0.0_DBL
+            eigen_out%vec%rc = 0.0_DP
 
             ! THEN PARSE THE INPUT SECTOR TO APPLY RELEVANT SPIN OPERATOR
 
             IF (ASSOCIATED(es%sector%sz)) THEN ! Sz-SECTOR
                DO istate = 1, es%sector%sz%dimen
-                  IF (eigen_in%vec%rc(istate) /= 0.0_DBL) THEN
+                  IF (eigen_in%vec%rc(istate) /= 0.0_DP) THEN
                      CALL new_ket(ket_in, es%sector%sz%state(istate), &
                                   es%sector%sz%norbs)
                      n = ni__(IMPiorbsz(site, 1), ket_in) + (1 - &
                                                              ni__(IMPiorbsz(site, 2), ket_in)) ! NAMBU
-                     IF (n /= 0.0_DBL) eigen_out%vec%rc(istate) = &
+                     IF (n /= 0.0_DP) eigen_out%vec%rc(istate) = &
                         eigen_out%vec%rc(istate) + n* &
                         eigen_in%vec%rc(istate)
                   ENDIF
@@ -368,7 +368,7 @@ contains
                   ndo = ni__(IMPiorbupdo(site, 2), ket_in_do)
                   DO iup = 1, es%sector%updo%up%dimen
                      istate = rankupdo(iup, ido, es%sector%updo)
-                     IF (eigen_in%vec%rc(istate) /= 0.0_DBL) THEN
+                     IF (eigen_in%vec%rc(istate) /= 0.0_DP) THEN
                         CALL new_ket(ket_in_up, es%sector%updo%up%state(iup), &
                                      Ns)
                         nup = ni__(IMPiorbupdo(site, 1), ket_in_up)
@@ -426,13 +426,13 @@ contains
             ! FIRST WE CREATE THE OUTPUT VECTOR IN THE RELEVANT SECTOR
 
             eigen_out%rank = site
-            eigen_out%vec%rc = 0.0_DBL
+            eigen_out%vec%rc = 0.0_DP
 
             ! THEN PARSE THE INPUT SECTOR TO APPLY RELEVANT SPIN OPERATOR
 
             IF (ASSOCIATED(es%sector%sz)) THEN ! Sz-SECTOR
                DO istate = 1, es%sector%sz%dimen
-                  IF (eigen_in%vec%rc(istate) /= 0.0_DBL) THEN
+                  IF (eigen_in%vec%rc(istate) /= 0.0_DP) THEN
                      eigen_out%vec%rc(istate) = eigen_out%vec%rc(istate) + &
                                                 eigen_in%vec%rc(istate)
                   ENDIF
@@ -441,7 +441,7 @@ contains
                DO ido = 1, es%sector%updo%down%dimen
                   DO iup = 1, es%sector%updo%up%dimen
                      istate = rankupdo(iup, ido, es%sector%updo)
-                     IF (eigen_in%vec%rc(istate) /= 0.0_DBL) THEN
+                     IF (eigen_in%vec%rc(istate) /= 0.0_DP) THEN
                         eigen_out%vec%rc(istate) = eigen_out%vec%rc(istate) + &
                                                    eigen_in%vec%rc(istate)
                      ENDIF

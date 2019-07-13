@@ -10,7 +10,7 @@
       integer                            :: iorb, jorb, ij, ji, ipm, si, ssi, &
                                             sssi, i, j, k, ssi_, si_, sssi_
       TYPE(mask_type)                    :: MASK(2, 2)
-      complex(8)                         :: xxx(8), aaa
+      complex(kind=DP)                         :: xxx(8), aaa
       LOGICAL                            :: BA
 
       CALL new_mask(MASK(1, 1), greenAB%correlstat(1, 1)%rc%MASK)

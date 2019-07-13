@@ -1,4 +1,5 @@
 program local_uniform_mask
+   use genvar, only: DP
    use linalg
    implicit none
 
@@ -6,12 +7,12 @@ program local_uniform_mask
    integer                    :: k1, k2, k3
    integer, allocatable :: uniform(:, :), label_in_big(:), label_in_hub(:)
    character(30), allocatable :: atom(:), atom_small(:)
-   real(8), allocatable :: normv(:), coord(:, :), coord_small(:, :)
-   real(8)                    :: v(3)
+   real(kind=DP), allocatable :: normv(:), coord(:, :), coord_small(:, :)
+   real(kind=DP)                    :: v(3)
    character(30)              :: ref, filename, filename2, filename3, temp, species
    integer                    :: natom, natom_small, kk1, kk2, kk3
-   real(8)                    :: coord_tmp(3), www(3), ex(3), ey(3), ez(3), bx(3), by(3), bz(3), dist, cutoff, vvv(3)
-   real(8)                    :: shift(3), max_dist, max_dist2, d1, d2, d3
+   real(kind=DP)                    :: coord_tmp(3), www(3), ex(3), ey(3), ez(3), bx(3), by(3), bz(3), dist, cutoff, vvv(3)
+   real(kind=DP)                    :: shift(3), max_dist, max_dist2, d1, d2, d3
    logical                    :: check
 
    open (unit=1010, file='uniform.input')

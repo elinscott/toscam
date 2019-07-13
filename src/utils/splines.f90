@@ -58,7 +58,7 @@ module splines
 !     subroutine splder(t,n,c,k,nu,x,y,m,wrk,ier)
 !      implicit none
 !       integer ::  n,k,nu,m,ier
-!       real(4) ::  t(n),c(n),x(m),y(m),wrk(n)
+!       real(kind=SP) ::  t(n),c(n),x(m),y(m),wrk(n)
 !       integer ::  i,j,kk,k1,k2,l,ll,l1,l2,nk1,nk2,nn
 !     end subroutine
 !   END INTERFACE
@@ -84,7 +84,7 @@ contains
 !   subroutine check_x_y(x,y)
 !   implicit none
 !   integer :: i
-!   real(8) :: x(:),y(:)
+!   real(kind=DP) :: x(:),y(:)
 !
 !     do i=1,size(x)-1
 !      if(x(i)>=x(i+1))then
@@ -506,7 +506,7 @@ contains
 ! implicit none
 !    integer     :: vois,k
 !    REAL(8)     :: xx(:),i(size(xx)),j(size(xx))
-!    complex(8)  :: ttab(:)
+!    complex(kind=DP)  :: ttab(:)
 !       i=real(ttab)
 !       j=aimag(ttab)
 !       call fourier_filter__(xx,i,vois)
@@ -554,11 +554,11 @@ contains
 ! !*****************************************************!
 ! !*****************************************************!
 !
-!  real(8) function inflexion_point(y,x)
+!  real(kind=DP) function inflexion_point(y,x)
 !  implicit none
 !  integer,parameter  ::  mm=1000
 !  integer            ::  i
-!  real(8)            ::  x(:),y(:),xx(mm),yy(mm)
+!  real(kind=DP)            ::  x(:),y(:),xx(mm),yy(mm)
 !
 !   xx(1:mm)=(/(minval(x)+dble(i-1)/dble(mm-1)*(maxval(x)-minval(x)),i=1,mm)/)
 !   call derivateit(x,y,xx,yy,2,0.d0)
@@ -584,13 +584,13 @@ contains
 !  subroutine interpolate_array_(kx,ky,arrayin,xin,yin,arrayout,xout,yout,smooth)
 !  implicit none
 !   integer,parameter                :: nnx=70,nny=70
-!   real(8)                          :: smooth,arrayin(:),xin(:),yin(:),xout(:),yout(:),arrayout(:,:)
-!   real(4)                          :: tx(nnx),ty(nny),w(size(xin)),xb,xe,yb,ye,s,eps
+!   real(kind=DP)                          :: smooth,arrayin(:),xin(:),yin(:),xout(:),yout(:),arrayout(:,:)
+!   real(kind=SP)                          :: tx(nnx),ty(nny),w(size(xin)),xb,xe,yb,ye,s,eps
 !   integer                          :: j,ier,iopt,siz1,siz2,rr,ss,k
 !   integer                          :: mx,my,ne,km,nx,ny,m,kx,ky,nxest,nyest
 !   integer                          :: kwrk,nmax,i,u,v,bx,by,b1,b2,lwrk1,lwrk2
-!   real(4)                          :: xr(size(xout)),yr(size(yout)),zr(size(xout)*size(yout))
-!   real(4)                          :: fp,c((nnx-kx-1)*(nny-ky-1))
+!   real(kind=SP)                          :: xr(size(xout)),yr(size(yout)),zr(size(xout)*size(yout))
+!   real(kind=SP)                          :: fp,c((nnx-kx-1)*(nny-ky-1))
 !   real,dimension(:),allocatable    :: work1,work2
 !   integer,dimension(:),allocatable :: iwrk
 !
@@ -699,12 +699,12 @@ contains
 !
 !  subroutine repair_curves_(x,y,yerr,kk,iii1,mismatch)
 !  implicit none
-!  real(8)      :: x(:),y(:),yerr(:),vv(2),xx,yy,dxdt(2,size(x))
+!  real(kind=DP)      :: x(:),y(:),yerr(:),vv(2),xx,yy,dxdt(2,size(x))
 !  integer      :: kk,i,j,kkk,z,ok,ii,ii1,iii1,cc,l,lll,ll
-!  real(8)      :: xxx1,xxx2,der(2)
-!  real(8)      :: a,deriv,deriv_tail
+!  real(kind=DP)      :: xxx1,xxx2,der(2)
+!  real(kind=DP)      :: a,deriv,deriv_tail
 !  logical      :: crossing
-!  real(8)      :: mismatch
+!  real(kind=DP)      :: mismatch
 !
 !  ! iii1 : 0.9 * matsu
 !  ! kk   :       matsu
@@ -736,12 +736,12 @@ contains
 !
 !  subroutine repair_curves(x,y,yerr,kk,iii1,mismatch)
 !  implicit none
-!  real(8)          :: x(:),y(:),yerr(:),vv(2),xx,yy
+!  real(kind=DP)          :: x(:),y(:),yerr(:),vv(2),xx,yy
 !  integer          :: kk,i,j,kkk,z,ok,ii,ii1,iii1,cc
-!  real(8)          :: xxx1,xxx2,der(2)
-!  real(8)          :: a
+!  real(kind=DP)          :: xxx1,xxx2,der(2)
+!  real(kind=DP)          :: a
 !  logical          :: crossing
-!  real(8),optional :: mismatch
+!  real(kind=DP),optional :: mismatch
 !
 !    if(kk>2.and.present(mismatch))then
 !       a=(maxval(y)-minval(y))*mismatch
@@ -796,7 +796,7 @@ contains
 !
 !  subroutine cross_or_not(der)
 !  implicit none
-!  real(8) :: der(2),v1(2,2),v2(2,2)
+!  real(kind=DP) :: der(2),v1(2,2),v2(2,2)
 !  integer :: i
 !   v1(1,1)=x(kk)
 !   v1(1,2)=y(kk)
@@ -862,7 +862,7 @@ contains
 !
 !  subroutine test_spline
 !  implicit none
-!  real(8)      :: x(100),y(100),xx(1000),dh(1000),yy(1000),yyy(3,1000)
+!  real(kind=DP)      :: x(100),y(100),xx(1000),dh(1000),yy(1000),yyy(3,1000)
 !  integer      :: i,j,k
 !  type(spline) :: rspline
 !
@@ -912,7 +912,7 @@ contains
 !
 !  subroutine derivateit__(x,yy,yyy,k,ss)
 !  implicit none
-!  real(8)      :: x(:),yy(:,:),yyy(:,:),ss
+!  real(kind=DP)      :: x(:),yy(:,:),yyy(:,:),ss
 !  integer      :: i,j,k
 !  type(spline) :: rspline
 !   do i=1,size(yy(:,1))
@@ -924,7 +924,7 @@ contains
 !
 !  subroutine derivateit_(x,y,yy,k,ss)
 !  implicit none
-!  real(8)      :: x(:),y(:),yy(:),ss
+!  real(kind=DP)      :: x(:),y(:),yy(:),ss
 !  integer      :: i,j,k
 !  type(spline) :: rspline
 !    call init_spline(rspline,x,y,5,ss)
@@ -937,7 +937,7 @@ contains
 !
 !  subroutine derivateit___(x,y,xx,yy,k,ss)
 !  implicit none
-!  real(8)      :: x(:),y(:),xx(:),yy(:),ss
+!  real(kind=DP)      :: x(:),y(:),xx(:),yy(:),ss
 !  integer      :: i,j,k
 !  type(spline) :: rspline
 !     call init_spline(rspline,x,y,5,ss)
@@ -949,7 +949,7 @@ contains
 !
 !  subroutine derivateit____(x,y,x_,y_,k,ss)
 !  implicit none
-!  real(8)      :: x(:),y(:),x_,y_,xx(1),yy(1),ss
+!  real(kind=DP)      :: x(:),y(:),x_,y_,xx(1),yy(1),ss
 !  integer      :: i,j,k
 !  type(spline) :: rspline
 !     xx=x_
@@ -972,12 +972,12 @@ contains
 !
 !  subroutine bendit_(i,j,x,y,yerr,ss)
 !  implicit none
-!  real(8)      :: x(:),y(:),ss,yerr(:)
-!  real(4)      :: ys(size(x)),temp(size(x)),yp(size(x)),errors(size(x))
-!  real(4)      :: td(size(x)),tsd1(size(x)),hd(size(x)),hsd1(size(x)),hsd2(size(x))
-!  real(4)      :: rd(size(x)),rsd1(size(x)),rsd2(size(x)),v(size(x))
+!  real(kind=DP)      :: x(:),y(:),ss,yerr(:)
+!  real(kind=SP)      :: ys(size(x)),temp(size(x)),yp(size(x)),errors(size(x))
+!  real(kind=SP)      :: td(size(x)),tsd1(size(x)),hd(size(x)),hsd1(size(x)),hsd2(size(x))
+!  real(kind=SP)      :: rd(size(x)),rsd1(size(x)),rsd2(size(x)),v(size(x))
 !  integer      :: i,j,k,ierr
-!  real(4)      :: sss,aa,bb,dd
+!  real(kind=SP)      :: sss,aa,bb,dd
 !
 !   dd=100000.
 !   aa=0.
@@ -999,10 +999,10 @@ contains
 !
 !  subroutine bendit__(i,j,x,y,yerr,ss)
 !  implicit none
-!  real(8)      :: x(:),y(:),yerr(:),ss,errors(size(x)),yout(size(y))
+!  real(kind=DP)      :: x(:),y(:),yerr(:),ss,errors(size(x)),yout(size(y))
 !  integer      :: i,j,k,NDEG,STATUS,IERR
-!  real(8)      :: eps,A(7*size(x)+3)
-!  real(4)      :: sss,aa,bb,cc,dd
+!  real(kind=DP)      :: eps,A(7*size(x)+3)
+!  real(kind=SP)      :: sss,aa,bb,cc,dd
 !
 !   eps =  -1.
 !   dd  =  1000.
@@ -1025,10 +1025,10 @@ contains
 !
 !  subroutine bendit(i,j,x,y,yerr,ss)
 !  implicit none
-!  real(8)      :: x(:),y(:),yerr(:),ss,errors(size(x))
+!  real(kind=DP)      :: x(:),y(:),yerr(:),ss,errors(size(x))
 !  integer      :: i,j,k
 !  type(spline) :: rspline
-!  real(4)      :: aa,bb,cc,dd
+!  real(kind=SP)      :: aa,bb,cc,dd
 !
 !   dd=  0.0001
 !   aa=  maxval(abs(y))/5.
@@ -1063,8 +1063,8 @@ contains
    subroutine spline_inter_extrapolate_array__(xin, yin, x, y)
 
       implicit none
-      real(8) :: xin(:), yin(:), x(:), y(:)
-      real(8) :: y_arr(1)
+      real(kind=DP) :: xin(:), yin(:), x(:), y(:)
+      real(kind=DP) :: y_arr(1)
       integer :: i, j, k, l, siz, ndim, ninter
       siz = size(xin(:))
       ! ebl: converting to be compatible with spline overhauser
@@ -1078,8 +1078,8 @@ contains
 
    subroutine spline_inter_extrapolate_array_(xin, yin, x, y)
       implicit none
-      real(4) :: xin(:), yin(:), x(:), y(:)
-      real(8) :: yo(1)
+      real(kind=SP) :: xin(:), yin(:), x(:), y(:)
+      real(kind=DP) :: yo(1)
       integer :: i, j, k, l, siz, ndim, ninter
       siz = size(xin(:))
       do i = 1, size(x)
@@ -1092,7 +1092,7 @@ contains
 
    subroutine spline_inter_extrapolate__(xin, yin, x, y)
       implicit none
-      real(8) :: xin(:), yin(:), x, y, y_arr(1)
+      real(kind=DP) :: xin(:), yin(:), x, y, y_arr(1)
       integer :: i, j, k, l, siz, ndim, ninter
       siz = size(xin(:))
       call spline_overhauser_val(1, siz, xin, [yin], x, y_arr)
@@ -1103,8 +1103,8 @@ contains
 
    subroutine spline_inter_extrapolate_(xin, yin, x, y)
       implicit none
-      real(4) :: xin(:), yin(:), x, y
-      real(8) :: yo(1)
+      real(kind=SP) :: xin(:), yin(:), x, y
+      real(kind=DP) :: yo(1)
       integer :: i, j, k, l, siz, ndim, ninter
       siz = size(xin(:))
       call spline_overhauser_val(1, siz, dble(xin), [dble(yin)], dble(x), yo)
@@ -1122,7 +1122,7 @@ contains
 !
 !  subroutine bezier_it(xin,t,x)
 !  implicit none
-!  real(8) :: xin(:),x(1,1),t,tt(1),xx(1,size(xin))
+!  real(kind=DP) :: xin(:),x(1,1),t,tt(1),xx(1,size(xin))
 !  integer :: i,j,k,l,siz,ndim,ninter
 !
 !   tt=t
@@ -1149,12 +1149,12 @@ contains
 !
 !  subroutine smoothit____(x,y,ss,errors)
 !  implicit none
-!  real(8)      :: x(:),y(:),ss,errors(:)
-!  real(4)      :: ys(size(x)),temp(size(x)),yp(size(x)),errors2(size(x))
-!  real(4)      :: td(size(x)),tsd1(size(x)),hd(size(x)),hsd1(size(x)),hsd2(size(x))
-!  real(4)      :: rd(size(x)),rsd1(size(x)),rsd2(size(x)),v(size(x))
+!  real(kind=DP)      :: x(:),y(:),ss,errors(:)
+!  real(kind=SP)      :: ys(size(x)),temp(size(x)),yp(size(x)),errors2(size(x))
+!  real(kind=SP)      :: td(size(x)),tsd1(size(x)),hd(size(x)),hsd1(size(x)),hsd2(size(x))
+!  real(kind=SP)      :: rd(size(x)),rsd1(size(x)),rsd2(size(x)),v(size(x))
 !  integer      :: i,j,k,ierr
-!  real(4)      :: sss
+!  real(kind=SP)      :: sss
 !
 !   if(maxval(abs(x))<1.d-13.or.maxval(abs(y))<1.d-13)then
 !    return
@@ -1175,9 +1175,9 @@ contains
 !
 !  subroutine smoothitb_____(x,y,errors,degree)
 !  implicit none
-!  real(8)          :: x(:),y(:),ss,errors(:),errors2(size(errors)),yout(size(y))
+!  real(kind=DP)          :: x(:),y(:),ss,errors(:),errors2(size(errors)),yout(size(y))
 !  integer          :: i,j,k,NDEG,STATUS,IERR,degree_
-!  real(8)          :: eps,A(7*size(x)+3),aa,rrr
+!  real(kind=DP)          :: eps,A(7*size(x)+3),aa,rrr
 !  integer,optional :: degree
 !
 !   if(maxval(abs(x))<1.d-13.or.maxval(abs(y))<1.d-13)then
@@ -1220,8 +1220,8 @@ contains
 !  subroutine smoothitbb_____(x,y,errors,fac,kkk)
 !  implicit none
 !  integer          :: fac
-!  real(8)          :: x(:),y(:),errors(:),x2(kkk),y2(kkk),errors2(kkk),dmax
-!  real(8)          :: x3(size(x)),y3(size(y)),errors3(size(errors)),back(size(x))
+!  real(kind=DP)          :: x(:),y(:),errors(:),x2(kkk),y2(kkk),errors2(kkk),dmax
+!  real(kind=DP)          :: x3(size(x)),y3(size(y)),errors3(size(errors)),back(size(x))
 !  integer          :: i,ii,order(size(errors)),kkk,ikil,itot,kkk2
 !
 !   if(maxval(abs(x))<1.d-13.or.maxval(abs(y))<1.d-13)then
@@ -1296,9 +1296,9 @@ contains
 !
 !  subroutine smoothitfft(x,y,win)
 !  implicit none
-!  real(8)          :: x(:),y(:),win
+!  real(kind=DP)          :: x(:),y(:),win
 !  integer          :: i,j
-!  real(4)          :: xx(2048),yy(2048)
+!  real(kind=SP)          :: xx(2048),yy(2048)
 !
 !   if(maxval(abs(x))<1.d-13.or.maxval(abs(y))<1.d-13)then
 !    return
@@ -1323,8 +1323,8 @@ contains
 !  subroutine smoothitred(x,y,ss,errors,fac,kkk)
 !  implicit none
 !  integer          :: fac
-!  real(8)          :: x(:),y(:),errors(:),x2(kkk),y2(kkk),errors2(kkk),dmax
-!  real(8)          :: x3(size(x)),y3(size(y)),errors3(size(errors)),ss
+!  real(kind=DP)          :: x(:),y(:),errors(:),x2(kkk),y2(kkk),errors2(kkk),dmax
+!  real(kind=DP)          :: x3(size(x)),y3(size(y)),errors3(size(errors)),ss
 !  integer          :: degree,i,ii,order(size(errors)),kkk,ikil,itot
 !  integer          :: ddeg
 !  type(spline)     :: rspline
@@ -1370,7 +1370,7 @@ contains
 !
 !  subroutine smoothit___(x,y,ss,errors)
 !  implicit none
-!  real(8)      :: x(:),y(:),ss,errors(:)
+!  real(kind=DP)      :: x(:),y(:),ss,errors(:)
 !  integer      :: i,j,k
 !  type(spline) :: rspline
 !
@@ -1389,7 +1389,7 @@ contains
 !
 !  subroutine smoothit__(x,yy,ss)
 !  implicit none
-!  real(8)      :: x(:),yy(:,:),ss
+!  real(kind=DP)      :: x(:),yy(:,:),ss
 !  integer      :: i,j,k
 !  type(spline) :: rspline
 !   do i=1,size(yy(:,1))
@@ -1402,7 +1402,7 @@ contains
 !
 !  subroutine smoothit_(x,y,ss)
 !  implicit none
-!  real(8)       :: x(:),y(:),ss
+!  real(kind=DP)       :: x(:),y(:),ss
 !  integer      :: i,j,k
 !  type(spline) :: rspline
 !   if(maxval(abs(x))<1.d-13.or.maxval(abs(y))<1.d-13)then
@@ -1439,8 +1439,8 @@ contains
 !  subroutine prolong_fix_deriv(x,y,xin,yin)
 !  implicit none
 !  integer      :: ns
-!  real(8)      :: step,deriv,xnew,ynew
-!  real(8)      :: xin(:),yin(:),x(size(xin)+2),y(size(yin)+2)
+!  real(kind=DP)      :: step,deriv,xnew,ynew
+!  real(kind=DP)      :: xin(:),yin(:),x(size(xin)+2),y(size(yin)+2)
 !
 !   ns    =  size(xin)
 !   step  =  xin(2)-xin(1)
@@ -1467,8 +1467,8 @@ contains
    subroutine prolong_fix_deriv_r(x, y, xin, yin)
       implicit none
       integer   :: ns
-      real(4)   :: step, deriv, xnew, ynew
-      real(4)   :: xin(:), yin(:), x(size(xin) + 2), y(size(yin) + 2)
+      real(kind=SP)   :: step, deriv, xnew, ynew
+      real(kind=SP)   :: xin(:), yin(:), x(size(xin) + 2), y(size(yin) + 2)
 
       ns = size(xin)
       step = xin(2) - xin(1)
@@ -1493,9 +1493,9 @@ contains
    subroutine prolong_fix_deriv_c(x, y, xin, yin)
       implicit none
       integer    :: ns
-      real(8)    :: step, xnew
-      real(8)    :: xin(:), x(size(xin) + 2)
-      complex(8) :: yin(:), y(size(yin) + 2), ynew, deriv
+      real(kind=DP)    :: step, xnew
+      real(kind=DP)    :: xin(:), x(size(xin) + 2)
+      complex(kind=DP) :: yin(:), y(size(yin) + 2), ynew, deriv
 
       ns = size(xin)
       step = xin(2) - xin(1)
@@ -1544,10 +1544,10 @@ contains
 
 !  subroutine resampleit_matrix___(xin,yin,xx,yy,ss)
 !  implicit none
-!  real(8)    :: xin(:),xx(:),trace,diag_(size(xin)),vlam,w(size(xin)),sy(size(xin))
-!  complex(8) :: yin(:,:,:,:)
-!  complex(8) :: yy(:,:,:,:)
-!  real(8)    :: ss,tt(size(yin(1,1,1,:))),ttr(size(yin(1,1,1,:)))
+!  real(kind=DP)    :: xin(:),xx(:),trace,diag_(size(xin)),vlam,w(size(xin)),sy(size(xin))
+!  complex(kind=DP) :: yin(:,:,:,:)
+!  complex(kind=DP) :: yy(:,:,:,:)
+!  real(kind=DP)    :: ss,tt(size(yin(1,1,1,:))),ttr(size(yin(1,1,1,:)))
 !  integer    :: i,j,k,u(4),ierr,v(3)
 !
 !  if(size(xin)==size(xx))then
@@ -1584,10 +1584,10 @@ contains
 
    subroutine resampleit_matrix_(xin, yin, xx, yy, ss)
       implicit none
-      real(8)      :: xin(:), xx(:)
-      complex(8)   :: yin(:, :, :, :)
-      complex(8)   :: yy(:, :, :, :)
-      real(8)      :: ss, tt(size(yin(1, 1, 1, :))), ttr(size(yin(1, 1, 1, :)))
+      real(kind=DP)      :: xin(:), xx(:)
+      complex(kind=DP)   :: yin(:, :, :, :)
+      complex(kind=DP)   :: yy(:, :, :, :)
+      real(kind=DP)      :: ss, tt(size(yin(1, 1, 1, :))), ttr(size(yin(1, 1, 1, :)))
       integer      :: i, j, k, u(4)
       type(spline) :: rspline, ispline
 
@@ -1632,11 +1632,11 @@ contains
 
    subroutine resampleit_matrix__(xin, yin, xx, yy, ss)
       implicit none
-      real(8)      :: xin(:), xx(:)
-      complex(8)   :: yin(:, :, :, :)
-      complex(8)   :: yy(:, :, :, :)
-      real(8)      :: ss, tt, ttr
-      real(8)      :: tt_arr(1), ttr_arr(1)
+      real(kind=DP)      :: xin(:), xx(:)
+      complex(kind=DP)   :: yin(:, :, :, :)
+      complex(kind=DP)   :: yy(:, :, :, :)
+      real(kind=DP)      :: ss, tt, ttr
+      real(kind=DP)      :: tt_arr(1), ttr_arr(1)
       integer      :: i, j, k, u(4), l
       type(spline) :: rspline, ispline
 
@@ -1677,10 +1677,10 @@ contains
 
    subroutine resampleit_matrix(xin, yin, xx, yy, ss)
       implicit none
-      real(8)      :: xin(:), xx(:)
-      complex(8)   :: yin(:, :, :)
-      complex(8)   :: yy(:, :, :)
-      real(8)      :: ss, tt(size(xx)), ttr(size(xx))
+      real(kind=DP)      :: xin(:), xx(:)
+      complex(kind=DP)   :: yin(:, :, :)
+      complex(kind=DP)   :: yy(:, :, :)
+      real(kind=DP)      :: ss, tt(size(xx)), ttr(size(xx))
       integer      :: i, j, k, u(3)
       type(spline) :: rspline, ispline
 
@@ -1726,8 +1726,8 @@ contains
    !--------------------------------!
 !
 !  subroutine linear_interpolation(xin,yin,xx,yy)
-!  real(8)      :: xin(:),yin(:)
-!  real(8)      :: xx(:),yy(:),fac
+!  real(kind=DP)      :: xin(:),yin(:)
+!  real(kind=DP)      :: xx(:),yy(:),fac
 !  integer      :: i,j,k
 !    do i=1,size(xx)
 !        j=minloci(abs(xx(i)-xin))
@@ -1748,8 +1748,8 @@ contains
 !
 !  subroutine resampleit__(xin,yin,xx,yy,ss)
 !  implicit none
-!  real(8)      :: xin(:),yin(:),x(size(xin)+2),y(size(yin)+2)
-!  real(8)      :: xx(:),yy(:),ss
+!  real(kind=DP)      :: xin(:),yin(:),x(size(xin)+2),y(size(yin)+2)
+!  real(kind=DP)      :: xx(:),yy(:),ss
 !  integer      :: i,j,k
 !  type(spline) :: rspline
 !
@@ -1780,8 +1780,8 @@ contains
 !
 !  subroutine resampleit_lin_(xin,yin,xx,yy)
 !  implicit none
-!  real(8)      :: xin(:),yin(:)
-!  real(8)      :: xx(:),yy(:),ss,a,b,vv
+!  real(kind=DP)      :: xin(:),yin(:)
+!  real(kind=DP)      :: xx(:),yy(:),ss,a,b,vv
 !  integer      :: i,j,k,iout
 !
 !   if(size(xx)==size(xin))then
@@ -1816,7 +1816,7 @@ contains
 !      subroutine findin1Dmesh_(xin,n,xx,iout)
 !      implicit none
 !       integer :: n,iout,jjj
-!       real(8) :: xin(n),xx
+!       real(kind=DP) :: xin(n),xx
 !
 !       iout=0
 !       do jjj=1,n-1
@@ -1839,8 +1839,8 @@ contains
 
    subroutine resampleit_(xin, yin, xx, yy, ss)
       implicit none
-      real(4)      :: xin(:), yin(:), x(size(xin) + 2), y(size(yin) + 2), xx(:), yy(:)
-      real(8)      :: ss
+      real(kind=SP)      :: xin(:), yin(:), x(size(xin) + 2), y(size(yin) + 2), xx(:), yy(:)
+      real(kind=DP)      :: ss
       integer      :: i, j, k
       type(spline) :: rspline
 
@@ -1870,9 +1870,9 @@ contains
 
    subroutine resampleit___(xin, yin, xx, yy, ss)
       implicit none
-      complex(8)   :: yin(:), y(size(yin) + 2), yy(:)
-      real(8)      :: xin(:), x(size(xin) + 2), xx(:)
-      real(8)      :: ss, yyy(size(yy))
+      complex(kind=DP)   :: yin(:), y(size(yin) + 2), yy(:)
+      real(kind=DP)      :: xin(:), x(size(xin) + 2), xx(:)
+      real(kind=DP)      :: ss, yyy(size(yy))
       integer      :: i, j, k
       type(spline) :: rspline
 
@@ -1907,8 +1907,8 @@ contains
 
    subroutine resampleit__b(x, y, xx, yy, ss)
       implicit none
-      real(8)      :: x(:), y(:)
-      real(8)      :: xx(:), yy(:), ss
+      real(kind=DP)      :: x(:), y(:)
+      real(kind=DP)      :: xx(:), yy(:), ss
       integer      :: i, j, k
       type(spline) :: rspline
 
@@ -1939,8 +1939,8 @@ contains
 
    subroutine resampleit_b(x, y, xx, yy, ss)
       implicit none
-      real(4)      :: x(:), y(:), xx(:), yy(:)
-      real(8)      :: ss
+      real(kind=SP)      :: x(:), y(:), xx(:), yy(:)
+      real(kind=DP)      :: ss
       integer      :: i, j, k
       type(spline) :: rspline
 
@@ -1969,9 +1969,9 @@ contains
 
    subroutine resampleit___b(x, y, xx, yy, ss)
       implicit none
-      complex(8)   :: y(:), yy(:)
-      real(8)      :: x(:), xx(:)
-      real(8)      :: ss, yyy(size(yy))
+      complex(kind=DP)   :: y(:), yy(:)
+      real(kind=DP)      :: x(:), xx(:)
+      real(kind=DP)      :: ss, yyy(size(yy))
       integer      :: i, j, k
       type(spline) :: rspline
 
@@ -2005,9 +2005,9 @@ contains
 
    subroutine resampleit_xonly_r(x, y, xx, ss)
       implicit none
-      real(8)    :: y(:)
-      real(8)    :: yy(size(y))
-      real(8)    :: x(:), xx(:), ss
+      real(kind=DP)    :: y(:)
+      real(kind=DP)    :: yy(size(y))
+      real(kind=DP)    :: x(:), xx(:), ss
       integer    :: i, j, k
       if (size(x) == size(xx)) then
       if (maxval(abs(x - xx)) < 1.d-12) then
@@ -2032,9 +2032,9 @@ contains
 
    subroutine resampleit_xonly_c(x, y, xx, ss)
       implicit none
-      complex(8) :: y(:)
-      real(8)    :: yy(size(y)), yyi(size(y))
-      real(8)    :: x(:), xx(:), ss
+      complex(kind=DP) :: y(:)
+      real(kind=DP)    :: yy(size(y)), yyi(size(y))
+      real(kind=DP)    :: x(:), xx(:), ss
       integer    :: i, j, k
       if (size(x) == size(xx)) then
       if (maxval(abs(x - xx)) < 1.d-12) then
@@ -2078,14 +2078,14 @@ contains
       ! cc  : coefficient of spline
       ! w   : weights
       !--------------------------------------------------------------!
-      real(8)               :: omi(:), Frc(size(omi))
+      real(kind=DP)               :: omi(:), Frc(size(omi))
       type(spline)          :: rspline
       integer               :: kk, kkk, i, j, kkk2
-      real(8), optional      :: s2
-      real(8), optional      :: errors(size(omi))
-      real(4)               :: s
+      real(kind=DP), optional      :: s2
+      real(kind=DP), optional      :: errors(size(omi))
+      real(kind=SP)               :: s
       integer               :: ier, nn, lwrk, k, tryit
-      real(4)               :: fp, xl, xr
+      real(kind=SP)               :: fp, xl, xr
 
       rspline%ierr = 0
       kk = size(omi)
@@ -2176,8 +2176,8 @@ contains
 
       subroutine define_spline(s2)
          implicit none
-         real(8), optional  :: s2
-  real(4)           :: wrk(rspline%N*(rspline%order+3)+rspline%nest*(7+4*rspline%order)+10),tt(rspline%nest),cc(rspline%nest)
+         real(kind=DP), optional  :: s2
+  real(kind=SP)           :: wrk(rspline%N*(rspline%order+3)+rspline%nest*(7+4*rspline%order)+10),tt(rspline%nest),cc(rspline%nest)
          integer           :: iwrk(rspline%nest)
 
          rspline%ierr = 0
@@ -2213,7 +2213,7 @@ contains
       subroutine sortitout
          implicit none
          integer :: order(rspline%N)
-         real(8) :: iiFrc(rspline%N), iiom(rspline%N)
+         real(kind=DP) :: iiFrc(rspline%N), iiom(rspline%N)
          iiFrc = rspline%Frc
          iiom = rspline%om
          call qsort_array(iiom, order)
@@ -2311,8 +2311,8 @@ contains
       implicit none
       type(spline)      :: rspline
       integer           :: kk, nn, iii, mm, siz
-      real(8)           :: xx(:), yy(:)
-      real(4)           :: yy2(size(yy)), xxx(size(xx))
+      real(kind=DP)           :: xx(:), yy(:)
+      real(kind=SP)           :: yy2(size(yy)), xxx(size(xx))
       integer           :: i, ier
 
       if (rspline%ierr > 0) return
@@ -2340,7 +2340,7 @@ contains
       implicit none
       type(spline)      :: rspline
       integer           :: kk, nn, iii, mm, siz
-      real(4)           :: xx(:), yy(:)
+      real(kind=SP)           :: xx(:), yy(:)
       integer           :: i, ier
 
       if (rspline%ierr > 0) return
@@ -2415,7 +2415,7 @@ contains
 !  type(spline)      :: rspline
 !  integer           :: kk,nn,iii,mm
 !  integer           :: i,ier
-!  real(4)           :: wrk(size(rspline%tt))
+!  real(kind=SP)           :: wrk(size(rspline%tt))
 !
 !    !------------------------------------------------------------------------!
 !    !  subroutine splder evaluates in a number of points x(i),i=1,2,...,m
@@ -2479,10 +2479,10 @@ contains
 !  type(spline)      :: rspline
 !  integer           :: kk,nn,iii,mm
 !  integer           :: mu
-!  real(8)           :: xx(:),yy(:,:)
-!  real(4)           :: yy2(size(yy(:,1)),size(yy(1,:)))
+!  real(kind=DP)           :: xx(:),yy(:,:)
+!  real(kind=SP)           :: yy2(size(yy(:,1)),size(yy(1,:)))
 !  integer           :: i,ier
-!  real(4)           :: wrk(size(rspline%tt))
+!  real(kind=SP)           :: wrk(size(rspline%tt))
 !
 !    if(rspline%ierr>0) return
 !    mm=size(xx(:))
@@ -2513,10 +2513,10 @@ contains
 !  type(spline)      :: rspline
 !  integer           :: kk,nn,mm
 !  integer           :: mu
-!  real(8)           :: xx(:),yy(:)
-!  real(4)           :: yy2(size(yy(:)))
+!  real(kind=DP)           :: xx(:),yy(:)
+!  real(kind=SP)           :: yy2(size(yy(:)))
 !  integer           :: i,ier
-!  real(4)           :: wrk(size(rspline%tt))
+!  real(kind=SP)           :: wrk(size(rspline%tt))
 !    if(rspline%ierr>0) return
 !    mm=size(xx)
 !    call splder(rspline%tt,rspline%nn,rspline%cc,rspline%order,mu,real(xx),yy2,mm,wrk,ier)
@@ -2544,9 +2544,9 @@ contains
 !  type(spline)      :: rspline
 !  integer           :: kk,nn,iii,mm
 !  integer           :: mu
-!  real(4)           :: xx(:),yy(:,:)
+!  real(kind=SP)           :: xx(:),yy(:,:)
 !  integer           :: i,ier
-!  real(4)           :: wrk(size(rspline%tt))
+!  real(kind=SP)           :: wrk(size(rspline%tt))
 !    if(rspline%ierr>0) return
 !    mm=size(xx(:))
 !     do iii=0,mu-1

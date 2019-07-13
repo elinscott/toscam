@@ -1,7 +1,7 @@
 module haimsz_class
 
    use fermion_hilbert_class, only: fermion_sector_type
-   use genvar, only: DBL
+   use genvar, only: DP
 
    !-------------------------------------------------------!
    ! FULL HAMILTONIAN IN FERMION SECTOR WITH TOTAL SPIN Sz !
@@ -19,7 +19,7 @@ module haimsz_class
       MODULE PROCEDURE HAIMsz_mult_fly_r, HAIMsz_mult_fly_c
    END INTERFACE
 
-   REAL(DBL), ALLOCATABLE                     :: QUART_INT_SZ(:)
+   REAL(DP), ALLOCATABLE                     :: QUART_INT_SZ(:)
    TYPE(fermion_sector_type), POINTER, PRIVATE :: sector_sz => NULL()
    INTEGER, PRIVATE :: istatemin, istatemax, dchunk, &
                        dimen
@@ -56,7 +56,7 @@ contains
       CALL new_masked_real_matrix(U, AIM%impurity%U)
 
       U%MASK%mat = .false.
-      WHERE (U%mat /= 0.0_DBL)
+      WHERE (U%mat /= 0.0_DP)
       U%MASK%mat = .true.
       END WHERE
 
@@ -125,7 +125,7 @@ contains
       ! SO WE TAKE CARE OF THAT ALSO WHEN TABULATING THE QUARTIC PART !
       !---------------------------------------------------------------!
 
-      QUART_INT_SZ = 0.0_DBL
+      QUART_INT_SZ = 0.0_DP
 
       DO istate = istatemin, istatemax ! span the local chunk of the sector
 
@@ -179,7 +179,7 @@ contains
       ! WE COMPUTE THE RELEVANT CHUNK OF vec_out = H * vec_in
 
       use fermion_Hilbert_class, only: HILBERT_SPACE_SPLITED_AMONG_NODES
-      use genvar, only: dbl, ierr, iproc, size2
+      use genvar, only: dp, ierr, iproc, size2
       use openmpmod, only: omp_get_num_threads, omp_get_thread_num, &
          openmp_split_array
       use globalvar_ed_solver, only: flag_mpi_greens, jhund, JHund_Slater_type, &
@@ -192,10 +192,10 @@ contains
 
       implicit none
 
-      COMPLEX(DBL), INTENT(INOUT) :: vec_out(:)
-      COMPLEX(DBL), INTENT(IN)    :: vec_in(:)
-      COMPLEX(DBL), ALLOCATABLE :: vec_tot_out(:)
-      COMPLEX(DBL)              :: hoffdiag
+      COMPLEX(DP), INTENT(INOUT) :: vec_out(:)
+      COMPLEX(DP), INTENT(IN)    :: vec_in(:)
+      COMPLEX(DP), ALLOCATABLE :: vec_tot_out(:)
+      COMPLEX(DP)              :: hoffdiag
       INTEGER                   :: istateloc, istate, jstate, noff, irank, &
                                    istatemin0, istatemax0, imin_(MAXT), &
                                    imax_(MAXT), TID, istatemin_, j
@@ -487,7 +487,7 @@ contains
          ! WE COMPUTE THE RELEVANT CHUNK OF vec_out = H * vec_in
 
          use fermion_Hilbert_class, only: HILBERT_SPACE_SPLITED_AMONG_NODES
-         use genvar, only: dbl, ierr, iproc, size2
+         use genvar, only: dp, ierr, iproc, size2
          use globalvar_ed_solver, only: flag_mpi_greens, jhund, open_mp, use_cc
          use haim2_class, only: diagsz, noffsz, offdiagsz, rankoffsz
          use linalg, only: long_sum
@@ -499,10 +499,10 @@ contains
 
          implicit none
 
-         REAL(DBL), INTENT(INOUT) :: vec_out(:)
-         REAL(DBL), INTENT(IN)    :: vec_in(:)
-         REAL(DBL), ALLOCATABLE :: vec_tot_out(:)
-         REAL(DBL)              :: hoffdiag
+         REAL(DP), INTENT(INOUT) :: vec_out(:)
+         REAL(DP), INTENT(IN)    :: vec_in(:)
+         REAL(DP), ALLOCATABLE :: vec_tot_out(:)
+         REAL(DP)              :: hoffdiag
          INTEGER                :: istateloc, istate, jstate, noff, irank, &
                                    istatemin0, istatemax0, imin_(MAXT), &
                                    imax_(MAXT), TID, istatemin_, j
@@ -650,7 +650,7 @@ contains
             ! WE COMPUTE THE RELEVANT CHUNK OF vec_out = H * vec_in
 
             use fermion_Hilbert_class, only: HILBERT_SPACE_SPLITED_AMONG_NODES
-            use genvar, only: dbl, ierr, iproc, size2
+            use genvar, only: dp, ierr, iproc, size2
             use haim2_class, only: AIM2sz
             use lockmod, only: MAXT
             use openmpmod, only: omp_get_num_threads, omp_get_thread_num, &
@@ -661,10 +661,10 @@ contains
 
             implicit none
 
-            REAL(DBL), INTENT(INOUT) :: vec_out(:)
-            REAL(DBL), INTENT(IN)    :: vec_in(:)
-            REAL(DBL), ALLOCATABLE :: vec_tot_out(:)
-            REAL(DBL)              :: hoffdiag
+            REAL(DP), INTENT(INOUT) :: vec_out(:)
+            REAL(DP), INTENT(IN)    :: vec_in(:)
+            REAL(DP), ALLOCATABLE :: vec_tot_out(:)
+            REAL(DP)              :: hoffdiag
             INTEGER                :: istateloc, istate, jstate, irank, istatemin0, &
                                       istatemax0, imin_(MAXT), imax_(MAXT), TID, &
                                       istatemin_, j, iorb, jorb
@@ -909,7 +909,7 @@ contains
             ! WE COMPUTE THE RELEVANT CHUNK OF vec_out = H * vec_in
 
             use fermion_Hilbert_class, only: HILBERT_SPACE_SPLITED_AMONG_NODES
-            use genvar, only: dbl, ierr, iproc, size2
+            use genvar, only: dp, ierr, iproc, size2
             use haim2_class, only: AIM2sz
             use lockmod, only: MAXT
             use openmpmod, only: omp_get_num_threads, omp_get_thread_num, &
@@ -920,10 +920,10 @@ contains
 
             implicit none
 
-            COMPLEX(DBL), INTENT(INOUT) :: vec_out(:)
-            COMPLEX(DBL), INTENT(IN)    :: vec_in(:)
-            COMPLEX(DBL), ALLOCATABLE :: vec_tot_out(:)
-            COMPLEX(DBL)              :: hoffdiag
+            COMPLEX(DP), INTENT(INOUT) :: vec_out(:)
+            COMPLEX(DP), INTENT(IN)    :: vec_in(:)
+            COMPLEX(DP), ALLOCATABLE :: vec_tot_out(:)
+            COMPLEX(DP)              :: hoffdiag
             INTEGER                   :: istateloc, istate, jstate, irank, &
                                          istatemin0, istatemax0, imin_(MAXT), &
                                          imax_(MAXT), TID, istatemin_, j, iorb, jorb

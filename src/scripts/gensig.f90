@@ -1,7 +1,7 @@
 program gensigg
    integer :: i, j, k, icol, ifrequ
-   real(8), allocatable :: gensig(:)
-   real(8) :: a1, a2, beta
+   real(kind=DP), allocatable :: gensig(:)
+   real(kind=DP) :: a1, a2, beta
    integer :: imatsu
 
    write (*, *) 'real 0 or matsu 1 ?'

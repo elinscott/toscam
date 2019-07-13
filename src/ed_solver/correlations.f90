@@ -1,7 +1,7 @@
 module correlations
 
    use correl_class, only: correl_type
-   use genvar, only: DBL
+   use genvar, only: DP
    use green_class, only: green_type
    use readable_vec_class, only: readable_vec_type
 
@@ -33,7 +33,7 @@ module correlations
    TYPE(correl_type), SAVE           :: CHI, CHIret
 
    LOGICAL                            :: SUPER
-   REAL(DBL)                          :: Nc, beta, width
+   REAL(DP)                          :: Nc, beta, width
    INTEGER, ALLOCATABLE               :: triplets(:, :), quadruplets(:, :)
    TYPE(readable_vec_type), POINTER   :: vec_list(:) => NULL()
    LOGICAL                            :: compute_Sz, compute_Spm, &
@@ -149,8 +149,8 @@ contains
       TYPE(correl_type), INTENT(IN)    :: G
       TYPE(AIM_type), INTENT(IN)       :: AIM
       TYPE(masked_matrix_type) :: E
-      COMPLEX(DBL)             :: Gm1(G%N, G%N, G%Nw)
-      COMPLEX(DBL)             :: bath1(G%N, G%N, G%Nw)
+      COMPLEX(DP)             :: Gm1(G%N, G%N, G%Nw)
+      COMPLEX(DP)             :: bath1(G%N, G%N, G%Nw)
       INTEGER                  :: iw, nnn
       logical                  :: retarded, block
 
@@ -223,7 +223,7 @@ contains
 
       use mask_class, only: delete_mask, mask_type, new_mask
       use correl_class, only: correl2vec
-      use genvar, only: dbl
+      use genvar, only: dp
       use masked_matrix_class, only: masked_matrix2vec
       use green_class, only: green_type
 
@@ -234,11 +234,11 @@ contains
       TYPE(green_type), INTENT(IN), OPTIONAL :: GF(2)
       INTEGER         :: Nc, bndsup(2), bndsdo(2), iw, iorb, jorb, ipm, mipm
       TYPE(mask_type) :: MASK
-      COMPLEX(DBL)    :: swapvec(GNAMBU%Nw)
+      COMPLEX(DP)    :: swapvec(GNAMBU%Nw)
 #ifdef _complex
-      COMPLEX(DBL)    :: dswapv
+      COMPLEX(DP)    :: dswapv
 #else
-      REAL(DBL)       :: dswapv
+      REAL(DP)       :: dswapv
 #endif
 
       Nc = G(1)%N
@@ -271,8 +271,8 @@ contains
          DO ipm = 1, 2
             mipm = 3 - ipm
 
-            GNAMBU%correl(ipm, mipm)%fctn = 0.0_DBL
-            GNAMBU%correlstat(ipm, mipm)%rc%mat = 0.0_DBL
+            GNAMBU%correl(ipm, mipm)%fctn = 0.0_DP
+            GNAMBU%correlstat(ipm, mipm)%rc%mat = 0.0_DP
 
             ! NORMAL PART
 

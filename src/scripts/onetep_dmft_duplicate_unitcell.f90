@@ -1,8 +1,11 @@
 program duplicate
+
+   use genvar, only: DP
+
    implicit none
    integer       :: i, j, k, l, m
    integer       :: ii(3), iii(3), k1, k2, k3
-   real(8)       :: pos_shift, shift(3), a(3, 3), aa(3, 3), v(3), coord(2000, 3)
+   real(kind=DP)       :: pos_shift, shift(3), a(3, 3), aa(3, 3), v(3), coord(2000, 3)
    character(30) :: filename, atom(2000), temp, species
 
    open (unit=1010, file='duplicate.input')

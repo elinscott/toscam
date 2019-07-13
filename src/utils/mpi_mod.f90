@@ -103,7 +103,7 @@ contains
 !
 !   subroutine test_mpi_gather_scatter
 !   implicit none
-!   real(8) :: vec_(size2,10),vec(size2*10)
+!   real(kind=DP) :: vec_(size2,10),vec(size2*10)
 !   integer :: i
 !
 !   if(rank==0)then
@@ -130,7 +130,7 @@ contains
 
    subroutine scatter_it_c(vec_to_scatter, target_vec)
       implicit none
-      complex(8), dimension(:)  :: vec_to_scatter, target_vec
+      complex(kind=DP), dimension(:)  :: vec_to_scatter, target_vec
 
       if (size2 == 1 .or. no_mpi) then
          target_vec = vec_to_scatter
@@ -149,7 +149,7 @@ contains
 
    subroutine scatter_it_r(vec_to_scatter, target_vec)
       implicit none
-      real(8), dimension(:)    :: vec_to_scatter, target_vec
+      real(kind=DP), dimension(:)    :: vec_to_scatter, target_vec
 
       if (size2 == 1 .or. no_mpi) then
          target_vec = vec_to_scatter
@@ -183,8 +183,8 @@ contains
 !   integer,parameter :: n1=4,n2_loc=2
 !   integer           :: n2
 !   integer           :: i,j,k,l,ii,jj
-!   real(8)           :: mat_glob(n1,size2*n2_loc),transp(size2*n2_loc,n1)
-!   real(8)           :: local_vec(n1*n2_loc)
+!   real(kind=DP)           :: mat_glob(n1,size2*n2_loc),transp(size2*n2_loc,n1)
+!   real(kind=DP)           :: local_vec(n1*n2_loc)
 !
 !   n2=size2*n2_loc
 !
@@ -220,7 +220,7 @@ contains
 !   subroutine print_it(mat_mpi,n1,n2)
 !   implicit none
 !   integer :: n1,n2,i
-!   real(8) :: mat_mpi(n1,n2)
+!   real(kind=DP) :: mat_mpi(n1,n2)
 !
 !   do ii=1,size2
 !    call mpibarrier
@@ -272,7 +272,7 @@ contains
       ! local chunk on one node is nup x ndn                  !
       !-------------------------------------------------------!
 
-      real(8)    :: vec(:), vec2(size(vec))
+      real(kind=DP)    :: vec(:), vec2(size(vec))
       integer(4) :: nup, ndn
       integer(4) :: send_cnt(size2), send_disp(size2), rcv_cnt(size2), rcv_disp(size2), i, ndn_global
       integer(4) :: npack
@@ -338,7 +338,7 @@ contains
 
       subroutine global_transpose(vec2, vec, nup, ndn)
          implicit none
-         real(8) :: vec(nup, ndn), vec2(ndn, nup)
+         real(kind=DP) :: vec(nup, ndn), vec2(ndn, nup)
          integer :: nup, ndn
          vec2 = transpose(vec)
       end subroutine
@@ -349,7 +349,7 @@ contains
 
       subroutine local_transpose_of_the_blocks(vec, vec2)
          implicit none
-         real(8) :: vec(:), vec2(:)
+         real(kind=DP) :: vec(:), vec2(:)
          do i = 1, size2
             call transpose_block_i(vec((i - 1)*npack + 1:i*npack), vec2((i - 1)*npack + 1:i*npack))
          enddo
@@ -362,7 +362,7 @@ contains
       subroutine transpose_block_i(vec, vec2)
          implicit none
          integer :: i1, i2, i
-         real(8) :: vec(ndn, nup/size2), vec2(nup/size2, ndn)
+         real(kind=DP) :: vec(ndn, nup/size2), vec2(nup/size2, ndn)
          vec2 = transpose(vec)
       end subroutine
 
@@ -396,7 +396,7 @@ contains
       ! local chunk on one node is nup x ndn                  !
       !-------------------------------------------------------!
 
-      complex(8) :: vec(:), vec2(size(vec))
+      complex(kind=DP) :: vec(:), vec2(size(vec))
       integer(4) :: nup, ndn
       integer(4) :: send_cnt(size2), send_disp(size2), rcv_cnt(size2), rcv_disp(size2), i, ndn_global
       integer(4) :: npack
@@ -462,7 +462,7 @@ contains
 
       subroutine global_transpose(vec2, vec, nup, ndn)
          implicit none
-         complex(8) :: vec(nup, ndn), vec2(ndn, nup)
+         complex(kind=DP) :: vec(nup, ndn), vec2(ndn, nup)
          integer    :: nup, ndn
          vec2 = transpose(vec)
       end subroutine
@@ -473,7 +473,7 @@ contains
 
       subroutine local_transpose_of_the_blocks(vec, vec2)
          implicit none
-         complex(8) :: vec(:), vec2(:)
+         complex(kind=DP) :: vec(:), vec2(:)
          do i = 1, size2
             call transpose_block_i(vec((i - 1)*npack + 1:i*npack), vec2((i - 1)*npack + 1:i*npack))
          enddo
@@ -486,7 +486,7 @@ contains
       subroutine transpose_block_i(vec, vec2)
          implicit none
          integer :: i1, i2, i
-         complex(8) :: vec(ndn, nup/size2), vec2(nup/size2, ndn)
+         complex(kind=DP) :: vec(ndn, nup/size2), vec2(nup/size2, ndn)
          vec2 = transpose(vec)
       end subroutine
 
@@ -663,8 +663,8 @@ contains
 !*********************************************
 !
 !  subroutine test_mpi_dot
-!  real(8)    :: v1(3),v2(3)
-!  complex(8) :: vv1(3),vv2(3)
+!  real(kind=DP)    :: v1(3),v2(3)
+!  complex(kind=DP) :: vv1(3),vv2(3)
 !
 !  call randomize_rank1(v1)
 !  call randomize_rank1(v2)
@@ -735,10 +735,10 @@ contains
 
    !------------------------!
 
-   real(8) function MPI_DOT_PRODUCTr(v1, v2, split)
+   real(kind=DP) function MPI_DOT_PRODUCTr(v1, v2, split)
       implicit none
-      real(8)          :: v1(:), v2(:)
-      real(8)          :: m
+      real(kind=DP)          :: v1(:), v2(:)
+      real(kind=DP)          :: m
       integer          :: i, j, k, l
       logical, optional :: split
 
@@ -780,10 +780,10 @@ contains
 
    !------------------------!
 
-   complex(8) function MPI_DOT_PRODUCTc(v1, v2, split)
+   complex(kind=DP) function MPI_DOT_PRODUCTc(v1, v2, split)
       implicit none
-      complex(8)       :: v1(:), v2(:)
-      complex(8)       :: m
+      complex(kind=DP)       :: v1(:), v2(:)
+      complex(kind=DP)       :: m
       integer          :: i, j, k, l
       logical, optional :: split
 
@@ -884,7 +884,7 @@ contains
 ! subroutine test_gather
 ! implicit none
 ! integer                                :: i1,i2,i,v(2),w(2)
-! real(8),dimension(22)                  :: a
+! real(kind=DP),dimension(22)                  :: a
 !
 !  write(*,*) '-------------------'
 !  write(*,*) '-------------------'
@@ -922,8 +922,8 @@ contains
 ! subroutine efficient_gather_(a,v,w)
 ! implicit none
 ! integer                                :: v(:),w(:),siz
-! real(8),dimension(:),target            :: a
-! real(8),dimension(:),pointer           :: c => null()
+! real(kind=DP),dimension(:),target            :: a
+! real(kind=DP),dimension(:),pointer           :: c => null()
 !
 !  if(no_mpi.or.size2==1) return
 !
@@ -954,7 +954,7 @@ contains
 
    subroutine mpibcastbcomp_2d(a, iii)
       implicit none
-      complex(8), dimension(:, :)              :: a
+      complex(kind=DP), dimension(:, :)              :: a
       integer, optional                       :: iii
       integer                                :: jjj
       if (no_mpi .or. size2 == 1) return
@@ -970,7 +970,7 @@ contains
 
    subroutine mpibcastb_2d(a, iii)
       implicit none
-      real(8), dimension(:, :)                 :: a
+      real(kind=DP), dimension(:, :)                 :: a
       integer, optional                       :: iii
       integer                                :: jjj
       if (no_mpi .or. size2 == 1) return
@@ -986,7 +986,7 @@ contains
 
    subroutine mpibcastbcomp_(a, iii)
       implicit none
-      complex(8), dimension(:)                :: a
+      complex(kind=DP), dimension(:)                :: a
       integer, optional                       :: iii
       integer                                :: jjj
       if (no_mpi .or. size2 == 1) return
@@ -1002,7 +1002,7 @@ contains
 
    subroutine mpibcastb_(a, iii)
       implicit none
-      real(8), dimension(:)                   :: a
+      real(kind=DP), dimension(:)                   :: a
       integer, optional                       :: iii
       integer                                :: jjj
       if (no_mpi .or. size2 == 1) return
@@ -1018,7 +1018,7 @@ contains
 
    subroutine mpibcastb__(a, iii)
       implicit none
-      real(8)                                :: a
+      real(kind=DP)                                :: a
       integer, optional                       :: iii
       integer                                :: jjj
       if (no_mpi .or. size2 == 1) return
@@ -1074,7 +1074,7 @@ contains
    subroutine mpibcast_(a, step)
       implicit none
       integer                                :: i, i1, i2, step, j
-      real(8), dimension(:)                   :: a
+      real(kind=DP), dimension(:)                   :: a
       if (no_mpi .or. size2 == 1) return
       i1 = 1
       i2 = step
@@ -1100,8 +1100,8 @@ contains
    subroutine mpibcast___(a, v, w)
       implicit none
       integer                                :: v(:), w(:), siz
-      real(8), dimension(:), target            :: a
-      real(8), dimension(:), pointer           :: c => null()
+      real(kind=DP), dimension(:), target            :: a
+      real(kind=DP), dimension(:), pointer           :: c => null()
 
       if (size2 == 1 .or. no_mpi) return
 
@@ -1131,7 +1131,7 @@ contains
    subroutine mpibcast_2arrays_r(a, source, v, w)
       implicit none
       integer                                :: v(:), w(:)
-      real(8), dimension(:)                   :: a, source
+      real(kind=DP), dimension(:)                   :: a, source
       if (size2 == 1 .or. no_mpi) then
          a = source
          return
@@ -1148,7 +1148,7 @@ contains
 
    subroutine mpigather_on_masternode_r(a, source)
       implicit none
-      real(8), dimension(:)   :: a, source
+      real(kind=DP), dimension(:)   :: a, source
       if (size2 == 1 .or. no_mpi) then
          a = source
          return
@@ -1166,7 +1166,7 @@ contains
 
    subroutine mpigather_on_masternode_c(a, source)
       implicit none
-      complex(8), dimension(:)  :: a, source
+      complex(kind=DP), dimension(:)  :: a, source
       if (size2 == 1 .or. no_mpi) then
          a = source
          return
@@ -1185,7 +1185,7 @@ contains
    subroutine mpibcast_no_disp_r(a, source, v)
       implicit none
       integer                                :: v(:), disp(size(v)), i
-      real(8), dimension(:)                   :: a, source
+      real(kind=DP), dimension(:)                   :: a, source
       if (size2 == 1 .or. no_mpi) then
          a = source
          return
@@ -1207,7 +1207,7 @@ contains
    subroutine mpibcast_no_disp_c(a, source, v)
       implicit none
       integer                                   :: v(:), disp(size(v)), i
-      complex(8), dimension(:)                   :: a, source
+      complex(kind=DP), dimension(:)                   :: a, source
       if (size2 == 1 .or. no_mpi) then
          a = source
          return
@@ -1233,7 +1233,7 @@ contains
    subroutine mpibcast_2arrays_c(a, source, v, w)
       implicit none
       integer                                :: v(:), w(:)
-      complex(8), dimension(:)                :: a, source
+      complex(kind=DP), dimension(:)                :: a, source
       if (size2 == 1 .or. no_mpi) then
          a = source
          return
@@ -1251,8 +1251,8 @@ contains
    subroutine mpibcast____(a, v, w)
       implicit none
       integer                                :: v(:), w(:), siz
-      complex(8), dimension(:), target         :: a
-      complex(8), dimension(:), pointer        :: c => null()
+      complex(kind=DP), dimension(:), target         :: a
+      complex(kind=DP), dimension(:), pointer        :: c => null()
 
       if (size2 == 1 .or. no_mpi) return
 
@@ -1282,7 +1282,7 @@ contains
 ! subroutine mpibcast__(a,step)
 ! implicit none
 ! integer                              :: i1,i2,step,j,i
-! complex(8),dimension(:)              :: a
+! complex(kind=DP),dimension(:)              :: a
 !  if(no_mpi.or.size2==1) return
 !  i1=1
 !  i2=step
@@ -1309,7 +1309,7 @@ contains
 ! subroutine mpi_readr(unit,number)
 ! implicit none
 ! integer :: unit,ier
-! real(8)  :: number
+! real(kind=DP)  :: number
 !  if(rank==0) read(unit,*,end=66,err=66) number
 !  66 continue
 !  if(size2>1) call MPI_BCAST(number,1,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ierr)
@@ -1321,7 +1321,7 @@ contains
 ! subroutine mpi_readrd(unit,number,number2)
 ! implicit none
 ! integer :: unit
-! real(8)  :: number,number2
+! real(kind=DP)  :: number,number2
 !  if(rank==0) read(unit,*,end=66,err=66) number,number2
 !  66 continue
 !  if(no_mpi.or.size2==1) return
@@ -1373,7 +1373,7 @@ contains
 ! subroutine mpi_readc(unit,number)
 ! implicit none
 ! integer     :: unit
-! complex(8)  :: number
+! complex(kind=DP)  :: number
 !  if(rank==0) read(unit,*,end=66,err=66) number
 !  66 continue
 !  if(size2>1.and..not.no_mpi) call MPI_BCAST(number,1,MPI_DOUBLE_COMPLEX,0,MPI_COMM_WORLD,ierr)
@@ -1427,7 +1427,7 @@ contains
 !
 ! subroutine mpiswap_rbb(array1,ii)
 ! implicit none
-! real(8) :: array1,temp(0:size2-1)
+! real(kind=DP) :: array1,temp(0:size2-1)
 ! integer :: i,j,k,l,m,s1,s2,ii
 !  if(no_mpi.or.size2==1) return
 !  do i=0,size2-1
@@ -1454,7 +1454,7 @@ contains
 !
 ! subroutine mpiswap_cbb(array1,ii)
 ! implicit none
-! complex(8) :: array1,temp(0:size2-1)
+! complex(kind=DP) :: array1,temp(0:size2-1)
 ! integer :: i,j,k,l,m,s1,s2,ii
 !  if(no_mpi.or.size2==1) return
 !  do i=0,size2-1
@@ -1538,7 +1538,7 @@ contains
 !
 ! subroutine mpiswap_r(array1,ii)
 ! implicit none
-! real(8)  :: array1(:,:),temp(0:size2-1,size(array1(:,1)),size(array1(1,:)))
+! real(kind=DP)  :: array1(:,:),temp(0:size2-1,size(array1(:,1)),size(array1(1,:)))
 ! integer :: i,j,k,l,m,s1,s2,ii
 !  if(no_mpi.or.size2==1) return
 !  s1=size(array1(:,1))
@@ -1567,7 +1567,7 @@ contains
 !
 ! subroutine mpiswap_rb(array1,ii)
 ! implicit none
-! real(8)  :: array1(:),temp(0:size2-1,size(array1(:)))
+! real(kind=DP)  :: array1(:),temp(0:size2-1,size(array1(:)))
 ! integer :: i,j,k,l,m,s1,s2,ii
 !  if(no_mpi.or.size2==1) return
 !  s1=size(array1(:))
@@ -1595,7 +1595,7 @@ contains
 !
 ! subroutine mpiswap_c(array1,ii)
 ! implicit none
-! complex(8) :: array1(:,:),temp(0:size2-1,size(array1(:,1)),size(array1(1,:)))
+! complex(kind=DP) :: array1(:,:),temp(0:size2-1,size(array1(:,1)),size(array1(1,:)))
 ! integer    :: i,j,k,l,m,s1,s2,ii
 !  if(no_mpi.or.size2==1) return
 !  s1=size(array1(:,1))
@@ -1624,7 +1624,7 @@ contains
 !
 ! subroutine mpiswap_cb(array1,ii)
 ! implicit none
-! complex(8) :: array1(:),temp(0:size2-1,size(array1(:)))
+! complex(kind=DP) :: array1(:),temp(0:size2-1,size(array1(:)))
 ! integer    :: i,j,k,l,m,s1,s2,ii
 !  if(no_mpi.or.size2==1) return
 !  s1=size(array1(:))
@@ -1657,7 +1657,7 @@ contains
 !
 ! subroutine dim1(vec,Ivec)
 ! implicit none
-! complex(8) :: vec(:),vecm(size(vec)),vec2m(size(vec)),Ivec(size(vec))
+! complex(kind=DP) :: vec(:),vecm(size(vec)),vec2m(size(vec)),Ivec(size(vec))
 ! integer    :: i,j,k,sizev
 !  Ivec=0
 !  vec2m=0
@@ -1679,7 +1679,7 @@ contains
 !
 ! subroutine dim2(mat,Imat)
 ! implicit none
-! complex(8) :: mat(:,:),matm(size(mat(:,1)),size(mat(1,:))), &
+! complex(kind=DP) :: mat(:,:),matm(size(mat(:,1)),size(mat(1,:))), &
 !                     & mat2m(size(mat(:,1)),size(mat(1,:))), &
 !                     &  Imat(size(mat(:,1)),size(mat(1,:)))
 ! integer    :: i,j,k,s1,s2
@@ -1705,7 +1705,7 @@ contains
 !
 ! subroutine dim3(mat,Imat)
 ! implicit none
-! complex(8) :: mat(:,:,:),matm(size(mat(:,1,1)),size(mat(1,:,1)),size(mat(1,1,:))), &
+! complex(kind=DP) :: mat(:,:,:),matm(size(mat(:,1,1)),size(mat(1,:,1)),size(mat(1,1,:))), &
 !             & mat2m(size(mat(:,1,1)),size(mat(1,:,1)),size(mat(1,1,:))), &
 !            &  Imat(size(mat(:,1,1)),size(mat(1,:,1)),size(mat(1,1,:)))
 ! integer :: i,j,k,s1,s2,s3
@@ -1735,7 +1735,7 @@ contains
 !
 ! subroutine rdim1(vec,Ivec)
 ! implicit none
-! real(8) :: vec(:),vecm(size(vec)),vec2m(size(vec)),Ivec(size(vec))
+! real(kind=DP) :: vec(:),vecm(size(vec)),vec2m(size(vec)),Ivec(size(vec))
 ! integer :: i,j,k,sizev
 !  Ivec=0
 !  vec2m=0
@@ -1757,7 +1757,7 @@ contains
 !
 ! subroutine rdim2(mat,Imat)
 ! implicit none
-! real(8) :: mat(:,:),matm(size(mat(:,1)),size(mat(1,:))), &
+! real(kind=DP) :: mat(:,:),matm(size(mat(:,1)),size(mat(1,:))), &
 !                  & mat2m(size(mat(:,1)),size(mat(1,:))), &
 !                  &  Imat(size(mat(:,1)),size(mat(1,:)))
 ! integer :: i,j,k,s1,s2
@@ -1783,7 +1783,7 @@ contains
 !
 ! subroutine rdim3(mat,Imat)
 ! implicit none
-! real(8) :: mat(:,:,:),matm(size(mat(:,1,1)),size(mat(1,:,1)),size(mat(1,1,:))), &
+! real(kind=DP) :: mat(:,:,:),matm(size(mat(:,1,1)),size(mat(1,:,1)),size(mat(1,1,:))), &
 !             & mat2m(size(mat(:,1,1)),size(mat(1,:,1)),size(mat(1,1,:))), &
 !            &  Imat(size(mat(:,1,1)),size(mat(1,:,1)),size(mat(1,1,:)))
 ! integer :: i,j,k,s1,s2,s3
@@ -1810,7 +1810,7 @@ contains
 
    subroutine adim0(vec, vecm)
       implicit none
-      complex(8) :: vec, vecm
+      complex(kind=DP) :: vec, vecm
       if (size2 == 1 .or. no_mpi) then
          vecm = vec
          return
@@ -1832,7 +1832,7 @@ contains
 
    subroutine adim0r(vec, vecm)
       implicit none
-      real(8)    :: vec, vecm
+      real(kind=DP)    :: vec, vecm
       if (size2 == 1 .or. no_mpi) then
          vecm = vec
          return
@@ -1854,7 +1854,7 @@ contains
 
    subroutine adim0_(vec)
       implicit none
-      complex(8) :: vec, vecm
+      complex(kind=DP) :: vec, vecm
       if (size2 == 1 .or. no_mpi) then
          return
       endif
@@ -1875,7 +1875,7 @@ contains
 
    subroutine adim0r_(vec)
       implicit none
-      real(8)    :: vec, vecm
+      real(kind=DP)    :: vec, vecm
       if (size2 == 1 .or. no_mpi) then
          return
       endif
@@ -1917,7 +1917,7 @@ contains
 
    subroutine adim1(vec, vecm2)
       implicit none
-      complex(8) :: vec(:), vecm(size(vec)), vecm2(size(vec))
+      complex(kind=DP) :: vec(:), vecm(size(vec)), vecm2(size(vec))
       integer    :: sizev
       if (size2 == 1 .or. no_mpi) then
          vecm2 = vec
@@ -1936,7 +1936,7 @@ contains
 
    subroutine adim2(mat, matm)
       implicit none
-      complex(8) :: mat(:, :), matm(size(mat, 1), size(mat, 2))
+      complex(kind=DP) :: mat(:, :), matm(size(mat, 1), size(mat, 2))
       integer    :: s1, s2
       if (size2 == 1 .or. no_mpi) then
          matm = mat
@@ -1955,7 +1955,7 @@ contains
 
    subroutine adim3(mat, matm)
       implicit none
-      complex(8) :: mat(:, :, :), matm(size(mat(:, 1, 1)), size(mat(1, :, 1)), size(mat(1, 1, :)))
+      complex(kind=DP) :: mat(:, :, :), matm(size(mat(:, 1, 1)), size(mat(1, :, 1)), size(mat(1, 1, :)))
       integer    :: s1, s2, s3
       if (size2 == 1 .or. no_mpi) then
          matm = mat
@@ -1974,7 +1974,7 @@ contains
 
    subroutine adim1s(vec)
       implicit none
-      complex(8) :: vec(:), vecm(size(vec))
+      complex(kind=DP) :: vec(:), vecm(size(vec))
       integer    :: sizev
       if (size2 == 1 .or. no_mpi) then
          return
@@ -1992,7 +1992,7 @@ contains
 
    subroutine adim2s(mat)
       implicit none
-      complex(8) :: mat(:, :), matm(size(mat(:, 1)), size(mat(1, :)))
+      complex(kind=DP) :: mat(:, :), matm(size(mat(:, 1)), size(mat(1, :)))
       integer    :: s1, s2
       if (size2 == 1 .or. no_mpi) then
          return
@@ -2010,7 +2010,7 @@ contains
 
    subroutine adim3s(mat)
       implicit none
-      complex(8) :: mat(:, :, :), matm(size(mat(:, 1, 1)), size(mat(1, :, 1)), size(mat(1, 1, :)))
+      complex(kind=DP) :: mat(:, :, :), matm(size(mat(:, 1, 1)), size(mat(1, :, 1)), size(mat(1, 1, :)))
       integer    :: s1, s2, s3
       if (size2 == 1 .or. no_mpi) then
          return
@@ -2028,7 +2028,7 @@ contains
 
    subroutine adim4s(mat)
       implicit none
-     complex(8) :: mat(:, :, :, :), matm(size(mat(:, 1, 1, 1)), size(mat(1, :, 1, 1)), size(mat(1, 1, :, 1)), size(mat(1, 1, 1, :)))
+     complex(kind=DP) :: mat(:, :, :, :), matm(size(mat(:, 1, 1, 1)), size(mat(1, :, 1, 1)), size(mat(1, 1, :, 1)), size(mat(1, 1, 1, :)))
       integer    :: s(4), p
       if (size2 == 1 .or. no_mpi) then
          return
@@ -2048,7 +2048,7 @@ contains
 
    subroutine adim5r(mat)
       implicit none
-      real(8) :: mat(:, :, :, :, :), &
+      real(kind=DP) :: mat(:, :, :, :, :), &
      & matm(size(mat(:,1,1,1,1)),size(mat(1,:,1,1,1)),size(mat(1,1,:,1,1)),size(mat(1,1,1,:,1)),size(mat(1,1,1,1,:)))
       integer    :: s(5), p
       if (size2 == 1 .or. no_mpi) then
@@ -2069,7 +2069,7 @@ contains
 
    subroutine adim5s(mat)
       implicit none
-      complex(8) :: mat(:, :, :, :, :), &
+      complex(kind=DP) :: mat(:, :, :, :, :), &
      & matm(size(mat(:,1,1,1,1)),size(mat(1,:,1,1,1)),size(mat(1,1,:,1,1)),size(mat(1,1,1,:,1)),size(mat(1,1,1,1,:)))
       integer    :: s(5), p
       if (size2 == 1 .or. no_mpi) then
@@ -2093,7 +2093,7 @@ contains
 
    subroutine ardim0(vec, vecm2)
       implicit none
-      real(8)  :: vec, vecm, vecm2
+      real(kind=DP)  :: vec, vecm, vecm2
       integer  :: sizev
       if (size2 == 1 .or. no_mpi) then
          vecm2 = vec
@@ -2115,7 +2115,7 @@ contains
 
    subroutine ardim1(vec, vecm2)
       implicit none
-      real(8)  :: vec(:), vecm(size(vec)), vecm2(size(vec))
+      real(kind=DP)  :: vec(:), vecm(size(vec)), vecm2(size(vec))
       integer  :: sizev
       if (size2 == 1 .or. no_mpi) then
          vecm2 = vec
@@ -2134,7 +2134,7 @@ contains
 
    subroutine ardim2(mat, matm)
       implicit none
-      real(8) :: mat(:, :), matm(size(mat(:, 1)), size(mat(1, :)))
+      real(kind=DP) :: mat(:, :), matm(size(mat(:, 1)), size(mat(1, :)))
       integer :: s1, s2
       if (size2 == 1 .or. no_mpi) then
          matm = mat
@@ -2153,7 +2153,7 @@ contains
 
    subroutine ardim3(mat, matm)
       implicit none
-      real(8)  :: mat(:, :, :), matm(size(mat(:, 1, 1)), size(mat(1, :, 1)), size(mat(1, 1, :)))
+      real(kind=DP)  :: mat(:, :, :), matm(size(mat(:, 1, 1)), size(mat(1, :, 1)), size(mat(1, 1, :)))
       integer  :: s1, s2, s3
       if (size2 == 1 .or. no_mpi) then
          matm = mat
@@ -2171,7 +2171,7 @@ contains
 
    subroutine ardim1s(vec)
       implicit none
-      real(8)  :: vec(:), vecm(size(vec))
+      real(kind=DP)  :: vec(:), vecm(size(vec))
       integer :: sizev
       if (size2 == 1 .or. no_mpi) then
          return
@@ -2189,7 +2189,7 @@ contains
 
    subroutine ardim2s(mat)
       implicit none
-      real(8)  :: mat(:, :), matm(size(mat(:, 1)), size(mat(1, :)))
+      real(kind=DP)  :: mat(:, :), matm(size(mat(:, 1)), size(mat(1, :)))
       integer :: s1, s2
       if (size2 == 1 .or. no_mpi) then
          return
@@ -2207,7 +2207,7 @@ contains
 
    subroutine ardim3s(mat)
       implicit none
-      real(8)  :: mat(:, :, :), matm(size(mat(:, 1, 1)), size(mat(1, :, 1)), size(mat(1, 1, :)))
+      real(kind=DP)  :: mat(:, :, :), matm(size(mat(:, 1, 1)), size(mat(1, :, 1)), size(mat(1, 1, :)))
       integer :: s1, s2, s3
       if (size2 == 1 .or. no_mpi) then
          return
@@ -2225,7 +2225,7 @@ contains
 
    subroutine ardim4s(mat)
       implicit none
-      real(8)  :: mat(:, :, :, :), matm(size(mat(:, 1, 1, 1)), size(mat(1, :, 1, 1)), size(mat(1, 1, :, 1)), size(mat(1, 1, 1, :)))
+      real(kind=DP)  :: mat(:, :, :, :), matm(size(mat(:, 1, 1, 1)), size(mat(1, :, 1, 1)), size(mat(1, 1, :, 1)), size(mat(1, 1, 1, :)))
       integer  :: s(4), p
       if (size2 == 1 .or. no_mpi) then
          return
@@ -2248,8 +2248,8 @@ contains
 !
 ! subroutine ardim1_mask(vec,vec2,mask,onl,onlyav)
 ! implicit none
-! real(8),intent(inout) :: vec(:),vec2(size(vec))
-! real(8)               :: vecm(size(vec))
+! real(kind=DP),intent(inout) :: vec(:),vec2(size(vec))
+! real(kind=DP)               :: vecm(size(vec))
 ! integer               :: i,j,k,sizev,count
 ! integer,intent(in)    :: mask
 ! integer               :: tot,maskm
@@ -2289,8 +2289,8 @@ contains
 !
 ! subroutine el_mask(vec,vec2,mask,onl,onlyav)
 ! implicit none
-! real(8),intent(inout) :: vec,vec2
-! real(8)               :: vecm
+! real(kind=DP),intent(inout) :: vec,vec2
+! real(kind=DP)               :: vecm
 ! integer               :: i,j,k,sizev,count
 ! integer,intent(in)    :: mask
 ! integer               :: tot,maskm
@@ -2330,9 +2330,9 @@ contains
 !
 ! subroutine ardim2_mask(mat,matm2,mask,onl,onlyav)
 ! implicit none
-!  real(8),intent(inout) :: mat(:,:)
-!  real(8),intent(inout) :: matm2(:,:)
-!  real(8)               :: matm(size(mat(:,1)),size(mat(1,:)))
+!  real(kind=DP),intent(inout) :: mat(:,:)
+!  real(kind=DP),intent(inout) :: matm2(:,:)
+!  real(kind=DP)               :: matm(size(mat(:,1)),size(mat(1,:)))
 !  integer               :: i,j,k,s1,s2
 !  integer,intent(in)    :: mask
 !  integer               :: maskm
@@ -2378,9 +2378,9 @@ contains
 !
 ! subroutine ardim3_mask(mat,matm2,mask,onl,onlyav)
 ! implicit none
-!  real(8),intent(inout) :: mat(:,:,:)
-!  real(8),intent(inout) :: matm2(:,:,:)
-!  real(8)               :: matm(size(mat,1),size(mat,2),size(mat,3))
+!  real(kind=DP),intent(inout) :: mat(:,:,:)
+!  real(kind=DP),intent(inout) :: matm2(:,:,:)
+!  real(kind=DP)               :: matm(size(mat,1),size(mat,2),size(mat,3))
 !  integer               :: i,j,k,s(3),p
 !  integer,intent(in)    :: mask
 !  integer               :: maskm
@@ -2423,9 +2423,9 @@ contains
 !
 ! subroutine ardim4_mask(rmat,matm2,mask,onl,onlyav)
 ! implicit none
-!  real(8)               :: rmat(:,:,:,:)
-!  real(8)               :: matm2(:,:,:,:)
-!  real(8)               :: matm(size(rmat,1),size(rmat,2),size(rmat,3),size(rmat,4))
+!  real(kind=DP)               :: rmat(:,:,:,:)
+!  real(kind=DP)               :: matm2(:,:,:,:)
+!  real(kind=DP)               :: matm(size(rmat,1),size(rmat,2),size(rmat,3),size(rmat,4))
 !  integer               :: i,j,k,s(4),p
 !  integer               :: mask
 !  integer               :: maskm
@@ -2472,9 +2472,9 @@ contains
 !
 ! subroutine ardim5_mask(rmat,matm2,mask,onl,onlyav)
 ! implicit none
-!  real(8),intent(inout) :: rmat(:,:,:,:,:)
-!  real(8),intent(inout) :: matm2(:,:,:,:,:)
-!  real(8)               :: matm(size(rmat(:,1,1,1,1)),size(rmat(1,:,1,1,1)),size(rmat(1,1,:,1,1)), &
+!  real(kind=DP),intent(inout) :: rmat(:,:,:,:,:)
+!  real(kind=DP),intent(inout) :: matm2(:,:,:,:,:)
+!  real(kind=DP)               :: matm(size(rmat(:,1,1,1,1)),size(rmat(1,:,1,1,1)),size(rmat(1,1,:,1,1)), &
 !                              & size(rmat(1,1,1,:,1)),size(rmat(1,1,1,1,:)))
 !  integer               :: i,j,k,s(5),p
 !  integer,intent(in)    :: mask

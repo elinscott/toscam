@@ -1,5 +1,7 @@
 module quantum_algebra
 
+   use genvar, only: DP
+
    implicit none
 
    private
@@ -7,7 +9,7 @@ module quantum_algebra
    TYPE fermion
       integer    :: nstate !2**state
       integer    :: ifull, k1, kk1, k2
-      complex(8) :: coef(40000)
+      complex(kind=DP) :: coef(40000)
       integer    :: state(40000)
    END TYPE
    !-----------------------------------------------------------------!
@@ -29,7 +31,7 @@ contains
       implicit none
 
       type(fermion), intent(inout) :: f1, f2
-      complex(8) :: aa
+      complex(kind=DP) :: aa
       integer    :: k, m, mm, ket, sigma, isum, tot, i
 
       if (sigma == 1) k = m
@@ -60,7 +62,7 @@ contains
       implicit none
 
       type(fermion), intent(inout) :: f1, f2
-      complex(8) :: aa
+      complex(kind=DP) :: aa
       integer    :: k, m, mm, ket, sigma, isum, tot, i
 
       if (sigma == 1) k = m
@@ -90,7 +92,7 @@ contains
       implicit none
 
       type(fermion), intent(inout) :: f1, f2
-      complex(8) :: aa
+      complex(kind=DP) :: aa
       integer    :: k, m, mm, ket, sigma, isum, tot, i
       integer    :: m2, sigma2, k2
 
@@ -130,7 +132,7 @@ contains
 
       type(fermion), intent(inout) :: f1
       type(fermion) :: f2
-      complex(8)    :: vv(:)
+      complex(kind=DP)    :: vv(:)
       integer       :: m
 
       call reset_fermion(f2, f1%nstate)
@@ -150,7 +152,7 @@ contains
 
       type(fermion), intent(inout) :: f1
       type(fermion) :: f2
-      complex(8)    :: vv(:, :, :, :)
+      complex(kind=DP)    :: vv(:, :, :, :)
       integer       :: m, i, j, siz1, sigma, sigma2, m2
 
       call reset_fermion(f2, f1%nstate)
@@ -175,7 +177,7 @@ contains
 
       type(fermion), intent(inout) :: f1
       type(fermion) :: f2
-      complex(8)    :: vv(:, :)
+      complex(kind=DP)    :: vv(:, :)
       integer       :: m, i, j, siz1, sigma
 
       siz1 = size(vv(:, 1))
@@ -199,7 +201,7 @@ contains
 
       type(fermion), intent(inout) :: f1
       type(fermion) :: f2
-      complex(8)    :: vv(:, :)
+      complex(kind=DP)    :: vv(:, :)
       integer       :: m, i, j, siz1, sigma
 
       siz1 = size(vv(:, 1))
@@ -223,7 +225,7 @@ contains
 
       type(fermion) :: f1
       type(fermion) :: f2
-      complex(8)    :: mat(:, :, :, :), vec(:, :)
+      complex(kind=DP)    :: mat(:, :, :, :), vec(:, :)
       integer       :: m, i, j, sigma, sigma2
 
       call reset_fermion(f1, f1%nstate)
@@ -348,7 +350,7 @@ contains
 
       type(fermion), intent(inout) :: fermion_in
       integer    :: i, j, k, k1, k2
-      complex(8) :: vv(:)
+      complex(kind=DP) :: vv(:)
 
       if (size(vv) /= fermion_in%nstate) stop 'error bad vacuum size'
       k = 0
@@ -366,7 +368,7 @@ contains
 
       implicit none
 
-      complex(8) :: rr
+      complex(kind=DP) :: rr
       integer    :: i
 
       if (ABS(rr) < 1.d-20) then
@@ -383,7 +385,7 @@ contains
       implicit none
 
       integer :: i, l
-      real(8) :: W(:)
+      real(kind=DP) :: W(:)
 
       if (W(i) > 1.d-1) then
          if (rank == 0) then
@@ -405,13 +407,13 @@ contains
 
       integer    :: siz ! = q1**2
       integer    :: kk2, i, l
-      complex(8) :: dnormi
-      real(8)    :: W(:)
-      complex(8) :: B(:, :)
+      complex(kind=DP) :: dnormi
+      real(kind=DP)    :: W(:)
+      complex(kind=DP) :: B(:, :)
       integer    :: icoef(siz, 2)
-      complex(8) :: coef(siz)
+      complex(kind=DP) :: coef(siz)
       integer    :: ivecout(siz, 2)
-      complex(8) :: vecout(siz)
+      complex(kind=DP) :: vecout(siz)
 
       dnormi = 100000000000000000.
       call reset_fermion(BCS_STATE, size(W))
@@ -441,7 +443,7 @@ contains
       implicit none
 
       type(fermion), intent(inout) :: f1
-      complex(8) :: vec(:), vecout(:), dnormi
+      complex(kind=DP) :: vec(:), vecout(:), dnormi
       integer    :: k, i, j, l, m, ini, isum, mm, kk, kkk, iii, iiii(2)
       integer    :: ivecout(:, :), iter
 

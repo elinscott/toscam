@@ -1,5 +1,6 @@
 program opticaltensor
 
+   use genvar, only: DP
    use linalg
    use StringManip, only: StrInt2, toString
    use matrix, only: diag
@@ -10,8 +11,8 @@ program opticaltensor
    implicit none
 
    integer             :: i, ijk, i1, i2, ii, nspin
-   real(8)             :: alpha_iso, alpha_non_iso, alpha2(3, 3), alpha(3, 3), tra, tra2
-   real(8), allocatable :: sigma(:, :, :), frequ(:)
+   real(kind=DP)             :: alpha_iso, alpha_non_iso, alpha2(3, 3), alpha(3, 3), tra, tra2
+   real(kind=DP), allocatable :: sigma(:, :, :), frequ(:)
    integer             :: k1, k2, nfrequ
 
    call system("ls 111 && echo 1 > scratch_file ")

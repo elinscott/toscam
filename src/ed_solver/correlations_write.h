@@ -24,27 +24,27 @@
       CALL write_array(GNAMBUret%correlstat(2, 1)%rc%MASK%imat, "### NAMBU &
            &GREEN'S FUNCTION", UNIT=UNIT)
       WRITE (unit_, '(a, f0.6)') "# REAL FREQ. RANGE = ", &
-         MAXVAL(DBLE(GNAMBUret%correl(2, 1)%freq%vec))
+         MAXVAL(real(GNAMBUret%correl(2, 1)%freq%vec, kind=DP))
       CALL write_array(Szret%correlstat(2, 1)%rc%MASK%imat, "### < Siz (w) * &
            &Sjz > ", UNIT=UNIT)
       IF (ANY(Szret%compute)) WRITE (unit_, '(a, f0.6)') "# REAL FREQ. RANGE = &
-           &", MAXVAL(DBLE(Szret%correl(2, 1)%freq%vec))
+           &", MAXVAL(real(Szret%correl(2, 1)%freq%vec, kind=DP))
       CALL write_array(Spmret%correlstat(2, 1)%rc%MASK%imat, "### < Si- (w) * &
            &Sj + > ", UNIT=UNIT)
       IF (ANY(Spmret%compute)) WRITE (unit_, '(a, f0.6)') "# REAL FREQ. RANGE = &
-           &", MAXVAL(DBLE(Spmret%correl(2, 1)%freq%vec))
+           &", MAXVAL(real(Spmret%correl(2, 1)%freq%vec, kind=DP))
       CALL write_array(Nret%correlstat(2, 1)%rc%MASK%imat, "### < Ni (w) * Nj &
            &> ", UNIT=UNIT)
       IF (ANY(Nret%compute)) WRITE (unit_, '(a, f0.6)') "# REAL FREQ. RANGE = ", &
-         MAXVAL(DBLE(Nret%correl(2, 1)%freq%vec))
+         MAXVAL(real(Nret%correl(2, 1)%freq%vec, kind=DP))
       CALL write_array(P3ret%correlstat(2, 1)%rc%MASK%imat, "### < P3i (w) * &
            &P3j > ", UNIT=UNIT)
       IF (ANY(P3ret%compute)) WRITE (unit_, '(a, f0.6)') "# REAL FREQ. RANGE = &
-           &", MAXVAL(DBLE(P3ret%correl(2, 1)%freq%vec))
+           &", MAXVAL(real(P3ret%correl(2, 1)%freq%vec, kind=DP))
       CALL write_array(P4ret%correlstat(2, 1)%rc%MASK%imat, "### < P4i (w) * &
            &P4j > ", UNIT=UNIT)
       IF (ANY(P4ret%compute)) WRITE (unit_, '(a, f0.6)') "# REAL FREQ. RANGE = &
-           &", MAXVAL(DBLE(P4ret%correl(2, 1)%freq%vec))
+           &", MAXVAL(real(P4ret%correl(2, 1)%freq%vec, kind=DP))
    end subroutine
 
    subroutine write_static(AIM, GS, UNIT)
@@ -54,7 +54,7 @@
          tot_repulsion
       use masked_matrix_class, only: delete_masked_matrix, masked_matrix_type, &
          new_masked_matrix
-      use genvar, only: ccspin, dbl, half, log_unit, quarter
+      use genvar, only: ccspin, dp, half, log_unit, quarter
       use linalg, only: conj, MPLX
       use mask_class, only: order_matrix_elements
       use matrix, only: write_array
@@ -67,13 +67,13 @@
       TYPE(eigensectorlist_type), INTENT(IN) :: GS
       INTEGER, OPTIONAL, INTENT(IN)          :: UNIT
 #ifdef _complex
-      COMPLEX(DBL)             :: meanStot2, meanStot, meanDStot
+      COMPLEX(DP)             :: meanStot2, meanStot, meanDStot
 #else
-      REAL(DBL)                :: meanStot2, meanStot, meanDStot
+      REAL(DP)                :: meanStot2, meanStot, meanDStot
 #endif
-      REAL(DBL), ALLOCATABLE   :: CHImean(:)
-      REAL(DBL), ALLOCATABLE   :: dblocc(:), magnet(:)
-      REAL(DBL), ALLOCATABLE   :: densdens(:, :)
+      REAL(DP), ALLOCATABLE   :: CHImean(:)
+      REAL(DP), ALLOCATABLE   :: dblocc(:), magnet(:)
+      REAL(DP), ALLOCATABLE   :: densdens(:, :)
       INTEGER, ALLOCATABLE     :: tabpairG(:, :), tabpairF(:, :), &
                                   tabpairNS(:, :), tabpairP3(:, :), &
                                   tabpairP4(:, :)
@@ -103,12 +103,12 @@
       ALLOCATE (magnet(Nc), dblocc(Nc))
 
       DO site1 = 1, Nc
-         dens(site1) = DBLE(G(1)%correlstat(1, 2)%rc%mat(site1, site1) + &
-                            G(2)%correlstat(1, 2)%rc%mat(site1, site1))
-         magnet(site1) = half*DBLE(G(1)%correlstat(1, 2)%rc%mat(site1, &
-                                                                site1) - G(2)%correlstat(1, 2)%rc%mat(site1, site1))
-         dblocc(site1) = half*DBLE(N%correlstat(2, 1)%rc%mat(site1, site1) - &
-                                   dens(site1))
+         dens(site1) = real(G(1)%correlstat(1, 2)%rc%mat(site1, site1) &
+                            + G(2)%correlstat(1, 2)%rc%mat(site1, site1), kind=DP)
+         magnet(site1) = half*real(G(1)%correlstat(1, 2)%rc%mat(site1, site1) &
+                            - G(2)%correlstat(1, 2)%rc%mat(site1, site1), kind=DP)
+         dblocc(site1) = half*real(N%correlstat(2, 1)%rc%mat(site1, site1) - &
+                                   dens(site1), kind=DP)
       ENDDO
 
       WRITE (unit_, fmt_loc) "# density       = ", dens
@@ -155,17 +155,15 @@
 #ifdef _complex
          WRITE (fmt_G, *) '(2x, I0, x, I0, 4x, 2(2(a, f9.6), a, 3x), 2x, 2(a, &
               &f9.6), a)'
-         WRITE (unit_, fmt_G) site1, site2, "(", DBLE(G(1)%correlstat(1, &
-                                                                      2)%rc%mat(site1, site2)), ", ", AIMAG(G(1)%correlstat(1, &
-                                                                       2)%rc%mat(site1, site2)), ")", "(", DBLE(G(2)%correlstat(1, &
-                                                                          2)%rc%mat(site1, site2)), ", ", AIMAG(G(2)%correlstat(1, &
-                                                                       2)%rc%mat(site1, site2)), ")", "(", DBLE(Gdia%rc%mat(site1, &
-                                                                                site2)), ", ", AIMAG(Gdia%rc%mat(site1, site2)), ")"
+         WRITE (unit_, fmt_G) site1, site2, "(", real(G(1)%correlstat(1, 2)%rc%mat(site1, site2), kind=DP), &
+              ", ", AIMAG(G(1)%correlstat(1, 2)%rc%mat(site1, site2)), ")", "(", &
+              real(G(2)%correlstat(1, 2)%rc%mat(site1, site2), kind=DP), ", ", &
+              AIMAG(G(2)%correlstat(1, 2)%rc%mat(site1, site2)), ")", "(", &
+              real(Gdia%rc%mat(site1, site2), kind=DP), ", ", AIMAG(Gdia%rc%mat(site1, site2)), ")"
 #else
          WRITE (fmt_G, *) '(2x, I0, x, I0, 10x, 3(f9.6, 15x))'
-         WRITE (unit_, fmt_G) site1, site2, G(1)%correlstat(1, 2)%rc%mat(site1, &
-                                                                         site2), G(2)%correlstat(1, 2)%rc%mat(site1, site2), &
-            Gdia%rc%mat(site1, site2)
+         WRITE (unit_, fmt_G) site1, site2, G(1)%correlstat(1, 2)%rc%mat(site1, site2), &
+              G(2)%correlstat(1, 2)%rc%mat(site1, site2), Gdia%rc%mat(site1, site2)
 #endif
       ENDDO
 
@@ -187,15 +185,14 @@
 
 #ifdef _complex
             WRITE (fmt_F, *) '(2x, I0, x, I0, 4x, 4(2(a, f9.6), a, 4x))'
-            WRITE (unit_, fmt_F) site1, site2, "(", DBLE(GF(1)%correlstat(1, &
-                                                                         1)%rc%mat(site1, site2)), ", ", AIMAG(GF(1)%correlstat(1, &
-                                                                      1)%rc%mat(site1, site2)), ")", "(", DBLE(GF(1)%correlstat(2, &
-                                                                         2)%rc%mat(site1, site2)), ", ", AIMAG(GF(1)%correlstat(2, &
-                                                                      2)%rc%mat(site1, site2)), ")", "(", DBLE(GF(2)%correlstat(1, &
-                                                                         1)%rc%mat(site1, site2)), ", ", AIMAG(GF(2)%correlstat(1, &
-                                                                      1)%rc%mat(site1, site2)), ")", "(", DBLE(GF(2)%correlstat(2, &
-                                                                         2)%rc%mat(site1, site2)), ", ", AIMAG(GF(2)%correlstat(2, &
-                                                                                                       2)%rc%mat(site1, site2)), ")"
+            WRITE (unit_, fmt_F) site1, site2, "(", real(GF(1)%correlstat(1, & 1)%rc%mat(site1, site2)), &
+                  ", ", AIMAG(GF(1)%correlstat(1, 1)%rc%mat(site1, site2)), ")", "(", &
+                  real(GF(1)%correlstat(2, 2)%rc%mat(site1, site2), kind=DP), ", ", &
+                  AIMAG(GF(1)%correlstat(2, 2)%rc%mat(site1, site2)), ")", "(",&
+                  real(GF(2)%correlstat(1, 1)%rc%mat(site1, site2), kind=DP), ", ", &
+                  AIMAG(GF(2)%correlstat(1, 1)%rc%mat(site1, site2)), ")", "(",&
+                  real(GF(2)%correlstat(2, 2)%rc%mat(site1, site2), kind=DP), ", ", &
+                  AIMAG(GF(2)%correlstat(2, 2)%rc%mat(site1, site2)), ")"
 #else
             WRITE (fmt_F, *) '(2x, I0, x, I0, 10x, 4(f9.6, 15x))'
             WRITE (unit_, fmt_F) site1, site2, GF(1)%correlstat(1, &
@@ -237,34 +234,33 @@
 #ifdef _complex
          WRITE (fmt_SS, *) '(2x, I0, x, I0, 2x, 3(2(a, f9.6), a, 2x), 2x, 2(a, &
               &f9.6), a)'
-         WRITE (unit_, fmt_SS) site1, site2, "(", half*DBLE(Spm%correlstat(2, &
-                                                                      1)%rc%mat(site1, site2)), ", ", half*AIMAG(Spm%correlstat(1, &
-                                                                   2)%rc%mat(site1, site2)), ")", "(", half*DBLE(Spm%correlstat(2, &
-                                                                      1)%rc%mat(site1, site2)), ", ", half*AIMAG(Spm%correlstat(1, &
-                                                                         2)%rc%mat(site1, site2)), ")", "(", DBLE(Sz%correlstat(2, &
-                                                                            1)%rc%mat(site1, site2)), ", ", AIMAG(Sz%correlstat(1, &
-                                                                         2)%rc%mat(site1, site2)), ")", "(", DBLE(SS%rc%mat(site1, &
-                                                                                  site2)), ", ", AIMAG(SS%rc%mat(site1, site2)), ")"
+         WRITE (unit_, fmt_SS) site1, site2, "(", half*real(Spm%correlstat(2, 1)%rc%mat(site1, site2), kind=DP), &
+               ", ", half*AIMAG(Spm%correlstat(1, 2)%rc%mat(site1, site2)), ")", "(", &
+               half*real(Spm%correlstat(2, 1)%rc%mat(site1, site2), kind=DP), ", ", &
+               half*AIMAG(Spm%correlstat(1, 2)%rc%mat(site1, site2)), ")", "(", &
+               real(Sz%correlstat(2, 1)%rc%mat(site1, site2), kind=DP), ", ", &
+               AIMAG(Sz%correlstat(1, 2)%rc%mat(site1, site2)), ")", "(", &
+               real(SS%rc%mat(site1, site2), kind=DP), ", ", &
+               AIMAG(SS%rc%mat(site1, site2)), ")"
 #else
          WRITE (fmt_SS, *) '(2x, I0, x, I0, 7x, 3(f9.6, 10x), f9.6)'
-         WRITE (unit_, fmt_SS) site1, site2, half*Spm%correlstat(2, &
-                                                                 1)%rc%mat(site1, site2), half*Spm%correlstat(1, 2)%rc%mat(site1, &
-                                                                                 site2), Sz%correlstat(2, 1)%rc%mat(site1, site2), &
-            SS%rc%mat(site1, site2)
+         WRITE (unit_, fmt_SS) site1, site2, half*Spm%correlstat(2, 1)%rc%mat(site1, site2), &
+                half*Spm%correlstat(1, 2)%rc%mat(site1, site2), &
+                Sz%correlstat(2, 1)%rc%mat(site1, site2), SS%rc%mat(site1, site2)
 #endif
       ENDDO
-      meanStot2 = SUM(Sz%correlstat(2, 1)%rc%mat + half*(Spm%correlstat(2, &
-                                                                        1)%rc%mat + Spm%correlstat(1, 2)%rc%mat))
+      meanStot2 = SUM(Sz%correlstat(2, 1)%rc%mat + half*(Spm%correlstat(2, 1)%rc%mat &
+            + Spm%correlstat(1, 2)%rc%mat))
       meanStot = SUM(magnet) ! this is true provided < S + >= < S- >= 0
       meanDStot = SQRT(abs(meanStot2 - meanStot**2))
 
 #ifdef _complex
-      WRITE (unit_, '(2(a,f9.6),a)') "# <Stot*Stot> = (", DBLE(meanStot2), ",", &
+      WRITE (unit_, '(2(a,f9.6),a)') "# <Stot*Stot> = (", real(meanStot2, kind=DP), ",", &
          AIMAG(meanStot2), ")"
-      WRITE (unit_, '(2(a,f9.6),a)') "# <Stot>      = (", DBLE(meanStot), ",", &
+      WRITE (unit_, '(2(a,f9.6),a)') "# <Stot>      = (", real(meanStot, kind=DP), ",", &
          AIMAG(meanStot), ")"
       WRITE (unit_, '(2(a,f9.6),a)') "# SQRT(<Stot*Stot> - <Stot>^2) = (", &
-         DBLE(meanDStot), ",", AIMAG(meanDStot), ")"
+         real(meanDStot, kind=DP), ",", AIMAG(meanDStot), ")"
 #else
       WRITE (unit_, '(a,f9.6)') "# <Stot*Stot> = ", meanStot2
       WRITE (unit_, '(a,f9.6)') "# <Stot>      = ", meanStot
@@ -298,15 +294,13 @@
 #ifdef _complex
          WRITE (fmt_NN, *) '(2x, I0, x, I0, 2x, 2(a, f9.6), a, 7x, f9.6, 10x, &
               &2(a, f9.6), a)'
-         WRITE (unit_, fmt_NN) site1, site2, "(", DBLE(N%correlstat(2, &
-                                                                    1)%rc%mat(site1, site2)), ", ", AIMAG(N%correlstat(2, &
-                                                                       1)%rc%mat(site1, site2)), ")", densdens(site1, site2), "(", &
-            DBLE(NN%rc%mat(site1, site2)), ", ", AIMAG(NN%rc%mat(site1, &
-                                                                 site2)), ")"
+         WRITE (unit_, fmt_NN) site1, site2, "(", real(N%correlstat(2, 1)%rc%mat(site1, site2), kind=DP), &
+               ", ", AIMAG(N%correlstat(2, 1)%rc%mat(site1, site2)), ")", densdens(site1, site2), "(", &
+               real(NN%rc%mat(site1, site2), kind=DP), ", ", AIMAG(NN%rc%mat(site1, site2)), ")"
 #else
          WRITE (fmt_NN, *) '(2x, I0, x, I0, 6x, 2(f9.6, 11x), 4x, f9.6)'
-         WRITE (unit_, fmt_NN) site1, site2, N%correlstat(2, 1)%rc%mat(site1, &
-                                                                       site2), densdens(site1, site2), NN%rc%mat(site1, site2)
+         WRITE (unit_, fmt_NN) site1, site2, N%correlstat(2, 1)%rc%mat(site1, site2), &
+               densdens(site1, site2), NN%rc%mat(site1, site2)
 #endif
       ENDDO
 
@@ -319,7 +313,7 @@
          CALL dump_message(UNIT=UNIT, TEXT="#########################")
          if (allocated(CHImean)) deallocate (CHImean)
          ALLOCATE (CHImean(SIZE(triplets, 1)))
-         CHImean = 0.0_DBL
+         CHImean = 0.0_DP
 
 #ifdef _complex
          ! CHI
@@ -338,7 +332,7 @@
 #ifdef _complex
             WRITE (unit_, '(3(a, I0), a, 2(2(a, f9.6), a), a, f9.6)') " (", &
                  (triplets(iP, site), ",", site=1, 2), triplets(iP, 3), ") &
-                 &", ("(", DBLE(P3%Amean(iP, ipm)), ",", AIMAG(P3%Amean(iP, &
+                 &", ("(", real(P3%Amean(iP, ipm), kind=DP), ",", AIMAG(P3%Amean(iP, &
                  ipm)), ") ", ipm=1, 2), " ", CHImean(iP)
 #else
             WRITE (unit_, '(3(a, I0), a, 2(f9.6, a), f9.6)') " (", &
@@ -373,15 +367,15 @@
             WRITE (unit_, fmt_P3) " (", (triplets(site1, site), ", ", site=1, &
                                          2), triplets(site1, 3), ") (", (triplets(site2, site), ", ", &
                                                                          site=1, 2), triplets(site2, 3), ") ", "(", &
-               DBLE(P3%correlstat(1, 1)%rc%mat(site1, site2)), ", ", &
+               real(P3%correlstat(1, 1)%rc%mat(site1, site2), kind=DP), ", ", &
                AIMAG(P3%correlstat(1, 1)%rc%mat(site1, site2)), ")", "(", &
-               DBLE(P3%correlstat(2, 2)%rc%mat(site1, site2)), ", ", &
+               real(P3%correlstat(2, 2)%rc%mat(site1, site2), kind=DP), ", ", &
                AIMAG(P3%correlstat(2, 2)%rc%mat(site1, site2)), ")", "(", &
-               DBLE(P3%correlstat(2, 1)%rc%mat(site1, site2)), ", ", &
+               real(P3%correlstat(2, 1)%rc%mat(site1, site2), kind=DP), ", ", &
                AIMAG(P3%correlstat(2, 1)%rc%mat(site1, site2)), ")", "(", &
-               DBLE(P3%correlstat(1, 2)%rc%mat(site1, site2)), ", ", &
+               real(P3%correlstat(1, 2)%rc%mat(site1, site2), kind=DP), ", ", &
                AIMAG(P3%correlstat(1, 2)%rc%mat(site1, site2)), ")", "(", &
-               DBLE(CHIstat%rc%mat(site1, site2)), ", ", &
+               real(CHIstat%rc%mat(site1, site2), kind=DP), ", ", &
                AIMAG(CHIstat%rc%mat(site1, site2)), ")"
 #else
             WRITE (fmt_P3, *) '(3(a, I0), 3(a, I0), a, 2x, 4(f9.6, 12x), 6x, &
@@ -415,13 +409,12 @@
          DO iP = 1, SIZE(quadruplets, 1)
 #ifdef _complex
             WRITE (unit_, '(4(a, I0), a, 2(2(a, f9.6), a))') " (", &
-               (quadruplets(iP, site), ",", site=1, 3), quadruplets(iP, &
-                                                                    4), ") ", ("(", DBLE(P4%Amean(iP, ipm)), ",", &
-                                                                               AIMAG(P4%Amean(iP, ipm)), ") ", ipm=1, 2)
+               (quadruplets(iP, site), ",", site=1, 3), quadruplets(iP, 4), ") ", &
+               ("(", real(P4%Amean(iP, ipm), kind=DP), ",", AIMAG(P4%Amean(iP, ipm)), ") ", ipm=1, 2)
 #else
             WRITE (unit_, '(4(a, I0), a, f9.6, a, f9.6, a)') " (", &
-               (quadruplets(iP, site), ",", site=1, 3), quadruplets(iP, &
-                                                                    4), ") ", (P4%Amean(iP, ipm), " ", ipm=1, 2)
+               (quadruplets(iP, site), ",", site=1, 3), quadruplets(iP, 4), ") ", &
+               (P4%Amean(iP, ipm), " ", ipm=1, 2)
 #endif
          ENDDO
          ! REORDER PAIRS OF QUADRUPLETS: DIAGONAL FIRST + GATHER (i, j) (j, i)
@@ -442,16 +435,16 @@
             site2 = tabpairP4(iind, 2)
 #ifdef _complex
             WRITE (fmt_P4, *) '(4(a, I0), 4(a, I0), a, 4(2(a, f9.6), a, 3x))'
-            WRITE (unit_, fmt_P4) " (", (quadruplets(site1, site), ",", site= &
-                                         1, 3), quadruplets(site1, 4), ") (", (quadruplets(site2, &
-                                                                         site), ",", site=1, 3), quadruplets(site2, 4), ") ", "(", &
-               DBLE(P4%correlstat(1, 1)%rc%mat(site1, site2)), ",", &
+            WRITE (unit_, fmt_P4) " (", (quadruplets(site1, site), ",", site=1, 3), &
+               quadruplets(site1, 4), ") (", (quadruplets(site2, site), ",", site=1, 3), &
+               quadruplets(site2, 4), ") ", "(", &
+               real(P4%correlstat(1, 1)%rc%mat(site1, site2), kind=DP), ",", &
                AIMAG(P4%correlstat(1, 1)%rc%mat(site1, site2)), ")", "(", &
-               DBLE(P4%correlstat(2, 2)%rc%mat(site1, site2)), ",", &
+               real(P4%correlstat(2, 2)%rc%mat(site1, site2), kind=DP), ",", &
                AIMAG(P4%correlstat(2, 2)%rc%mat(site1, site2)), ")", "(", &
-               DBLE(P4%correlstat(2, 1)%rc%mat(site1, site2)), ",", &
+               real(P4%correlstat(2, 1)%rc%mat(site1, site2), kind=DP), ",", &
                AIMAG(P4%correlstat(2, 1)%rc%mat(site1, site2)), ")", "(", &
-               DBLE(P4%correlstat(1, 2)%rc%mat(site1, site2)), ",", &
+               real(P4%correlstat(1, 2)%rc%mat(site1, site2), kind=DP), ",", &
                AIMAG(P4%correlstat(1, 2)%rc%mat(site1, site2)), ")"
 #else
             WRITE (fmt_P4, *) '(4(a, I0), 4(a, I0), a, 3x, 4(f9.6, 14x))'

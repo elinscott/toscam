@@ -1,7 +1,7 @@
 module haim2_class
 
    use aim2_class, only: AIM2_type
-   use genvar, only: DBL
+   use genvar, only: DP
 
    IMPLICIT NONE
 
@@ -17,7 +17,7 @@ module haim2_class
    ! DIAGONAL PART  !
    !----------------!
 
-   REAL(DBL), ALLOCATABLE, TARGET :: diagup(:), diagdo(:), diagsz(:)
+   REAL(DP), ALLOCATABLE, TARGET :: diagup(:), diagdo(:), diagsz(:)
 
    !--------------------!
    ! OFF-DIAGONAL PART  !
@@ -31,10 +31,10 @@ module haim2_class
    INTEGER(8), TARGET                :: noffdiagup = 0, noffdiagdo = 0, &
                                         noffdiagsz = 0
 #ifdef _complex
-   COMPLEX(DBL), ALLOCATABLE, TARGET :: offdiagup(:), offdiagdo(:), &
+   COMPLEX(DP), ALLOCATABLE, TARGET :: offdiagup(:), offdiagdo(:), &
                                         offdiagsz(:)
 #else
-   REAL(DBL), ALLOCATABLE, TARGET :: offdiagup(:), offdiagdo(:), &
+   REAL(DP), ALLOCATABLE, TARGET :: offdiagup(:), offdiagdo(:), &
                                      offdiagsz(:)
 #endif
    INTEGER, ALLOCATABLE, TARGET :: rankoffup(:), rankoffdo(:), &
@@ -180,7 +180,7 @@ contains
       use common_def, only: reset_timer, timer_fortran
       use fermion_hilbert_class, only: fermion_sector_type
       use fermion_ket_class, only: fermion_ket_type, hop, is_occupied, new_ket
-      use genvar, only: dbl, iproc, log_unit, rank
+      use genvar, only: dp, iproc, log_unit, rank
       use globalvar_ed_solver, only: cutoff_hamilt_param, do_quench, open_mp, &
          quench_mag, use_cc, use_transpose_trick_mpi, verboseall
       use impurity_class, only: hamiltonian
@@ -203,11 +203,11 @@ contains
                                   istatemax, iorb, jorb
       INTEGER                  :: IMPnorbs, BATHnorbs, i
       INTEGER, POINTER         :: IMPiorb(:) => NULL(), BATHiorb(:) => NULL()
-      REAL(DBL), POINTER       :: diag(:) => NULL()
+      REAL(DP), POINTER       :: diag(:) => NULL()
 #ifdef _complex
-      COMPLEX(DBL), POINTER    :: offdiag(:) => NULL()
+      COMPLEX(DP), POINTER    :: offdiag(:) => NULL()
 #else
-      REAL(DBL), POINTER       :: offdiag(:) => NULL()
+      REAL(DP), POINTER       :: offdiag(:) => NULL()
 #endif
       INTEGER, POINTER         :: rankoff(:) => NULL(), noff(:) => NULL()
       INTEGER(8), POINTER      :: noffdiag => NULL()
@@ -284,8 +284,8 @@ contains
             offdiag => offdiagdo
             rankoff => rankoffdo
          END SELECT
-         diag = 0.0_DBL
-         offdiag = 0.0_DBL
+         diag = 0.0_DP
+         offdiag = 0.0_DP
          rankoff = 0
       ENDIF
 

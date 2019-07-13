@@ -1,7 +1,7 @@
 program plotsigma
    implicit none
    integer                :: chan, i, j
-   complex(8), allocatable :: mat1(:, :)
+   complex(kind=DP), allocatable :: mat1(:, :)
 
    write (*, *) 'ENTER CHANNELS'
    read (*, *) chan

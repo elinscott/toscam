@@ -25,11 +25,11 @@ VPATH=$(ROOTDIR)/src/ed_solver:$(ROOTDIR)/src/ed_solver/obj
 
 ifeq ($(COMPILER),$(filter $(COMPILER),intel))
    REDIRECT = -module $(ROOTDIR)/src/ed_solver/obj
-   prep = -fpp -D__complex
+   prep = -fpp
 endif
 ifeq ($(COMPILER),$(filter $(COMPILER),gnu))
    REDIRECT = -J$(ROOTDIR)/src/ed_solver/obj
-   prep = -cpp -D__complex
+   prep = -cpp
 endif
 ifeq ($(COMPILER),$(filter $(COMPILER),nag))
    REDIRECT = -mdir $(ROOTDIR)/src/ed_solver/obj

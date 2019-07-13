@@ -15,35 +15,36 @@
 
 module local_vars
 
+   use genvar, only: DP
    use mpi
    use mesh, only: findin1dmesh
 
    implicit none
 
-   real(8), parameter      ::  me_in_ev = 510998.91d0
-   real(8), parameter      ::  small_scale_derivative = 0.005d0, hartree_in_eV = 27.211396132d0, eV_in_hartree = 0.036749308824d0
-   real(8), parameter      ::  pi = 3.14159265358979323846264338327950288419716939937510d0
-   real(8), parameter      ::  one_angstrom_in_bohr_radius = 1.889725989d0
-   real(8), parameter      ::  hbar_divided_electron_mass_in_meter2_per_second = 0.000115767622d0
-   real(8), parameter      ::  hbar_divided_by_second_in_ev = 6.58211899131*1.d-16
-   real(8), parameter      ::  hbar_divided_by_me_in_Angstrom_square_divided_by_second = 1.15767635048*1.d16
-   real(8), parameter      ::  one_over_Angstrom_in_one_over_cm = 100000000.d0
-   complex(8), parameter   ::  imi = CMPLX(0.d0, 1.0d0, 8)
-   real(8), parameter      ::  MAX_EXP = 700.d0
-   real(8), parameter      ::  MIN_EXP = -700.d0
+   real(kind=DP), parameter      ::  me_in_ev = 510998.91d0
+   real(kind=DP), parameter      ::  small_scale_derivative = 0.005d0, hartree_in_eV = 27.211396132d0, eV_in_hartree = 0.036749308824d0
+   real(kind=DP), parameter      ::  pi = 3.14159265358979323846264338327950288419716939937510d0
+   real(kind=DP), parameter      ::  one_angstrom_in_bohr_radius = 1.889725989d0
+   real(kind=DP), parameter      ::  hbar_divided_electron_mass_in_meter2_per_second = 0.000115767622d0
+   real(kind=DP), parameter      ::  hbar_divided_by_second_in_ev = 6.58211899131*1.d-16
+   real(kind=DP), parameter      ::  hbar_divided_by_me_in_Angstrom_square_divided_by_second = 1.15767635048*1.d16
+   real(kind=DP), parameter      ::  one_over_Angstrom_in_one_over_cm = 100000000.d0
+   complex(kind=DP), parameter   ::  imi = CMPLX(0.d0, 1.0d0, 8)
+   real(kind=DP), parameter      ::  MAX_EXP = 700.d0
+   real(kind=DP), parameter      ::  MIN_EXP = -700.d0
    integer                ::  rank, size2, ierr
-   real(8), parameter      ::  Angst_in_ev = 1968.d0
-   real(8), parameter      ::  Angst_in_cm = 1.d-8
-   real(8), parameter      ::  hbar_divided_e2_in_ohm = 25812.d0/2.d0/pi
-   real(8), parameter      ::  cm_moins_1_in_ev = 0.000123980262342235
-   real(8), parameter      ::  Kelvin_in_ev = 8.617343d-5
-   real(8), parameter      ::  ev_in_Kelvin = 11604.505008098
+   real(kind=DP), parameter      ::  Angst_in_ev = 1968.d0
+   real(kind=DP), parameter      ::  Angst_in_cm = 1.d-8
+   real(kind=DP), parameter      ::  hbar_divided_e2_in_ohm = 25812.d0/2.d0/pi
+   real(kind=DP), parameter      ::  cm_moins_1_in_ev = 0.000123980262342235
+   real(kind=DP), parameter      ::  Kelvin_in_ev = 8.617343d-5
+   real(kind=DP), parameter      ::  ev_in_Kelvin = 11604.505008098
 
 contains
 
    subroutine mpisum(mat)
       implicit none
-      real(8)  :: mat(:, :, :, :), matm(size(mat(:, 1, 1, 1)), size(mat(1, :, 1, 1)), size(mat(1, 1, :, 1)), size(mat(1, 1, 1, :)))
+      real(kind=DP)  :: mat(:, :, :, :), matm(size(mat(:, 1, 1, 1)), size(mat(1, :, 1, 1)), size(mat(1, 1, :, 1)), size(mat(1, 1, 1, :)))
       integer  :: i, j, k, s(4), p
       if (size2 == 1) then
          return
@@ -58,7 +59,7 @@ contains
 
    subroutine mpisum_(mat)
       implicit none
-      real(8)  :: mat(:, :), matm(size(mat(:, 1)), size(mat(1, :)))
+      real(kind=DP)  :: mat(:, :), matm(size(mat(:, 1)), size(mat(1, :)))
       integer :: i, j, k, s1, s2
       if (size2 == 1) then
          return
@@ -99,10 +100,10 @@ contains
       toString = TRIM(ADJUSTL(toString))
    end function
 
-   elemental real(8) function fermi_dirac_(rr, mu, T)
+   elemental real(kind=DP) function fermi_dirac_(rr, mu, T)
       implicit none
-      real(8), intent(in) :: rr, T, mu
-      real(8)            :: aa
+      real(kind=DP), intent(in) :: rr, T, mu
+      real(kind=DP)            :: aa
       aa = (rr - mu)/T
       if (aa < -100.d0) then
          fermi_dirac_ = 1.d0
@@ -115,10 +116,10 @@ contains
       fermi_dirac_ = 1.d0/(1.d0 + DEXPc(aa))
    end function
 
-   elemental real(8) function derivative_fermi_dirac_(rr, mu, T)
+   elemental real(kind=DP) function derivative_fermi_dirac_(rr, mu, T)
       implicit none
-      real(8), intent(in) :: rr, T, mu
-      real(8)            :: aa
+      real(kind=DP), intent(in) :: rr, T, mu
+      real(kind=DP)            :: aa
       aa = (rr - mu)/T/2.d0
       if (abs(aa) > 200.d0) then
          derivative_fermi_dirac_ = 0.d0
@@ -127,9 +128,9 @@ contains
       derivative_fermi_dirac_ = -1.d0/T/(DEXPc(-aa) + DEXPc(aa))**2
    end function
 
-   pure real(8) function DEXPc(rr)
+   pure real(kind=DP) function DEXPc(rr)
       implicit none
-      real(8), intent(in) :: rr
+      real(kind=DP), intent(in) :: rr
       if (rr < MAX_EXP) then
          if (rr < MIN_EXP) then
             DEXPc = 0.d0
@@ -178,16 +179,16 @@ program optical_cond
    integer                :: imin, imax, directions, ttt, k1, k2, nn, i1, i2, nfrequ, ii, ien, i, j, k, l, is, mpi_rank, mpi_size
    logical                :: check, usexy
    character(50)          :: filename
-   complex(8)             :: energy
-   real(8)                :: units_for_optics
-   real(8)                :: frequ_temp, tttemp(4), a1, a2, a3, a4, Volume
-   real(8)                :: aa(3), bb(3), cc(3), t1(3), t2(3), t3(3), F_factor, dstep, TT, rtemp, chem_shift, fermi_e, mmu
-   real(8), allocatable    :: green(:, :, :), greeny(:, :, :), vertex__(:, :, :)
-   real(8), allocatable    :: fermiv(:), derfermiv(:), frequ(:), Omega(:), optics(:, :), opticstot(:, :)
+   complex(kind=DP)             :: energy
+   real(kind=DP)                :: units_for_optics
+   real(kind=DP)                :: frequ_temp, tttemp(4), a1, a2, a3, a4, Volume
+   real(kind=DP)                :: aa(3), bb(3), cc(3), t1(3), t2(3), t3(3), F_factor, dstep, TT, rtemp, chem_shift, fermi_e, mmu
+   real(kind=DP), allocatable    :: green(:, :, :), greeny(:, :, :), vertex__(:, :, :)
+   real(kind=DP), allocatable    :: fermiv(:), derfermiv(:), frequ(:), Omega(:), optics(:, :), opticstot(:, :)
    character(300)         :: value(100)
    integer, allocatable    :: i_plus_j(:, :)
    integer                :: num, len__, status__, kp, nkpoints, nktemp
-   real(8)                :: normk, nktempd
+   real(kind=DP)                :: normk, nktempd
 
    !-------------------------------!
    call initialize_my_simulation
@@ -528,9 +529,9 @@ contains
  set_name='optics_data_spin_'//TRIM(ADJUSTL(toString(is)))//'_k_'//TRIM(ADJUSTL(toString(k)))//'_rank_'//TRIM(ADJUSTL(toString(mpi_rank)))
    end function
 
-   real(8) function vertex_(w, omega, ttt)
+   real(kind=DP) function vertex_(w, omega, ttt)
       implicit none
-      real(8) :: w, omega
+      real(kind=DP) :: w, omega
       integer :: ttt
       SELECT CASE (ttt)
       CASE (1)

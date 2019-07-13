@@ -38,16 +38,16 @@ contains
       CHARACTER(LEN=*)               :: FIT_METH
       INTEGER                        :: iparam, ii, nnn, Niter_search_max, Niter_search_max_
       INTEGER                        :: iexit, ifault, i, j
-      real(8)                        :: dist_min, dist_max, search_step
+      real(kind=DP)                        :: dist_min, dist_max, search_step
       INTEGER                        :: mode, iprint
       REAL(8)                        :: dfn
-      real(8), allocatable            :: min_ar(:), g(:), xtemp(:), xprmt(:), hess(:), w(:), wcivelli(:), WORK(:)
-      real(8), allocatable            :: var(:), stepvec(:)
-      real(8)                        :: test(:)
+      real(kind=DP), allocatable            :: min_ar(:), g(:), xtemp(:), xprmt(:), hess(:), w(:), wcivelli(:), WORK(:)
+      real(kind=DP), allocatable            :: var(:), stepvec(:)
+      real(kind=DP)                        :: test(:)
       LOGICAL                        :: use_mpi
       REAL(8)                        :: pow_in
       REAL(8), OPTIONAL               :: pow_in_
-      real(8)                        :: dist_init
+      real(kind=DP)                        :: dist_init
 
       INTERFACE
          SUBROUTINE func_(dist, n, vec)
@@ -180,17 +180,17 @@ contains
       subroutine distance_func_(n, m, u, f, con)
          implicit none
          integer, intent(in)  :: n, m
-         real(8), intent(in)  :: u(n)
-         real(8), intent(out) :: con(m), f
+         real(kind=DP), intent(in)  :: u(n)
+         real(kind=DP), intent(out) :: con(m), f
          call func_(f, n, u)
          con = 0.d0
       end subroutine
 
       !---------------------!
 
-      real(8) function distance_func__(u)
+      real(kind=DP) function distance_func__(u)
          implicit none
-         real(8) :: u(:)
+         real(kind=DP) :: u(:)
          call func_(distance_func__, nnn, u(1:nnn))
       end function
 
@@ -198,8 +198,8 @@ contains
 
       subroutine distance_func___(u, d)
          implicit none
-         real(8), intent(in) :: u(:)
-         real(8), intent(out) :: d
+         real(kind=DP), intent(in) :: u(:)
+         real(kind=DP), intent(out) :: d
          call func_(d, nnn, u(1:nnn))
       end subroutine
 
@@ -208,15 +208,15 @@ contains
       subroutine distance_func____(n, u, d)
          implicit none
          integer, intent(in) :: n
-         real(8), intent(in) :: u(:)
-         real(8), intent(out) :: d
+         real(kind=DP), intent(in) :: u(:)
+         real(kind=DP), intent(out) :: d
          call func_(d, nnn, u(1:nnn))
       end subroutine
 
       !---------------------!
 
       SUBROUTINE distance_func_____(N, X, F, G)
-         real(8) :: X(N), G(N), F, Fder
+         real(kind=DP) :: X(N), G(N), F, Fder
          integer :: N, i
          if (size(X) /= nnn) then
             write (*, *) '  N    : ', N

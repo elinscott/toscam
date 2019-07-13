@@ -11,16 +11,16 @@
 
       integer                 :: Nc, nw_r, nw_m, nmoments, i, j, k, l, ii, jj
       logical                 :: check
-      real(8)                 :: target, target1, target2
-      real(8), allocatable    :: mout(:), nout(:)
-      complex(8), allocatable :: frequ__(:), Tail(:, :, :), matsubara(:), &
+      real(kind=DP)                 :: target, target1, target2
+      real(kind=DP), allocatable    :: mout(:), nout(:)
+      complex(kind=DP), allocatable :: frequ__(:), Tail(:, :, :), matsubara(:), &
                                  gimp(:, :, :), T1(:, :), T2(:, :)
-      real(8), allocatable    :: umn(:, :), ujmn(:, :), Ur(:, :, :, :)
+      real(kind=DP), allocatable    :: umn(:, :), ujmn(:, :), Ur(:, :, :, :)
       integer                 :: nmu_adapt
       integer                 :: imu, mu_min
-      real(8)                 :: mu_range
-      real(8), allocatable    :: mu_cor(:), denshub(:)
-      real(8)                 :: mmu_
+      real(kind=DP)                 :: mu_range
+      real(kind=DP), allocatable    :: mu_cor(:), denshub(:)
+      real(kind=DP)                 :: mmu_
 
       Nc = size(Eimp, 1)/2
       nw_r = size(sigw, 3)

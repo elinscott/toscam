@@ -1,4 +1,5 @@
 program local_dimers
+   use genvar, only: DP
    use linalg
    use sorting
    use random
@@ -7,12 +8,12 @@ program local_dimers
    integer           :: i, j, k, l, m
    integer           :: k1, k2, k3
 
-   real(8)           :: ladder(1000, 0:1000), v(3), v_(3), coord(1000, 3), coord_disorder(1000, 3), proj(1000, 1000)
+   real(kind=DP)           :: ladder(1000, 0:1000), v(3), v_(3), coord(1000, 3), coord_disorder(1000, 3), proj(1000, 1000)
    character(30)     :: ref, filename, temp, species
-   real(8)           :: www(3), mat(3, 3), ex(3), ey(3), ez(3), normv(1000), dist, cutoff, vvv(3), rutile(3)
+   real(kind=DP)           :: www(3), mat(3, 3), ex(3), ey(3), ez(3), normv(1000), dist, cutoff, vvv(3), rutile(3)
    logical           :: same_line(1000, 1000)
    integer           :: jj, i1_, i2_, i3_, i1, i2, kk, order(1000, 0:1000), nneigh(1000, 0:1000), counti(1000)
-   real(8)           :: v1_(3), v12(3), disorder_amp, peierls_move, shift_amp(3)
+   real(kind=DP)           :: v1_(3), v12(3), disorder_amp, peierls_move, shift_amp(3)
    logical, parameter :: testingloc = .false.
 
    disorder_amp = 0.d0
@@ -255,10 +256,10 @@ program local_dimers
 
 contains
 
-   real(8) function manhattan_distance(v1, v2)
+   real(kind=DP) function manhattan_distance(v1, v2)
       implicit none
       integer :: i1_, i2_, i3_
-      real(8) :: v1(3), v2(3), dd, temp, v1_(3)
+      real(kind=DP) :: v1(3), v2(3), dd, temp, v1_(3)
       dd = 1.d20
       do i1_ = -1, 1
       do i2_ = -1, 1

@@ -12,7 +12,7 @@ program band
 !---------------!
    implicit none
 
-   real(8)       :: rot(3, 3), Rd(5, 5), search_step, dist_min, dist_max, mat(5, 5), tmp(10), test(9)
+   real(kind=DP)       :: rot(3, 3), Rd(5, 5), search_step, dist_min, dist_max, mat(5, 5), tmp(10), test(9)
    integer       :: ii, i, j, k, bb(5)
    character(13) :: FIT_METH
    logical       :: flip
@@ -94,9 +94,9 @@ contains
 
    SUBROUTINE rotate_our_notation(Rd, R)
       IMPLICIT NONE
-      real(8), intent(in)  :: R(3, 3)
-      real(8), intent(out) :: Rd(5, 5)
-      real(8)              :: s3, r1, r2, r3, r4, r5, r6, r7, r8, r9
+      real(kind=DP), intent(in)  :: R(3, 3)
+      real(kind=DP), intent(out) :: Rd(5, 5)
+      real(kind=DP)              :: s3, r1, r2, r3, r4, r5, r6, r7, r8, r9
 
       s3 = sqrt(3.d0)
 
@@ -170,7 +170,7 @@ contains
    subroutine get_rd
       implicit none
       integer :: i, j, k
-      real(8) :: vec_(3, 3), tmp(5, 5)
+      real(kind=DP) :: vec_(3, 3), tmp(5, 5)
 
       k = 0
       do i = 1, 3

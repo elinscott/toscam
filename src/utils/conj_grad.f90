@@ -1,7 +1,7 @@
 MODULE conj_grad
 
    USE common_def, only: c2s, dump_message, i2c
-   use genvar, only: DBL, log_unit
+   use genvar, only: DP, log_unit
 
    implicit none
 
@@ -27,33 +27,33 @@ CONTAINS
       INTERFACE
          SUBROUTINE funct(val, n, x)
             USE common_def
-            use genvar, only: DBL
-            REAL(DBL), INTENT(OUT) :: val
+            use genvar, only: DP
+            REAL(DP), INTENT(OUT) :: val
             INTEGER, INTENT(IN)  :: n
-            REAL(DBL), INTENT(IN)  :: x(n)
+            REAL(DP), INTENT(IN)  :: x(n)
          END SUBROUTINE
       END INTERFACE
-      REAL(DBL), INTENT(OUT)   :: fmin
-      REAL(DBL), INTENT(INOUT) :: x(n)      ! initial vector to evaluate funct.
+      REAL(DP), INTENT(OUT)   :: fmin
+      REAL(DP), INTENT(INOUT) :: x(n)      ! initial vector to evaluate funct.
       INTEGER, INTENT(IN)    :: ncall     ! max. # of calls to funct.
       INTEGER, INTENT(IN)    :: n         ! # of parameters
-      REAL(DBL), INTENT(IN)    :: step, fmax ! step/tolerance
+      REAL(DP), INTENT(IN)    :: step, fmax ! step/tolerance
       INTEGER, INTENT(IN)    :: iprint, mode
-      REAL(DBL)                :: g(n), xm(n)
-      REAL(DBL)                :: w(n*4)
-      REAL(DBL)                :: h(n*(n + 1)/2)
+      REAL(DP)                :: g(n), xm(n)
+      REAL(DP)                :: w(n*4)
+      REAL(DP)                :: h(n*(n + 1)/2)
       INTEGER                  :: iexit
       INTEGER                  :: n4, np1, nm1, nnp1s2
       INTEGER                  :: is, iu, iv, ib, idiff, i_, j_, ij, i1
       INTEGER                  :: jk, ik, k, itn, icall, link, int_
-      REAL(DBL)                :: f_, df, dfn, z, zz, dmin, gs0, afmax
-      REAL(DBL)                :: alpha, ff, tot, f1, f2, gys, dgs, sig
+      REAL(DP)                :: f_, df, dfn, z, zz, dmin, gs0, afmax
+      REAL(DP)                :: alpha, ff, tot, f1, f2, gys, dgs, sig
       f_ = 0.
       n4 = n*4
       np1 = n + 1
       nm1 = n - 1
       nnp1s2 = (n*np1)/2
-      dfn = -0.5_DBL
+      dfn = -0.5_DP
       xm = ABS(x) + 1.D-10
       is = n
       iu = n
@@ -64,16 +64,16 @@ CONTAINS
       SELECT CASE (mode)
       CASE (1)
          !
-         h = 0.0_DBL
+         h = 0.0_DP
          DO i_ = 1, n
-            h(nnp1s2 - i_*(i_ + 1)/2 + 1) = 1.0_DBL
+            h(nnp1s2 - i_*(i_ + 1)/2 + 1) = 1.0_DP
          END DO
       CASE (2)
          !
          ij = 1
          DO i_ = 2, n
             z = h(ij)
-            IF (z <= 0.0_DBL) THEN
+            IF (z <= 0.0_DP) THEN
                fmin = f_
                RETURN
             END IF
@@ -92,7 +92,7 @@ CONTAINS
                ij = ij + 1
             END DO
          END DO
-         IF (h(ij) <= 0.0_DBL) THEN
+         IF (h(ij) <= 0.0_DP) THEN
             fmin = f_
             RETURN
          END IF
@@ -103,7 +103,7 @@ CONTAINS
          IF (h(ij) < dmin) dmin = h(ij)
          ij = ij + np1 - i_
       END DO
-      IF (dmin <= 0.0_DBL) THEN
+      IF (dmin <= 0.0_DP) THEN
          fmin = f_
          RETURN
       END IF
@@ -112,9 +112,9 @@ CONTAINS
       CALL funct(f_, n, x)
       icall = 1
       df = dfn
-      IF (dfn == 0.0_DBL) df = f_ - z
-      IF (dfn < 0.0_DBL) df = ABS(df*f_)
-      IF (df <= 0.0_DBL) df = 1.0_DBL
+      IF (dfn == 0.0_DP) df = f_ - z
+      IF (dfn < 0.0_DP) df = ABS(df*f_)
+      IF (df <= 0.0_DP) df = 1.0_DP
 17    CONTINUE
       w(1:n) = x(1:n)
       link = 1
@@ -147,25 +147,25 @@ CONTAINS
       ij = nnp1s2
       DO i_ = 1, nm1
          ij = ij - 1
-         z = 0.0_DBL
+         z = 0.0_DP
          DO j_ = 1, i_
             z = z + h(ij)*w(is + np1 - j_)
             ij = ij - 1
          END DO
          w(is + n - i_) = w(n - i_)/h(ij) - z
       END DO
-      z = 0.0_DBL
+      z = 0.0_DP
       gs0 = SUM(g(1:n)*w(is + 1:is + n))
       DO i_ = 1, n
          IF (z*xm(i_) < ABS(w(is + i_))) z = ABS(w(is + i_))/xm(i_)
       END DO
       afmax = fmax/z
       iexit = 2
-      IF (gs0 >= 0.0_DBL) GOTO 92
-      alpha = -2.0_DBL*df/gs0
-      IF (alpha > 1.0_DBL) alpha = 1.0_DBL
+      IF (gs0 >= 0.0_DP) GOTO 92
+      alpha = -2.0_DP*df/gs0
+      IF (alpha > 1.0_DP) alpha = 1.0_DP
       ff = f_
-      tot = 0.0_DBL
+      tot = 0.0_DP
       int_ = 0
       iexit = 1
 30    CONTINUE
@@ -188,12 +188,12 @@ CONTAINS
       IF (f1 >= f_) GOTO 50
       IF ((f1 + f2 >= f_ + f_) .AND. (7.0d0*f1 + 5.0d0*f2 > 12.0d0*f_)) int_ = 2
       tot = tot + alpha
-      alpha = 2.0_DBL*alpha
+      alpha = 2.0_DP*alpha
       GOTO 32
 40    CONTINUE
       IF (alpha < afmax) GOTO 92
       IF (icall >= ncall) GOTO 90
-      alpha = 0.5_DBL*alpha
+      alpha = 0.5_DP*alpha
       w(1:n) = x(1:n) + alpha*w(is + 1:is + n)
       CALL funct(f2, n, w)
       icall = icall + 1
@@ -204,7 +204,7 @@ CONTAINS
       GOTO 49
 45    CONTINUE
       z = 0.1d0
-      IF (f1 + f_ > f2 + f2) z = 1.0_DBL + 0.5_DBL*(f_ - f1)/(f_ + f1 - f2 - f2)
+      IF (f1 + f_ > f2 + f2) z = 1.0_DP + 0.5_DP*(f_ - f1)/(f_ + f1 - f2 - f2)
       IF (z < 0.1d0) z = 0.1d0
       alpha = z*alpha
       int_ = 1
@@ -223,25 +223,25 @@ CONTAINS
       gys = SUM(g(1:n)*w(is + 1:is + n))
       df = ff - f_
       dgs = gys - gs0
-      IF (dgs <= 0.0_DBL) GOTO 20
+      IF (dgs <= 0.0_DP) GOTO 20
       link = 1
-      IF (dgs + alpha*gs0 > 0.0_DBL) THEN
+      IF (dgs + alpha*gs0 > 0.0_DP) THEN
          zz = alpha/(dgs - alpha*gs0)
-         z = dgs*zz - 1.0_DBL
+         z = dgs*zz - 1.0_DP
          w(iu + 1:iu + n) = z*w(1:n) + g(1:n)
-         sig = 1.0_DBL/(zz*dgs*dgs)
+         sig = 1.0_DP/(zz*dgs*dgs)
       ELSE
          w(iu + 1:iu + n) = g(1:n) - w(1:n)
-         sig = 1.0_DBL/(alpha*dgs)
+         sig = 1.0_DP/(alpha*dgs)
       END IF
       GOTO 70
 60    CONTINUE
       link = 2
       w(iu + 1:iu + n) = w(1:n)
-      IF (dgs + alpha*gs0 > 0.0_DBL) THEN
+      IF (dgs + alpha*gs0 > 0.0_DP) THEN
          sig = -zz
       ELSE
-         sig = 1.0_DBL/gs0
+         sig = 1.0_DP/gs0
       END IF
 70    CONTINUE
       w(iv + 1) = w(iu + 1)
@@ -258,7 +258,7 @@ CONTAINS
       ij = 1
       DO i_ = 1, n
          z = h(ij) + sig*w(iv + i_)*w(iv + i_)
-         IF (z <= 0.0_DBL) z = dmin
+         IF (z <= 0.0_DP) z = dmin
          IF (z < dmin) dmin = z
          h(ij) = z
          w(ib + i_) = w(iv + i_)*sig/z
@@ -322,17 +322,17 @@ CONTAINS
       INTERFACE
          SUBROUTINE funct(val, n, xx)
             USE common_def
-            use genvar, only: DBL
-            REAL(DBL), INTENT(OUT) :: val
+            use genvar, only: DP
+            REAL(DP), INTENT(OUT) :: val
             INTEGER, INTENT(IN)  :: n
-            REAL(DBL), INTENT(IN)  :: xx(n)
+            REAL(DP), INTENT(IN)  :: xx(n)
          END SUBROUTINE
       END INTERFACE
-      REAL(DBL), INTENT(INOUT) :: grad(:)
-      REAL(DBL), INTENT(IN)    :: x(:), step(:)
-      REAL(DBL), INTENT(IN), OPTIONAL :: fx    ! value of function at x
+      REAL(DP), INTENT(INOUT) :: grad(:)
+      REAL(DP), INTENT(IN)    :: x(:), step(:)
+      REAL(DP), INTENT(IN), OPTIONAL :: fx    ! value of function at x
       INTEGER, INTENT(INOUT), OPTIONAL :: ncall ! number of calls to funct
-      REAL(DBL) :: y(SIZE(x)), fy, myfx
+      REAL(DP) :: y(SIZE(x)), fy, myfx
       INTEGER   :: icomp, ncomp
       !
       ! COMPUTE grad(funct)[i](x) = ( f(x+step(i)) - f(x) ) / step(i)
@@ -375,16 +375,16 @@ CONTAINS
       INTERFACE
          SUBROUTINE funct(val, n, xx)
             USE common_def
-            use genvar, only: DBL
-            REAL(DBL), INTENT(OUT) :: val
+            use genvar, only: DP
+            REAL(DP), INTENT(OUT) :: val
             INTEGER, INTENT(IN)  :: n
-            REAL(DBL), INTENT(IN)  :: xx(n)
+            REAL(DP), INTENT(IN)  :: xx(n)
          END SUBROUTINE
       END INTERFACE
-      REAL(DBL), INTENT(INOUT) :: grad2(:)
-      REAL(DBL), INTENT(IN)    :: x(:), step(:)
+      REAL(DP), INTENT(INOUT) :: grad2(:)
+      REAL(DP), INTENT(IN)    :: x(:), step(:)
       INTEGER, INTENT(INOUT), OPTIONAL :: ncall ! number of calls to funct
-      REAL(DBL) :: y(SIZE(x)), fyp, fym
+      REAL(DP) :: y(SIZE(x)), fyp, fym
       INTEGER   :: icomp, ncomp
       ! COMPUTE SECOND ORDER DERIVATIVE g(i) ALONG i'th DIRECTION
       IF (SIZE(grad2) /= SIZE(x) .OR. SIZE(step) /= SIZE(x)) STOP "ERROR IN gradient: INCONSISTENT SIZES!"
@@ -396,7 +396,7 @@ CONTAINS
          y = x
          y(icomp) = y(icomp) - step(icomp)
          CALL funct(fym, ncomp, y)
-         grad2(icomp) = (fyp - fym)/(2.0_DBL*step(icomp))
+         grad2(icomp) = (fyp - fym)/(2.0_DP*step(icomp))
       END DO
       IF (PRESENT(ncall)) ncall = ncall + ncomp*2
    END SUBROUTINE
@@ -428,10 +428,10 @@ CONTAINS
       INTERFACE
          SUBROUTINE funct(val, n, x)
             USE common_def
-            use genvar, only: DBL
-            REAL(DBL), INTENT(OUT) :: val
+            use genvar, only: DP
+            REAL(DP), INTENT(OUT) :: val
             INTEGER, INTENT(IN)  :: n
-            REAL(DBL), INTENT(IN)  :: x(n)
+            REAL(DP), INTENT(IN)  :: x(n)
          END SUBROUTINE
       END INTERFACE
 
@@ -458,14 +458,14 @@ CONTAINS
       do 5 i = 1, n
       do 6 j = 1, i
          ij = ij - 1
-6        h(ij) = 0.0_DBL
-5        h(ij) = 1.0_DBL
+6        h(ij) = 0.0_DP
+5        h(ij) = 1.0_DP
          go to 15
 10       continue
          ij = 1
          do 11 i = 2, n
             z = h(ij)
-            if (z .le. 0.0_DBL) return
+            if (z .le. 0.0_DP) return
             ij = ij + 1
             i1 = ij
             do 11 j = i, n
@@ -480,7 +480,7 @@ CONTAINS
 12                continue
                   ij = ij + 1
 11                continue
-                  if (h(ij) .le. 0.0_DBL) return
+                  if (h(ij) .le. 0.0_DP) return
 15                continue
                   ij = np
                   dmin = h(1)
@@ -488,15 +488,15 @@ CONTAINS
                      if (h(ij) .ge. dmin) go to 16
                      dmin = h(ij)
 16                   ij = ij + np - i
-                     if (dmin .le. 0.0_DBL) return
+                     if (dmin .le. 0.0_DP) return
                      z = f
                      itn = 0
                      call funct(f, n, x)
                      ifn = 1
                      df = dfn
-                     if (dfn .eq. 0.0_DBL) df = f - z
-                     if (dfn .lt. 0.0_DBL) df = abs(df*f)
-                     if (df .le. 0.0_DBL) df = 1.0_DBL
+                     if (dfn .eq. 0.0_DP) df = f - z
+                     if (dfn .lt. 0.0_DP) df = abs(df*f)
+                     if (df .le. 0.0_DP) df = 1.0_DP
 17                   continue
                      do 19 i = 1, n
                         w(i) = x(i)
@@ -537,14 +537,14 @@ CONTAINS
                               ij = nn
                               do 25 i = 1, n1
                                  ij = ij - 1
-                                 z = 0.0_DBL
+                                 z = 0.0_DP
                                  do 26 j = 1, i
                                     z = z + h(ij)*w(is + np - j)
                                     ij = ij - 1
 26                                  continue
 25                                  w(is + n - i) = w(n - i)/h(ij) - z
-                                    z = 0.0_DBL
-                                    gs0 = 0.0_DBL
+                                    z = 0.0_DP
+                                    gs0 = 0.0_DP
                                     do 29 i = 1, n
                                        if (z*xm(i) .ge. abs(w(is + i))) go to 28
                                        z = abs(w(is + i))/xm(i)
@@ -552,11 +552,11 @@ CONTAINS
 29                                     continue
                                        aeps = eps/z
                                        iexit = 2
-                                       if (gs0 .ge. 0.0_DBL) go to 92
-                                       alpha = -2.0_DBL*df/gs0
-                                       if (alpha .gt. 1.0_DBL) alpha = 1.0_DBL
+                                       if (gs0 .ge. 0.0_DP) go to 92
+                                       alpha = -2.0_DP*df/gs0
+                                       if (alpha .gt. 1.0_DP) alpha = 1.0_DP
                                        ff = f
-                                       tot = 0.0_DBL
+                                       tot = 0.0_DP
                                        int = 0
                                        iexit = 1
 30                                     continue
@@ -585,12 +585,12 @@ CONTAINS
                                                 if (f1 .ge. f) go to 50
                                                 if ((f1 + f2 .ge. f + f) .and. (7.0d0*f1 + 5.0d0*f2 .gt. 12.0d0*f)) int = 2
                                                 tot = tot + alpha
-                                                alpha = 2.0_DBL*alpha
+                                                alpha = 2.0_DP*alpha
                                                 go to 32
 40                                              continue
                                                 if (alpha .lt. aeps) go to 92
                                                 if (ifn .ge. maxfn) go to 90
-                                                alpha = 0.5_DBL*alpha
+                                                alpha = 0.5_DP*alpha
                                                 do 41 i = 1, n
                                                    w(i) = x(i) + alpha*w(is + i)
 41                                                 continue
@@ -606,7 +606,7 @@ CONTAINS
 45                                                    continue
                                                       z = 0.1d0
                                                       if (f1 + f .gt. f2 + f2) &
-                                                         z = 1.0_DBL + 0.5_DBL*(f - f1)/(f + f1 - f2 - f2)
+                                                         z = 1.0_DP + 0.5_DP*(f - f1)/(f + f1 - f2 - f2)
                                                       if (z .lt. 0.1d0) z = 0.1d0
                                                       alpha = z*alpha
                                                       int = 1
@@ -623,36 +623,36 @@ CONTAINS
                                                          if (idiff - 1) 100, 100, 110
 54                                                       continue
                                                          if (ifn .ge. maxfn) go to 90
-                                                         gys = 0.0_DBL
+                                                         gys = 0.0_DP
                                                          do 55 i = 1, n
                                                             w(i) = w(ib + i)
                                                             gys = gys + g(i)*w(is + i)
 55                                                          continue
                                                             df = ff - f
                                                             dgs = gys - gs0
-                                                            if (dgs .le. 0.0_DBL) go to 20
+                                                            if (dgs .le. 0.0_DP) go to 20
                                                             link = 1
-                                                            if (dgs + alpha*gs0 .gt. 0.0_DBL) go to 52
+                                                            if (dgs + alpha*gs0 .gt. 0.0_DP) go to 52
                                                             do 51 i = 1, n
                                                                w(iu + i) = g(i) - w(i)
 51                                                             continue
-                                                               sig = 1.0_DBL/(alpha*dgs)
+                                                               sig = 1.0_DP/(alpha*dgs)
                                                                go to 70
 52                                                             continue
                                                                zz = alpha/(dgs - alpha*gs0)
-                                                               z = dgs*zz - 1.0_DBL
+                                                               z = dgs*zz - 1.0_DP
                                                                do 53 i = 1, n
                                                                   w(iu + i) = z*w(i) + g(i)
 53                                                                continue
-                                                                  sig = 1.0_DBL/(zz*dgs*dgs)
+                                                                  sig = 1.0_DP/(zz*dgs*dgs)
                                                                   go to 70
 60                                                                continue
                                                                   link = 2
                                                                   do 61 i = 1, n
                                                                      w(iu + i) = w(i)
 61                                                                   continue
-                                                                     if (dgs + alpha*gs0 .gt. 0.0_DBL) go to 62
-                                                                     sig = 1.0_DBL/gs0
+                                                                     if (dgs + alpha*gs0 .gt. 0.0_DP) go to 62
+                                                                     sig = 1.0_DP/gs0
                                                                      go to 70
 62                                                                   continue
                                                                      sig = -zz
@@ -671,7 +671,7 @@ CONTAINS
                                                                            ij = 1
                                                                            do 75 i = 1, n
                                                                               z = h(ij) + sig*w(iv + i)*w(iv + i)
-                                                                              if (z .le. 0.0_DBL) z = dmin
+                                                                              if (z .le. 0.0_DP) z = dmin
                                                                               if (z .lt. dmin) dmin = z
                                                                               h(ij) = z
                                                                               w(ib + i) = w(iv + i)*sig/z
@@ -745,7 +745,7 @@ CONTAINS
                                                                                    if (verbose) write (6, *) '  x-epsilon =', w(1:n)
                                                                                           call funct(f2, n, w)
                                                                                        if (verbose) write (6, *) 'f(x-epsilon)=', f2
-                                                                                          g(i) = (f1 - f2)/(2.0_DBL*z)
+                                                                                          g(i) = (f1 - f2)/(2.0_DP*z)
                                                                                  if (verbose) write (6, *) 'gradgrad(f,i)(x)=', g(i)
                                                                                           w(i) = w(i) + z
 111                                                                                       continue

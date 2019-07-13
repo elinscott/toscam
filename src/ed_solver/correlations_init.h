@@ -5,7 +5,7 @@
       use common_def, only: close_safe, open_safe, skip_line
       use impurity_class, only: impurity_type, symmetry
       use readable_vec_class, only: new_readable_veclist_from_file
-      use genvar, only: bosonic, dbl, fermionic, log_unit
+      use genvar, only: bosonic, dp, fermionic, log_unit
       use globalvar_ed_solver, only: average_g, dens, do_keldysh, &
          donot_compute_holepart, donot_compute_holepart_spm, &
          flag_all_green_func_computed, flag_build_correl_low_part, &
@@ -27,13 +27,12 @@
       INTEGER, ALLOCATABLE :: IMASK_tmp(:, :), IMASK(:, :), IMASKup(:, :), &
                               IMASKdo(:, :), IMASKpair(:, :)
       INTEGER, ALLOCATABLE :: IMASKNS(:, :), IMASKP3(:, :), IMASKP4(:, :)
-      REAL(DBL)            :: wmin, wmax, wSzmax, wSpmmax, wNmax, wP3max, &
-                              wP4max, rbeta
+      REAL(DP)            :: wmin, wmax, wSzmax, wSpmmax, wNmax, wP3max, wP4max, rbeta
       INTEGER              :: Nc, ipm, jpm, site, spin, iP3, iP3_, nP3, iP4, &
                               iP4_, nP4, ff, Niw, Nww, jj, i, j, ii
       LOGICAL              :: IS_HERM, to_compute(2, 2), to_compute_in(2, 2)
       TYPE(freq_type)      :: dummyfreq
-      real(DBL)            :: rdelta_width
+      real(DP)            :: rdelta_width
       INTEGER, POINTER     :: mat_temp(:, :)
       INTEGER              :: i_temp
 
