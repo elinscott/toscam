@@ -220,6 +220,7 @@ contains
       ! WHERE lambda_i ARE THE EIGENVALUES OF THE DENSITY MATRIX
 
       use genvar, only: dbl, log_unit
+      use globalvar_ed_solver, only: ed_num_eigenstates_print
       use common_def, only: c2s, dump_message, i2c
       use matrix, only: diagonalize, write_array
       use readable_vec_class, only: cket_from_state
@@ -240,7 +241,8 @@ contains
       INTEGER               :: states(size(dmat, 1))
       REAL(DBL)             :: ENTROPY, TRACE
       INTEGER               :: ivp, nvp, icomp
-      CHARACTER(LEN=1000) :: cvec, prefix
+      CHARACTER(LEN=:), allocatable :: cvec
+      character(1000)       :: prefix
       INTEGER               :: npairs, ncomp, ncompi
       character(100)        :: intwri
 
@@ -251,11 +253,12 @@ contains
       ! NUMBER OF EIGENVALUES TO DISPLAY, NUMBER OF EIGENVECTOR COMPONENTS TO
       ! DISPLAY
 
-      ncomp = min(size(dmat, 1), 16)
+      ncomp = min(size(dmat, 1), ed_num_eigenstates_print)
       npairs = ncomp
 
-      if (size(dmat, 1) <= 16) call write_array(dmat, " DENSITY MATRIX ", unit &
-                                                =log_unit, short=.true.)
+      if (size(dmat, 1) <= ed_num_eigenstates_print) then
+         call write_array(dmat, " DENSITY MATRIX ", unit=log_unit, short=.true.)
+      end if
 
       write (*, *) 'analyse density matrix'
 
@@ -289,6 +292,7 @@ contains
          write (log_unit, *) '======================================================='
 #ifdef _complex
          intwri = '('//c2s(i2c(ncompi))//'(2f9.6, a))'
+         allocate(character(len=ncompi*19) :: cvec)
          write (log_unit, *) 'non zero elements in state vector  : ', ncompi
          write (log_unit, *) (VECP(states(icomp), ivp), " "// &
                               cket_from_state(states(icomp) - 1, IMPiorb, NAMBU)//" ", &
@@ -299,6 +303,7 @@ contains
                                               icomp=1, ncompi)
 #else
          intwri = '('//c2s(i2c(ncompi))//'(f9.6, a))'
+         allocate(character(len=ncompi*10) :: cvec)
          write (log_unit, *) 'non zero elements in state vector  : ', ncompi
          write (log_unit, *) (VECP(states(icomp), ivp), " "// &
                               cket_from_state(states(icomp) - 1, IMPiorb, NAMBU)//" ", &
@@ -312,6 +317,7 @@ contains
          prefix = "# "//c2s(i2c(nvp - ivp + 1))//"   "
          WRITE (log_unit, '(a'//c2s(i2c(LEN_TRIM(prefix)))//', f9.6, a)') &
             TRIM(prefix), VALP(ivp), " - > "//TRIM(cvec)
+         deallocate(cvec)
          write (log_unit, *) '======================================================='
 
       ENDDO

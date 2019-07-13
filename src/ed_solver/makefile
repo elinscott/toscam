@@ -153,7 +153,7 @@ correl_class.mod: correl_class.f90 frequency_class.mod globalvar_ed_solver.mod m
 
 correlations.mod: correlations.f90 aim_class.mod apply_c.mod apply_ns.mod apply_p.mod bath_class_hybrid.mod correl_class.mod density_matrix.mod eigen_sector_class.mod globalvar_ed_solver.mod green_class.mod green_class_computeaa.mod green_class_computeab.mod impurity_class.mod mask_class.mod masked_matrix_class.mod overlap_module.mod rcmatrix_class.mod rcvector_class.mod readable_vec_class.mod
 
-density_matrix.mod: density_matrix.f90 aim_class.mod eigen_class.mod eigen_sector_class.mod rcmatrix_class.mod readable_vec_class.mod sector_class.mod
+density_matrix.mod: density_matrix.f90 aim_class.mod eigen_class.mod eigen_sector_class.mod globalvar_ed_solver.mod rcmatrix_class.mod readable_vec_class.mod sector_class.mod
 
 dmft_solver_ed.mod: dmft_solver_ed.f90 aim_class.mod bath_class.mod bath_class_hybrid.mod correl_class.mod correlations.mod eigen_sector_class.mod globalvar_ed_solver.mod impurity_class.mod solver.mod
 

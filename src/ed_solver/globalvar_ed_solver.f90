@@ -102,4 +102,5 @@ module globalvar_ed_solver
    integer, allocatable    :: list_sectors(:)
    logical                 :: verbose_graph           ! plot fits of the hybridization at each step of the minimization
    real(DBL)               :: fit_shift
+   integer                 :: ed_num_eigenstates_print
 end module

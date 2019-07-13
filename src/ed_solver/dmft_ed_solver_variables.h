@@ -621,3 +621,9 @@ call putel_in_namelist(nm, &
                        'flag_idelta_two_scales_ed', &
                        0, &
                        'Definition: if true the ED solver will use a double energy scale for the idelta frequency dependence')
+
+call putel_in_namelist(nm, ed_num_eigenstates_print, 'ed_num_eigenstates_print', &
+                      16, 'Definition: the number of lowest-energy eigenstates of &
+                      &the reduced spectral density to list in the logfile report')
+                  
+                      
