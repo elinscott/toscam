@@ -1,2 +1,2 @@
 ### Contact
-For more information, email <a>mailto:cedric.weber@kcl</a>
+For more information, email <cedric.weber@kcl>
