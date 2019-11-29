@@ -1,5 +1,5 @@
-Welcome to toscam's documentation!
-==================================
+TOSCAM documentation
+====================
 
 .. toctree::
    :maxdepth: 2
