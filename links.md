@@ -1,3 +1,3 @@
 ### Useful links
 
-For more information about `ONETEP`, see <a>www.onetep.org</a>
+For more information about `ONETEP`, see <a>http://www.onetep.org</a>
