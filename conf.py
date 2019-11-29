@@ -12,6 +12,7 @@
 #
 # import os
 # import sys
+import sphinx_rtd_theme
 # sys.path.insert(0, os.path.abspath('.'))
 
 
@@ -20,11 +21,10 @@
 project = 'toscam'
 copyright = '2019, Edward Linscott and Cedric Weber'
 author = 'Edward Linscott and Cedric Weber'
+language = None
 version = '0.0.1'
-
 # The full version, including alpha/beta/rc tags
-release = 'Dec 2019'
-
+release = '0.0.1a'
 
 # -- General configuration ---------------------------------------------------
 
