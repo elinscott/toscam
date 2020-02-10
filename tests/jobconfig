@@ -1,0 +1,10 @@
+[test_01/]
+program = onetep
+
+[test_02/]
+program = toscam
+
+[categories]
+dft = test_01
+dmft = test_02
+

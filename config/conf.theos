@@ -1,0 +1,10 @@
+# Config file for TCM PC
+F90       = mpiifort
+FFLAGS    = -O1 -qopenmp
+MKL       = -lmkl_intel_lp64 -lmkl_sequential -lmkl_core
+CCOMPL    = mpiicc
+CFLAGS    = -O1
+C++       = mpiicpc
+CXXFLAGS  = -O1
+RANLIB    = ranlib
+COMPILER  = intel

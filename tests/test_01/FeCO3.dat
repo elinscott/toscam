@@ -1,0 +1,83 @@
+!========================================================!
+! Input for calculation with ONETEP                      !
+!                                                        !
+! Quality Control file for:                              ! 
+! Dynamical Mean Field Theory calculations               !
+! Iron Carbonate molecule FeCO_3                         !
+!                                                        !
+! Created by E. B. Linscott on 18/04/2016                !
+!                                                        !
+! Theory of Condensed Matter                             !
+! Department of Physics                                  !
+! University of Cambridge                                !
+! CB3 0HE Cambridge, UK                                  !
+!                                                        !
+!========================================================!
+
+task                  : singlepoint
+cutoff_energy         : 700.000000 eV
+maxit_ngwf_cg         : 30
+minit_lnv             : 5
+maxit_lnv             : 15
+xc_functional         : PBE
+
+edft : T
+
+spin_polarized        : F
+spin                  : 0
+
+write_denskern : T
+write_tightbox_ngwfs : T
+read_denskern         : F
+read_tightbox_ngwfs   : F
+write_forces : F
+output_detail         : VERBOSE
+print_qc              : T
+cube_format : F
+
+kerfix                :  1
+pen_param             :  20
+maxit_pen             :  0
+maxit_palser_mano     : -1
+maxit_kernel_fix      :  250
+maxit_hotelling       :  0
+delta_e_conv          :  T
+
+%block hubbard
+Fe 2 0.0 0.0 -10.0 0.0 0.0
+%endblock hubbard 
+
+%block lattice_cart
+'ang'
+  21.167    0.000    0.000
+   0.000   21.167    0.000
+   0.000    0.000   21.167
+%endblock lattice_cart
+
+%block positions_abs
+'ang'
+Fe  6.546149	5.698683   5.613481
+C   4.317344	5.190539   5.214890
+O   5.371306	4.329598   5.149560
+O   4.840265	6.389633   5.603814
+O   3.161252	4.956243   4.982952
+%endblock positions_abs
+
+%block species
+'ang'
+Fe    Fe  26 13  6.6
+C      C   6  4  5.0
+O      O   8  4  5.0
+%endblock species
+
+%block species_pot 
+Fe   "../../pseudo/Fe_13NGWFs.recpot"
+C    "../../pseudo/C.recpot"
+O    "../../pseudo/O.recpot"
+%endblock species_pot
+
+%block species_ldos_groups
+Fe
+C
+O
+%endblock species_ldos_groups
