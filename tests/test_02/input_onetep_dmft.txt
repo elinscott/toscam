@@ -22,8 +22,8 @@ dmft_spin = 1
 
 !ED
 im_solver=4
-openmp_solver=4
-nproc_mpi_solver=2
+openmp_solver=8
+nproc_mpi_solver=1
 Neigen=3
 which_lanczos=NORMAL
 Block_size=0
@@ -82,7 +82,9 @@ niter_dmft=2
 
 fit_weight_power=0.00000000
 fit_nw=30
-sites_ed=7
-ncpt_approx=3
+sites_ed=4
+ncpt_approx=0
 cpt_upper_bound=0.50000000
 cpt_lagrange=0.00000001
+
+print_qc=.true.

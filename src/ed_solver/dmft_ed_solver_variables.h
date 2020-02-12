@@ -626,4 +626,6 @@ call putel_in_namelist(nm, ed_num_eigenstates_print, 'ed_num_eigenstates_print',
                       16, 'Definition: the number of lowest-energy eigenstates of &
                       &the reduced spectral density to list in the logfile report')
                   
+call putel_in_namelist(nm, print_qc, 'print_qc', &
+                      .false., 'Definition: if true, print out various quantities for the purposes of quality control')
                       

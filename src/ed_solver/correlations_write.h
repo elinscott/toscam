@@ -51,14 +51,14 @@
 
       use eigen_sector_class, only: eigensectorlist_type
       use globalvar_ed_solver, only: dens, donot_compute_holepart_spm, &
-         tot_repulsion
+         tot_repulsion, print_qc
       use masked_matrix_class, only: delete_masked_matrix, masked_matrix_type, &
          new_masked_matrix
       use genvar, only: ccspin, dp, half, log_unit, quarter
       use linalg, only: conj, MPLX
       use mask_class, only: order_matrix_elements
       use matrix, only: write_array
-      use common_def, only: dump_message
+      use common_def, only: dump_message, utils_qc_print
       use aim_class, only: aim_type
 
       implicit none
@@ -125,6 +125,11 @@
       call write_array(G(2)%correlstat(1, 2)%rc%mat, 'G2 12', unit=unit_)
       call write_array(G(2)%correlstat(2, 1)%rc%mat, 'G2 21', unit=unit_)
       call write_array(G(2)%correlstat(2, 2)%rc%mat, 'G2 22', unit=unit_)
+
+      ! ebl: printout for quality control
+      if (print_qc) then
+         call utils_qc_print('density(1)', dens(1))
+      end if
 
       ! BOND OPERATORS !
 

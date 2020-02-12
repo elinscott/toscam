@@ -287,6 +287,7 @@ logical           ::   double_counting_with_no_average,dimer_average_occupation,
    integer           ::   ncpt_approx
    real(kind=DP)           ::   cpt_upper_bound, cpt_lagrange, tail_linear_scaling
    complex(kind=DP)        ::   ccctemp, ccctemp_av
+   logical           :: print_qc
 
 contains
 
@@ -415,6 +416,7 @@ call putel_in_namelist(nm, fmos_fluc, 'fmos_fluc', .false., 'Definition: if true
  call putel_in_namelist(nm,use_simp_from_onetep_for_ortho,'use_simp_from_onetep_for_ortho',.true., 'Definition: uses the Simp matrix obtained by onetep to compute the transformations to non-ortho basis')
  call putel_in_namelist(nm,flag_use_broadening_two_scales_ed,'flag_use_broadening_two_scales_ed',-1,'Definition: if >0 the ED solver will use a broadening factor which assumes two different energy scales')
  call putel_in_namelist(nm,ed_no_real_overide,'ed_no_real_overide',.false.,'Definition: if true, the ED solver will not provide the real axis quantities, this overrides any other combination of options')
+      call putel_in_namelist(nm, print_qc, 'print_qc', .false., 'Definition: if true, print out various quantities for the purposes of quality control')
 
       call look_for_namelist_in_file(nm, './input_onetep_dmft.txt')
 
@@ -1379,6 +1381,8 @@ contains
       if (ed_do_not_keep_previous_fit_param) then
          call utils_system_call(" rm ed.fit.param ed.fmos ")
       endif
+
+      if (print_qc) call utils_system_call('echo print_qc=.true. >> ed.in')
 
       call utils_system_call("mv hf.in "//TRIM(ADJUSTL(filename)))
       call utils_system_call("mv ed.* "//TRIM(ADJUSTL(filename)))

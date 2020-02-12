@@ -1,0 +1,21 @@
+[user]
+benchmark = 0.0.1
+date_fmt = %d%m%y
+diff = vimdiff
+default_program = toscam
+
+[onetep]
+exe = onetep
+inputs_args = ('*.dat', '')
+nprocs = 2
+run_cmd_template = tc.program tc.args tc.input > tc.output 2> tc.error
+data_tag = <QC>
+tolerance = (2.0e-5, None, '[total_energy]'), (1.0e-5, 0.005, None, False)
+
+[toscam]
+exe = ../bin/onetep_dmft.out
+nprocs = 0
+run_cmd_template = tc.program > tc.output 2> tc.error
+extract_program = extract_dmft_qc.sh
+extract_cmd_template = tc.extract tc.file
+tolerance = (2.0e-5, None, '[density(1)]')

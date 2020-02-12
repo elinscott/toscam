@@ -13,4 +13,4 @@ for i in `ls edc_output* 2> /dev/null`
     cat $i | head -1 | awk '{print $2}'>> ./edc_total
   done 
 
-  awk '{a+=$0}END{print a}' edc_total 
+  # awk '{a+=$0}END{print a}' edc_total

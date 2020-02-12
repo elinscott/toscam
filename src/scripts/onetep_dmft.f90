@@ -46,17 +46,6 @@ contains
          output = trim(adjustl(output))//" 2>&1 "
       endif
 
-      write (*, *) 'CALLING get_mpi_command_line with arguments : '
-      write (*, *) trim(adjustl(exe))//' "   '&
-                                         & //trim(adjustl(args))//' "   '&
-                                         & //trim(adjustl(tostring(np)))//'     '&
-                                         & //trim(adjustl(tostring(p)))//'     '&
-                                         & //trim(adjustl(tostring(omp)))//'     '&
-                                         & //trim(adjustl(mach))//' "   '&
-                                         & //trim(adjustl(mach_arg))//' " " '&
-                                         & //trim(adjustl(output))//' "   '&
-                                         & //trim(adjustl(localhost))
-
       build_mpi_command_line = " "
       call utils_system_call('  get_mpi_command_line '//trim(adjustl(exe))//' "     '&
                                          & //trim(adjustl(args))//' "     '&
@@ -358,7 +347,7 @@ program dmftonetep
       !call check_if_input_file_changed
 
       if (iter_dmft > niter_dmft) then
-         write (*, *) 'MAX ITER REACHED, iter_dmft, niter : ', iter_dmft, niter_dmft
+         write (*, '(a)') 'Maximum number of DMFT iterations reached'
          exit
       endif
 
@@ -390,9 +379,8 @@ program dmftonetep
 
       call utils_system_call(" mkdir after_onetep ")
       call utils_system_call(" cp green_output* after_onetep ")
-      write (*, *) 'did we get the green functions ?'
-      call utils_system_call(" ls green_output* && echo 'yes there are [x] green functions : ' && ls green_output* |wc -l  ")
-      call utils_system_call(" ls green_output* | wc -l > list_of_greens ")
+      call utils_system_call(' ls green_output* > /dev/null 2>&1 && n_gf=$(ls green_output* | wc -l) && echo "Found ${n_gf} green function(s): " && ls green_output*')
+      call utils_system_call(" echo $n_gf > list_of_greens ")
       call utils_system_call(" ls green_output* >> list_of_greens ")
       call utils_system_call(" order_list_of_greens.out ", abort=.true.)
       call onetepdmft

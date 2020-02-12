@@ -9,7 +9,7 @@ else
 	ARCH=$(ARCH) testcode/bin/testcode.py $(TC) --verbose
 endif
 
-KEEP_FILES := *.dat input_onetep_dmft.txt mask_projections
+KEEP_FILES := bench* *.dat input_onetep_dmft.txt mask_projections
 KEEP_TESTS := $(patsubst %,! -name %,${KEEP_FILES})
 CLEAN_FILES := test.out.* test.err.*
 CLEAN_TESTS := $(patsubst %,-o -name %,${CLEAN_FILES})

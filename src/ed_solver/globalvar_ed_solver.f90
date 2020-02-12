@@ -89,8 +89,8 @@ module globalvar_ed_solver
    logical                 :: fast_fit, first_iter_use_edinput, &
                               force_no_pairing, force_para_state, &
                               force_singlet_state
-   real(DP)               :: tolerance               ! Lanczos tolerance
-   real(DP)               :: dEmax = 0.d0, dEmax0 = 0.d0 ! max.energy of excited states to consider
+   real(DP)                :: tolerance               ! Lanczos tolerance
+   real(DP)                :: dEmax = 0.d0, dEmax0 = 0.d0 ! max.energy of excited states to consider
    integer                 :: Neigen = 0   ! max. # of eigenvalues computed in this window
    integer                 :: Block_size = 0   ! Block size (ignored if Neigen=1: Block_size=1)
    integer                 :: nsec = 1               ! Number of sectors to scan
@@ -98,9 +98,10 @@ module globalvar_ed_solver
    integer                 :: window_hybrid = 0       ! window of matsubara frequencies to fit
    integer                 :: window_hybrid2 = 0      ! window of matsubara frequencies to fit
    integer                 :: window_weight = 1       ! ratio weight point inside window / point outside window
-   real(DP), allocatable  :: dens(:)                 ! onsite charge density
+   real(DP), allocatable   :: dens(:)                 ! onsite charge density
    integer, allocatable    :: list_sectors(:)
    logical                 :: verbose_graph           ! plot fits of the hybridization at each step of the minimization
-   real(DP)               :: fit_shift
+   real(DP)                :: fit_shift
    integer                 :: ed_num_eigenstates_print
+   logical                 :: print_qc
 end module
