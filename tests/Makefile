@@ -21,11 +21,11 @@ help:
 	@echo ''
 	@echo 'TOSCAM QC tests'
 	@echo ''
-	@echo 'To run type'
+	@echo 'To run:'
 	@echo '> make tests ARCH=<arch>'
-	@echo
-	@echo 'Other options'
 	@echo 'To remove all test outputs in the test subdirectories:'
 	@echo '> make clean'
-	@echo
+	@echo ''
+	@echo 'For information on testcode see http://testcode.readthedocs.org'
+	@echo ''
 
