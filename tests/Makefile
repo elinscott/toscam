@@ -1,7 +1,15 @@
 # List of available tasks
-.PHONY: tests clean help
+.PHONY: install tests clean help
+
+install:
+	@# install testcode
+	git submodule init
+	git submodule update
 
 tests:
+ifeq ($(wildcard ./testcode/bin/testcode.py),)
+	@$(MAKE) install
+endif
 ifeq ($(ARCH),)
 	$(warning Please set ARCH.)
 	@$(MAKE) help
