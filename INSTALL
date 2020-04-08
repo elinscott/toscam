@@ -52,6 +52,8 @@ parallelism, in which case OpenMP will need to be enabled for your compiler
 4) Running make with no target in the base directory lists the available 
    options. The normal target is 'toscam' but there are also options for 
    step-by-step compilation of the libraries and solver.
+   
+5) Finally, add /path/to/toscam/bin and /path/to/toscam/utils to your $PATH, and set $ONETEP to be your ONETEP binary.
 
 TOSCAM Developers
 Last updated: 10 April 2019
