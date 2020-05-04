@@ -11,7 +11,7 @@ if __name__ == '__main__':
                           "ed_solver/dmft_ed_solver_variables.h"]
 
    for fname in files_with_keywords:
-      with open('../src/' + fname, 'r') as f:
+      with open('../../src/' + fname, 'r') as f:
          flines = f.readlines()
 
       for i, line in enumerate(flines):
@@ -75,7 +75,7 @@ if __name__ == '__main__':
              '      <th>Type</th>',
              '   </tr>']
 
-   with open('_static/keywords.html', 'w') as f:
+   with open('keywords.html', 'w') as f:
       f.write('\n'.join(header))
       for key in sorted(keywords.keys()):
          keyword, definition, default, key_type = keywords[key]
