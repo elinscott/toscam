@@ -8,6 +8,7 @@ This webpage is still under development. Come back soon!
 
    about
    installation
+   keywords
    tutorials
    links
    papers
