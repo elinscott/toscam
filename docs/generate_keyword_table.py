@@ -80,9 +80,9 @@ if __name__ == '__main__':
       for key in sorted(keywords.keys()):
          keyword, definition, default, key_type = keywords[key]
          f.write(f'\n   <tr>')
-         f.write(f'\n      <td>{keyword}</td>')
+         f.write(f'\n      <td><code>{keyword}</code></td>')
          f.write(f'\n      <td>{definition}</td>')
-         f.write(f'\n      <td>{default}</td>')
+         f.write(f'\n      <td><code>{default}</code></td>')
          f.write(f'\n      <td>{key_type}</td>')
          f.write(f'\n   </tr>')
       f.write('\n</table>')

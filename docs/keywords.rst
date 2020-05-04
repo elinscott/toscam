@@ -22,7 +22,7 @@ Keywords
      tr = tab.getElementsByTagName('tr');
      // Loop through all list items, and hide those who don't match the search query
      for (i = 1; i < tr.length; i++) {
-       a = tr[i].getElementsByTagName("td")[0];
+       a = tr[i].getElementsByTagName("td")[0].getElementsByTagName("code")[0];
        txtValue = a.textContent || a.innerText;
        if (txtValue.toUpperCase().indexOf(filter) > -1) {
          tr[i].style.display = "";

@@ -6,1683 +6,1683 @@
       <th>Type</th>
    </tr>
    <tr>
-      <td>all_local_host</td>
+      <td><code>all_local_host</code></td>
       <td>=if true will send all the job on local host</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>alpha</td>
+      <td><code>alpha</code></td>
       <td>NCA/OCA mixing for internal self consistence</td>
-      <td>0.3</td>
+      <td><code>0.3</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>always_compute_static_obs</td>
+      <td><code>always_compute_static_obs</code></td>
       <td>if true will always compute static bosonic observables</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>amp_slight_sym_breaking</td>
+      <td><code>amp_slight_sym_breaking</code></td>
       <td>if finite it will induce a small symmetry breaking will be used for the polarized calculations in the impurity levels</td>
-      <td>0.0</td>
+      <td><code>0.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>amp_slight_sym_breaking_all_iter</td>
+      <td><code>amp_slight_sym_breaking_all_iter</code></td>
       <td>if true the small symmetry breaking amp_slight_sym_breaking will be used at all DMFT iteration and not only at the first iteration</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>assume_proj_overlap_is_diagonal</td>
+      <td><code>assume_proj_overlap_is_diagonal</code></td>
       <td>if true the code will simplify the calculations by assuming that the projected overlap matrix is diagonal</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>atom_d_command</td>
+      <td><code>atom_d_command</code></td>
       <td>name of the command to run atom_d.py</td>
-      <td>'atom_d.py'</td>
+      <td><code>'atom_d.py'</code></td>
       <td>string</td>
    </tr>
    <tr>
-      <td>average_green_ed</td>
+      <td><code>average_green_ed</code></td>
       <td>if true will average the green function with the mask_sym_green_ed</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>bath_nearest_hop</td>
+      <td><code>bath_nearest_hop</code></td>
       <td>whatever bath parametrization</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>beta_ed_</td>
+      <td><code>beta_ed_</code></td>
       <td>temperature for Boltzman weight. If =0. it will use the DMFT temperature</td>
-      <td>0.0</td>
+      <td><code>0.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>block_size</td>
+      <td><code>block_size</code></td>
       <td>Block size (0 lets the routine decide)</td>
-      <td>0</td>
+      <td><code>0</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>cluster_dmft_green_for_self_consistence</td>
+      <td><code>cluster_dmft_green_for_self_consistence</code></td>
       <td>if true keeps the off diagonal self energy terms when sending back to onetep</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>compute_dos</td>
+      <td><code>compute_dos</code></td>
       <td>=if true will run onetep only (1 iteration) to compute the density of states from a real frequency Solver</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>compute_ed_spin_correlation</td>
+      <td><code>compute_ed_spin_correlation</code></td>
       <td>if true will compute spin-spin correlations within ED</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>copy_kernel</td>
+      <td><code>copy_kernel</code></td>
       <td>if true will copy the kernel at each iteration to sc_dmft_full_iter</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>cpt_correct_green_out</td>
+      <td><code>cpt_correct_green_out</code></td>
       <td>if true will correct the output impurity green function with the CPT formula</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>cpt_lagrange</td>
+      <td><code>cpt_lagrange</code></td>
       <td>this is the lagrangian parameter for the weight V connecting to the large cluster</td>
-      <td>0.0</td>
+      <td><code>0.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>cpt_upper_bound</td>
+      <td><code>cpt_upper_bound</code></td>
       <td>this is the upper bound on the V cpt parameters</td>
-      <td>10000.0</td>
+      <td><code>10000.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>ctqmc_erase_status</td>
+      <td><code>ctqmc_erase_status</code></td>
       <td>if true will erase status file after each CTQMC iteration</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>cubic</td>
+      <td><code>cubic</code></td>
       <td>=1 for cubic harmonics</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>cutoff_dynamic</td>
+      <td><code>cutoff_dynamic</code></td>
       <td>cutoff for computing dynamical green function</td>
-      <td>1e-08</td>
+      <td><code>1e-08</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>cutoff_energy</td>
+      <td><code>cutoff_energy</code></td>
       <td>energy plane wave cutoff</td>
-      <td>850.0</td>
+      <td><code>850.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>cutoff_hamilt_param</td>
+      <td><code>cutoff_hamilt_param</code></td>
       <td>cutoff_hamilt_param: under this param the hamiltonian parameters are considered as 0</td>
-      <td>0.001</td>
+      <td><code>0.001</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>cutoff_min_lanczos_vec</td>
+      <td><code>cutoff_min_lanczos_vec</code></td>
       <td>cutoff for the minimal norm of a vector obtained in Lanczos</td>
-      <td>1e-25</td>
+      <td><code>1e-25</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>cutoff_rvb</td>
+      <td><code>cutoff_rvb</code></td>
       <td>cutoff under which it is considered no more as rvb state but as normal state</td>
-      <td>0.01</td>
+      <td><code>0.01</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>cutoff_simp_offdiag</td>
+      <td><code>cutoff_simp_offdiag</code></td>
       <td>if off diag elements of simp smaller than cutoff</td>
-      <td>0.01</td>
+      <td><code>0.01</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>debug_mode_erase_sigma</td>
+      <td><code>debug_mode_erase_sigma</code></td>
       <td>if true erases the self energy files</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>demax0</td>
+      <td><code>demax0</code></td>
       <td>max. energy of excited state to consider</td>
-      <td>5.0</td>
+      <td><code>5.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>diag_bath</td>
+      <td><code>diag_bath</code></td>
       <td>takes into account only the diagonal elements of the bath</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>diag_v</td>
+      <td><code>diag_v</code></td>
       <td>if true bath V is diagonal</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>diis_max</td>
+      <td><code>diis_max</code></td>
       <td>number of kernel iterations kept for pullay mixing</td>
-      <td>5</td>
+      <td><code>5</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>dimer_average_occupation</td>
+      <td><code>dimer_average_occupation</code></td>
       <td>if true the occupation will be averaged on both sites of the dimer for the double counting correction</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>dist_max</td>
+      <td><code>dist_max</code></td>
       <td>max. error on hybridization functions</td>
-      <td>1e-10</td>
+      <td><code>1e-10</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>dmft_for_dimer</td>
+      <td><code>dmft_for_dimer</code></td>
       <td>if true the library treats the problem as a dimer</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>dmft_kernel_process</td>
+      <td><code>dmft_kernel_process</code></td>
       <td>1-standard dmft kernel</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>dmft_spin</td>
+      <td><code>dmft_spin</code></td>
       <td>spin of the DMFT self consistence. By default doing PM calculations</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>dmft_split</td>
+      <td><code>dmft_split</code></td>
       <td>if true will split the onetep dmft interface over cpus with MPI rather than NFS</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>dmft_splitk</td>
+      <td><code>dmft_splitk</code></td>
       <td>if true splits the mpi onetep dmft interface in several batches each of them running different K points</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>dmft_splitk_batch</td>
+      <td><code>dmft_splitk_batch</code></td>
       <td>number of cpus in each of the batch when splitting k points</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>dmft_splitkdmftall</td>
+      <td><code>dmft_splitkdmftall</code></td>
       <td>if true splits the mpi onetep dmft interface in several batches each of them running different K points</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>do_keldysh</td>
+      <td><code>do_keldysh</code></td>
       <td>keldysh : if true will run the keldysh calculations</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>do_keldysh_gbigger</td>
+      <td><code>do_keldysh_gbigger</code></td>
       <td>keldysh : if true will also compute G^></td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>do_not_use_opt_lanczos</td>
+      <td><code>do_not_use_opt_lanczos</code></td>
       <td>if true will not use the optimized version of the Lanczos algorithm</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>do_quench</td>
+      <td><code>do_quench</code></td>
       <td>keldysh : if 1 will do a quench in magnetic field</td>
-      <td>0</td>
+      <td><code>0</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>donot_compute_holepart_spm</td>
+      <td><code>donot_compute_holepart_spm</code></td>
       <td>if false will compute both hole and particle part of S+S-</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>double_counting_nf</td>
+      <td><code>double_counting_nf</code></td>
       <td>if negative</td>
-      <td>-1.0</td>
+      <td><code>-1.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>double_counting_with_no_average</td>
+      <td><code>double_counting_with_no_average</code></td>
       <td>if true will not use the averaged U value which takes into accoung the hunds coupling rule</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>double_counting_zero_self</td>
+      <td><code>double_counting_zero_self</code></td>
       <td>if true it will impose that the self energy is zero at infinite frequency</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>double_counting_zero_self_av</td>
+      <td><code>double_counting_zero_self_av</code></td>
       <td>if true remove the orbital averaged Sigma(w=oo)</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>double_counting_zero_self_from_matsu</td>
+      <td><code>double_counting_zero_self_from_matsu</code></td>
       <td>if true the self energy estimated at w=oo for the double counting correction is taken from the matsubara self energy</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>dpmax</td>
+      <td><code>dpmax</code></td>
       <td></td>
-      <td>0.6</td>
+      <td><code>0.6</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>dpmin</td>
+      <td><code>dpmin</code></td>
       <td></td>
-      <td>0.05</td>
+      <td><code>0.05</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>dump_ground_state</td>
+      <td><code>dump_ground_state</code></td>
       <td>write the ground state to a file during the Lanczos process</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>ed_compute_all</td>
+      <td><code>ed_compute_all</code></td>
       <td>if true will compute all observables within ED</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>ed_compute_retarded_every_step</td>
+      <td><code>ed_compute_retarded_every_step</code></td>
       <td>if true will compute the retarded Green function at every dmft step</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>ed_do_not_keep_previous_fit_param</td>
+      <td><code>ed_do_not_keep_previous_fit_param</code></td>
       <td>if true the previous ED fit will not be used for the next iteration</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>ed_frequ_max</td>
+      <td><code>ed_frequ_max</code></td>
       <td>max ED real frequ</td>
-      <td>10.0</td>
+      <td><code>10.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>ed_frequ_min</td>
+      <td><code>ed_frequ_min</code></td>
       <td>min ED real frequ</td>
-      <td>-10.0</td>
+      <td><code>-10.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>ed_no_real_overide</td>
+      <td><code>ed_no_real_overide</code></td>
       <td>if true</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>ed_nsearch</td>
+      <td><code>ed_nsearch</code></td>
       <td>number of conjugate gradient iterations for fitting the hybridization for ED solver</td>
-      <td>200000</td>
+      <td><code>200000</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>ed_num_eigenstates_print</td>
+      <td><code>ed_num_eigenstates_print</code></td>
       <td>the number of lowest-energy eigenstates of the reduced spectral density to list in the logfile report</td>
-      <td>16</td>
+      <td><code>16</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>ed_rdelta</td>
+      <td><code>ed_rdelta</code></td>
       <td>small i*delta to shift off the real frequency axis</td>
-      <td>0.0001</td>
+      <td><code>0.0001</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>ed_rdelta_frequ_eta1</td>
+      <td><code>ed_rdelta_frequ_eta1</code></td>
       <td>eta1</td>
-      <td>0.002</td>
+      <td><code>0.002</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>ed_rdelta_frequ_t</td>
+      <td><code>ed_rdelta_frequ_t</code></td>
       <td>ramp to move from 0 to eta1</td>
-      <td>0.0003</td>
+      <td><code>0.0003</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>ed_rdelta_frequ_w0</td>
+      <td><code>ed_rdelta_frequ_w0</code></td>
       <td>frequency at which we have eta1</td>
-      <td>0.0006</td>
+      <td><code>0.0006</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>ed_real_frequ</td>
+      <td><code>ed_real_frequ</code></td>
       <td>ed number of frequencies</td>
-      <td>1000</td>
+      <td><code>1000</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>ed_real_frequ_last</td>
+      <td><code>ed_real_frequ_last</code></td>
       <td>ed number of frequencies for last DMFT iter</td>
-      <td>100</td>
+      <td><code>100</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>ed_solver_compute_all_green_functions</td>
+      <td><code>ed_solver_compute_all_green_functions</code></td>
       <td>if true it will tell the ED solver to compute all matrix elements of the Green function</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>ed_star_geom</td>
+      <td><code>ed_star_geom</code></td>
       <td>if true will use the so-called star geometry for the hybridization for ED solver</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>edfile</td>
+      <td><code>edfile</code></td>
       <td>ED-SOLVER PARAMETERS FILE</td>
-      <td>'./ED/ED.in'</td>
+      <td><code>'./ED/ED.in'</code></td>
       <td>string</td>
    </tr>
    <tr>
-      <td>endlambda</td>
+      <td><code>endlambda</code></td>
       <td>NCA/OCA EndLambda</td>
-      <td>200.0</td>
+      <td><code>200.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>erase_chem</td>
+      <td><code>erase_chem</code></td>
       <td>if true erases the chemical potential between different DMFT iteration</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>fast_fit</td>
+      <td><code>fast_fit</code></td>
       <td>use a faster way to obtain the fit through eigenvalue decomposition</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>first_iter_use_edinput</td>
+      <td><code>first_iter_use_edinput</code></td>
       <td>start the dmft iterations with the initial bath parameters as a starting bath instead of the Delta(iw) input</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>fit_all_elements_show_graphs</td>
+      <td><code>fit_all_elements_show_graphs</code></td>
       <td>if true will show the fit in agr files for all matrix elements</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>fit_green</td>
+      <td><code>fit_green</code></td>
       <td>if true ED solver will fit the Weiss Field instead of the hybridization</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>fit_meth</td>
+      <td><code>fit_meth</code></td>
       <td>FITTING METHODS</td>
-      <td>'MINIMIZE'</td>
+      <td><code>'MINIMIZE'</code></td>
       <td>string</td>
    </tr>
    <tr>
-      <td>fit_nw</td>
+      <td><code>fit_nw</code></td>
       <td>only consider the fit_nw matsubara frequencies for the fit</td>
-      <td>650</td>
+      <td><code>650</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>fit_shift</td>
+      <td><code>fit_shift</code></td>
       <td>Bath fit : give the shift of the 1/(w**a+shift) fit</td>
-      <td>0.01</td>
+      <td><code>0.01</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>fit_weight_power</td>
+      <td><code>fit_weight_power</code></td>
       <td>Bath fit : give the exponent of the 1/w**a to weight the frequencies to fit</td>
-      <td>0.5</td>
+      <td><code>0.5</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>flag_all_green_func_computed</td>
+      <td><code>flag_all_green_func_computed</code></td>
       <td>will compute the full Green function correlations</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>flag_blank_out_green_offdiag_for_testing</td>
+      <td><code>flag_blank_out_green_offdiag_for_testing</code></td>
       <td>if true will blank out the off-diagonal elements of the cluster hybridization</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>flag_blank_out_sigma_offdiag_for_testing</td>
+      <td><code>flag_blank_out_sigma_offdiag_for_testing</code></td>
       <td>if true will blank out the off-diagonal elements of the cluster self energy</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>flag_build_correl_low_part</td>
+      <td><code>flag_build_correl_low_part</code></td>
       <td>build automatically the lower part of the correl mask</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>flag_correct_eimp_spin_orbit</td>
+      <td><code>flag_correct_eimp_spin_orbit</code></td>
       <td>if true will add a correction to the impurity level due to the spin-orbit coupling</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>flag_donot_keep_all_files</td>
+      <td><code>flag_donot_keep_all_files</code></td>
       <td>if true will not keep all the details and every files of the calculations</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>flag_dump_info_for_gamma_vertex</td>
+      <td><code>flag_dump_info_for_gamma_vertex</code></td>
       <td>if true will dump out the necessary files to compute Gamma (four leg vertex) for later postprocessing</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>flag_full_ed_green</td>
+      <td><code>flag_full_ed_green</code></td>
       <td>if set to true</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>flag_get_t2c_real</td>
+      <td><code>flag_get_t2c_real</code></td>
       <td>if true will try to correct the T2C matrix for the rotation with the right phases such that it reduces the imaginary part as much as possible</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>flag_gup_is_gdn</td>
+      <td><code>flag_gup_is_gdn</code></td>
       <td>take care</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>flag_idelta_two_scales_ed</td>
+      <td><code>flag_idelta_two_scales_ed</code></td>
       <td>if true the ED solver will use a double energy scale for the idelta frequency dependence</td>
-      <td>0</td>
+      <td><code>0</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>flag_introduce_noise_in_minimization</td>
+      <td><code>flag_introduce_noise_in_minimization</code></td>
       <td>if yes it will introduce some noise in the minimization between 2 dmft iterations</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>flag_introduce_only_noise_in_minimization</td>
+      <td><code>flag_introduce_only_noise_in_minimization</code></td>
       <td>if yes it will start from a fresh random guess for the bath minimization at every DMFT iteration</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>flag_mpi_greens</td>
+      <td><code>flag_mpi_greens</code></td>
       <td>compute each green functions on a different CPU</td>
-      <td>0</td>
+      <td><code>0</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>flag_ncup</td>
+      <td><code>flag_ncup</code></td>
       <td>compute cor hopping green function n_dn C_iup</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>flag_symmetrize_green</td>
+      <td><code>flag_symmetrize_green</code></td>
       <td>if true will symmetrize input green function</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>flag_turn_off_dmft</td>
+      <td><code>flag_turn_off_dmft</code></td>
       <td>if true will not copy the DMFT kernel for the next ONETEP iteration</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>flag_turn_off_store</td>
+      <td><code>flag_turn_off_store</code></td>
       <td>if true does not use the store file system to speed up calculations</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>flag_use_broadening_two_scales_ed</td>
+      <td><code>flag_use_broadening_two_scales_ed</code></td>
       <td>if >0 the ED solver will use a broadening factor which assumes two different energy scales</td>
-      <td>-1</td>
+      <td><code>-1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>flag_use_jj_basis_for_f</td>
+      <td><code>flag_use_jj_basis_for_f</code></td>
       <td>if true will use the L+S j-j basis for the f orbital</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>flag_use_slater_in_ed</td>
+      <td><code>flag_use_slater_in_ed</code></td>
       <td>if true uses Slater interaction for ED</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>fmos</td>
+      <td><code>fmos</code></td>
       <td>if true will run a mean field solver instead of ED</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>fmos_fluc</td>
+      <td><code>fmos_fluc</code></td>
       <td>if true takes also into account the charge fluctuations in the FMOS approximation</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>fmos_hub1</td>
+      <td><code>fmos_hub1</code></td>
       <td>if true uses the Hubbard I solver as a fast multi-orbital solver</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>fmos_hub_iter_mu</td>
+      <td><code>fmos_hub_iter_mu</code></td>
       <td>number of iteration to impose a target density in Hubbard I solver</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>fmos_hub_range_mu</td>
+      <td><code>fmos_hub_range_mu</code></td>
       <td>interval to adjust the chemical potential to reach a target density in the Hubbard I solver</td>
-      <td>0.001</td>
+      <td><code>0.001</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>fmos_iter</td>
+      <td><code>fmos_iter</code></td>
       <td>number of mean field iterations</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>fmos_mix</td>
+      <td><code>fmos_mix</code></td>
       <td>mixing for FMOS iterations</td>
-      <td>0.3</td>
+      <td><code>0.3</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>fmos_use</td>
+      <td><code>fmos_use</code></td>
       <td>if true use FMOS solver instead of ED</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>followpeak</td>
+      <td><code>followpeak</code></td>
       <td>NCA/OCA follow peak</td>
-      <td>-1</td>
+      <td><code>-1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>force_no_bcs_pairing</td>
+      <td><code>force_no_bcs_pairing</code></td>
       <td>if true will run the superconducting code</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>force_no_pairing</td>
+      <td><code>force_no_pairing</code></td>
       <td>if true kills the pairing</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>force_nupdn_basis</td>
+      <td><code>force_nupdn_basis</code></td>
       <td>Force the use of the nup ndn quantum number</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>force_pairing_from_mask</td>
+      <td><code>force_pairing_from_mask</code></td>
       <td>force the use of the pairing defined in the MASK of ed_hybrid instead of relaxing all parameters</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>force_para_state</td>
+      <td><code>force_para_state</code></td>
       <td>force the paramagnetic symmetry (up/dn spin the same)</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>force_self_infty_real</td>
+      <td><code>force_self_infty_real</code></td>
       <td>if true it will estimate the self energy at infinite frequency as a real number</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>force_singlet_state</td>
+      <td><code>force_singlet_state</code></td>
       <td>force the singlet state in the superconducting calculations</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>force_sz_basis</td>
+      <td><code>force_sz_basis</code></td>
       <td>Force the use of the Sz quantum number (mandatory for SC state</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>freeze_pole_lambda</td>
+      <td><code>freeze_pole_lambda</code></td>
       <td>between 0 and 1</td>
-      <td>1.0</td>
+      <td><code>1.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>fully_sc</td>
+      <td><code>fully_sc</code></td>
       <td>If true will use the self energy in the energy functional in the DFT kernel/NGWF optimization</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>fully_sc_h</td>
+      <td><code>fully_sc_h</code></td>
       <td>if true will use the one shot Kohn Sham hamiltonian obtained by DMFT in onetep</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>gen_cpt</td>
+      <td><code>gen_cpt</code></td>
       <td>if true</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>hf_average</td>
+      <td><code>hf_average</code></td>
       <td>Hirsch Fye average over time slices</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>hf_hartree</td>
+      <td><code>hf_hartree</code></td>
       <td>if true will impose the hartree shift in the self energy obtained by Quantum Monte Carlo</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>hf_krauth</td>
+      <td><code>hf_krauth</code></td>
       <td>Hirsch Fye with Krauth</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>hide_errors</td>
+      <td><code>hide_errors</code></td>
       <td>this iterface will not show the list of minor errors occuring when for instance the mpi aborts</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>highest_occupancy</td>
+      <td><code>highest_occupancy</code></td>
       <td>highest occupancy of the atom</td>
-      <td>12</td>
+      <td><code>12</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>hydrogenic_projectors</td>
+      <td><code>hydrogenic_projectors</code></td>
       <td>if >0 will use hydrogenic projectors with given effective charge instead of atomic orbitals used by the solver</td>
-      <td>-1.0</td>
+      <td><code>-1.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>im_solver</td>
+      <td><code>im_solver</code></td>
       <td>choice of the solver for matsubara calculations</td>
-      <td>4</td>
+      <td><code>4</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>impose_no_cdw</td>
+      <td><code>impose_no_cdw</code></td>
       <td>if true will impose that the self energy in the dimer case is not a charge density wave (symmetrize sigma at the output of ED)</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>improve_mu_conv</td>
+      <td><code>improve_mu_conv</code></td>
       <td>if true</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>input_temp_dir</td>
+      <td><code>input_temp_dir</code></td>
       <td>=local directory to store the atom subdirectories</td>
-      <td>'.'</td>
+      <td><code>'.'</code></td>
       <td>string</td>
    </tr>
    <tr>
-      <td>iter_dmft</td>
+      <td><code>iter_dmft</code></td>
       <td>=dmft iteration number</td>
-      <td>-1</td>
+      <td><code>-1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>iter_lin</td>
+      <td><code>iter_lin</code></td>
       <td>from 1-iter_lin the mixing is linear</td>
-      <td>3</td>
+      <td><code>3</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>iter_restart_sc</td>
+      <td><code>iter_restart_sc</code></td>
       <td>restart from this iter the calculation</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>iwindow</td>
+      <td><code>iwindow</code></td>
       <td>for track_sectors</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>jhund</td>
+      <td><code>jhund</code></td>
       <td>Hunds coupling</td>
-      <td>0.0</td>
+      <td><code>0.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>just_onetep</td>
+      <td><code>just_onetep</code></td>
       <td>=if true it will only compute the onetep part</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>keep_both_real_and_matsu_last</td>
+      <td><code>keep_both_real_and_matsu_last</code></td>
       <td>if true keeps both the sigma_output in matsu and real representations</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>keldysh_n</td>
+      <td><code>keldysh_n</code></td>
       <td>keldysh : number of time frames</td>
-      <td>5</td>
+      <td><code>5</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>keldysh_ortho</td>
+      <td><code>keldysh_ortho</code></td>
       <td>keldysh : if positive number will re-orthogonalize the Lanczos vector when building the local Kryslov space for the time evolution</td>
-      <td>0</td>
+      <td><code>0</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>keldysh_pert_ground_sector</td>
+      <td><code>keldysh_pert_ground_sector</code></td>
       <td>if true</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>keldysh_t0</td>
+      <td><code>keldysh_t0</code></td>
       <td>keldysh : t0</td>
-      <td>0.0</td>
+      <td><code>0.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>keldysh_tmax</td>
+      <td><code>keldysh_tmax</code></td>
       <td>keldysh : tmax</td>
-      <td>10.0</td>
+      <td><code>10.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>kernel_cutoff</td>
+      <td><code>kernel_cutoff</code></td>
       <td>cutoff for kernel truncation</td>
-      <td>4000.0</td>
+      <td><code>4000.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>kernelfix_only_first_iter</td>
+      <td><code>kernelfix_only_first_iter</code></td>
       <td>if true will use kernel_fix:2 only for first DFT iter</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>kerneliter</td>
+      <td><code>kerneliter</code></td>
       <td>number of iterations for kernel updates</td>
-      <td>4</td>
+      <td><code>4</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>kerneliterinit</td>
+      <td><code>kerneliterinit</code></td>
       <td>number of iterations for kernel updates</td>
-      <td>10</td>
+      <td><code>10</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>ks_shift</td>
+      <td><code>ks_shift</code></td>
       <td>if true adds the correction induced by shift of occupations in the Kernel DFT minimization where the DFT energy is introduced</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>lambda_sym_fit</td>
+      <td><code>lambda_sym_fit</code></td>
       <td>coefficient that contributes to the fitting distance for finding the AIM parameters. Basically</td>
-      <td>0.0</td>
+      <td><code>0.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>last_iter_is_real</td>
+      <td><code>last_iter_is_real</code></td>
       <td>if true and if solver is ED</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>lin_nval</td>
+      <td><code>lin_nval</code></td>
       <td>number of eigenvalues for linear inversion of GF</td>
-      <td>40</td>
+      <td><code>40</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>lin_scaling</td>
+      <td><code>lin_scaling</code></td>
       <td>if true the code will use for the DMFT part (not the kernel) a linear scaling algorithm to invert the GF</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>lin_window</td>
+      <td><code>lin_window</code></td>
       <td>window of energy around fermi level for linear scaling inversion</td>
-      <td>0.4</td>
+      <td><code>0.4</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>list_sectors</td>
+      <td><code>list_sectors</code></td>
       <td>list of sectors nup</td>
-      <td>'list0'</td>
+      <td><code>'list0'</code></td>
       <td>string</td>
    </tr>
    <tr>
-      <td>lowest_occupancy</td>
+      <td><code>lowest_occupancy</code></td>
       <td>lowest occupancy of the atom</td>
-      <td>2</td>
+      <td><code>2</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>mach_onetep</td>
+      <td><code>mach_onetep</code></td>
       <td>name of the machine file for the GF calculation</td>
-      <td>'machines_onetep'</td>
+      <td><code>'machines_onetep'</code></td>
       <td>string</td>
    </tr>
    <tr>
-      <td>matsu_solver</td>
+      <td><code>matsu_solver</code></td>
       <td>if true does not generate real axis quantities (matsubara solver)</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>max_steps</td>
+      <td><code>max_steps</code></td>
       <td>NCA/OCA max numer of internal steps</td>
-      <td>30</td>
+      <td><code>30</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>mcs_ctqmc</td>
+      <td><code>mcs_ctqmc</code></td>
       <td>number of MonteCarlo steps for CTQMC solver</td>
-      <td>20000000</td>
+      <td><code>20000000</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>min_all_bath_param</td>
+      <td><code>min_all_bath_param</code></td>
       <td>if /= 0 will overtake the ed_hybrid file and minimize all the bath parameters</td>
-      <td>8</td>
+      <td><code>8</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>mixing</td>
+      <td><code>mixing</code></td>
       <td>DMFT mixing for Self-Energy</td>
-      <td>0.5</td>
+      <td><code>0.5</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>mixing_dft_dmft</td>
+      <td><code>mixing_dft_dmft</code></td>
       <td>mixing of DFT AND DMFT kernel</td>
-      <td>0.2</td>
+      <td><code>0.2</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>monitor_gpu_temperature</td>
+      <td><code>monitor_gpu_temperature</code></td>
       <td>if true will prepare a graphic of the GPU temperature during the ONETEP+DMFT run</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>mpi_onetep_type</td>
+      <td><code>mpi_onetep_type</code></td>
       <td>if 1 will run a home made mpi</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>mu_diff</td>
+      <td><code>mu_diff</code></td>
       <td>precision (max deviation) from target density in the DMFT when the chemical potential is obtained by the Newton-Parston algorithm</td>
-      <td>0.04</td>
+      <td><code>0.04</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>ncpt_approx</td>
+      <td><code>ncpt_approx</code></td>
       <td>this is an additional degree of approximation</td>
-      <td>0</td>
+      <td><code>0</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>ncpt_flag_two_step_fit</td>
+      <td><code>ncpt_flag_two_step_fit</code></td>
       <td>if true will do the ncpt fit in two steps : first ncpt is turned off</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>ncpt_two_step</td>
+      <td><code>ncpt_two_step</code></td>
       <td>if true always do the fits in two steps procedures</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>ncpt_two_step_all_iter</td>
+      <td><code>ncpt_two_step_all_iter</code></td>
       <td>if true will enforce the two step fit for CPT at every dmft iteration</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>ncpt_two_step_iter</td>
+      <td><code>ncpt_two_step_iter</code></td>
       <td>if iter_dmft_sc < ncpt_two_step_iter then the CPT ED solver will use a two step procedure to fit the hybridization</td>
-      <td>100000</td>
+      <td><code>100000</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>neigen</td>
+      <td><code>neigen</code></td>
       <td>number of eigenvalues to compute</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>nfrequencies_dmft_dft</td>
+      <td><code>nfrequencies_dmft_dft</code></td>
       <td>number of frequencies for the DFT+DMFT calculations</td>
-      <td>160</td>
+      <td><code>160</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>ngwf_cgiter</td>
+      <td><code>ngwf_cgiter</code></td>
       <td>number of iterations for NGWF update after dmft iter</td>
-      <td>3</td>
+      <td><code>3</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>niter_dft_dmft_sc</td>
+      <td><code>niter_dft_dmft_sc</code></td>
       <td>Number of mixed DFT+DMFT iteration</td>
-      <td>5</td>
+      <td><code>5</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>niter_dmft</td>
+      <td><code>niter_dmft</code></td>
       <td>Number of DMFT iteration</td>
-      <td>5</td>
+      <td><code>5</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>niter_dmft_mu</td>
+      <td><code>niter_dmft_mu</code></td>
       <td>number of iterations used to adjust the chemical potential in DFT when preparing the input files for the DMFT</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>niter_kernel_mu</td>
+      <td><code>niter_kernel_mu</code></td>
       <td>number of iterations for the Newton method to adapt the chemical potential</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>niter_sc_dft</td>
+      <td><code>niter_sc_dft</code></td>
       <td>Number of iteration at the DFT level</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>niter_sc_dft_first</td>
+      <td><code>niter_sc_dft_first</code></td>
       <td>number of DFT iterations for the first DFT set</td>
-      <td>4</td>
+      <td><code>4</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>niter_sc_dmft</td>
+      <td><code>niter_sc_dmft</code></td>
       <td>Number of iteration at the dmft level</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>niter_search_max</td>
+      <td><code>niter_search_max</code></td>
       <td>Niter_search_max = max. numb. of function calls in conjugate gradient</td>
-      <td>100</td>
+      <td><code>100</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>niter_search_max_0</td>
+      <td><code>niter_search_max_0</code></td>
       <td>if non zero</td>
-      <td>0</td>
+      <td><code>0</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>nitergreenmax</td>
+      <td><code>nitergreenmax</code></td>
       <td>max.numb.of Lanczos iterations in Green s fct. computation</td>
-      <td>36</td>
+      <td><code>36</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>nitermax</td>
+      <td><code>nitermax</code></td>
       <td>max. number of Lanczos iterations</td>
-      <td>128</td>
+      <td><code>128</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>nkpoints</td>
+      <td><code>nkpoints</code></td>
       <td>although onetep is Gamma only calculation</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>nmatsu_ctqmc</td>
+      <td><code>nmatsu_ctqmc</code></td>
       <td>number of matsubara frequencies for CTQMC solver</td>
-      <td>20</td>
+      <td><code>20</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>nmatsu_ed</td>
+      <td><code>nmatsu_ed</code></td>
       <td>number of matsubara frequencies for ED solver</td>
-      <td>4000</td>
+      <td><code>4000</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>nmatsu_long</td>
+      <td><code>nmatsu_long</code></td>
       <td>if 0 does not have any effect</td>
-      <td>0</td>
+      <td><code>0</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>no_frequ_split</td>
+      <td><code>no_frequ_split</code></td>
       <td>if true the onetep dmft interface will not split over frequencies</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>nohole</td>
+      <td><code>nohole</code></td>
       <td>if true will not compute the hole part of the green function</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>nokernelupdate</td>
+      <td><code>nokernelupdate</code></td>
       <td>if true will not update the density kernel in the dft part</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>nomachinefile</td>
+      <td><code>nomachinefile</code></td>
       <td>if true removes -machinefile from the mpi syntax</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>nproc</td>
+      <td><code>nproc</code></td>
       <td>=number of processors for dmft</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>nproc_gpu</td>
+      <td><code>nproc_gpu</code></td>
       <td>number of processor for the projection of the green function part in onetep</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>nproc_mpi_solver</td>
+      <td><code>nproc_mpi_solver</code></td>
       <td>=number of processors (MPI type) used for DMFT solver</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>nproc_onetep</td>
+      <td><code>nproc_onetep</code></td>
       <td>=number of processors (MPI type) for onetep</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>nproc_onetep_openmp</td>
+      <td><code>nproc_onetep_openmp</code></td>
       <td>will run mpi for the onetep dmft interface</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>nproc_onetep_openmp_</td>
+      <td><code>nproc_onetep_openmp_</code></td>
       <td>will run mpi for the onetep dmft interface</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>nproc_store</td>
+      <td><code>nproc_store</code></td>
       <td>number of cpu used to obtain the store files with onetep</td>
-      <td>8</td>
+      <td><code>8</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>nsec</td>
+      <td><code>nsec</code></td>
       <td>number of sectors to diagonalize</td>
-      <td>-1</td>
+      <td><code>-1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>nsec0</td>
+      <td><code>nsec0</code></td>
       <td>If list_sectors not provided</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>ntauhf</td>
+      <td><code>ntauhf</code></td>
       <td>imaginary time discretization for HF solver</td>
-      <td>50</td>
+      <td><code>50</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>numa</td>
+      <td><code>numa</code></td>
       <td>numa avoids remote memory access in multi-socket architectures</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>oldgsfile</td>
+      <td><code>oldgsfile</code></td>
       <td>OLD GS FILE</td>
-      <td>'./ED_out/GS.raw'</td>
+      <td><code>'./ED_out/GS.raw'</code></td>
       <td>string</td>
    </tr>
    <tr>
-      <td>on_fly</td>
+      <td><code>on_fly</code></td>
       <td>do not store the sparse hamiltonian matrix for the Sz case</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>onetep_only_up</td>
+      <td><code>onetep_only_up</code></td>
       <td>=true if onetep produces only up spin</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>onetep_spin</td>
+      <td><code>onetep_spin</code></td>
       <td>spin of the ONETEP calculation (1=pm or 2=af)</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>onlygammakernel</td>
+      <td><code>onlygammakernel</code></td>
       <td>if true will not estimate the DFT kernel from the k-point average obtained from DMFT</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>openmp_solver</td>
+      <td><code>openmp_solver</code></td>
       <td>Number of open-mp cores running for the dmft-solver</td>
-      <td>8</td>
+      <td><code>8</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>pairing_imp_to_bath</td>
+      <td><code>pairing_imp_to_bath</code></td>
       <td>pairing between impurity and bath</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>paramagnetic</td>
+      <td><code>paramagnetic</code></td>
       <td>=1 is paramagnetic</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>print_qc</td>
+      <td><code>print_qc</code></td>
       <td>if true</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>protect_projectors</td>
+      <td><code>protect_projectors</code></td>
       <td>will make the file run.tightbox_hubbard read only</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>purify_sc</td>
+      <td><code>purify_sc</code></td>
       <td>if true uses the purifed kernel in the DFT module properties for dft+dmft</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>qq</td>
+      <td><code>qq</code></td>
       <td>NCA/OCA QQ parameter for seeking out lambda</td>
-      <td>8.0</td>
+      <td><code>8.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>quench_cancel_statistics</td>
+      <td><code>quench_cancel_statistics</code></td>
       <td>keldysh : if true will not use the initial statistics from the modified initial hamiltonian</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>quench_mag</td>
+      <td><code>quench_mag</code></td>
       <td>keldysh : magnetic field along z axis used for the quench</td>
-      <td>1.0</td>
+      <td><code>1.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>quench_orb</td>
+      <td><code>quench_orb</code></td>
       <td>keldysh : which orbital should be computed for the evolution</td>
-      <td>-1</td>
+      <td><code>-1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>quench_u</td>
+      <td><code>quench_u</code></td>
       <td>keldysh : Coulomb repulsion used for the quench</td>
-      <td>10.0</td>
+      <td><code>10.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>rankin</td>
+      <td><code>rankin</code></td>
       <td>=rank given as an input</td>
-      <td>0</td>
+      <td><code>0</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>read_cix_file</td>
+      <td><code>read_cix_file</code></td>
       <td>if true will read the cix file instead of generating it</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>real_axis_only_last_step</td>
+      <td><code>real_axis_only_last_step</code></td>
       <td>if true the real axis quantities obtained by the ED solver are only obtained for the last two DMFT steps</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>real_eimp_from_onetep</td>
+      <td><code>real_eimp_from_onetep</code></td>
       <td>condition on the quantities extracted from onetep</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>real_eimp_from_tail</td>
+      <td><code>real_eimp_from_tail</code></td>
       <td>condition on the quantities extracted from onetep</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>real_smat_coef</td>
+      <td><code>real_smat_coef</code></td>
       <td>if true the S matrix (projected overlap matrix) will be enforced to be real</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>real_smat_from_onetep</td>
+      <td><code>real_smat_from_onetep</code></td>
       <td>condition on the quantities extracted from onetep</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>real_solver</td>
+      <td><code>real_solver</code></td>
       <td>choice of the solver for real-axis calculations</td>
-      <td>2</td>
+      <td><code>2</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>real_sproj_from_onetep</td>
+      <td><code>real_sproj_from_onetep</code></td>
       <td>condition on the quantities extracted from onetep</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>restart_from_iteration_number</td>
+      <td><code>restart_from_iteration_number</code></td>
       <td>restart from iteration number given here instead of starting from first iteration</td>
-      <td>0</td>
+      <td><code>0</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>restart_from_older_dft</td>
+      <td><code>restart_from_older_dft</code></td>
       <td>if true it will run a usual onetep+dmft calculations</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>rotate_int_after_earlier_transfo</td>
+      <td><code>rotate_int_after_earlier_transfo</code></td>
       <td>if true will rotate the CTQMC interaction according to an earlier transformation</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>rotate_ortho_av_renorm_int</td>
+      <td><code>rotate_ortho_av_renorm_int</code></td>
       <td>if true will use averaged renormalization induced by the non orthogonal basis set</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>rotate_to_ortho_basis</td>
+      <td><code>rotate_to_ortho_basis</code></td>
       <td>if true the code will perform a rotation to the orthogonal basis back and forth</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>rotation_green_function</td>
+      <td><code>rotation_green_function</code></td>
       <td>if true the code will rotate the Green Function such that it is diagonal</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>rotation_scheme</td>
+      <td><code>rotation_scheme</code></td>
       <td>if 1 rotates the green function according to the occupation matrix</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>rotation_scheme_pm</td>
+      <td><code>rotation_scheme_pm</code></td>
       <td>if true will use the same rotation for spin up and spin dn</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>rotation_scheme_read_write</td>
+      <td><code>rotation_scheme_read_write</code></td>
       <td>if true and rotation==4</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>sandwitch_embedding</td>
+      <td><code>sandwitch_embedding</code></td>
       <td>if true it will generate both left and right embedding files</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>save_atoms_at_each_steps</td>
+      <td><code>save_atoms_at_each_steps</code></td>
       <td>if true TOSCAM will save the atoms directories at every self consistent iteration</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>sc_start_from_previous_run</td>
+      <td><code>sc_start_from_previous_run</code></td>
       <td>if true starts from a previous run and reads tightbox and dkn files</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>scan_full_nup_ndn</td>
+      <td><code>scan_full_nup_ndn</code></td>
       <td>if true</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>search_step</td>
+      <td><code>search_step</code></td>
       <td>small step in search direction</td>
-      <td>0.0001</td>
+      <td><code>0.0001</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>second_order_correction_to_eimp</td>
+      <td><code>second_order_correction_to_eimp</code></td>
       <td>if true includes second order corrections to Eimp</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>sites_ed</td>
+      <td><code>sites_ed</code></td>
       <td>number of sites in the bath for ED solver</td>
-      <td>5</td>
+      <td><code>5</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>size2in</td>
+      <td><code>size2in</code></td>
       <td>=size2 given as an input</td>
-      <td>0</td>
+      <td><code>0</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>slater_inter_cutoff</td>
+      <td><code>slater_inter_cutoff</code></td>
       <td>the cutoff under which the Slater terms are not taken into account in the Hamiltonian matrix</td>
-      <td>1e-05</td>
+      <td><code>1e-05</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>spin_breaking_amp</td>
+      <td><code>spin_breaking_amp</code></td>
       <td>amplitude of the initial symmetry breaking for AF state</td>
-      <td>0.05</td>
+      <td><code>0.05</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>spin_breaking_iter</td>
+      <td><code>spin_breaking_iter</code></td>
       <td>number of iterations where the symmetry breaking is applied on the impurity energy levels</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>spin_orbit</td>
+      <td><code>spin_orbit</code></td>
       <td>spin-orbit coupling</td>
-      <td>0.0</td>
+      <td><code>0.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>split_onetep</td>
+      <td><code>split_onetep</code></td>
       <td>=asynchronous calls to onetep</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>start_from_an_old_sim</td>
+      <td><code>start_from_an_old_sim</code></td>
       <td>=if true start from an old calculation</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>start_from_old_gs</td>
+      <td><code>start_from_old_gs</code></td>
       <td>START FROM OLD GS</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>start_para</td>
+      <td><code>start_para</code></td>
       <td>force starting the first iteration fit from a paramagnetic state</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>startlambda</td>
+      <td><code>startlambda</code></td>
       <td>NCA/OCA StartLambda</td>
-      <td>-300.0</td>
+      <td><code>-300.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>store_sig_in_scratch</td>
+      <td><code>store_sig_in_scratch</code></td>
       <td>if true the sigma_output files will be copied to local scratch when running onetep</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>sum_over_k_dft</td>
+      <td><code>sum_over_k_dft</code></td>
       <td>if true the code is expecting that a summation over k-points was done at the DFT level</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>tail_linear_scaling</td>
+      <td><code>tail_linear_scaling</code></td>
       <td>tail to match the free GF</td>
-      <td>-1.0</td>
+      <td><code>-1.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>tolerance</td>
+      <td><code>tolerance</code></td>
       <td>Lanczos convergence tolerance</td>
-      <td>1e-12</td>
+      <td><code>1e-12</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>tough_converge</td>
+      <td><code>tough_converge</code></td>
       <td>if true will use some flags in onetep to help fixing the density kernel</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>track_sectors</td>
+      <td><code>track_sectors</code></td>
       <td>if true the code is tracking the ground state sector along the DMFT iterations</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>uniform_sigma</td>
+      <td><code>uniform_sigma</code></td>
       <td>=true sigma is imposed as spatially uniform</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>use_custom_command_for_atomd</td>
+      <td><code>use_custom_command_for_atomd</code></td>
       <td>if true uses custom command line for atom_d.py instead of the default</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>use_eimp_from_onetep</td>
+      <td><code>use_eimp_from_onetep</code></td>
       <td>if true will use the analytical formula for eimp obtained from Onetep</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>use_eimp_from_onetep_with_sigma_cor</td>
+      <td><code>use_eimp_from_onetep_with_sigma_cor</code></td>
       <td>if true</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>use_input_delta</td>
+      <td><code>use_input_delta</code></td>
       <td>if true will use the input hybridization to compute the self energy in the ED solver</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>use_precomputed_slater_matrix</td>
+      <td><code>use_precomputed_slater_matrix</code></td>
       <td>if true will use a precomputed Hamiltonian matrix for the Slater interaction</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>use_previous_dmft_files</td>
+      <td><code>use_previous_dmft_files</code></td>
       <td>if true the code will use the previous dmft files for the next iteration</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>use_same_self_energy</td>
+      <td><code>use_same_self_energy</code></td>
       <td>if true always copy the self energy from the 1st iteration back</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>use_simp_from_onetep</td>
+      <td><code>use_simp_from_onetep</code></td>
       <td>if true will use the analytical formula for simp obtained from Onetep</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>use_simp_from_onetep_for_ortho</td>
+      <td><code>use_simp_from_onetep_for_ortho</code></td>
       <td>uses the Simp matrix obtained by onetep to compute the transformations to non-ortho basis</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>use_transpose_trick_mpi</td>
+      <td><code>use_transpose_trick_mpi</code></td>
       <td>each cpu keeps only a chunk of the lanczos vector in memory</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>uu</td>
+      <td><code>uu</code></td>
       <td>Coulomb repulsion</td>
-      <td>5.0</td>
+      <td><code>5.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>verbose_graph</td>
+      <td><code>verbose_graph</code></td>
       <td>plot hybridization fit at each step of the minimization</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>verysilent</td>
+      <td><code>verysilent</code></td>
       <td>if true the solver will be as silent and interact as little as possible with the local directory and outputs</td>
-      <td>True</td>
+      <td><code>True</code></td>
       <td>boolean</td>
    </tr>
    <tr>
-      <td>weight_expo</td>
+      <td><code>weight_expo</code></td>
       <td>exponent power of the fitting difference |a-b|^weight_exop</td>
-      <td>2.0</td>
+      <td><code>2.0</code></td>
       <td>float</td>
    </tr>
    <tr>
-      <td>which_lanczos</td>
+      <td><code>which_lanczos</code></td>
       <td>NORMAL</td>
-      <td>'NORMAL'</td>
+      <td><code>'NORMAL'</code></td>
       <td>string</td>
    </tr>
    <tr>
-      <td>window_hybrid</td>
+      <td><code>window_hybrid</code></td>
       <td>window (left) of matsubara frequencies to fit the hybridization</td>
-      <td>0</td>
+      <td><code>0</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>window_hybrid2</td>
+      <td><code>window_hybrid2</code></td>
       <td>window (right) of matsubara frequencies to fit the hybridization</td>
-      <td>0</td>
+      <td><code>0</code></td>
       <td>integer</td>
    </tr>
    <tr>
-      <td>window_weight</td>
+      <td><code>window_weight</code></td>
       <td>ratio weight point inside window over point outside window</td>
-      <td>1</td>
+      <td><code>1</code></td>
       <td>integer</td>
    </tr>
 </table>
