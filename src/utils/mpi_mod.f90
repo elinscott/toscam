@@ -2028,7 +2028,8 @@ contains
 
    subroutine adim4s(mat)
       implicit none
-     complex(kind=DP) :: mat(:, :, :, :), matm(size(mat(:, 1, 1, 1)), size(mat(1, :, 1, 1)), size(mat(1, 1, :, 1)), size(mat(1, 1, 1, :)))
+      complex(kind=DP), intent(inout) :: mat(:, :, :, :)
+      complex(kind=DP) :: matm(size(mat(:, 1, 1, 1)), size(mat(1, :, 1, 1)), size(mat(1, 1, :, 1)), size(mat(1, 1, 1, :)))
       integer    :: s(4), p
       if (size2 == 1 .or. no_mpi) then
          return
@@ -2225,7 +2226,8 @@ contains
 
    subroutine ardim4s(mat)
       implicit none
-      real(kind=DP)  :: mat(:, :, :, :), matm(size(mat(:, 1, 1, 1)), size(mat(1, :, 1, 1)), size(mat(1, 1, :, 1)), size(mat(1, 1, 1, :)))
+      real(kind=DP), intent(inout) :: mat(:, :, :, :)
+      real(kind=DP) :: matm(size(mat(:, 1, 1, 1)), size(mat(1, :, 1, 1)), size(mat(1, 1, :, 1)), size(mat(1, 1, 1, :)))
       integer  :: s(4), p
       if (size2 == 1 .or. no_mpi) then
          return

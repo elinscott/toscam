@@ -552,6 +552,10 @@ contains
       INTEGER                          :: unit_
       integer                          :: i
 
+#ifdef DEBUG
+      write(*, '(a)') 'DEBUG: entering random.rand_init'
+#endif
+
       CALL RANDOM_SEED(SIZE=seedsize)
       IF (ALLOCATED(seed)) THEN
          IF (SIZE(seed) /= seedsize) THEN
@@ -588,6 +592,10 @@ contains
          IF (SIZE(ZESEED) /= seedsize) STOP "ERROR IN rand_init: INCONSISTENT SEED SIZES!"
          ZESEED = seed
       ENDIF
+
+#ifdef DEBUG
+      write(*, '(a)') 'DEBUG: leaving random.rand_init'
+#endif
 
    end subroutine
 
@@ -627,6 +635,10 @@ contains
       integer, optional :: iseed_
       integer          :: iseed
 
+#ifdef DEBUG
+      write(*, '(a)') 'DEBUG: entering random.init_rantab'
+#endif
+
       if (present(iseed_)) then
          iseed = iseed_
       else
@@ -644,6 +656,11 @@ contains
       if (messages2) write (*, *) 'iseed   : ', iseed
       call rand_init(iseed=iseed + rank)
       if (messages2) write (*, *) 'my rank :', rank
+
+#ifdef DEBUG
+      write(*, '(a)') 'DEBUG: leaving random.init_rantab'
+#endif
+
    end subroutine
 
    !======!
