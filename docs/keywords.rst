@@ -1,3 +1,5 @@
+.. _Page Keywords:
+
 Keywords
 --------
 .. raw:: html

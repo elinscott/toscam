@@ -7,6 +7,7 @@ This webpage is still under development. Come back soon!
    :maxdepth: 2
 
    about
+   quick_start
    installation
    keywords
    tutorials
