@@ -1,0 +1,15 @@
+# Ignore all test output
+test_??/*
+
+# ...except for the following
+!test_??/benchmark*
+!test_??/*.dat
+
+!test_02/FeCO3.dkn
+!test_02/FeCO3.tightbox_hub_projs
+!test_02/FeCO3.tightbox_ngwfs
+
+# ...but including the following
+test_??/test.out.*.dat
+test_??/test.err.*.dat
+

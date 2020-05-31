@@ -60,7 +60,7 @@ contains
       ! Prints a line of QC output to stdout
       ! Written by Edward Linscott Feb 2020
 
-      use genvar, only: logfile
+      use genvar, only: logfile, running_qc_tests
 
       implicit none
 
@@ -69,8 +69,10 @@ contains
 
       character(len=40) :: trimmed_tag
 
-      trimmed_tag = '[' // trim(tag) // ']'
-      write(*, '(a5,a,a1,i23)') '<QC> ', adjustr(trimmed_tag), ':', value
+      if (running_qc_tests) then
+         trimmed_tag = '[' // trim(tag) // ']'
+         write(*, '(a5,a,a1,i23)') '<QC> ', adjustr(trimmed_tag), ':', value
+      end if
 
    end subroutine utils_qc_print_integer
 
@@ -78,7 +80,7 @@ contains
       ! Prints a line of QC output to stdout
       ! Written by Edward Linscott Feb 2020
 
-      use genvar, only: logfile, DP
+      use genvar, only: logfile, DP, running_qc_tests
 
       implicit none
 
@@ -87,8 +89,10 @@ contains
 
       character(len=40) :: trimmed_tag
 
-      trimmed_tag = '[' // trim(tag) // ']'
-      write(*, '(a5,a,a1,f23.12)') '<QC> ', adjustr(trimmed_tag), ':', value
+      if (running_qc_tests) then
+         trimmed_tag = '[' // trim(tag) // ']'
+         write(*, '(a5,a,a1,f23.12)') '<QC> ', adjustr(trimmed_tag), ':', value
+      end if
 
    end subroutine utils_qc_print_real
 
@@ -96,7 +100,7 @@ contains
       ! Prints a line of QC output to stdout
       ! Written by Edward Linscott Feb 2020
 
-      use genvar, only: logfile
+      use genvar, only: logfile, running_qc_tests
 
       implicit none
 
@@ -105,8 +109,10 @@ contains
 
       character(len=40) :: trimmed_tag
 
-      trimmed_tag = '[' // trim(tag) // ']'
-      write(*, '(a5,a,a1,a)') '<QC> ', adjustr(trimmed_tag), ':', trim(value)
+      if (running_qc_tests) then
+         trimmed_tag = '[' // trim(tag) // ']'
+         write(*, '(a5,a,a1,a)') '<QC> ', adjustr(trimmed_tag), ':', trim(value)
+      end if
 
    end subroutine utils_qc_print_string
 

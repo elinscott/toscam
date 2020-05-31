@@ -10,19 +10,14 @@ module random
    public :: drand1
    public :: dran_tab
    public :: gaussian
-   public :: genran
-   public :: initialize_random_numbers
    public :: init_rantab
-   public :: rand_init
+   public :: initialize_random_numbers
+   public :: random_seed_wrapper
    public :: randomize_mat
    public :: randomize_matrix
 
-   real(kind=DP), parameter, private :: rerror = 1.d-3
-   INTEGER, PRIVATE :: seedsize
-   CHARACTER(LEN=5), private :: csize
-   INTEGER, ALLOCATABLE, PRIVATE :: seed(:)
-   CHARACTER(LEN=100), PRIVATE :: SEEDFILEOUT
-   CHARACTER(LEN=100), PRIVATE :: fmtseed
+   real(kind=DP), parameter  :: rerror = 1.d-3
+   integer(kind=LONG), save :: seed_internal
 
    INTERFACE randomize_matrix
       module procedure randomize_matrix_r, randomize_matrix_c
@@ -48,8 +43,136 @@ module random
       MODULE PROCEDURE randomize_mat_r, randomize_mat_c
    END INTERFACE
 
+   interface bad_random_number_wrapper
+      module procedure bad_random_number_float
+      module procedure bad_random_number_1d
+      module procedure bad_random_number_2d
+   end interface
+
 contains
 
+   subroutine random_number_wrapper(r)
+
+      use genvar, only: running_qc_tests
+
+      implicit none
+      real :: r
+
+#ifdef DEBUG
+      write(*, '(a)') 'DEBUG: entering random.random_number_wrapper'
+#endif
+
+      if (running_qc_tests) then
+         call bad_random_number_wrapper(r)
+      else
+         call random_number(r)
+      end if
+
+#ifdef DEBUG
+      write(*, '(a)') 'DEBUG: leaving random.random_number_wrapper'
+#endif
+
+   end subroutine
+
+   subroutine random_seed_wrapper(same_across_tasks)
+
+      use mpi_mod, only: mpibcast
+      use genvar, only: rank
+      use common_def, only: utils_assert
+
+      implicit none
+      logical, optional :: same_across_tasks
+      logical :: same_across_tasks_internal
+      logical :: for_testing_internal
+      integer :: funit, ierr, seed_size
+      integer, allocatable :: seed(:)
+
+#ifdef DEBUG
+      write(*, '(a)') 'DEBUG: entering random.random_seed_wrapper'
+#endif
+
+      ! By default, have different MPI tasks generate the same random numbers
+      same_across_tasks_internal = .false.
+      if (present(same_across_tasks)) same_across_tasks_internal = same_across_tasks
+
+      if (running_qc_tests) then
+         seed_internal = 1234567
+         if (.not. same_across_tasks_internal) then
+            seed_internal = seed_internal + rank
+         end if
+      else
+         if (same_across_tasks_internal) then
+            ! Ensure all MPI tasks generate the same random numbers
+            call random_seed(size=seed_size)
+            allocate(seed(seed_size))
+
+            ! Use /dev/urandom/ as a seed
+            if (rank == 0) then
+
+               funit = utils_unit()
+               open(unit=funit, file="/dev/urandom", access="stream", form="unformatted", &
+                    action="read", status="old", iostat=ierr)
+
+               call utils_assert(ierr == 0, 'Error in random.random_seed_wrapper: failed to read /dev/urandom')
+
+               read(funit) seed
+               close(funit)
+
+            end if
+
+            call mpibcast(seed, 0)
+            call random_seed(put=seed)
+            deallocate(seed)
+         else
+            ! All MPI tasks will generate different random nunbers
+            call random_seed()
+         end if
+      end if
+
+#ifdef DEBUG
+      write(*, '(a)') 'DEBUG: leaving random.random_seed_wrapper'
+#endif
+
+   end subroutine
+
+   subroutine bad_random_number_float(r, seed)
+      ! A crude random number generator to only be used for testing that guarantees cross-compiler repeatability
+      implicit none
+      real,              intent(out) :: r
+      integer, optional, intent(in)  :: seed
+      integer(kind=long) :: m, a, c
+
+      if (present(seed)) seed_internal = seed
+      m = 2**15
+      a = 1103515245
+      c = 12345
+
+      seed_internal = mod(a * seed_internal + c, m)
+
+      r = seed_internal / real(m, kind=DP)
+
+      return
+   end subroutine
+
+   subroutine bad_random_number_1d(r)
+      implicit none
+      real, intent(inout) :: r(:)
+      integer :: i
+      do i = 1, size(r, 1)
+         call bad_random_number_float(r(i))
+      end do
+   end subroutine
+
+   subroutine bad_random_number_2d(r)
+      implicit none
+      real, intent(inout) :: r(:,:)
+      integer :: i
+      do i = 1, size(r, 1)
+         call bad_random_number_1d(r(i, :))
+      end do
+   end subroutine
+
+
 !********************************************
 !********************************************
 !********************************************
@@ -63,11 +186,10 @@ contains
 !********************************************
 !********************************************
 
-   subroutine initialize_random_numbers(iseed, rank)
+   subroutine initialize_random_numbers()
       implicit none
-      integer :: iseed, rank
       call init_rantab
-      call rand_init(iseed=iseed + 10*rank, FILEIN='seed')
+      call random_seed_wrapper(same_across_tasks = .false.)
    end subroutine
 
 !********************************************
@@ -80,35 +202,35 @@ contains
 !********************************************
 !********************************************
 !********************************************
-
-   SUBROUTINE write_seed(UNIT, ZESEED)
-      implicit none
-      INTEGER, OPTIONAL, INTENT(IN)    :: UNIT
-      INTEGER, OPTIONAL, INTENT(INOUT) :: ZESEED(:)
-      INTEGER                          :: unit_
-      CALL RANDOM_SEED(GET=seed)
-      IF (PRESENT(UNIT)) THEN
-         unit_ = UNIT
-         CALL dump_message(TEXT="# seed value =", UNIT=unit_)
-         IF (PRESENT(ZESEED)) THEN
-            IF (SIZE(ZESEED) /= seedsize) STOP "ERROR IN write_seed: INCONSISTENT SEED SIZES!"
-            WRITE (unit_, fmtseed) ZESEED
-         ELSE
-            WRITE (unit_, fmtseed) seed
-         ENDIF
-         CALL flush(unit_)
-      ELSE
-         CALL open_safe(unit_, SEEDFILEOUT, "UNKNOWN", "WRITE", get_unit=.true.)
-         IF (PRESENT(ZESEED)) THEN
-            IF (SIZE(ZESEED) /= seedsize) STOP "ERROR IN write_seed: INCONSISTENT SEED SIZES!"
-            WRITE (unit_, fmtseed) ZESEED
-         ELSE
-            WRITE (unit_, fmtseed) seed
-         ENDIF
-         CALL close_safe(unit_)
-      ENDIF
-   END SUBROUTINE
-
+! 
+!    SUBROUTINE write_seed(UNIT, ZESEED)
+!       implicit none
+!       INTEGER, OPTIONAL, INTENT(IN)    :: UNIT
+!       INTEGER, OPTIONAL, INTENT(INOUT) :: ZESEED(:)
+!       INTEGER                          :: unit_
+!       CALL RANDOM_SEED(GET=seed)
+!       IF (PRESENT(UNIT)) THEN
+!          unit_ = UNIT
+!          CALL dump_message(TEXT="# seed value =", UNIT=unit_)
+!          IF (PRESENT(ZESEED)) THEN
+!             IF (SIZE(ZESEED) /= seedsize) STOP "ERROR IN write_seed: INCONSISTENT SEED SIZES!"
+!             WRITE (unit_, fmtseed) ZESEED
+!          ELSE
+!             WRITE (unit_, fmtseed) seed
+!          ENDIF
+!          CALL flush(unit_)
+!       ELSE
+!          CALL open_safe(unit_, SEEDFILEOUT, "UNKNOWN", "WRITE", get_unit=.true.)
+!          IF (PRESENT(ZESEED)) THEN
+!             IF (SIZE(ZESEED) /= seedsize) STOP "ERROR IN write_seed: INCONSISTENT SEED SIZES!"
+!             WRITE (unit_, fmtseed) ZESEED
+!          ELSE
+!             WRITE (unit_, fmtseed) seed
+!          ENDIF
+!          CALL close_safe(unit_)
+!       ENDIF
+!    END SUBROUTINE
+! 
 !********************************************
 !********************************************
 !********************************************
@@ -221,23 +343,23 @@ contains
 ! !********************************************
 ! !********************************************
 !********************************************
-
-   SUBROUTINE GENRAN(seed_, randvec, ncpt)
-      implicit none
-      REAL(DP), INTENT(INOUT) :: randvec(:)
-      INTEGER, INTENT(IN)    :: ncpt
-      INTEGER, INTENT(INOUT) :: seed_(:)
-      ! GENERATES RANDOM VECTOR WITH seed_
-      CALL RANDOM_SEED(SIZE=seedsize)
-      IF (SIZE(seed_) /= seedsize) STOP "ERROR IN GENRAN: INCONSISTENT SEED SIZE!"
-      CALL RANDOM_SEED(PUT=seed_)
-      CALL RANDOM_NUMBER(randvec(1:ncpt))
-      CALL RANDOM_SEED(GET=seed_)
-      IF (.NOT. ALLOCATED(seed)) ALLOCATE (seed(seedsize))
-      seed = seed_
-      IF (iproc == 1) CALL write_seed()
-   END SUBROUTINE
-
+! 
+!    SUBROUTINE GENRAN(seed_, randvec, ncpt)
+!       implicit none
+!       REAL(DP), INTENT(INOUT) :: randvec(:)
+!       INTEGER, INTENT(IN)    :: ncpt
+!       INTEGER, INTENT(INOUT) :: seed_(:)
+!       ! GENERATES RANDOM VECTOR WITH seed_
+!       CALL RANDOM_SEED(SIZE=seedsize)
+!       IF (SIZE(seed_) /= seedsize) STOP "ERROR IN GENRAN: INCONSISTENT SEED SIZE!"
+!       CALL RANDOM_SEED(PUT=seed_)
+!       CALL RANDOM_NUMBER(randvec(1:ncpt))
+!       CALL RANDOM_SEED(GET=seed_)
+!       IF (.NOT. ALLOCATED(seed)) ALLOCATE (seed(seedsize))
+!       seed = seed_
+!       IF (iproc == 1) CALL write_seed()
+!    END SUBROUTINE
+! 
 !********************************************
 !********************************************
 !********************************************
@@ -544,60 +666,60 @@ contains
 ! !********************************************
 ! !********************************************
 !
-   subroutine rand_init(iseed, FILEIN, ZESEED)
-      implicit none
-      integer, optional                 :: iseed
-      CHARACTER(LEN=*), optional        :: FILEIN
-      INTEGER, OPTIONAL                :: ZESEED(:)
-      INTEGER                          :: unit_
-      integer                          :: i
-
-#ifdef DEBUG
-      write(*, '(a)') 'DEBUG: entering random.rand_init'
-#endif
-
-      CALL RANDOM_SEED(SIZE=seedsize)
-      IF (ALLOCATED(seed)) THEN
-         IF (SIZE(seed) /= seedsize) THEN
-            DEALLOCATE (seed)
-            ALLOCATE (seed(seedsize))
-         ENDIF
-      ELSE
-         ALLOCATE (seed(seedsize))
-      ENDIF
-      WRITE (fmtseed, *) "(", seedsize, "(I0,X))"
-      csize = c2s(i2c(seedsize))
-
-      if (present(iseed)) then
-         seed(1) = iseed
-         do i = 2, seedsize
-            seed(i) = seed(i - 1) + 1
-         enddo
-         CALL RANDOM_SEED(PUT=seed)
-      endif
-
-      if (present(FILEIN)) then
-         ! READ SEED
-         CALL open_safe(unit_, TRIM(ADJUSTL(FILEIN)), "UNKNOWN", "READ", get_unit=.true.)
-         READ (unit_, *, END=12, ERR=12) seed
-         CALL RANDOM_SEED(PUT=seed)
-12       continue
-         CALL close_safe(unit_)
-         ! OUTPUT FILE=INPUT FILE
-         SEEDFILEOUT = TRIM(ADJUSTL(FILEIN))
-      endif
-
-      !
-      IF (PRESENT(ZESEED)) THEN
-         IF (SIZE(ZESEED) /= seedsize) STOP "ERROR IN rand_init: INCONSISTENT SEED SIZES!"
-         ZESEED = seed
-      ENDIF
-
-#ifdef DEBUG
-      write(*, '(a)') 'DEBUG: leaving random.rand_init'
-#endif
-
-   end subroutine
+!    subroutine rand_init(iseed, FILEIN, ZESEED)
+!       implicit none
+!       integer, optional                 :: iseed
+!       CHARACTER(LEN=*), optional        :: FILEIN
+!       INTEGER, OPTIONAL                :: ZESEED(:)
+!       INTEGER                          :: unit_
+!       integer                          :: i
+! 
+! #ifdef DEBUG
+!       write(*, '(a)') 'DEBUG: entering random.rand_init'
+! #endif
+! 
+!       CALL RANDOM_SEED(SIZE=seedsize)
+!       IF (ALLOCATED(seed)) THEN
+!          IF (SIZE(seed) /= seedsize) THEN
+!             DEALLOCATE (seed)
+!             ALLOCATE (seed(seedsize))
+!          ENDIF
+!       ELSE
+!          ALLOCATE (seed(seedsize))
+!       ENDIF
+!       WRITE (fmtseed, *) "(", seedsize, "(I0,X))"
+!       csize = c2s(i2c(seedsize))
+! 
+!       if (present(iseed)) then
+!          seed(1) = iseed
+!          do i = 2, seedsize
+!             seed(i) = seed(i - 1) + 1
+!          enddo
+!          CALL RANDOM_SEED(PUT=seed)
+!       endif
+! 
+!       if (present(FILEIN)) then
+!          ! READ SEED
+!          CALL open_safe(unit_, TRIM(ADJUSTL(FILEIN)), "UNKNOWN", "READ", get_unit=.true.)
+!          READ (unit_, *, END=12, ERR=12) seed
+!          CALL RANDOM_SEED(PUT=seed)
+! 12       continue
+!          CALL close_safe(unit_)
+!          ! OUTPUT FILE=INPUT FILE
+!          SEEDFILEOUT = TRIM(ADJUSTL(FILEIN))
+!       endif
+! 
+!       !
+!       IF (PRESENT(ZESEED)) THEN
+!          IF (SIZE(ZESEED) /= seedsize) STOP "ERROR IN rand_init: INCONSISTENT SEED SIZES!"
+!          ZESEED = seed
+!       ENDIF
+! 
+! #ifdef DEBUG
+!       write(*, '(a)') 'DEBUG: leaving random.rand_init'
+! #endif
+! 
+!    end subroutine
 
 !********************************************
 !********************************************
@@ -629,33 +751,30 @@ contains
 
    !======!
 
-   subroutine init_rantab(iseed_)
+   subroutine init_rantab
+
+      use genvar, only: rank
+
       implicit none
       integer          :: i
-      integer, optional :: iseed_
-      integer          :: iseed
+
 
 #ifdef DEBUG
       write(*, '(a)') 'DEBUG: entering random.init_rantab'
 #endif
 
-      if (present(iseed_)) then
-         iseed = iseed_
-      else
-         iseed = 1234567
-      endif
+      ! Have all tasks use the same random seed
+      call random_seed_wrapper(same_across_tasks = .true.)
 
-      write (*, *) 'initialize RANDOM number with seed: ', iseed
-      call rand_init(iseed=iseed)
       if (messages2) write (*, *) ' my rank ', rank
       do i = 0, size(ran_tab) - 1
          ran_tab(i) = floor_(drand1(), 3)
       enddo
       if (messages2) write (*, *) 'ran_tab initiated', maxval(ran_tab), minval(ran_tab)
       if (messages2) write (*, *) 'my rank : ', rank
-      if (messages2) write (*, *) 'iseed   : ', iseed
-      call rand_init(iseed=iseed + rank)
-      if (messages2) write (*, *) 'my rank :', rank
+
+      ! Now make different tasks have different seeds
+      call random_seed_wrapper(same_across_tasks = .false.)
 
 #ifdef DEBUG
       write(*, '(a)') 'DEBUG: leaving random.init_rantab'

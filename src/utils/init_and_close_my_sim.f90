@@ -5,7 +5,7 @@ module init_and_close_my_sim
    use common_def
    use namelistmod
    ! use fortran_cuda
-   use random
+   use random, only: initialize_random_numbers
 
    private
 
@@ -34,7 +34,7 @@ contains
       s3 = SQRT(three)
       s6 = s2*s3
       CALL SYSTEM_CLOCK(COUNT_RATE=clock_rate)
-      call initialize_random_numbers(iseed, rank)
+      call initialize_random_numbers()
       write (*, *) 'system clock rate is : ', clock_rate
       one_over_clock_rate = one/real(clock_rate, kind=DP)
       write (*, *) 'one over clock rate : ', one_over_clock_rate

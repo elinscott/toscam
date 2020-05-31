@@ -541,11 +541,11 @@ contains
    subroutine stand_alone_ed()
 
       use common_def, only: utils_system_call
-      use random, only: init_rantab, rand_init
-      use genvar, only: imi, matsubara, no_mpi, pi, ran_tab, rank, size2
+      use random, only: init_rantab, random_seed_wrapper
+      use genvar, only: imi, matsubara, no_mpi, pi, ran_tab, rank, size2, running_qc_tests
       use stringmanip, only: tostring
       use impurity_class, only: hamiltonian, web
-      use globalvar_ed_solver, only: jhund, jjmatrix, Jhund_Slater_type, uumatrix
+      use globalvar_ed_solver, only: jhund, jjmatrix, Jhund_Slater_type, uumatrix, print_qc
       use mesh, only: build1dmesh
       use matrix, only: diag, write_array
       use mpi_mod, only: mpibarrier
@@ -587,6 +587,8 @@ contains
       logical, parameter      :: init_every_time = .true.
       logical                 :: first_time
       real(kind=DP)                 :: dummy, dummy_tot
+
+      running_qc_tests = print_qc
 
       open (unit=10001, file='PARAMS')
       read (10001, *) cluster_problem_size
@@ -740,7 +742,6 @@ contains
       Himp%teta = 0.
       Himp%Vrep = 0.
 
-      my_seed = 4781
 #ifndef NO_SYS_CALL
       call utils_system_call("rm -r ED_out")
       call utils_system_call("rm -r AGR")
@@ -752,8 +753,8 @@ contains
       write (*, *) '        because NO_SYS_CALL was set'
 #endif
 
-      call init_rantab(iseed_=my_seed)
-      call rand_init(my_seed)
+      call init_rantab()
+      call random_seed_wrapper()
 
       hybrid_in = 0.
 

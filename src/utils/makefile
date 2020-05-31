@@ -158,14 +158,14 @@ minimization_wrapping.mod: minimization_wrapping.f90 \
                            conj_grad.mod genvar.mod linalg.mod \
                            mpi_mod.mod random.mod stringmanip.mod
 
-mpi_mod.mod: mpi_mod.f90 genvar.mod linalg.mod random.mod
+mpi_mod.mod: mpi_mod.f90 genvar.mod linalg.mod
  
 namelistmod.mod: namelistmod.f90 common_def.mod genvar.mod string4.mod \
                  string5.mod
  
 openmpmod.mod: openmpmod.f90 lockmod.mod
  
-random.mod: random.f90 common_def.mod genvar.mod linalg.mod
+random.mod: random.f90 common_def.mod genvar.mod linalg.mod mpi_mod.mod
  
 smooth_data.mod: smooth_data.f90 fourier_transform_mod.mod genvar.mod
  

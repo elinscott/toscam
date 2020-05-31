@@ -3,7 +3,6 @@ module mpi_mod
    !--------------!
    use genvar
    use linalg
-   use random
    !--------------!
    implicit none
    private

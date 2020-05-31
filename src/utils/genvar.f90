@@ -15,6 +15,7 @@ module genvar
    integer, parameter                       :: SP = kind(1.0)    ! single precision type
    integer, parameter                       :: DP = kind(1.0d0)  ! double precision type
    integer, parameter                       :: DDP = 16          ! quad precision type
+   integer, parameter                       :: LONG = selected_int_kind(18)
 
    integer                                  :: alternate_display_count = 0, alternate_display_cycle = 5
    logical                                  :: flag_alternate_display = .false., flag_introduce_only_noise_in_minimization = .false.
@@ -25,12 +26,6 @@ module genvar
    real(16), parameter                       :: real2 = 0._16
    complex(kind=DP), parameter                     :: comp1 = 0.d0
    complex(16), parameter                    :: comp2 = 0._16
-
-   integer, parameter                        :: wp = kind(0d0)
-   integer, parameter                        :: int_k = kind(12345678)
-   integer, parameter                        :: byte_k = kind(.true.)
-   integer, parameter                        :: short_k = kind(12)
-   integer, parameter                        :: long_k = kind(1234567891)
 
    integer                                  :: indepLink
    real(kind=DP), parameter                        :: errinout = 0.0001d0
@@ -115,6 +110,9 @@ module genvar
    integer                                  :: status(MPI_STATUS_SIZE)
 
 !******************************************************************
+
+   ! Quality control testing
+   logical :: running_qc_tests
 
 end module
 

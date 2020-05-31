@@ -131,16 +131,16 @@ objdir:
 #
 
 check_convergence.out: check_convergence.f90 common_def.o genvar.o init_and_close_my_sim.o \
-      linalg.o lockmod.o matrix.o openmpmod.o random.o stringmanip.o 
+      linalg.o lockmod.o matrix.o mpi_mod.o openmpmod.o random.o stringmanip.o 
 
 check_convergence_full.out: check_convergence_full.f90 common_def.o genvar.o init_and_close_my_sim.o \
-      linalg.o lockmod.o matrix.o openmpmod.o random.o stringmanip.o 
+      linalg.o lockmod.o matrix.o mpi_mod.o openmpmod.o random.o stringmanip.o 
 
 check_convergence_renorm.out: check_convergence_renorm.f90 common_def.o genvar.o init_and_close_my_sim.o \
-      linalg.o lockmod.o matrix.o openmpmod.o random.o stringmanip.o 
+      linalg.o lockmod.o matrix.o mpi_mod.o openmpmod.o random.o stringmanip.o 
 
 check_convergence_single_renorm.out: check_convergence_single_renorm.f90 common_def.o genvar.o \
-      init_and_close_my_sim.o linalg.o lockmod.o matrix.o openmpmod.o random.o stringmanip.o 
+      init_and_close_my_sim.o linalg.o lockmod.o matrix.o mpi_mod.o openmpmod.o random.o stringmanip.o 
 
 dmft_all_iterations_onetep.out: dmft_all_iterations_onetep.f90 common_def.o genvar.o stringmanip.o
 
@@ -172,17 +172,17 @@ dmft_gen_correl_output_file.out: dmft_gen_correl_output_file.f90 stringmanip.o
 dmft_group_dimers.out: dmft_group_dimers.f90 stringmanip.o
 
 dmft_project.out: dmft_project.f90 common_def.o genvar.o geomlib.o linalg.o lockmod.o matrix.o \
-    openmpmod.o random.o sorting.o stringmanip.o strings.o tools_algebra.o
+    mpi_mod.o openmpmod.o random.o sorting.o stringmanip.o strings.o tools_algebra.o
 
 dmft_project_back.out: dmft_project_back.f90 common_def.o genvar.o geomlib.o linalg.o lockmod.o \
-    matrix.o openmpmod.o random.o sorting.o stringmanip.o strings.o tools_algebra.o
+    matrix.o mpi_mod.o openmpmod.o random.o sorting.o stringmanip.o strings.o tools_algebra.o
 
 dmft_project_orbitals_back.out: dmft_project_orbitals_back.f90 common_def.o genvar.o geomlib.o \
-    linalg.o lockmod.o matrix.o openmpmod.o random.o sorting.o stringmanip.o strings.o \
+    linalg.o lockmod.o matrix.o mpi_mod.o openmpmod.o random.o sorting.o stringmanip.o strings.o \
     tools_algebra.o
 
 dmft_project_sigma.out: dmft_project_sigma.f90 common_def.o genvar.o geomlib.o linalg.o lockmod.o \
-    matrix.o openmpmod.o random.o sorting.o stringmanip.o strings.o tools_algebra.o
+    matrix.o mpi_mod.o openmpmod.o random.o sorting.o stringmanip.o strings.o tools_algebra.o
 
 ed_solver.out: ed_solver.f90 aim2_class.o aim_class.o apply_c.o apply_ns.o apply_p.o bath_class.o \
     bath_class_hybrid.o bath_class_vec.o block_lanczos.o common_def.o conj_grad.o \
@@ -232,8 +232,8 @@ ed_solver_serial.out: ed_solver_serial.f90 aim2_class.o aim_class.o apply_c.o ap
 gensig.out: gensig.f90
 
 onetep_dmft.out: onetep_dmft.f90 common_def.o genvar.o geomlib.o init_and_close_my_sim.o linalg.o \
-    lockmod.o namelistmod.o openmpmod.o random.o string4.o string5.o stringmanip.o strings.o \
-    timer_mod.o
+    lockmod.o mpi_mod.o namelistmod.o openmpmod.o random.o string4.o string5.o stringmanip.o \
+    strings.o timer_mod.o
 
 onetep_dmft_build_heterostructure.out: onetep_dmft_build_heterostructure.f90 common_def.o genvar.o \
     lockmod.o namelistmod.o openmpmod.o string4.o string5.o stringmanip.o
@@ -264,10 +264,10 @@ onetep_dmft_fmos.out: onetep_dmft_fmos.f90 routinesfmos.o
 onetep_dmft_hf.out: onetep_dmft_hf.f90 routineshf.o
 
 onetep_dmft_histogram.out: onetep_dmft_histogram.f90 common_def.o genvar.o geomlib.o linalg.o \
-    lockmod.o openmpmod.o random.o sorting.o stringmanip.o
+    lockmod.o mpi_mod.o openmpmod.o random.o sorting.o stringmanip.o
 
 onetep_dmft_local_dimers.out: onetep_dmft_local_dimers.f90 common_def.o genvar.o geomlib.o \
-    linalg.o lockmod.o openmpmod.o random.o sorting.o
+    linalg.o lockmod.o mpi_mod.o openmpmod.o random.o sorting.o
 
 onetep_dmft_local_rotation.out: onetep_dmft_local_rotation.f90 genvar.o geometry2.o geomlib.o \
     linalg.o lockmod.o openmpmod.o
@@ -287,8 +287,8 @@ onetep_dmft_movie.out: onetep_dmft_movie.f90 genvar.o geomlib.o linalg.o lockmod
     stringmanip.o
 
 onetep_dmft_one_iter.out: onetep_dmft_one_iter.f90 common_def.o genvar.o geomlib.o linalg.o \
-    lockmod.o matrix.o namelistmod.o openmpmod.o random.o sorting.o specialfunction.o string4.o \
-    string5.o stringmanip.o strings.o timer_mod.o tools_algebra.o
+    lockmod.o matrix.o mpi_mod.o namelistmod.o openmpmod.o random.o sorting.o specialfunction.o \
+    string4.o string5.o stringmanip.o strings.o timer_mod.o tools_algebra.o
 
 onetep_dmft_proj_green_func_matrix.out: onetep_dmft_proj_green_func_matrix.f90 common_def.o \
     derivative_noise.o fourier_transform_mod.o genvar.o geometry.o geomlib.o linalg.o lockmod.o \
@@ -296,16 +296,16 @@ onetep_dmft_proj_green_func_matrix.out: onetep_dmft_proj_green_func_matrix.f90 c
     stringmanip.o tools_algebra.o
 
 onetep_dmft_read_n.out: onetep_dmft_read_n.f90 common_def.o genvar.o geomlib.o linalg.o lockmod.o \
-    matrix.o openmpmod.o random.o sorting.o tools_algebra.o
+    matrix.o mpi_mod.o openmpmod.o random.o sorting.o tools_algebra.o
 
 onetep_dmft_read_overlap_matrices.out: onetep_dmft_read_overlap_matrices.f90 common_def.o genvar.o \
-    geomlib.o linalg.o lockmod.o matrix.o openmpmod.o random.o sorting.o tools_algebra.o
+    geomlib.o linalg.o lockmod.o matrix.o mpi_mod.o openmpmod.o random.o sorting.o tools_algebra.o
 
 onetep_dmft_read_spin.out: onetep_dmft_read_spin.f90 genvar.o
 
 onetep_dmft_sc.out: onetep_dmft_sc.f90 common_def.o genvar.o geomlib.o init_and_close_my_sim.o \
-    linalg.o lockmod.o namelistmod.o openmpmod.o random.o string4.o string5.o stringmanip.o \
-    strings.o
+    linalg.o lockmod.o mpi_mod.o namelistmod.o openmpmod.o random.o string4.o string5.o \
+    stringmanip.o strings.o
 
 onetep_dmft_stitch.out: onetep_dmft_stitch.f90 common_def.o genvar.o geomlib.o linalg.o lockmod.o \
     namelistmod.o openmpmod.o string4.o string5.o stringmanip.o
