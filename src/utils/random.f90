@@ -43,36 +43,13 @@ module random
       MODULE PROCEDURE randomize_mat_r, randomize_mat_c
    END INTERFACE
 
-   interface bad_random_number_wrapper
-      module procedure bad_random_number_float
-      module procedure bad_random_number_1d
-      module procedure bad_random_number_2d
+   interface random_number_wrapper
+      module procedure random_number_float
+      module procedure random_number_1d
+      module procedure random_number_2d
    end interface
 
 contains
-
-   subroutine random_number_wrapper(r)
-
-      use genvar, only: running_qc_tests
-
-      implicit none
-      real :: r
-
-#ifdef DEBUG
-      write(*, '(a)') 'DEBUG: entering random.random_number_wrapper'
-#endif
-
-      if (running_qc_tests) then
-         call bad_random_number_wrapper(r)
-      else
-         call random_number(r)
-      end if
-
-#ifdef DEBUG
-      write(*, '(a)') 'DEBUG: leaving random.random_number_wrapper'
-#endif
-
-   end subroutine
 
    subroutine random_seed_wrapper(same_across_tasks)
 
@@ -86,6 +63,7 @@ contains
       logical :: for_testing_internal
       integer :: funit, ierr, seed_size
       integer, allocatable :: seed(:)
+      real, allocatable :: r_test(:)
 
 #ifdef DEBUG
       write(*, '(a)') 'DEBUG: entering random.random_seed_wrapper'
@@ -131,7 +109,55 @@ contains
 
 #ifdef DEBUG
       write(*, '(a)') 'DEBUG: leaving random.random_seed_wrapper'
+      allocate(r_test(2))
+      call random_number_wrapper(r_test)
+      write(*, *) r_test
 #endif
+
+   end subroutine
+
+   subroutine random_number_float(r)
+
+      use genvar, only: running_qc_tests
+
+      implicit NONE
+      real :: r
+
+      if (running_qc_tests) then
+         call bad_random_number_float(r)
+      else
+         call random_number(r)
+      end if
+
+   end subroutine
+
+   subroutine random_number_1d(r)
+
+      use genvar, only: running_qc_tests
+
+      implicit NONE
+      real, allocatable :: r(:)
+
+      if (running_qc_tests) then
+         call bad_random_number_1d(r)
+      else
+         call random_number(r)
+      end if
+
+   end subroutine
+
+   subroutine random_number_2d(r)
+
+      use genvar, only: running_qc_tests
+
+      implicit NONE
+      real, allocatable :: r(:,:)
+
+      if (running_qc_tests) then
+         call bad_random_number_2d(r)
+      else
+         call random_number(r)
+      end if
 
    end subroutine
 
