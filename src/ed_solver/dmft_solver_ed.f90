@@ -542,10 +542,10 @@ contains
 
       use common_def, only: utils_system_call
       use random, only: init_rantab, random_seed_wrapper
-      use genvar, only: imi, matsubara, no_mpi, pi, ran_tab, rank, size2, running_qc_tests
+      use genvar, only: imi, matsubara, no_mpi, pi, ran_tab, rank, size2
       use stringmanip, only: tostring
       use impurity_class, only: hamiltonian, web
-      use globalvar_ed_solver, only: jhund, jjmatrix, Jhund_Slater_type, uumatrix, print_qc
+      use globalvar_ed_solver, only: jhund, jjmatrix, Jhund_Slater_type, uumatrix
       use mesh, only: build1dmesh
       use matrix, only: diag, write_array
       use mpi_mod, only: mpibarrier
@@ -588,7 +588,6 @@ contains
       logical                 :: first_time
       real(kind=DP)                 :: dummy, dummy_tot
 
-      running_qc_tests = print_qc
 
       open (unit=10001, file='PARAMS')
       read (10001, *) cluster_problem_size
@@ -1202,9 +1201,9 @@ contains
          ncpt_chain_coup, ncpt_para, ncpt_tot, para_state, &
          rdelta_frequ_eta1, rdelta_frequ_t, rdelta_frequ_w0, &
          slater_coulomb_c, slater_coulomb_r, supersc_state, ucc, uccc, uccr, &
-         use_input_eimp_matrices, use_precomputed_slater_matrix, uumatrix
+         use_input_eimp_matrices, use_precomputed_slater_matrix, uumatrix, print_qc
       use impurity_class, only: define_impurity, hamiltonian, web
-      use genvar, only: fermionic, log_unit, rank, size2
+      use genvar, only: fermionic, log_unit, rank, size2, running_qc_tests
       use aim_class, only: new_aim, update_aim_pointer
       use bath_class_hybrid, only: bath2hybrid
       use common_def, only: utils_assert
@@ -1345,6 +1344,10 @@ contains
       if (present(init)) then
          if (init) CALL read_DMFT_parameters(nmatsu_frequ, FLAGIMP, nstep, &
                                              impurity_%N)
+         ! Initialising genvar.running_qc_tests so that utils code, in addition to 
+         ! ed_solver code, can tell if we are running tests
+         running_qc_tests = print_qc
+
       endif
 #ifdef OPENMP_MPI_SAFE
       if (MAXT > 1 .and. size2 > 1 .and. .not. no_mpi) then
