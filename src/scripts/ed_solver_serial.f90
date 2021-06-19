@@ -11,7 +11,7 @@ program dmft_standalone
 !---------------!
    implicit none
 
-   call initialize_timing
+   call initialize_timing()
 
    no_mpi = .true.
 

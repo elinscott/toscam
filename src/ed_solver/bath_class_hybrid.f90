@@ -469,7 +469,7 @@ contains
       use mpi_mod, only: mpibarrier, mpibcast
       use matrix, only: invmat, write_array
       use minimization_wrapping, only: minimize_func_wrapper
-      use random, only: dran_tab
+      use random, only: random_float_from_interval
       use timer_mod, only: start_timer, stop_timer
 
       implicit none
@@ -552,7 +552,7 @@ contains
       test(1:bath%nparam) = bath%vec(1:bath%nparam)
       if (ncpt_tot > 0) then
          do i = 1, ncpt_tot
-            test(bath%nparam + i) = (-1.d0 + 2.d0*dran_tab(i))/2.d0/1000.d0
+            test(bath%nparam + i) = random_float_from_interval(-5.d-4, 5.d-4, same_across_tasks=.true.)
             if (ncpt_para == 2) then
                test(bath%nparam + i + ncpt_tot) = test(bath%nparam + i)
             endif

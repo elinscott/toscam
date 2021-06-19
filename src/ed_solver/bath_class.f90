@@ -446,7 +446,7 @@ contains
          fill_masked_matrix, new_masked_matrix, test_masked_matrix_hermitic
       use common_def, only: close_safe, open_safe, skip_line
       use matrix, only: write_array
-      use random, only: dran_tab
+      use random, only: random_float_from_interval, random_complex_from_interval
       use string5, only: get_unit
 
       implicit none
@@ -457,7 +457,7 @@ contains
       INTEGER, ALLOCATABLE :: IMASKE(:, :, :), IMASKV(:, :, :), IMASKP(:, :), &
                               IMASKPV(:, :, :)
       INTEGER              :: Nb, index_in, ib, jb, spin, mu, iind_, iind, &
-                              fac_cplx
+                              fac_cplx, nind
       INTEGER              :: Nitermax, ff
       REAL(DP)            :: step, dmax
       CHARACTER(LEN=5)   :: sym_bath
@@ -529,16 +529,21 @@ contains
             ENDDO
          ENDDO
       else
-         DO iind_ = 1, BATH%Eb(1)%rc%MASK%nind + BATH%Eb(2)%rc%MASK%nind
+         if (start_para) then
+            nind = BATH%Eb(1)%rc%MASK%nind
+         else
+            nind = BATH%Eb(1)%rc%MASK%nind + BATH%Eb(2)%rc%MASK%nind
+         end if
+         DO iind_ = 1, nind
             iind = iind_
-            val = (-1.d0 + 2.d0*dran_tab(iind))/2.d0
 #ifdef _complex
-            val = val + dran_tab(iind)*imi
+            val = random_complex_from_interval(-0.5d0, 0.0d0, 0.5d0, 1.0d0, same_across_tasks=.true.)
+#else
+            val = random_float_from_interval(-0.5d0, 0.5d0, same_across_tasks=.true.)
 #endif
-            if (start_para .and. iind_ > BATH%Eb(1)%rc%MASK%nind) val = (-1.d0 &
-                                                                         + 2.d0*dran_tab(iind - BATH%Eb(1)%rc%MASK%nind))/2.d0
             DO spin = 1, 2
                CALL fill_masked_matrix(BATH%Eb(spin), iind, val)
+               if (start_para) call fill_masked_matrix(BATH%Eb(spin), iind + BATH%Eb(1)%rc%MASK%nind, val)
             ENDDO
          ENDDO
       endif
@@ -612,9 +617,10 @@ contains
                elseif (min_all_bath_param < 0) then
                   DO iind_ = 1, BATH%Pb%rc%MASK%nind
                      iind = iind_
-                     val = (-1.d0 + 2.d0*dran_tab(iind*3))/2.d0
 #ifdef _complex
-                     val = val + dran_tab(iind*6)*imi
+                     val = random_complex_from_interval(-0.5d0, 0.0d0, 0.5d0, 1.0d0, same_across_tasks=.true.)
+#else
+                     val = random_float_from_interval(-0.5d0, 0.5d0, same_across_tasks=.true.)
 #endif
                      CALL fill_masked_matrix(BATH%Pb, iind, val)
                   ENDDO
@@ -713,16 +719,21 @@ contains
                ENDDO
             ENDDO
          else
-            DO iind_ = 1, BATH%Vbc(1)%rc%MASK%nind + BATH%Vbc(2)%rc%MASK%nind
+            if (start_para) then
+               nind = BATH%Eb(1)%rc%MASK%nind
+            else
+               nind = BATH%Eb(1)%rc%MASK%nind + BATH%Eb(2)%rc%MASK%nind
+            end if
+            DO iind_ = 1, nind
                iind = iind_
-               val = (-1.d0 + 2.d0*dran_tab(iind*4))/2.d0
 #ifdef _complex
-               val = val + dran_tab(iind*8)*imi
+               val = random_complex_from_interval(-0.5d0, 0.0d0, 0.5d0, 1.0d0, same_across_tasks=.true.)
+#else
+               val = random_float_from_interval(-0.5d0, 0.5d0, same_across_tasks=.true.)
 #endif
-               if (start_para .and. iind_ > BATH%Vbc(1)%rc%MASK%nind) val = &
-                  (-1.d0 + 2.d0*dran_tab(iind - BATH%Vbc(1)%rc%MASK%nind))
                DO spin = 1, 2
                   CALL fill_masked_matrix(BATH%Vbc(spin), iind, val)
+                  if (start_para) call fill_masked_matrix(BATH%Vbc(spin), iind + BATH%Vbc(1)%rc%MASK%nind, val)
                ENDDO
             ENDDO
          endif
@@ -750,9 +761,10 @@ contains
                      DO iind_ = 1, BATH%PVbc(1)%rc%MASK%nind + &
                         BATH%PVbc(2)%rc%MASK%nind
                         iind = iind_
-                        val = (-1.d0 + 2.d0*dran_tab(iind*7))/2.d0
 #ifdef _complex
-                        val = val + dran_tab(iind*10)*imi
+                        val = random_complex_from_interval(-0.5d0, 0.0d0, 0.5d0, 1.0d0, same_across_tasks=.true.)
+#else
+                        val = random_float_from_interval(-0.5d0, 0.5d0, same_across_tasks=.true.)
 #endif
                         DO spin = 1, 2
                            CALL fill_masked_matrix(BATH%PVbc(spin), iind, val)

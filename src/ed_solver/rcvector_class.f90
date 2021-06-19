@@ -41,7 +41,7 @@ contains
 
    subroutine create_fix_initial_vector(initvec, n)
 
-      use random, only: dran_tab
+      use random, only: random_float_from_interval, random_complex_from_interval
 
       implicit none
 
@@ -53,11 +53,11 @@ contains
 
 #ifdef _complex
       do i = 1, size(initvec%rc)
-         initvec%rc(i) = CMPLX(dran_tab(i), dran_tab(i + 20), 8)
+         initvec%rc(i) = random_complex_from_interval(0.d0, 0.d0, 1.d0, 1.d0, same_across_tasks=.true.)
       enddo
 #else
       do i = 1, size(initvec%rc)
-         initvec%rc(i) = dran_tab(i)
+         initvec%rc(i) = random_float_from_interval(0.0d0, 1.0d0, same_across_tasks=.true.)
       enddo
 #endif
 

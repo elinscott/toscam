@@ -251,7 +251,6 @@ module onetep_variables
    use StringManip, only: toString, StrInt2
    use strings, only: replace_in_string, string, assignment(=)
    use matrix, only: offdiag, Id, invmat, write_array, eigenvector_matrix
-   use random, only: drand1
    use specialFunction, only: SlaterF, cmp_all_Gaunt
 
    implicit none

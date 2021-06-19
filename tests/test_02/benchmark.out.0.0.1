@@ -1,13 +1,243 @@
+ file sparsed ... return - RANK / NOMPI / SIZE / FILENAME            0 F
+           0 ./input_onetep_dmft.txt
+ ===========================================
+   number of command line arguments :            0
+   Usage : 
+          help       -  to print the full list of arguments
+          summary    -  to print a shortlist of argument definitions
+          build_tree -  build local tree of directories
+          wait       -  wait a few seconds to read this menu
+ ===========================================
+ command line parsed ... return - RANK / NOMPI / SIZE            0 F           0
+Performing system call get_onetep_case
+/home/elinscott/code/toscam/tests/test_02
+CASE :  FeCO3
+ my ONETEP CASE is : FeCO3
+Performing system call ls *.dat | wc -l >> other_dat_file_
+Performing system call rm other_dat_file_ > /dev/null 2>&1
+Performing system call rm i_am_dimer*         > /dev/null 2>&1
+Performing system call rm sigma_output*       > /dev/null 2>&1
+Performing system call rm mask_loc_rot_atom_* > /dev/null 2>&1
+  setting ONETEP in PROPERTIES mode : 
+Performing system call sed -i 's/SINGLEPOINT/PROPERTIES/' *.dat
+Performing system call sed -i 's/singlepoint/PROPERTIES/' *.dat
+ looking for strings with : write
+Performing system call grep_in_dat write
+ opening file scratch
+ flipping flag : write_denskern : F
+ modified string : write_denskern : F
+Performing system call sed 's/write_denskern : F/write_denskern : F/' *.dat > scratch2
+Performing system call mv scratch2 FeCO3.dat
+ flipping flag : write_tightbox_ngwfs : F
+ modified string : write_tightbox_ngwfs : F
+Performing system call sed 's/write_tightbox_ngwfs : F/write_tightbox_ngwfs : F/' *.dat > scratch2
+Performing system call mv scratch2 FeCO3.dat
+ flipping flag : write_forces : F
+ modified string : write_forces : F
+Performing system call sed 's/write_forces : F/write_forces : F/' *.dat > scratch2
+Performing system call mv scratch2 FeCO3.dat
+ flipping flag : write_converged_dk_ngwfs : F
+ modified string : write_converged_dk_ngwfs : F
+Performing system call sed 's/write_converged_dk_ngwfs : F/write_converged_dk_ngwfs : F/' *.dat > scratch2
+Performing system call mv scratch2 FeCO3.dat
+ flipping flag : write_params : F
+ modified string : write_params : F
+Performing system call sed 's/write_params : F/write_params : F/' *.dat > scratch2
+Performing system call mv scratch2 FeCO3.dat
+ flipping flag : write_positions : F
+ modified string : write_positions : F
+Performing system call sed 's/write_positions : F/write_positions : F/' *.dat > scratch2
+Performing system call mv scratch2 FeCO3.dat
+ flipping flag : write_xyz : F
+ modified string : write_xyz : F
+Performing system call sed 's/write_xyz : F/write_xyz : F/' *.dat > scratch2
+Performing system call mv scratch2 FeCO3.dat
+ flipping flag : write_density_plot : F
+ modified string : write_density_plot : F
+Performing system call sed 's/write_density_plot : F/write_density_plot : F/' *.dat > scratch2
+Performing system call mv scratch2 FeCO3.dat
+ flipping flag : write_ngwf_plot : F
+ modified string : write_ngwf_plot : F
+Performing system call sed 's/write_ngwf_plot : F/write_ngwf_plot : F/' *.dat > scratch2
+Performing system call mv scratch2 FeCO3.dat
+ flipping flag : write_ngwf_grad_plot : F
+ modified string : write_ngwf_grad_plot : F
+Performing system call sed 's/write_ngwf_grad_plot : F/write_ngwf_grad_plot : F/' *.dat > scratch2
+Performing system call mv scratch2 FeCO3.dat
+ flipping flag : write_sw_ngwfs : F
+ modified string : write_sw_ngwfs : F
+Performing system call sed 's/write_sw_ngwfs : F/write_sw_ngwfs : F/' *.dat > scratch2
+Performing system call mv scratch2 FeCO3.dat
+Performing system call rm scratch  > /dev/null 2>&1
+Performing system call rm scratch2 > /dev/null 2>&1
+ looking for strings with : read
+Performing system call grep_in_dat read
+ opening file scratch
+ flipping flag : read_denskern         : T
+ modified string : read_denskern         : T
+Performing system call sed 's/read_denskern         : T/read_denskern         : T/' *.dat > scratch2
+Performing system call mv scratch2 FeCO3.dat
+ flipping flag : read_tightbox_ngwfs   : T
+ modified string : read_tightbox_ngwfs   : T
+Performing system call sed 's/read_tightbox_ngwfs   : T/read_tightbox_ngwfs   : T/' *.dat > scratch2
+Performing system call mv scratch2 FeCO3.dat
+ flipping flag : 
+ hubbard_proj_mixing   : -1.0        ! read in tightbox_hub_projs
+ modified string : 
+ hubbard_proj_mixing   : -1.0        ! read in tightbox_hub_projs
+Performing system call sed 's/hubbard_proj_mixing   : -1.0        ! read in tightbox_hub_projs/hubbard_proj_mixing   : -1.0        ! read in tightbox_hub_projs/' *.dat > scratch2
+Performing system call mv scratch2 FeCO3.dat
+Performing system call rm scratch  > /dev/null 2>&1
+Performing system call rm scratch2 > /dev/null 2>&1
+ looking for strings with : ngwf_analysis
+Performing system call grep_in_dat ngwf_analysis
+ opening file scratch
+ flipping flag : ngwf_analysis : F
+ modified string : ngwf_analysis : F
+Performing system call sed 's/ngwf_analysis : F/ngwf_analysis : F/' *.dat > scratch2
+Performing system call mv scratch2 FeCO3.dat
+Performing system call rm scratch  > /dev/null 2>&1
+Performing system call rm scratch2 > /dev/null 2>&1
+ looking for strings with : do_properties
+Performing system call grep_in_dat do_properties
+ opening file scratch
+ flipping flag : do_properties         : T
+ modified string : do_properties         : T
+Performing system call sed 's/do_properties         : T/do_properties         : T/' *.dat > scratch2
+Performing system call mv scratch2 FeCO3.dat
+Performing system call rm scratch  > /dev/null 2>&1
+Performing system call rm scratch2 > /dev/null 2>&1
+ looking for strings with : popn_calculate
+Performing system call grep_in_dat popn_calculate
+ opening file scratch
+ flipping flag : popn_calculate : F
+ modified string : popn_calculate : F
+Performing system call sed 's/popn_calculate : F/popn_calculate : F/' *.dat > scratch2
+Performing system call mv scratch2 FeCO3.dat
+Performing system call rm scratch  > /dev/null 2>&1
+Performing system call rm scratch2 > /dev/null 2>&1
+ looking for strings with : cond_calculate
+Performing system call grep_in_dat cond_calculate
+ opening file scratch
+Performing system call rm scratch  > /dev/null 2>&1
+Performing system call rm scratch2 > /dev/null 2>&1
+ looking for strings with : polarisation_calculate
+Performing system call grep_in_dat polarisation_calculate
+ opening file scratch
+ flipping flag : polarisation_calculate : F
+ modified string : polarisation_calculate : F
+Performing system call sed 's/polarisation_calculate : F/polarisation_calculate : F/' *.dat > scratch2
+Performing system call mv scratch2 FeCO3.dat
+Performing system call rm scratch  > /dev/null 2>&1
+Performing system call rm scratch2 > /dev/null 2>&1
+Performing system call get_onetep_env
+ My TOSCAM base directory is /home/elinscott/code/toscam/
+Performing system call rm dir_onetep > /dev/null 2>&1
+Performing system call get_mpi_env
+ My MPI executable is 
+Performing system call rm dir_onetep_mpi > /dev/null 2>&1
+Performing system call get_onetep_exec
+ My ONETEP executable is /home/elinscott/code/onetep_ebl/bin/onetep.theos
+Performing system call rm exec_onetep > /dev/null 2>&1
+Performing system call /home/elinscott/code/toscam/utils/disable_write
+write_params set to F in FeCO3.dat
+write_forces set to F in FeCO3.dat
+write_positions set to F in FeCO3.dat
+write_xyz set to F in FeCO3.dat
+write_density_plot set to F in FeCO3.dat
+write_ngwf_plot set to F in FeCO3.dat
+write_ngwf_grad_plot set to F in FeCO3.dat
+write_denskern set to F in FeCO3.dat
+write_tightbox_ngwfs set to F in FeCO3.dat
+write_converged_dk_ngwfs set to F in FeCO3.dat
+write_sw_ngwfs set to F in FeCO3.dat
+homo_plot set to -1 in FeCO3.dat
+lumo_plot set to -1 in FeCO3.dat
+dos_smear set to 0.00 in FeCO3.dat
+ngwf_analysis set to F in FeCO3.dat
+popn_calculate set to F in FeCO3.dat
+polarisation_calculate set to F in FeCO3.dat
+homo_dens_plot set to -1 in FeCO3.dat
+lumo_dens_plot set to -1 in FeCO3.dat
+cube_format set to F in FeCO3.dat
+grd_format set to F in FeCO3.dat
+ RUNNING THE DMFT   CALCULATIONS WITH [x] cpus             :            1
+ RUNNING THE ONETEP CALCULATIONS WITH [x] cpus             :            2
+ RUNNING THE ONETEP CALCULATIONS WITH [x] threads (openmp) :            1
+Performing system call rm -r dir_onetep_iter* > /dev/null 2>&1
+DMFT ITERATION 1 of 2                             
+ running onetep for case : FeCO3
+Performing system call mkdir dir_onetep_iter1
+Performing system call mkdir            before_onetep
+Performing system call mv green_output* before_onetep > /dev/null 2>&1
+Performing system call cp edc_output*   before_onetep > /dev/null 2>&1
+Performing system call cp sigma_output* before_onetep > /dev/null 2>&1
+Performing system call mv before_onetep dir_onetep_iter1
+Performing system call onetep.dmft.collect.edc
+Performing system call rm ./onetep_confirmation*  > /dev/null 2>&1
+Performing system call rm ./green_output*         > /dev/null 2>&1
+Performing system call ls machines_onetep || fill_machine_file machines_onetep 2
+machines_onetep
+ HOST IN MACHINES_ONETEP FILE : theospc8
+ HOST IN MACHINES_ONETEP FILE : theospc8
+Performing system call get_mpi_command_line /home/elinscott/code/onetep_ebl/bin/onetep.theos "     FeCO3 "     2       1       1       machines_onetep "     -machinefile " "   FeCO3_1.onetep 2>&1 "     F  >  __mpi_cmd__
+Performing system call rm __mpi_cmd__
+Performing system call mpirun -genv OMP_NUM_THREADS=1 -np 2 /home/elinscott/code/onetep_ebl/bin/onetep.theos FeCO3 > FeCO3_1.onetep 2>&1
+Performing system call dmft_collect_script.out
+Performing system call mkdir after_onetep
+Performing system call cp green_output* after_onetep
+Performing system call ls green_output* > /dev/null 2>&1 && n_gf=$(ls green_output* | wc -l) && echo "Found ${n_gf} green function(s): " && ls green_output*
+Found 1 green function(s): 
+green_output1_1_1
+Performing system call echo $n_gf > list_of_greens
+Performing system call ls green_output* >> list_of_greens
+Performing system call order_list_of_greens.out
+Performing system call export OMP_NUM_THREADS=8
+Performing system call onetep_split_serial.out iter_dmft=1 > onetep_dmft_part_1
+Performing system call cp sigma_output* after_onetep
+Performing system call mv after_onetep dir_onetep_iter1
+DMFT ITERATION 2 of 2                             
+ running onetep for case : FeCO3
+Performing system call mkdir dir_onetep_iter2
+Performing system call mkdir            before_onetep
+Performing system call mv green_output* before_onetep > /dev/null 2>&1
+Performing system call cp edc_output*   before_onetep > /dev/null 2>&1
+Performing system call cp sigma_output* before_onetep > /dev/null 2>&1
+Performing system call mv before_onetep dir_onetep_iter2
+Performing system call onetep.dmft.collect.edc
+Performing system call rm ./onetep_confirmation*  > /dev/null 2>&1
+Performing system call rm ./green_output*         > /dev/null 2>&1
+Performing system call ls machines_onetep || fill_machine_file machines_onetep 2
+machines_onetep
+ HOST IN MACHINES_ONETEP FILE : theospc8
+ HOST IN MACHINES_ONETEP FILE : theospc8
+Performing system call get_mpi_command_line /home/elinscott/code/onetep_ebl/bin/onetep.theos "     FeCO3 "     2       1       1       machines_onetep "     -machinefile " "   FeCO3_2.onetep 2>&1 "     F  >  __mpi_cmd__
+Performing system call rm __mpi_cmd__
+Performing system call mpirun -genv OMP_NUM_THREADS=1 -np 2 /home/elinscott/code/onetep_ebl/bin/onetep.theos FeCO3 > FeCO3_2.onetep 2>&1
+Performing system call dmft_collect_script.out
+Performing system call mkdir after_onetep
+Performing system call cp green_output* after_onetep
+Performing system call ls green_output* > /dev/null 2>&1 && n_gf=$(ls green_output* | wc -l) && echo "Found ${n_gf} green function(s): " && ls green_output*
+Found 1 green function(s): 
+green_output1_1_1
+Performing system call echo $n_gf > list_of_greens
+Performing system call ls green_output* >> list_of_greens
+Performing system call order_list_of_greens.out
+Performing system call export OMP_NUM_THREADS=8
+Performing system call onetep_split_serial.out iter_dmft=2 > onetep_dmft_part_2
+Performing system call cp sigma_output* after_onetep
+Performing system call mv after_onetep dir_onetep_iter2
+Maximum number of DMFT iterations reached
+ =============================== TIMING SUMMARY =============================== 
+  Routine                                    | Calls          | Walltime      
+  onetep                                     |              2 |           6.11
+  onetep_split_serial.out                    |              2 |          40.09
+                                                        TOTAL |          47.48
+ ==============================================================================
+
+ Contents of atom1/dir_green_output1_1_1_iter2/ed_solver_serial.log:
  ...set common variables....
  start to init common quantities
- initialize RANDOM number with seed:      1234567
- open_safe routine, filename :seed
- inquire if file is opened
- getting free unit for file
- unit is :           21
- filename: seed actions: READ
-ERROR OPENING seed : IOSTAT=29
-ERROR IN 'close_safe' : FILE =  NOT OPENED
  system clock rate is :        10000
  one over clock rate :   1.000000000000000E-004
  open_safe routine, filename :
@@ -19,13 +249,6 @@ ERROR IN 'close_safe' : FILE =  NOT OPENED
  init MPI : 
  start to init MPI
  start to init common quantities
- initialize RANDOM number with seed:      1234567
- open_safe routine, filename :seed
- inquire if file is opened
- getting free unit for file
- unit is :           21
- filename: seed actions: READ
-ERROR OPENING seed : IOSTAT=29
  system clock rate is :        10000
  one over clock rate :   1.000000000000000E-004
  open_safe routine, filename :
@@ -50,13 +273,12 @@ ERROR OPENING seed : IOSTAT=29
   ==================================== 
    my_iter_dmft :             2
   ==================================== 
+Performing system call rm -r ED_out
+Performing system call rm -r AGR
+Performing system call mkdir AGR
+Performing system call mkdir ED_out
+Performing system call rm ./seed
 rm: cannot remove './seed': No such file or directory
- initialize RANDOM number with seed:         4781
-  my rank            0
- ran_tab initiated   1.00000000000000       0.000000000000000E+000
- my rank :            0
- iseed   :         4781
- my rank :           0
  CALLING ED SOLVER WITH [x] real frequencies and [y] nmatsu frequencies : 
         2000        2000
  initialization ed solver
@@ -188,38 +410,38 @@ rm: cannot remove './seed': No such file or directory
  update data in namelist 
  ===========================================
  command line parsed ... return - RANK / NOMPI / SIZE            0 T           1
- READING PREVIOUS FIT :  -7.065200068499193E-002  3.120899276302766E-002
-  7.088006526606502E-002  6.539093804024917E-002 -3.574664218675763E-002
-  2.177713281214571E-002 -6.226699238201759E-002 -8.410621508325783E-003
-  1.017680838543485E-002 -5.606817460526350E-003  8.007580196379266E-003
- -1.715550071982586E-003 -1.820752796662662E-003  1.122175970967855E-003
- -3.383976483111873E-003 -5.182158993311857E-004 -2.858515570978509E-002
-  1.588236849070441E-002 -2.468280193693380E-002  3.892361292859710E-003
- -5.801638552464726E-002  6.968906639951690E-002  2.427506822022944E-002
- -3.097029432266088E-002  1.790479721208252E-002 -9.161922343685969E-002
-  7.823283538827946E-002 -1.855871719546562E-002 -7.144998839679517E-002
-  4.590014255476298E-002
+ READING PREVIOUS FIT :  -5.270999410117407E-002 -8.530333101431624E-002
+ -5.361527048131236E-002  4.832083197312696E-002 -4.107904200158010E-002
+ -1.247035602743467E-003  6.147441636729956E-002 -1.518608234977931E-002
+  1.026743244197725E-002  4.506253727941530E-003 -8.725468250684579E-003
+  3.977099498176444E-004 -2.123487129822218E-003  2.722964882207499E-005
+  3.322920337275242E-003 -8.592880630784844E-004 -2.915864205020861E-002
+ -1.172092775053063E-002  2.648352962517118E-002 -2.001478182028984E-003
+ -3.576106950124421E-002 -9.298753735869406E-002 -1.202783319208799E-002
+  6.742947769759909E-002 -4.176814761612806E-002 -6.895981566866875E-002
+  1.602759866244863E-002  5.356818438758863E-002  5.263541286098751E-002
+  4.706718695135360E-002
  ############################################
  calling ED solver, with [x] Bath parameters :           30
  ############################################
  allocated JJmatrix? : T T
  ---------------------------------------------------------
- ED SOLVER, USE INPUT PARAMETER SPECIFIED :  -7.065200068499193E-002
-  3.120899276302766E-002  7.088006526606502E-002  6.539093804024917E-002
- -3.574664218675763E-002  2.177713281214571E-002 -6.226699238201759E-002
- -8.410621508325783E-003  1.017680838543485E-002 -5.606817460526350E-003
-  8.007580196379266E-003 -1.715550071982586E-003 -1.820752796662662E-003
-  1.122175970967855E-003 -3.383976483111873E-003 -5.182158993311857E-004
- -2.858515570978509E-002  1.588236849070441E-002 -2.468280193693380E-002
-  3.892361292859710E-003 -5.801638552464726E-002  6.968906639951690E-002
-  2.427506822022944E-002 -3.097029432266088E-002  1.790479721208252E-002
- -9.161922343685969E-002  7.823283538827946E-002 -1.855871719546562E-002
- -7.144998839679517E-002  4.590014255476298E-002
+ ED SOLVER, USE INPUT PARAMETER SPECIFIED :  -5.270999410117407E-002
+ -8.530333101431624E-002 -5.361527048131236E-002  4.832083197312696E-002
+ -4.107904200158010E-002 -1.247035602743467E-003  6.147441636729956E-002
+ -1.518608234977931E-002  1.026743244197725E-002  4.506253727941530E-003
+ -8.725468250684579E-003  3.977099498176444E-004 -2.123487129822218E-003
+  2.722964882207499E-005  3.322920337275242E-003 -8.592880630784844E-004
+ -2.915864205020861E-002 -1.172092775053063E-002  2.648352962517118E-002
+ -2.001478182028984E-003 -3.576106950124421E-002 -9.298753735869406E-002
+ -1.202783319208799E-002  6.742947769759909E-002 -4.176814761612806E-002
+ -6.895981566866875E-002  1.602759866244863E-002  5.356818438758863E-002
+  5.263541286098751E-002  4.706718695135360E-002
  ---------------------------------------------------------
  minimizing with [x] total parameters - rank :           30           0
  size of array test (parameters) - rank :           30           0
  COMPUTING DISTANCE_FUNC
- INITIAL DISTANCE :   2.033831343930752E-004
+ INITIAL DISTANCE :   2.356246273381771E-004
  CALLING minimize_func .....
  =============================================
  =============================================
@@ -231,7 +453,7 @@ rm: cannot remove './seed': No such file or directory
   size test      :           30
   NITER          :       800000
   dist max       :   1.000000000000000E-010
-  dist min       :   0.000000000000000E+000
+  dist min       :  -0.712483500000000     
   use mpi        :  T
   present(pow_in):  F
   noise  ?       :  F
@@ -245,300 +467,713 @@ rm: cannot remove './seed': No such file or directory
  STARTING MINIMIZATION 
  INIT MINIMIZE - RANK           0
  calling initial distance
- initial distance is :   2.033831343930752E-004
+ initial distance is :   2.356246273381771E-004
  DONE - RANK            0
-  dist =   2.033831357353425E-004          20           0
-  dist =   1.976565989632745E-004          40           0
-  dist =   1.976565855215261E-004          60           0
-  dist =   1.975040591856396E-004          80           0
-  dist =   1.973060269133920E-004         100           0
-  dist =   1.952007058287525E-004         120           0
-  dist =   1.924931068920854E-004         140           0
-  dist =   1.924930755758426E-004         160           0
-  dist =   1.907648048233033E-004         180           0
-  dist =   1.905510150876223E-004         200           0
-  dist =   1.905510151438828E-004         220           0
-  dist =   1.901730819080127E-004         240           0
-  dist =   1.901730817943749E-004         260           0
-  dist =   1.899873619533748E-004         280           0
-  dist =   1.899439531285089E-004         300           0
-  dist =   1.899439515774242E-004         320           0
-  dist =   1.898866690628132E-004         340           0
-  dist =   1.898866688081637E-004         360           0
-  dist =   1.898257920605043E-004         380           0
-  dist =   1.898170480833883E-004         400           0
-  dist =   1.898170451257437E-004         420           0
-  dist =   1.897258913653794E-004         440           0
-  dist =   1.895655669751268E-004         460           0
-  dist =   1.893328600529206E-004         480           0
-  dist =   1.889004248225973E-004         500           0
-  dist =   1.889004185811100E-004         520           0
-  dist =   1.866375805264411E-004         540           0
-  dist =   3.308325648782321E-004         560           0
-  dist =   1.648323567103578E-004         580           0
-  dist =   1.306867519961782E-004         600           0
-  dist =   1.306867451016608E-004         620           0
-  dist =   1.300117876873016E-004         640           0
-  dist =   1.263003652809112E-004         660           0
-  dist =   1.263003504622295E-004         680           0
-  dist =   1.103787148101016E-004         700           0
-  dist =   1.103787081198209E-004         720           0
-  dist =   9.293877341262406E-005         740           0
-  dist =   7.794314090069066E-005         760           0
-  dist =   7.794354153571316E-005         780           0
-  dist =   7.239458688740175E-005         800           0
-  dist =   6.633334107668654E-005         820           0
-  dist =   6.633334073805552E-005         840           0
-  dist =   6.408325334389704E-005         860           0
-  dist =   6.408325428375866E-005         880           0
-  dist =   6.260650110035756E-005         900           0
-  dist =   6.121657195126252E-005         920           0
-  dist =   6.121653303027493E-005         940           0
-  dist =   6.005208877837761E-005         960           0
-  dist =   5.972117591970989E-005         980           0
-  dist =   5.972117628746736E-005        1000           0
-  dist =   5.950734358566284E-005        1020           0
-  dist =   5.950734421389097E-005        1040           0
-  dist =   5.929356121651568E-005        1060           0
-  dist =   5.916010533385721E-005        1080           0
-  dist =   5.916009821544349E-005        1100           0
-  dist =   5.898305229632208E-005        1120           0
-  dist =   5.891076369310340E-005        1140           0
-  dist =   5.891053889992024E-005        1160           0
-  dist =   5.886793266280805E-005        1180           0
-  dist =   5.886793250801099E-005        1200           0
-  dist =   5.882874472934311E-005        1220           0
-  dist =   5.873485759856912E-005        1240           0
-  dist =   5.873484893739930E-005        1260           0
-  dist =   5.861216498116800E-005        1280           0
-  dist =   5.857628083288902E-005        1300           0
-  dist =   5.857628091835542E-005        1320           0
-  dist =   5.856831081677606E-005        1340           0
-  dist =   5.856831071660740E-005        1360           0
-  dist =   5.856037643122339E-005        1380           0
-  dist =   5.854194558023122E-005        1400           0
-  dist =   5.854195172639661E-005        1420           0
-  dist =   5.849504322422054E-005        1440           0
-  dist =   5.848256632957322E-005        1460           0
-  dist =   5.847950656365026E-005        1480           0
-  dist =   5.847730058137704E-005        1500           0
-  dist =   5.847730065371810E-005        1520           0
-  dist =   5.847668522447165E-005        1540           0
-  dist =   5.847550784753440E-005        1560           0
-  dist =   5.847550783574200E-005        1580           0
-  dist =   5.847328848610024E-005        1600           0
-  dist =   5.847116465630841E-005        1620           0
-  dist =   5.846994174176516E-005        1640           0
-  dist =   5.846813719823796E-005        1660           0
-  dist =   5.846813680694367E-005        1680           0
-  dist =   5.846719541601338E-005        1700           0
-  dist =   5.846515932252217E-005        1720           0
-  dist =   5.846515953255512E-005        1740           0
-  dist =   5.846396895507977E-005        1760           0
-  dist =   5.846396893770552E-005        1780           0
-  dist =   5.846363483043081E-005        1800           0
-  dist =   5.846360328097784E-005        1820           0
-  dist =   5.846360337741669E-005        1840           0
-  dist =   5.846359548122685E-005        1860           0
-  dist =   5.846354577083729E-005        1880           0
-  dist =   5.846354577296233E-005        1900           0
-  dist =   5.846332354605615E-005        1920           0
-  dist =   5.846332348486142E-005        1940           0
-  dist =   5.846325037516815E-005        1960           0
-  dist =   5.846323796022083E-005        1980           0
-  dist =   5.846323794494706E-005        2000           0
-  dist =   5.846321564041310E-005        2020           0
-  dist =   5.846321563842095E-005        2040           0
-  dist =   5.846320145989773E-005        2060           0
-  dist =   5.846319128574671E-005        2080           0
-  dist =   5.846319131883945E-005        2100           0
-  dist =   5.846318660800625E-005        2120           0
-  dist =   5.846316680927806E-005        2140           0
-  dist =   5.846316680991478E-005        2160           0
-  dist =   5.846315002710336E-005        2180           0
-  dist =   5.846315002816368E-005        2200           0
-  dist =   5.846314967685000E-005        2220           0
-  dist =   5.846314961296276E-005        2240           0
-  dist =   5.846314961003236E-005        2260           0
-  dist =   5.846314958081318E-005        2280           0
-  dist =   5.846314957339947E-005        2300           0
-  dist =   5.846314957007700E-005        2320           0
-  dist =   5.846314955817787E-005        2340           0
-  dist =   5.846314954639003E-005        2360           0
-  dist =   5.846314954750259E-005        2380           0
-  dist =   5.846314953667466E-005        2400           0
-  dist =   5.846314953789141E-005        2420           0
-  dist =   5.846314953612204E-005        2440           0
-  dist =   5.846314953346026E-005        2460           0
-  dist =   5.846314952563779E-005        2480           0
-  dist =   5.846314951356655E-005        2500           0
-  dist =   5.846314952103540E-005        2520           0
-  dist =   5.846314950070882E-005        2540           0
-  dist =   5.846314953861331E-005        2560           0
-  dist =   5.846314951598139E-005        2580           0
-  dist =   5.846314951281845E-005        2600           0
-  dist =   5.846314951200493E-005        2620           0
-  dist =   5.846314951063896E-005        2640           0
-  dist =   5.846314951043390E-005        2660           0
-  dist =   5.846314950795212E-005        2680           0
-  dist =   5.846314950758046E-005        2700           0
-  dist =   5.846314950574252E-005        2720           0
-  dist =   5.846314950455615E-005        2740           0
-  dist =   5.846314950443029E-005        2760           0
-  dist =   5.846314950217290E-005        2780           0
-  dist =   5.846314951176404E-005        2800           0
-  dist =   5.846314950476642E-005        2820           0
-  dist =   5.846314950399959E-005        2840           0
-  dist =   5.846314952575782E-005        2860           0
-  dist =   5.846314949982182E-005        2880           0
-  dist =   5.846314949802120E-005        2900           0
-  dist =   5.846314948379784E-005        2920           0
-  dist =   5.846314949675254E-005        2940           0
-  dist =   5.846314949818302E-005        2960           0
-  dist =   5.846314949743278E-005        2980           0
-  dist =   5.846314949733592E-005        3000           0
-  dist =   5.846314949661693E-005        3020           0
-  dist =   5.846314949668689E-005        3040           0
-  dist =   5.846314949617285E-005        3060           0
-  dist =   5.846314949612493E-005        3080           0
-  dist =   5.846314949513694E-005        3100           0
-  dist =   5.846314949597263E-005        3120           0
-  dist =   5.846314949836359E-005        3140           0
-  dist =   5.846314949583340E-005        3160           0
-  dist =   5.846314949480602E-005        3180           0
-  dist =   5.846314949564897E-005        3200           0
-  dist =   5.846314949552586E-005        3220           0
-  dist =   5.846314949557511E-005        3240           0
-  dist =   5.846314949795984E-005        3260           0
-  dist =   5.846314949547032E-005        3280           0
-  dist =   5.846314949787903E-005        3300           0
-  dist =   5.846314949542669E-005        3320           0
-  dist =   5.846314949530361E-005        3340           0
-  dist =   5.846314949539482E-005        3360           0
-  dist =   5.846314949443954E-005        3380           0
-  dist =   5.846314949531822E-005        3400           0
-  dist =   5.846314949773635E-005        3420           0
-  dist =   5.846314949529531E-005        3440           0
-  dist =   5.846314949961660E-005        3460           0
-  dist =   5.846314949456537E-005        3480           0
-  dist =   5.846314946931861E-005        3500           0
-  dist =   5.846314949524413E-005        3520           0
-  dist =   5.846314949561315E-005        3540           0
-  dist =   5.846314949379245E-005        3560           0
-  dist =   5.846314947929120E-005        3580           0
-  dist =   5.846314949524324E-005        3600           0
-  dist =   5.846314946705914E-005        3620           0
-  dist =   5.846314883029841E-005        3640           0
-  dist =   5.846314882933467E-005        3660           0
-  dist =   5.846314882965190E-005        3680           0
-  dist =   5.846314858181416E-005        3700           0
-  dist =   5.846314856889671E-005        3720           0
-  dist =   5.846314856547593E-005        3740           0
-  dist =   5.846314845292543E-005        3760           0
-  dist =   5.846314845268697E-005        3780           0
-  dist =   5.846314849102031E-005        3800           0
-  dist =   5.846314837692506E-005        3820           0
-  dist =   5.846314837662111E-005        3840           0
-  dist =   5.846314837678093E-005        3860           0
-  dist =   5.846314835714283E-005        3880           0
-  dist =   5.846314835682870E-005        3900           0
-  dist =   5.846314836460082E-005        3920           0
-  dist =   5.846314834501151E-005        3940           0
-  dist =   5.846314834454680E-005        3960           0
-  dist =   5.846314834449738E-005        3980           0
-  dist =   5.846314832200394E-005        4000           0
-  dist =   5.846314832200608E-005        4020           0
-  dist =   5.846314832279731E-005        4040           0
-  dist =   5.846314830960257E-005        4060           0
-  dist =   5.846314830955187E-005        4080           0
-  dist =   5.846314831114050E-005        4100           0
-  dist =   5.846314830711022E-005        4120           0
-  dist =   5.846314830711453E-005        4140           0
-  dist =   5.846314830712061E-005        4160           0
-  dist =   5.846314830713115E-005        4180           0
-  dist =   5.846314830622587E-005        4200           0
-  dist =   5.846314830621772E-005        4220           0
-  dist =   5.846314830623622E-005        4240           0
-  dist =   5.846314829544491E-005        4260           0
-  dist =   5.846314829545235E-005        4280           0
-  dist =   5.846314835692000E-005        4300           0
-  dist =   5.846314829470978E-005        4320           0
-  dist =   5.846314829458086E-005        4340           0
-  dist =   5.846314829471562E-005        4360           0
-  dist =   5.846314829460263E-005        4380           0
-  dist =   5.846314829455274E-005        4400           0
-  dist =   5.846314830152033E-005        4420           0
-  dist =   5.846314829447656E-005        4440           0
-  dist =   5.846314829451253E-005        4460           0
-  dist =   5.846314829514561E-005        4480           0
-  dist =   5.846314829482100E-005        4500           0
-  dist =   5.846314829433528E-005        4520           0
-  dist =   5.846314829593753E-005        4540           0
-  dist =   5.846314829416833E-005        4560           0
-  dist =   5.846314829411518E-005        4580           0
-  dist =   5.846314829411250E-005        4600           0
-  dist =   5.846314829412186E-005        4620           0
-  dist =   5.846314829410045E-005        4640           0
-  dist =   5.846314829420587E-005        4660           0
-  dist =   5.846314829451648E-005        4680           0
-  dist =   5.846314829408604E-005        4700           0
-  dist =   5.846314829408583E-005        4720           0
-  dist =   5.846314829408160E-005        4740           0
-  dist =   5.846314829415090E-005        4760           0
-  dist =   5.846314829399646E-005        4780           0
-  dist =   5.846314829414985E-005        4800           0
-  dist =   5.846314829393151E-005        4820           0
-  dist =   5.846314829312910E-005        4840           0
-  dist =   5.846314829313050E-005        4860           0
-  dist =   5.846314829284417E-005        4880           0
-  dist =   5.846314829283893E-005        4900           0
-  dist =   5.846314829344966E-005        4920           0
-  dist =   5.846314829325794E-005        4940           0
-  dist =   5.846314829283573E-005        4960           0
-  dist =   5.846314829454266E-005        4980           0
-  dist =   5.846314829281610E-005        5000           0
-  dist =   5.846314829282115E-005        5020           0
-  dist =   5.846314829280897E-005        5040           0
-  dist =   5.846314829281344E-005        5060           0
-  dist =   5.846314829273901E-005        5080           0
-  dist =   5.846314829274521E-005        5100           0
-  dist =   5.846314829274325E-005        5120           0
-  dist =   5.846314829397504E-005        5140           0
-  dist =   5.846314829248651E-005        5160           0
-  dist =   5.846314829257518E-005        5180           0
-  dist =   5.846314829180750E-005        5200           0
-  dist =   5.846314829179796E-005        5220           0
-  dist =   5.846314835140030E-005        5240           0
-  dist =   5.846314829179376E-005        5260           0
-  dist =   5.846314829165321E-005        5280           0
-  dist =   5.846314829178581E-005        5300           0
-  dist =   5.846314829173702E-005        5320           0
-  dist =   5.846314829164647E-005        5340           0
-  dist =   5.846314829864775E-005        5360           0
-  dist =   5.846314829250204E-005        5380           0
-  dist =   5.846314829164615E-005        5400           0
-  dist =   5.846314829164744E-005        5420           0
-  dist =   5.846314829164615E-005        5440           0
-  dist =   5.846314829165317E-005        5460           0
-  dist =   5.846314829175955E-005        5480           0
-  dist =   5.846314829208086E-005        5500           0
+  dist =   2.356246269400338E-004          20           0
+  dist =   2.236712683464098E-004          40           0
+  dist =   2.236712745911829E-004          60           0
+  dist =   2.228573989261351E-004          80           0
+  dist =   2.214080097540413E-004         100           0
+  dist =   2.189617105763948E-004         120           0
+  dist =   2.156409956255991E-004         140           0
+  dist =   2.156409878835130E-004         160           0
+  dist =   2.139753815638929E-004         180           0
+  dist =   2.119894968929442E-004         200           0
+  dist =   2.119894968329376E-004         220           0
+  dist =   2.107139792574461E-004         240           0
+  dist =   2.107139822674246E-004         260           0
+  dist =   2.102080308589937E-004         280           0
+  dist =   2.091308956432834E-004         300           0
+  dist =   2.091308991679323E-004         320           0
+  dist =   2.082427258778205E-004         340           0
+  dist =   2.079941103249374E-004         360           0
+  dist =   2.079941092724591E-004         380           0
+  dist =   2.079491586401624E-004         400           0
+  dist =   2.079491587270592E-004         420           0
+  dist =   2.078845309191233E-004         440           0
+  dist =   2.078322641848268E-004         460           0
+  dist =   2.078322641135275E-004         480           0
+  dist =   2.078228330343170E-004         500           0
+  dist =   2.078132958409143E-004         520           0
+  dist =   2.077426941295141E-004         540           0
+  dist =   2.076838183557921E-004         560           0
+  dist =   2.076838181463543E-004         580           0
+  dist =   2.076820918807291E-004         600           0
+  dist =   2.076806614245702E-004         620           0
+  dist =   2.076797789402299E-004         640           0
+  dist =   2.076580658164885E-004         660           0
+  dist =   2.076580661621526E-004         680           0
+  dist =   2.066759042614601E-004         700           0
+  dist =   2.066759009266178E-004         720           0
+  dist =   2.062514403791069E-004         740           0
+  dist =   2.048715067579676E-004         760           0
+  dist =   2.048715095243207E-004         780           0
+  dist =   2.045003250861986E-004         800           0
+  dist =   2.042099875227390E-004         820           0
+  dist =   2.042099874271045E-004         840           0
+  dist =   2.037645461442283E-004         860           0
+  dist =   2.037645500193019E-004         880           0
+  dist =   2.019726360049640E-004         900           0
+  dist =   2.000436760550840E-004         920           0
+  dist =   2.000436433412876E-004         940           0
+  dist =   1.997111563344931E-004         960           0
+  dist =   1.997111588607769E-004         980           0
+  dist =   1.996114649447663E-004        1000           0
+  dist =   1.995424192132461E-004        1020           0
+  dist =   1.995424196802048E-004        1040           0
+  dist =   1.991437176261429E-004        1060           0
+  dist =   1.987134672673856E-004        1080           0
+  dist =   1.987134707815561E-004        1100           0
+  dist =   1.984160279995439E-004        1120           0
+  dist =   1.984160267371430E-004        1140           0
+  dist =   1.696859330446998E-004        1160           0
+  dist =   1.081969526196396E-004        1180           0
+  dist =   1.081969544313291E-004        1200           0
+  dist =   1.020944261759211E-004        1220           0
+  dist =   1.020943489580040E-004        1240           0
+  dist =   8.828012613478599E-005        1260           0
+  dist =   6.400404063545455E-005        1280           0
+  dist =   6.400405466904085E-005        1300           0
+  dist =   5.876457944737924E-005        1320           0
+  dist =   5.876477351181986E-005        1340           0
+  dist =   4.727732156515665E-005        1360           0
+  dist =   4.442806866607545E-005        1380           0
+  dist =   4.442806944184107E-005        1400           0
+  dist =   4.400872517238465E-005        1420           0
+  dist =   4.386410376387818E-005        1440           0
+  dist =   4.386407604425833E-005        1460           0
+  dist =   4.367367221155226E-005        1480           0
+  dist =   4.367368072097412E-005        1500           0
+  dist =   4.347362646982715E-005        1520           0
+  dist =   4.317637604505190E-005        1540           0
+  dist =   4.317637671233785E-005        1560           0
+  dist =   4.294180429340733E-005        1580           0
+  dist =   4.285177964723022E-005        1600           0
+  dist =   4.285178038501561E-005        1620           0
+  dist =   4.281203487930135E-005        1640           0
+  dist =   4.281204149452727E-005        1660           0
+  dist =   4.278409017930782E-005        1680           0
+  dist =   4.275406391703236E-005        1700           0
+  dist =   4.275406428788142E-005        1720           0
+  dist =   4.273490117517194E-005        1740           0
+  dist =   4.273108108818386E-005        1760           0
+  dist =   4.273107547116952E-005        1780           0
+  dist =   4.271193279920250E-005        1800           0
+  dist =   4.271192949498425E-005        1820           0
+  dist =   4.263978218754567E-005        1840           0
+  dist =   4.253297922350394E-005        1860           0
+  dist =   4.253297819215067E-005        1880           0
+  dist =   4.251137371949644E-005        1900           0
+  dist =   4.250981697584566E-005        1920           0
+  dist =   4.250978061488653E-005        1940           0
+  dist =   4.250683837077150E-005        1960           0
+  dist =   4.250683858903947E-005        1980           0
+  dist =   4.241162792218888E-005        2000           0
+  dist =   4.241163091296700E-005        2020           0
+  dist =   4.229988473445473E-005        2040           0
+  dist =   4.223501986907399E-005        2060           0
+  dist =   4.223501986019909E-005        2080           0
+  dist =   4.218163943565851E-005        2100           0
+  dist =   4.216776820450406E-005        2120           0
+  dist =   4.216776342095359E-005        2140           0
+  dist =   4.216468955919161E-005        2160           0
+  dist =   4.216469211168740E-005        2180           0
+  dist =   4.216311029705010E-005        2200           0
+  dist =   4.216257644147524E-005        2220           0
+  dist =   4.216257640020794E-005        2240           0
+  dist =   4.216236451267748E-005        2260           0
+  dist =   4.216053241347412E-005        2280           0
+  dist =   4.216053241123495E-005        2300           0
+  dist =   4.215296568190413E-005        2320           0
+  dist =   4.215296591522740E-005        2340           0
+  dist =   4.212925771679052E-005        2360           0
+  dist =   4.211696931341349E-005        2380           0
+  dist =   4.211696651344642E-005        2400           0
+  dist =   4.211485757764571E-005        2420           0
+  dist =   4.211485836234870E-005        2440           0
+  dist =   4.211426740389103E-005        2460           0
+  dist =   4.211303153867995E-005        2480           0
+  dist =   4.211303141720970E-005        2500           0
+  dist =   4.210991569180453E-005        2520           0
+  dist =   4.210170096166744E-005        2540           0
+  dist =   4.209733353574816E-005        2560           0
+  dist =   4.207202024854527E-005        2580           0
+  dist =   4.207201675111810E-005        2600           0
+  dist =   4.205555808961732E-005        2620           0
+  dist =   4.205157507343724E-005        2640           0
+  dist =   4.205157543361551E-005        2660           0
+  dist =   4.205083054016026E-005        2680           0
+  dist =   4.205046800586440E-005        2700           0
+  dist =   4.205036784674299E-005        2720           0
+  dist =   4.205030950040757E-005        2740           0
+  dist =   4.205030942677895E-005        2760           0
+  dist =   4.205030939095470E-005        2780           0
+  dist =   4.205030930073007E-005        2800           0
+  dist =   4.205030924253009E-005        2820           0
+  dist =   4.205030842366870E-005        2840           0
+  dist =   4.205030845037247E-005        2860           0
+  dist =   4.205030783986323E-005        2880           0
+  dist =   4.205030798388773E-005        2900           0
+  dist =   4.205030679343574E-005        2920           0
+  dist =   4.205030532481698E-005        2940           0
+  dist =   4.205030528510267E-005        2960           0
+  dist =   4.205030442162483E-005        2980           0
+  dist =   4.205030441580262E-005        3000           0
+  dist =   4.205030316619973E-005        3020           0
+  dist =   4.205030193506357E-005        3040           0
+  dist =   4.205030201591670E-005        3060           0
+  dist =   4.205029895458945E-005        3080           0
+  dist =   4.205029879753242E-005        3100           0
+  dist =   4.205029520761969E-005        3120           0
+  dist =   4.205029033622572E-005        3140           0
+  dist =   4.205029062076277E-005        3160           0
+  dist =   4.205028373927076E-005        3180           0
+  dist =   4.205028377756639E-005        3200           0
+  dist =   4.205027449585055E-005        3220           0
+  dist =   4.205025928105561E-005        3240           0
+  dist =   4.205025920250583E-005        3260           0
+  dist =   4.205022623039597E-005        3280           0
+  dist =   4.205022551213075E-005        3300           0
+  dist =   4.205012927720552E-005        3320           0
+  dist =   4.204982868892434E-005        3340           0
+  dist =   4.204982874497336E-005        3360           0
+  dist =   4.204940869185965E-005        3380           0
+  dist =   4.204939123368500E-005        3400           0
+  dist =   4.204939121861066E-005        3420           0
+  dist =   4.204935631275843E-005        3440           0
+  dist =   4.204935670593742E-005        3460           0
+  dist =   4.204935631254325E-005        3480           0
+  dist =   4.204935631781986E-005        3500           0
+  dist =   4.204935636048700E-005        3520           0
+  dist =   4.204930546858850E-005        3540           0
+  dist =   4.204929218228914E-005        3560           0
+  dist =   4.204929218179149E-005        3580           0
+  dist =   4.204929198073575E-005        3600           0
+  dist =   4.204928832522479E-005        3620           0
+  dist =   4.204928832577405E-005        3640           0
+  dist =   4.204928832087990E-005        3660           0
+  dist =   4.204928761850350E-005        3680           0
+  dist =   4.204928761810267E-005        3700           0
+  dist =   4.204928767309502E-005        3720           0
+  dist =   4.204928739973447E-005        3740           0
+  dist =   4.204928739934370E-005        3760           0
+  dist =   4.204928739578423E-005        3780           0
+  dist =   4.204928727312771E-005        3800           0
+  dist =   4.204928727313477E-005        3820           0
+  dist =   4.204928727324345E-005        3840           0
+  dist =   4.204928666161198E-005        3860           0
+  dist =   4.204928665759234E-005        3880           0
+  dist =   4.204928665742445E-005        3900           0
+  dist =   4.204928494917264E-005        3920           0
+  dist =   4.204928494888683E-005        3940           0
+  dist =   4.204928494835922E-005        3960           0
+  dist =   4.204928263333503E-005        3980           0
+  dist =   4.204928263466945E-005        4000           0
+  dist =   4.204928265415144E-005        4020           0
+  dist =   4.204928215667468E-005        4040           0
+  dist =   4.204928215716505E-005        4060           0
+  dist =   4.204928215753037E-005        4080           0
+  dist =   4.204928209747883E-005        4100           0
+  dist =   4.204928209751744E-005        4120           0
+  dist =   4.204928209751752E-005        4140           0
+  dist =   4.204928210837316E-005        4160           0
+  dist =   4.204928208480928E-005        4180           0
+  dist =   4.204928208486571E-005        4200           0
+  dist =   4.204928210692418E-005        4220           0
+  dist =   4.204928199575709E-005        4240           0
+  dist =   4.204928199570504E-005        4260           0
+  dist =   4.204928199548346E-005        4280           0
+  dist =   4.204928173085009E-005        4300           0
+  dist =   4.204928173261590E-005        4320           0
+  dist =   4.204928173215297E-005        4340           0
+  dist =   4.204928123835710E-005        4360           0
+  dist =   4.204928123776480E-005        4380           0
+  dist =   4.204928123740431E-005        4400           0
+  dist =   4.204928100337920E-005        4420           0
+  dist =   4.204928100372574E-005        4440           0
+  dist =   4.204928100414137E-005        4460           0
+  dist =   4.204928099458364E-005        4480           0
+  dist =   4.204928099319042E-005        4500           0
+  dist =   4.204928100850769E-005        4520           0
+  dist =   4.204928097996773E-005        4540           0
+  dist =   4.204928098015103E-005        4560           0
+  dist =   4.204928098028634E-005        4580           0
+  dist =   4.204928095623363E-005        4600           0
+  dist =   4.204928091423681E-005        4620           0
+  dist =   4.204928091354381E-005        4640           0
+  dist =   4.204928091628321E-005        4660           0
+  dist =   4.204928021383350E-005        4680           0
+  dist =   4.204928021316893E-005        4700           0
+  dist =   4.204928021449979E-005        4720           0
+  dist =   4.204927398302580E-005        4740           0
+  dist =   4.204927396427590E-005        4760           0
+  dist =   4.204927398276739E-005        4780           0
+  dist =   4.204922703795605E-005        4800           0
+  dist =   4.204922706196648E-005        4820           0
+  dist =   4.204922709478656E-005        4840           0
+  dist =   4.204921434684948E-005        4860           0
+  dist =   4.204921418752335E-005        4880           0
+  dist =   4.204921449171662E-005        4900           0
+  dist =   4.204917658676473E-005        4920           0
+  dist =   4.204917659244733E-005        4940           0
+  dist =   4.204917656630444E-005        4960           0
+  dist =   4.204916222851933E-005        4980           0
+  dist =   4.204916222917275E-005        5000           0
+  dist =   4.204916222854825E-005        5020           0
+  dist =   4.204916223706949E-005        5040           0
+  dist =   4.204916014606675E-005        5060           0
+  dist =   4.204916014431939E-005        5080           0
+  dist =   4.204916014920042E-005        5100           0
+  dist =   4.204915887361700E-005        5120           0
+  dist =   4.204915887434161E-005        5140           0
+  dist =   4.204915888181169E-005        5160           0
+  dist =   4.204915871527114E-005        5180           0
+  dist =   4.204915871556608E-005        5200           0
+  dist =   4.204915871648969E-005        5220           0
+  dist =   4.204915871163303E-005        5240           0
+  dist =   4.204915871162807E-005        5260           0
+  dist =   4.204915871172159E-005        5280           0
+  dist =   4.204915871153510E-005        5300           0
+  dist =   4.204915871143924E-005        5320           0
+  dist =   4.204915871154483E-005        5340           0
+  dist =   4.204915871177747E-005        5360           0
+  dist =   4.204915871142967E-005        5380           0
+  dist =   4.204915871163563E-005        5400           0
+  dist =   4.204915871149106E-005        5420           0
+  dist =   4.204915871141922E-005        5440           0
+  dist =   4.204915871156709E-005        5460           0
+  dist =   4.204915871120722E-005        5480           0
+  dist =   4.204915871120756E-005        5500           0
+  dist =   4.204915871121206E-005        5520           0
+  dist =   4.204915872214198E-005        5540           0
+  dist =   4.204915870894153E-005        5560           0
+  dist =   4.204915870866967E-005        5580           0
+  dist =   4.204915873244925E-005        5600           0
+  dist =   4.204915869382666E-005        5620           0
+  dist =   4.204915869431613E-005        5640           0
+  dist =   4.204915869537148E-005        5660           0
+  dist =   4.204915861533769E-005        5680           0
+  dist =   4.204915861716146E-005        5700           0
+  dist =   4.204915861879818E-005        5720           0
+  dist =   4.204915796294245E-005        5740           0
+  dist =   4.204915796490969E-005        5760           0
+  dist =   4.204915796673700E-005        5780           0
+  dist =   4.204913495750515E-005        5800           0
+  dist =   4.204913495730109E-005        5820           0
+  dist =   4.204913495824359E-005        5840           0
+  dist =   4.204913447302002E-005        5860           0
+  dist =   4.204910356193858E-005        5880           0
+  dist =   4.204910356504929E-005        5900           0
+  dist =   4.204910356712368E-005        5920           0
+  dist =   4.204908029840663E-005        5940           0
+  dist =   4.204908030392823E-005        5960           0
+  dist =   4.204907972854477E-005        5980           0
+  dist =   4.204908000116372E-005        6000           0
+  dist =   4.204907999342123E-005        6020           0
+  dist =   4.204908014357431E-005        6040           0
+  dist =   4.204905777125286E-005        6060           0
+  dist =   4.204905783173563E-005        6080           0
+  dist =   4.204905784049135E-005        6100           0
+  dist =   4.204903815740407E-005        6120           0
+  dist =   4.204903815702484E-005        6140           0
+  dist =   4.204903819354593E-005        6160           0
+  dist =   4.204901290266996E-005        6180           0
+  dist =   4.204901289666306E-005        6200           0
+  dist =   4.204901295398603E-005        6220           0
+  dist =   4.204896585006407E-005        6240           0
+  dist =   4.204896583594670E-005        6260           0
+  dist =   4.204896579270201E-005        6280           0
+  dist =   4.204978785250257E-005        6300           0
+  dist =   4.204895475822835E-005        6320           0
+  dist =   4.204895474962557E-005        6340           0
+  dist =   4.204895471333835E-005        6360           0
+  dist =   4.204892182594914E-005        6380           0
+  dist =   4.204892181804558E-005        6400           0
+  dist =   4.204892177168442E-005        6420           0
+  dist =   4.204884801993941E-005        6440           0
+  dist =   4.204884801301152E-005        6460           0
+  dist =   4.204884803892831E-005        6480           0
+  dist =   4.204877254366608E-005        6500           0
+  dist =   4.204877254360963E-005        6520           0
+  dist =   4.204877254476417E-005        6540           0
+  dist =   4.204874507610249E-005        6560           0
+  dist =   4.204874503064791E-005        6580           0
+  dist =   4.204874494304868E-005        6600           0
+  dist =   4.204868268133140E-005        6620           0
+  dist =   4.204868266055278E-005        6640           0
+  dist =   4.204868268940776E-005        6660           0
+  dist =   4.204862409112056E-005        6680           0
+  dist =   4.204862408058754E-005        6700           0
+  dist =   4.204862403494152E-005        6720           0
+  dist =   4.204854995816903E-005        6740           0
+  dist =   4.204854994343784E-005        6760           0
+  dist =   4.204855004724778E-005        6780           0
+  dist =   4.204851192916767E-005        6800           0
+  dist =   4.204851196706986E-005        6820           0
+  dist =   4.204851214970667E-005        6840           0
+  dist =   4.204845116660991E-005        6860           0
+  dist =   4.204845116680697E-005        6880           0
+  dist =   4.204845116607599E-005        6900           0
+  dist =   4.204845184705354E-005        6920           0
+  dist =   4.204839914814744E-005        6940           0
+  dist =   4.204839914822935E-005        6960           0
+  dist =   4.204839904238993E-005        6980           0
+  dist =   4.204834489987858E-005        7000           0
+  dist =   4.204834491729353E-005        7020           0
+  dist =   4.204834581977384E-005        7040           0
+  dist =   4.204823272860102E-005        7060           0
+  dist =   4.204823272253518E-005        7080           0
+  dist =   4.204823314264693E-005        7100           0
+  dist =   4.204804068153582E-005        7120           0
+  dist =   4.204804068019737E-005        7140           0
+  dist =   4.204804070007110E-005        7160           0
+  dist =   4.204796068367843E-005        7180           0
+  dist =   4.204796077881543E-005        7200           0
+  dist =   4.204796085267063E-005        7220           0
+  dist =   4.204760639489062E-005        7240           0
+  dist =   4.204760640344729E-005        7260           0
+  dist =   4.204760678462494E-005        7280           0
+  dist =   4.204745369411112E-005        7300           0
+  dist =   4.204745371337601E-005        7320           0
+  dist =   4.204745267072444E-005        7340           0
+  dist =   4.204674078818986E-005        7360           0
+  dist =   4.204674078282168E-005        7380           0
+  dist =   4.204674048423974E-005        7400           0
+  dist =   4.204498176703863E-005        7420           0
+  dist =   4.204346454785422E-005        7440           0
+  dist =   4.204346425720118E-005        7460           0
+  dist =   4.204347068801267E-005        7480           0
+  dist =   4.203952245769228E-005        7500           0
+  dist =   4.203952081031734E-005        7520           0
+  dist =   4.203951197265264E-005        7540           0
+  dist =   4.196192630268845E-005        7560           0
+  dist =   4.196192631406040E-005        7580           0
+  dist =   4.196192962443456E-005        7600           0
+  dist =   4.186332592390970E-005        7620           0
+  dist =   4.186332486918379E-005        7640           0
+  dist =   4.186332583045312E-005        7660           0
+  dist =   4.084198876787928E-005        7680           0
+  dist =   4.084198748738712E-005        7700           0
+  dist =   4.084197891638157E-005        7720           0
+  dist =   4.078033443142938E-005        7740           0
+  dist =   4.078033147263180E-005        7760           0
+  dist =   4.078036130715219E-005        7780           0
+  dist =   4.000396088364362E-005        7800           0
+  dist =   3.968373386286849E-005        7820           0
+  dist =   3.968373520911862E-005        7840           0
+  dist =   3.968372671034626E-005        7860           0
+  dist =   3.824040645514428E-005        7880           0
+  dist =   3.824040572633150E-005        7900           0
+  dist =   3.824041029866583E-005        7920           0
+  dist =   3.757436178652387E-005        7940           0
+  dist =   3.757436808178923E-005        7960           0
+  dist =   3.757436007443803E-005        7980           0
+  dist =   3.704857998217167E-005        8000           0
+  dist =   3.704857749004851E-005        8020           0
+  dist =   3.704858920766042E-005        8040           0
+  dist =   3.671584248868491E-005        8060           0
+  dist =   3.671584248167950E-005        8080           0
+  dist =   3.671584005925579E-005        8100           0
+  dist =   3.592575202383694E-005        8120           0
+  dist =   3.592575055521400E-005        8140           0
+  dist =   3.592574788047660E-005        8160           0
+  dist =   3.565285068041172E-005        8180           0
+  dist =   3.565285218818260E-005        8200           0
+  dist =   3.565285424581334E-005        8220           0
+  dist =   3.498376607045754E-005        8240           0
+  dist =   3.498376874765868E-005        8260           0
+  dist =   3.498376973602621E-005        8280           0
+  dist =   3.363822577278798E-005        8300           0
+  dist =   3.363822886093067E-005        8320           0
+  dist =   3.363819769623574E-005        8340           0
+  dist =   3.327717935566588E-005        8360           0
+  dist =   3.327717704132018E-005        8380           0
+  dist =   3.327718387344903E-005        8400           0
+  dist =   3.276717715097259E-005        8420           0
+  dist =   3.263015240963334E-005        8440           0
+  dist =   3.263015258368534E-005        8460           0
+  dist =   3.263018087400891E-005        8480           0
+  dist =   3.246263189360049E-005        8500           0
+  dist =   3.246263176050957E-005        8520           0
+  dist =   3.246263275039585E-005        8540           0
+  dist =   3.222747519250039E-005        8560           0
+  dist =   3.222747440154525E-005        8580           0
+  dist =   3.222749038489450E-005        8600           0
+  dist =   3.212585408152379E-005        8620           0
+  dist =   3.212585381839743E-005        8640           0
+  dist =   3.212585158379250E-005        8660           0
+  dist =   3.204537132321866E-005        8680           0
+  dist =   3.204537125686076E-005        8700           0
+  dist =   3.204537004612945E-005        8720           0
+  dist =   3.199078893251838E-005        8740           0
+  dist =   3.199078956376355E-005        8760           0
+  dist =   3.199078942492788E-005        8780           0
+  dist =   3.191820317859513E-005        8800           0
+  dist =   3.191820329256127E-005        8820           0
+  dist =   3.191820167490371E-005        8840           0
+  dist =   3.184517024215509E-005        8860           0
+  dist =   3.184517015626566E-005        8880           0
+  dist =   3.184517287842411E-005        8900           0
+  dist =   3.173549125072217E-005        8920           0
+  dist =   3.173548913101549E-005        8940           0
+  dist =   3.173542651173819E-005        8960           0
+  dist =   3.158479324359744E-005        8980           0
+  dist =   3.158479612939052E-005        9000           0
+  dist =   3.158481265610321E-005        9020           0
+  dist =   3.143181888287217E-005        9040           0
+  dist =   3.143181866830757E-005        9060           0
+  dist =   3.143181896199677E-005        9080           0
+  dist =   3.143184580003986E-005        9100           0
+  dist =   3.066436698596374E-005        9120           0
+  dist =   3.066436306573078E-005        9140           0
+  dist =   3.066426945818635E-005        9160           0
+  dist =   3.042160320599029E-005        9180           0
+  dist =   3.042160096174382E-005        9200           0
+  dist =   3.042155566075036E-005        9220           0
+  dist =   2.980273374246894E-005        9240           0
+  dist =   2.980273420938443E-005        9260           0
+  dist =   2.980273942172879E-005        9280           0
+  dist =   2.818767787426116E-005        9300           0
+  dist =   2.818769266775716E-005        9320           0
+  dist =   2.818765925024661E-005        9340           0
+  dist =   2.567650325276484E-005        9360           0
+  dist =   2.567650214375180E-005        9380           0
+  dist =   2.567650481049977E-005        9400           0
+  dist =   2.555308199949126E-005        9420           0
+  dist =   2.555309095699809E-005        9440           0
+  dist =   2.555284455142664E-005        9460           0
+  dist =   2.360875367286186E-005        9480           0
+  dist =   2.227308271721834E-005        9500           0
+  dist =   2.227308224949910E-005        9520           0
+  dist =   2.227297884608468E-005        9540           0
+  dist =   2.180043998450323E-005        9560           0
+  dist =   2.180043532472903E-005        9580           0
+  dist =   2.180051244992026E-005        9600           0
+  dist =   2.082878239627839E-005        9620           0
+  dist =   2.082878464313225E-005        9640           0
+  dist =   2.082881768400624E-005        9660           0
+  dist =   2.063327659709771E-005        9680           0
+  dist =   2.063327664432520E-005        9700           0
+  dist =   2.063327311765670E-005        9720           0
+  dist =   2.018121399324626E-005        9740           0
+  dist =   2.018121541459659E-005        9760           0
+  dist =   2.018122338974149E-005        9780           0
+  dist =   2.010071803061886E-005        9800           0
+  dist =   2.010071730990347E-005        9820           0
+  dist =   2.010071196318241E-005        9840           0
+  dist =   1.988281485503199E-005        9860           0
+  dist =   1.988281451619322E-005        9880           0
+  dist =   1.988281408026448E-005        9900           0
+  dist =   1.977544190883515E-005        9920           0
+  dist =   1.977544155974170E-005        9940           0
+  dist =   1.977545346392848E-005        9960           0
+  dist =   1.966147257274878E-005        9980           0
+  dist =   1.966147430208337E-005       10000           0
+  dist =   1.966147434352776E-005       10020           0
+  dist =   1.952789562101364E-005       10040           0
+  dist =   1.952789555103550E-005       10060           0
+  dist =   1.952789582063098E-005       10080           0
+  dist =   1.952789304456376E-005       10100           0
+  dist =   1.938014763076998E-005       10120           0
+  dist =   1.938014793296340E-005       10140           0
+  dist =   1.938015513774439E-005       10160           0
+  dist =   1.928377548606718E-005       10180           0
+  dist =   1.928377480975229E-005       10200           0
+  dist =   1.928377444487433E-005       10220           0
+  dist =   1.916653681266617E-005       10240           0
+  dist =   1.916653714477797E-005       10260           0
+  dist =   1.916654982735776E-005       10280           0
+  dist =   1.901854723975932E-005       10300           0
+  dist =   1.901854721180278E-005       10320           0
+  dist =   1.901855249334722E-005       10340           0
+  dist =   1.873767243736575E-005       10360           0
+  dist =   1.873767385403025E-005       10380           0
+  dist =   1.873767641362089E-005       10400           0
+  dist =   1.855936636553264E-005       10420           0
+  dist =   1.855936514951696E-005       10440           0
+  dist =   1.855935825701698E-005       10460           0
+  dist =   1.848859038171880E-005       10480           0
+  dist =   1.848859125578503E-005       10500           0
+  dist =   1.848859205860845E-005       10520           0
+  dist =   1.843814987423876E-005       10540           0
+  dist =   1.843815134130665E-005       10560           0
+  dist =   1.843814319363198E-005       10580           0
+  dist =   1.841262159814741E-005       10600           0
+  dist =   1.841262107489555E-005       10620           0
+  dist =   1.841262325245174E-005       10640           0
+  dist =   1.839478136890999E-005       10660           0
+  dist =   1.838432289119930E-005       10680           0
+  dist =   1.838432279473801E-005       10700           0
+  dist =   1.838432728134011E-005       10720           0
+  dist =   1.836611299757990E-005       10740           0
+  dist =   1.836611303239299E-005       10760           0
+  dist =   1.836610823326023E-005       10780           0
+  dist =   1.835567885738565E-005       10800           0
+  dist =   1.835567913053087E-005       10820           0
+  dist =   1.835568193184355E-005       10840           0
+  dist =   1.834987030606951E-005       10860           0
+  dist =   1.834987028595764E-005       10880           0
+  dist =   1.834987120178514E-005       10900           0
+  dist =   1.834803916351119E-005       10920           0
+  dist =   1.834803917641157E-005       10940           0
+  dist =   1.834803936182757E-005       10960           0
+  dist =   1.834707987864904E-005       10980           0
+  dist =   1.834707995553752E-005       11000           0
+  dist =   1.834707971126242E-005       11020           0
+  dist =   1.834663185762157E-005       11040           0
+  dist =   1.834663177699143E-005       11060           0
+  dist =   1.834663167503147E-005       11080           0
+  dist =   1.834634410214902E-005       11100           0
+  dist =   1.834634406551025E-005       11120           0
+  dist =   1.834634404569870E-005       11140           0
+  dist =   1.834608983805660E-005       11160           0
+  dist =   1.834608991408897E-005       11180           0
+  dist =   1.834608986024638E-005       11200           0
+  dist =   1.834586890772823E-005       11220           0
+  dist =   1.834586874477492E-005       11240           0
+  dist =   1.834586839613871E-005       11260           0
+  dist =   1.834549070358290E-005       11280           0
+  dist =   1.834530264950447E-005       11300           0
+  dist =   1.834530264616262E-005       11320           0
+  dist =   1.834530262919624E-005       11340           0
+  dist =   1.834459984914365E-005       11360           0
+  dist =   1.834459979565527E-005       11380           0
+  dist =   1.834460072276112E-005       11400           0
+  dist =   1.834360257119718E-005       11420           0
+  dist =   1.834360255355942E-005       11440           0
+  dist =   1.834360288381792E-005       11460           0
+  dist =   1.833825666083243E-005       11480           0
+  dist =   1.833825666455952E-005       11500           0
+  dist =   1.833825714340424E-005       11520           0
+  dist =   1.832341295588636E-005       11540           0
+  dist =   1.832341290098045E-005       11560           0
+  dist =   1.832341356510045E-005       11580           0
+  dist =   1.830288018626956E-005       11600           0
+  dist =   1.830287895322884E-005       11620           0
+  dist =   1.830288913768016E-005       11640           0
+  dist =   1.827130549288170E-005       11660           0
+  dist =   1.827130822766561E-005       11680           0
+  dist =   1.827130861615959E-005       11700           0
+  dist =   1.821328492412843E-005       11720           0
+  dist =   1.821329202185263E-005       11740           0
+  dist =   1.821330309187744E-005       11760           0
+  dist =   1.818905946435454E-005       11780           0
+  dist =   1.818905797740438E-005       11800           0
+  dist =   1.818905332663911E-005       11820           0
+  dist =   1.815081343284050E-005       11840           0
+  dist =   1.813753514030422E-005       11860           0
+  dist =   1.813753509792647E-005       11880           0
+  dist =   1.813754778603241E-005       11900           0
+  dist =   1.810793463134350E-005       11920           0
+  dist =   1.810793475232496E-005       11940           0
+  dist =   1.810791617223091E-005       11960           0
+  dist =   1.807957327473994E-005       11980           0
+  dist =   1.807957379964377E-005       12000           0
+  dist =   1.807957005487666E-005       12020           0
+  dist =   1.804979981316984E-005       12040           0
+  dist =   1.804980106780623E-005       12060           0
+  dist =   1.804980213854978E-005       12080           0
+  dist =   1.802141865983160E-005       12100           0
+  dist =   1.802141868457683E-005       12120           0
+  dist =   1.802142246283022E-005       12140           0
+  dist =   1.799761745887068E-005       12160           0
+  dist =   1.799761611864797E-005       12180           0
+  dist =   1.799761659199650E-005       12200           0
+  dist =   1.797959295963238E-005       12220           0
+  dist =   1.797959154115868E-005       12240           0
+  dist =   1.797959059061728E-005       12260           0
+  dist =   1.797210573129256E-005       12280           0
+  dist =   1.797210537296610E-005       12300           0
+  dist =   1.797210529244175E-005       12320           0
+  dist =   1.796772486855443E-005       12340           0
+  dist =   1.796772489395332E-005       12360           0
+  dist =   1.796772406516283E-005       12380           0
+  dist =   1.796593761882475E-005       12400           0
+  dist =   1.796593774701050E-005       12420           0
+  dist =   1.796593796211388E-005       12440           0
+  dist =   1.796541121946131E-005       12460           0
+  dist =   1.796541121017519E-005       12480           0
+  dist =   1.796541121973703E-005       12500           0
+  dist =   1.796541079908793E-005       12520           0
+  dist =   1.796527751514105E-005       12540           0
+  dist =   1.796527749152059E-005       12560           0
+  dist =   1.796527764743425E-005       12580           0
+  dist =   1.796523640556172E-005       12600           0
+  dist =   1.796523637506597E-005       12620           0
+  dist =   1.796523649180969E-005       12640           0
+  dist =   1.796521413514474E-005       12660           0
+  dist =   1.796521415350686E-005       12680           0
+  dist =   1.796521418787823E-005       12700           0
+  dist =   1.796520659403662E-005       12720           0
+  dist =   1.796520659398755E-005       12740           0
+  dist =   1.796520657835430E-005       12760           0
+  dist =   1.796520226006517E-005       12780           0
+  dist =   1.796520227125675E-005       12800           0
+  dist =   1.796520228899751E-005       12820           0
+  dist =   1.796519883913039E-005       12840           0
+  dist =   1.796519882586666E-005       12860           0
+  dist =   1.796519884221041E-005       12880           0
+  dist =   1.796519757265305E-005       12900           0
+  dist =   1.796519757671299E-005       12920           0
+  dist =   1.796519757530736E-005       12940           0
+  dist =   1.796519727870542E-005       12960           0
+  dist =   1.796519727523495E-005       12980           0
+  dist =   1.796519727616457E-005       13000           0
+  dist =   1.796519716846951E-005       13020           0
+  dist =   1.796519716866578E-005       13040           0
+  dist =   1.796519717339461E-005       13060           0
+  dist =   1.796519714033379E-005       13080           0
+  dist =   1.796519714031739E-005       13100           0
+  dist =   1.796519714031348E-005       13120           0
+  dist =   1.796519715195568E-005       13140           0
+  dist =   1.796519713657772E-005       13160           0
+  dist =   1.796519713654925E-005       13180           0
+  dist =   1.796519714609134E-005       13200           0
+  dist =   1.796519713546403E-005       13220           0
+  dist =   1.796519713536336E-005       13240           0
+  dist =   1.796519713996950E-005       13260           0
+  dist =   1.796519713512117E-005       13280           0
+  dist =   1.796519713500049E-005       13300           0
+  dist =   1.796519713705799E-005       13320           0
+  dist =   1.796519713488919E-005       13340           0
+  dist =   1.796519713488856E-005       13360           0
+  dist =   1.796519713556963E-005       13380           0
+  dist =   1.796519713507465E-005       13400           0
+  dist =   1.796519713484713E-005       13420           0
+  dist =   1.796519713528627E-005       13440           0
+  dist =   1.796519713521405E-005       13460           0
+  dist =   1.796519713483100E-005       13480           0
+  dist =   1.796519714039120E-005       13500           0
+  dist =   1.796519713493396E-005       13520           0
+  dist =   1.796519713482731E-005       13540           0
+  dist =   1.796519713485288E-005       13560           0
+  dist =   1.796519713573709E-005       13580           0
+  dist =   1.796519713482647E-005       13600           0
+  dist =   1.796519714080166E-005       13620           0
+  dist =   1.796519713482645E-005       13640           0
+  dist =   1.796519713482751E-005       13660           0
+  dist =   1.796519713482712E-005       13680           0
+  dist =   1.796519714681960E-005       13700           0
+  dist =   1.796519713483308E-005       13720           0
+  dist =   1.796519713484708E-005       13740           0
+  dist =   1.796519714339786E-005       13760           0
   ------- 
-  value at minimum is :   5.846314829164611E-005
+  value at minimum is :   1.796519713482644E-005
   ...end....
  =============================================
  =============================================
  =============================================
- min bath parameters are :  -8.179283675638424E-002  3.346246777649457E-002
-  4.389993959844569E-002  4.959594336676093E-002 -5.404704866498186E-003
- -8.567724150293073E-004 -4.052449555331571E-002 -7.732749225675763E-003
-  4.574352555370194E-003 -1.367057929694917E-003  4.684168969543560E-003
- -9.637317767623349E-004 -3.578702697228732E-004 -4.158825139561648E-005
- -2.469201975055252E-003 -4.577671615910933E-004 -5.726141463184556E-003
-  1.866294101240654E-003 -3.669074126632486E-003  1.762604038462299E-003
- -1.913161254557096E-002  3.130239673411549E-002  3.751172028097802E-002
-  1.184516725987122E-002 -1.115064324703089E-002 -8.786987123773553E-003
-  5.739888999726327E-002 -1.326711186981279E-002 -3.171932743077942E-002
-  5.812002985458381E-002
+ min bath parameters are :   5.960570868584345E-002 -9.985999927283729E-002
+  4.019650679392927E-002  6.689606399051844E-002 -8.264938593661050E-002
+ -1.398740020744807E-003  4.334423641940019E-002  9.558899300254192E-003
+  1.209220016876706E-002  5.431140600811063E-003 -1.364159065913354E-002
+ -5.547410001248089E-003 -4.457802428727473E-003  1.349086497695665E-004
+  1.812418795878418E-003  6.844749068015230E-004 -5.602629009048050E-002
+ -2.420171236111047E-002  6.496527648181084E-002 -2.375159998503067E-003
+ -0.226902230234101      -1.855394630473669E-002 -6.727489875477882E-002
+  0.141851108873381       0.102071193790889      -0.267190523221725     
+ -9.039046709092899E-002  3.409266107304244E-002 -2.059777015946113E-002
+ -6.744068562089348E-002
   AIM SOLVER : NOT STARTING FROM OLD GS - RANK            0
  WARNING SECTOR BOUND FILE PRESENT - RANK           0
  SECTOR BOUND FILE PRESENT - nup min max           2           7
@@ -1120,25 +1755,25 @@ rm: cannot remove './seed': No such file or directory
   ===================================================== 
  ---start CPU Lanczos---
   ===================================================== 
- diagonalize sector up/dn, # sites :            2           5           9
+ diagonalize sector up/dn, # sites :            4           7           9
  number of up and dn states        :          512         512
  label of sector                   :            1
  number of mpi nodes               :            1
- chunk up spin :           36
- chunk dn spin :          126
+ chunk up spin :          126
+ chunk dn spin :           36
   ===================================================== 
  ---start CPU Lanczos---
   ===================================================== 
- diagonalize sector up/dn, # sites :            2           6           9
+ diagonalize sector up/dn, # sites :            5           6           9
  number of up and dn states        :          512         512
  label of sector                   :            2
  number of mpi nodes               :            1
- chunk up spin :           36
+ chunk up spin :          126
  chunk dn spin :           84
   ===================================================== 
  ---start CPU Lanczos---
   ===================================================== 
- diagonalize sector up/dn, # sites :            3           4           9
+ diagonalize sector up/dn, # sites :            6           5           9
  number of up and dn states        :          512         512
  label of sector                   :            3
  number of mpi nodes               :            1
@@ -1147,59 +1782,15 @@ rm: cannot remove './seed': No such file or directory
   ===================================================== 
  ---start CPU Lanczos---
   ===================================================== 
- diagonalize sector up/dn, # sites :            3           5           9
+ diagonalize sector up/dn, # sites :            7           4           9
  number of up and dn states        :          512         512
  label of sector                   :            4
  number of mpi nodes               :            1
- chunk up spin :           84
+ chunk up spin :           36
  chunk dn spin :          126
   ===================================================== 
  ---start CPU Lanczos---
-  ===================================================== 
- diagonalize sector up/dn, # sites :            4           3           9
- number of up and dn states        :          512         512
- label of sector                   :            5
- number of mpi nodes               :            1
- chunk up spin :          126
- chunk dn spin :           84
-  ===================================================== 
- ---start CPU Lanczos---
-  ===================================================== 
- diagonalize sector up/dn, # sites :            4           4           9
- number of up and dn states        :          512         512
- label of sector                   :            6
- number of mpi nodes               :            1
- chunk up spin :          126
- chunk dn spin :          126
-  ===================================================== 
- ---start CPU Lanczos---
-  ===================================================== 
- diagonalize sector up/dn, # sites :            5           2           9
- number of up and dn states        :          512         512
- label of sector                   :            7
- number of mpi nodes               :            1
- chunk up spin :          126
- chunk dn spin :           36
-  ===================================================== 
- ---start CPU Lanczos---
-  ===================================================== 
- diagonalize sector up/dn, # sites :            5           3           9
- number of up and dn states        :          512         512
- label of sector                   :            8
- number of mpi nodes               :            1
- chunk up spin :          126
- chunk dn spin :           84
-  ===================================================== 
- ---start CPU Lanczos---
-  ===================================================== 
- diagonalize sector up/dn, # sites :            6           2           9
- number of up and dn states        :          512         512
- label of sector                   :            9
- number of mpi nodes               :            1
- chunk up spin :           84
- chunk dn spin :           36
-  ===================================================== 
- ---start CPU Lanczos---
+Performing system call rm ed.sector_bound_file
   ==== compute matsubara green ==== 
  --- COMPUTE PARTICLE/HOLE UP SPIN PART ---
  ---ASSUME PARAMAGNETIC STATE---
@@ -1212,104 +1803,105 @@ rm: cannot remove './seed': No such file or directory
   ==== compute N ==== 
   ==== P3 ==== 
   ==== P4 ==== 
-<QC>                             [density(1)]:         1.078582955886
+<QC>                             [density(1)]:         1.204249938376
  shape Spm cor           5           5        2000
  shape corhop          10          10        2000
- WRITING NEW FIT :  -8.179283675638424E-002  3.346246777649457E-002
-  4.389993959844569E-002  4.959594336676093E-002 -5.404704866498186E-003
- -8.567724150293073E-004 -4.052449555331571E-002 -7.732749225675763E-003
-  4.574352555370194E-003 -1.367057929694917E-003  4.684168969543560E-003
- -9.637317767623349E-004 -3.578702697228732E-004 -4.158825139561648E-005
- -2.469201975055252E-003 -4.577671615910933E-004 -5.726141463184556E-003
-  1.866294101240654E-003 -3.669074126632486E-003  1.762604038462299E-003
- -1.913161254557096E-002  3.130239673411549E-002  3.751172028097802E-002
-  1.184516725987122E-002 -1.115064324703089E-002 -8.786987123773553E-003
-  5.739888999726327E-002 -1.326711186981279E-002 -3.171932743077942E-002
-  5.812002985458381E-002
-  impurity densities  :   0.539291477943054       0.622199793587278     
-  0.504955264927258       0.500700182719467       0.520569612818319     
-  0.539291477943054       0.622199793587278       0.504955264927258     
-  0.500700182719467       0.520569612818319     
-  total density       :    5.37543266399075     
-  total double occ    :   0.566112236941013     
+Performing system call rm ed.fit.param
+ WRITING NEW FIT :   5.960570868584345E-002 -9.985999927283729E-002
+  4.019650679392927E-002  6.689606399051844E-002 -8.264938593661050E-002
+ -1.398740020744807E-003  4.334423641940019E-002  9.558899300254192E-003
+  1.209220016876706E-002  5.431140600811063E-003 -1.364159065913354E-002
+ -5.547410001248089E-003 -4.457802428727473E-003  1.349086497695665E-004
+  1.812418795878418E-003  6.844749068015230E-004 -5.602629009048050E-002
+ -2.420171236111047E-002  6.496527648181084E-002 -2.375159998503067E-003
+ -0.226902230234101      -1.855394630473669E-002 -6.727489875477882E-002
+  0.141851108873381       0.102071193790889      -0.267190523221725     
+ -9.039046709092899E-002  3.409266107304244E-002 -2.059777015946113E-002
+ -6.744068562089348E-002
+  impurity densities  :   0.602124969188169       0.582325122525485     
+  0.539576951416406       0.538084321397999       0.536104171247616     
+  0.602124969188169       0.582325122525485       0.539576951416406     
+  0.538084321397999       0.536104171247616     
+  total density       :    5.59643107155135     
+  total double occ    :   0.401449668948021     
 self at matsu long RE
-  0.395165  -0.000000  -0.000000  -0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
- -0.000000   0.395162  -0.000000  -0.000000   0.000001   0.000000   0.000000   0.000000   0.000000   0.000000
- -0.000000  -0.000000   0.395162   0.000000  -0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
- -0.000000  -0.000000   0.000000   0.395163   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
-  0.000000   0.000001  -0.000000   0.000000   0.395163   0.000000   0.000000   0.000000   0.000000   0.000000
-  0.000000   0.000000   0.000000   0.000000   0.000000   0.395165  -0.000000  -0.000000  -0.000000   0.000000
-  0.000000   0.000000   0.000000   0.000000   0.000000  -0.000000   0.395162  -0.000000  -0.000000   0.000001
-  0.000000   0.000000   0.000000   0.000000   0.000000  -0.000000  -0.000000   0.395162   0.000000  -0.000000
-  0.000000   0.000000   0.000000   0.000000   0.000000  -0.000000  -0.000000   0.000000   0.395163   0.000000
-  0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000001  -0.000000   0.000000   0.395163
+  0.384487  -0.002415   0.001182  -0.002045  -0.001034   0.000000   0.000000   0.000000   0.000000   0.000000
+ -0.002415   0.392050   0.001053  -0.004855   0.001788   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.001182   0.001053   0.387861  -0.000657  -0.000721   0.000000   0.000000   0.000000   0.000000   0.000000
+ -0.002045  -0.004855  -0.000657   0.389445  -0.001295   0.000000   0.000000   0.000000   0.000000   0.000000
+ -0.001034   0.001788  -0.000721  -0.001295   0.392004   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.384487  -0.002415   0.001182  -0.002045  -0.001034
+  0.000000   0.000000   0.000000   0.000000   0.000000  -0.002415   0.392050   0.001053  -0.004855   0.001788
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.001182   0.001053   0.387861  -0.000657  -0.000721
+  0.000000   0.000000   0.000000   0.000000   0.000000  -0.002045  -0.004855  -0.000657   0.389445  -0.001295
+  0.000000   0.000000   0.000000   0.000000   0.000000  -0.001034   0.001788  -0.000721  -0.001295   0.392004
 g at matsu long RE
-  0.000676  -0.000043  -0.000015  -0.000004   0.000035   0.000000   0.000000   0.000000   0.000000   0.000000
- -0.000043   0.000447  -0.000033   0.000011   0.000111   0.000000   0.000000   0.000000   0.000000   0.000000
- -0.000015  -0.000033   0.000331   0.000005  -0.000021   0.000000   0.000000   0.000000   0.000000   0.000000
- -0.000004   0.000011   0.000005   0.000393   0.000007   0.000000   0.000000   0.000000   0.000000   0.000000
-  0.000035   0.000111  -0.000021   0.000007   0.000422   0.000000   0.000000   0.000000   0.000000   0.000000
-  0.000000   0.000000   0.000000   0.000000   0.000000   0.000676  -0.000043  -0.000015  -0.000004   0.000035
-  0.000000   0.000000   0.000000   0.000000   0.000000  -0.000043   0.000447  -0.000033   0.000011   0.000111
-  0.000000   0.000000   0.000000   0.000000   0.000000  -0.000015  -0.000033   0.000331   0.000005  -0.000021
-  0.000000   0.000000   0.000000   0.000000   0.000000  -0.000004   0.000011   0.000005   0.000393   0.000007
-  0.000000   0.000000   0.000000   0.000000   0.000000   0.000035   0.000111  -0.000021   0.000007   0.000422
+  0.000732  -0.000026  -0.000024   0.000011   0.000042   0.000000   0.000000   0.000000   0.000000   0.000000
+ -0.000026   0.000448  -0.000040   0.000046   0.000098   0.000000   0.000000   0.000000   0.000000   0.000000
+ -0.000024  -0.000040   0.000363   0.000010  -0.000015   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000011   0.000046   0.000010   0.000413   0.000017   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000042   0.000098  -0.000015   0.000017   0.000423   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000732  -0.000026  -0.000024   0.000011   0.000042
+  0.000000   0.000000   0.000000   0.000000   0.000000  -0.000026   0.000448  -0.000040   0.000046   0.000098
+  0.000000   0.000000   0.000000   0.000000   0.000000  -0.000024  -0.000040   0.000363   0.000010  -0.000015
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000011   0.000046   0.000010   0.000413   0.000017
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000042   0.000098  -0.000015   0.000017   0.000423
  correction of Eimp nmatsu_long-nmatsu_frequ RE
-  0.000276   0.000005   0.000007   0.000001   0.000017   0.000000   0.000000   0.000000   0.000000   0.000000
-  0.000005   0.000281   0.000025   0.000009   0.000069   0.000000   0.000000   0.000000   0.000000   0.000000
-  0.000007   0.000025   0.000180   0.000001   0.000013   0.000000   0.000000   0.000000   0.000000   0.000000
-  0.000001   0.000009   0.000001   0.000202   0.000005   0.000000   0.000000   0.000000   0.000000   0.000000
-  0.000017   0.000069   0.000013   0.000005   0.000221   0.000000   0.000000   0.000000   0.000000   0.000000
-  0.000000   0.000000   0.000000   0.000000   0.000000   0.000276   0.000005   0.000007   0.000001   0.000017
-  0.000000   0.000000   0.000000   0.000000   0.000000   0.000005   0.000281   0.000025   0.000009   0.000069
-  0.000000   0.000000   0.000000   0.000000   0.000000   0.000007   0.000025   0.000180   0.000001   0.000013
-  0.000000   0.000000   0.000000   0.000000   0.000000   0.000001   0.000009   0.000001   0.000202   0.000005
-  0.000000   0.000000   0.000000   0.000000   0.000000   0.000017   0.000069   0.000013   0.000005   0.000221
+  0.000400   0.000008   0.000011   0.000005   0.000024   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000008   0.000312   0.000019   0.000007   0.000104   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000011   0.000019   0.000185   0.000011   0.000018   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000005   0.000007   0.000011   0.000222   0.000010   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000024   0.000104   0.000018   0.000010   0.000295   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000400   0.000008   0.000011   0.000005   0.000024
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000008   0.000312   0.000019   0.000007   0.000104
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000011   0.000019   0.000185   0.000011   0.000018
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000005   0.000007   0.000011   0.000222   0.000010
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000024   0.000104   0.000018   0.000010   0.000295
 self at matsu long IM
- -0.001146  -0.000026  -0.000011  -0.000001   0.000021   0.000000   0.000000   0.000000   0.000000   0.000000
- -0.000026  -0.001254  -0.000042   0.000016   0.000074   0.000000   0.000000   0.000000   0.000000   0.000000
- -0.000011  -0.000042  -0.001478  -0.000003  -0.000015   0.000000   0.000000   0.000000   0.000000   0.000000
- -0.000001   0.000016  -0.000003  -0.001486   0.000005   0.000000   0.000000   0.000000   0.000000   0.000000
-  0.000021   0.000074  -0.000015   0.000005  -0.001458   0.000000   0.000000   0.000000   0.000000   0.000000
-  0.000000   0.000000   0.000000   0.000000   0.000000  -0.001146  -0.000026  -0.000011  -0.000001   0.000021
-  0.000000   0.000000   0.000000   0.000000   0.000000  -0.000026  -0.001254  -0.000042   0.000016   0.000074
-  0.000000   0.000000   0.000000   0.000000   0.000000  -0.000011  -0.000042  -0.001478  -0.000003  -0.000015
-  0.000000   0.000000   0.000000   0.000000   0.000000  -0.000001   0.000016  -0.000003  -0.001486   0.000005
-  0.000000   0.000000   0.000000   0.000000   0.000000   0.000021   0.000074  -0.000015   0.000005  -0.001458
+ -0.001629   0.000011  -0.000019   0.000011   0.000024   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000011  -0.001714  -0.000023   0.000089   0.000003   0.000000   0.000000   0.000000   0.000000   0.000000
+ -0.000019  -0.000023  -0.001871   0.000009   0.000012   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000011   0.000089   0.000009  -0.001822   0.000017   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000024   0.000003   0.000012   0.000017  -0.001884   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000000   0.000000   0.000000   0.000000   0.000000  -0.001629   0.000011  -0.000019   0.000011   0.000024
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000011  -0.001714  -0.000023   0.000089   0.000003
+  0.000000   0.000000   0.000000   0.000000   0.000000  -0.000019  -0.000023  -0.001871   0.000009   0.000012
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000011   0.000089   0.000009  -0.001822   0.000017
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000024   0.000003   0.000012   0.000017  -0.001884
 g at matsu long IM
- -0.085567  -0.000001  -0.000000  -0.000000   0.000001   0.000000   0.000000   0.000000   0.000000   0.000000
- -0.000001  -0.085576  -0.000000   0.000000   0.000001   0.000000   0.000000   0.000000   0.000000   0.000000
- -0.000000  -0.000000  -0.085576   0.000000  -0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
- -0.000000   0.000000   0.000000  -0.085576   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
-  0.000001   0.000001  -0.000000   0.000000  -0.085576   0.000000   0.000000   0.000000   0.000000   0.000000
-  0.000000   0.000000   0.000000   0.000000   0.000000  -0.085567  -0.000001  -0.000000  -0.000000   0.000001
-  0.000000   0.000000   0.000000   0.000000   0.000000  -0.000001  -0.085576  -0.000000   0.000000   0.000001
-  0.000000   0.000000   0.000000   0.000000   0.000000  -0.000000  -0.000000  -0.085576   0.000000  -0.000000
-  0.000000   0.000000   0.000000   0.000000   0.000000  -0.000000   0.000000   0.000000  -0.085576   0.000000
-  0.000000   0.000000   0.000000   0.000000   0.000000   0.000001   0.000001  -0.000000   0.000000  -0.085576
+ -0.085558  -0.000002  -0.000001  -0.000000   0.000001   0.000000   0.000000   0.000000   0.000000   0.000000
+ -0.000002  -0.085568  -0.000001   0.000000   0.000006   0.000000   0.000000   0.000000   0.000000   0.000000
+ -0.000001  -0.000001  -0.085573  -0.000000  -0.000001   0.000000   0.000000   0.000000   0.000000   0.000000
+ -0.000000   0.000000  -0.000000  -0.085573   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000001   0.000006  -0.000001   0.000000  -0.085568   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000000   0.000000   0.000000   0.000000   0.000000  -0.085558  -0.000002  -0.000001  -0.000000   0.000001
+  0.000000   0.000000   0.000000   0.000000   0.000000  -0.000002  -0.085568  -0.000001   0.000000   0.000006
+  0.000000   0.000000   0.000000   0.000000   0.000000  -0.000001  -0.000001  -0.085573  -0.000000  -0.000001
+  0.000000   0.000000   0.000000   0.000000   0.000000  -0.000000   0.000000  -0.000000  -0.085573   0.000000
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000001   0.000006  -0.000001   0.000000  -0.085568
  correction of Eimp nmatsu_long-nmatsu_frequ IM
-  0.004520   0.000110   0.000047   0.000006   0.000084   0.000000   0.000000   0.000000   0.000000   0.000000
-  0.000110   0.004978   0.000168   0.000066   0.000300   0.000000   0.000000   0.000000   0.000000   0.000000
-  0.000047   0.000168   0.005882   0.000012   0.000061   0.000000   0.000000   0.000000   0.000000   0.000000
-  0.000006   0.000066   0.000012   0.005910   0.000022   0.000000   0.000000   0.000000   0.000000   0.000000
-  0.000084   0.000300   0.000061   0.000022   0.005798   0.000000   0.000000   0.000000   0.000000   0.000000
-  0.000000   0.000000   0.000000   0.000000   0.000000   0.004520   0.000110   0.000047   0.000006   0.000084
-  0.000000   0.000000   0.000000   0.000000   0.000000   0.000110   0.004978   0.000168   0.000066   0.000300
-  0.000000   0.000000   0.000000   0.000000   0.000000   0.000047   0.000168   0.005882   0.000012   0.000061
-  0.000000   0.000000   0.000000   0.000000   0.000000   0.000006   0.000066   0.000012   0.005910   0.000022
-  0.000000   0.000000   0.000000   0.000000   0.000000   0.000084   0.000300   0.000061   0.000022   0.005798
+  0.006373   0.000034   0.000075   0.000045   0.000100   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000034   0.006742   0.000097   0.000353   0.000040   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000075   0.000097   0.007401   0.000034   0.000041   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000045   0.000353   0.000034   0.007206   0.000068   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000100   0.000040   0.000041   0.000068   0.007423   0.000000   0.000000   0.000000   0.000000   0.000000
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.006373   0.000034   0.000075   0.000045   0.000100
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000034   0.006742   0.000097   0.000353   0.000040
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000075   0.000097   0.007401   0.000034   0.000041
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000045   0.000353   0.000034   0.007206   0.000068
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000100   0.000040   0.000041   0.000068   0.007423
  ED CLEANING UP, RANK =            0
-<QC>                             [density(1)]:         1.078582955886
+<QC>                             [density(1)]:         1.204249938376
  ED DONE RETURN, RANK =            0
   --- MPI TERMINATED --- 
  =============================== TIMING SUMMARY =============================== 
   Routine                                    | Calls          | Walltime      
-  hybrid2bath                                |              1 |           1.06
-  solve_aim                                  |              1 |           4.26
-  tab_haim2                                  |            580 |           0.02
-  lanczos_fast_diagonalize                   |             64 |           3.52
-  lanczos_get_gs_sector                      |              9 |           0.69
-  compute_dynamic_full                       |           1080 |          36.06
-                                                        TOTAL |          41.84
+  hybrid2bath                                |              1 |           2.73
+  solve_aim                                  |              1 |           3.88
+  tab_haim2                                  |            400 |           0.02
+  lanczos_fast_diagonalize                   |             64 |           3.29
+  lanczos_get_gs_sector                      |              4 |           0.37
+  compute_dynamic_full                       |            480 |          16.94
+                                                        TOTAL |          24.19
  ==============================================================================
  ED_SOLVER_STANDALONE_FINISHED

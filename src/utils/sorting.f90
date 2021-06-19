@@ -1173,8 +1173,8 @@ contains
    integer function qsort_rand(lower, upper)
       implicit none
       integer                       :: lower, upper
-      real(kind=SP)                       :: r
-      r = real(drand1(), kind=4)
+      real                          :: r
+      call random_number_wrapper(r)
       qsort_rand = lower + nint(r*(upper - lower))
    end function qsort_rand
 

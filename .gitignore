@@ -12,3 +12,6 @@ bin/*
 
 # Ignore any swap files
 *swp
+
+# Ignore vscode files
+.vscode

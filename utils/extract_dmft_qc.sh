@@ -11,8 +11,10 @@ file=$1
 # If 'test' in filename, redirect it to check the logfile
 if [[ $file == 'test'* ]]; then
    # Find the logfile from the last iteration
-   file=$(ls -d atom1/dir_green_output* | sort --numeric-sort -t 'r' -k 4 | tail -1)
-   file=$file/ed_solver_serial.log
+   logfile=$(ls -d atom1/dir_green_output* | sort --numeric-sort -t 'r' -k 4 | tail -1)
+   logfile=$logfile/ed_solver_serial.log
+   echo -e '\n Contents of '$logfile':' >> $file
+   cat $logfile >> $file
 fi
 
 # Get list of unique keywords

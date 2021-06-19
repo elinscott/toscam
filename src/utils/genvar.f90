@@ -65,7 +65,6 @@ module genvar
    real(16), parameter                       :: euler_q = 2.71828182845904523536028747135266249&
                                                    &77572470936999595749669676277240766303535_16
    integer, parameter                        :: master = 0
-   real(kind=DP)                                  :: ran_tab(0:10000)
    integer                                  :: iseed = 41845213
    logical                                  :: testing = .false.
    logical                                  :: MPIseparate = .false.
@@ -112,7 +111,7 @@ module genvar
 !******************************************************************
 
    ! Quality control testing
-   logical :: running_qc_tests
+   logical, save :: running_qc_tests
 
 end module
 

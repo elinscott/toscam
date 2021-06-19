@@ -31,7 +31,7 @@ contains
 
   SUBROUTINE minimize_func_wrapper(func_, test, nnn, FIT_METH, Niter_search_max_, dist_min, dist_max, search_step, use_mpi, pow_in_)
 
-      use random, only: drand1
+      use random, only: random_float_from_interval
       use linalg, only: minloci
 
       implicit none
@@ -117,8 +117,8 @@ contains
          call mpibarrier
       endif
 
-      if (flag_introduce_noise_in_minimization) test = test + [(-1.d0 + 2.d0*drand1(), i=1, size(test))]/10.d0
-      if (flag_introduce_only_noise_in_minimization) test = [(-1.d0 + 2.d0*drand1(), i=1, size(test))]
+      if (flag_introduce_noise_in_minimization) test = test + [(random_float_from_interval(-1.d-1, 1.d-1), i=1, size(test))]
+      if (flag_introduce_only_noise_in_minimization) test = [(random_float_from_interval(-1.d0, 1.d0), i=1, size(test))]
 
       if (rank == 0) write (*, *) 'STARTING MINIMIZATION '
 

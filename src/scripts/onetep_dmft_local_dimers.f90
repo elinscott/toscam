@@ -64,9 +64,9 @@ program local_dimers
    j = 0
    do
       read (10, *, end=66) temp, v(1), v(2), v(3)
-      v_(1) = gaussian()
-      v_(2) = gaussian()
-      v_(3) = gaussian()
+      v_(1) = random_float_from_gaussian()
+      v_(2) = random_float_from_gaussian()
+      v_(3) = random_float_from_gaussian()
       v_ = v_*disorder_amp
       v_ = v + v_
       write (1010, '(a5,3f15.6)') temp, v_(1), v_(2), v_(3)

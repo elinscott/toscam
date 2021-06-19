@@ -628,4 +628,3 @@ call putel_in_namelist(nm, ed_num_eigenstates_print, 'ed_num_eigenstates_print',
                   
 call putel_in_namelist(nm, print_qc, 'print_qc', &
                       .false., 'Definition: if true, print out various quantities for the purposes of quality control')
-                      

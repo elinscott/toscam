@@ -541,14 +541,14 @@ contains
    subroutine stand_alone_ed()
 
       use common_def, only: utils_system_call
-      use random, only: init_rantab, random_seed_wrapper
-      use genvar, only: imi, matsubara, no_mpi, pi, ran_tab, rank, size2
+      use genvar, only: imi, matsubara, no_mpi, pi, rank, size2
       use stringmanip, only: tostring
       use impurity_class, only: hamiltonian, web
       use globalvar_ed_solver, only: jhund, jjmatrix, Jhund_Slater_type, uumatrix
       use mesh, only: build1dmesh
       use matrix, only: diag, write_array
       use mpi_mod, only: mpibarrier
+      use random, only: random_float_from_interval
       use solver, only: remove_filef
 
       implicit none
@@ -752,9 +752,6 @@ contains
       write (*, *) '        because NO_SYS_CALL was set'
 #endif
 
-      call init_rantab()
-      call random_seed_wrapper()
-
       hybrid_in = 0.
 
       INQUIRE (file='delta_input_full_1', EXIST=check)
@@ -929,10 +926,10 @@ contains
             endif
 #endif
             !call system("rm ed.sector_bound_file")
-            bathparams = (/(ran_tab(j), j=1, bath_param_ed)/)
+            bathparams = (/(random_float_from_interval(0.d0, 1.d0, same_across_tasks=.true.), j=1, bath_param_ed)/)
          endif
       else
-         bathparams = (/((-1.+2*ran_tab(j))/30., j=1, bath_param_ed)/)
+         bathparams = (/(random_float_from_interval(-1.d0, 1.d0, same_across_tasks=.true.)/30., j=1, bath_param_ed)/)
          write (*, *) 'STARTING WITH RANDOM PARAM FOR THE FIT : ', bathparams
       endif
 
@@ -1214,6 +1211,7 @@ contains
       use matrix, only: write_array
       use correlations, only: init_correlations, SNAMBU, SNAMBUret
       use solver, only: init_solver
+      use random, only: random_init
 
       implicit none
 
@@ -1347,7 +1345,6 @@ contains
          ! Initialising genvar.running_qc_tests so that utils code, in addition to 
          ! ed_solver code, can tell if we are running tests
          running_qc_tests = print_qc
-
       endif
 #ifdef OPENMP_MPI_SAFE
       if (MAXT > 1 .and. size2 > 1 .and. .not. no_mpi) then
@@ -1355,6 +1352,10 @@ contains
       endif
 #endif
       ! =============================================== !
+
+      ! Initialise random module
+      call random_init()
+
       dEmax = 1.d0/beta_ED*dEmax0
 
       if (supersc_state .and. .not. force_nupdn_basis) min_all_bath_param = &

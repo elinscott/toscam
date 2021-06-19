@@ -25,7 +25,7 @@ contains
       use h_class, only: hmult__, title_h_, dimen_H
       use mpi
       use mpi_mod, only: split
-      use random, only: randomize_mat
+      use random, only: random_number_wrapper, random_seed_wrapper
 
       implicit none
 
@@ -39,7 +39,7 @@ contains
       INTEGER                :: ISTOR_QUERY(17)
       REAL(DP)              :: RSTOR_QUERY(5)
       INTEGER, ALLOCATABLE   :: ISTOR(:)
-      REAL(DP), ALLOCATABLE :: RSTOR(:), U(:, :), V(:, :), VALP(:, :), VECP(:, :)
+      REAL(kind=DP), ALLOCATABLE :: RSTOR(:), U(:, :), V(:, :), VALP(:, :), VECP(:, :)
       REAL(DP)              :: SIGMA, minv_
       INTEGER                :: NNEIG, LFLAG, NVOPU, Neigen_
 
@@ -233,7 +233,9 @@ contains
 
          CASE (4)  ! BLDRD REQUIRES THE STARTING VECTORS IN V(:, 1:NVOPU)
 
-            CALL randomize_mat(V)
+            call random_seed_wrapper(same_across_tasks=.true.)
+            call random_number_wrapper(V)
+            call random_seed_wrapper(same_across_tasks=.false.)
 
          CASE DEFAULT
 

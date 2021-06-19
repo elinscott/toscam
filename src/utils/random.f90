@@ -6,47 +6,25 @@ module random
 
    implicit none
    private
-   public :: crand1
-   public :: drand1
-   public :: dran_tab
-   public :: gaussian
-   public :: init_rantab
-   public :: initialize_random_numbers
+   public :: random_float_from_gaussian
+   public :: random_init
    public :: random_seed_wrapper
-   public :: randomize_mat
-   public :: randomize_matrix
+   public :: random_number_wrapper
+   public :: random_float_from_interval
+   public :: random_complex_from_interval
 
    real(kind=DP), parameter  :: rerror = 1.d-3
    integer(kind=LONG), save :: seed_internal
-
-   INTERFACE randomize_matrix
-      module procedure randomize_matrix_r, randomize_matrix_c
-   END INTERFACE
-
-   ! INTERFACE randomize_rank2
-   !   MODULE PROCEDURE randomize_rank2r,randomize_rank2c
-   ! END INTERFACE
-
-   ! INTERFACE randomize_rank1
-   !   MODULE PROCEDURE randomize_rank1r,randomize_rank1c
-   ! END INTERFACE
-
-   ! INTERFACE get_random_vec_by_seed
-   !   MODULE PROCEDURE get_random_vec_by_seed_c,get_random_vec_by_seed_r
-   ! END INTERFACE
-
-   ! INTERFACE random_vec
-   !   MODULE PROCEDURE random_vec_r,random_vec_c
-   ! END INTERFACE
-
-   INTERFACE randomize_mat
-      MODULE PROCEDURE randomize_mat_r, randomize_mat_c
-   END INTERFACE
+   logical, save :: module_is_initialized = .false.
 
    interface random_number_wrapper
       module procedure random_number_float
+      module procedure random_number_double
+      module procedure random_number_complex
       module procedure random_number_1d
       module procedure random_number_2d
+      module procedure random_number_1d_double
+      module procedure random_number_2d_double
    end interface
 
 contains
@@ -63,7 +41,7 @@ contains
       logical :: for_testing_internal
       integer :: funit, ierr, seed_size
       integer, allocatable :: seed(:)
-      real, allocatable :: r_test(:)
+      real(kind=DP), allocatable :: r_test(:)
 
 #ifdef DEBUG
       write(*, '(a)') 'DEBUG: entering random.random_seed_wrapper'
@@ -74,7 +52,13 @@ contains
       if (present(same_across_tasks)) same_across_tasks_internal = same_across_tasks
 
       if (running_qc_tests) then
-         seed_internal = 1234567
+         if (module_is_initialized) then
+            ! Make sure each time we call this function it uses a different seed
+            seed_internal = seed_internal + 1
+         else
+            seed_internal = 1234567
+         end if
+
          if (.not. same_across_tasks_internal) then
             seed_internal = seed_internal + rank
          end if
@@ -109,9 +93,6 @@ contains
 
 #ifdef DEBUG
       write(*, '(a)') 'DEBUG: leaving random.random_seed_wrapper'
-      allocate(r_test(2))
-      call random_number_wrapper(r_test)
-      write(*, *) r_test
 #endif
 
    end subroutine
@@ -123,11 +104,45 @@ contains
       implicit NONE
       real :: r
 
+      call utils_assert(module_is_initialized, 'Error in random: random seed has not yet been initialised')
+
       if (running_qc_tests) then
          call bad_random_number_float(r)
       else
          call random_number(r)
       end if
+   end subroutine
+
+   subroutine random_number_double(r)
+
+      use genvar, only: running_qc_tests
+
+      implicit NONE
+      real(kind=DP) :: r
+      real :: r_dummy
+
+      call random_number_float(r_dummy)
+      r = real(r_dummy, kind=DP)
+
+   end subroutine
+
+   subroutine random_number_complex(r)
+
+      use genvar, only: running_qc_tests
+
+      implicit NONE
+      complex(kind=DP) :: r
+      real(kind=SP) :: r1, r2
+
+      if (running_qc_tests) then
+         call bad_random_number_float(r1)
+         call bad_random_number_float(r2)
+      else
+         call random_number_float(r1)
+         call random_number_float(r2)
+      end if
+
+      r = cmplx(r1, r2)
 
    end subroutine
 
@@ -138,12 +153,23 @@ contains
       implicit NONE
       real, allocatable :: r(:)
 
+      call utils_assert(module_is_initialized, 'Error in random: random seed has not yet been initialised')
+
       if (running_qc_tests) then
          call bad_random_number_1d(r)
       else
          call random_number(r)
       end if
 
+   end subroutine
+
+   subroutine random_number_1d_double(r)
+      implicit none
+      real(kind=DP), allocatable, intent(out) :: r(:)
+      real, allocatable :: rtmp(:)
+
+      call random_number_1d(rtmp)
+      r = rtmp
    end subroutine
 
    subroutine random_number_2d(r)
@@ -153,6 +179,8 @@ contains
       implicit NONE
       real, allocatable :: r(:,:)
 
+      call utils_assert(module_is_initialized, 'Error in random: random seed has not yet been initialised')
+
       if (running_qc_tests) then
          call bad_random_number_2d(r)
       else
@@ -161,12 +189,23 @@ contains
 
    end subroutine
 
+   subroutine random_number_2d_double(r)
+      implicit none
+      real(kind=DP), allocatable, intent(out) :: r(:, :)
+      real, allocatable :: rtmp(:, :)
+
+      call random_number_2d(rtmp)
+      r = rtmp
+   end subroutine
+
    subroutine bad_random_number_float(r, seed)
       ! A crude random number generator to only be used for testing that guarantees cross-compiler repeatability
       implicit none
-      real,              intent(out) :: r
+      real,     intent(out) :: r
       integer, optional, intent(in)  :: seed
       integer(kind=long) :: m, a, c
+
+      call utils_assert(module_is_initialized, 'Error in random: random seed has not yet been initialised')
 
       if (present(seed)) seed_internal = seed
       m = 2**15
@@ -184,6 +223,7 @@ contains
       implicit none
       real, intent(inout) :: r(:)
       integer :: i
+
       do i = 1, size(r, 1)
          call bad_random_number_float(r(i))
       end do
@@ -198,24 +238,65 @@ contains
       end do
    end subroutine
 
-
-!********************************************
-!********************************************
-!********************************************
-!********************************************
-!********************************************
-!********************************************
-!********************************************
-!********************************************
-!********************************************
-!********************************************
-!********************************************
-!********************************************
-
-   subroutine initialize_random_numbers()
+   function random_float_from_interval(bound_lower, bound_upper, same_across_tasks)
       implicit none
-      call init_rantab
+      real(kind=DP), intent(in) :: bound_lower, bound_upper
+      logical, optional, intent(in) :: same_across_tasks
+      real(kind=DP) :: random_float_from_interval
+      logical :: same_across_tasks_internal
+      real(kind=SP) :: r_tmp
+
+      ! same_across_tasks is .false. by default
+      same_across_tasks_internal = .false.
+      if (present(same_across_tasks)) same_across_tasks_internal = same_across_tasks
+
+      ! Optionally make different tasks give the same random numbers
+      if (same_across_tasks_internal) call random_seed_wrapper(same_across_tasks_internal)
+
+      if (running_qc_tests) then
+         call bad_random_number_float(r_tmp)
+      else
+         call random_number_wrapper(r_tmp)
+      end if
+
+      ! Restore random seed to be different across tasks
+      if (same_across_tasks_internal) call random_seed_wrapper(.false.)
+
+      random_float_from_interval = bound_lower + (bound_upper - bound_lower) * r_tmp
+
+   end function
+
+   function random_complex_from_interval(bound_lower_r, bound_lower_i, bound_upper_r, bound_upper_i, same_across_tasks)
+      implicit none
+      real(kind=DP), intent(in) :: bound_lower_r, bound_upper_r, bound_lower_i, bound_upper_i
+      logical, optional, intent(in) :: same_across_tasks
+      real(kind=DP) :: random_complex_from_interval
+      real(kind=DP) :: rtmp, itmp
+
+      rtmp = random_float_from_interval(bound_lower_r, bound_upper_r, same_across_tasks)
+      itmp = random_float_from_interval(bound_lower_i, bound_upper_i, same_across_tasks)
+
+      random_complex_from_interval = cmplx(rtmp, itmp)
+
+   end function
+
+!********************************************
+!********************************************
+!********************************************
+!********************************************
+!********************************************
+!********************************************
+!********************************************
+!********************************************
+!********************************************
+!********************************************
+!********************************************
+!********************************************
+
+   subroutine random_init()
+      implicit none
       call random_seed_wrapper(same_across_tasks = .false.)
+      module_is_initialized = .true.
    end subroutine
 
 !********************************************
@@ -574,25 +655,25 @@ contains
 ! enddo
 ! end function
 !
-   subroutine randomize_mat_c(mat)
-      complex(kind=DP) :: mat(:, :)
-      integer    :: i, j
-      do i = 1, size(mat, 1)
-         do j = 1, size(mat, 2)
-            mat(i, j) = dran_tabc(i + j*2)
-         enddo
-      enddo
-   end subroutine
-
-   subroutine randomize_mat_r(mat)
-      real(kind=DP)    :: mat(:, :)
-      integer    :: i, j
-      do i = 1, size(mat, 1)
-         do j = 1, size(mat, 2)
-            mat(i, j) = dran_tab(i + j*2)
-         enddo
-      enddo
-   end subroutine
+!    subroutine randomize_mat_c(mat)
+!       complex(kind=DP) :: mat(:, :)
+!       integer    :: i, j
+!       do i = 1, size(mat, 1)
+!          do j = 1, size(mat, 2)
+!             mat(i, j) = dran_tabc(i + j*2)
+!          enddo
+!       enddo
+!    end subroutine
+! 
+!    subroutine randomize_mat_r(mat)
+!       real(kind=DP)    :: mat(:, :)
+!       integer    :: i, j
+!       do i = 1, size(mat, 1)
+!          do j = 1, size(mat, 2)
+!             mat(i, j) = dran_tab(i + j*2)
+!          enddo
+!       enddo
+!    end subroutine
 !
 !
 ! !********************************************
@@ -630,26 +711,27 @@ contains
 ! !********************************************
 ! !********************************************
 !
-   function drand1()
-      implicit none
-      real(kind=DP) :: drand1
-      real(kind=SP) :: r
-      call random_number(r)
-      drand1 = real(r, kind=DP)
-   end function
+! function drand1()
+!    implicit none
+!    real(kind=DP) :: drand1
+!    real(kind=SP) :: r
+!    call utils_assert(module_is_intialized, 'Error in random: random seed has not yet been initialised')
+!    call random_number(r)
+!    drand1 = real(r, kind=DP)
+! end function
 
-   !------------!
+!------------!
 
-   function crand1()
-      implicit none
-      complex(kind=DP) :: crand1
-      real(kind=DP)     :: rtemp1, rtemp2
-      rtemp1 = (-1.d0 + 2.d0*drand1())
-      rtemp2 = (-1.d0 + 2.d0*drand1())
-      crand1 = CMPLX(rtemp1, rtemp2, kind=8)
-   end function
+! function crand1()
+!    implicit none
+!    complex(kind=DP) :: crand1
+!    real     :: rtemp1, rtemp2
+!    rtemp1 = random_number_from_interval(-1.d0, 1.d0)
+!    rtemp2 = random_number_from_interval(-1.d0, 1.d0)
+!    crand1 = CMPLX(rtemp1, rtemp2, kind=8)
+! end function
 
-   !------------!
+!------------!
 !
 ! function iirand1(k)
 ! implicit none
@@ -755,60 +837,62 @@ contains
 !********************************************
 !********************************************
 !
-   real(kind=DP) function dran_tab(jjj)
-      implicit none
-      integer             :: jj
-      integer, intent(in) :: jjj
-      jj = modi(jjj, size(ran_tab) - 1)
-      dran_tab = ran_tab(jj)
-      return
-   end function
-
-   !======!
-
-   complex(kind=DP) function dran_tabc(jjj)
-      implicit none
-      integer             :: jj
-      integer, intent(in) :: jjj
-      jj = modi(jjj, size(ran_tab - 2))
-      dran_tabc = CMPLX(-1.d0 + 2.d0*ran_tab(jj), -1.d0 + 2.d0*ran_tab(jj + 1), kind=8)
-      return
-   end function
-
-   !======!
-
-   subroutine init_rantab
-
-      use genvar, only: rank
-
-      implicit none
-      integer          :: i
-
-
-#ifdef DEBUG
-      write(*, '(a)') 'DEBUG: entering random.init_rantab'
-#endif
-
-      ! Have all tasks use the same random seed
-      call random_seed_wrapper(same_across_tasks = .true.)
-
-      if (messages2) write (*, *) ' my rank ', rank
-      do i = 0, size(ran_tab) - 1
-         ran_tab(i) = floor_(drand1(), 3)
-      enddo
-      if (messages2) write (*, *) 'ran_tab initiated', maxval(ran_tab), minval(ran_tab)
-      if (messages2) write (*, *) 'my rank : ', rank
-
-      ! Now make different tasks have different seeds
-      call random_seed_wrapper(same_across_tasks = .false.)
-
-#ifdef DEBUG
-      write(*, '(a)') 'DEBUG: leaving random.init_rantab'
-#endif
-
-   end subroutine
-
-   !======!
+!   real(kind=DP) function dran_tab(jjj)
+!      implicit none
+!      integer             :: jj
+!      integer, intent(in) :: jjj
+!      jj = modi(jjj, size(ran_tab) - 1)
+!      dran_tab = ran_tab(jj)
+!      return
+!   end function
+!
+!   !======!
+!
+!   complex(kind=DP) function dran_tabc(jjj)
+!      implicit none
+!      integer             :: jj
+!      integer, intent(in) :: jjj
+!      jj = modi(jjj, size(ran_tab - 2))
+!      dran_tabc = CMPLX(-1.d0 + 2.d0*ran_tab(jj), -1.d0 + 2.d0*ran_tab(jj + 1), kind=8)
+!      return
+!   end function
+!
+!   !======!
+!
+!   subroutine init_rantab
+!
+!      use genvar, only: rank
+!
+!      implicit none
+!      integer          :: i
+!      real(kind=DP)    :: r
+!
+!
+!#ifdef DEBUG
+!      write(*, '(a)') 'DEBUG: entering random.init_rantab'
+!#endif
+!
+!      ! Have all tasks use the same random seed
+!      call random_seed_wrapper(same_across_tasks = .true.)
+!
+!      if (messages2) write (*, *) ' my rank ', rank
+!      do i = 0, size(ran_tab) - 1
+!         call random_number_wrapper(r)
+!         ran_tab(i) = floor_(r, 3)
+!      enddo
+!      if (messages2) write (*, *) 'ran_tab initiated', maxval(ran_tab), minval(ran_tab)
+!      if (messages2) write (*, *) 'my rank : ', rank
+!
+!      ! Now make different tasks have different seeds
+!      call random_seed_wrapper(same_across_tasks = .false.)
+!
+!#ifdef DEBUG
+!      write(*, '(a)') 'DEBUG: leaving random.init_rantab'
+!#endif
+!
+!   end subroutine
+!
+!   !======!
 !
 ! subroutine test_random_number
 ! implicit none
@@ -945,7 +1029,7 @@ contains
 !********************************************
 !********************************************
 
-   real(kind=DP) FUNCTION gaussian()
+   real(kind=DP) FUNCTION random_float_from_gaussian()
       implicit none
 
       !-----------------------------------------------------------------------!
@@ -956,11 +1040,12 @@ contains
       !-----------------------------------------------------------------------!
 
       real(kind=DP) :: R, X, Y
-10    X = 2.d0*drand1() - 1.d0
-      Y = 2.d0*drand1() - 1.d0
+      real :: rtmp
+10    X = random_float_from_interval(-1.d0, 1.d0)
+      Y = random_float_from_interval(-1.d0, 1.d0)
       R = X**2 + Y**2
       IF (R >= 1.d0 .or. R < 1.d-20) GOTO 10
-      gaussian = X*SQRT(-2.d0*LOG(R)/R)
+      random_float_from_gaussian = X*SQRT(-2.d0*LOG(R)/R)
 
    END function
 
@@ -1104,82 +1189,86 @@ contains
 !
 !        !---------------!
 !
-   subroutine randomize_matrix_c(A, amp, flag, kk2)
-      implicit none
-      integer          :: i, j, siz1
-      complex(kind=DP)       :: A(:, :), ctemp
-      real(kind=DP)          :: maxA
-      real(kind=DP), optional :: amp
-      logical, optional :: flag
-      integer          :: kk
-      integer, optional :: kk2
-
-      if (present(kk2)) then
-         kk = kk2
-      else
-         kk = 0
-      endif
-
-      maxA = 1.d0
-      if (present(amp)) then
-         maxA = maxA*amp
-      else
-         maxA = maxA*rerror
-      endif
-
-      siz1 = size(A(:, 1))
-      do i = 1, siz1
-         do j = i, siz1
-            if (.not. present(flag) .and. .not. present(kk2)) then
-               ctemp = crand1()*maxA
-            else
-               ctemp = CMPLX(-1.d0 + 2.d0*dran_tab(i + j*2 + kk), -1.d0 + 2.d0*dran_tab(2*i + j + 42*kk), kind=8)*maxA
-            endif
-            if (j == i) A(i, i) = A(i, i) + real(ctemp)
-            A(i, j) = A(i, j) + ctemp
-            A(j, i) = A(j, i) + conjg(ctemp)
-         enddo
-      enddo
-   end subroutine
-
-   !---------------!
-
-   subroutine randomize_matrix_r(A, amp, flag, kk2)
-      implicit none
-      integer          :: i, j, siz1
-      real(kind=DP)           :: A(:, :), rtemp, maxA
-      real(kind=DP), optional  :: amp
-      logical, optional :: flag
-      integer          :: kk
-      integer, optional :: kk2
-
-      if (present(kk2)) then
-         kk = kk2
-      else
-         kk = 0
-      endif
-
-      maxA = 1.d0
-      if (present(amp)) then
-         maxA = maxA*amp
-      else
-         maxA = maxA*rerror
-      endif
-      siz1 = size(A(:, 1))
-      do i = 1, siz1
-         do j = i, siz1
-         if (.not. present(flag) .and. .not. present(kk2)) then
-            rtemp = (-1.d0 + 2.d0*drand1())*maxA
-         else
-            rtemp = (-1.d0 + 2.d0*dran_tab(i + j*2 + kk))*maxA
-         endif
-         if (j == i) A(i, i) = A(i, i) + rtemp
-         A(i, j) = A(i, j) + rtemp
-         A(j, i) = A(j, i) + rtemp
-         enddo
-      enddo
-   end subroutine
-
+!    subroutine randomize_matrix_c(A, amp, flag, kk2)
+!       implicit none
+!       integer          :: i, j, siz1
+!       complex(kind=DP)       :: A(:, :), ctemp
+!       real(kind=DP)          :: maxA
+!       real(kind=DP), optional :: amp
+!       logical, optional :: flag
+!       integer          :: kk
+!       integer, optional :: kk2
+! 
+!       call utils_assert(module_is_initialized, 'Error in random: random seed has not yet been initialised')
+! 
+!       if (present(kk2)) then
+!          kk = kk2
+!       else
+!          kk = 0
+!       endif
+! 
+!       maxA = 1.d0
+!       if (present(amp)) then
+!          maxA = maxA*amp
+!       else
+!          maxA = maxA*rerror
+!       endif
+! 
+!       siz1 = size(A(:, 1))
+!       do i = 1, siz1
+!          do j = i, siz1
+!             if (.not. present(flag) .and. .not. present(kk2)) then
+!                ctemp = crand1()*maxA
+!             else
+!                ctemp = CMPLX(-1.d0 + 2.d0*dran_tab(i + j*2 + kk), -1.d0 + 2.d0*dran_tab(2*i + j + 42*kk), kind=8)*maxA
+!             endif
+!             if (j == i) A(i, i) = A(i, i) + real(ctemp)
+!             A(i, j) = A(i, j) + ctemp
+!             A(j, i) = A(j, i) + conjg(ctemp)
+!          enddo
+!       enddo
+!    end subroutine
+! 
+!    !---------------!
+! 
+!    subroutine randomize_matrix_r(A, amp, flag, kk2)
+!       implicit none
+!       integer          :: i, j, siz1
+!       real(kind=DP)           :: A(:, :), rtemp, maxA
+!       real(kind=DP), optional  :: amp
+!       logical, optional :: flag
+!       integer          :: kk
+!       integer, optional :: kk2
+!       real :: r
+! 
+!       if (present(kk2)) then
+!          kk = kk2
+!       else
+!          kk = 0
+!       endif
+! 
+!       maxA = 1.d0
+!       if (present(amp)) then
+!          maxA = maxA*amp
+!       else
+!          maxA = maxA*rerror
+!       endif
+!       siz1 = size(A(:, 1))
+!       do i = 1, siz1
+!          do j = i, siz1
+!             if (.not. present(flag) .and. .not. present(kk2)) then
+!                call random_number_wrapper(r)
+!                rtemp = (-1.d0 + 2.d0*r)*maxA
+!             else
+!                rtemp = (-1.d0 + 2.d0*dran_tab(i + j*2 + kk))*maxA
+!             endif
+!             if (j == i) A(i, i) = A(i, i) + rtemp
+!             A(i, j) = A(i, j) + rtemp
+!             A(j, i) = A(j, i) + rtemp
+!          enddo
+!       enddo
+!    end subroutine
+! 
 !********************************************
 !********************************************
 !********************************************

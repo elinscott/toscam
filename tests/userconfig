@@ -15,7 +15,7 @@ tolerance = (2.0e-5, None, '[total_energy]'), (1.0e-5, 0.005, None, False)
 [toscam]
 exe = ../bin/onetep_dmft.out
 nprocs = 0
-run_cmd_template = tc.program > tc.output 2> tc.error
-extract_program = extract_dmft_qc.sh
+run_cmd_template = clean_run_sc; tc.program > tc.output 2> tc.error
+extract_program = ../utils/extract_dmft_qc.sh
 extract_cmd_template = tc.extract tc.file
 tolerance = (2.0e-5, None, '[density(1)]')
